@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Text;
 public class OpenCommit extends Composite {
 	String path, commit;
 	
-	public OpenCommit(Composite parent, int style, String filterPath) {
+	public OpenCommit(Composite parent, int style, final String filterPath) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
@@ -32,7 +32,7 @@ public class OpenCommit extends Composite {
 		
 		Label l1 = new Label(composite, SWT.NONE);
 		l1.setText("Repository");
-		Text txtPath = new Text(composite, SWT.BORDER);
+		final Text txtPath = new Text(composite, SWT.BORDER);
 		txtPath.setLayoutData(new GridData(500, txtPath.getLineHeight()));
 		Button b = new Button(composite, SWT.PUSH);
 		b.setText("&Browse");
@@ -51,9 +51,9 @@ public class OpenCommit extends Composite {
 		});
 		Label l2 = new Label(composite, SWT.NONE);
 		l2.setText("Commit");
-		Text txtCommit = new Text(composite, SWT.BORDER);
+		final Text txtCommit = new Text(composite, SWT.BORDER);
 		txtCommit.setLayoutData(new GridData(500, txtCommit.getLineHeight()));
-		Button b2 = new Button(composite, SWT.PUSH);
+		final Button b2 = new Button(composite, SWT.PUSH);
 		b2.setText("OK");
 		b2.getShell().setDefaultButton(b2);
 		b2.addSelectionListener(new SelectionAdapter() {

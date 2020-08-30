@@ -38,7 +38,7 @@ public class Miner {
 		this.level = level;
 	}
 
-	public String getCurrDir()
+	public String getCurrDir(){
 		return currDir;
 	}
 
@@ -310,7 +310,7 @@ public class Miner {
 //			System.out.println("*********************");
 //			System.out.println(beforeAndAfter.get(1).substring(highlight.get(0),highlight.get(1)+highlight.get(0)));
 //		}
-
+		System.out.println(beforeAndAfter);
 		String afterStr = beforeAndAfter.get(0);
 		String beforeStr = beforeAndAfter.get(1);
 

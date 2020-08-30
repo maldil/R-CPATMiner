@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>af1c85573e9547c00524981aee824cb0c093ffa6,community/bolt/src/test/java/org/neo4j/bolt/v4/BoltProtocolV4Test.java,BoltProtocolV4Test,shouldVersionReturnBoltV4,#,55
+</h3><h3>Before Change</h3><pre><code class='java'>
+    void shouldVersionReturnBoltV4() throws Throwable
+    {
+        BoltProtocolV4 protocolV4 =
+                new BoltProtocolV4( <a id="change">mock( BoltChannel.class</a><a id="change"> )</a>, ( ch, st ) -&gt; mock( BoltConnection.class ), mock( BoltStateMachineFactory.class ),
+                        bookmarksParser, NullLogService.getInstance() );
+
+        assertThat( protocolV4.version() ).isEqualTo( new BoltProtocolVersion( 4, 0 ) );</code></pre><h3>After Change</h3><pre><code class='java'>
+    {
+        BoltProtocolV4 protocolV4 =
+                new BoltProtocolV4( newTestBoltChannel(), ( ch, st, messageWriter ) -&gt; mock( BoltConnection.class ), mock( BoltStateMachineFactory.class ),
+                        bookmarksParser, NullLogService.getInstance(), <a id="change">mock( TransportThrottleGroup.class</a><a id="change"> )</a> );
+
+        assertThat( protocolV4.version() ).isEqualTo( new BoltProtocolVersion( 4, 0 ) );
+    }</code></pre>

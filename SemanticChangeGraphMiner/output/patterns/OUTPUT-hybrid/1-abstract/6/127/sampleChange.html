@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>9f1c9f537ce1155acdb1acfcd5a85b33696d1937,community/index/src/test/java/org/neo4j/index/internal/gbptree/GBPTreeTest.java,GBPTreeTest,mustRecognizeFailedCleaning,#ThrowingConsumer#,1140
+</h3><h3>Before Change</h3><pre><code class='java'>
+            cleanup.get();
+
+            // then
+            <a id="change">try
+            </a>{
+                checkpoint.get();
+                <a id="change">fail( "Expected checkpoint to fail because of failed cleaning job"</a><a id="change"> )</a>;
+            }
+            <a id="change">catch ( </a>ExecutionException e<a id="change"> )
+            </a>{
+                assertThat( e.getMessage() ).contains( "cleaning" ).<a id="change">contains( </a>"failed"<a id="change"> )</a>;
+            }
+        }
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+            cleanup.get();
+
+            ExecutionException e = assertThrows( ExecutionException.class, checkpoint::get, "Expected checkpoint to fail because of failed cleaning job" );
+            assertThat( e.getMessage() ).contains( "cleaning" ).<a id="change">contains( </a>"failed"<a id="change"> )</a>;
+        }
+    }
+</code></pre>

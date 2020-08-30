@@ -194,6 +194,7 @@ public class CMethod extends ChangeEntity {
 		HashMap<CMethod, HashSet<Pair>> pairsOfMethods2 = new HashMap<CMethod, HashSet<Pair>>();
 		ArrayList<Pair> pairs = new ArrayList<Pair>();
 		PairDescendingOrder comparator = new PairDescendingOrder();
+
 		for (CMethod cmM : methodsM) {
 			HashSet<Pair> pairs1 = new HashSet<Pair>();
 			for (CMethod cmN : methodsN) {
@@ -339,6 +340,7 @@ public class CMethod extends ChangeEntity {
 		HashMap<String, HashSet<CMethod>> methodsWithNameN = new HashMap<String, HashSet<CMethod>>();
 		for (CMethod cm : methodsM) {
 			String name = cm.getName();
+
 			HashSet<CMethod> cms = methodsWithNameM.get(name);
 			if (cms == null)
 				cms = new HashSet<CMethod>();

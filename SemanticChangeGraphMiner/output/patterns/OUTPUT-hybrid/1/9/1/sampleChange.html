@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>64c9008ea765f8f869c43463241807338d8ebd37,arbiter/arbiter-ui/src/main/java/org/deeplearning4j/arbiter/ui/module/ArbiterModule.java,ArbiterModule,getRoutes,#,136
+</h3><h3>Before Change</h3><pre><code class='java'>
+                    .putHeader("content-type", "text/html; charset=utf-8")
+                    .sendFile("templates/ArbiterUI.html")));
+            r.add(new Route("/arbiter/lastUpdate", HttpMethod.GET, (path, rc) -&gt; this.getLastUpdateTime(rc)));
+            r.<a id="change">add(</a>new Route("/arbiter/lastUpdate/:ids", HttpMethod.GET,
+                    (path, rc) -&gt; this.getModelLastUpdateTimes(path.get(0), rc))<a id="change">)</a>;
+            r.add(new Route("/arbiter/candidateInfo/:id", HttpMethod.GET,
+                    (path, rc) -&gt; this.getCandidateInfo(path.get(0), rc)));
+            r.add(new Route("/arbiter/config", HttpMethod.GET, (path, rc) -&gt; this.getOptimizationConfig(rc)));</code></pre><h3>After Change</h3><pre><code class='java'>
+                (path, rc) -&gt; rc.response().end(multiSession ? "true" : "false")));
+        if (multiSession) {
+            r.add(new Route("/arbiter", HttpMethod.GET, (path, rc) -&gt; this.listSessions(rc)));
+            r.<a id="change">add(</a>new Route("/arbiter/:sessionId", HttpMethod.GET, (path, rc) -&gt; rc.response()
+                    .putHeader("content-type", "text/html; charset=utf-8")
+                    .sendFile("templates/ArbiterUI.html"))<a id="change">)</a>;
+
+            r.add(new Route("/arbiter/:sessionId/lastUpdate", HttpMethod.GET, (path, rc) -&gt; {
+                if (knownSessionIDs.containsKey(path.get(0))) {
+                    this.getLastUpdateTime(path.get(0), rc);
+                } else {
+                    sessionNotFound(path.get(0), rc.request().path(), rc);
+                }
+            }));
+            r.add(new Route("/arbiter/:sessionId/candidateInfo/:id", HttpMethod.GET, (path, rc) -&gt; {
+                if (knownSessionIDs.containsKey(path.get(0))) {
+                    this.getCandidateInfo(path.get(0), path.get(1), rc);
+                } else {
+                    sessionNotFound(path.get(0), rc.request().path(), rc);
+                }
+            }));
+            <a id="change">r</a>.<a id="change">add(new Route("/arbiter/:sessionId/config"</a>, <a id="change">HttpMethod.GET</a>, <a id="change">(path, rc) -&gt; {
+                if (knownSessionIDs.containsKey(path.get(0))) {
+                    this.getOptimizationConfig(path.get(0), rc);
+                } else {
+                    sessionNotFound(path.get(0), rc.request().path(), rc);
+                }
+            }</a><a id="change">)</a><a id="change">)</a>;
+            r.add(new Route("/arbiter/:sessionId/results", HttpMethod.GET, (path, rc) -&gt; {
+                if (knownSessionIDs.containsKey(path.get(0))) {
+                    this.getSummaryResults(path.get(0), rc);</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>5fbb04531d0a049180ec05c778f07e4a95cca1ca,nd4j/nd4j-backends/nd4j-api-parent/nd4j-api/src/main/java/org/nd4j/linalg/api/ops/impl/transforms/pairwise/arithmetic/MergeAddOp.java,MergeAddOp,doDiff,#List#,72
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+    @Override
+    public List&lt;SDVariable&gt; doDiff(List&lt;SDVariable&gt; i_v) {
+        SDVariable gradient = sameDiff.<a id="change">setupFunction(</a>i_v.<a id="change">get(</a>0<a id="change">))</a>;
+        List&lt;SDVariable&gt; ret = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; <a id="change">args()</a>.length; i++)
+            ret.add(gradient);
+        return ret;
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Override
+    public List&lt;SDVariable&gt; doDiff(List&lt;SDVariable&gt; i_v) {
+         <a id="change">return </a>Arrays.asList(<a id="change">new MergeAddBp(sameDiff</a>, <a id="change">args()</a>, i_v.<a id="change">get(</a>0<a id="change">)</a><a id="change">)</a>.<a id="change">outputVariables()</a>);
+
+    }
+</code></pre>

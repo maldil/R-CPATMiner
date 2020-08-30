@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
+import com.ibm.icu.impl.Assert;
+import main.Configurations;
+import org.apache.http.conn.routing.RouteInfo;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -23,6 +26,8 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import utils.Config;
 import change.ChangeEntity.Type;
+
+import static org.jpp.modules.thread._thread.exit;
 
 public class RevisionAnalyzer {
 	private ChangeAnalyzer changeAnalyzer;
@@ -115,6 +120,7 @@ public class RevisionAnalyzer {
 			return true;
 		if (!map())
 			return false;
+
 		deriveChanges();
 		/*
 		 * try { printChanges(new PrintStream(new
@@ -125,12 +131,17 @@ public class RevisionAnalyzer {
 	}
 
 	public boolean analyzeGit() {
-		if (!buildGitModifiedFiles())
+		if (!buildGitModifiedFiles())   // update mappedfilesM and mappedfilesN with source codes.
 			return false;
 		if (Config.countChangeFileOnly)
 			return true;
 		if (!map())
 			return false;
+		System.out.println("+++++++++");
+		System.out.println(methodsM);  //removed methods
+		System.out.println(methodsN); //Added methods
+		System.out.println(mappedMethodsM); //All coexisting methods in removed code
+		System.out.println(mappedMethodsN); //All coexisting methods in added code
 		deriveChanges();
 		if (this.mappedMethodsM.size() > 100)
 			return false;
@@ -204,9 +215,15 @@ public class RevisionAnalyzer {
 		for (String changedPath : javaChangedPaths) {
 			String contentM = getSourceCode(copiedPaths.get(changedPath),
 					copiedRevisions.get(changedPath));
+			String contentN = getSourceCode(changedPath, revision);
+
+			if (contentM.isEmpty() || contentN.isEmpty()){
+				continue;
+			}
+			System.out.println(contentM);
 			if (contentM == null)
 				continue;
-			String contentN = getSourceCode(changedPath, revision);
+
 			if (contentN == null)
 				continue;
 			CFile fileM = new CFile(this, copiedPaths.get(changedPath),
@@ -244,7 +261,15 @@ public class RevisionAnalyzer {
 			df.setRepository(repository);
 			df.setDiffComparator(RawTextComparator.DEFAULT);
 			df.setDetectRenames(true);
-			df.setPathFilter(PathSuffixFilter.create(".java"));
+			if (Configurations.IS_PYTHON) {
+				df.setPathFilter(PathSuffixFilter.create(".py"));
+			}
+			else if (Configurations.IS_JAVA){
+				df.setPathFilter(PathSuffixFilter.create(".java"));
+			}
+			else {
+				Assert.assrt("Please specify the processing language in Configurations",false);
+			}
 			List<DiffEntry> diffs = null;
 			try {
 				diffs = df.scan(parent.getTree(), gitCommit.getTree());
@@ -272,6 +297,7 @@ public class RevisionAnalyzer {
 				df.close();
 				return true;
 			}
+
 			if (!diffs.isEmpty()) {
 				this.changeAnalyzer.incrementNumOfCodeRevisions();
 				for (DiffEntry diff : diffs) {
@@ -296,6 +322,9 @@ public class RevisionAnalyzer {
 							newContent = new String(ldr.getCachedBytes());
 						} catch (IOException e) {
 							System.err.println(e.getMessage());
+							continue;
+						}
+						if (oldContent.isEmpty() || newContent.isEmpty()){
 							continue;
 						}
 						CFile fileM = new CFile(this, diff.getOldPath(),
@@ -468,7 +497,7 @@ public class RevisionAnalyzer {
 
 	private void deriveMethodChanges() {
 		for (CMethod cmM : new HashSet<CMethod>(mappedMethodsM)) {
-			cmM.deriveChanges();
+			cmM.deriveChanges();			//iterate each methods that wasn't deleted or inserted.
 			if (cmM.getCType() == Type.Unchanged) {
 				mappedMethodsM.remove(cmM);
 				mappedMethodsN.remove(cmM.getMappedMethod());

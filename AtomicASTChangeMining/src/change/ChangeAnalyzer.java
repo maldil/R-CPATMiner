@@ -1,21 +1,15 @@
 package change;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import main.MainChangeAnalyzer;
+import graphics.DotGraph;
+import main.Configurations;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -190,7 +184,7 @@ public class ChangeAnalyzer {
 	public void analyzeGit() {
 		this.cproject = new CProject(projectId, projectName);
 		this.cproject.revisions = new ArrayList<CRevision>();
-		File dir = new File(MainChangeAnalyzer.outputPath + "/" + projectName);
+		File dir = new File(Configurations.outputPath + "/" + projectName);
 		Iterable<RevCommit> commits = null;
 		try {
 			ObjectId head = this.gitConn.getRepository().resolve(Constants.HEAD);
@@ -215,7 +209,9 @@ public class ChangeAnalyzer {
 //		    	return;
 //		    break;
 //		}
-		for (final RevCommit commit : commits) {
+		int num_commits =0;
+		for (final RevCommit commit : commits) {    //Iterate each commit
+			System.out.println(commit.toString());
 			if (numOfExtractedRevisions >= Config.MAX_EXTRACTED_COMMITS)
 				break;
 			File file = new File(dir.getAbsolutePath() + "/" + commit.getName() + ".dat");
@@ -223,38 +219,48 @@ public class ChangeAnalyzer {
 				numOfExtractedRevisions++;
 				continue;
 			}
-			analyzeGit(commit);
+			analyzeGit(commit);     //Start Analysing git commit
+			num_commits+=1;
 		}
 		this.cproject.numOfAllRevisions = this.numOfRevisions;
+		System.out.println(num_commits+" commits processed");
 	}
 
 	private void analyzeGit(RevCommit commit) {
+		int imageID = 0;
 		this.numOfRevisions++;
 		if (this.numOfRevisions % 1000 == 0)
 			System.out.println("Analyzing revision: " + this.numOfRevisions + " " + commit.getName() + " from " + projectName);
+		System.out.println(commit.getShortMessage());
+		System.out.println(commit.name());
 		RevisionAnalyzer ra = new RevisionAnalyzer(this, commit);
 		boolean analyzed = ra.analyzeGit();
 		if (analyzed) {
 			HashMap<String, HashMap<String, ChangeGraph>> changeGraphs = new HashMap<>();
+
 			for (CMethod e : ra.getMappedMethodsM()) {
-				// System.out.println(e.getCFile().getPath());
-				// System.out.println("Method: " + e.getQualName() + " - " + e.getMappedEntity().getQualName());
+				System.out.println(e);
+				System.out.println(e.getCFile().getPath());
+				//System.out.println("Method: " + e.getQualName() + " - " + e.getMappedEntity().getQualName());
 				ChangeGraph cg = e.getChangeGraph(this.gitConn.getRepository(), commit);
-//				ps.println(commit.getName() 
+//				ps.println(commit.getName()
 //						+ ":" + e.getCFile().getPath()
-//						+ ":" + e.getCClass().getName() + "." + e.getSimpleName() + "(" + e.getNumOfParameters()+ ")" + e.getParameterTypes() 
+//						+ ":" + e.getCClass().getName() + "." + e.getSimpleName() + "(" + e.getNumOfParameters()+ ")" + e.getParameterTypes()
 //						+ ":" + cg.summarize());
 				int[] csizes = cg.getChangeSizes();
+				System.out.println(csizes[0]);
 				if (csizes[0] > 0 && csizes[1] > 0 
 						&& (csizes[0] + csizes[1]) >= 3 
 						&& csizes[0] <= 100 && csizes[1] <= 100 
 						&& cg.hasMethods()) {
 					// DEBUG
-					/*DotGraph dg = new DotGraph(cg);
-					String dirPath = "D:/temp";
-					dg.toDotFile(new File(dirPath + "/" + "changegraph.dot"));
-					dg.toGraphics(dirPath + "/" + "changegraph", "png");*/
-					 
+
+					DotGraph dg = new DotGraph(cg);
+					System.out.println("updated dot graph");
+					String dirPath = "./OUTPUT/DEBUG/";
+					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
+//					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
+					imageID+=1;
 					HashMap<String, ChangeGraph> cgs = changeGraphs.get(e.getCFile().getPath());
 					if (cgs == null) {
 						cgs = new HashMap<>();
@@ -266,7 +272,7 @@ public class ChangeAnalyzer {
 				e.cleanForStats();
 			}
 			if (!changeGraphs.isEmpty()) {
-				File dir = new File(MainChangeAnalyzer.outputPath + "/"
+				File dir = new File(Configurations.outputPath + "/"
 						+ projectName);
 				if (!dir.exists())
 					dir.mkdirs();

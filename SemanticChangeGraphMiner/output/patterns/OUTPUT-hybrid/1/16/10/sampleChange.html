@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>fad8da878f0a8349050420d5fa280bb5cc4399d4,deeplearning4j/deeplearning4j-nn/src/main/java/org/deeplearning4j/nn/layers/convolution/upsampling/Upsampling3D.java,Upsampling3D,backpropGradient,#INDArray#LayerWorkspaceMgr#,67
+</h3><h3>Before Change</h3><pre><code class='java'>
+        int miniBatch = (int) input.size(0);
+        int inChannels = (int) input.size(1);
+        int inD = (int) input.size(2);
+        int inH = <a id="change">(int) </a>input.size(3);
+        int inW = (int) input.size(4);
+
+        int[] intArgs = new int[] {1}; // 1 is channels first
+
+        INDArray reshapedEpsilon = workspaceMgr.createUninitialized(
+                ArrayType.ACTIVATION_GRAD, epsilon.dataType(), new long[]{miniBatch, inChannels, inD, inH, inW}, 'c');
+
+
+        Gradient gradient = new DefaultGradient();
+
+        CustomOp op = DynamicCustomOp.builder("upsampling3d_bp")
+                .addIntegerArguments(intArgs)
+                .addInputs(input, epsilon)
+                .addOutputs(reshapedEpsilon)
+                .callInplace(false)
+                .build();
+        Nd4j.getExecutioner().exec(op);
+
+        <a id="change">reshapedEpsilon</a> = backpropDropOutIfPresent(reshapedEpsilon);
+        return new Pair&lt;&gt;(gradient, reshapedEpsilon);
+    }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    public Pair&lt;Gradient, INDArray&gt; backpropGradient(INDArray epsilon, LayerWorkspaceMgr workspaceMgr) {
+        assertInputSet(true);
+
+        boolean <a id="change">ncdhw</a> = layerConf().getDataFormat()<a id="change"> == org.deeplearning4j.nn.conf.layers.Convolution3D.DataFormat.NCDHW</a>;
+        // FIXME: int cast
+        // Assumes NCDHW order
+        int miniBatch = (int) input.size(0);
+        int inChannels, inD, inH, inW;
+        int[] intArgs;
+        <a id="change">if(ncdhw</a><a id="change">)</a>{
+            inChannels = (int) input.size(1);
+            inD = (int) input.size(2);
+            inH = <a id="change">(int) </a>input.size(3);
+            inW = (int) input.size(4);
+            intArgs = new int[] {1}; // 1 is channels first
+        } else {
+            inD = (int) input.size(1);
+            inH = <a id="change">(int) input</a>.<a id="change">size(2</a><a id="change">)</a>;
+            inW = (int) input.size(3);
+            inChannels = (int) input.size(4);
+            intArgs = new int[] {0}; // 0 is channels last
+        }
+
+
+
+        INDArray epsOut;
+        if(ncdhw){
+            epsOut = workspaceMgr.createUninitialized(
+                    ArrayType.ACTIVATION_GRAD, epsilon.dataType(), new long[]{miniBatch, inChannels, inD, inH, inW}, 'c');
+        } else {
+            epsOut = workspaceMgr.createUninitialized(
+                    ArrayType.ACTIVATION_GRAD, epsilon.dataType(), new long[]{miniBatch, inD, inH, inW, inChannels}, 'c');
+        }
+
+
+        Gradient gradient = new DefaultGradient();
+
+        CustomOp op = DynamicCustomOp.builder("upsampling3d_bp")
+                .addIntegerArguments(intArgs)
+                .addInputs(input, epsilon)
+                .addOutputs(epsOut)
+                .callInplace(false)
+                .build();
+        Nd4j.getExecutioner().exec(op);
+
+        <a id="change">epsOut</a> = backpropDropOutIfPresent(epsOut);
+        return new Pair&lt;&gt;(gradient, epsOut);
+    }
+</code></pre>

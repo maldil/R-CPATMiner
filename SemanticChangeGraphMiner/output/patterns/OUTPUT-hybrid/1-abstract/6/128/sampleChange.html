@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>171ce51f46137bfe7a678ee03eff4346c89ded56,rl4j/rl4j-core/src/main/java/org/deeplearning4j/rl4j/learning/async/a3c/discrete/A3CDiscrete.java,A3CDiscrete,A3CDiscrete,#MDP#IActorCritic#A3CConfiguration#,50
+</h3><h3>Before Change</h3><pre><code class='java'>
+        this.configuration = conf;
+        policy = new ACPolicy&lt;&gt;(iActorCritic, getRandom());
+        asyncGlobal = new AsyncGlobal&lt;&gt;(iActorCritic, conf);
+        mdp.getActionSpace().setSeed(conf.<a id="change">getSeed()</a>);
+    }
+
+    protected AsyncThread newThread(int i, int deviceNum) {</code></pre><h3>After Change</h3><pre><code class='java'>
+        this.configuration = conf;
+        asyncGlobal = new AsyncGlobal&lt;&gt;(iActorCritic, conf);
+
+        Integer <a id="change">seed</a> = conf.<a id="change">getSeed()</a>;
+        Random rnd = Nd4j.getRandom();
+        if(<a id="change">seed != </a><a id="change">null</a>) {
+            mdp.getActionSpace().setSeed(seed);
+            rnd.setSeed(seed);
+        }</code></pre>

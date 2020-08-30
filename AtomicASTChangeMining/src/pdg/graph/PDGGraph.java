@@ -93,10 +93,11 @@ public class PDGGraph implements Serializable {
 
 	public PDGGraph(MethodDeclaration md, PDGBuildingContext context) {
 		this(context);
-		context.addScope();
+		context.addScope(); //this.localVariables.push(new HashMap<String, String>());
 		context.setMethod(md, false);
 		int numOfParameters = 0;
-		if (Modifier.isStatic(md.getModifiers()))
+		System.out.println(md.getModifiers());
+		if (Modifier.isStatic(md.getModifiers())) //TODO add capability to find Python static methods
 			parameters = new PDGDataNode[md.parameters().size()];
 		else {
 			parameters = new PDGDataNode[md.parameters().size() + 1];
