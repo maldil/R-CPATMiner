@@ -1,0 +1,184 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>2ecabde500dc64cf87e362f5b8edb1fdb139b246,deeplearning4j/deeplearning4j-core/src/test/java/org/deeplearning4j/nn/layers/recurrent/GravesBidirectionalLSTMTest.java,GravesBidirectionalLSTMTest,testSimpleForwardsAndBackwardsActivation,#,256
+</h3><h3>Before Change</h3><pre><code class='java'>
+        final INDArray refEpsilon = backprop1.getSecond().dup();
+        final INDArray backEpsilon = backprop3.getSecond().dup();
+
+        <a id="change">reverseColumnsInPlace(</a>refEpsilon.slice(0)<a id="change">)</a>;
+        assertArrayEquals(backEpsilon.dup().data().asDouble(), refEpsilon.dup().data().asDouble(), 1e-6);
+
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+                        Nd4j.create(1, confForwards.getLayer().initializer().numParams(confForwards)));
+
+
+        final INDArray sig = (<a id="change">rnnDataFormat</a><a id="change"> == RNNFormat</a><a id="change">.NCW</a>)?Nd4j.rand(new int[] {miniBatchSize, nIn, timeSeriesLength}):
+                Nd4j.rand(new int[] {miniBatchSize, timeSeriesLength, nIn});
+        final INDArray sigb = sig.dup();
+
+        if (<a id="change">rnnDataFormat</a><a id="change"> == RNNFormat</a><a id="change">.NCW</a>) {
+            reverseColumnsInPlace(sigb.slice(0));
+        }
+        else{
+            reverseColumnsInPlace(sigb.slice(0).permute(1, 0));
+        }
+
+        final INDArray recurrentWeightsF = bidirectionalLSTM
+                        .getParam(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_FORWARDS);
+        final INDArray inputWeightsF =
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_FORWARDS);
+        final INDArray biasWeightsF =
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_FORWARDS);
+
+        final INDArray recurrentWeightsF2 = forwardsLSTM.getParam(GravesLSTMParamInitializer.RECURRENT_WEIGHT_KEY);
+        final INDArray inputWeightsF2 = forwardsLSTM.getParam(GravesLSTMParamInitializer.INPUT_WEIGHT_KEY);
+        final INDArray biasWeightsF2 = forwardsLSTM.getParam(GravesLSTMParamInitializer.BIAS_KEY);
+
+        //assert that the forwards part of the bidirectional layer is equal to that of the regular LSTM
+        assertArrayEquals(recurrentWeightsF2.shape(), recurrentWeightsF.shape());
+        assertArrayEquals(inputWeightsF2.shape(), inputWeightsF.shape());
+        assertArrayEquals(biasWeightsF2.shape(), biasWeightsF.shape());
+
+        forwardsLSTM.setParam(GravesLSTMParamInitializer.RECURRENT_WEIGHT_KEY, recurrentWeightsF);
+        forwardsLSTM.setParam(GravesLSTMParamInitializer.INPUT_WEIGHT_KEY, inputWeightsF);
+        forwardsLSTM.setParam(GravesLSTMParamInitializer.BIAS_KEY, biasWeightsF);
+
+        //copy forwards weights to make the forwards activations do the same thing
+
+        final INDArray recurrentWeightsB = bidirectionalLSTM
+                        .getParam(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_BACKWARDS);
+        final INDArray inputWeightsB =
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_BACKWARDS);
+        final INDArray biasWeightsB =
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_BACKWARDS);
+
+        //assert that the forwards and backwards are the same shapes
+        assertArrayEquals(recurrentWeightsF.shape(), recurrentWeightsB.shape());
+        assertArrayEquals(inputWeightsF.shape(), inputWeightsB.shape());
+        assertArrayEquals(biasWeightsF.shape(), biasWeightsB.shape());
+
+        //zero out backwards layer
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_BACKWARDS,
+                        Nd4j.zeros(recurrentWeightsB.shape()));
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_BACKWARDS,
+                        Nd4j.zeros(inputWeightsB.shape()));
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_BACKWARDS,
+                        Nd4j.zeros(biasWeightsB.shape()));
+
+
+        forwardsLSTM.setInput(sig, LayerWorkspaceMgr.noWorkspaces());
+
+        //compare activations
+        final INDArray activation1 = forwardsLSTM.activate(sig, false, LayerWorkspaceMgr.noWorkspaces()).slice(0);
+        final INDArray activation2 = bidirectionalLSTM.activate(sig, false, LayerWorkspaceMgr.noWorkspaces()).slice(0);
+
+        assertArrayEquals(activation1.data().asFloat(), activation2.data().asFloat(), 1e-5f);
+
+        final INDArray randSig = (<a id="change">rnnDataFormat</a><a id="change"> == RNNFormat</a><a id="change">.NCW</a>)?Nd4j.rand(new int[] {1, layerSize, timeSeriesLength}):
+                Nd4j.rand(new int[] {1, timeSeriesLength, layerSize});
+        INDArray randSigBackwards = randSig.dup();
+        <a id="change">if (</a><a id="change">rnnDataFormat</a><a id="change"> == RNNFormat</a><a id="change">.NCW)</a>{
+            reverseColumnsInPlace(randSigBackwards.slice(0));
+        }else{
+            reverseColumnsInPlace(<a id="change">randSigBackwards</a>.<a id="change">slice(0</a><a id="change">)</a>.permute(1, 0));
+        }
+
+        final Pair&lt;Gradient, INDArray&gt; backprop1 = forwardsLSTM.backpropGradient(randSig, LayerWorkspaceMgr.noWorkspaces());
+        final Pair&lt;Gradient, INDArray&gt; backprop2 = bidirectionalLSTM.backpropGradient(randSig, LayerWorkspaceMgr.noWorkspaces());
+
+        //compare gradients
+        assertArrayEquals(
+                        backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.RECURRENT_WEIGHT_KEY).dup()
+                                        .data().asFloat(),
+                        backprop2.getFirst()
+                                        .getGradientFor(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_FORWARDS)
+                                        .dup().data().asFloat(),
+                        1e-5f);
+
+        assertArrayEquals(
+                        backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.INPUT_WEIGHT_KEY).dup().data()
+                                        .asFloat(),
+                        backprop2.getFirst()
+                                        .getGradientFor(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_FORWARDS)
+                                        .dup().data().asFloat(),
+                        1e-5f);
+
+        assertArrayEquals(
+                        backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.BIAS_KEY).dup().data().asFloat(),
+                        backprop2.getFirst().getGradientFor(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_FORWARDS)
+                                        .dup().data().asFloat(),
+                        1e-5f);
+
+        //copy forwards to backwards
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_BACKWARDS,
+                        bidirectionalLSTM.getParam(
+                                        GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_FORWARDS));
+
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_BACKWARDS,
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_FORWARDS));
+
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_BACKWARDS,
+                        bidirectionalLSTM.getParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_FORWARDS));
+
+        //zero out forwards layer
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_FORWARDS,
+                        Nd4j.zeros(recurrentWeightsB.shape()));
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_FORWARDS,
+                        Nd4j.zeros(inputWeightsB.shape()));
+        bidirectionalLSTM.setParam(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_FORWARDS,
+                        Nd4j.zeros(biasWeightsB.shape()));
+
+        //run on reversed signal
+        final INDArray activation3 = bidirectionalLSTM.activate(sigb, false, LayerWorkspaceMgr.noWorkspaces()).slice(0);
+
+        final INDArray activation3Reverse = activation3.dup();
+        if (<a id="change">rnnDataFormat</a><a id="change"> == RNNFormat</a><a id="change">.NCW</a>){
+            reverseColumnsInPlace(activation3Reverse);
+        }
+        else{
+            reverseColumnsInPlace(activation3Reverse.permute(1, 0));
+        }
+
+        assertArrayEquals(activation3Reverse.shape(), activation1.shape());
+        assertEquals(activation3Reverse, activation1);
+
+
+        //test backprop now
+        final INDArray refBackGradientReccurrent =
+                        backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.RECURRENT_WEIGHT_KEY);
+
+        final INDArray refBackGradientInput =
+                        backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.INPUT_WEIGHT_KEY);
+
+        final INDArray refBackGradientBias = backprop1.getFirst().getGradientFor(GravesLSTMParamInitializer.BIAS_KEY);
+
+        //reverse weights only with backwards signal should yield same result as forwards weights with forwards signal
+        final Pair&lt;Gradient, INDArray&gt; backprop3 = bidirectionalLSTM.backpropGradient(randSigBackwards, LayerWorkspaceMgr.noWorkspaces());
+
+        final INDArray backGradientRecurrent = backprop3.getFirst()
+                        .getGradientFor(GravesBidirectionalLSTMParamInitializer.RECURRENT_WEIGHT_KEY_BACKWARDS);
+        final INDArray backGradientInput = backprop3.getFirst()
+                        .getGradientFor(GravesBidirectionalLSTMParamInitializer.INPUT_WEIGHT_KEY_BACKWARDS);
+        final INDArray backGradientBias =
+                        backprop3.getFirst().getGradientFor(GravesBidirectionalLSTMParamInitializer.BIAS_KEY_BACKWARDS);
+
+        assertArrayEquals(refBackGradientBias.dup().data().asDouble(), backGradientBias.dup().data().asDouble(), 1e-6);
+
+        assertArrayEquals(refBackGradientInput.dup().data().asDouble(), backGradientInput.dup().data().asDouble(),
+                        1e-6);
+
+        assertArrayEquals(refBackGradientReccurrent.dup().data().asDouble(),
+                        backGradientRecurrent.dup().data().asDouble(), 1e-6);
+
+        final INDArray refEpsilon = backprop1.getSecond().dup();
+        final INDArray backEpsilon = backprop3.getSecond().dup();
+
+        <a id="change">if (rnnDataFormat</a><a id="change"> == RNNFormat.NCW) </a>{
+            <a id="change">reverseColumnsInPlace(</a>refEpsilon.slice(0)<a id="change">)</a>;
+        }
+        else{
+            <a id="change">reverseColumnsInPlace(</a>refEpsilon.slice(0).<a id="change">permute(1</a>, <a id="change">0</a><a id="change">)</a><a id="change">)</a>;
+        }
+        assertArrayEquals(backEpsilon.dup().data().asDouble(), refEpsilon.dup().data().asDouble(), 1e-6);
+</code></pre>

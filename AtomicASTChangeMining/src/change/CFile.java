@@ -2,12 +2,13 @@ package change;
 
 import java.io.PrintStream;
 import java.util.HashSet;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import main.Configurations;
+import org.eclipse.jdt.core.dom.*;
+import org.eclipse.swt.internal.C;
+import python3.PyCompilationUnit;
+import python3.PythonASTUtil;
+import python3.TypeInference.TypeInformation;
 import utils.FileIO;
 import utils.JavaASTUtil;
 
@@ -23,13 +24,32 @@ public class CFile extends ChangeEntity {
 
 	public CFile(RevisionAnalyzer revisionAnalyzer, String filePath,
 			String content) {
+
 		this.startLine = 0;
 		this.cRevisionAnalyzer = revisionAnalyzer;
 		this.path = filePath;
 		this.simpleName = FileIO.getSimpleFileName(path);
 		try {
-			compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);
-		} catch (Exception e) {} // FIXME somehow throw org/eclipse/text/edits/MalformedTreeException
+			System.out.println(content);
+//			compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);  //TODO change this to python
+			if (Configurations.IS_PYTHON)
+			{
+				compileUnit = PythonASTUtil.parseSource(content);
+//				TypeInformation typeInformation = new TypeInformation();
+//				typeInformation.getTypeInformation(filePath);
+			}
+			else if (Configurations.IS_JAVA)
+			{
+				compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);
+			}
+//			else
+//			{
+//				Error
+//			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} // FIXME somehow throw org/eclipse/text/edits/MalformedTreeException
 		if (compileUnit == null || compileUnit.types() == null || compileUnit.types().isEmpty()) {
 			// System.out.println("\t\tDiscarded " + filePath);
 		} else {

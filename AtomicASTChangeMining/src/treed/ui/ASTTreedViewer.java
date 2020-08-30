@@ -468,7 +468,7 @@ public class ASTTreedViewer extends Composite implements TreedConstants {
 			this.txtSrcCodes[i].setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
 					| GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
 					| GridData.VERTICAL_ALIGN_FILL));
-			StyledText text = this.txtSrcCodes[i];
+			final StyledText text = this.txtSrcCodes[i];
 			text.addLineStyleListener(new LineStyleListener() {
 			    @Override
 				public void lineGetStyle(LineStyleEvent e) {
@@ -512,8 +512,8 @@ public class ASTTreedViewer extends Composite implements TreedConstants {
 		sashUpFormHorizontal.setWeights(new int[]{25, 25, 50});
 		
 		for(int i = 0; i < 2; i++) {
-			StyledText text = this.txtSrcCodes[i], otherText = this.txtSrcCodes[1-i];
-			Tree tree = this.astTrees[i], otherTree = this.astTrees[1-i];
+			final StyledText text = this.txtSrcCodes[i], otherText = this.txtSrcCodes[1-i];
+			final Tree tree = this.astTrees[i], otherTree = this.astTrees[1-i];
 			final int index = i;
 			tree.addSelectionListener(new SelectionListener() {
 				@Override
@@ -641,9 +641,9 @@ public class ASTTreedViewer extends Composite implements TreedConstants {
 		showAST(1);
 	}
 	
-	protected void showAST(int i) {
-		Tree tree = astTrees[i];
-		ASTNode ast = asts[i];
+	protected void showAST(final int i) {
+		final Tree tree = astTrees[i];
+		final ASTNode ast = asts[i];
 		tree.removeAll();
 		this.ast2Trees[i].clear();
 		this.tree2ASTs[i].clear();

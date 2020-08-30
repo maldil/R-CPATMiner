@@ -38,10 +38,11 @@ public class MineChangePatterns {
 
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
-		changesPath = "contains a set of GitHub repos each of which is in the structure of username/reponame/*.dat."
-				+ "E.g. inPath = repos-junit should contains junit-team/junit/*.dat"
-				+ "or inPath = repos could contains junit-team/junit/*.dat and JetBrains/intellij-community/*.dat";
-		
+//		changesPath = "contains a set of GitHub repos each of which is in the structure of username/reponame/*.dat."
+//				+ "E.g. inPath = repos-junit should contains junit-team/junit/*.dat"
+//				+ "or inPath = repos could contains junit-team/junit/*.dat and JetBrains/intellij-community/*.dat";
+		changesPath = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/OUTPUT";
+		reposPath = "/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner";
 		if (args.length > 0) {
 			Pattern.mode = Integer.parseInt(args[0]);
 			if (Pattern.mode == 0) {
@@ -53,9 +54,9 @@ public class MineChangePatterns {
 		HashSet<String> projectNames = new HashSet<String>();
 		String content = null;
 		if(SystemUtils.IS_OS_MAC){
-			content = FileIO.readStringFromFile(reposPath + "/list.csv");
+			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_LINUX) {
-			content = FileIO.readStringFromFile("/home/hoan/github/selected-repos.csv");
+			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
 			content = FileIO.readStringFromFile(new File(reposPath).getParentFile().getAbsolutePath() + "/" + new File(reposPath).getName() + ".csv");
 		}
@@ -68,6 +69,7 @@ public class MineChangePatterns {
 			if (index == -1)
 				index = line.length();
 			final String name = line.substring(0, index);
+			System.out.println(name);
 			if (Pattern.mode == 0) {
 				if (new File("output/patterns/" + name.replace("/", "---")).exists())
 					continue;
@@ -115,7 +117,7 @@ public class MineChangePatterns {
 		}
 	}
 	
-	private static ArrayList<GROUMGraph> mine(ArrayList<GROUMGraph> graphs, int level, String currDir) {
+	private static ArrayList<GROUMGraph> mine (ArrayList<GROUMGraph> graphs, int level, String currDir) {
 		Miner miner = new Miner(level);
 		miner.setCurrDir(currDir);
 		if (level == 1) {
@@ -128,6 +130,7 @@ public class MineChangePatterns {
 	private static ArrayList<GROUMGraph> readGraphs(String changesPath, String projectName) {
 		ArrayList<GROUMGraph> graphs = new ArrayList<>();
 		File dir = new File(changesPath + "/" + projectName);
+		System.out.println(changesPath + "/" + projectName);
 		if (!dir.exists())
 			return graphs;
 		File[] files = dir.listFiles();

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>7abc574eeb92627a20213e47e63dbce05bf05fda,nd4j/nd4j-backends/nd4j-backend-impls/nd4j-cuda/src/main/java/org/nd4j/jita/allocator/pointers/cuda/cudaEvent_t.java,cudaEvent_t,synchronize,#,66
+</h3><h3>Before Change</h3><pre><code class='java'>
+            if (res == 0)
+                throw new ND4JException("CUDA exception happened. Terminating. Last op: [" + Nd4j.getExecutioner().getLastOp() +"]");
+
+            if (NativeOpsHolder.getInstance().getDeviceNativeOps().<a id="change">lastErrorCode()</a><a id="change"> != 0</a>)
+                throw new RuntimeException(NativeOpsHolder.getInstance().getDeviceNativeOps().<a id="change">lastErrorMessage()</a>);
+        }
+    }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if (res == 0)
+                throw new ND4JException("CUDA exception happened. Terminating. Last op: [" + Nd4j.getExecutioner().getLastOp() +"]");
+
+            val <a id="change">code</a> = NativeOpsHolder.getInstance().getDeviceNativeOps().<a id="change">lastErrorCode()</a>;
+            if (<a id="change">code</a><a id="change"> != 0</a>)
+                throw new RuntimeException(NativeOpsHolder.getInstance().getDeviceNativeOps().<a id="change">lastErrorMessage()</a> + "; Error code: " + code);
+        }
+    }
+</code></pre>

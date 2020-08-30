@@ -82,6 +82,7 @@ public class JavaASTUtil {
 		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
 		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
+		System.out.println(parser);
     	parser.setSource(source.toCharArray());
     	parser.setCompilerOptions(options);
     	ASTNode ast = parser.createAST(null);
@@ -642,8 +643,8 @@ public class JavaASTUtil {
 		return d.getType().resolveBinding().getErasure().getQualifiedName();
 	}
 
-	public static ASTNode getNode(ASTNode ast, int start, int end) {
-		ASTNode[] results = new ASTNode[1];
+	public static ASTNode getNode(ASTNode ast, final int start, final int end) {
+		final ASTNode[] results = new ASTNode[1];
 		ASTVisitor v = new ASTVisitor(true) {
 			@Override
 			public boolean preVisit2(ASTNode node) {

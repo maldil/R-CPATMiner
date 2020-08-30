@@ -1,0 +1,191 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>6f514e94310e55fe0dc44b5eac9c9b1404efb09c,arbiter/arbiter-ui/src/main/java/org/deeplearning4j/arbiter/ui/module/ArbiterModule.java,ArbiterModule,getCandidateInfo,#String#,304
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+        ComponentDiv cd = new ComponentDiv(STYLE_DIV_WIDTH_100_PC, components);
+
+        <a id="change">return </a><a id="change">ok(</a><a id="change">asJson(</a>cd<a id="change">))</a>.<a id="change">as(JSON</a><a id="change">)</a>;
+    }
+
+    /**</code></pre><h3>After Change</h3><pre><code class='java'>
+        StatsStorage ss = knownSessionIDs.get(currentSessionID);
+        if(ss == null){
+            log.debug("getModelLastUpdateTimes(): Session ID is unknown: {}", currentSessionID);
+            <a id="change">rc</a>.<a id="change">response()</a>.<a id="change">end()</a>;
+            return;
+        }
+
+        GlobalConfigPersistable gcp = (GlobalConfigPersistable)ss.getStaticInfo(currentSessionID, ARBITER_UI_TYPE_ID, GlobalConfigPersistable.GLOBAL_WORKER_ID);;
+        OptimizationConfiguration oc = gcp.getOptimizationConfiguration();
+
+        Persistable p = ss.getLatestUpdate(currentSessionID, ARBITER_UI_TYPE_ID, candidateId);
+        if(p == null){
+            String title = "No results found for model " + candidateId + ".";
+            ComponentText ct = new ComponentText.Builder(title,STYLE_TEXT_SZ12).build();
+            <a id="change">rc</a>.<a id="change">response()</a>
+                    .putHeader("content-type", "application/json")
+                    .<a id="change">end(</a>asJson(ct)<a id="change">)</a>;
+            return;
+        }
+
+        ModelInfoPersistable mip = (ModelInfoPersistable)p;
+
+        //First: static info
+        // Hyperparameter configuration/settings
+        // Number of parameters
+        // Maybe memory info in the future?
+
+        //Second: dynamic info
+        //Runtime
+        // Performance stats (total minibatches, total time,
+        // Score vs. time
+
+        List&lt;Component&gt; components = new ArrayList&lt;&gt;();
+
+        //First table: mix of static + dynamic in a table
+        long runtimeDurationMs = mip.getLastUpdateTime() - mip.getTimeStamp();
+        double avgMinibatchesPerSec = mip.getTotalNumUpdates() / (runtimeDurationMs/1000.0);
+        String avgMinibatchesPerSecStr = DECIMAL_FORMAT_2DP.format(avgMinibatchesPerSec);
+        String runtimeStr = UIUtils.formatDuration(runtimeDurationMs);
+
+        if(mip.getStatus() == CandidateStatus.Failed){
+            runtimeStr = "";
+            avgMinibatchesPerSecStr = "";
+        }
+
+        String[][] table = new String[][]{
+                {"Model Index", String.valueOf(mip.getModelIdx())},
+                {"Status", mip.getStatus().toString()},
+                {"Model Score", mip.getScore() == null ? "" : String.valueOf(mip.getScore())},
+                {"Created", TIME_FORMATTER.print(mip.getTimeStamp())},
+                {"Runtime", runtimeStr},
+                {"Total Number of Model Updates", String.valueOf(mip.getTotalNumUpdates())},
+                {"Average # Updates / Sec", avgMinibatchesPerSecStr},
+                {"Number of Parameters", String.valueOf(mip.getNumParameters())},
+                {"Number of Layers", String.valueOf(mip.getNumLayers())}
+        };
+
+        ComponentTable cTable = new ComponentTable.Builder(STYLE_TABLE)
+                .content(table)
+                .header("Model Information", "")
+                .build();
+        components.add(cTable);
+
+
+        //Second: parameter space values, in multiple tables
+        double[] paramSpaceValues = mip.getParamSpaceValues();
+        if(paramSpaceValues != null){
+            BaseNetworkSpace bns = (BaseNetworkSpace)oc.getCandidateGenerator().getParameterSpace();
+            Map&lt;String,ParameterSpace&gt; m = bns.getNestedSpaces();
+
+            String[][] hSpaceTable = new String[m.size()][3];
+            int i=0;
+            for(Map.Entry&lt;String,ParameterSpace&gt; e : m.entrySet()){
+                hSpaceTable[i][0] = e.getKey();
+                Object currCandidateValue = e.getValue().getValue(paramSpaceValues);
+                hSpaceTable[i][1] = ObjectUtils.valueToString(currCandidateValue);
+                hSpaceTable[i][2] = e.getValue().toString();
+                i++;
+            }
+
+            String[] hSpaceTableHeader = new String[]{"Hyperparameter", "Model Value", "Hyperparameter Space"};
+
+            ComponentTable ct2 = new ComponentTable.Builder(STYLE_TABLE3_25_25_50)
+                    .content(hSpaceTable)
+                    .header(hSpaceTableHeader)
+                    .build();
+
+
+            String title = "Global Network Configuration";
+            components.add(DIV_SPACER_20PX);
+            components.add(new ComponentText.Builder(title, STYLE_TEXT_SZ12).build());
+            components.add(ct2);
+
+            List&lt;BaseNetworkSpace.LayerConf&gt; layerConfs = bns.getLayerSpaces();
+
+            for(BaseNetworkSpace.LayerConf l : layerConfs){
+                LayerSpace&lt;?&gt; ls = l.getLayerSpace();
+                Map&lt;String,ParameterSpace&gt; lpsm = ls.getNestedSpaces();
+
+                String[][] t = new String[lpsm.size()][3];
+                i=0;
+                for(Map.Entry&lt;String,ParameterSpace&gt; e : lpsm.entrySet()){
+                    t[i][0] = e.getKey();
+                    Object currCandidateValue = e.getValue().getValue(paramSpaceValues);
+                    t[i][1] = ObjectUtils.valueToString(currCandidateValue);
+                    t[i][2] = e.getValue().toString();
+                    i++;
+                }
+
+                ComponentTable ct3 = new ComponentTable.Builder(STYLE_TABLE3_25_25_50)
+                        .content(t)
+                        .header(hSpaceTableHeader)
+                        .build();
+
+                title = "Layer Space: " + ls.getClass().getSimpleName() + ", Name: " + l.getLayerName();
+
+                components.add(DIV_SPACER_20PX);
+                components.add(new ComponentText.Builder(title, STYLE_TEXT_SZ12).build());
+                components.add(ct3);
+            }
+        }
+
+
+        //Third: Score vs. time chart
+        int[] iters = mip.getIter();
+        float[] scores = mip.getScoreVsIter();
+
+        if(iters != null) {
+            double[] si = new double[iters.length];
+            double[] scoresD = new double[iters.length];
+
+            double minScore = Double.MAX_VALUE;
+            double maxScore = -Double.MAX_VALUE;
+            for( int i=0; i&lt;iters.length; i++ ){
+                si[i] = iters[i];
+                scoresD[i] = scores[i];
+                minScore = Math.min(minScore, scoresD[i]);
+                maxScore = Math.max(maxScore, scoresD[i]);
+            }
+
+            double[] chartMinMax = UIUtils.graphNiceRange(maxScore, minScore, 5);
+
+            ChartLine cl = new ChartLine.Builder("Model Score vs. Iteration", STYLE_CHART_800_400)
+                    .addSeries("Score", si, scoresD )
+                    .setYMin(chartMinMax[0])
+                    .setYMax(chartMinMax[1])
+                    .build();
+
+            components.add(DIV_SPACER_60PX);
+            components.add(cl);
+        }
+
+
+        //Post full network configuration JSON, if available:
+        String modelJson = mip.getModelConfigJson();
+        if(modelJson != null){
+            components.add(DIV_SPACER_60PX);
+            components.add(new ComponentDiv(STYLE_DIV_WIDTH_100_PC, new ComponentText("Model Configuration", STYLE_TEXT_SZ12)));
+            ComponentText jsonText = new ComponentText(modelJson, STYLE_TEXT_SZ10_WHITESPACE_PRE);
+            ComponentDiv cd = new ComponentDiv(STYLE_DIV_WIDTH_100_PC, jsonText);
+            components.add(cd);
+        }
+
+
+        //Post exception stack trace, if necessary:
+        if( mip.getExceptionStackTrace() != null ){
+            components.add(DIV_SPACER_60PX);
+            components.add(new ComponentDiv(STYLE_DIV_WIDTH_100_PC, new ComponentText("Model Exception - Stack Trace", STYLE_TEXT_SZ12)));
+            ComponentText exText = new ComponentText(mip.getExceptionStackTrace(), STYLE_TEXT_SZ10_WHITESPACE_PRE);
+            ComponentDiv cd = new ComponentDiv(STYLE_DIV_WIDTH_100_PC, exText);
+            components.add(cd);
+        }
+
+        ComponentDiv cd = new ComponentDiv(STYLE_DIV_WIDTH_100_PC, components);
+
+        <a id="change">rc</a>.<a id="change">response()</a>.<a id="change">putHeader("content-type"</a>, <a id="change">"application/json"</a><a id="change">)</a>.<a id="change">end(</a><a id="change">asJson(</a>cd<a id="change">))</a>;
+    }
+
+    /**</code></pre>

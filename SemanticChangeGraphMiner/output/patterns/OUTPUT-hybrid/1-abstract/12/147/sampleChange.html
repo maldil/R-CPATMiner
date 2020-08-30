@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>ad26f26a5c32a75fbe0df1e5bb595c44a3ef1db9,community/community-it/import-it/src/test/java/org/neo4j/importer/ImportCommandTest.java,ImportCommandTest,shouldFailIfHeaderHasLessColumnsThanData,#,612
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+        // WHEN data file contains more columns than header file
+        int extraColumns = 3;
+        <a id="change">try
+        </a>{
+            <a id="change">runImport(
+                    </a>"--delimiter", "TAB",
+                    <a id="change">"--array-delimiter"</a>, String.valueOf( config.arrayDelimiter() ),
+                    "--nodes", nodeHeader( config ).<a id="change">getAbsolutePath() + </a><a id="change">","</a> +
+                            nodeData( false, config, nodeIds, TRUE, Charset.defaultCharset(), extraColumns )
+                                    .<a id="change">getAbsolutePath()</a>,
+                    "--relationships", relationshipHeader( config ).getAbsolutePath() + "," +
+                            relationshipData( false, config, nodeIds, TRUE, true ).<a id="change">getAbsolutePath()</a><a id="change"> )</a>;
+
+            <a id="change">fail( </a>"Should have thrown exception"<a id="change"> )</a>;
+        }
+        <a id="change">catch ( </a>InputException e<a id="change"> )
+        </a>{
+            // THEN
+            <a id="change">assertTrue( </a>suppressOutput.getOutputVoice().containsMessage( "IMPORT FAILED" )<a id="change"> )</a>;
+            assertFalse( suppressOutput.getErrorVoice().containsMessage( e.getClass().getName() ) );
+            assertTrue( e.getMessage().contains( "Extra column not present in header on line" ) );
+        }</code></pre><h3>After Change</h3><pre><code class='java'>
+                                .getAbsolutePath(),
+                "--relationships", relationshipHeader( config ).getAbsolutePath() + "," +
+                        relationshipData( false, config, nodeIds, TRUE, true ).getAbsolutePath() ) );
+        <a id="change">assertTrue( </a>suppressOutput.getOutputVoice().containsMessage( "IMPORT FAILED" )<a id="change"> )</a>;
+        assertFalse( suppressOutput.getErrorVoice().containsMessage( e.getClass().getName() ) );
+        assertTrue( e.getMessage().contains( "Extra column not present in header on line" ) );
+    }</code></pre>

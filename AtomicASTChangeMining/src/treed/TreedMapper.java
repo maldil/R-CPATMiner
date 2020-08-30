@@ -352,7 +352,7 @@ public class TreedMapper implements TreedConstants {
 
 	private void mapPivots() {
 		for (ASTNode node : tree.keySet())
-			treeMap.put(node, new HashMap<>());
+			treeMap.put(node,(HashMap<ASTNode,Double>)(HashMap<?,?>) new HashMap<>());
 		setMap(astM, astN, 1.0);
 		ArrayList<ASTNode> lM = getChildrenContainers(astM), lN = getChildrenContainers(astN);
 		ArrayList<ASTNode> heightsM = new ArrayList<>(lM), heightsN = new ArrayList<>(lN);

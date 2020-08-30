@@ -29,7 +29,7 @@ public class DotGraph {
 	public static final String STYLE_ROUNDED = "rounded";
 	public static final String STYLE_DOTTED = "dotted";
 	public static String EXEC_DOT = "D:/Program Files (x86)/Graphviz2.36/bin/dot.exe"; // Windows
-
+	private static int idCounter = 0;
 	private StringBuilder graph = new StringBuilder();
 
 	public DotGraph(StringBuilder sb) {

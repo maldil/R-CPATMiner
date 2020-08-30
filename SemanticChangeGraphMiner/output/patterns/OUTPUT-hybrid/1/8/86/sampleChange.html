@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>2ecabde500dc64cf87e362f5b8edb1fdb139b246,deeplearning4j/deeplearning4j-nn/src/main/java/org/deeplearning4j/nn/conf/preprocessor/RnnToFeedForwardPreProcessor.java,RnnToFeedForwardPreProcessor,backprop,#INDArray#number#LayerWorkspaceMgr#,76
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+        val shape = output.shape();
+        INDArray reshaped = output.reshape('f', miniBatchSize, shape[0] / miniBatchSize, shape[1]);
+        return workspaceMgr.leverageTo(ArrayType.ACTIVATION_GRAD, reshaped.<a id="change">permute(</a>0, 2, 1<a id="change">)</a>);
+    }
+
+    @Override</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        val shape = output.shape();
+        INDArray reshaped = output.reshape('f', miniBatchSize, shape[0] / miniBatchSize, shape[1]);
+        <a id="change">if (rnnDataFormat</a><a id="change"> == RNNFormat.NCW)</a>{
+            reshaped = reshaped.<a id="change">permute(</a>0, 2, 1<a id="change">)</a>;
+        }
+        return workspaceMgr.leverageTo(ArrayType.ACTIVATION_GRAD, reshaped);
+    }</code></pre>

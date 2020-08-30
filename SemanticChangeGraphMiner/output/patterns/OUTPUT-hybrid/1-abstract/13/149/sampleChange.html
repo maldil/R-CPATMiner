@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>6de00bf75fbe7d183779a82789839029889b3824,nd4j/nd4j-backends/nd4j-api-parent/nd4j-api/src/main/java/org/nd4j/autodiff/samediff/internal/InferenceSession.java,InferenceSession,getAndParameterizeOp,#String#FrameIter#Set#Set#Set#Map#Set#,753
+</h3><h3>Before Change</h3><pre><code class='java'>
+            //Check output shape; allocate a new Z if required
+            //For example, if minibatch size has changed since last op execution
+            if (emptyReduce) {
+                INDArray <a id="change">z</a> = <a id="change">op</a>.<a id="change">z()</a>;
+                <a id="change">if (z == </a><a id="change">null || </a><a id="change">!</a>op.x().equalShapes(z)<a id="change"> || </a><a id="change">isLoop</a><a id="change">) </a>{
+                    //Note: edge case: [x,y].sum(empty) = [x,y] for TF import compatibility.
+                    z = mmgr.<a id="change">allocate(</a>false, op.x().dataType(), op.x().shape()<a id="change">)</a>;
+                    op.setZ(z);
+                }
+            } else {</code></pre><h3>After Change</h3><pre><code class='java'>
+            boolean isOutput = allReqVariables.contains(((BaseOp) op).outputVariablesNames()[0]);
+            if (emptyReduce) {
+                //Always allocate new output array, rely on memory manager for efficient memory management and array reuse etc
+                INDArray z = mmgr.<a id="change">allocate(</a>false, op.x().dataType(), op.x().shape()<a id="change">)</a>;
+                op.setZ(z);
+            } else {
+                List&lt;LongShapeDescriptor&gt; outputShape = ((BaseOp) op).calculateOutputShape();</code></pre>

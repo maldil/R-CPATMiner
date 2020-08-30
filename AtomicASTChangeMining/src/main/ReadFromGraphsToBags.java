@@ -40,7 +40,7 @@ public class ReadFromGraphsToBags {
 				if (!names.contains(user.getName() + "/" + repo.getName()))
 					continue;
 				File[] files = repo.listFiles();
-				HashMap<String, Integer> commitTime = (HashMap<String, Integer>) FileIO.readObjectFromFile("T:/github/repos-metadata/" + user.getName() + "---" + repo.getName() + ".time");
+				final HashMap<String, Integer> commitTime = (HashMap<String, Integer>) FileIO.readObjectFromFile("T:/github/repos-metadata/" + user.getName() + "---" + repo.getName() + ".time");
 				Arrays.sort(files, new Comparator<File>() {
 					@Override
 					public int compare(File f1, File f2) {
