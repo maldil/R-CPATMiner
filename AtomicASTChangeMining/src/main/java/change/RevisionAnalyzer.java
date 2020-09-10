@@ -11,6 +11,7 @@ import java.util.Stack;
 import com.ibm.icu.impl.Assert;
 import core.Configurations;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -220,12 +221,13 @@ public class RevisionAnalyzer {
 			if (contentM.isEmpty() || contentN.isEmpty()){
 				continue;
 			}
-			System.out.println(contentM);
+
 			if (contentM == null)
 				continue;
 
 			if (contentN == null)
 				continue;
+
 			CFile fileM = new CFile(this, copiedPaths.get(changedPath),
 					contentM,this.url);
 			CFile fileN = new CFile(this, changedPath, contentN,this.url);
@@ -327,9 +329,23 @@ public class RevisionAnalyzer {
 						if (oldContent.isEmpty() || newContent.isEmpty()){
 							continue;
 						}
+						logger.debug("checked out : "+this.gitCommit.getName());
+						try {
+							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
+							this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
+						} catch (GitAPIException e) {
+							logger.error(e);
+						}
 						CFile fileN = new CFile(this, diff.getNewPath(),
 								newContent,this.url);
+						logger.debug("checked out : "+parent.getName());
 
+						try {
+							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
+							this.changeAnalyzer.getGitConn().getGit().checkout().setName(parent.getName()).call();
+						} catch (GitAPIException e) {
+							logger.error(e);
+						}
 						CFile fileM = new CFile(this, diff.getOldPath(),
 								oldContent,this.url);
 

@@ -243,8 +243,6 @@ public class ChangeAnalyzer {
 			HashMap<String, HashMap<String, ChangeGraph>> changeGraphs = new HashMap<>();
 
 			for (CMethod e : ra.getMappedMethodsM()) {
-				System.out.println(e);
-				System.out.println(e.getCFile().getPath());
 				//System.out.println("Method: " + e.getQualName() + " - " + e.getMappedEntity().getQualName());
 				ChangeGraph cg = e.getChangeGraph(this.gitConn.getRepository(), commit);
 //				ps.println(commit.getName()
@@ -260,7 +258,6 @@ public class ChangeAnalyzer {
 					// DEBUG
 
 					DotGraph dg = new DotGraph(cg);
-					System.out.println("updated dot graph");
 					String dirPath = "./OUTPUT/DEBUG/";
 					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
 //					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");

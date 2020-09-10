@@ -18,6 +18,7 @@ public class TypeInformationTest {
     public void testGetTypeInformation() {
         ClassLoader classLoader = getClass().getClassLoader();
         File absoluteFile = new File(Objects.requireNonNull(classLoader.getResource("TestPyType")).getFile()+"/main.py").getAbsoluteFile();
+        log.debug("File : "+absoluteFile);
         TypeInformation typeInformation = new TypeInformation();
         String project_path = Objects.requireNonNull(classLoader.getResource("TestPyType")).getFile();
         String file_name = "main.py";

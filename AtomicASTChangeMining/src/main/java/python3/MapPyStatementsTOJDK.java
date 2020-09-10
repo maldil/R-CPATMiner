@@ -1,5 +1,6 @@
 package python3;
 
+import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
@@ -14,8 +15,11 @@ import org.jpp.heart.PyObject;
 import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.pyvisitors.PyVisitor;
+import python3.typeinference.antlr.TypeInfo;
+import python3.typeinference.antlr.TypeTree;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeDecNeeds;
+import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -90,6 +94,19 @@ public class MapPyStatementsTOJDK {
                 logger.error(e);
             }
             MethodDeclaration methoddec = asn.newMethodDeclaration();
+            if (variableNeedsDeclaration != null) {
+                for (TypeDecNeeds typeDecNeeds : variableNeedsDeclaration) {
+                    String typeString = this.typeNodes.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
+                    VariableDeclarationStatement variableDeclarationStatement = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString);
+                    if (methoddec.getBody() ==null){
+                        methoddec.setBody(asn.newBlock());
+                    }
+                    methoddec.getBody().statements().add(variableDeclarationStatement);
+
+                }
+            }
+
+
             ArrayList<MethodDeclaration> list_method = new ArrayList<>();
             methoddec.setName(asn.newSimpleName(((FunctionDef) node).getName().toString())); //TODO set the field isConstructor
             for (Object arg : (AstList) ((arguments) ((FunctionDef) node).getArgs()).getArgs()) {

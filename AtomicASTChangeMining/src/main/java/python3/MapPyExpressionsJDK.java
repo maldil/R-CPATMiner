@@ -1,6 +1,5 @@
 package python3;
 
-
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
