@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import core.Configurations;
+import org.apache.log4j.Logger;
 import python3.PythonASTUtil;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeInformation;
@@ -23,6 +24,7 @@ public class CFile extends ChangeEntity {
 	private CompilationUnit compileUnit;
 	private HashSet<CClass> classes = new HashSet<CClass>();
 	private  String url;
+	static Logger logger = Logger.getLogger(CFile.class);
 
 	public CFile(RevisionAnalyzer revisionAnalyzer, String filePath,
 			String content,String projectPath) {
@@ -32,7 +34,7 @@ public class CFile extends ChangeEntity {
 		this.simpleName = FileIO.getSimpleFileName(path);
 		this.url=projectPath;
 		try {
-			System.out.println(content);
+			logger.debug(content);
 //			compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);  //TODO change this to python
 			if (Configurations.IS_PYTHON)
 			{

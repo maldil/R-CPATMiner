@@ -1,8 +1,8 @@
 # (generated with --quick)
 
-from typing import List
+from typing import Any
 
 np: module
 
 class Test:
-    def add_arrays(self, M) -> List[int]: ...
+    def add_arrays(self, M) -> Any: ...

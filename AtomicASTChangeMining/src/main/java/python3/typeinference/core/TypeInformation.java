@@ -58,7 +58,9 @@ public class TypeInformation {
                 if (type_string.get(node) !=null){
                     logger.error(node + "Node exists");
                 }
-                type_string.put(node, node.getType());
+                String type = node.getType();
+                node.setType(null);
+                type_string.put(node, type);
             }
 
         } catch (IOException e) {

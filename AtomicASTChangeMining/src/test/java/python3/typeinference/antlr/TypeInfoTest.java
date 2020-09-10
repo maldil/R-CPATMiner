@@ -5,6 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TypeInfoTest {
+
     @Test
     public void testGetTypeTree1() throws RecognitionException {
         String typeString = "List[int]";
@@ -29,5 +30,19 @@ public class TypeInfoTest {
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree = typeInfo.getTypeTree(typeString);
         Assert.assertTrue(typeTree.isError());
+    }
+
+    @Test
+    public void testGetTypeTree4() throws RecognitionException {
+        String typeString = "List[List[int]]]";
+        TypeInfo typeInfo = new TypeInfo();
+        TypeTree typeTree = typeInfo.getTypeTree(typeString);
+    }
+
+    @Test
+    public void testGetTypeTree5() throws RecognitionException {
+        String typeString = "List[List[int]][int]";
+        TypeInfo typeInfo = new TypeInfo();
+        TypeTree typeTree = typeInfo.getTypeTree(typeString);
     }
 }
