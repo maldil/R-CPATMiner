@@ -1,6 +1,10 @@
 package python3;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.jpp.astnodes.ast.ImportFrom;
+import org.jpp.astnodes.base.stmt;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -15,6 +19,7 @@ import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeInformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,10 +43,12 @@ public class PythonASTUtil {
         AST asn = new AST(options);
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
+        HashMap<String, String> import_nodes = getImportsAndAlias(ast, asn);
+        logger.debug("Import and Alias Names : "+import_nodes);
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
             try {
-                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch);
+                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes);
                 for (Object node : Objects.requireNonNull(nodes)) {
                     if (node instanceof ImportDeclaration)
                     {
@@ -51,8 +58,11 @@ public class PythonASTUtil {
                     {
                         pyc.setTypes((TypeDeclaration) node);
                     }
+//                    else if (node instanceof MethodDeclaration){
+//                        pyc.setTypes(node);
+//                    }
                     else {
-                        logger.fatal("Not implemented statement "+node.toString());
+                        logger.fatal("Not implemented statement "+node+ node.toString());
                     }
                 }
             } catch (NodeNotFoundException | ExpressionNotFound e) {
@@ -61,6 +71,25 @@ public class PythonASTUtil {
 
         }
         return pyc;
+    }
+
+    public HashMap<String, String> getImportsAndAlias(mod ast, AST asn) {
+        MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
+        HashMap<String,String> import_nodes = new HashMap<>();
+        for (PythonTree ch : ast.getChildren()){ //collect import statements to resolve alias names.
+            if (ch instanceof Import || ch instanceof ImportFrom){
+                try {
+                    for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null)) {
+                        if (((ImportDeclaration)o).getasName() !=null){
+                            import_nodes.put(((ImportDeclaration)o).getasName().getFullyQualifiedName(),((ImportDeclaration)o).getName().getFullyQualifiedName());
+                        }
+                    }
+                } catch (NodeNotFoundException | ExpressionNotFound e) {
+                    logger.error(e);
+                }
+            }
+        }
+        return import_nodes;
     }
 
 

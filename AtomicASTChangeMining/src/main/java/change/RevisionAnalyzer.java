@@ -331,7 +331,7 @@ public class RevisionAnalyzer {
 						}
 						logger.debug("checked out : "+this.gitCommit.getName());
 						try {
-							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
+							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call(); //TODO change this to checkout a commit only once.
 							this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
 						} catch (GitAPIException e) {
 							logger.error(e);

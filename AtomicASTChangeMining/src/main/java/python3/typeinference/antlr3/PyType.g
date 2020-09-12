@@ -12,6 +12,10 @@ tokens {
     OPEN_SQ_BR = '[';
     CLOSE_SQ_BR = ']';
     LIST = 'List';
+    UNION = 'Union';
+    COMMA = ',';
+    Nothing = 'nothing';
+
 }
 
 @members {
@@ -40,14 +44,22 @@ list_element
     : OPEN_SQ_BR expr CLOSE_SQ_BR -> expr
     ;
 
+union_element
+    : OPEN_SQ_BR (expr COMMA)+ CLOSE_SQ_BR -> expr+;
+
 list_expr
     : LIST^ list_element*;
+
+union_expr
+    : UNION^ union_element;
 
 expr
     : INT
     | STRING
     | ANY
-    | list_expr;
+    | Nothing
+    | list_expr
+    | union_expr;
 
 /*------------------------------------------------------------------
  * LEXER RULES
