@@ -5,6 +5,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.testng.Assert;
 
 public class PyTypeParserTest {
@@ -62,6 +63,40 @@ public class PyTypeParserTest {
 
         Assert.assertEquals("Any",tree.toString());
     }
+
+    @org.testng.annotations.Test
+    public void test6() throws RecognitionException {
+        String src = "Union[int, Any]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("Union",tree.toString());
+        Assert.assertEquals("int",tree.getChild(0).toString());
+        Assert.assertEquals("Any",tree.getChild(1).toString());
+//        DOTTreeGenerator gen = new DOTTreeGenerator();
+//        org.antlr.stringtemplate.StringTemplate stringTemplate = gen.toDOT(tree);
+//        System.out.println(stringTemplate);
+    }
+
+    @org.testng.annotations.Test
+    public void test7() throws RecognitionException {
+        String src = "List[Union[int, Any, str]]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("List",tree.toString());
+        Assert.assertEquals("Union",tree.getChild(0).toString());
+        Assert.assertEquals("int",tree.getChild(0).getChild(0).toString());
+        Assert.assertEquals("Any",tree.getChild(0).getChild(1).toString());
+        Assert.assertEquals("str",tree.getChild(0).getChild(2).toString());
+//        DOTTreeGenerator gen = new DOTTreeGenerator();
+//        org.antlr.stringtemplate.StringTemplate stringTemplate = gen.toDOT(tree);
+//        System.out.println(stringTemplate);
+    }
+
+
+
+
 
     @org.testng.annotations.Test
     public void testError1() throws RecognitionException {

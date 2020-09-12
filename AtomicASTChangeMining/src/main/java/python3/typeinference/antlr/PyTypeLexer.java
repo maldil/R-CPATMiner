@@ -1,17 +1,23 @@
-// $ANTLR 3.5.2 PyType.g 2020-09-01 20:40:04
-package python3.typeinference.antlr;
+package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-09-10 21:44:11
+
 import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
 
 @SuppressWarnings("all")
 public class PyTypeLexer extends Lexer {
 	public static final int EOF=-1;
 	public static final int ANY=4;
 	public static final int CLOSE_SQ_BR=5;
-	public static final int INT=6;
-	public static final int LIST=7;
-	public static final int OPEN_SQ_BR=8;
-	public static final int STRING=9;
-	public static final int WHITESPACE=10;
+	public static final int COMMA=6;
+	public static final int INT=7;
+	public static final int LIST=8;
+	public static final int Nothing=9;
+	public static final int OPEN_SQ_BR=10;
+	public static final int STRING=11;
+	public static final int UNION=12;
+	public static final int WHITESPACE=13;
 
 	// delegates
 	// delegators
@@ -69,13 +75,33 @@ public class PyTypeLexer extends Lexer {
 	}
 	// $ANTLR end "CLOSE_SQ_BR"
 
+	// $ANTLR start "COMMA"
+	public final void mCOMMA() throws RecognitionException {
+		try {
+			int _type = COMMA;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:4:7: ( ',' )
+			// PyType.g:4:9: ','
+			{
+			match(','); 
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "COMMA"
+
 	// $ANTLR start "INT"
 	public final void mINT() throws RecognitionException {
 		try {
 			int _type = INT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:4:5: ( 'int' )
-			// PyType.g:4:7: 'int'
+			// PyType.g:5:5: ( 'int' )
+			// PyType.g:5:7: 'int'
 			{
 			match("int"); 
 
@@ -95,8 +121,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = LIST;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:5:6: ( 'List' )
-			// PyType.g:5:8: 'List'
+			// PyType.g:6:6: ( 'List' )
+			// PyType.g:6:8: 'List'
 			{
 			match("List"); 
 
@@ -111,13 +137,34 @@ public class PyTypeLexer extends Lexer {
 	}
 	// $ANTLR end "LIST"
 
+	// $ANTLR start "Nothing"
+	public final void mNothing() throws RecognitionException {
+		try {
+			int _type = Nothing;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:7:9: ( 'nothing' )
+			// PyType.g:7:11: 'nothing'
+			{
+			match("nothing"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "Nothing"
+
 	// $ANTLR start "OPEN_SQ_BR"
 	public final void mOPEN_SQ_BR() throws RecognitionException {
 		try {
 			int _type = OPEN_SQ_BR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:6:12: ( '[' )
-			// PyType.g:6:14: '['
+			// PyType.g:8:12: ( '[' )
+			// PyType.g:8:14: '['
 			{
 			match('['); 
 			}
@@ -136,8 +183,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = STRING;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:7:8: ( 'str' )
-			// PyType.g:7:10: 'str'
+			// PyType.g:9:8: ( 'str' )
+			// PyType.g:9:10: 'str'
 			{
 			match("str"); 
 
@@ -152,15 +199,36 @@ public class PyTypeLexer extends Lexer {
 	}
 	// $ANTLR end "STRING"
 
+	// $ANTLR start "UNION"
+	public final void mUNION() throws RecognitionException {
+		try {
+			int _type = UNION;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:10:7: ( 'Union' )
+			// PyType.g:10:9: 'Union'
+			{
+			match("Union"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "UNION"
+
 	// $ANTLR start "WHITESPACE"
 	public final void mWHITESPACE() throws RecognitionException {
 		try {
 			int _type = WHITESPACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:65:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-			// PyType.g:65:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:68:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+			// PyType.g:68:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			{
-			// PyType.g:65:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:68:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			int cnt1=0;
 			loop1:
 			while (true) {
@@ -207,8 +275,8 @@ public class PyTypeLexer extends Lexer {
 
 	@Override
 	public void mTokens() throws RecognitionException {
-		// PyType.g:1:8: ( ANY | CLOSE_SQ_BR | INT | LIST | OPEN_SQ_BR | STRING | WHITESPACE )
-		int alt2=7;
+		// PyType.g:1:8: ( ANY | CLOSE_SQ_BR | COMMA | INT | LIST | Nothing | OPEN_SQ_BR | STRING | UNION | WHITESPACE )
+		int alt2=10;
 		switch ( input.LA(1) ) {
 		case 'A':
 			{
@@ -220,24 +288,39 @@ public class PyTypeLexer extends Lexer {
 			alt2=2;
 			}
 			break;
-		case 'i':
+		case ',':
 			{
 			alt2=3;
 			}
 			break;
-		case 'L':
+		case 'i':
 			{
 			alt2=4;
 			}
 			break;
-		case '[':
+		case 'L':
 			{
 			alt2=5;
 			}
 			break;
-		case 's':
+		case 'n':
 			{
 			alt2=6;
+			}
+			break;
+		case '[':
+			{
+			alt2=7;
+			}
+			break;
+		case 's':
+			{
+			alt2=8;
+			}
+			break;
+		case 'U':
+			{
+			alt2=9;
 			}
 			break;
 		case '\t':
@@ -246,7 +329,7 @@ public class PyTypeLexer extends Lexer {
 		case '\r':
 		case ' ':
 			{
-			alt2=7;
+			alt2=10;
 			}
 			break;
 		default:
@@ -270,35 +353,56 @@ public class PyTypeLexer extends Lexer {
 				}
 				break;
 			case 3 :
-				// PyType.g:1:26: INT
+				// PyType.g:1:26: COMMA
+				{
+				mCOMMA(); 
+
+				}
+				break;
+			case 4 :
+				// PyType.g:1:32: INT
 				{
 				mINT(); 
 
 				}
 				break;
-			case 4 :
-				// PyType.g:1:30: LIST
+			case 5 :
+				// PyType.g:1:36: LIST
 				{
 				mLIST(); 
 
 				}
 				break;
-			case 5 :
-				// PyType.g:1:35: OPEN_SQ_BR
+			case 6 :
+				// PyType.g:1:41: Nothing
+				{
+				mNothing(); 
+
+				}
+				break;
+			case 7 :
+				// PyType.g:1:49: OPEN_SQ_BR
 				{
 				mOPEN_SQ_BR(); 
 
 				}
 				break;
-			case 6 :
-				// PyType.g:1:46: STRING
+			case 8 :
+				// PyType.g:1:60: STRING
 				{
 				mSTRING(); 
 
 				}
 				break;
-			case 7 :
-				// PyType.g:1:53: WHITESPACE
+			case 9 :
+				// PyType.g:1:67: UNION
+				{
+				mUNION(); 
+
+				}
+				break;
+			case 10 :
+				// PyType.g:1:73: WHITESPACE
 				{
 				mWHITESPACE(); 
 

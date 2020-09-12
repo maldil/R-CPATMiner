@@ -1,6 +1,5 @@
 package python3;
 
-import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;
@@ -15,13 +14,12 @@ import org.jpp.heart.PyObject;
 import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.pyvisitors.PyVisitor;
-import python3.typeinference.antlr.TypeInfo;
-import python3.typeinference.antlr.TypeTree;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeDecNeeds;
 import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +31,7 @@ public class MapPyStatementsTOJDK {
         this.typeNodes = typeNodes;
     }
 
-    public ArrayList<?> getMappingPyNode(AST asn , PythonTree node) throws NodeNotFoundException, ExpressionNotFound {
+    public ArrayList<?> getMappingPyNode(AST asn , PythonTree node, HashMap<String,String> import_nodes) throws NodeNotFoundException, ExpressionNotFound {
         if (node instanceof Import){
             ArrayList<ImportDeclaration> list_imports = new ArrayList<>();
             for (PyObject pyObject : ((Import) node).getNames().asIterable()) {
@@ -77,7 +75,7 @@ public class MapPyStatementsTOJDK {
             }
 
             for (Object ch : (AstList)((ClassDef) node).getBody()){
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes)) {
                     classdec.bodyDeclarations().add(o);
                 }
 
@@ -97,25 +95,30 @@ public class MapPyStatementsTOJDK {
             if (variableNeedsDeclaration != null) {
                 for (TypeDecNeeds typeDecNeeds : variableNeedsDeclaration) {
                     String typeString = this.typeNodes.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
-                    VariableDeclarationStatement variableDeclarationStatement = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString);
-                    if (methoddec.getBody() ==null){
-                        methoddec.setBody(asn.newBlock());
+                    if (typeString!=null) {
+                        VariableDeclarationStatement variableDeclarationStatement = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString);
+                        if (methoddec.getBody() == null) {
+                            methoddec.setBody(asn.newBlock());
+                        }
+                        methoddec.getBody().statements().add(variableDeclarationStatement);
                     }
-                    methoddec.getBody().statements().add(variableDeclarationStatement);
-
                 }
             }
 
 
             ArrayList<MethodDeclaration> list_method = new ArrayList<>();
-            methoddec.setName(asn.newSimpleName(((FunctionDef) node).getName().toString())); //TODO set the field isConstructor
+            methoddec.setName(asn.newSimpleName(((FunctionDef) node).getName().toString())); //We assign only the parameter self. Type of other parameters are assigned
             for (Object arg : (AstList) ((arguments) ((FunctionDef) node).getArgs()).getArgs()) {
-                SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
-                parameter.setName(asn.newSimpleName(((arg)arg).getArg().toString())); //TODO change type of the parameter
-                methoddec.parameters().add(parameter);
+                if (((arg) arg).getArg().toString().equals("self") && node.getParent() instanceof ClassDef){
+                    SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
+                    parameter.setName(asn.newSimpleName(((arg)arg).getArg().toString()));
+                    parameter.setType(asn.newSimpleType(asn.newName(((ClassDef) node.getParent()).getInternalName())));
+                    methoddec.parameters().add(parameter);
+                }
+
             }
             for (Object ch : (AstList)((FunctionDef) node).getBody()){
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes)) {
                     if (methoddec.getBody() ==null){
                         methoddec.setBody(asn.newBlock());
                     }
@@ -131,7 +134,7 @@ public class MapPyStatementsTOJDK {
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             assign.setOperator(new Assignment.Operator("="));
             assign.setLeftHandSide(asn.newSimpleName(((Name)((AstList)((Assign) node).getTargets()).get(0)).getId().toString()));
-            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((Assign) node).getValue(),asn));
+            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((Assign) node).getValue(),asn, import_nodes));
             list_assign.add(asn.newExpressionStatement(assign));
             return list_assign;
 
@@ -142,11 +145,11 @@ public class MapPyStatementsTOJDK {
             ArrayList<EnhancedForStatement> list_for = new ArrayList<>();
             parameter.setName(asn.newSimpleName(((Name)((expr)((For) node).getTarget())).getId().toString()));
             forstmt.setParameter(parameter);
-            forstmt.setExpression(MapPyExpressionsJDK.mapExpression((expr)((For) node).getIter(),asn));
+            forstmt.setExpression(MapPyExpressionsJDK.mapExpression((expr)((For) node).getIter(),asn,import_nodes));
             ((For) node).getBody() ;
 
             for (Object ch : (AstList)((For) node).getBody()){
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes)) {
                     if (forstmt.getBody() ==null){
                         forstmt.setBody(asn.newBlock());
                     }
@@ -167,20 +170,20 @@ public class MapPyStatementsTOJDK {
                 throw new NodeNotFoundException("Operator is not implemented :"+((AugAssign) node).getInternalOp().name());
             }
 
-            assign.setLeftHandSide( MapPyExpressionsJDK.mapExpression((expr) ((AugAssign) node).getTarget(),asn));
-            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((AugAssign) node).getValue(),asn));
+            assign.setLeftHandSide( MapPyExpressionsJDK.mapExpression((expr) ((AugAssign) node).getTarget(),asn, import_nodes));
+            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((AugAssign) node).getValue(),asn, import_nodes));
             list_assign.add(asn.newExpressionStatement(assign));
             return list_assign;
         }
         else if (node instanceof Return){
             ReturnStatement statement = asn.newReturnStatement();
             ArrayList<ReturnStatement> list_assign = new ArrayList<>();
-            statement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((Return) node).getValue(),asn));
+            statement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((Return) node).getValue(),asn, import_nodes));
             list_assign.add(statement);
             return list_assign;
         }
         else if (node instanceof Expr){
-            Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn);
+            Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes);
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             ExpressionStatement expstmt= asn.newExpressionStatement(exp);
 

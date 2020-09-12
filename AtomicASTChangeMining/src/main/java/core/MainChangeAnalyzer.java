@@ -43,7 +43,7 @@ public class MainChangeAnalyzer {
 //			inputPath = "E:/github/repos-5stars-50commits"; outputPath = "T:/change graphs/repos-5stars-50commits-fresh";
 //			content = FileIO.readStringFromFile("E:/github/repos-5stars-50commits-fresh-remain.csv");
 		} else if (SystemUtils.IS_OS_MAC) {
-			Configurations.THREAD_POOL_SIZE = 8;
+			Configurations.THREAD_POOL_SIZE = 1;
 			Configurations.inputPath = "/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/";
 			Configurations.outputPath = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/OUTPUT/";
 

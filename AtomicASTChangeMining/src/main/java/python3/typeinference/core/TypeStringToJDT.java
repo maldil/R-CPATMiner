@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.UnionType;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -29,6 +30,9 @@ public class TypeStringToJDT {
         TypeTree typeTree=null;
         try {
             typeTree = typeInfo.getTypeTree(typeString);
+            if (typeTree.isError()){
+                logger.error("Error when parsing Type String :"+typeString);
+            }
             return convertToJDTType(ast,typeTree.getTree());
         } catch (RecognitionException e) {
             logger.fatal("Type tree formation error");
@@ -40,11 +44,15 @@ public class TypeStringToJDT {
 
     private static Type convertToJDTType(AST ast, CommonTree typeTree) throws NodeNotFoundException {
         CommonTree tree = typeTree;
+
         if (tree.getChildren()==null){
             if (tree.getText().equals("int")){
                 return ast.newPrimitiveType(PrimitiveType.INT);
             }
             else if (tree.getText().equals("Any")){
+                return ast.newSimpleType(ast.newName("Any"));
+            }
+            else if (tree.getText().equals("nothing")){
                 return ast.newSimpleType(ast.newName("Any"));
             }
             else{
@@ -58,10 +66,18 @@ public class TypeStringToJDT {
                 return ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0)));
 
             }
+
             else {
                 logger.fatal("Corresponding Python node is not found : " + tree.getText());
                 throw new NodeNotFoundException("Corresponding Python node is not found : " + tree.getText());
             }
+        }
+        else if (tree.getText().equals("Union")){
+            UnionType unionType = ast.newUnionType();
+            for (Object child : tree.getChildren()) {
+                unionType.types().add(convertToJDTType(ast, (CommonTree) child));
+            }
+            return unionType;
         }
         else
         {

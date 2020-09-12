@@ -58,6 +58,7 @@ public class CFile extends ChangeEntity {
 		if (compileUnit == null || compileUnit.types() == null || compileUnit.types().isEmpty()) {
 			// System.out.println("\t\tDiscarded " + filePath);
 		} else {
+			logger.debug(compileUnit.toString());
 			VectorVisitor vectorVisitor = new VectorVisitor();
 			compileUnit.accept(vectorVisitor);
 			for (int index = 0; index < compileUnit.types().size(); index++) {
