@@ -1,10 +1,8 @@
 package python3;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Name;
 import org.jpp.astnodes.ast.ImportFrom;
-import org.jpp.astnodes.base.stmt;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -16,7 +14,6 @@ import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
-import python3.typeinference.core.TypeInformation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +40,7 @@ public class PythonASTUtil {
         AST asn = new AST(options);
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
-        HashMap<String, String> import_nodes = getImportsAndAlias(ast, asn);
+        HashMap<String, Name> import_nodes = getImportsAndAlias(ast, asn);
         logger.debug("Import and Alias Names : "+import_nodes);
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
@@ -73,15 +70,15 @@ public class PythonASTUtil {
         return pyc;
     }
 
-    public HashMap<String, String> getImportsAndAlias(mod ast, AST asn) {
+    public HashMap<String, Name> getImportsAndAlias(mod ast, AST asn) {
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
-        HashMap<String,String> import_nodes = new HashMap<>();
+        HashMap<String,Name> import_nodes = new HashMap<>();
         for (PythonTree ch : ast.getChildren()){ //collect import statements to resolve alias names.
             if (ch instanceof Import || ch instanceof ImportFrom){
                 try {
                     for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null)) {
                         if (((ImportDeclaration)o).getasName() !=null){
-                            import_nodes.put(((ImportDeclaration)o).getasName().getFullyQualifiedName(),((ImportDeclaration)o).getName().getFullyQualifiedName());
+                            import_nodes.put(((ImportDeclaration)o).getasName().getFullyQualifiedName(),((ImportDeclaration)o).getName());
                         }
                     }
                 } catch (NodeNotFoundException | ExpressionNotFound e) {
