@@ -30,7 +30,7 @@ def get_annotations_dict( module):
 
 def generate_pytype_folder(project_path,file_path):
   env = os.environ.copy()
-  subprocess.run(['pytype','--pythonpath='+project_path,'--no-report-errors','--keep-going','--protocols','--output='+pytype_out_path,file_path], shell=False,env=env,cwd="/Users/malinda/Documents/Research_Topic_2/PyTypeParser/src/main/PyScripts/")
+  subprocess.run(['pytype','--pythonpath='+project_path,'--no-report-errors','--keep-going','--protocols','--output='+pytype_out_path,file_path], shell=False,env=env,cwd="/Users/malinda/Documents/Research_Topic_2/python3.typeinference.antlr.PyTypeParser/src/main/PyScripts/")
 
 
 
@@ -61,7 +61,7 @@ def main1():
   if len(sys.argv)>2:
     project_name = sys.argv[2]
   else:
-    project_name = '/Users/malinda/Documents/Research_Topic_2/PyTypeParser/src/test/resources/TestPyType/'
+    project_name = '/Users/malinda/Documents/Research_Topic_2/python3.typeinference.antlr.PyTypeParser/src/test/resources/TestPyType/'
 
   if len(sys.argv)>3:
     file_name = sys.argv[3]
