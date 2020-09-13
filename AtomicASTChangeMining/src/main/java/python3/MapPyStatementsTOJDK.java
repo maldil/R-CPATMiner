@@ -31,7 +31,7 @@ public class MapPyStatementsTOJDK {
         this.typeNodes = typeNodes;
     }
 
-    public ArrayList<?> getMappingPyNode(AST asn , PythonTree node, HashMap<String,String> import_nodes) throws NodeNotFoundException, ExpressionNotFound {
+    public ArrayList<?> getMappingPyNode(AST asn , PythonTree node, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes) throws NodeNotFoundException, ExpressionNotFound {
         if (node instanceof Import){
             ArrayList<ImportDeclaration> list_imports = new ArrayList<>();
             for (PyObject pyObject : ((Import) node).getNames().asIterable()) {

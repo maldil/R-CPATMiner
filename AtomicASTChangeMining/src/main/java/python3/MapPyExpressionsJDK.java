@@ -1,6 +1,11 @@
 package python3;
 
+import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
+import org.jpp.PyASTParser;
+import org.jpp.astnodes.PythonTree;
+import org.jpp.astnodes.ast.Expr;
+import org.jpp.astnodes.base.mod;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -21,11 +26,16 @@ import org.jpp.heart.PyLong;
 import org.jpp.astnodes.ast.Index;
 import python3.pyerrors.ExpressionNotFound;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 public class MapPyExpressionsJDK {
     static Logger logger = Logger.getLogger(MapPyExpressionsJDK.class);
-    public static Expression mapExpression(expr pyexp, AST ast, HashMap<String, String> import_nodes) throws ExpressionNotFound, NodeNotFoundException {
+    public static Expression mapExpression(expr pyexp, AST ast, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes) throws ExpressionNotFound, NodeNotFoundException {
         if (pyexp instanceof Num){
             if (((Num) pyexp).getN() instanceof PyLong){
                 return ast.newNumberLiteral(String.valueOf(((PyLong)((Num) pyexp).getN()).getValue()));
@@ -52,7 +62,16 @@ public class MapPyExpressionsJDK {
                 SimpleName method_name = ast.newSimpleName(((Attribute)((Call) pyexp).getFunc()).getAttr().toString());
                 Expression expre;
                 if (((Attribute)((Call) pyexp).getFunc()).getValue() instanceof Name && import_nodes.get(((Name)((Attribute)((Call) pyexp).getFunc()).getValue()).getId().toString())!=null){
-                    expre = ast.newSimpleName(import_nodes.get(((Name)((Attribute)((Call) pyexp).getFunc()).getValue()).getId().toString()));
+                    org.eclipse.jdt.core.dom.Name name = import_nodes.get(((Name) ((Attribute) ((Call) pyexp).getFunc()).getValue()).getId().toString());
+                    if (name.getFullyQualifiedName().contains("."))
+                    {
+                        mod mod = PyASTParser.parsePython(name.getFullyQualifiedName());
+                        expre = mapExpression((expr) mod.getChild(0).getChild(0),ast,import_nodes);
+
+                    }
+                    else{
+                        expre = ast.newSimpleName(name.getFullyQualifiedName());
+                    }
                 }
                 else
                 {
@@ -90,16 +109,22 @@ public class MapPyExpressionsJDK {
 
             if (((Attribute) pyexp).getValue() instanceof Name && import_nodes.get(((Name)(((Attribute) pyexp).getValue())).getId().toString())!=null)
             {
-                expression = ast.newSimpleName(import_nodes.get(((Name)(((Attribute) pyexp).getValue())).getId().toString()));
+                org.eclipse.jdt.core.dom.Name name = import_nodes.get(((Name) (((Attribute) pyexp).getValue())).getId().toString());
+                if (name.getFullyQualifiedName().contains("."))
+                {
+                    mod mod = PyASTParser.parsePython(name.getFullyQualifiedName());
+                    expression = mapExpression((expr) mod.getChild(0).getChild(0),ast,import_nodes);
+
+                }
+                else{
+                    expression = ast.newSimpleName(name.getFullyQualifiedName());
+                }
             }
             else{
                 expression = mapExpression((expr) ((Attribute) pyexp).getValue(), ast, import_nodes);
             }
             SimpleName simpleName = ast.newSimpleName(((Attribute) pyexp).getAttr().toString());
-
-
-            QualifiedName qualifiedName = ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
-            return qualifiedName;
+            return ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
         }
         else {
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());

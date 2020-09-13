@@ -16,6 +16,7 @@ tokens {
     COMMA = ',';
     Nothing = 'nothing';
 
+
 }
 
 @members {
@@ -53,12 +54,20 @@ list_expr
 union_expr
     : UNION^ union_element;
 
+SimpleType
+    : ('A'..'Z' | 'a'..'z')+;
+
+
+QualifiedType : SimpleType | SimpleType'.'SimpleType*;
+
+
 expr
     : INT
     | STRING
     | ANY
     | Nothing
     | list_expr
+    | QualifiedType
     | union_expr;
 
 /*------------------------------------------------------------------
