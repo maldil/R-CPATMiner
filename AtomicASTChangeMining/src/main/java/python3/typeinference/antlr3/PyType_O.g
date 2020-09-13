@@ -6,6 +6,9 @@ options {
 }
 
 tokens {
+    INT    = 'int' ;
+    STRING   = 'str' ;
+    ANY    = 'Any' ;
     OPEN_SQ_BR = '[';
     CLOSE_SQ_BR = ']';
     LIST = 'List';
@@ -14,7 +17,8 @@ tokens {
     Nothing = 'nothing';
     HYPHEN = '-' ;
     UNDERSCORE = '_' ;
-    DOT = '\.';
+
+
 }
 
 @members {
@@ -54,14 +58,23 @@ union_expr
 
 DIGIT  : '0'..'9' ;
 
-LETTER : 'a'..'z' |'A'..'Z'|'0'..'9'|'_' ;
+LETTER : 'a'..'z' |'A'..'Z' ;
 
 NUMBER : DIGIT+ ;
 
-SimpleType : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+WORD : LETTER+  ;
+
+SimpleType : (WORD | UNDERSCORE) (WORD | NUMBER | UNDERSCORE)*
            ;
 
-expr : list_expr
+QualifiedType : SimpleType | SimpleType'.'SimpleType*;
+
+expr
+    : INT
+    | STRING
+    | ANY
+    | Nothing
+    | list_expr
     | SimpleType
     | union_expr;
 
