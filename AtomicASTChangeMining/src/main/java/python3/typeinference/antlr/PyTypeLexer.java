@@ -1,4 +1,4 @@
-package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-09-13 01:11:23
+package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-09-13 15:37:52
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -332,8 +332,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = SimpleType;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:61:12: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )* )
-			// PyType.g:61:14: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+			// PyType.g:61:12: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' ) )
+			// PyType.g:61:14: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )
 			{
 			if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
 				input.consume();
@@ -343,12 +343,19 @@ public class PyTypeLexer extends Lexer {
 				recover(mse);
 				throw mse;
 			}
-			// PyType.g:61:37: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )*
+			// PyType.g:61:37: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
 			loop2:
 			while (true) {
 				int alt2=2;
 				int LA2_0 = input.LA(1);
 				if ( ((LA2_0 >= '0' && LA2_0 <= '9')||(LA2_0 >= 'A' && LA2_0 <= 'Z')||LA2_0=='_'||(LA2_0 >= 'a' && LA2_0 <= 'z')) ) {
+					int LA2_1 = input.LA(2);
+					if ( (LA2_1=='.'||(LA2_1 >= '0' && LA2_1 <= '9')||(LA2_1 >= 'A' && LA2_1 <= 'Z')||LA2_1=='_'||(LA2_1 >= 'a' && LA2_1 <= 'z')) ) {
+						alt2=1;
+					}
+
+				}
+				else if ( (LA2_0=='.') ) {
 					alt2=1;
 				}
 
@@ -356,7 +363,7 @@ public class PyTypeLexer extends Lexer {
 				case 1 :
 					// PyType.g:
 					{
-					if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
+					if ( input.LA(1)=='.'||(input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
 						input.consume();
 					}
 					else {
@@ -372,6 +379,14 @@ public class PyTypeLexer extends Lexer {
 				}
 			}
 
+			if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
+				input.consume();
+			}
+			else {
+				MismatchedSetException mse = new MismatchedSetException(null,input);
+				recover(mse);
+				throw mse;
+			}
 			}
 
 			state.type = _type;
@@ -388,10 +403,10 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = WHITESPACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:72:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-			// PyType.g:72:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:73:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+			// PyType.g:73:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			{
-			// PyType.g:72:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:73:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			int cnt3=0;
 			loop3:
 			while (true) {
@@ -471,7 +486,7 @@ public class PyTypeLexer extends Lexer {
 					int LA4_21 = input.LA(4);
 					if ( (LA4_21=='t') ) {
 						int LA4_24 = input.LA(5);
-						if ( ((LA4_24 >= '0' && LA4_24 <= '9')||(LA4_24 >= 'A' && LA4_24 <= 'Z')||LA4_24=='_'||(LA4_24 >= 'a' && LA4_24 <= 'z')) ) {
+						if ( (LA4_24=='.'||(LA4_24 >= '0' && LA4_24 <= '9')||(LA4_24 >= 'A' && LA4_24 <= 'Z')||LA4_24=='_'||(LA4_24 >= 'a' && LA4_24 <= 'z')) ) {
 							alt4=13;
 						}
 
@@ -493,6 +508,7 @@ public class PyTypeLexer extends Lexer {
 
 				}
 				break;
+			case '.':
 			case '0':
 			case '1':
 			case '2':
@@ -580,7 +596,7 @@ public class PyTypeLexer extends Lexer {
 								int LA4_30 = input.LA(7);
 								if ( (LA4_30=='g') ) {
 									int LA4_32 = input.LA(8);
-									if ( ((LA4_32 >= '0' && LA4_32 <= '9')||(LA4_32 >= 'A' && LA4_32 <= 'Z')||LA4_32=='_'||(LA4_32 >= 'a' && LA4_32 <= 'z')) ) {
+									if ( (LA4_32=='.'||(LA4_32 >= '0' && LA4_32 <= '9')||(LA4_32 >= 'A' && LA4_32 <= 'Z')||LA4_32=='_'||(LA4_32 >= 'a' && LA4_32 <= 'z')) ) {
 										alt4=13;
 									}
 
@@ -620,6 +636,7 @@ public class PyTypeLexer extends Lexer {
 
 				}
 				break;
+			case '.':
 			case '0':
 			case '1':
 			case '2':
@@ -699,7 +716,7 @@ public class PyTypeLexer extends Lexer {
 		case '_':
 			{
 			int LA4_8 = input.LA(2);
-			if ( ((LA4_8 >= '0' && LA4_8 <= '9')||(LA4_8 >= 'A' && LA4_8 <= 'Z')||LA4_8=='_'||(LA4_8 >= 'a' && LA4_8 <= 'z')) ) {
+			if ( (LA4_8=='.'||(LA4_8 >= '0' && LA4_8 <= '9')||(LA4_8 >= 'A' && LA4_8 <= 'Z')||LA4_8=='_'||(LA4_8 >= 'a' && LA4_8 <= 'z')) ) {
 				alt4=13;
 			}
 
@@ -721,7 +738,7 @@ public class PyTypeLexer extends Lexer {
 						int LA4_26 = input.LA(5);
 						if ( (LA4_26=='n') ) {
 							int LA4_29 = input.LA(6);
-							if ( ((LA4_29 >= '0' && LA4_29 <= '9')||(LA4_29 >= 'A' && LA4_29 <= 'Z')||LA4_29=='_'||(LA4_29 >= 'a' && LA4_29 <= 'z')) ) {
+							if ( (LA4_29=='.'||(LA4_29 >= '0' && LA4_29 <= '9')||(LA4_29 >= 'A' && LA4_29 <= 'Z')||LA4_29=='_'||(LA4_29 >= 'a' && LA4_29 <= 'z')) ) {
 								alt4=13;
 							}
 
@@ -749,6 +766,7 @@ public class PyTypeLexer extends Lexer {
 
 				}
 				break;
+			case '.':
 			case '0':
 			case '1':
 			case '2':
@@ -893,7 +911,7 @@ public class PyTypeLexer extends Lexer {
 		case 'z':
 			{
 			int LA4_11 = input.LA(2);
-			if ( ((LA4_11 >= '0' && LA4_11 <= '9')||(LA4_11 >= 'A' && LA4_11 <= 'Z')||LA4_11=='_'||(LA4_11 >= 'a' && LA4_11 <= 'z')) ) {
+			if ( (LA4_11=='.'||(LA4_11 >= '0' && LA4_11 <= '9')||(LA4_11 >= 'A' && LA4_11 <= 'Z')||LA4_11=='_'||(LA4_11 >= 'a' && LA4_11 <= 'z')) ) {
 				alt4=13;
 			}
 

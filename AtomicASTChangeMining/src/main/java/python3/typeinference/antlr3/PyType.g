@@ -58,8 +58,9 @@ LETTER : 'a'..'z' |'A'..'Z'|'0'..'9'|'_' ;
 
 NUMBER : DIGIT+ ;
 
-SimpleType : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+SimpleType : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'.')*('a'..'z'|'A'..'Z'|'_'|'0'..'9')
            ;
+
 
 expr : list_expr
     | SimpleType
