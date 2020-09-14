@@ -1,4 +1,4 @@
-package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-09-13 01:11:22
+package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-09-13 15:37:52
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -467,7 +467,7 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "expr"
-	// PyType.g:64:1: expr : ( list_expr | SimpleType | union_expr );
+	// PyType.g:65:1: expr : ( list_expr | SimpleType | union_expr );
 	public final PyTypeParser.expr_return expr() throws RecognitionException {
 		PyTypeParser.expr_return retval = new PyTypeParser.expr_return();
 		retval.start = input.LT(1);
@@ -481,7 +481,7 @@ public class PyTypeParser extends Parser {
 		CommonTree SimpleType14_tree=null;
 
 		try {
-			// PyType.g:64:6: ( list_expr | SimpleType | union_expr )
+			// PyType.g:65:6: ( list_expr | SimpleType | union_expr )
 			int alt3=3;
 			switch ( input.LA(1) ) {
 			case LIST:
@@ -506,12 +506,12 @@ public class PyTypeParser extends Parser {
 			}
 			switch (alt3) {
 				case 1 :
-					// PyType.g:64:8: list_expr
+					// PyType.g:65:8: list_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_list_expr_in_expr333);
+					pushFollow(FOLLOW_list_expr_in_expr351);
 					list_expr13=list_expr();
 					state._fsp--;
 
@@ -520,24 +520,24 @@ public class PyTypeParser extends Parser {
 					}
 					break;
 				case 2 :
-					// PyType.g:65:7: SimpleType
+					// PyType.g:66:7: SimpleType
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					SimpleType14=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_expr341); 
+					SimpleType14=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_expr359); 
 					SimpleType14_tree = (CommonTree)adaptor.create(SimpleType14);
 					adaptor.addChild(root_0, SimpleType14_tree);
 
 					}
 					break;
 				case 3 :
-					// PyType.g:66:7: union_expr
+					// PyType.g:67:7: union_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_union_expr_in_expr349);
+					pushFollow(FOLLOW_union_expr_in_expr367);
 					union_expr15=union_expr();
 					state._fsp--;
 
@@ -581,7 +581,7 @@ public class PyTypeParser extends Parser {
 	public static final BitSet FOLLOW_list_element_in_list_expr219 = new BitSet(new long[]{0x0000000000002002L});
 	public static final BitSet FOLLOW_UNION_in_union_expr232 = new BitSet(new long[]{0x0000000000002000L});
 	public static final BitSet FOLLOW_union_element_in_union_expr235 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_list_expr_in_expr333 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_SimpleType_in_expr341 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_union_expr_in_expr349 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_list_expr_in_expr351 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_SimpleType_in_expr359 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_union_expr_in_expr367 = new BitSet(new long[]{0x0000000000000002L});
 }

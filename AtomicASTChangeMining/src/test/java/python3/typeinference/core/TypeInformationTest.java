@@ -120,6 +120,9 @@ public class TypeInformationTest {
         typeASTNodeList.add(new TypeASTNode(27, 8, "cc"));
         typeASTNodeList.add(new TypeASTNode(22, 8, "final_result"));
         typeASTNodeList.add(new TypeASTNode(28, 8, "dd"));
+        log.debug("Project Path : "+project_path);
+        log.debug("File Name : "+file_name);
+        log.debug("File Path : "+absoluteFile.toString());
         Map<TypeASTNode, TypeTree> typeTreeInformation = typeInformation.getTypeTreeInformation(absoluteFile.toString(), project_path, file_name, typeASTNodeList);
     }
 }

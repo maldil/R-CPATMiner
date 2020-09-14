@@ -95,26 +95,54 @@ public class PyTypeParserTest {
     }
 
     @org.testng.annotations.Test
-    public void testError1() throws RecognitionException {
-        String src = "abc";
+    public void test8() throws RecognitionException {
+        String src = "List[abc.boo]";
         PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
         PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
         CommonTree tree = parser.parse().getTree();
-
-//        Assert.assertTrue(tree instanceof CommonErrorNode);
-
+        Assert.assertEquals(tree.toString(),"List");
+        Assert.assertEquals(tree.getChild(0).toString(),"abc.boo");
     }
 
     @org.testng.annotations.Test
-    public void testError2() throws RecognitionException {
+    public void test9() throws RecognitionException {
         String src = "List[Jhon]";
         PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
         PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
         CommonTree tree = (CommonTree) parser.parse().getTree();
-//        Assert.assertEquals("List",tree.toString());
-//        Assert.assertTrue(tree.getChild(0) instanceof CommonErrorNode);
-
+        Assert.assertEquals("List",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"Jhon");
     }
 
+    @org.testng.annotations.Test
+    public void test10() throws RecognitionException {
+        String src = "List[Jhon.Boo_12Zoo]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("List",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"Jhon.Boo_12Zoo");
+    }
+
+    @org.testng.annotations.Test
+    public void test11() throws RecognitionException {
+        String src = "List[Jhon.Boo_12Zoo]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("List",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"Jhon.Boo_12Zoo");
+    }
+
+    @org.testng.annotations.Test
+    public void test12() throws RecognitionException {
+        String src = "List[List[Jhon.Boo_12Zoo]]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("List",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"List");
+        Assert.assertEquals(tree.getChild(0).getChild(0).toString(),"Jhon.Boo_12Zoo");
+    }
 
 }

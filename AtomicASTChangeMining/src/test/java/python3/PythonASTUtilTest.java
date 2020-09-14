@@ -37,7 +37,6 @@ public class PythonASTUtilTest {
         HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
         typeASTNodeStringHashMap.put(new TypeASTNode(4,2,"result",null),"Any" );
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
-        System.out.println(pyCompilationUnit.toString());
         Assert.assertEquals(pyCompilationUnit.toString(),"import numpy;\n" +
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
@@ -59,7 +58,6 @@ public class PythonASTUtilTest {
         HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
         typeASTNodeStringHashMap.put(new TypeASTNode(4,2,"result",null),"Any" );
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
-        System.out.println(pyCompilationUnit.toString());
         Assert.assertEquals(pyCompilationUnit.toString(),"import numpy;\n" +
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
@@ -80,7 +78,6 @@ public class PythonASTUtilTest {
         HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
         typeASTNodeStringHashMap.put(new TypeASTNode(4,2,"result",null),"Any" );
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
-        System.out.println(pyCompilationUnit.toString());
         Assert.assertEquals(pyCompilationUnit.toString(),"import numpy.boo;\n" +
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
@@ -101,7 +98,6 @@ public class PythonASTUtilTest {
         HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
         typeASTNodeStringHashMap.put(new TypeASTNode(4,2,"result",null),"List[int]" );
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
-        System.out.println(pyCompilationUnit.toString());
         Assert.assertEquals(pyCompilationUnit.toString(),"import numpy.boo;\n" +
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
@@ -122,7 +118,6 @@ public class PythonASTUtilTest {
         HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
         typeASTNodeStringHashMap.put(new TypeASTNode(4,2,"result",null),"numpy.ndarray" );
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
-        System.out.println(pyCompilationUnit.toString());
         Assert.assertEquals(pyCompilationUnit.toString(),"import numpy.boo;\n" +
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
@@ -130,6 +125,5 @@ public class PythonASTUtilTest {
                 "    result=numpy.boo.sum.com.som.lom(numpy.boo.thh.array(M));\n" +
                 "  }\n" +
                 "}\n");
-
     }
 }

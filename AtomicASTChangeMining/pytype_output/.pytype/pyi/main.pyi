@@ -1,0 +1,13 @@
+# (generated with --quick)
+
+from typing import Any, Iterable, List
+
+example_file: module
+np: module
+tf: module
+
+class Test:
+    def add(self) -> None: ...
+    def add_arrays(self, A) -> Any: ...
+    def add_one(self, M: Iterable) -> List[list]: ...
+    def foo(self) -> None: ...

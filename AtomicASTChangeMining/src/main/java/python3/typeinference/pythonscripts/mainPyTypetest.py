@@ -14,6 +14,7 @@ import os
 import subprocess
 pytype_out_path = '/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/pytype_output/.pytype/'
 
+
 def annotate(source,file_name):
   source = textwrap.dedent(source.lstrip('\n'))
   ast_factory = lambda unused_options: ast
@@ -30,7 +31,7 @@ def get_annotations_dict( module):
 
 def generate_pytype_folder(project_path,file_path):
   env = os.environ.copy()
-  subprocess.run(['pytype','--pythonpath='+project_path,'--no-report-errors','--keep-going','--protocols','--output='+pytype_out_path,file_path], shell=False,env=env,cwd="/Users/malinda/Documents/Research_Topic_2/python3.typeinference.antlr.PyTypeParser/src/main/PyScripts/")
+  subprocess.run(['pytype','--pythonpath='+project_path,'--no-report-errors','--keep-going','--protocols','--output='+pytype_out_path,file_path], shell=False,env=env,cwd=os.path.dirname(os.path.realpath(__file__)))
 
 
 

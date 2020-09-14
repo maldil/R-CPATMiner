@@ -4,15 +4,24 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.UnionType;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.jpp.PyASTParser;
+import org.jpp.astnodes.base.expr;
+import org.jpp.astnodes.base.mod;
+import python3.MapPyExpressionsJDK;
+import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.typeinference.antlr.TypeInfo;
 import python3.typeinference.antlr.TypeTree;
+
+import java.util.HashMap;
 
 public class TypeStringToJDT {
     static Logger logger = Logger.getLogger(TypeStringToJDT.class);
@@ -55,6 +64,20 @@ public class TypeStringToJDT {
             else if (tree.getText().equals("nothing")){
                 return ast.newSimpleType(ast.newName("Any"));
             }
+            else if (tree.getText().contains(".")){
+                try {
+                    mod mod = PyASTParser.parsePython(tree.getText());
+                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<String, org.eclipse.jdt.core.dom.Name>());
+                    return ast.newSimpleType((Name) expression);
+
+                } catch (ExpressionNotFound expressionNotFound) {
+                    expressionNotFound.printStackTrace();
+                    logger.fatal("Error when converting types");
+                    logger.error(expressionNotFound);
+                }
+                return ast.newSimpleType(ast.newName("Any"));
+            }
+
             else{
                 logger.fatal("Corresponding Python node is not found : "+tree.getText());
                 throw new NodeNotFoundException("Corresponding Python node is not found : "+tree.getText());
