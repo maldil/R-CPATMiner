@@ -1,5 +1,7 @@
 Stay tuned: We are in the process of adding Python support to the CPatMiner
 
+Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMiner.git
+
 # CPatMiner: Graph-based Mining of In-the-Wild, Fine-grained, Semantic Code Change Patterns
 
 ## Contributors
