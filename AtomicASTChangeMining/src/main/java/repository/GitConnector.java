@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import core.MainChangeAnalyzer;
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -23,6 +25,7 @@ import org.eclipse.jgit.treewalk.filter.PathSuffixFilter;
 import org.eclipse.jgit.util.io.NullOutputStream;
 
 public class GitConnector extends AbstractConnector {
+	static Logger logger = Logger.getLogger(AbstractConnector.class);
 	private String url;
 	private int numberOfCommits = -1, numberOfCodeCommits = -1;
 
@@ -52,12 +55,14 @@ public class GitConnector extends AbstractConnector {
 	public boolean connect() {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		try {
+			logger.debug("Git connecting "+url);
 			repository = builder.setGitDir(new File(url)).readEnvironment() // scan
 																			// environment
 																			// GIT_*
 																			// variables
 					.findGitDir() // scan up the file system tree
 					.build();
+
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			return false;
@@ -68,6 +73,7 @@ public class GitConnector extends AbstractConnector {
 		} catch (IOException e) {
 			return false;
 		}
+
 		git = new Git(repository);
 		return true;
 	}

@@ -40,7 +40,7 @@ public class TypeStringToJDT {
         try {
             typeTree = typeInfo.getTypeTree(typeString);
             if (typeTree.isError()){
-                logger.error("Error when parsing Type String :"+typeString);
+                logger.fatal("Error when parsing Type String :"+typeString);
             }
             return convertToJDTType(ast,typeTree.getTree());
         } catch (RecognitionException e) {
@@ -79,8 +79,8 @@ public class TypeStringToJDT {
             }
 
             else{
-                logger.fatal("Corresponding Python node is not found : "+tree.getText());
-                throw new NodeNotFoundException("Corresponding Python node is not found : "+tree.getText());
+                logger.debug("SimpleType was assigned to  : "+tree.getText());
+                return ast.newSimpleType(ast.newName(tree.getText()));
             }
 
         }
@@ -89,7 +89,6 @@ public class TypeStringToJDT {
                 return ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0)));
 
             }
-
             else {
                 logger.fatal("Corresponding Python node is not found : " + tree.getText());
                 throw new NodeNotFoundException("Corresponding Python node is not found : " + tree.getText());

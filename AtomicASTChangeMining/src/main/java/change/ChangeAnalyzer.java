@@ -3,6 +3,7 @@ package change;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -123,8 +124,12 @@ public class ChangeAnalyzer {
 	}
 
 	public void buildGitConnector() {
+		logger.debug("Building git connector for : "+url);
 		this.gitConn = new GitConnector(url + "/.git");
+		logger.debug("codeoc ");
 		this.gitConn.connect();
+		logger.debug("fff ");
+
 	}
 
 	public void closeGitConnector() {
@@ -227,7 +232,7 @@ public class ChangeAnalyzer {
 			num_commits+=1;
 		}
 		this.cproject.numOfAllRevisions = this.numOfRevisions;
-		System.out.println(num_commits+" commits processed");
+		logger.debug(num_commits+" commits processed");
 	}
 
 	private void analyzeGit(RevCommit commit) {
@@ -250,7 +255,7 @@ public class ChangeAnalyzer {
 //						+ ":" + e.getCClass().getName() + "." + e.getSimpleName() + "(" + e.getNumOfParameters()+ ")" + e.getParameterTypes()
 //						+ ":" + cg.summarize());
 				int[] csizes = cg.getChangeSizes();
-				System.out.println(csizes[0]);
+
 				if (csizes[0] > 0 && csizes[1] > 0 
 						&& (csizes[0] + csizes[1]) >= 3 
 						&& csizes[0] <= 100 && csizes[1] <= 100 
@@ -269,6 +274,9 @@ public class ChangeAnalyzer {
 					}
 					cgs.put(e.getCClass().getName() + "," + e.getSimpleName()
 							+ "," + e.getParameterTypes() + "," + e.startLine, cg);
+				}
+				else{
+					logger.info("PDG was not created - CSIZES monitor : "+ Arrays.toString(csizes));
 				}
 				e.cleanForStats();
 			}

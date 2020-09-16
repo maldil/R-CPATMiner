@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
+import core.Configurations;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.ArrayCreation;
@@ -69,6 +70,7 @@ import exas.ExasFeature;
 import exas.ExasSingleFeature;
 import graph.PDGDataEdge.Type;
 import treed.TreedConstants;
+import utils.Config;
 import utils.FeatureAscendingOrder;
 import utils.JavaASTUtil;
 
@@ -100,9 +102,16 @@ public class PDGGraph implements Serializable {
 		if (Modifier.isStatic(md.getModifiers())) //TODO add capability to find Python static methods
 			parameters = new PDGDataNode[md.parameters().size()];
 		else {
-			parameters = new PDGDataNode[md.parameters().size() + 1];
-			parameters[numOfParameters++] = new PDGDataNode(
-					null, ASTNode.THIS_EXPRESSION, "this", "this", "this");
+			if (Configurations.IS_PYTHON){   //we consider the self pointer as a method parameter with the type of parent class
+				parameters = new PDGDataNode[md.parameters().size()];
+			}
+			else{
+				parameters = new PDGDataNode[md.parameters().size() + 1];
+				parameters[numOfParameters++] = new PDGDataNode(
+						null, ASTNode.THIS_EXPRESSION, "this", "this", "this");
+			}
+
+
 		}
 		entryNode = new PDGEntryNode(md, ASTNode.METHOD_DECLARATION, "START");
 		nodes.add(entryNode);
