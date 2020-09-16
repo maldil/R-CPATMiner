@@ -329,22 +329,27 @@ public class RevisionAnalyzer {
 						if (oldContent.isEmpty() || newContent.isEmpty()){
 							continue;
 						}
-						logger.debug("checked out : "+this.gitCommit.getName());
-						try {
-							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call(); //TODO change this to checkout a commit only once.
-							this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
-						} catch (GitAPIException e) {
-							logger.error(e);
+
+						if (Configurations.IS_PYTHON){
+							logger.debug("checked out : "+this.gitCommit.getName());
+							try {
+								this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call(); //TODO change this to checkout a commit only once.
+								this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
+							} catch (GitAPIException e) {
+								logger.error(e);
+							}
 						}
+
 						CFile fileN = new CFile(this, diff.getNewPath(),
 								newContent,this.url);
-						logger.debug("checked out : "+parent.getName());
-
-						try {
-							this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
-							this.changeAnalyzer.getGitConn().getGit().checkout().setName(parent.getName()).call();
-						} catch (GitAPIException e) {
-							logger.error(e);
+						if (Configurations.IS_PYTHON) {
+							logger.debug("checked out : "+parent.getName());
+							try {
+								this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
+								this.changeAnalyzer.getGitConn().getGit().checkout().setName(parent.getName()).call();
+							} catch (GitAPIException e) {
+								logger.error(e);
+							}
 						}
 						CFile fileM = new CFile(this, diff.getOldPath(),
 								oldContent,this.url);

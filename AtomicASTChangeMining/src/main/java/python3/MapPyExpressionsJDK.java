@@ -1,17 +1,14 @@
 package python3;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.jpp.PyASTParser;
-import org.jpp.astnodes.PythonTree;
-import org.jpp.astnodes.ast.Expr;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.jpp.astnodes.ast.Attribute;
@@ -26,19 +23,16 @@ import org.jpp.heart.PyLong;
 import org.jpp.astnodes.ast.Index;
 import python3.pyerrors.ExpressionNotFound;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.stream.Collectors;
 
-public class MapPyExpressionsJDK {
+public class MapPyExpressionsJDK extends PyMap {
     static Logger logger = Logger.getLogger(MapPyExpressionsJDK.class);
     public static Expression mapExpression(expr pyexp, AST ast, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes) throws ExpressionNotFound, NodeNotFoundException {
         if (pyexp instanceof Num){
             if (((Num) pyexp).getN() instanceof PyLong){
-                return ast.newNumberLiteral(String.valueOf(((PyLong)((Num) pyexp).getN()).getValue()));
+                NumberLiteral numberLiteral = ast.newNumberLiteral(String.valueOf(((PyLong) ((Num) pyexp).getN()).getValue()));
+                numberLiteral.setSourceRange(pyexp.getCharStartIndex(),pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
+                return numberLiteral;
             }
             else {
                 throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass());
