@@ -89,9 +89,9 @@ public class PyTypeParserTest {
         Assert.assertEquals("int",tree.getChild(0).getChild(0).toString());
         Assert.assertEquals("Any",tree.getChild(0).getChild(1).toString());
         Assert.assertEquals("str",tree.getChild(0).getChild(2).toString());
-        DOTTreeGenerator gen = new DOTTreeGenerator();
-        org.antlr.stringtemplate.StringTemplate stringTemplate = gen.toDOT(tree);
-        System.out.println(stringTemplate);
+//        DOTTreeGenerator gen = new DOTTreeGenerator();
+//        org.antlr.stringtemplate.StringTemplate stringTemplate = gen.toDOT(tree);
+//        System.out.println(stringTemplate);
     }
 
     @org.testng.annotations.Test

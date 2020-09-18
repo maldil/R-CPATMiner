@@ -4,9 +4,12 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.UnionType;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
@@ -16,6 +19,7 @@ import org.jpp.PyASTParser;
 import org.jpp.astnodes.base.expr;
 import org.jpp.astnodes.base.mod;
 import python3.MapPyExpressionsJDK;
+import python3.PyMap;
 import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.typeinference.antlr.TypeInfo;
@@ -23,18 +27,24 @@ import python3.typeinference.antlr.TypeTree;
 
 import java.util.HashMap;
 
-public class TypeStringToJDT {
+public class TypeStringToJDT extends PyMap{
     static Logger logger = Logger.getLogger(TypeStringToJDT.class);
-    public static VariableDeclarationStatement mapTypeStringToTypeTree(AST ast,TypeDecNeeds needs,String typeString) throws NodeNotFoundException {
+    public static VariableDeclarationStatement mapTypeStringToTypeTree(AST ast, TypeDecNeeds needs, String typeString, int startPosition) throws NodeNotFoundException {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setName(ast.newSimpleName(needs.getName()));
+        variableDeclarationFragment.setSourceRange(startPosition+PyMap.totalCharGains ,variableDeclarationFragment.toString().length());
+        SimpleName simpleName = ast.newSimpleName(needs.getName());
+
+        variableDeclarationFragment.setName(simpleName);
         VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(variableDeclarationFragment);
-        variableDeclarationStatement.setType(getJDTType(ast,typeString));
+        Type jdtType = getJDTType(ast, typeString, startPosition+simpleName.toString().length());
+        simpleName.setSourceRange(startPosition+jdtType.toString().length()+1+PyMap.totalCharGains ,simpleName.toString().length());
+        jdtType.setSourceRange(startPosition+PyMap.totalCharGains,jdtType.toString().length());
+        variableDeclarationStatement.setType(jdtType);
 
         return variableDeclarationStatement;
     }
 
-    private static Type getJDTType(AST ast,String typeString) throws NodeNotFoundException {
+    private static Type getJDTType(AST ast, String typeString, int startPosition) throws NodeNotFoundException {
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree=null;
         try {
@@ -42,7 +52,7 @@ public class TypeStringToJDT {
             if (typeTree.isError()){
                 logger.fatal("Error when parsing Type String :"+typeString);
             }
-            return convertToJDTType(ast,typeTree.getTree());
+            return convertToJDTType(ast,typeTree.getTree(),startPosition);
         } catch (RecognitionException e) {
             logger.fatal("Type tree formation error");
             logger.error(e);
@@ -51,31 +61,41 @@ public class TypeStringToJDT {
 
     }
 
-    private static Type convertToJDTType(AST ast, CommonTree typeTree) throws NodeNotFoundException {
+    private static Type convertToJDTType(AST ast, CommonTree typeTree,int startPosition) throws NodeNotFoundException {
         CommonTree tree = typeTree;
 
         if (tree.getChildren()==null){
             if (tree.getText().equals("int")){
-                return ast.newPrimitiveType(PrimitiveType.INT);
+                PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.INT);
+                primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
+                return primitiveType;
             }
             else if (tree.getText().equals("Any")){
-                return ast.newSimpleType(ast.newName("Any"));
+                SimpleType any = ast.newSimpleType(ast.newName("Any"));
+                any.setSourceRange(startPosition,4);
+                return any;
             }
             else if (tree.getText().equals("nothing")){
-                return ast.newSimpleType(ast.newName("Any"));
+                SimpleType any = ast.newSimpleType(ast.newName("Any"));
+                any.setSourceRange(startPosition,4);
+                return any;
             }
             else if (tree.getText().contains(".")){
                 try {
                     mod mod = PyASTParser.parsePython(tree.getText());
-                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<String, org.eclipse.jdt.core.dom.Name>());
-                    return ast.newSimpleType((Name) expression);
+                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<>());
+                    SimpleType simpleType = ast.newSimpleType((Name) expression);
+                    simpleType.setSourceRange(startPosition,expression.toString().length());
+                    return simpleType;
 
                 } catch (ExpressionNotFound expressionNotFound) {
                     expressionNotFound.printStackTrace();
                     logger.fatal("Error when converting types");
                     logger.error(expressionNotFound);
                 }
-                return ast.newSimpleType(ast.newName("Any"));
+                Name any = ast.newName("Any");
+                any.setSourceRange(startPosition,4);
+                return ast.newSimpleType(any);
             }
 
             else{
@@ -86,7 +106,9 @@ public class TypeStringToJDT {
         }
         else if(tree.getChildren().size()==1){
             if (tree.getText().equals("List")){
-                return ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0)));
+                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition));
+                arrayType.setSourceRange(startPosition,4);
+                return arrayType;
 
             }
             else {
@@ -97,8 +119,9 @@ public class TypeStringToJDT {
         else if (tree.getText().equals("Union")){
             UnionType unionType = ast.newUnionType();
             for (Object child : tree.getChildren()) {
-                unionType.types().add(convertToJDTType(ast, (CommonTree) child));
+                unionType.types().add(convertToJDTType(ast, (CommonTree) child,startPosition+6));
             }
+            unionType.setSourceRange(startPosition,unionType.toString().length());
             return unionType;
         }
         else

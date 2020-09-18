@@ -1,11 +1,10 @@
 # (generated with --quick)
 
-from typing import Any
+from typing import Sized
 
 np: module
 
 class Test:
-    length_scale: Any
-    def set_hyperparameters(self, length_scale) -> Any: ...
-
-def main() -> None: ...
+    length_scale: int
+    def main(self) -> None: ...
+    def set_hyperparameters(self, length_scale: Sized) -> int: ...

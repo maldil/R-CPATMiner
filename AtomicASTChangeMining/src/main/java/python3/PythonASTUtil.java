@@ -1,6 +1,8 @@
 package python3;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Name;
 import org.jpp.astnodes.ast.ImportFrom;
 import python3.pyerrors.NodeNotFoundException;
@@ -14,6 +16,7 @@ import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
+import utils.JavaASTUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +42,10 @@ public class PythonASTUtil {
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         AST asn = new AST(options);
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
+
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
+        PyMap.totalCharGains=0;
+        PyMap.currentMethodGain=0;
         HashMap<String, Name> import_nodes = getImportsAndAlias(ast, asn);
         logger.debug("Import and Alias Names : "+import_nodes);
         for (PythonTree ch : ast.getChildren()){
@@ -67,6 +73,8 @@ public class PythonASTUtil {
             }
 
         }
+        pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
+
         return pyc;
     }
 

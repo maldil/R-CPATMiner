@@ -38,11 +38,15 @@ public class MapPyStatementsTOJDK extends PyMap{
             for (PyObject pyObject : ((Import) node).getNames().asIterable()) {
                 ImportDeclaration import_dec =  asn.newImportDeclaration();
                 String[] import_name = ((alias) pyObject).getName().toString().split("\\.");
-                import_dec.setName(asn.newName(import_name));
+                org.eclipse.jdt.core.dom.Name name = asn.newName(import_name);
+                name.setSourceRange(node.getCharStartIndex()+"import ".length(),name.toString().length());
+                import_dec.setName(name);
                 PyObject asname = ((alias) pyObject).getAsname();
                 if (!(asname instanceof PyNone)){
                     import_dec.setasName(asn.newName(asname.asString()));
                 }
+                logger.debug(((alias) pyObject).getCharStartIndex());
+                import_dec.setSourceRange(node.getCharStartIndex(),import_dec.toString().length());
                 list_imports.add(import_dec);
             }
             return list_imports;
@@ -53,12 +57,14 @@ public class MapPyStatementsTOJDK extends PyMap{
             for (PyObject pyObject : ((ImportFrom) node).getNames().asIterable()) {
                 ImportDeclaration import_dec =  asn.newImportDeclaration();
                 String[] import_name = (String[]) ArrayUtils.addAll(module,((alias) pyObject).getName().toString().split("\\."));
-
-                import_dec.setName(asn.newName(import_name));
+                org.eclipse.jdt.core.dom.Name name = asn.newName(import_name);
+                name.setSourceRange(node.getCharStartIndex()+7,name.toString().length());
+                import_dec.setName(name);
                 PyObject asname = ((alias) pyObject).getAsname();
                 if (!(asname instanceof PyNone)){
                     import_dec.setasName(asn.newName(asname.asString()));
                 }
+                import_dec.setSourceRange(node.getCharStartIndex(),import_dec.toString().length());
                 list_imports.add(import_dec);
             }
 
@@ -112,25 +118,10 @@ public class MapPyStatementsTOJDK extends PyMap{
                 logger.error(e);
             }
             MethodDeclaration methoddec = asn.newMethodDeclaration();
-            if (variableNeedsDeclaration != null) {
-                for (TypeDecNeeds typeDecNeeds : variableNeedsDeclaration) {
-                    String typeString = this.typeNodes.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
-                    if (typeString!=null) {
-                        VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString);
-                        if (methoddec.getBody() == null) {
-                            methoddec.setBody(asn.newBlock());
-                            methoddec.getBody().setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStopIndex());
-                        }
-                        varDecStat.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,varDecStat.toString().length());
-                        PyMap.currentMethodGain+=varDecStat.toString().length();
-                        PyMap.totalCharGains+=varDecStat.toString().length();
-                        methoddec.getBody().statements().add(varDecStat);
-                    }
-                }
-            }
 
-            ArrayList<MethodDeclaration> list_method = new ArrayList<>();
-            methoddec.setName(asn.newSimpleName(((FunctionDef) node).getName().toString())); //We assign only the parameter self. Type of other parameters are assigned
+            methoddec.setName(asn.newSimpleName(((FunctionDef) node).getName().toString()));
+
+            //We assign only the parameter self. Type of other parameters are assigned
             for (Object arg : (AstList) ((arguments) ((FunctionDef) node).getArgs()).getArgs()) {
                 if (((arg) arg).getArg().toString().equals("self") && node.getParent() instanceof ClassDef){
                     SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
@@ -138,8 +129,8 @@ public class MapPyStatementsTOJDK extends PyMap{
                     simpleName.setSourceRange(((arg) arg).getCharStartIndex()+PyMap.totalCharGains,((arg) arg).getArg().toString().length());
                     parameter.setName(simpleName);
                     SimpleType simpleType = asn.newSimpleType(asn.newName(((ClassDef) node.getParent()).getInternalName()));
-                    simpleType.setSourceRange(simpleName.getStartPosition()+1,((ClassDef) node.getParent()).getInternalName().length());
-
+              //      simpleType.setSourceRange(simpleName.getStartPosition()+simpleName.getLength()+1,((ClassDef) node.getParent()).getInternalName().length());
+//TODO uncomment above
                     parameter.setType(simpleType);
                     parameter.setSourceRange(((arg) arg).getCharStartIndex()+PyMap.totalCharGains,((arg) arg).getCharStopIndex()-((arg) arg).getCharStartIndex()+
                             ((ClassDef) node.getParent()).getInternalName().length()+1);
@@ -149,6 +140,28 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
 
             }
+            int startPosition=node.getCharStartIndex()+PyMap.totalCharGains;
+            if (variableNeedsDeclaration != null) {
+                for (TypeDecNeeds typeDecNeeds : variableNeedsDeclaration) {
+
+                    String typeString = this.typeNodes.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
+                    if (typeString!=null) {
+                        VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString,startPosition);
+                        if (methoddec.getBody() == null) {
+                            methoddec.setBody(asn.newBlock());
+                            methoddec.getBody().setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
+                        }
+                        varDecStat.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,varDecStat.toString().length());
+                        PyMap.currentMethodGain+=varDecStat.toString().length();
+                        PyMap.totalCharGains+=varDecStat.toString().length();
+                        startPosition+=varDecStat.toString().length();
+                        methoddec.getBody().statements().add(varDecStat);
+                    }
+                }
+            }
+
+            ArrayList<MethodDeclaration> list_method = new ArrayList<>();
+
             for (Object ch : (AstList)((FunctionDef) node).getBody()){
                 for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes)) {
                     if (methoddec.getBody() ==null){
@@ -169,7 +182,8 @@ public class MapPyStatementsTOJDK extends PyMap{
             assign.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             assign.setOperator(new Assignment.Operator("="));
-            assert(((AstList)((Assign) node).getTargets()).size()>1);
+            logger.debug(((AstList)((Assign) node).getTargets()));
+            assert(((AstList)((Assign) node).getTargets()).size()<=1);
             assign.setLeftHandSide(MapPyExpressionsJDK.mapExpression((expr) ((AstList)((Assign) node).getTargets()).get(0),asn, import_nodes));
             assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((Assign) node).getValue(),asn, import_nodes));
             assign.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
@@ -194,6 +208,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                 for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes)) {
                     if (forstmt.getBody() ==null){
                         forstmt.setBody(asn.newBlock());
+                        forstmt.getBody().setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
                     }
                     ((Block)forstmt.getBody()).statements().add(o);
                 }

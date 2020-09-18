@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import graph.PDGDataEdge.Type;
 import utils.JavaASTUtil;
+import graph.PDGDataEdge.Type;
 
 public abstract class PDGNode {
 	protected static final String PREFIX_DUMMY = "dummy_";

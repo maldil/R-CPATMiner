@@ -1,5 +1,6 @@
 package python3;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Name;
 import org.jpp.PyASTParser;
@@ -15,7 +16,7 @@ import java.util.Map;
 import static org.testng.Assert.*;
 
 public class PythonASTUtilTest {
-
+    private static org.apache.log4j.Logger log = Logger.getLogger(LineCounterTestASTVisitor.class);
     @Test
     public void testGetImportStatements1()  {
         String content = "import numpy as np" + "\n" + "from tensorflow.boo import foo as fo" + "\n";
@@ -85,7 +86,6 @@ public class PythonASTUtilTest {
                 "    result=numpy.boo.sum.com.som.lom(numpy.boo.thh.array(M));\n" +
                 "  }\n" +
                 "}\n");
-
     }
 
     @Test
@@ -125,5 +125,69 @@ public class PythonASTUtilTest {
                 "    result=numpy.boo.sum.com.som.lom(numpy.boo.thh.array(M));\n" +
                 "  }\n" +
                 "}\n");
+    }
+
+    @Test
+    public void testCharPosition1(){
+        String content = "import numpy.boo as np\n" +
+                "from tensorflow import matrix as xp\n" +
+                "class Test ():\n" +
+                "\tdef add_arrays(self,M):\n" +
+                "\t\tresult = np.sum.com.som.lom(np.thh.array(M),axis=1)";
+
+        PythonASTUtil pythonASTUtil = new PythonASTUtil();
+        HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
+        typeASTNodeStringHashMap.put(new TypeASTNode(5,2,"result",null),"numpy.ndarray" );
+        PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
+
+        LineCounterTestASTVisitor visitor = new LineCounterTestASTVisitor();
+        pyCompilationUnit.accept(visitor);
+        log.debug("\n"+pyCompilationUnit.toString());
+    }
+
+    @Test
+    public void testCharPosition2(){
+        String content = "import numpy.boo as np\n" +
+                "from tensorflow import matrix as xp\n" +
+                "class Test ():\n" +
+                "\tdef add_arrays(self,M):\n" +
+                "\t\tresult = np.sum.com.som.lom(np.thh.array(M),axis=1)\n" +
+                "\t\tfor x in range(10):\n" +
+                "\t\t\tvoo+=1\n";
+
+        PythonASTUtil pythonASTUtil = new PythonASTUtil();
+        HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
+        typeASTNodeStringHashMap.put(new TypeASTNode(5,2,"result",null),"numpy.ndarray" );
+        PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
+
+        LineCounterTestASTVisitor visitor = new LineCounterTestASTVisitor();
+        pyCompilationUnit.accept(visitor);
+        log.debug("\n"+pyCompilationUnit.toString());
+    }
+
+    @Test
+    public void testCharPosition3(){
+        String content = "import numpy.boo as np\n" +
+                "from tensorflow import matrix as xp\n" +
+                "class Test1 ():\n" +
+                "\tdef add_arrays(self,M):\n" +
+                "\t\tresult = np.sum.com.som.lom(np.thh.array(M),axis=1)\n" +
+                "\t\tfor x in range(10):\n" +
+                "\t\t\tvoo+=1\n" +
+                "\n" +
+                "class Test2 ():\n" +
+                "\tdef add_arrays(self,M):\n" +
+                "\t\tresult = np.sum.com.som.lom(np.thh.array(M),axis=1)\n" +
+                "\t\tfor x in range(10):\n" +
+                "\t\t\tvoo+=1\n";
+
+        PythonASTUtil pythonASTUtil = new PythonASTUtil();
+        HashMap<TypeASTNode, String> typeASTNodeStringHashMap = new HashMap<>();
+        typeASTNodeStringHashMap.put(new TypeASTNode(5,2,"result",null),"numpy.ndarray" );
+        PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
+
+        LineCounterTestASTVisitor visitor = new LineCounterTestASTVisitor();
+        pyCompilationUnit.accept(visitor);
+        log.debug("\n"+pyCompilationUnit.toString());
     }
 }
