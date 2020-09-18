@@ -2,6 +2,7 @@ package python3;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.NumberLiteral;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.jpp.PyASTParser;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.NodeNotFoundException;
@@ -40,10 +41,13 @@ public class MapPyExpressionsJDK extends PyMap {
 
         }
         else if (pyexp instanceof Name){
-            return ast.newSimpleName(((Name) pyexp).getId().toString());
+            SimpleName simpleName = ast.newSimpleName(((Name) pyexp).getId().toString());
+            simpleName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,((Name) pyexp).getId().toString().length());
+            return simpleName;
         }
         else if (pyexp instanceof Call){
             MethodInvocation invocation = ast.newMethodInvocation();
+            int start_invocation = pyexp.getCharStartIndex()+PyMap.totalCharGains;
             if (((Call) pyexp).getFunc() instanceof Name){
                 SimpleName method_name = (SimpleName)mapExpression((expr) ((Call) pyexp).getFunc(), ast, import_nodes);
                 invocation.setName(method_name);
@@ -54,6 +58,8 @@ public class MapPyExpressionsJDK extends PyMap {
             }
             else if (((Call) pyexp).getFunc() instanceof Attribute){
                 SimpleName method_name = ast.newSimpleName(((Attribute)((Call) pyexp).getFunc()).getAttr().toString());
+
+
                 Expression expre;
                 if (((Attribute)((Call) pyexp).getFunc()).getValue() instanceof Name && import_nodes.get(((Name)((Attribute)((Call) pyexp).getFunc()).getValue()).getId().toString())!=null){
                     org.eclipse.jdt.core.dom.Name name = import_nodes.get(((Name) ((Attribute) ((Call) pyexp).getFunc()).getValue()).getId().toString());
@@ -64,18 +70,27 @@ public class MapPyExpressionsJDK extends PyMap {
 
                     }
                     else{
-                        expre = ast.newSimpleName(name.getFullyQualifiedName());
+                        SimpleName simpleName = ast.newSimpleName(name.getFullyQualifiedName());
+                        simpleName.setSourceRange(((Attribute) ((Call) pyexp).getFunc()).getCharStartIndex(),name.getFullyQualifiedName().length());
+                        int length=name.getFullyQualifiedName().length()-((Name) ((Attribute) ((Call) pyexp).getFunc()).getValue()).getId().toString().length();
+                        PyMap.currentMethodGain+=length;
+                        PyMap.totalCharGains+=length;
+                        expre = simpleName;
                     }
                 }
                 else
                 {
                     expre = mapExpression( (expr) ((Attribute)((Call) pyexp).getFunc()).getValue(),ast, import_nodes);
                 }
+
+                method_name.setSourceRange(pyexp.getCharStartIndex()+expre.toString().length()+PyMap.totalCharGains,method_name.toString().length());
+
                 invocation.setName(method_name);
                 invocation.setExpression(expre);
                 for (Object arg : (AstList) ((Call) pyexp).getArgs()) {
                     invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes));
                 }
+                invocation.setSourceRange(start_invocation,invocation.toString().length());
                 return invocation;
             }
             else{
@@ -86,6 +101,7 @@ public class MapPyExpressionsJDK extends PyMap {
             ArrayAccess arrayAccess = ast.newArrayAccess();
             arrayAccess.setArray(mapExpression((expr)((Subscript) pyexp).getValue(),ast, import_nodes));
             arrayAccess.setIndex(mapExpression((expr) ((Index)((Subscript) pyexp).getSlice()).getValue(),ast, import_nodes));
+            arrayAccess.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
             return arrayAccess;
         }
         else if (pyexp instanceof List){
@@ -93,7 +109,7 @@ public class MapPyExpressionsJDK extends PyMap {
             for (Object elt : (AstList) ((List) pyexp).getElts()) {
                 arrayInitializer.expressions().add(mapExpression((expr) elt,ast, import_nodes));
             }
-
+            arrayInitializer.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
 
             //TODO fille the data
             return arrayInitializer;
@@ -111,14 +127,19 @@ public class MapPyExpressionsJDK extends PyMap {
 
                 }
                 else{
-                    expression = ast.newSimpleName(name.getFullyQualifiedName());
+                    SimpleName simpleName = ast.newSimpleName(name.getFullyQualifiedName());
+                    simpleName.setSourceRange(name.getStartPosition()+PyMap.totalCharGains,name.getLength());
+                    expression = simpleName;
                 }
             }
             else{
                 expression = mapExpression((expr) ((Attribute) pyexp).getValue(), ast, import_nodes);
             }
             SimpleName simpleName = ast.newSimpleName(((Attribute) pyexp).getAttr().toString());
-            return ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
+            simpleName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,((Attribute) pyexp).getAttr().toString().length());
+            QualifiedName qualifiedName = ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
+            qualifiedName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
+            return qualifiedName;
         }
         else {
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());

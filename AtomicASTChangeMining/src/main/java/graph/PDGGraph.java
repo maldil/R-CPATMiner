@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 import core.Configurations;
+import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.ArrayCreation;
@@ -70,13 +71,12 @@ import exas.ExasFeature;
 import exas.ExasSingleFeature;
 import graph.PDGDataEdge.Type;
 import treed.TreedConstants;
-import utils.Config;
 import utils.FeatureAscendingOrder;
 import utils.JavaASTUtil;
 
 public class PDGGraph implements Serializable {
 	private static final long serialVersionUID = -5128703931982211886L;
-	
+	static Logger logger = Logger.getLogger(PDGGraph.class);
 	private PDGBuildingContext context;
 	private HashMap<String, HashSet<PDGDataNode>> defStore = new HashMap<>();
 	protected PDGNode entryNode, endNode;
@@ -98,7 +98,7 @@ public class PDGGraph implements Serializable {
 		context.addScope(); //this.localVariables.push(new HashMap<String, String>());
 		context.setMethod(md, false);
 		int numOfParameters = 0;
-		System.out.println(md.getModifiers());
+		logger.debug (md.getModifiers());
 		if (Modifier.isStatic(md.getModifiers())) //TODO add capability to find Python static methods
 			parameters = new PDGDataNode[md.parameters().size()];
 		else {
@@ -110,8 +110,6 @@ public class PDGGraph implements Serializable {
 				parameters[numOfParameters++] = new PDGDataNode(
 						null, ASTNode.THIS_EXPRESSION, "this", "this", "this");
 			}
-
-
 		}
 		entryNode = new PDGEntryNode(md, ASTNode.METHOD_DECLARATION, "START");
 		nodes.add(entryNode);
@@ -1485,7 +1483,7 @@ public class PDGGraph implements Serializable {
 			}
 		}
 		/*if (this.statementNodes.isEmpty() || pdg.statementNodes.isEmpty()) {
-			System.err.println("Merge an empty graph!!!");
+			System.err.println("Merge an empty pdg.graph!!!");
 			System.exit(-1);
 		}*/
 		this.dataSources.addAll(pdg.dataSources);
@@ -1615,7 +1613,7 @@ public class PDGGraph implements Serializable {
 		if (pdg.statementNodes.isEmpty())
 			return;
 		if (this.statementNodes.isEmpty() || pdg.statementNodes.isEmpty()) {
-			System.err.println("Merge an empty graph!!!");
+			System.err.println("Merge an empty pdg.graph!!!");
 			System.exit(-1);
 		}
 		this.sinks.clear();

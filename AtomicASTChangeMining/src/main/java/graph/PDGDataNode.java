@@ -1,9 +1,11 @@
 package graph;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import graph.PDGDataEdge.Type;
 
 public class PDGDataNode extends PDGNode {
+	static Logger logger = Logger.getLogger(PDGNode.class);
 	protected boolean isField = false, isDeclaration = false;
 	
 	protected String dataName;

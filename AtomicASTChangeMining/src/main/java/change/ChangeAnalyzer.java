@@ -126,9 +126,8 @@ public class ChangeAnalyzer {
 	public void buildGitConnector() {
 		logger.debug("Building git connector for : "+url);
 		this.gitConn = new GitConnector(url + "/.git");
-		logger.debug("codeoc ");
 		this.gitConn.connect();
-		logger.debug("fff ");
+
 
 	}
 
@@ -191,7 +190,7 @@ public class ChangeAnalyzer {
 
 	public void analyzeGit() {
 		this.cproject = new CProject(projectId, projectName);
-		this.cproject.revisions = new ArrayList<CRevision>();
+		this.cproject.revisions = new ArrayList<>();
 		File dir = new File(Configurations.outputPath + "/" + projectName);
 		Iterable<RevCommit> commits = null;
 		try {
@@ -199,10 +198,11 @@ public class ChangeAnalyzer {
 
 			commits = this.gitConn.getGit().log().add(head).call();
 		} catch (GitAPIException e) {
-			System.err.println(e.getMessage());
+			logger.error(e.getMessage());
 		} catch (RuntimeException e) {
-			System.err.println(e.getMessage());
+			logger.error(e.getMessage());
 		} catch (IOException e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		if (commits == null)
@@ -240,8 +240,6 @@ public class ChangeAnalyzer {
 		this.numOfRevisions++;
 		if (this.numOfRevisions % 1000 == 0)
 			logger.info("Analyzing revision: " + this.numOfRevisions + " " + commit.getName() + " from " + projectName);
-		logger.debug(commit.getShortMessage());
-		logger.debug(commit.name());
 		RevisionAnalyzer ra = new RevisionAnalyzer(this, commit,this.url);
 		boolean analyzed = ra.analyzeGit();
 		if (analyzed) {
