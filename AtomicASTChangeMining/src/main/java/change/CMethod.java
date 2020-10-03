@@ -486,9 +486,10 @@ public class CMethod extends ChangeEntity {
 	}
 
 	public ChangeGraph getChangeGraph(Repository repository, RevCommit commit) {
-		PDGGraph pdg1 = new PDGGraph(this.declaration, new PDGBuildingContext(repository, commit, this.getCFile().getPath(), false));
+		PDGGraph pdg1 = new PDGGraph(this.declaration, new PDGBuildingContext(repository, commit, this.getCFile().getPath(), false,cClass.getCFile().getCompileUnit().imports()));
 		pdg1.buildChangeGraph(0);
-		PDGGraph pdg2 = new PDGGraph(this.mappedMethod.declaration, new PDGBuildingContext(repository, commit, this.mappedMethod.getCFile().getPath(), false));
+		PDGGraph pdg2 = new PDGGraph(this.mappedMethod.declaration, new PDGBuildingContext(repository, commit, this.mappedMethod.getCFile().getPath(), false,
+				cClass.getCFile().getCompileUnit().imports()));
 		pdg2.buildChangeGraph(1);
 		pdg2.buildChangeGraph(pdg1);
 		return new ChangeGraph(pdg2);

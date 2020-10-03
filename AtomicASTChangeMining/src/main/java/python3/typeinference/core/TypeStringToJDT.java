@@ -1,13 +1,16 @@
 package python3.typeinference.core;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
@@ -31,20 +34,23 @@ public class TypeStringToJDT extends PyMap{
     static Logger logger = Logger.getLogger(TypeStringToJDT.class);
     public static VariableDeclarationStatement mapTypeStringToTypeTree(AST ast, TypeDecNeeds needs, String typeString, int startPosition) throws NodeNotFoundException {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setSourceRange(startPosition+PyMap.totalCharGains ,variableDeclarationFragment.toString().length());
-        SimpleName simpleName = ast.newSimpleName(needs.getName());
-
-        variableDeclarationFragment.setName(simpleName);
         VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(variableDeclarationFragment);
-        Type jdtType = getJDTType(ast, typeString, startPosition+simpleName.toString().length());
-        simpleName.setSourceRange(startPosition+jdtType.toString().length()+1+PyMap.totalCharGains ,simpleName.toString().length());
-        jdtType.setSourceRange(startPosition+PyMap.totalCharGains,jdtType.toString().length());
+
+        Type jdtType = getJDTType(ast, typeString, startPosition);
+        assert jdtType != null;
+        jdtType.setSourceRange(startPosition,jdtType.toString().length());
         variableDeclarationStatement.setType(jdtType);
+
+        SimpleName simpleName = ast.newSimpleName(needs.getName());
+        simpleName.setSourceRange(startPosition + jdtType.toString().length()+1,simpleName.toString().length());
+        variableDeclarationFragment.setName(simpleName);
+
+        variableDeclarationFragment.setSourceRange(startPosition+ jdtType.toString().length()+1,variableDeclarationFragment.toString().length());
 
         return variableDeclarationStatement;
     }
 
-    private static Type getJDTType(AST ast, String typeString, int startPosition) throws NodeNotFoundException {
+    public static Type getJDTType(AST ast, String typeString, int startPosition) throws NodeNotFoundException {
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree=null;
         try {
@@ -72,30 +78,30 @@ public class TypeStringToJDT extends PyMap{
             }
             else if (tree.getText().equals("Any")){
                 SimpleType any = ast.newSimpleType(ast.newName("Any"));
-                any.setSourceRange(startPosition,4);
+                any.setSourceRange(startPosition,3);
                 return any;
             }
             else if (tree.getText().equals("nothing")){
                 SimpleType any = ast.newSimpleType(ast.newName("Any"));
-                any.setSourceRange(startPosition,4);
+                any.setSourceRange(startPosition,3);
                 return any;
             }
             else if (tree.getText().contains(".")){
-                try {
-                    mod mod = PyASTParser.parsePython(tree.getText());
-                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<>());
-                    SimpleType simpleType = ast.newSimpleType((Name) expression);
-                    simpleType.setSourceRange(startPosition,expression.toString().length());
+
+//                    mod mod = PyASTParser.parsePython(tree.getText());
+//                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<>());
+//                    SimpleType simpleType = ast.newSimpleType((Name) expression);
+
+
+                    QualifiedName qualifiedName = (QualifiedName) ast.newName(tree.getText().split("\\."));
+                    qualifiedName.setSourceRange(startPosition,qualifiedName.toString().length());
+                    SimpleType simpleType = ast.newSimpleType(qualifiedName);
+                    simpleType.setSourceRange(startPosition,simpleType.toString().length());
                     return simpleType;
 
-                } catch (ExpressionNotFound expressionNotFound) {
-                    expressionNotFound.printStackTrace();
-                    logger.fatal("Error when converting types");
-                    logger.error(expressionNotFound);
-                }
-                Name any = ast.newName("Any");
-                any.setSourceRange(startPosition,4);
-                return ast.newSimpleType(any);
+//                Name any = ast.newName("Any");
+//                any.setSourceRange(startPosition,4);
+//                return ast.newSimpleType(any);
             }
 
             else{
@@ -106,8 +112,8 @@ public class TypeStringToJDT extends PyMap{
         }
         else if(tree.getChildren().size()==1){
             if (tree.getText().equals("List")){
-                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition));
-                arrayType.setSourceRange(startPosition,4);
+                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5));
+                arrayType.setSourceRange(startPosition,arrayType.toString().length());
                 return arrayType;
 
             }
@@ -131,5 +137,6 @@ public class TypeStringToJDT extends PyMap{
         }
 
     }
+
 
 }

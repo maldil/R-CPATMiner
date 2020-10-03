@@ -5,7 +5,13 @@ import org.eclipse.jdt.core.dom.*;
 import org.testng.Assert;
 import python3.typeinference.core.TypeInformationTest;
 
+import javax.swing.*;
+import java.util.jar.JarOutputStream;
+
+import static org.hamcrest.core.AnyOf.anyOf;
+
 public class LineCounterTestASTVisitor extends ASTVisitor {
+
     private static org.apache.log4j.Logger log = Logger.getLogger(LineCounterTestASTVisitor.class);
     @Override
     public void preVisit(ASTNode node) {
@@ -20,9 +26,6 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(AnnotationTypeDeclaration node) {
-
-
-
         return super.visit(node);
     }
 
@@ -148,6 +151,92 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(EnhancedForStatement node) {
+        if (node.getParent().getParent() instanceof MethodDeclaration && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays1")) {
+            Assert.assertEquals(node.getStartPosition(), ("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    ").length());
+            Assert.assertEquals(node.getParameter().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    ").length());
+
+            Assert.assertEquals(node.getExpression().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : ").length());
+        }
+        else if (node.getParent().getParent() instanceof MethodDeclaration && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays2")) {
+            Assert.assertEquals(node.getStartPosition(), ("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    ").length());
+            Assert.assertEquals(node.getParameter().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    ").length());
+            Assert.assertEquals(node.getExpression().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : ").length());
+        }
         return super.visit(node);
     }
 
@@ -198,6 +287,25 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(ImportDeclaration node) {
+        Assert.assertEquals(node.toString().length(),node.getLength());
+        log.debug(node.toString());
+        if (node.toString().equals("import numpy.boo;"+"\n")){
+            Assert.assertEquals(node.getStartPosition(),0);
+        }
+//        else if (node.toString().equals("import tensorflow.matrix;"+"\n"))
+//        {
+//            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;"+"\n").length()+("import aaa.boo;"+"\n").length()+("import zooo;"+"\n").length());
+//        }
+        else if (node.toString().equals("import aaa.boo;"+"\n")){
+            Assert.assertEquals(node.getStartPosition(),18);
+        }
+        else if (node.toString().equals("import zooo;"+"\n")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;"+"\n").length()+("import aaa.boo;"+"\n").length());
+        }
+//        else {
+//            log.error(node.toString());
+//            Assert.assertTrue(false);
+//        }
         return super.visit(node);
     }
 
@@ -263,16 +371,417 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(MethodRefParameter node) {
+
+
         return super.visit(node);
     }
 
     @Override
     public boolean visit(MethodDeclaration node) {
+        Assert.assertEquals(node.getLength(),node.toString().length());
+        if (node.getName().getIdentifier().equals("add_arrays1")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  ").length());
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void ").length());
+
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 ").length());
+        }
+        else if (node.getName().getIdentifier().equals("add_arrays2")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  ").length());
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 ").length());
+        }
+        else if (node.getName().getIdentifier().equals("add_arrays3")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  ").length());
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 ").length());
+        }
+        else if (node.getName().getIdentifier().equals("add_arrays4")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  ").length());
+
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 ").length());
+        }
+        else if (node.getName().getIdentifier().equals("add_arrays5")){
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void ").length());
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  ").length());
+
+
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays5(  ").length());
+            Assert.assertEquals(((SingleVariableDeclaration)node.parameters().get(0)).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays5(  Test3 ").length());
+        }
+
+
         return super.visit(node);
     }
 
     @Override
     public boolean visit(MethodInvocation node) {
+
         return super.visit(node);
     }
 
@@ -394,6 +903,140 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(SingleVariableDeclaration node) {
+        System.out.println("Node "+node.toString());
+        if (node.getName().getIdentifier().equals("self") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays1")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  ").length());
+
+        }
+        else if (node.getName().getIdentifier().equals("self") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays2")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  ").length());
+        }
+        else if (node.getName().getIdentifier().equals("self") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays3")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  ").length());
+
+        }
+        else if (node.getName().getIdentifier().equals("self") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays4")) {
+            Assert.assertEquals(node.getStartPosition(), ("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  ").length());
+        }
+        else if (node.getName().getIdentifier().equals("self") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays5")) {
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test3 {\n" +
+                    "  void add_arrays3(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays4(  Test3 self){\n" +
+                    "    print(\"nice\");\n" +
+                    "  }\n" +
+                    "  void add_arrays5(  ").length());
+
+        }
+        else if (node.getType().toString().equals("numpy.ndarray") && node.getParent() instanceof MethodDeclaration &&
+                ((MethodDeclaration) node.getParent()).getName().getIdentifier().equals("add_arrays1")){
+            System.out.println("hit");
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    ").length());
+
+        }
+
         return super.visit(node);
     }
 
@@ -474,6 +1117,119 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(TypeDeclaration node) {
+        Assert.assertEquals(node.getLength(),node.toString().length());
+        if (node.getName().toString().equals("Test1")){
+            log.debug(node.getStartPosition());
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n").length());
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class ").length());
+
+
+
+        }
+        else if (node.getName().toString().equals("Test2"))
+        {
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n").length());
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays2(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class ").length());
+            Assert.assertEquals(node.getSuperclassType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays3(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends ").length());
+
+        }
+        else if (node.getName().toString().equals("Test3")) {
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n").length());
+
+            Assert.assertEquals(node.getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    int[] result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom2(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class ").length());
+        }
+
+
+        log.debug("class");
+        log.debug(node.toString());
         return super.visit(node);
     }
 
@@ -514,6 +1270,96 @@ public class LineCounterTestASTVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationStatement node) {
+        if (node.getType().toString().equals("numpy.ndarray") && node.getParent().getParent() instanceof MethodDeclaration
+                && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays1")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    ").length());
+            Assert.assertEquals(node.getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    ").length());
+
+            Assert.assertEquals(((SimpleType)node.getType()).getName().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    ").length());
+//            Assert.assertEquals(((QualifiedName)((SimpleType)node.getType()).getName()).getQualifier().getStartPosition(),("import numpy.boo;\n" +
+//                    "import aaa.boo;\n" +
+//                    "import zooo;\n" +
+//                    "import tensorflow.matrix;\n" +
+//                    "public class Test1 {\n" +
+//                    "  void add_arrays1(  Test1 self){\n" +
+//                    "    ").length());
+//            Assert.assertEquals(((QualifiedName)((SimpleType)node.getType()).getName()).getName().getStartPosition(),("import numpy.boo;\n" +
+//                    "import aaa.boo;\n" +
+//                    "import zooo;\n" +
+//                    "import tensorflow.matrix;\n" +
+//                    "public class Test1 {\n" +
+//                    "  void add_arrays1(  Test1 self){\n" +
+//                    "    numpy.").length());
+        }
+        else if (node.getType().toString().equals("int[]") && node.getParent().getParent() instanceof MethodDeclaration
+                && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays2")){
+            Assert.assertEquals(node.getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    ").length());
+
+            Assert.assertEquals(node.getType().getStartPosition(),("import numpy.boo;\n" +
+                    "import aaa.boo;\n" +
+                    "import zooo;\n" +
+                    "import tensorflow.matrix;\n" +
+                    "public class Test1 {\n" +
+                    "  void add_arrays1(  Test1 self){\n" +
+                    "    numpy.ndarray result;\n" +
+                    "    result=aaa.boo.sum.com.som.lom(aaa.boo.thh.array(M));\n" +
+                    "    for (    int x : range(10)) {\n" +
+                    "      voo+=1;\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n" +
+                    "public class Test2 extends Boo {\n" +
+                    "  void add_arrays2(  Test2 self){\n" +
+                    "    ").length());
+        }
+        else if (node.getType().toString().equals("numpy.ndarray.foo.dooo") && node.getParent().getParent() instanceof MethodDeclaration
+                && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays6")){
+            Assert.assertTrue(node.getStartPosition()==715 || node.getStartPosition()==694 );
+            Assert.assertTrue(node.getType().getStartPosition()==715 || node.getType().getStartPosition()==694);
+            Assert.assertTrue(((SimpleType)node.getType()).getName().getStartPosition()==715||((SimpleType)node.getType()).getName().getStartPosition()==694 );
+//            Assert.assertTrue(((QualifiedName)((SimpleType)node.getType()).getName()).getQualifier().getStartPosition()==715||((QualifiedName)((SimpleType)node.getType()).getName()).getQualifier().getStartPosition()==694);
+//            Assert.assertTrue(((QualifiedName)((SimpleType)node.getType()).getName()).getName().getStartPosition()==733||((QualifiedName)((SimpleType)node.getType()).getName()).getName().getStartPosition()==712);
+
+        }
+        else if (node.getType().toString().equals("int[][]") && node.getParent().getParent() instanceof MethodDeclaration
+                && ((MethodDeclaration) node.getParent().getParent()).getName().getIdentifier().equals("add_arrays6")){
+            Assert.assertTrue(node.getStartPosition()==694||node.getStartPosition()==730);
+       //     Assert.assertTrue(((ArrayType)node.getType()).getElementType().getStartPosition()==694||((ArrayType)node.getType()).getElementType().getStartPosition()==730);
+        }
+
         return super.visit(node);
     }
 

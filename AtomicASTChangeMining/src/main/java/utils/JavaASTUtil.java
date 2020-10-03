@@ -82,7 +82,8 @@ public class JavaASTUtil {
 		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
 		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
-		System.out.println(parser);
+		System.out.println("BELOW");
+		System.out.println(source);
     	parser.setSource(source.toCharArray());
     	parser.setCompilerOptions(options);
     	ASTNode ast = parser.createAST(null);

@@ -605,6 +605,12 @@ public class PDGGraph implements Serializable {
 					name, false, false));
 			return pdg;
 		}
+		else if(context.getImportsMap().containsKey(name)){
+			PDGGraph pdg = new PDGGraph(context, new PDGDataNode(
+					astNode, astNode.getNodeType(), name, name,
+					name, false, false));
+			return pdg;
+		}
 		PDGGraph pdg = new PDGGraph(context, new PDGDataNode(
 				null, ASTNode.THIS_EXPRESSION, "this",
 				"this", "this"));

@@ -19,6 +19,7 @@ import graph.PDGDataEdge;
 import graph.PDGDataEdge.Type;
 import graph.PDGEntryNode;
 import graph.PDGEdge;
+import treed.TreedConstants;
 
 public class DotGraph {
 	public static final String SHAPE_BOX = "box";
@@ -52,7 +53,24 @@ public class DotGraph {
 				shape = SHAPE_DIAMOND;
 			else if (node.getType().equals("d"))
 				shape = SHAPE_ELLIPSE;
+
+			if (node.getChangeType()== TreedConstants.STATUS_UNCHANGED){
+				color = "green";
+			}
+			else if (node.getChangeType()== TreedConstants.STATUS_RELABELED){
+				color = "blue";
+			}
+			else if(node.getChangeType()== TreedConstants.STATUS_MOVED){
+				color = "red";
+			}
+			else if (node.getChangeType() == -1){
+				color = "pink";
+			}
 			graph.append(addNode(id, node.getLabel(), shape, null, color, color));
+
+
+
+
 		}
 		//add edges
 		for (ChangeNode node : cg.getNodes()) {

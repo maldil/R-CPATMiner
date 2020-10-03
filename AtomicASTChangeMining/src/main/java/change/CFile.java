@@ -41,7 +41,13 @@ public class CFile extends ChangeEntity {
 				TypeInformation typeInformation = new TypeInformation();
 				Map<TypeASTNode, String> typeInformation1 = typeInformation.getTypeInformation(this.url+"/"+path, this.url, filePath.replace('/','.'));
 				PythonASTUtil astUtil = new PythonASTUtil();
-				compileUnit = astUtil.parseSource(content,typeInformation1);
+				CompilationUnit pyCompileUnit = astUtil.parseSource(content,typeInformation1);
+				logger.debug(pyCompileUnit.toString());
+				compileUnit= (CompilationUnit)JavaASTUtil.parseSource(pyCompileUnit.toString());
+				if (compileUnit.getProblems().length>0){
+					logger.error("Converted Java Compilation unit contains errors");
+				}
+				logger.debug(compileUnit);
 			}
 			else if (Configurations.IS_JAVA)
 			{
@@ -61,6 +67,7 @@ public class CFile extends ChangeEntity {
 			logger.debug(compileUnit.toString());
 			VectorVisitor vectorVisitor = new VectorVisitor();
 			compileUnit.accept(vectorVisitor);
+
 			for (int index = 0; index < compileUnit.types().size(); index++) {
 				AbstractTypeDeclaration declaration = (AbstractTypeDeclaration) compileUnit
 						.types().get(index);
@@ -186,5 +193,9 @@ public class CFile extends ChangeEntity {
 	@Override
 	public String getQualName() {
 		return this.path;
+	}
+
+	public CompilationUnit getCompileUnit() {
+		return compileUnit;
 	}
 }

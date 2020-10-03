@@ -3,6 +3,7 @@ package graph;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -47,12 +48,26 @@ public class PDGBuildingContext {
 	private Stack<HashSet<PDGActionNode>> stkTrys = new Stack<>();
 	private Stack<HashMap<String, String>> localVariables = new Stack<>(), localVariableTypes = new Stack<>();
 	private HashMap<String, String> fieldTypes = new HashMap<>();
+	private HashMap<String, String> importsMap = new HashMap<>();
+	public HashMap<String, String> getImportsMap() {
+		return importsMap;
+	}
+
+
 	
-	public PDGBuildingContext(Repository repository, RevCommit commit, String sourceFilePath, boolean interprocedural) {
+	public PDGBuildingContext(Repository repository, RevCommit commit, String sourceFilePath, boolean interprocedural, List imports) {
 		this.repository = repository;
 		this.revCommit = commit;
 		this.sourceFilePath = sourceFilePath;
 		this.interprocedural = interprocedural;
+
+		for (Object anImport : imports) {
+			String fullyQualifiedName = ((ImportDeclaration) anImport).getName().getFullyQualifiedName();
+			String[] split = fullyQualifiedName.split("\\.");
+			importsMap.put(split[split.length-1],fullyQualifiedName);
+		}
+
+
 	}
 	
 	public PDGBuildingContext(PDGBuildingContext context) {
