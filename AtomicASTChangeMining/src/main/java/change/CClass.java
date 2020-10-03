@@ -524,4 +524,8 @@ public class CClass extends ChangeEntity {
 			ce.setMappedInitializer(null);
 		}
 	}
+
+	public CFile getcFile() {
+		return cFile;
+	}
 }

@@ -21,7 +21,6 @@ public class TypeInfoTest {
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree = typeInfo.getTypeTree(typeString);
         Assert.assertEquals("List",typeTree.getTree().toString());
-        Assert.assertTrue(typeTree.isError());
     }
 
     @Test
@@ -29,7 +28,7 @@ public class TypeInfoTest {
         String typeString = "jhon";
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree = typeInfo.getTypeTree(typeString);
-        Assert.assertTrue(typeTree.isError());
+
     }
 
     @Test

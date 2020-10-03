@@ -3,7 +3,11 @@ package python3;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.jpp.astnodes.ast.ClassDef;
 import org.jpp.astnodes.ast.ImportFrom;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
@@ -30,6 +34,7 @@ public class PythonASTUtil {
     public PyCompilationUnit parseSource(String content, Map<TypeASTNode, String> typeinfo) {
         mod ast = PyASTParser.parsePython(content);
         logger.debug(ast.toStringTree());
+
         this.typeinformation=typeinfo;
         return createPyCompilationUnit(ast);
     }
@@ -48,11 +53,24 @@ public class PythonASTUtil {
         PyMap.currentMethodGain=0;
         HashMap<String, Name> import_nodes = getImportsAndAlias(ast, asn);
         logger.debug("Import and Alias Names : "+import_nodes);
+        int startChar = 0;
+        TypeDeclaration dummyClass = asn.newTypeDeclaration();
+        Modifier.ModifierKeyword keyword= new Modifier.ModifierKeyword("public",1);
+        Modifier modifier = asn.newModifier(keyword);
+        dummyClass.setModifier(modifier);
+        SimpleName simpleName = asn.newSimpleName("PyDummyClass");
+        dummyClass.setName(simpleName);
+
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
             try {
-                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes);
+                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes,startChar);
+
+
                 for (Object node : Objects.requireNonNull(nodes)) {
+                    logger.debug(node.toString());
+                    startChar+=node.toString().length();
+                    logger.debug("Start Char : "+startChar);
                     if (node instanceof ImportDeclaration)
                     {
                         pyc.setImport((ImportDeclaration) node);
@@ -64,6 +82,9 @@ public class PythonASTUtil {
 //                    else if (node instanceof MethodDeclaration){
 //                        pyc.setTypes(node);
 //                    }
+                    else if (node instanceof MethodDeclaration){
+                        dummyClass.bodyDeclarations().add(node);
+                    }
                     else {
                         logger.fatal("Not implemented statement "+node+ node.toString());
                     }
@@ -72,6 +93,9 @@ public class PythonASTUtil {
                 e.printStackTrace();
             }
 
+        }
+        if (dummyClass.bodyDeclarations().size()>0){
+            pyc.setTypes(dummyClass);
         }
         pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
 
@@ -84,7 +108,7 @@ public class PythonASTUtil {
         for (PythonTree ch : ast.getChildren()){ //collect import statements to resolve alias names.
             if (ch instanceof Import || ch instanceof ImportFrom){
                 try {
-                    for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null)) {
+                    for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null,0)) {
                         if (((ImportDeclaration)o).getasName() !=null){
                             import_nodes.put(((ImportDeclaration)o).getasName().getFullyQualifiedName(),((ImportDeclaration)o).getName());
                         }

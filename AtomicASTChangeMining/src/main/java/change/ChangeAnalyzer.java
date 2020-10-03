@@ -127,7 +127,7 @@ public class ChangeAnalyzer {
 		logger.debug("Building git connector for : "+url);
 		this.gitConn = new GitConnector(url + "/.git");
 		this.gitConn.connect();
-
+		logger.debug("Connected");
 
 	}
 
