@@ -35,7 +35,9 @@ public class TypeStringToJDT extends PyMap{
     public static VariableDeclarationStatement mapTypeStringToTypeTree(AST ast, TypeDecNeeds needs, String typeString, int startPosition) throws NodeNotFoundException {
         VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
         VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(variableDeclarationFragment);
-
+        if(typeString==null){
+            typeString = "PyTypeError";
+        }
         Type jdtType = getJDTType(ast, typeString, startPosition);
         assert jdtType != null;
         jdtType.setSourceRange(startPosition,jdtType.toString().length());
@@ -50,7 +52,32 @@ public class TypeStringToJDT extends PyMap{
         return variableDeclarationStatement;
     }
 
+    public static VariableDeclarationStatement mapTypeStringToTypeTree(AST ast, String needs, String typeString, int startPosition) throws NodeNotFoundException {
+        VariableDeclarationFragment variableDeclarationFragment = ast.newVariableDeclarationFragment();
+        VariableDeclarationStatement variableDeclarationStatement = ast.newVariableDeclarationStatement(variableDeclarationFragment);
+        if(typeString==null){
+            typeString = "PyTypeError";
+        }
+
+
+        Type jdtType = getJDTType(ast, typeString, startPosition);
+        assert jdtType != null;
+        jdtType.setSourceRange(startPosition,jdtType.toString().length());
+        variableDeclarationStatement.setType(jdtType);
+
+        SimpleName simpleName = ast.newSimpleName(needs);
+        simpleName.setSourceRange(startPosition + jdtType.toString().length()+1,simpleName.toString().length());
+        variableDeclarationFragment.setName(simpleName);
+
+        variableDeclarationFragment.setSourceRange(startPosition+ jdtType.toString().length()+1,variableDeclarationFragment.toString().length());
+
+        return variableDeclarationStatement;
+    }
+
     public static Type getJDTType(AST ast, String typeString, int startPosition) throws NodeNotFoundException {
+        if(typeString==null){
+            typeString = "PyTypeError";
+        }
         TypeInfo typeInfo = new TypeInfo();
         TypeTree typeTree=null;
         try {

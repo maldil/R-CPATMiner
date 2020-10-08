@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
+import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
@@ -16,12 +17,17 @@ import org.jpp.PyASTParser;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.BoolOp;
 import org.jpp.astnodes.ast.Compare;
+import org.jpp.astnodes.ast.Delete;
+import org.jpp.astnodes.ast.Starred;
 import org.jpp.astnodes.ast.UnaryOp;
 import org.jpp.astnodes.ast.boolopType;
 import org.jpp.astnodes.ast.cmpopType;
+import org.jpp.astnodes.ast.keyword;
 import org.jpp.astnodes.ast.operatorType;
 import org.jpp.astnodes.ast.unaryopType;
 import org.jpp.astnodes.base.mod;
+import org.jpp.heart.PyFloat;
+import org.jpp.heart.PyObject;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -61,25 +67,38 @@ public class MapPyExpressionsJDK extends PyMap {
                 numberLiteral.setSourceRange(start_char_pos,numberLiteral.toString().length());
                 return numberLiteral;
             }
+            else if (((Num) pyexp).getN() instanceof PyFloat ){
+                NumberLiteral numberLiteral = ast.newNumberLiteral(String.valueOf(((PyFloat) ((Num) pyexp).getN()).getValue()));
+                numberLiteral.setSourceRange(start_char_pos,numberLiteral.toString().length());
+                return numberLiteral;
+            }
             else {
                 throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass());
             }
 
         }
         else if (pyexp instanceof Name){
-            SimpleName simpleName = ast.newSimpleName(((Name) pyexp).getId().toString());
+            String id = ((Name) pyexp).getId().toString();
+            if (id.equals("int")){
+                id="integer";
+            }
+            SimpleName simpleName = ast.newSimpleName(id);
             simpleName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,((Name) pyexp).getId().toString().length());
             return simpleName;
         }
         else if (pyexp instanceof Call){
             MethodInvocation invocation = ast.newMethodInvocation();
-
             if (((Call) pyexp).getFunc() instanceof Name){
                 SimpleName method_name = (SimpleName)mapExpression((expr) ((Call) pyexp).getFunc(), ast, import_nodes,start_char_pos,typeNodes);
                 invocation.setName(method_name);
-                for (Object arg : (AstList) ((Call) pyexp).getArgs()) {
+                for (Object arg : (AstList) ((Call) pyexp).getArgs()) {  //TODO keyword arguments are not parsed by the JPyParser, Thus is a Bug
                     invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
                 }
+                for (Object karg: (AstList) ((Call) pyexp).getKeywords()){
+                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
+                    logger.debug("Key ward is neglected : "+((keyword) karg).getArg());
+                }
+
                 invocation.setSourceRange(start_char_pos,invocation.toString().length());
                 return invocation;
             }
@@ -112,6 +131,10 @@ public class MapPyExpressionsJDK extends PyMap {
                 invocation.setExpression(expre);
                 for (Object arg : (AstList) ((Call) pyexp).getArgs()) {
                     invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,0,typeNodes));
+                }
+                for (Object karg: (AstList) ((Call) pyexp).getKeywords()){
+                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
+                    logger.debug("Key ward is neglected : "+((keyword) karg).getArg());
                 }
                 invocation.setSourceRange(start_char_pos,invocation.toString().length());
                 return invocation;
@@ -205,9 +228,17 @@ public class MapPyExpressionsJDK extends PyMap {
             }
             SimpleName simpleName = ast.newSimpleName(((Attribute) pyexp).getAttr().toString());
             simpleName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,((Attribute) pyexp).getAttr().toString().length());
-            QualifiedName qualifiedName = ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
-            qualifiedName.setSourceRange(pyexp.getCharStartIndex()+ PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
-            return qualifiedName;
+            if (expression instanceof ArrayAccess || expression instanceof FieldAccess || expression instanceof MethodInvocation){
+                FieldAccess fieldAccess = ast.newFieldAccess();
+                fieldAccess.setExpression(expression);
+                fieldAccess.setName(simpleName);
+                return fieldAccess;
+            }
+            else{
+                QualifiedName qualifiedName = ast.newQualifiedName((org.eclipse.jdt.core.dom.Name) expression, simpleName);
+                qualifiedName.setSourceRange(pyexp.getCharStartIndex()+ PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
+                return qualifiedName;
+            }
         }
         else if (pyexp instanceof Str){
             StringLiteral stringLiteral = ast.newStringLiteral();
@@ -306,6 +337,9 @@ public class MapPyExpressionsJDK extends PyMap {
             else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.GtE)){
                 infixExpression.setOperator(InfixExpression.Operator.GREATER_EQUALS);
             }
+            else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.In)){
+                infixExpression.setOperator(InfixExpression.Operator.IN);
+            }
             else{
                 logger.fatal("Unmapped operator found "+((AstList)((Compare) pyexp).getOps()).get(0));
             }
@@ -374,6 +408,12 @@ public class MapPyExpressionsJDK extends PyMap {
             }
             return prefixExpression;
         }
+        else if (pyexp instanceof Starred){
+         return mapExpression((expr) ((Starred) pyexp).getValue(),ast,import_nodes,0,typeNodes); //TODO handle stars, for now we neglect the stars
+
+
+        }
+
         else {
             logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
