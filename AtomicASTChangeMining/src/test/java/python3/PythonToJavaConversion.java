@@ -1,8 +1,11 @@
 package python3;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.internal.codeassist.complete.CompletionParser;
 import org.eclipse.jdt.internal.compiler.parser.Parser;
+import org.eclipse.jdt.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,6 +44,7 @@ public class PythonToJavaConversion {
 
     @Test
     public void testIfExpression3(){
+
         String content = "def add_arrays():\n" +
                 "    self.is_ts = is_ts if is_ts is not None and is_ts is None and 1!=4 or foo<kool  else isinstance(coo,boo)";
         CompilationUnit converted = Convert(content);
@@ -203,6 +207,7 @@ public class PythonToJavaConversion {
                 "        result += '}'\n" +
                 "        return result";
         CompilationUnit converted = Convert(content); //TODO add the assert
+
     }
     @Test
     public void testConversion3(){
@@ -252,14 +257,14 @@ public class PythonToJavaConversion {
                 "                s298 = data.get_entropy(298) / 4.184\n" +
                 "                temperatures = np.array([300, 400, 500, 600, 800, 1000, 1500, 2000, 2400])\n" +
                 "                cp = []\n" +
-                "                for t in temperatures:\n" +
-                "                    cp.append(data.get_heat_capacity(t) / 4.184)\n" +
-                "\n" +
-                "                self.thermo_data = ThermoData(H298=(h298, 'kcal/mol'),\n" +
-                "                                              S298=(s298, 'cal/(mol*K)'),\n" +
-                "                                              Tdata=(temperatures, 'K'),\n" +
-                "                                              Cpdata=(cp, 'cal/(mol*K)'),\n" +
-                "                                              )";
+                "                for tyyy in temperatures:\n" +
+                "                    cp.append(data.get_heat_capacity(t) / 4.184)\n" ;
+//                "\n" +
+//                "                self.thermo_data = ThermoData(H298=(h298, 'kcal/mol'),\n" +
+//                "                                              S298=(s298, 'cal/(mol*K)'),\n" +
+//                "                                              Tdata=(temperatures, 'K'),\n" +
+//                "                                              Cpdata=(cp, 'cal/(mol*K)'),\n" +
+//                "                                              )";
 
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
@@ -305,6 +310,20 @@ public class PythonToJavaConversion {
 
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+                "  void save_yaml(){\n" +
+                "    PyTypeError full_path;\n" +
+                "    if (!os.path.exists(os.path.join(os.path.abspath(path),\"species\",\"\"))) {\n" +
+                "      os.mkdir(os.path.join(os.path.abspath(path),\"species\",\"\"));\n" +
+                "    }\n" +
+                "    full_path=os.path.join(path,filename);\n" +
+                "    withstmt (open(full_path,\"w\")) {\n" +
+                "      PyTypeError f;\n" +
+                "      yaml.dump(self.as_dict(),f);\n" +
+                "    }\n" +
+                "    logging.debug(\"Dumping species {0} data as {1}\".format(self.label,filename));\n" +
+                "  }\n" +
+                "}\n");
 
     }
 
@@ -375,23 +394,284 @@ public class PythonToJavaConversion {
 
     @Test
     public void testConversion7(){
-        String content = "def load_yaml(self, path, label=None, pdep=False):\n" ;
+        String content = "def load_yaml(self, path, label=None, pdep=False):\n" +
+                "        if class_name != 'ArkaneSpecies':\n" +
+                "            raise KeyError(\"Expected a ArkaneSpecies object, but got {0}\".format(class_name))\n" +
+                "        del data['class']\n" +
+                "        freq_data = None\n" +
+                "        if 'imaginary_frequency' in data:\n" +
+                "            freq_data = data['imaginary_frequency']\n" +
+                "            del data['imaginary_frequency']\n" +
+                "        if not data['is_ts']:\n" +
+                "            if 'smiles' in data:\n" +
+                "                data['species'] = Species(smiles=data['smiles'])\n" +
+                "            elif 'adjacency_list' in data:\n" +
+                "                data['species'] = Species().from_adjacency_list(data['adjacency_list'])\n" +
+                "            elif 'inchi' in data:\n" +
+                "                data['species'] = Species(inchi=data['inchi'])\n" +
+                "            else:\n" +
+                "                raise ValueError('Cannot load ArkaneSpecies from YAML file {0}. Either `smiles`, `adjacency_list`, or '\n" +
+                "                                 'InChI must be specified'.format(path))\n" +
+                "            # Finally, set the species label so that the special attributes are updated properly\n" +
+                "            data['species'].label = data['label']" ;
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+                "  void load_yaml(){\n" +
+                "    PyTypeError freq_data;\n" +
+                "    PyTypeError freq_data;\n" +
+                "    if ((class_name != \"ArkaneSpecies\")) {\n" +
+                "      throw new KeyError(\"Expected a ArkaneSpecies object, but got {0}\".format(class_name));\n" +
+                "    }\n" +
+                "    del(data[\"class\"]);\n" +
+                "    freq_data=None;\n" +
+                "    if (    \"imaginary_frequency\" in data) {\n" +
+                "      freq_data=data[\"imaginary_frequency\"];\n" +
+                "      del(data[\"imaginary_frequency\"]);\n" +
+                "    }\n" +
+                "    if (!data[\"is_ts\"]) {\n" +
+                "      if (      \"smiles\" in data) {\n" +
+                "        data[\"species\"]=Species(data[\"smiles\"]);\n" +
+                "      }\n" +
+                " else       if (      \"adjacency_list\" in data) {\n" +
+                "        data[\"species\"]=Species().from_adjacency_list(data[\"adjacency_list\"]);\n" +
+                "      }\n" +
+                " else       if (      \"inchi\" in data) {\n" +
+                "        data[\"species\"]=Species(data[\"inchi\"]);\n" +
+                "      }\n" +
+                " else {\n" +
+                "        throw new ValueError(\"Cannot load ArkaneSpecies from YAML file {0}. Either `smiles`, `adjacency_list`, or InChI must be specified\".format(path));\n" +
+                "      }\n" +
+                "      data[\"species\"].label=data[\"label\"];\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n");
 
 
     }
 
     @Test
     public void testConversion8(){
+        String content = "def get_element_mass(input_element, isotope=None):\n" +
+                "    \"\"\"\n" +
+                "    Returns the mass and z number of the requested isotope for a given element.\n" +
+                "    'input_element' can be wither the atomic number (integer) or an element symbol.\n" +
+                "    'isotope' is an integer of the atomic z number. If 'isotope' is None, returns the most common isotope.\n" +
+                "    Data taken from NIST, https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl (accessed October 2018)\n" +
+                "    \"\"\"\n" +
+                "    symbol = None\n" +
+                "    number = None\n" +
+                "\n" +
+                "    if isinstance(input_element, int):\n" +
+                "        symbol = symbol_by_number[input_element]\n" +
+                "        number = input_element\n" +
+                "    elif isinstance(input_element, str):\n" +
+                "        symbol = input_element\n" +
+                "\n" +
+                "    if symbol is None or number is None:\n" +
+                "        raise ValueError('Could not identify element {0}'.format(input_element))\n" +
+                "\n" +
+                "    mass_list = mass_by_symbol[symbol]\n" +
+                "\n" +
+                "    if isotope is not None:\n" +
+                "        # a specific isotope is required\n" +
+                "        for iso_mass in mass_list:\n" +
+                "            if iso_mass[0] == isotope:\n" +
+                "                mass = iso_mass[1]\n" +
+                "        else:\n" +
+                "            raise ValueError(\"Could not find requested isotope {0} for element {1}\".format(isotope, symbol))\n" ;
 
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
     }
 
     @Test
     public void testConversion9(){
+        String content = "def get_element_mass(input_element, isotope=None):\n" +
+                "            if iso_mass[0] in isotope:\n" +
+                "                mass = iso_mass[1]\n" ;
+
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+                "  void get_element_mass(){\n" +
+                "    PyTypeError mass;\n" +
+                "    if (    iso_mass[0] in isotope) {\n" +
+                "      mass=iso_mass[1];\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n");
 
     }
 
     @Test
     public void testConversion10(){
+        String content = "def get_element_mass(input_element, isotope=None):\n" +
+                "    \"\"\"\n" +
+                "    Returns the mass and z number of the requested isotope for a given element.\n" +
+                "    'input_element' can be wither the atomic number (integer) or an element symbol.\n" +
+                "    'isotope' is an integer of the atomic z number. If 'isotope' is None, returns the most common isotope.\n" +
+                "    Data taken from NIST, https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl (accessed October 2018)\n" +
+                "    \"\"\"\n" +
+                "    symbol = None\n" +
+                "    number = None\n" +
+                "\n" +
+                "    if isinstance(input_element, int):\n" +
+                "        symbol = symbol_by_number[input_element]\n" +
+                "        number = input_element\n" +
+                "    elif isinstance(input_element, str):\n" +
+                "        symbol = input_element\n" +
+                "        number = next(key+value for key, value in symbol_by_number.items() if value == input_element)\n" +
+                "\n" +
+                "    if symbol is None or number is None:\n" +
+                "        raise ValueError('Could not identify element {0}'.format(input_element))\n" +
+                "\n" +
+                "    mass_list = mass_by_symbol[symbol]\n" +
+                "\n" +
+                "    if isotope is not None:\n" +
+                "        # a specific isotope is required\n" +
+                "        for iso_mass in mass_list:\n" +
+                "            if iso_mass[0] == isotope:\n" +
+                "                mass = iso_mass[1]\n" +
+                "                break\n" +
+                "        else:\n" +
+                "            raise ValueError(\"Could not find requested isotope {0} for element {1}\".format(isotope, symbol))\n" +
+                "    else:\n" +
+                "        # no specific isotope is required\n" +
+                "        if len(mass_list[0]) == 2:\n" +
+                "            # isotope weight is unavailable, use the first entry\n" +
+                "            mass = mass_list[0][1]\n" +
+                "            number = next(key for value in symbol_by_number.items() if value == input_element)\n" +
+                "            logging.warning('Assuming isotope {0} is representative of element {1}'.format(mass_list[0][0], symbol))\n" +
+                "        else:\n" +
+                "            # use the most common isotope\n" +
+                "            max_weight = mass_list[0][2]\n" +
+                "            mass = mass_list[0][1]\n" +
+                "            for iso_mass in mass_list:\n" +
+                "                if iso_mass[2] > max_weight:\n" +
+                "                    max_weight = iso_mass[2]\n" +
+                "                    mass = iso_mass[1]\n" +
+                "    return mass, number";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
 
     }
+
+    @Test
+    public void testConversion11(){  //Tuple
+        String content = "def get_element_mass(input_element, isotope=None):\n" +
+                "            if iso_mass[0] in isotope:\n" +
+                "                goo,1,goo.loo()=iso_mass[1]   \n" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+                "  void get_element_mass(){\n" +
+                "    if (    iso_mass[0] in isotope) {\n" +
+                "      (      (goo.loo() pyjavatuple 1 pyjavatuple goo))=iso_mass[1];\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n");
+    }
+
+    @Test
+    public void testConversion12(){
+//
+//        String content = "def get_element_mass(input_element, isotope=None):\n" +
+//                "\"\"\"\n" +
+//                "    Returns the mass and z number of the requested isotope for a given element.\n" +
+//                "    'input_element' can be wither the atomic number (integer) or an element symbol.\n" +
+//                "    'isotope' is an integer of the atomic z number. If 'isotope' is None, returns the most common isotope.\n" +
+//                "    Data taken from NIST, https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl (accessed October 2018)\n" +
+//                "    \"\"\"\n" +
+//                "symbol = None\n" +
+//                "number = None\n" +
+//                "if isinstance(input_element, int):\n" +
+//                "symbol = symbol_by_number[input_element]\n" +
+//                "number = input_element\n" +
+//                "elif isinstance(input_element, str):\n" +
+//                "symbol = input_element\n" +
+//                "number = next(key+value for key, value in symbol_by_number.items() if value == input_element)\n" +
+//                "if symbol is None or number is None:\n" +
+//                "raise ValueError('Could not identify element {0}'.format(input_element))"+
+//                "}}";
+//        CompilationUnit converted = Convert(content);
+//
+//        Assert.assertEquals(converted.getProblems().length,0);
+        String check = "public class PyDummyClass {\n" +
+                "  void get_element_mass(){\n" +
+                "    PyTypeError number;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError number;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError number;\n" +
+                "    symbol=None;\n" +
+                "    number=None;\n" +
+                "    if (isinstance(input_element,integer)) {\n" +
+                "      symbol=symbol_by_number[input_element];\n" +
+                "      number=input_element;\n" +
+                "    }\n" +
+                " else     if (isinstance(input_element,str)) {\n" +
+                "      symbol=input_element;\n" +
+                "      number=next(      gen (key + value pyjavatuple value for      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError iso_mass1,      PyTypeError iso_mass2 : symbol_by_number.items() if (value == input_element)) );\n" +
+                "      number=next(      gen (key + value pyjavatuple value for      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError iso_mass1,      PyTypeError iso_mass2 : symbol_by_number.items() if (value == input_element)) );\n" +
+                "      number=next(      gen (key for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value : symbol_by_number.items() if (value == input_element)) );"+
+                "      if ((symbol == None) || (number == None)) {\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(cu.getProblems().length,0);
+    }
+
+
+    @Test
+    public void testConversion13(){  //Tuple
+        String content = "def get_element_mass(input_element, isotope=None):\n" +
+                                "y = [x_i + np.random.rand() for x_i in x]\n" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
+    @Test
+    public void testConversion14(){  //Tuple
+        String content = "def clean_dir(base_dir_path: str = '',\n" +
+                "              files_to_delete: List[str] = None,\n" +
+                "              file_extensions_to_delete: List[str] = None,\n" +
+                "              files_to_keep: List[str] = None,\n" +
+                "              sub_dir_to_keep: List[str] = None,\n" +
+                "              ) -> None:\n" +
+                "    \"\"\"\n" +
+                "    Clean up a directory. Commonly used for removing unwanted files after unit tests.\n" +
+                "\n" +
+                "    Args:\n" +
+                "        base_dir_path (str): absolute path of the directory to clean up.\n" +
+                "        files_to_delete (list[str]): full name of the file (includes extension) to delete.\n" +
+                "        file_extensions_to_delete: extensions of files to delete.\n" +
+                "        files_to_keep: full name of the file (includes extension) to keep, files specified here will NOT be deleted even\n" +
+                "                       if its extension is also in file_extensions_to_delete.\n" +
+                "        sub_dir_to_keep: name of the subdirectories in the base directory to keep.\n" +
+                "    \"\"\"\n" +
+                "    for item in os.listdir(base_dir_path):\n" +
+                "        item_path = os.path.join(base_dir_path, item)\n" +
+                "        if os.path.isfile(item_path):\n" +
+                "            item_extension = os.path.splitext(item_path)[-1]\n" +
+                "            if item in files_to_delete or (item_extension in file_extensions_to_delete and item not in files_to_keep):\n" +
+                "                os.remove(item_path)\n" +
+                "        else:\n" +
+                "            # item is sub-directory\n" +
+                "            if os.path.split(item_path)[-1] in sub_dir_to_keep:\n" +
+                "                continue\n" +
+                "            shutil.rmtree(item_path)" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
 }
