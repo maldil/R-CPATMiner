@@ -7,21 +7,31 @@ import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.PyGenerator;
+import org.eclipse.jdt.core.dom.PyInExpression;
+import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.jpp.PyASTParser;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.BoolOp;
 import org.jpp.astnodes.ast.Compare;
 import org.jpp.astnodes.ast.Delete;
+import org.jpp.astnodes.ast.For;
+import org.jpp.astnodes.ast.GeneratorExp;
 import org.jpp.astnodes.ast.Starred;
+import org.jpp.astnodes.ast.Tuple;
 import org.jpp.astnodes.ast.UnaryOp;
 import org.jpp.astnodes.ast.boolopType;
 import org.jpp.astnodes.ast.cmpopType;
+import org.jpp.astnodes.ast.comprehension;
 import org.jpp.astnodes.ast.keyword;
 import org.jpp.astnodes.ast.operatorType;
 import org.jpp.astnodes.ast.unaryopType;
@@ -89,6 +99,12 @@ public class MapPyExpressionsJDK extends PyMap {
         else if (pyexp instanceof Call){
             MethodInvocation invocation = ast.newMethodInvocation();
             if (((Call) pyexp).getFunc() instanceof Name){
+//                if (((Name) ((Call) pyexp).getFunc()).getId().toString().toString().equals("isinstance")){
+//                    InstanceofExpression instanceofExpression = ast.newInstanceofExpression();
+//                    instanceofExpression.setLeftOperand(MapPyExpressionsJDK.mapExpression((expr) ((AstList)((Call) pyexp).getArgs()).get(0),ast, import_nodes,0,typeNodes));
+//                    instanceofExpression.setRightOperand(MapPyExpressionsJDK.mapExpression((expr) ((AstList)((Call) pyexp).getArgs()).get(1),ast, import_nodes,0,typeNodes));
+//                    return instanceofExpression;
+//                }
                 SimpleName method_name = (SimpleName)mapExpression((expr) ((Call) pyexp).getFunc(), ast, import_nodes,start_char_pos,typeNodes);
                 invocation.setName(method_name);
                 for (Object arg : (AstList) ((Call) pyexp).getArgs()) {  //TODO keyword arguments are not parsed by the JPyParser, Thus is a Bug
@@ -301,7 +317,12 @@ public class MapPyExpressionsJDK extends PyMap {
             return conditionalExpression;
         }
         else if (pyexp instanceof Compare){
-
+            if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.In)){
+                PyInExpression pyInExpression = ast.newPyInExpression();
+                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
+                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
+                return pyInExpression;
+            }
             InfixExpression infixExpression = ast.newInfixExpression();
             infixExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
             if (((AstList)((Compare) pyexp).getComparators()).size()>1){
@@ -336,9 +357,6 @@ public class MapPyExpressionsJDK extends PyMap {
             }
             else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.GtE)){
                 infixExpression.setOperator(InfixExpression.Operator.GREATER_EQUALS);
-            }
-            else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.In)){
-                infixExpression.setOperator(InfixExpression.Operator.IN);
             }
             else{
                 logger.fatal("Unmapped operator found "+((AstList)((Compare) pyexp).getOps()).get(0));
@@ -413,7 +431,80 @@ public class MapPyExpressionsJDK extends PyMap {
 
 
         }
+        else if (pyexp instanceof Tuple){
+            PyTupleExpression pyTupleExpression = ast.newPyTupleExpression();
+            for (expr elt : ((Tuple) pyexp).getInternalElts()) {
+                pyTupleExpression.expressions().add(mapExpression(elt,ast,import_nodes,0,typeNodes));
+            }
+            return pyTupleExpression;
 
+        }
+        else if(pyexp instanceof GeneratorExp) {
+            PyGenerator pyGenerator = ast.newPyGenerator();
+            pyGenerator.setTargetExpression(mapExpression((expr) ((GeneratorExp) pyexp).getElt(),ast,import_nodes,0,typeNodes));
+            if (((AstList)((GeneratorExp) pyexp).getGenerators()).size()==1 && ((AstList)((GeneratorExp) pyexp).getGenerators()).get(0) instanceof comprehension){
+                comprehension comp = (comprehension)((AstList)((GeneratorExp) pyexp).getGenerators()).get(0);
+          //      Expression valueexpression = mapExpression((expr) comp.getTarget(), ast, import_nodes, 0, typeNodes);
+
+                if (comp.getTarget() instanceof Tuple){
+                    SingleVariableDeclaration parameter_dummy = ast.newSingleVariableDeclaration();
+                    parameter_dummy.setName(ast.newSimpleName( "DummyTerminalNode"));
+                    parameter_dummy.setType(ast.newSimpleType(ast.newName("DummyTerminalTypeNode")));
+                    pyGenerator.getValueExpression().add(parameter_dummy);
+                    for (Object elt : (AstList) ((Tuple) comp.getTarget()).getElts()) {
+                        SingleVariableDeclaration lo_parameter = ast.newSingleVariableDeclaration();
+                        lo_parameter.setName(ast.newSimpleName(((Name)elt).getId().toString()));
+                        String typeString = typeNodes.get(new TypeASTNode(((Name)elt).getLineno(),
+                                ((Name)elt).getCol_offset(), ((Name)elt).getId().toString(), null));
+                        Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
+                        if (jdtType!=null){
+                            lo_parameter.setType(jdtType);
+                        }
+                        else
+                            logger.error("Type of for loop variable in generator is not updated");
+                        pyGenerator.getValueExpression().add(lo_parameter);
+                    }
+
+                }
+                else if (comp.getTarget() instanceof Name){
+                    SingleVariableDeclaration parameter_dummy = ast.newSingleVariableDeclaration();
+                    parameter_dummy.setName(ast.newSimpleName( "DummyTerminalNode"));
+                    parameter_dummy.setType(ast.newSimpleType(ast.newName("DummyTerminalTypeNode")));
+                    pyGenerator.getValueExpression().add(parameter_dummy);
+                    SingleVariableDeclaration parameter = ast.newSingleVariableDeclaration();
+                    parameter.setName(ast.newSimpleName(((Name)(comp.getTarget())).getId().toString()));
+                    String typeString = typeNodes.get(new TypeASTNode(((Name)(comp.getTarget())).getLineno(),
+                            ((Name)comp.getTarget()).getCol_offset(), ((Name)(comp.getTarget())).getId().toString(), null));
+
+                    Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
+                    if (jdtType!=null){
+                        parameter.setType(jdtType);
+                    }
+                    else
+                        logger.error("Type of for loop variable is not updated");
+                    pyGenerator.getValueExpression().add(parameter);
+
+                }
+                else{
+                    logger.error("The mapping for the corresponding for loop parameter is not found");
+                }
+                pyGenerator.setIteratorExpression(mapExpression(comp.getInternalIter(),ast,import_nodes,0,typeNodes));
+                if (((AstList)comp.getIfs()).size()==1){
+                    pyGenerator.setConditionalExpression(mapExpression((expr) ((AstList)comp.getIfs()).get(0),ast,import_nodes,0,typeNodes));
+                    return pyGenerator;
+                }
+                else {
+                    logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                    throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                }
+            }
+            else{
+                logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+            }
+
+
+        }
         else {
             logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());

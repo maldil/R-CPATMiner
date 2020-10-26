@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
+import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
@@ -14,9 +15,11 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PyWithStatement;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -33,6 +36,7 @@ import org.jpp.astnodes.PythonTree;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.Attribute;
 import org.jpp.astnodes.ast.AugAssign;
+import org.jpp.astnodes.ast.Break;
 import org.jpp.astnodes.ast.Call;
 import org.jpp.astnodes.ast.ClassDef;
 import org.jpp.astnodes.ast.Delete;
@@ -284,9 +288,15 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof For){
             int start_char_pos =startChar;
             EnhancedForStatement forstmt = asn.newEnhancedForStatement();
-            SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
+
             ArrayList<EnhancedForStatement> list_for = new ArrayList<>();
             if (((For) node).getTarget() instanceof Name){
+                SingleVariableDeclaration parameter_dummy = asn.newSingleVariableDeclaration();
+                parameter_dummy.setName(asn.newSimpleName( "DummyTerminalNode"));
+                parameter_dummy.setType(asn.newSimpleType(asn.newName("DummyTerminalTypeNode")));
+
+
+                SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
                 parameter.setName(asn.newSimpleName(((Name)(((For) node).getTarget())).getId().toString()));
                 String typeString = this.typeNodes.get(new TypeASTNode(((Name)(((For) node).getTarget())).getLineno(),
                         ((Name)(((For) node).getTarget())).getCol_offset(), ((Name)(((For) node).getTarget())).getId().toString(), null));
@@ -297,21 +307,45 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
                 else
                     logger.error("Type of for loop variable is not updated");
+                forstmt.setParameter(parameter_dummy);
+                forstmt.Parameters().add(parameter);
+
 
             }
             else if (((For) node).getTarget() instanceof Tuple){
-                    logger.error("For loop tuple parameter has not been implemented");
+                SingleVariableDeclaration parameter_dummy = asn.newSingleVariableDeclaration();
+                parameter_dummy.setName(asn.newSimpleName( "DummyTerminalNode"));
+                parameter_dummy.setType(asn.newSimpleType(asn.newName("DummyTerminalTypeNode")));
+                forstmt.setParameter(parameter_dummy);
+                for (Object elt : (AstList) ((Tuple) ((For) node).getTarget()).getElts()) {
+                    SingleVariableDeclaration lo_parameter = asn.newSingleVariableDeclaration();
+                    lo_parameter.setName(asn.newSimpleName(((Name)elt).getId().toString()));
+                    String typeString = this.typeNodes.get(new TypeASTNode(((Name)elt).getLineno(),
+                            ((Name)elt).getCol_offset(), ((Name)elt).getId().toString(), null));
+
+                    Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
+                    if (jdtType!=null){
+                        lo_parameter.setType(jdtType);
+                    }
+                    else
+                        logger.error("Type of for loop variable is not updated");
+                    forstmt.Parameters().add(lo_parameter);
+
+                }
             }
             else{
                 logger.error("The mapping for the corresponding for loop parameter is not found");
             }
             start_char_pos+=3+2+2+2; //for , space, ( , 4space
+//
+//            int para_int = parameter.toString().length();
+//            parameter.setSourceRange(start_char_pos,para_int);
+//            start_char_pos+=para_int+1+1+1; //space, : , space
 
-            int para_int = parameter.toString().length();
-            parameter.setSourceRange(start_char_pos,para_int);
-            start_char_pos+=para_int+1+1+1; //space, : , space
 
-            forstmt.setParameter(parameter);
+
+
+
             forstmt.setExpression(MapPyExpressionsJDK.mapExpression((expr)((For) node).getIter(),asn,import_nodes,start_char_pos,typeNodes));
             int number_of_parents = get_Number_Of_Parent_Statements(node);
             start_char_pos += 4; //), space,{,new line
@@ -360,6 +394,14 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof Expr){
             if (((Expr) node).getValue() instanceof Call){ //Add super invocation
                 Call value = (Call)((Expr) node).getValue();
+//                if (value.getFunc() instanceof Name && ((Name) value.getFunc()).getId().equals("isinstance")){
+//                    InstanceofExpression instanceofExpression = asn.newInstanceofExpression();
+//                    instanceofExpression.setLeftOperand(MapPyExpressionsJDK.mapExpression((expr) ((AstList) value.getArgs()).get(0),asn, import_nodes,0,typeNodes));
+//                    instanceofExpression.setLeftOperand(MapPyExpressionsJDK.mapExpression((expr) ((AstList) value.getArgs()).get(1),asn, import_nodes,0,typeNodes));
+//                    ArrayList<InstanceofExpression> list_assign = new ArrayList<>();
+//                    list_assign.add(instanceofExpression);
+//                    return list_assign ;
+//                }
                 if (value.getFunc() instanceof Name && ((Name) value.getFunc()).getId().equals("super")){
                     SuperConstructorInvocation constructorInvocation = asn.newSuperConstructorInvocation();
                     for (Object arg : (AstList) value.getArgs()) {
@@ -382,10 +424,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                     ArrayList<SuperConstructorInvocation> list_assign = new ArrayList<>();
                     list_assign.add(constructorInvocation);
                     return list_assign ;
-
                 }
-
-
             }
             Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes,0,typeNodes);
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
@@ -397,7 +436,10 @@ public class MapPyStatementsTOJDK extends PyMap{
         }
         else if (node instanceof If){
             IfStatement ifStatement = asn.newIfStatement();
-            ifStatement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((If) node).getTest(),asn,import_nodes,0,typeNodes));
+            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((If) node).getTest(), asn, import_nodes, 0, typeNodes);
+            ifStatement.setExpression(expression);
+
+
             ((AstList) ((If) node).getBody()).stream().forEach(
                     ob-> {
                         try {
@@ -575,7 +617,13 @@ public class MapPyStatementsTOJDK extends PyMap{
             list_assign.add(pyWithStatement);
             return list_assign;
             }
+        else if (node instanceof Break){
+            BreakStatement breakStatement = asn.newBreakStatement();
 
+            ArrayList<BreakStatement> list_assign = new ArrayList<>();
+            list_assign.add(breakStatement);
+            return list_assign;
+        }
         else {
             logger.fatal("Corresponding Python node is not found : found "+node.getClass()+" Class "+node.toString());
             return new ArrayList<>();
