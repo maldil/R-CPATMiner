@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
@@ -39,6 +40,7 @@ import org.jpp.astnodes.ast.AugAssign;
 import org.jpp.astnodes.ast.Break;
 import org.jpp.astnodes.ast.Call;
 import org.jpp.astnodes.ast.ClassDef;
+import org.jpp.astnodes.ast.Continue;
 import org.jpp.astnodes.ast.Delete;
 import org.jpp.astnodes.ast.ExceptHandler;
 import org.jpp.astnodes.ast.Expr;
@@ -622,6 +624,12 @@ public class MapPyStatementsTOJDK extends PyMap{
 
             ArrayList<BreakStatement> list_assign = new ArrayList<>();
             list_assign.add(breakStatement);
+            return list_assign;
+        }
+        else if (node instanceof Continue){
+            ContinueStatement continueStatement = asn.newContinueStatement();
+            ArrayList<ContinueStatement> list_assign = new ArrayList<>();
+            list_assign.add(continueStatement);
             return list_assign;
         }
         else {

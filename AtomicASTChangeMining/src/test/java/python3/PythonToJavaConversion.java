@@ -6,13 +6,16 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.codeassist.complete.CompletionParser;
 import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.eclipse.jdt.internal.compiler.parser.Scanner;
+import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import python3.typeinference.core.TypeASTNode;
 import utils.JavaASTUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class PythonToJavaConversion {
     private static org.apache.log4j.Logger log = Logger.getLogger(LineCounterTestASTVisitor.class);
@@ -23,10 +26,10 @@ public class PythonToJavaConversion {
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass {\n" +
-                "  void add_arrays(){\n" +
-                "    self.is_ts=(is_ts != None) && (is_ts == None) ? is_ts : isinstance(coo,boo);\n" +
-                "  }\n" +
-                "}\n");
+                        "  void add_arrays(){\n" +
+                        "    self.is_ts=((is_ts != None) && (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
+                        "  }\n" +
+                        "}\n");
     }
 
     @Test
@@ -37,7 +40,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass {\n" +
                         "  void add_arrays(){\n" +
-                        "    self.is_ts=(is_ts != None) || (is_ts == None) ? is_ts : isinstance(coo,boo);\n" +
+                        "    self.is_ts=((is_ts != None) || (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
                         "  }\n" +
                         "}\n");
     }
@@ -51,7 +54,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass {\n" +
                         "  void add_arrays(){\n" +
-                        "    self.is_ts=(is_ts != None) && (is_ts == None) && (1 != 4) || (foo < kool) ? is_ts : isinstance(coo,boo);\n" +
+                        "    self.is_ts=(((is_ts != None) && (is_ts == None) && (1 != 4)) || (foo < kool)) ? is_ts : isinstance(coo,boo);\n" +
                         "  }\n" +
                         "}\n");
     }
@@ -129,19 +132,19 @@ public class PythonToJavaConversion {
                 "    if ((conformer != None)) {\n" +
                 "      self.conformer=conformer;\n" +
                 "    }\n" +
-                " else     if ((label == None) && (species != None)) {\n" +
+                " else     if (((label == None) && (species != None))) {\n" +
                 "      boo=noo;\n" +
                 "    }\n" +
                 " else {\n" +
                 "      self.label=label;\n" +
                 "    }\n" +
-                "    if ((label == None) && (species != None)) {\n" +
+                "    if (((label == None) && (species != None))) {\n" +
                 "      self.label=species.label;\n" +
                 "    }\n" +
                 " else {\n" +
                 "      self.label=label;\n" +
                 "    }\n" +
-                "    if ((species == None) && (conformer == None)) {\n" +
+                "    if (((species == None) && (conformer == None))) {\n" +
                 "      throw new ValueError(\"No species (or TS) or conformer was passed to the ArkaneSpecies object\");\n" +
                 "    }\n" +
                 "    self.author=author;\n" +
@@ -156,7 +159,7 @@ public class PythonToJavaConversion {
                 "    self.symmetry_number=symmetry_number;\n" +
                 "    self.charge=charge;\n" +
                 "    self.multiplicity=multiplicity;\n" +
-                "    self.is_ts=(one != None) && voo && cool || tool ? is_ts : isinstance(coo,boo);\n" +
+                "    self.is_ts=(((one != None) && voo && cool) || tool) ? is_ts : isinstance(coo,boo);\n" +
                 "    if (!self.is_ts) {\n" +
                 "      self.chemkin_thermo_string=chemkin_thermo_string;\n" +
                 "      self.smiles=smiles;\n" +
@@ -633,7 +636,6 @@ public class PythonToJavaConversion {
         String content = "def get_element_mass(input_element, isotope=None):\n" +
                                 "y = [x_i + np.random.rand() for x_i in x]\n" ;
         CompilationUnit converted = Convert(content);
-
         Assert.assertEquals(converted.getProblems().length,0);
 
     }
@@ -671,7 +673,34 @@ public class PythonToJavaConversion {
         CompilationUnit converted = Convert(content);
 
         Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(4).collect(Collectors.joining( "\n" )),
+                "    for (    PyTypeError item : os.listdir(base_dir_path)) {\n" +
+                "      item_path=os.path.join(base_dir_path,item);\n" +
+                "      if (os.path.isfile(item_path)) {\n" +
+                "        item_extension=os.path.splitext(item_path)[-1];\n" +
+                "        if ((        item in files_to_delete || (        item_extension in file_extensions_to_delete &&         item not in files_to_keep))) {\n" +
+                "          os.remove(item_path);\n" +
+                "        }\n" +
+                "      }\n" +
+                " else {\n" +
+                "        if (        os.path.split(item_path)[-1] in sub_dir_to_keep) {\n" +
+                "          continue;\n" +
+                "        }\n" +
+                "        shutil.rmtree(item_path);\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
 
     }
 
 }
+
+
+
+
+
+
+
+
+
