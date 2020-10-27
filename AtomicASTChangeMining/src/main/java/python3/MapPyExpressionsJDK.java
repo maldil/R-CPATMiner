@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PyGenerator;
 import org.eclipse.jdt.core.dom.PyInExpression;
+import org.eclipse.jdt.core.dom.PyNotInExpression;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
@@ -323,6 +324,12 @@ public class MapPyExpressionsJDK extends PyMap {
                 pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
                 return pyInExpression;
             }
+            else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.NotIn)){
+                PyNotInExpression pyInExpression = ast.newPyNotInExpression();
+                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
+                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
+                return pyInExpression;
+            }
             InfixExpression infixExpression = ast.newInfixExpression();
             infixExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
             if (((AstList)((Compare) pyexp).getComparators()).size()>1){
@@ -370,6 +377,7 @@ public class MapPyExpressionsJDK extends PyMap {
             return parenthesizedExpression;
         }
         else if (pyexp instanceof BoolOp){
+            ParenthesizedExpression paraexpression = ast.newParenthesizedExpression();
             InfixExpression infixExpression = ast.newInfixExpression();
             int values = ((AstList)((BoolOp) pyexp).getValues()).size();
             infixExpression.setRightOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(values-1),ast,import_nodes,0,typeNodes));
@@ -412,8 +420,8 @@ public class MapPyExpressionsJDK extends PyMap {
             else {
                 logger.fatal("Unmapped operator found "+ ((BoolOp) pyexp).getOp());
             }
-
-            return infixExpression;
+            paraexpression.setExpression(infixExpression);
+            return paraexpression;
         }
         else if (pyexp instanceof UnaryOp){
             PrefixExpression prefixExpression = ast.newPrefixExpression();
