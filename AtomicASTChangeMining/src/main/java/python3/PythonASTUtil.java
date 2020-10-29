@@ -2,12 +2,16 @@ package python3;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
-import org.jpp.astnodes.ast.ClassDef;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jpp.astnodes.ast.ImportFrom;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
@@ -20,13 +24,14 @@ import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
-import utils.JavaASTUtil;
+import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PythonASTUtil {
     static Logger logger = Logger.getLogger(PythonASTUtil.class);
@@ -41,7 +46,7 @@ public class PythonASTUtil {
 
 
     private PyCompilationUnit createPyCompilationUnit(mod ast){
-        Map options = JavaCore.getOptions();
+        Map<String, String> options = JavaCore.getOptions();
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
@@ -60,13 +65,12 @@ public class PythonASTUtil {
         dummyClass.setModifier(modifier);
         SimpleName simpleName = asn.newSimpleName("PyDummyClass");
         dummyClass.setName(simpleName);
+        ArrayList<ASTNode> global_stmts = new ArrayList<ASTNode>();
 
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
             try {
-                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes,startChar);
-
-
+                ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes,startChar, pyc);
                 for (Object node : Objects.requireNonNull(nodes)) {
                     logger.debug(node.toString());
                     startChar+=node.toString().length();
@@ -79,11 +83,26 @@ public class PythonASTUtil {
                     {
                         pyc.setTypes((TypeDeclaration) node);
                     }
+
 //                    else if (node instanceof MethodDeclaration){
 //                        pyc.setTypes(node);
 //                    }
                     else if (node instanceof MethodDeclaration){
                         dummyClass.bodyDeclarations().add(node);
+                    }
+                    else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName) {
+                        VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
+                        variableDeclarationFragment.setName(asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier()));
+                        variableDeclarationFragment.setInitializer((Expression) ASTNode.copySubtree(asn, ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide()));
+                        FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
+                        String typeString = typeinformation.get(new TypeASTNode((((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getPyStartPosition(),
+                                ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide().getPyColumnOffSet(), ((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier(), null));
+                        Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
+                        fieldDeclaration.setType(jdtType);
+                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
+                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
+                        global_stmts.add(fieldDeclaration);
+                        System.out.println(node);
                     }
                     else {
                         logger.fatal("Not implemented statement "+node+ node.toString());
@@ -97,6 +116,8 @@ public class PythonASTUtil {
         if (dummyClass.bodyDeclarations().size()>0){
             pyc.setTypes(dummyClass);
         }
+        pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
+                .addAll(global_stmts.stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
         pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
 
         return pyc;
@@ -108,7 +129,7 @@ public class PythonASTUtil {
         for (PythonTree ch : ast.getChildren()){ //collect import statements to resolve alias names.
             if (ch instanceof Import || ch instanceof ImportFrom){
                 try {
-                    for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null,0)) {
+                    for (Object o : pyStatementsTOJDK.getMappingPyNode(asn, ch, null,0,null )) {
                         if (((ImportDeclaration)o).getasName() !=null){
                             import_nodes.put(((ImportDeclaration)o).getasName().getFullyQualifiedName(),((ImportDeclaration)o).getName());
                         }

@@ -16,11 +16,9 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PyWithStatement;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -86,7 +84,7 @@ public class MapPyStatementsTOJDK extends PyMap{
         this.typeNodes = typeNodes;
     }
 
-    public ArrayList<?> getMappingPyNode(AST asn , PythonTree node, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes,int startChar) throws NodeNotFoundException, ExpressionNotFound {
+    public ArrayList<?> getMappingPyNode(AST asn, PythonTree node, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes, int startChar, PyCompilationUnit pyc) throws NodeNotFoundException, ExpressionNotFound {
         if (node instanceof Import){
             int start_import = startChar;
             ArrayList<ImportDeclaration> list_imports = new ArrayList<>();
@@ -165,7 +163,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                 start_char_pos+=2+2;//{,\n , space, space
 
             for (Object ch : (AstList)((ClassDef) node).getBody()){
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos,pyc )) {
                     if (o instanceof BodyDeclaration){
                         classdec.bodyDeclarations().add(o);
                         start_char_pos+=o.toString().length()+2+2 +2*(o.toString().lines().count()-1) ; //space,space,two spaces in parameters
@@ -253,7 +251,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                     continue;  //remove comments
                 }
 
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos, pyc)) {
                     if (methoddec.getBody() ==null){
                         methoddec.setBody(asn.newBlock());
                     }
@@ -276,8 +274,12 @@ public class MapPyStatementsTOJDK extends PyMap{
             assign.setOperator(new Assignment.Operator("="));
             logger.debug((((Assign) node).getTargets().toString()));
             assert(((AstList)((Assign) node).getTargets()).size()<=1);
-            assign.setLeftHandSide(MapPyExpressionsJDK.mapExpression((expr) ((AstList)((Assign) node).getTargets()).get(0),asn, import_nodes,0,typeNodes));
-            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((Assign) node).getValue(),asn, import_nodes,0,typeNodes));
+            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((AstList) ((Assign) node).getTargets()).get(0), asn, import_nodes, 0, typeNodes,pyc );
+            expression.setPyStartPosition( ((expr) ((AstList) ((Assign) node).getTargets()).get(0)).getLine());
+            expression.setPyColumnOffSet( ((expr) ((AstList) ((Assign) node).getTargets()).get(0)).getCharPositionInLine());
+
+            assign.setLeftHandSide(expression);
+            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((Assign) node).getValue(),asn, import_nodes,0,typeNodes,pyc ));
             assign.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
             ExpressionStatement statement = asn.newExpressionStatement(assign);
 
@@ -348,12 +350,12 @@ public class MapPyStatementsTOJDK extends PyMap{
 
 
 
-            forstmt.setExpression(MapPyExpressionsJDK.mapExpression((expr)((For) node).getIter(),asn,import_nodes,start_char_pos,typeNodes));
+            forstmt.setExpression(MapPyExpressionsJDK.mapExpression((expr)((For) node).getIter(),asn,import_nodes,start_char_pos,typeNodes,pyc ));
             int number_of_parents = get_Number_Of_Parent_Statements(node);
             start_char_pos += 4; //), space,{,new line
             int start_of_for_loop = start_char_pos+number_of_parents*2;
             for (Object ch : (AstList)((For) node).getBody()){
-                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos+=number_of_parents*2)) {
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos+=number_of_parents*2, pyc)) {
                     if (forstmt.getBody() ==null){
                         forstmt.setBody(asn.newBlock());
                     }
@@ -369,15 +371,18 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof AugAssign){
             Assignment assign = asn.newAssignment();
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
-            if (((AugAssign) node).getInternalOp().name().equals("Add")){
-                assign.setOperator(new Assignment.Operator("+="));
+            if (((AugAssign) node).getInternalOp().name().equals("Div")){
+                assign.setOperator(Assignment.Operator.PLUS_ASSIGN);
+            }
+            else if (((AugAssign) node).getInternalOp().name().equals("Add")){
+                assign.setOperator(Assignment.Operator.DIVIDE_ASSIGN);
             }
             else {
                 throw new NodeNotFoundException("Operator is not implemented :"+((AugAssign) node).getInternalOp().name());
             }
 
-            assign.setLeftHandSide( MapPyExpressionsJDK.mapExpression((expr) ((AugAssign) node).getTarget(),asn, import_nodes,0,typeNodes));
-            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((AugAssign) node).getValue(),asn, import_nodes,0,typeNodes));
+            assign.setLeftHandSide( MapPyExpressionsJDK.mapExpression((expr) ((AugAssign) node).getTarget(),asn, import_nodes,0,typeNodes,pyc ));
+            assign.setRightHandSide(MapPyExpressionsJDK.mapExpression((expr)((AugAssign) node).getValue(),asn, import_nodes,0,typeNodes,pyc ));
 
             ExpressionStatement statement = asn.newExpressionStatement(assign);
 
@@ -387,7 +392,7 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof Return){
             ReturnStatement statement = asn.newReturnStatement();
             ArrayList<ReturnStatement> list_assign = new ArrayList<>();
-            statement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((Return) node).getValue(),asn, import_nodes,0,typeNodes));
+            statement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((Return) node).getValue(),asn, import_nodes,0,typeNodes,pyc ));
 
             statement.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
             list_assign.add(statement);
@@ -407,7 +412,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                 if (value.getFunc() instanceof Name && ((Name) value.getFunc()).getId().equals("super")){
                     SuperConstructorInvocation constructorInvocation = asn.newSuperConstructorInvocation();
                     for (Object arg : (AstList) value.getArgs()) {
-                        constructorInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes));
+                        constructorInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes,pyc ));
                     }
                     ArrayList<SuperConstructorInvocation> list_assign = new ArrayList<>();
                     list_assign.add(constructorInvocation);
@@ -421,14 +426,14 @@ public class MapPyStatementsTOJDK extends PyMap{
 
                     SuperConstructorInvocation constructorInvocation = asn.newSuperConstructorInvocation();
                     for (Object arg : (AstList) ((Call) ((Attribute) value.getFunc()).getValue()).getArgs()) {
-                        constructorInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes));
+                        constructorInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes,pyc ));
                     }
                     ArrayList<SuperConstructorInvocation> list_assign = new ArrayList<>();
                     list_assign.add(constructorInvocation);
                     return list_assign ;
                 }
             }
-            Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes,0,typeNodes);
+            Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes,0,typeNodes,pyc );
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             ExpressionStatement expstmt= asn.newExpressionStatement(exp);
             expstmt.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
@@ -438,14 +443,14 @@ public class MapPyStatementsTOJDK extends PyMap{
         }
         else if (node instanceof If){
             IfStatement ifStatement = asn.newIfStatement();
-            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((If) node).getTest(), asn, import_nodes, 0, typeNodes);
+            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((If) node).getTest(), asn, import_nodes, 0, typeNodes, pyc);
             ifStatement.setExpression(expression);
 
 
             ((AstList) ((If) node).getBody()).stream().forEach(
                     ob-> {
                         try {
-                            ((Block)ifStatement.getThenStatement()).statements().addAll(getMappingPyNode(asn, (PythonTree) ob,import_nodes,0));
+                            ((Block)ifStatement.getThenStatement()).statements().addAll(getMappingPyNode(asn, (PythonTree) ob,import_nodes,0,pyc ));
                         } catch (NodeNotFoundException e) {
                             e.printStackTrace();
                         } catch (ExpressionNotFound expressionNotFound) {
@@ -455,7 +460,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             if (((AstList)((If) node).getOrelse()).size()>0){
                 if (((AstList)((If) node).getOrelse()).size()==1 && ((AstList)((If) node).getOrelse()).get(0) instanceof If ){
                     ifStatement.setElseStatement((Statement) getMappingPyNode
-                            (asn, (PythonTree) ((AstList)((If) node).getOrelse()).get(0),import_nodes,0).get(0));
+                            (asn, (PythonTree) ((AstList)((If) node).getOrelse()).get(0),import_nodes,0, pyc).get(0));
                 }
                 else{
                     ((AstList) ((If) node).getOrelse()).stream().forEach(
@@ -465,7 +470,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                                         ifStatement.setElseStatement(asn.newBlock());
                                     }
                                     ((Block)ifStatement.getElseStatement()).statements().addAll(getMappingPyNode(asn,
-                                            (PythonTree) ob,import_nodes,0));
+                                            (PythonTree) ob,import_nodes,0,pyc ));
                                 } catch (NodeNotFoundException e) {
                                     e.printStackTrace();
                                 } catch (ExpressionNotFound expressionNotFound) {
@@ -484,12 +489,12 @@ public class MapPyStatementsTOJDK extends PyMap{
             ThrowStatement throwStatement = asn.newThrowStatement();
             ClassInstanceCreation classInstanceCreation = asn.newClassInstanceCreation();
             if (((Raise) node).getExc() instanceof Call){
-                SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name) MapPyExpressionsJDK.mapExpression((expr) ((Call) ((Raise) node).getExc()).getFunc(), asn, import_nodes, 0, typeNodes));
+                SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name) MapPyExpressionsJDK.mapExpression((expr) ((Call) ((Raise) node).getExc()).getFunc(), asn, import_nodes, 0, typeNodes,pyc ));
                 classInstanceCreation.setType(simpleType);
                 ((AstList)((Call) ((Raise) node).getExc()).getArgs()).stream().forEach(o->
                 {
                     try {
-                        Expression expression = MapPyExpressionsJDK.mapExpression((expr) o, asn, import_nodes, 0, typeNodes);
+                        Expression expression = MapPyExpressionsJDK.mapExpression((expr) o, asn, import_nodes, 0, typeNodes, pyc);
                         classInstanceCreation.arguments().add(expression);
                     } catch (ExpressionNotFound expressionNotFound) {
                         expressionNotFound.printStackTrace();
@@ -512,7 +517,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             Block block = asn.newBlock();
             ((AstList)((TryExcept) node).getBody()).stream().forEach(x-> {
                 try {
-                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0);
+                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
                     block.statements().addAll(mappingPyNode);
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
@@ -523,7 +528,7 @@ public class MapPyStatementsTOJDK extends PyMap{
 
             ((AstList)((TryExcept) node).getHandlers()).stream().forEach(x-> {
                 try {
-                    tryStatement.catchClauses().addAll(getMappingPyNode(asn, (PythonTree) x, import_nodes, 0));
+                    tryStatement.catchClauses().addAll(getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc));
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
                 } catch (ExpressionNotFound expressionNotFound) {
@@ -545,7 +550,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             Block block = asn.newBlock();
             ((AstList)((ExceptHandler) node).getBody()).stream().forEach(x-> {
                 try {
-                    block.statements().addAll(getMappingPyNode(asn, (PythonTree) x, import_nodes, 0));
+                    block.statements().addAll(getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc));
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
                 } catch (ExpressionNotFound expressionNotFound) {
@@ -553,7 +558,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
             });
             SingleVariableDeclaration singleVarDec = asn.newSingleVariableDeclaration();
-            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getExceptType(), asn, import_nodes, 0, typeNodes);
+            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getExceptType(), asn, import_nodes, 0, typeNodes, pyc);
             singleVarDec.setType(asn.newSimpleType((org.eclipse.jdt.core.dom.Name) expression));
             if (((ExceptHandler) node).getName()!=null){
                 if (((ExceptHandler) node).getName() instanceof PyUnicode){
@@ -565,7 +570,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                     singleVarDec.setName(simpleName);
                 }
                 else{
-                    Expression name = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getName(), asn, import_nodes, 0, typeNodes);
+                    Expression name = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getName(), asn, import_nodes, 0, typeNodes, pyc);
                     singleVarDec.setName((SimpleName) name);
                 }
 
@@ -580,7 +585,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             MethodInvocation methodInvocation = asn.newMethodInvocation();
             methodInvocation.setName(asn.newSimpleName("del"));
             for (Object arg : (AstList) ((Delete) node).getTargets()) {  //TODO keyword arguments are not parsed by the JPyParser, Thus is a Bug
-                methodInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes));
+                methodInvocation.arguments().add(MapPyExpressionsJDK.mapExpression((expr) arg,asn, import_nodes,0,typeNodes,pyc ));
             }
 
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
@@ -593,7 +598,7 @@ public class MapPyStatementsTOJDK extends PyMap{
                 logger.error("With item contain more than one item in the header");
             }
             expr internalContext_expr = ((With) node).getInternalItems().get(0).getInternalContext_expr();
-            Expression expression = MapPyExpressionsJDK.mapExpression(internalContext_expr, asn, import_nodes, 0, typeNodes);
+            Expression expression = MapPyExpressionsJDK.mapExpression(internalContext_expr, asn, import_nodes, 0, typeNodes,pyc );
             pyWithStatement.setExpression(expression);
             expr optional_vars = ((With) node).getInternalItems().get(0).getInternalOptional_vars();
 
@@ -607,7 +612,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
             ((With) node).getInternalBody().stream().forEach(x -> {
                     try {
-                        block.statements().addAll(getMappingPyNode(asn, x, import_nodes, 0));
+                        block.statements().addAll(getMappingPyNode(asn, x, import_nodes, 0, pyc));
                     } catch (NodeNotFoundException e) {
                         e.printStackTrace();
                     } catch (ExpressionNotFound expressionNotFound) {
