@@ -1,13 +1,14 @@
 package python3;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ArrayType;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.FieldAccess;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
-import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
@@ -19,13 +20,11 @@ import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.jpp.PyASTParser;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.BoolOp;
 import org.jpp.astnodes.ast.Compare;
-import org.jpp.astnodes.ast.Delete;
-import org.jpp.astnodes.ast.For;
+import org.jpp.astnodes.ast.Dict;
 import org.jpp.astnodes.ast.GeneratorExp;
 import org.jpp.astnodes.ast.Starred;
 import org.jpp.astnodes.ast.Tuple;
@@ -38,7 +37,6 @@ import org.jpp.astnodes.ast.operatorType;
 import org.jpp.astnodes.ast.unaryopType;
 import org.jpp.astnodes.base.mod;
 import org.jpp.heart.PyFloat;
-import org.jpp.heart.PyObject;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -66,12 +64,16 @@ import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeStringToJDT;
 
+import java.security.cert.TrustAnchor;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MapPyExpressionsJDK extends PyMap {
     static Logger logger = Logger.getLogger(MapPyExpressionsJDK.class);
-    public static Expression mapExpression(expr pyexp, AST ast, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes , int start_char_pos, Map<TypeASTNode, String> typeNodes) throws ExpressionNotFound, NodeNotFoundException {
+    public static Expression mapExpression(expr pyexp, AST ast, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes, int start_char_pos, Map<TypeASTNode, String> typeNodes, PyCompilationUnit pyc) throws ExpressionNotFound, NodeNotFoundException {
         if (pyexp instanceof Num){
             if (((Num) pyexp).getN() instanceof PyLong){
                 NumberLiteral numberLiteral = ast.newNumberLiteral(String.valueOf(((PyLong) ((Num) pyexp).getN()).getValue()));
@@ -106,13 +108,13 @@ public class MapPyExpressionsJDK extends PyMap {
 //                    instanceofExpression.setRightOperand(MapPyExpressionsJDK.mapExpression((expr) ((AstList)((Call) pyexp).getArgs()).get(1),ast, import_nodes,0,typeNodes));
 //                    return instanceofExpression;
 //                }
-                SimpleName method_name = (SimpleName)mapExpression((expr) ((Call) pyexp).getFunc(), ast, import_nodes,start_char_pos,typeNodes);
+                SimpleName method_name = (SimpleName)mapExpression((expr) ((Call) pyexp).getFunc(), ast, import_nodes,start_char_pos,typeNodes,pyc );
                 invocation.setName(method_name);
                 for (Object arg : (AstList) ((Call) pyexp).getArgs()) {  //TODO keyword arguments are not parsed by the JPyParser, Thus is a Bug
-                    invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
+                    invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes, pyc));
                 }
                 for (Object karg: (AstList) ((Call) pyexp).getKeywords()){
-                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
+                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes, pyc));
                     logger.debug("Key ward is neglected : "+((keyword) karg).getArg());
                 }
 
@@ -139,7 +141,7 @@ public class MapPyExpressionsJDK extends PyMap {
                 }
                 else
                 {
-                    expre = mapExpression( (expr) ((Attribute)((Call) pyexp).getFunc()).getValue(),ast, import_nodes,0,typeNodes);
+                    expre = mapExpression( (expr) ((Attribute)((Call) pyexp).getFunc()).getValue(),ast, import_nodes,0,typeNodes, pyc);
                 }
 
                 method_name.setSourceRange(pyexp.getCharStartIndex()+expre.toString().length()+PyMap.totalCharGains,method_name.toString().length());
@@ -147,10 +149,10 @@ public class MapPyExpressionsJDK extends PyMap {
                 invocation.setName(method_name);
                 invocation.setExpression(expre);
                 for (Object arg : (AstList) ((Call) pyexp).getArgs()) {
-                    invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,0,typeNodes));
+                    invocation.arguments().add(mapExpression((expr) arg,ast, import_nodes,0,typeNodes,pyc ));
                 }
                 for (Object karg: (AstList) ((Call) pyexp).getKeywords()){
-                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes));
+                    invocation.arguments().add(mapExpression((expr) ((keyword) karg).getValue(),ast, import_nodes,start_char_pos+1+method_name.toString().length(),typeNodes,pyc ));
                     logger.debug("Key ward is neglected : "+((keyword) karg).getArg());
                 }
                 invocation.setSourceRange(start_char_pos,invocation.toString().length());
@@ -162,19 +164,20 @@ public class MapPyExpressionsJDK extends PyMap {
         }
         else if (pyexp instanceof Subscript){
             ArrayAccess arrayAccess = ast.newArrayAccess();
-            arrayAccess.setArray(mapExpression((expr)((Subscript) pyexp).getValue(),ast, import_nodes,0,typeNodes));
-            arrayAccess.setIndex(mapExpression((expr) ((Index)((Subscript) pyexp).getSlice()).getValue(),ast, import_nodes,0,typeNodes));
+            arrayAccess.setArray(mapExpression((expr)((Subscript) pyexp).getValue(),ast, import_nodes,0,typeNodes,pyc  ));
+            arrayAccess.setIndex(mapExpression((expr) ((Index)((Subscript) pyexp).getSlice()).getValue(),ast, import_nodes,0,typeNodes, pyc));
             arrayAccess.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
             return arrayAccess;
         }
         else if (pyexp instanceof List){
             ArrayInitializer arrayInitializer = ast.newArrayInitializer();
+            ((AstList) ((List) pyexp).getElts()).stream().filter(x->((expr)x).getParent()==null).forEach(x->((expr)x).setParent(pyexp));
+
             for (Object elt : (AstList) ((List) pyexp).getElts()) {
-                arrayInitializer.expressions().add(mapExpression((expr) elt,ast, import_nodes,0,typeNodes));
+                arrayInitializer.expressions().add(mapExpression((expr) elt,ast, import_nodes,0,typeNodes,pyc  ));
             }
             arrayInitializer.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,pyexp.getCharStopIndex()-pyexp.getCharStartIndex());
 
-            //TODO fille the data
             if (!(pyexp.getParent() instanceof List)){
                 ArrayCreation arrayCreation = ast.newArrayCreation();
                 if (pyexp.getParent() instanceof Assign){
@@ -212,7 +215,7 @@ public class MapPyExpressionsJDK extends PyMap {
                         logger.fatal("Assigned target is not an instance of Name");
                     }
 
-                }
+                }//TODO write a component that can infer types of the arrays
 
 
                 arrayCreation.setInitializer(arrayInitializer);
@@ -231,7 +234,7 @@ public class MapPyExpressionsJDK extends PyMap {
                 if (name.getFullyQualifiedName().contains("."))
                 {
                     mod mod = PyASTParser.parsePython(name.getFullyQualifiedName());
-                    expression = mapExpression((expr) mod.getChild(0).getChild(0),ast,import_nodes,0,typeNodes);
+                    expression = mapExpression((expr) mod.getChild(0).getChild(0),ast,import_nodes,0,typeNodes,pyc  );
 
                 }
                 else{
@@ -241,7 +244,7 @@ public class MapPyExpressionsJDK extends PyMap {
                 }
             }
             else{
-                expression = mapExpression((expr) ((Attribute) pyexp).getValue(), ast, import_nodes,0,typeNodes);
+                expression = mapExpression((expr) ((Attribute) pyexp).getValue(), ast, import_nodes,0,typeNodes,pyc  );
             }
             SimpleName simpleName = ast.newSimpleName(((Attribute) pyexp).getAttr().toString());
             simpleName.setSourceRange(pyexp.getCharStartIndex()+PyMap.totalCharGains,((Attribute) pyexp).getAttr().toString().length());
@@ -266,8 +269,8 @@ public class MapPyExpressionsJDK extends PyMap {
         else if (pyexp instanceof BinOp){
 
             InfixExpression infixExpression = ast.newInfixExpression();
-            infixExpression.setLeftOperand(mapExpression(((BinOp) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
-            infixExpression.setRightOperand(mapExpression(((BinOp) pyexp).getInternalRight(),ast,import_nodes,0,typeNodes));
+            infixExpression.setLeftOperand(mapExpression(((BinOp) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  ));
+            infixExpression.setRightOperand(mapExpression(((BinOp) pyexp).getInternalRight(),ast,import_nodes,0,typeNodes,pyc  ));
             if (((BinOp) pyexp).getInternalOp()== operatorType.Mult){
                 infixExpression.setOperator(InfixExpression.Operator.TIMES);
             }
@@ -312,26 +315,26 @@ public class MapPyExpressionsJDK extends PyMap {
         else if (pyexp instanceof IfExp){
             ConditionalExpression conditionalExpression = ast.newConditionalExpression();
 
-            conditionalExpression.setThenExpression(mapExpression(((IfExp) pyexp).getInternalBody(),ast,import_nodes,0,typeNodes));
-            conditionalExpression.setElseExpression(mapExpression(((IfExp) pyexp).getInternalOrelse(),ast,import_nodes,0,typeNodes));
-            conditionalExpression.setExpression(mapExpression(((IfExp) pyexp).getInternalTest(),ast,import_nodes,0,typeNodes));
+            conditionalExpression.setThenExpression(mapExpression(((IfExp) pyexp).getInternalBody(),ast,import_nodes,0,typeNodes,pyc  ));
+            conditionalExpression.setElseExpression(mapExpression(((IfExp) pyexp).getInternalOrelse(),ast,import_nodes,0,typeNodes,pyc  ));
+            conditionalExpression.setExpression(mapExpression(((IfExp) pyexp).getInternalTest(),ast,import_nodes,0,typeNodes,pyc  ));
             return conditionalExpression;
         }
         else if (pyexp instanceof Compare){
             if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.In)){
                 PyInExpression pyInExpression = ast.newPyInExpression();
-                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
-                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
+                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  ));
+                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
                 return pyInExpression;
             }
             else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.NotIn)){
                 PyNotInExpression pyInExpression = ast.newPyNotInExpression();
-                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
-                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
+                pyInExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  ));
+                pyInExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
                 return pyInExpression;
             }
             InfixExpression infixExpression = ast.newInfixExpression();
-            infixExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes));
+            infixExpression.setLeftOperand(mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  ));
             if (((AstList)((Compare) pyexp).getComparators()).size()>1){
                 logger.fatal("Size of the Comparators is more than one");
             }
@@ -370,7 +373,7 @@ public class MapPyExpressionsJDK extends PyMap {
             }
 
 
-            infixExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes));
+            infixExpression.setRightOperand(mapExpression((expr) ((AstList)((Compare) pyexp).getComparators()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
             ParenthesizedExpression parenthesizedExpression = ast.newParenthesizedExpression();
             parenthesizedExpression.setExpression(infixExpression);
 
@@ -380,19 +383,19 @@ public class MapPyExpressionsJDK extends PyMap {
             ParenthesizedExpression paraexpression = ast.newParenthesizedExpression();
             InfixExpression infixExpression = ast.newInfixExpression();
             int values = ((AstList)((BoolOp) pyexp).getValues()).size();
-            infixExpression.setRightOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(values-1),ast,import_nodes,0,typeNodes));
+            infixExpression.setRightOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(values-1),ast,import_nodes,0,typeNodes,pyc  ));
             InfixExpression temp = infixExpression;
             if (values==2){
-                infixExpression.setLeftOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(0),ast,import_nodes,0,typeNodes));
+                infixExpression.setLeftOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
             }
             else{
                 for (int i = values-2; i >= 0; i--) {
                     if (i==0){
-                        temp.setLeftOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(i),ast,import_nodes,0,typeNodes));
+                        temp.setLeftOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(i),ast,import_nodes,0,typeNodes,pyc  ));
                     }
                     else{
                         InfixExpression leftinfixExpression = ast.newInfixExpression();
-                        leftinfixExpression.setRightOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(i),ast,import_nodes,0,typeNodes));
+                        leftinfixExpression.setRightOperand(mapExpression ((expr) ((AstList)((BoolOp) pyexp).getValues()).get(i),ast,import_nodes,0,typeNodes,pyc  ));
                         if (((BoolOp) pyexp).getInternalOp().equals(boolopType.And)){
                             leftinfixExpression.setOperator(InfixExpression.Operator.CONDITIONAL_AND);
                         }
@@ -425,7 +428,7 @@ public class MapPyExpressionsJDK extends PyMap {
         }
         else if (pyexp instanceof UnaryOp){
             PrefixExpression prefixExpression = ast.newPrefixExpression();
-            prefixExpression.setOperand(mapExpression(((UnaryOp) pyexp).getInternalOperand(),ast,import_nodes,0,typeNodes));
+            prefixExpression.setOperand(mapExpression(((UnaryOp) pyexp).getInternalOperand(),ast,import_nodes,0,typeNodes,pyc  ));
             if (((UnaryOp) pyexp).getInternalOp().equals(unaryopType.Not)){
                 prefixExpression.setOperator(PrefixExpression.Operator.NOT);
             }
@@ -435,21 +438,21 @@ public class MapPyExpressionsJDK extends PyMap {
             return prefixExpression;
         }
         else if (pyexp instanceof Starred){
-         return mapExpression((expr) ((Starred) pyexp).getValue(),ast,import_nodes,0,typeNodes); //TODO handle stars, for now we neglect the stars
+         return mapExpression((expr) ((Starred) pyexp).getValue(),ast,import_nodes,0,typeNodes,pyc  ); //TODO handle stars, for now we neglect the stars
 
 
         }
         else if (pyexp instanceof Tuple){
             PyTupleExpression pyTupleExpression = ast.newPyTupleExpression();
             for (expr elt : ((Tuple) pyexp).getInternalElts()) {
-                pyTupleExpression.expressions().add(mapExpression(elt,ast,import_nodes,0,typeNodes));
+                pyTupleExpression.expressions().add(mapExpression(elt,ast,import_nodes,0,typeNodes,pyc  ));
             }
             return pyTupleExpression;
 
         }
         else if(pyexp instanceof GeneratorExp) {
             PyGenerator pyGenerator = ast.newPyGenerator();
-            pyGenerator.setTargetExpression(mapExpression((expr) ((GeneratorExp) pyexp).getElt(),ast,import_nodes,0,typeNodes));
+            pyGenerator.setTargetExpression(mapExpression((expr) ((GeneratorExp) pyexp).getElt(),ast,import_nodes,0,typeNodes,pyc  ));
             if (((AstList)((GeneratorExp) pyexp).getGenerators()).size()==1 && ((AstList)((GeneratorExp) pyexp).getGenerators()).get(0) instanceof comprehension){
                 comprehension comp = (comprehension)((AstList)((GeneratorExp) pyexp).getGenerators()).get(0);
           //      Expression valueexpression = mapExpression((expr) comp.getTarget(), ast, import_nodes, 0, typeNodes);
@@ -496,9 +499,9 @@ public class MapPyExpressionsJDK extends PyMap {
                 else{
                     logger.error("The mapping for the corresponding for loop parameter is not found");
                 }
-                pyGenerator.setIteratorExpression(mapExpression(comp.getInternalIter(),ast,import_nodes,0,typeNodes));
+                pyGenerator.setIteratorExpression(mapExpression(comp.getInternalIter(),ast,import_nodes,0,typeNodes,pyc  ));
                 if (((AstList)comp.getIfs()).size()==1){
-                    pyGenerator.setConditionalExpression(mapExpression((expr) ((AstList)comp.getIfs()).get(0),ast,import_nodes,0,typeNodes));
+                    pyGenerator.setConditionalExpression(mapExpression((expr) ((AstList)comp.getIfs()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
                     return pyGenerator;
                 }
                 else {
@@ -513,10 +516,74 @@ public class MapPyExpressionsJDK extends PyMap {
 
 
         }
+        else if (pyexp instanceof Dict){
+            AstList keys = (AstList) (((Dict) pyexp).getKeys());
+            AstList values = (AstList) (((Dict) pyexp).getValues());
+            MethodInvocation methodInvocation = ast.newMethodInvocation();
+            methodInvocation.setExpression(ast.newSimpleName("Map"));
+            methodInvocation.setName(ast.newSimpleName("of"));
+            for (int i=0;i<keys.size();i++){
+                Expression keyExpression = mapExpression((expr) keys.get(i), ast, import_nodes, 0, typeNodes,pyc );
+                Expression valueExpression = mapExpression((expr) values.get(i), ast, import_nodes, 0, typeNodes,pyc);
+                if (keyExpression instanceof org.eclipse.jdt.core.dom.Name && isClassImport(pyc,(org.eclipse.jdt.core.dom.Name)keyExpression)){
+                    ClassInstanceCreation keyclassInstanceCreation = ast.newClassInstanceCreation();
+                    keyclassInstanceCreation.setType(ast.newSimpleType((org.eclipse.jdt.core.dom.Name) keyExpression));
+                    methodInvocation.arguments().add(keyclassInstanceCreation);
+                }
+                else{
+                    methodInvocation.arguments().add(keyExpression);
+                }
+                if (valueExpression instanceof org.eclipse.jdt.core.dom.Name && isClassImport(pyc,(org.eclipse.jdt.core.dom.Name)valueExpression)){
+                    ClassInstanceCreation valueclassInstanceCreation = ast.newClassInstanceCreation();
+                    valueclassInstanceCreation.setType(ast.newSimpleType((org.eclipse.jdt.core.dom.Name) valueExpression));
+                    methodInvocation.arguments().add(valueclassInstanceCreation);
+                }
+                else
+                    {
+                    methodInvocation.arguments().add(valueExpression);
+                }
+            }
+            return methodInvocation;
+        }
         else {
             logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
         }
+    }
+
+    public static boolean isClassImport(PyCompilationUnit cmp, org.eclipse.jdt.core.dom.Name name){
+        ArrayList<org.eclipse.jdt.core.dom.Name> importnames = (ArrayList<org.eclipse.jdt.core.dom.Name>) cmp.imports().stream().map(x->((ImportDeclaration)x).getName()).collect(Collectors.toList());
+        for (org.eclipse.jdt.core.dom.Name importname : importnames) {
+            if (importname.isSimpleName() && name.isSimpleName() ) {
+                if (importname.getFullyQualifiedName().equals(name.getFullyQualifiedName())) return true;
+            }
+            else if (importname.isQualifiedName() && name.isSimpleName()){
+                if (((QualifiedName)importname).getName().getIdentifier().equals(name.getFullyQualifiedName())) return true;
+            }
+            else if (importname.isQualifiedName() && name.isQualifiedName()){
+                if (importname.getFullyQualifiedName().equals(name.getFullyQualifiedName())) return true;
+                String[] split_import = importname.getFullyQualifiedName().split("\\.");
+                String[] split_name = name.getFullyQualifiedName().split("\\.");
+
+                for (int i=0;i<split_import.length;i++){
+                    java.util.List<String> collect = Arrays.stream(split_import).skip(i).collect(Collectors.toList());
+                    if ((split_import.length - i)<=split_name.length){
+                        java.util.List<String> collect1 = Arrays.stream(split_name).limit(split_import.length - i).collect(Collectors.toList());
+                        if (collect1.equals(collect)){
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            else if (importname.isSimpleName() && name.isQualifiedName()){
+                String[] split_name = name.getFullyQualifiedName().split("\\.");
+                if (split_name[0].equals(importname.getFullyQualifiedName())) return true;
+            }
+
+        }
+        return false;
     }
 
 

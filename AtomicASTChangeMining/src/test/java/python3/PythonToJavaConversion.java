@@ -1,18 +1,19 @@
 package python3;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.internal.codeassist.complete.CompletionParser;
-import org.eclipse.jdt.internal.compiler.parser.Parser;
-import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jdt.internal.compiler.parser.TerminalTokens;
-import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import python3.typeinference.core.TypeASTNode;
 import utils.JavaASTUtil;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -692,6 +693,70 @@ public class PythonToJavaConversion {
                 "  }\n" +
                 "}");
 
+    }
+
+    @Test
+    public void testConversion15(){
+        String content = readFile("common.py");
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
+    @Test
+    public void testConversion16(){
+        String content = "mass_by_symbol = {\n" +
+                "    'Og': [[294, 294.21392]]}\n" +
+                "def get_center_of_mass(coords, numbers=None, symbols=None):\n" +
+                "    \"\"\"\n" +
+                "    Calculate and return the 3D position of the center of mass of the current geometry.\n" +
+                "    Either ``numbers`` or ``symbols`` must be given.\n" +
+                "\n" +
+                "    Args:\n" +
+                "        coords (np.array): Entries are 3-length lists of xyz coordinates for an atom.\n" +
+                "        numbers (np.array, list): Entries are atomic numbers corresponding to coords.\n" +
+                "        symbols (list): Entries are atom symbols corresponding to coords.\n" +
+                "\n" +
+                "    Returns:\n" +
+                "        np.array: The center of mass coordinates.\n" +
+                "    \"\"\"\n" +
+                "    if symbols is None and numbers is None:\n" +
+                "        raise IndexError('Either symbols or numbers must be given.')\n" +
+                "    if numbers is not None:\n" +
+                "        symbols = [symbol_by_number[number] for number in numbers]\n" +
+                "    center, total_mass = np.zeros(3, np.float64), 0\n" +
+                "    for coord, symbol in zip(coords, symbols):\n" +
+                "        mass = get_element_mass(symbol)[0]\n" +
+                "        center += mass * coord\n" +
+                "        total_mass += mass\n" +
+                "    center /= total_mass\n" +
+                "    return center";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
+    public String readFile(String fileName) {
+        Path resourceDirectory = Paths.get("src","test","resources","ASTConversion",fileName);
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(String.valueOf(resourceDirectory));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String everything = null;
+        try {
+            everything = IOUtils.toString(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return everything;
     }
 
 }
