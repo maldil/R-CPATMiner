@@ -103,6 +103,10 @@ public class TypeStringToJDT extends PyMap{
                 primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
                 return primitiveType;
             }
+            if (tree.getText().equals("str")){
+                SimpleType string = ast.newSimpleType(ast.newName("String"));
+                return string;
+            }
             else if (tree.getText().equals("Any")){
                 SimpleType any = ast.newSimpleType(ast.newName("Any"));
                 any.setSourceRange(startPosition,3);

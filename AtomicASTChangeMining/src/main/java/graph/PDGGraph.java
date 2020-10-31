@@ -47,6 +47,7 @@ import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PostfixExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.PyWithStatement;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -276,8 +277,8 @@ public class PDGGraph implements Serializable {
 					(VariableDeclarationStatement) node);
 		if (node instanceof WhileStatement)
 			return buildPDG(control, branch, (WhileStatement) node);
-		if (node instanceof WhileStatement)
-			return buildPDG(control, branch, (WhileStatement) node);
+		if (node instanceof PyWithStatement)
+			return buildPDG(control, branch, (PyWithStatement) node);
 		return new PDGGraph(context);
 	}
 
@@ -303,6 +304,32 @@ public class PDGGraph implements Serializable {
 		pdg.adjustBreakNodes("");
 		context.removeScope();
 		return pdg;
+	}
+
+	private PDGGraph buildPDG(PDGNode control, String branch,
+							  PyWithStatement astNode){
+		context.addScope();
+		PDGGraph pdg = buildArgumentPDG(control, branch,
+				astNode.getExpression());
+		PDGControlNode node = new PDGControlNode(control, branch,
+				astNode, astNode.getNodeType());
+
+		pdg.mergeSequentialData(node, Type.CONDITION);
+		PDGGraph ebg = new PDGGraph(context, new PDGActionNode(node, "T",
+				null, ASTNode.EMPTY_STATEMENT, null, null, "empty"));
+		PDGGraph bg = buildPDG(node, "T", astNode.getBody());
+		if (!bg.isEmpty())
+			ebg.mergeSequential(bg);
+		PDGGraph eg = new PDGGraph(context, new PDGActionNode(node, "F",
+				null, ASTNode.EMPTY_STATEMENT, null, null, "empty"));
+		pdg.mergeBranches(ebg, eg);
+		/*
+		 * pdg.sinks.remove(node); pdg.statementSinks.remove(node);
+		 */
+		pdg.adjustBreakNodes("");
+		context.removeScope();
+		return pdg;
+
 	}
 
 	private PDGGraph buildPDG(PDGNode control, String branch,
