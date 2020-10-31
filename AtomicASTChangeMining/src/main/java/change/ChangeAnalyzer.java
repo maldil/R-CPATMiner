@@ -263,7 +263,7 @@ public class ChangeAnalyzer {
 					DotGraph dg = new DotGraph(cg);
 					String dirPath = "./OUTPUT/DEBUG/";
 					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
-//					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
+			//		dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
 					imageID+=1;
 					HashMap<String, ChangeGraph> cgs = changeGraphs.get(e.getCFile().getPath());
 					if (cgs == null) {

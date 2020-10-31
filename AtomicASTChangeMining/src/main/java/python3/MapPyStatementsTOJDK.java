@@ -607,8 +607,6 @@ public class MapPyStatementsTOJDK extends PyMap{
                 String typeString = this.typeNodes.get(new TypeASTNode(((Name) optional_vars).getLineno(), ((Name) optional_vars).getCol_offset(), ((Name) optional_vars).getInternalId(), null));
                 VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, ((Name) optional_vars).getInternalId(), typeString, 0);
                 block.statements().add(varDecStat);
-
-
             }
             ((With) node).getInternalBody().stream().forEach(x -> {
                     try {

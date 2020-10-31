@@ -391,6 +391,15 @@ public class ChangeNode implements Serializable {
 		lengths[1] = astNode.getBody().getStartPosition() - starts[1];
 	}
 
+	private void setPositionInfo(PyWithStatement astNode) { //TODO handle empty cases
+		starts = new int[2];
+		lengths = new int[2];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getExpression().getStartPosition() - starts[0];
+		starts[1] = astNode.getExpression().getStartPosition() + astNode.getExpression().getLength();
+		lengths[1] = astNode.getBody().getStartPosition() - starts[1];
+	}
+
 	private void setPositionInfo(ASTNode astNode) {
 		if (astNode instanceof ArrayAccess) setPositionInfo((ArrayAccess) astNode);
 		else if (astNode instanceof ArrayCreation) setPositionInfo((ArrayCreation) astNode);
@@ -434,6 +443,7 @@ public class ChangeNode implements Serializable {
 		else if (astNode instanceof TypeLiteral) setPositionInfo((TypeLiteral) astNode);
 		else if (astNode instanceof VariableDeclarationFragment) setPositionInfo((VariableDeclarationFragment) astNode);
 		else if (astNode instanceof WhileStatement) setPositionInfo((WhileStatement) astNode);
+		else if (astNode instanceof PyWithStatement) setPositionInfo((PyWithStatement) astNode);
 		else throw new IllegalArgumentException(astNode.getClass().toString());
 	}
 
