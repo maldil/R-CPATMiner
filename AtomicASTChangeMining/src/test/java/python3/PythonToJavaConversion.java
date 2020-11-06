@@ -3,6 +3,7 @@ package python3;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import python3.typeinference.core.TypeASTNode;
@@ -26,7 +27,7 @@ public class PythonToJavaConversion {
                 "    self.is_ts = is_ts if is_ts is not None and is_ts is None  else isinstance(coo,boo)";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.toString(),
-                "public class PyDummyClass {\n" +
+                "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
                         "    self.is_ts=((is_ts != None) && (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
                         "  }\n" +
@@ -39,7 +40,7 @@ public class PythonToJavaConversion {
                 "    self.is_ts = is_ts if is_ts is not None or is_ts is None  else isinstance(coo,boo)";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.toString(),
-                "public class PyDummyClass {\n" +
+                "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
                         "    self.is_ts=((is_ts != None) || (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
                         "  }\n" +
@@ -53,7 +54,7 @@ public class PythonToJavaConversion {
                 "    self.is_ts = is_ts if is_ts is not None and is_ts is None and 1!=4 or foo<kool  else isinstance(coo,boo)";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.toString(),
-                "public class PyDummyClass {\n" +
+                "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
                         "    self.is_ts=(((is_ts != None) && (is_ts == None) && (1 != 4)) || (foo < kool)) ? is_ts : isinstance(coo,boo);\n" +
                         "  }\n" +
@@ -314,7 +315,7 @@ public class PythonToJavaConversion {
 
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void save_yaml(){\n" +
                 "    PyTypeError full_path;\n" +
                 "    if (!os.path.exists(os.path.join(os.path.abspath(path),\"species\",\"\"))) {\n" +
@@ -420,9 +421,8 @@ public class PythonToJavaConversion {
                 "            data['species'].label = data['label']" ;
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void load_yaml(){\n" +
-                "    PyTypeError freq_data;\n" +
                 "    PyTypeError freq_data;\n" +
                 "    if ((class_name != \"ArkaneSpecies\")) {\n" +
                 "      throw new KeyError(\"Expected a ArkaneSpecies object, but got {0}\".format(class_name));\n" +
@@ -497,7 +497,7 @@ public class PythonToJavaConversion {
 
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void get_element_mass(){\n" +
                 "    PyTypeError mass;\n" +
                 "    if (    iso_mass[0] in isotope) {\n" +
@@ -569,7 +569,7 @@ public class PythonToJavaConversion {
         CompilationUnit converted = Convert(content);
 
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(converted.toString(),"public class PyDummyClass {\n" +
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void get_element_mass(){\n" +
                 "    if (    iso_mass[0] in isotope) {\n" +
                 "      (      (goo.loo() pyjavatuple 1 pyjavatuple goo))=iso_mass[1];\n" +
@@ -618,14 +618,13 @@ public class PythonToJavaConversion {
                 "    }\n" +
                 " else     if (isinstance(input_element,str)) {\n" +
                 "      symbol=input_element;\n" +
-                "      number=next(      gen (key + value pyjavatuple value for      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError iso_mass1,      PyTypeError iso_mass2 : symbol_by_number.items() if (value == input_element)) );\n" +
-                "      number=next(      gen (key + value pyjavatuple value for      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError iso_mass1,      PyTypeError iso_mass2 : symbol_by_number.items() if (value == input_element)) );\n" +
-                "      number=next(      gen (key for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value : symbol_by_number.items() if (value == input_element)) );"+
+                "      number=next(      gen (key for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value : symbol_by_number.items()) );"+
                 "      if ((symbol == None) || (number == None)) {\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
+
         CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
 //        "number = (key for key in symbol_by_number.items() if value > input_element);"+
         Assert.assertEquals(cu.getProblems().length,0);
@@ -635,9 +634,11 @@ public class PythonToJavaConversion {
     @Test
     public void testConversion13(){  //Tuple
         String content = "def get_element_mass(input_element, isotope=None):\n" +
-                                "y = [x_i + np.random.rand() for x_i in x]\n" ;
+//                                "   y = [x_i + np.random.rand() for x_i in x]\n"+
+                                "   filename = join(c.foo for c in label if goo==hoo )";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
+
 
     }
 
@@ -700,13 +701,12 @@ public class PythonToJavaConversion {
         String content = readFile("common.py");
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-
     }
 
     @Test
     public void testConversion16(){
         String content = "mass_by_symbol = {\n" +
-                "    'Og': [[294, 294.21392]]}\n" +
+                "    'Og': [[294.78, 294.21392]]}\n" +
                 "def get_center_of_mass(coords, numbers=None, symbols=None):\n" +
                 "    \"\"\"\n" +
                 "    Calculate and return the 3D position of the center of mass of the current geometry.\n" +
@@ -720,20 +720,214 @@ public class PythonToJavaConversion {
                 "    Returns:\n" +
                 "        np.array: The center of mass coordinates.\n" +
                 "    \"\"\"\n" +
+                "    number = next(key+value for key, value in symbol_by_number.items())\n" +
                 "    if symbols is None and numbers is None:\n" +
                 "        raise IndexError('Either symbols or numbers must be given.')\n" +
                 "    if numbers is not None:\n" +
                 "        symbols = [symbol_by_number[number] for number in numbers]\n" +
                 "    center, total_mass = np.zeros(3, np.float64), 0\n" +
+                "    number = next(key+value for key, value in symbol_by_number)\n" +
                 "    for coord, symbol in zip(coords, symbols):\n" +
                 "        mass = get_element_mass(symbol)[0]\n" +
                 "        center += mass * coord\n" +
                 "        total_mass += mass\n" +
                 "    center /= total_mass\n" +
+                "    number = next(key+value for key, value in symbol_by_number.items() if value == input_element)\n" +
                 "    return center";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
+                "    if (((symbols == None) && (numbers == None))) {\n" +
+                "      throw new IndexError(\"Either symbols or numbers must be given.\");\n" +
+                "    }\n" +
+                "    if ((numbers != None)) {\n" +
+                "      symbols=      listc (symbol_by_number[number] for       PyTypeError number : numbers) ;\n" +
+                "    }\n" +
+                "    (    (total_mass pyjavatuple center))=(    (0 pyjavatuple np.zeros(3,np.float64)));\n" +
+                "    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number) );\n" +
+                "    for (    PyTypeError coord,    PyTypeError symbol : zip(coords,symbols)) {\n" +
+                "      mass=get_element_mass(symbol)[0];\n" +
+                "      center+=mass * coord;\n" +
+                "      total_mass+=mass;\n" +
+                "    }\n" +
+                "    center/=total_mass;\n" +
+                "    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
+                "    return center;\n" +
+                "  }\n" +
+                "  public static PyTypeError mass_by_symbol=Map.of(\"Og\",new float[][]{{294.78,294.21392}});\n" +
+                "}");
+    }
 
+    @Test
+    public void testConversion17(){
+        String content = "def update_species_attributes(self, species=None):\n" +
+                "        \"\"\"\n" +
+                "        Update the object with a new species/TS (while keeping non-species-dependent attributes unchanged)\n" +
+                "        \"\"\"\n" +
+                "        if species is None:\n" +
+                "            raise ValueError('No species was passed to ArkaneSpecies')\n" +
+                "        # Don't overwrite the label if it already exists\n" +
+                "        self.label = self.label or species.label\n" +
+                "        if isinstance(species, TransitionState):\n" +
+                "            self.imaginary_frequency = species.frequency\n" +
+                "            if species.conformer is not None:\n" +
+                "                self.conformer = species.conformer\n" +
+                "                self.xyz = self.update_xyz_string()\n" +
+                "        elif species.molecule is not None and len(species.molecule) > 0:\n" +
+                "            self.smiles = species.molecule[0].to_smiles()\n" +
+                "            self.adjacency_list = species.molecule[0].to_adjacency_list()\n" +
+                "            self.charge = species.molecule[0].get_net_charge()\n" +
+                "            self.multiplicity = species.molecule[0].multiplicity\n" +
+                "            self.formula = species.molecule[0].get_formula()\n" +
+                "            try:\n" +
+                "                inchi = to_inchi(species.molecule[0], backend='try-all', aug_level=0)\n" +
+                "            except ValueError:\n" +
+                "                inchi = ''\n" +
+                "            try:\n" +
+                "                inchi_key = to_inchi_key(species.molecule[0], backend='try-all', aug_level=0)\n" +
+                "            except ValueError:\n" +
+                "                inchi_key = ''\n" +
+                "            self.inchi = inchi\n" +
+                "            self.inchi_key = inchi_key\n" +
+                "            if species.conformer is not None:\n" +
+                "                self.conformer = species.conformer\n" +
+                "                self.xyz = self.update_xyz_string()\n" +
+                "            self.molecular_weight = species.molecular_weight\n" +
+                "            if species.symmetry_number != -1:\n" +
+                "                self.symmetry_number = species.symmetry_number\n" +
+                "            if species.transport_data is not None:\n" +
+                "                self.transport_data = species.transport_data  # called `collisionModel` in Arkane\n" +
+                "            if species.energy_transfer_model is not None:\n" +
+                "                self.energy_transfer_model = species.energy_transfer_model\n" +
+                "            if species.thermo is not None:\n" +
+                "                self.thermo = species.thermo.as_dict()\n" +
+                "                data = species.get_thermo_data()\n" +
+                "                h298 = data.get_enthalpy(298) / 4184.\n" +
+                "                s298 = data.get_entropy(298) / 4.184\n" +
+                "                temperatures = np.array([300, 400, 500, 600, 800, 1000, 1500, 2000, 2400])\n" +
+                "                cp = []\n";
+
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(9).collect(Collectors.joining( "\n" )),"    if ((species == None)) {\n" +
+                "      throw new ValueError(\"No species was passed to ArkaneSpecies\");\n" +
+                "    }\n" +
+                "    self.label=(self.label || species.label);\n" +
+                "    if (isinstance(species,TransitionState)) {\n" +
+                "      self.imaginary_frequency=species.frequency;\n" +
+                "      if ((species.conformer != None)) {\n" +
+                "        self.conformer=species.conformer;\n" +
+                "        self.xyz=self.update_xyz_string();\n" +
+                "      }\n" +
+                "    }\n" +
+                " else     if (((species.molecule != None) && (len(species.molecule) > 0))) {\n" +
+                "      self.smiles=species.molecule[0].to_smiles();\n" +
+                "      self.adjacency_list=species.molecule[0].to_adjacency_list();\n" +
+                "      self.charge=species.molecule[0].get_net_charge();\n" +
+                "      self.multiplicity=species.molecule[0].multiplicity;\n" +
+                "      self.formula=species.molecule[0].get_formula();\n" +
+                "      try {\n" +
+                "        inchi=to_inchi(species.molecule[0],\"try-all\",0);\n" +
+                "      }\n" +
+                " catch (      ValueError PyCpatDummy) {\n" +
+                "        inchi=\"\";\n" +
+                "      }\n" +
+                "      try {\n" +
+                "        inchi_key=to_inchi_key(species.molecule[0],\"try-all\",0);\n" +
+                "      }\n" +
+                " catch (      ValueError PyCpatDummy) {\n" +
+                "        inchi_key=\"\";\n" +
+                "      }\n" +
+                "      self.inchi=inchi;\n" +
+                "      self.inchi_key=inchi_key;\n" +
+                "      if ((species.conformer != None)) {\n" +
+                "        self.conformer=species.conformer;\n" +
+                "        self.xyz=self.update_xyz_string();\n" +
+                "      }\n" +
+                "      self.molecular_weight=species.molecular_weight;\n" +
+                "      if ((species.symmetry_number != -1)) {\n" +
+                "        self.symmetry_number=species.symmetry_number;\n" +
+                "      }\n" +
+                "      if ((species.transport_data != None)) {\n" +
+                "        self.transport_data=species.transport_data;\n" +
+                "      }\n" +
+                "      if ((species.energy_transfer_model != None)) {\n" +
+                "        self.energy_transfer_model=species.energy_transfer_model;\n" +
+                "      }\n" +
+                "      if ((species.thermo != None)) {\n" +
+                "        self.thermo=species.thermo.as_dict();\n" +
+                "        data=species.get_thermo_data();\n" +
+                "        h298=data.get_enthalpy(298) / 4184.0;\n" +
+                "        s298=data.get_entropy(298) / 4.184;\n" +
+                "        temperatures=np.array(new int[]{300,400,500,600,800,1000,1500,2000,2400});\n" +
+                "        cp=new Any[]{};\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+
+
+
+    }
+    @Test
+    public void testConversion18(){
+
+        String content = "def update_species_attributes(self, species=None):\n" +
+                "        \"\"\"\n" +
+                "        Update the object with a new species/TS (while keeping non-species-dependent attributes unchanged)\n" +
+                "        \"\"\"\n" +
+                "        if species is None:\n" +
+                "            raise ValueError('No species was passed to ArkaneSpecies')\n" +
+                "        # Don't overwrite the label if it already exists\n" +
+                "        self.label = self.label or species.label\n" +
+                "        if isinstance(species, TransitionState):\n" +
+                "            self.imaginary_frequency = species.frequency\n" +
+                "            if species.conformer is not None:\n" +
+                "                self.conformer = species.conformer\n" +
+                "                self.xyz = self.update_xyz_string()\n" +
+                "        elif species.molecule is not None and len(species.molecule) > 0:\n" +
+                "            self.smiles = species.molecule[0].to_smiles()\n" +
+                "            self.adjacency_list = species.molecule[0].to_adjacency_list()\n" +
+                "            self.charge = species.molecule[0].get_net_charge()\n" +
+                "            self.multiplicity = species.molecule[0].multiplicity\n" +
+                "            self.formula = species.molecule[0].get_formula()\n" +
+                "            try:\n" +
+                "                inchi = to_inchi(species.molecule[0], backend='try-all', aug_level=0)\n" +
+                "            except ValueError:\n" +
+                "                inchi = ''\n" +
+                "            try:\n" +
+                "                inchi_key = to_inchi_key(species.molecule[0], backend='try-all', aug_level=0)\n" +
+                "            except ValueError:\n" +
+                "                inchi_key = ''\n" +
+                "            self.inchi = inchi\n" +
+                "            self.inchi_key = inchi_key\n" +
+                "            if species.conformer is not None:\n" +
+                "                self.conformer = species.conformer\n" +
+                "                self.xyz = self.update_xyz_string()\n" +
+                "            self.molecular_weight = species.molecular_weight\n" +
+                "            if species.symmetry_number != -1:\n" +
+                "                self.symmetry_number = species.symmetry_number\n" +
+                "            if species.transport_data is not None:\n" +
+                "                self.transport_data = species.transport_data  # called `collisionModel` in Arkane\n" +
+                "            if species.energy_transfer_model is not None:\n" +
+                "                self.energy_transfer_model = species.energy_transfer_model\n" +
+                "            if species.thermo is not None:\n" +
+                "                self.thermo = species.thermo.as_dict()\n" +
+                "                data = species.get_thermo_data()\n" +
+                "                h298 = data.get_enthalpy(298) / 4184.\n" +
+                "                s298 = data.get_entropy(298) / 4.184\n" +
+                "                temperatures = np.array([300, 400, 500, 600, 800, 1000, 1500, 2000, 2400])\n" +
+                "                cp = []\n" +
+                "                for t in temperatures:\n" +
+                "                    cp.append(data.get_heat_capacity(t) / 4.184)\n" +
+                "\n" +
+                "                self.thermo_data = ThermoData(H298=(h298, 'kcal/mol'),\n" +
+                "                                              S298=(s298, 'cal/(mol*K)'),\n" +
+                "                                              Tdata=(temperatures, 'K'),\n" +
+                "                                              Cpdata=(cp, 'cal/(mol*K)'),\n" +
+                "                                              )";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
     }
 
     public String readFile(String fileName) {
@@ -758,6 +952,9 @@ public class PythonToJavaConversion {
         }
         return everything;
     }
+
+
+
 
 }
 

@@ -103,7 +103,17 @@ public class TypeStringToJDT extends PyMap{
                 primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
                 return primitiveType;
             }
-            if (tree.getText().equals("str")){
+            else if (tree.getText().equals("long")){
+                PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.LONG);
+                primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
+                return primitiveType;
+            }
+            else if (tree.getText().equals("float")){
+                PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.FLOAT);
+                primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
+                return primitiveType;
+            }
+            else if (tree.getText().equals("str")){
                 SimpleType string = ast.newSimpleType(ast.newName("String"));
                 return string;
             }
@@ -154,12 +164,18 @@ public class TypeStringToJDT extends PyMap{
             }
         }
         else if (tree.getText().equals("Union")){
-            UnionType unionType = ast.newUnionType();
+//            UnionType unionType = ast.newUnionType();
+//            for (Object child : tree.getChildren()) {
+//                unionType.types().add(convertToJDTType(ast, (CommonTree) child,startPosition+6));
+//            }
+//            unionType.setSourceRange(startPosition,unionType.toString().length());
+            String typeString = "Union";
             for (Object child : tree.getChildren()) {
-                unionType.types().add(convertToJDTType(ast, (CommonTree) child,startPosition+6));
+                typeString+="_";
+                typeString+= ((CommonTree) child).toString();
             }
-            unionType.setSourceRange(startPosition,unionType.toString().length());
-            return unionType;
+
+            return ast.newSimpleType(ast.newName(typeString));
         }
         else
         {

@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PyGenerator;
 import org.eclipse.jdt.core.dom.PyInExpression;
+import org.eclipse.jdt.core.dom.PyListComprehension;
 import org.eclipse.jdt.core.dom.PyNotInExpression;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -26,6 +27,7 @@ import org.jpp.astnodes.ast.BoolOp;
 import org.jpp.astnodes.ast.Compare;
 import org.jpp.astnodes.ast.Dict;
 import org.jpp.astnodes.ast.GeneratorExp;
+import org.jpp.astnodes.ast.ListComp;
 import org.jpp.astnodes.ast.Starred;
 import org.jpp.astnodes.ast.Tuple;
 import org.jpp.astnodes.ast.UnaryOp;
@@ -62,6 +64,7 @@ import org.jpp.heart.PyLong;
 import org.jpp.astnodes.ast.Index;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
+import python3.typeinference.core.TypeApproximator;
 import python3.typeinference.core.TypeStringToJDT;
 
 import java.security.cert.TrustAnchor;
@@ -180,44 +183,37 @@ public class MapPyExpressionsJDK extends PyMap {
 
             if (!(pyexp.getParent() instanceof List)){
                 ArrayCreation arrayCreation = ast.newArrayCreation();
-                if (pyexp.getParent() instanceof Assign){
-                    if (((AstList)((Assign)pyexp.getParent()).getTargets()).size()>1){
-                        logger.fatal("have to handle more than one assignments");
-                    }
-                    if (((AstList)((Assign)pyexp.getParent()).getTargets()).get(0) instanceof Name){
-                        String typeString = typeNodes.get(new TypeASTNode(((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getLineno(),
-                                ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getCol_offset(), ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getInternalId(), null));
-                        if (typeString!=null) {
-                            Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
-                            if (jdtType!=null) {
-                                arrayCreation.setType((ArrayType) jdtType);
-                            }
-                            else
-                            {
-                                Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
-                                arrayCreation.setType((ArrayType) jdtType1);
-                                logger.fatal("Created any type");
-                            }
+
+                Type type = TypeApproximator.getSimpleTypeApproximation(ast, pyexp);
+                if (type!=null){
+                    arrayCreation.setType((ArrayType) type);
+                }
+                else{
+                    if (pyexp.getParent() instanceof Assign){
+                        if (((AstList)((Assign)pyexp.getParent()).getTargets()).size()>1){
+                            logger.fatal("have to handle more than one assignments");
                         }
-                        else{
+                        else if (((AstList)((Assign)pyexp.getParent()).getTargets()).get(0) instanceof Attribute){
+                            Object o = ((AstList) ((Assign) pyexp.getParent()).getTargets()).get(0);
+                            String typeString = typeNodes.get(new TypeASTNode(((Attribute) o).getLineno(),
+                                    ((Attribute) o).getCol_offset()+((Attribute) o).getValue().toString().length()+1, ((Attribute) o).getAttr().toString(), null));
+
+                            updateArrayTpe(ast, arrayCreation, typeString);
+                        }
+                        else if (((AstList)((Assign)pyexp.getParent()).getTargets()).get(0) instanceof Name){
+                            String typeString = typeNodes.get(new TypeASTNode(((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getLineno(),
+                                    ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getCol_offset(), ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getInternalId(), null));
+                            updateArrayTpe(ast, arrayCreation, typeString);
+                        }
+                        else
+                        {
                             Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
                             arrayCreation.setType((ArrayType) jdtType1);
                             logger.fatal("Created any type");
+                            logger.fatal("Assigned target is not an instance of Name");
                         }
-
-
-                    }
-                    else
-                    {
-                        Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
-                        arrayCreation.setType((ArrayType) jdtType1);
-                        logger.fatal("Created any type");
-                        logger.fatal("Assigned target is not an instance of Name");
-                    }
-
-                }//TODO write a component that can infer types of the arrays
-
-
+                    }//TODO write a component that can infer types of the arrays
+                }
                 arrayCreation.setInitializer(arrayInitializer);
                 return arrayCreation;
             }
@@ -450,6 +446,76 @@ public class MapPyExpressionsJDK extends PyMap {
             return pyTupleExpression;
 
         }
+        else if (pyexp instanceof ListComp){
+            PyListComprehension pyListComp = ast.newPyListComprehension();
+            pyListComp.setTargetExpression(mapExpression((expr) ((ListComp) pyexp).getElt(),ast,import_nodes,0,typeNodes,pyc  ));
+            if (((AstList)((ListComp) pyexp).getGenerators()).size()==1 && ((AstList)((ListComp) pyexp).getGenerators()).get(0) instanceof comprehension){
+                comprehension comp = (comprehension)((AstList)((ListComp) pyexp).getGenerators()).get(0);
+                //      Expression valueexpression = mapExpression((expr) comp.getTarget(), ast, import_nodes, 0, typeNodes);
+
+                if (comp.getTarget() instanceof Tuple){
+                    SingleVariableDeclaration parameter_dummy = ast.newSingleVariableDeclaration();
+                    parameter_dummy.setName(ast.newSimpleName( "DummyTerminalNode"));
+                    parameter_dummy.setType(ast.newSimpleType(ast.newName("DummyTerminalTypeNode")));
+                    pyListComp.getValueExpression().add(parameter_dummy);
+                    for (Object elt : (AstList) ((Tuple) comp.getTarget()).getElts()) {
+                        SingleVariableDeclaration lo_parameter = ast.newSingleVariableDeclaration();
+                        lo_parameter.setName(ast.newSimpleName(((Name)elt).getId().toString()));
+                        String typeString = typeNodes.get(new TypeASTNode(((Name)elt).getLineno(),
+                                ((Name)elt).getCol_offset(), ((Name)elt).getId().toString(), null));
+                        Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
+                        if (jdtType!=null){
+                            lo_parameter.setType(jdtType);
+                        }
+                        else
+                            logger.error("Type of for loop variable in generator is not updated");
+                        pyListComp.getValueExpression().add(lo_parameter);
+                    }
+
+                }
+                else if (comp.getTarget() instanceof Name){
+                    SingleVariableDeclaration parameter_dummy = ast.newSingleVariableDeclaration();
+                    parameter_dummy.setName(ast.newSimpleName( "DummyTerminalNode"));
+                    parameter_dummy.setType(ast.newSimpleType(ast.newName("DummyTerminalTypeNode")));
+                    pyListComp.getValueExpression().add(parameter_dummy);
+                    SingleVariableDeclaration parameter = ast.newSingleVariableDeclaration();
+                    parameter.setName(ast.newSimpleName(((Name)(comp.getTarget())).getId().toString()));
+                    String typeString = typeNodes.get(new TypeASTNode(((Name)(comp.getTarget())).getLineno(),
+                            ((Name)comp.getTarget()).getCol_offset(), ((Name)(comp.getTarget())).getId().toString(), null));
+
+                    Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
+                    if (jdtType!=null){
+                        parameter.setType(jdtType);
+                    }
+                    else
+                        logger.error("Type of for loop variable is not updated");
+                    pyListComp.getValueExpression().add(parameter);
+
+                }
+                else{
+                    logger.error("The mapping for the corresponding for loop parameter is not found");
+                }
+                pyListComp.setIteratorExpression(mapExpression(comp.getInternalIter(),ast,import_nodes,0,typeNodes,pyc  ));
+                if (((AstList)comp.getIfs()).size()==0){
+                    return pyListComp;
+                }
+                else if (((AstList)comp.getIfs()).size()==1){
+                    pyListComp.setConditionalExpression(mapExpression((expr) ((AstList)comp.getIfs()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
+                    return pyListComp;
+                }
+                else {
+                    logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                    throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                }
+            }
+            else{
+                logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+                throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+            }
+
+
+
+        }
         else if(pyexp instanceof GeneratorExp) {
             PyGenerator pyGenerator = ast.newPyGenerator();
             pyGenerator.setTargetExpression(mapExpression((expr) ((GeneratorExp) pyexp).getElt(),ast,import_nodes,0,typeNodes,pyc  ));
@@ -500,7 +566,10 @@ public class MapPyExpressionsJDK extends PyMap {
                     logger.error("The mapping for the corresponding for loop parameter is not found");
                 }
                 pyGenerator.setIteratorExpression(mapExpression(comp.getInternalIter(),ast,import_nodes,0,typeNodes,pyc  ));
-                if (((AstList)comp.getIfs()).size()==1){
+                if (((AstList)comp.getIfs()).size()==0){
+                    return pyGenerator;
+                }
+                else if (((AstList)comp.getIfs()).size()==1){
                     pyGenerator.setConditionalExpression(mapExpression((expr) ((AstList)comp.getIfs()).get(0),ast,import_nodes,0,typeNodes,pyc  ));
                     return pyGenerator;
                 }
@@ -547,8 +616,28 @@ public class MapPyExpressionsJDK extends PyMap {
         }
         else {
             logger.debug("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
-
+            assert false;
             throw new ExpressionNotFound("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
+        }
+    }
+
+    private static void updateArrayTpe(AST ast, ArrayCreation arrayCreation, String typeString) throws NodeNotFoundException {
+        if (typeString !=null) {
+            Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
+            if (jdtType!=null) {
+                arrayCreation.setType((ArrayType) jdtType);
+            }
+            else
+            {
+                Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
+                arrayCreation.setType((ArrayType) jdtType1);
+                logger.fatal("Created any type");
+            }
+        }
+        else{
+            Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
+            arrayCreation.setType((ArrayType) jdtType1);
+            logger.fatal("Created any type");
         }
     }
 

@@ -10,8 +10,10 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.jpp.astnodes.ast.FunctionDef;
 import org.jpp.astnodes.ast.ImportFrom;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
@@ -63,32 +65,71 @@ public class PythonASTUtil {
         Modifier.ModifierKeyword keyword= new Modifier.ModifierKeyword("public",1);
         Modifier modifier = asn.newModifier(keyword);
         dummyClass.setModifier(modifier);
-        SimpleName simpleName = asn.newSimpleName("PyDummyClass");
+        SimpleName simpleName = asn.newSimpleName("PyDummyClass1");
         dummyClass.setName(simpleName);
         ArrayList<ASTNode> global_stmts = new ArrayList<ASTNode>();
-
+        Object currentCursor = null;
+        TypeDeclaration currentHolder = null;
+        TypeDeclaration otherCurrentHolder = null;
+        int number_of_dummy_classes = 1;
+        int number_of_dummy_methods = 1;
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
             try {
                 ArrayList<?> nodes = pyStatementsTOJDK.getMappingPyNode(asn,ch,import_nodes,startChar, pyc);
+                int nodeNumber=0;
+
                 for (Object node : Objects.requireNonNull(nodes)) {
+
                     logger.debug(node.toString());
                     startChar+=node.toString().length();
                     logger.debug("Start Char : "+startChar);
                     if (node instanceof ImportDeclaration)
                     {
+                        if (currentHolder!=null && (currentCursor instanceof MethodDeclaration || currentCursor ==null)){
+                            pyc.setTypes(currentHolder);
+                            currentHolder=null;
+                        }
+
                         pyc.setImport((ImportDeclaration) node);
+
                     }
                     else if (node instanceof TypeDeclaration)
                     {
-                        pyc.setTypes((TypeDeclaration) node);
-                    }
+                        if (currentHolder!=null && (currentCursor instanceof MethodDeclaration|| currentCursor==null)){
+                            pyc.setTypes(currentHolder);
+                            currentHolder=null;
+                        }
+                        if (otherCurrentHolder!=null){
+                            pyc.setTypes(otherCurrentHolder);
+                            otherCurrentHolder=null;
 
+                        }
+
+                        pyc.setTypes((TypeDeclaration) node);
+
+                    }
 //                    else if (node instanceof MethodDeclaration){
 //                        pyc.setTypes(node);
 //                    }
                     else if (node instanceof MethodDeclaration){
-                        dummyClass.bodyDeclarations().add(node);
+                        if (currentHolder !=null){
+                            currentHolder.bodyDeclarations().add(node);
+                            //pyc.setTypes(dummyClass);
+                        }
+                        else {
+                            currentHolder=asn.newTypeDeclaration();
+                            currentHolder.setModifier(asn.newModifier(new Modifier.ModifierKeyword("public",1)));
+                            currentHolder.setName(asn.newSimpleName("PyDummyClass"+number_of_dummy_classes));
+                            currentHolder.bodyDeclarations().add(node);
+                            number_of_dummy_classes+=1;
+                        }
+
+                        if (otherCurrentHolder!=null){
+                            pyc.setTypes(otherCurrentHolder);
+                            otherCurrentHolder=null;
+
+                        }
                     }
                     else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName) {
                         VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
@@ -102,20 +143,51 @@ public class PythonASTUtil {
                         fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
                         fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
                         global_stmts.add(fieldDeclaration);
-                        System.out.println(node);
+                        if (otherCurrentHolder!=null){
+                            pyc.setTypes(otherCurrentHolder);
+                            otherCurrentHolder=null;
+
+                        }
+
                     }
                     else {
-                        logger.fatal("Not implemented statement "+node+ node.toString());
+                        if (currentHolder!=null && (currentCursor instanceof MethodDeclaration|| currentCursor==null)){
+                            pyc.setTypes(currentHolder);
+                            currentHolder=null;
+                        }
+                        if (!(node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof StringLiteral)){
+                            if (otherCurrentHolder==null){
+                                otherCurrentHolder=asn.newTypeDeclaration();
+                                otherCurrentHolder.setModifier(asn.newModifier(new Modifier.ModifierKeyword("public",1)));
+                                otherCurrentHolder.setName(asn.newSimpleName("PyDummyClass"+number_of_dummy_classes));
+                                MethodDeclaration methoddec = asn.newMethodDeclaration();
+                                methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
+                                methoddec.setBody(asn.newBlock());
+                                methoddec.getBody().statements().add(node);
+                                otherCurrentHolder.bodyDeclarations().add(methoddec);
+                                number_of_dummy_classes+=1;
+                                number_of_dummy_methods+=1;
+                            }
+                            else{
+                                ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(node);
+                            }
+                        }
+//                        logger.fatal("Not implemented statement "+node+ node.toString());
                     }
+                    currentCursor = node;
                 }
             } catch (NodeNotFoundException | ExpressionNotFound e) {
                 e.printStackTrace();
             }
 
         }
-        if (dummyClass.bodyDeclarations().size()>0){
-            pyc.setTypes(dummyClass);
+        if (currentHolder!=null && currentHolder.bodyDeclarations().size()>0){
+            pyc.setTypes(currentHolder);
         }
+        if (otherCurrentHolder!=null && otherCurrentHolder.bodyDeclarations().size()>0){
+            pyc.setTypes(otherCurrentHolder);
+        }
+
         pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
                 .addAll(global_stmts.stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
         pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());

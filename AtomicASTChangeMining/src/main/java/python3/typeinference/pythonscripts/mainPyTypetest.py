@@ -15,7 +15,6 @@ import subprocess
 import shutil
 pytype_out_path = '/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/pytype_output/.pytype/'
 
-
 def annotate(source,file_name):
   source = textwrap.dedent(source.lstrip('\n'))
   ast_factory = lambda unused_options: ast

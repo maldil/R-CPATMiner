@@ -253,7 +253,7 @@ class ArkaneSpecies(RMGObject):
             os.mkdir(os.path.join(os.path.abspath(path), 'species', ''))
         valid_chars = "-_.()<=>+ %s%s" % (string.ascii_letters, string.digits)
         filename = os.path.join('species',
-                                ''.join(c for c in self.label if c in valid_chars) + '.yml')
+                                ''.join(c for c in self.goo if c in valid_chars) + '.yml')
         full_path = os.path.join(path, filename)
         with open(full_path, 'w') as f:
             yaml.dump(data=self.as_dict(), stream=f)
@@ -321,6 +321,8 @@ class ArkaneSpecies(RMGObject):
                              'pressure-dependent calculations are requested. Check file {0}'.format(path))
         logging.debug("Parsed all YAML objects")
 
+yaml.add_representer(str, str_repr)
+yaml.add_representer(str, str_repr)
 
 def replace_yaml_syntax(content, label=None):
     """
@@ -374,6 +376,8 @@ def check_conformer_energy(energies, path):
                         f'lowest energy conformer by {e_diff:.2f} kJ/mol. This can cause significant errors in '
                         f'your computed thermodynamic properties and rate coefficients.')
 
+yaml.add_representer(str, str_repr)
+yaml.add_representer(str, str_repr)
 
 def get_element_mass(input_element, isotope=None):
     """
@@ -667,6 +671,7 @@ def get_moment_of_inertia_tensor(coords, numbers=None, symbols=None):
         tensor[0, 1] -= mass * cm_coord[0] * cm_coord[1]
         tensor[0, 2] -= mass * cm_coord[0] * cm_coord[2]
         tensor[1, 2] -= mass * cm_coord[1] * cm_coord[2]
+
     tensor[1, 0] = tensor[0, 1]
     tensor[2, 0] = tensor[0, 2]
     tensor[2, 1] = tensor[1, 2]
@@ -698,6 +703,63 @@ def get_principal_moments_of_inertia(coords, numbers=None, symbols=None):
 
 
 def clean_dir(base_dir_path: str = '',
+              files_to_delete: List[str] = None,
+              file_extensions_to_delete: List[str] = None,
+              files_to_keep: List[str] = None,
+              sub_dir_to_keep: List[str] = None,
+              ) -> None:
+    """
+    Clean up a directory. Commonly used for removing unwanted files after unit tests.
+
+    Args:
+        base_dir_path (str): absolute path of the directory to clean up.
+        files_to_delete (list[str]): full name of the file (includes extension) to delete.
+        file_extensions_to_delete: extensions of files to delete.
+        files_to_keep: full name of the file (includes extension) to keep, files specified here will NOT be deleted even
+                       if its extension is also in file_extensions_to_delete.
+        sub_dir_to_keep: name of the subdirectories in the base directory to keep.
+    """
+    for item in os.listdir(base_dir_path):
+        item_path = os.path.join(base_dir_path, item)
+        if os.path.isfile(item_path):
+            item_extension = os.path.splitext(item_path)[-1]
+            if item in files_to_delete or (item_extension in file_extensions_to_delete and item not in files_to_keep):
+                os.remove(item_path)
+        else:
+            # item is sub-directory
+            if os.path.split(item_path)[-1] in sub_dir_to_keep:
+                continue
+            shutil.rmtree(item_path)
+
+class ArkaneSpeciesTest1(RMGObject):
+    """
+    A class for archiving an Arkane species including its statmech data into .yml files
+    """
+
+    def __init__(self, species=None, conformer=None, author='', level_of_theory='', model_chemistry='',
+                 frequency_scale_factor=None, use_hindered_rotors=None, use_bond_corrections=None, atom_energies='',
+                 chemkin_thermo_string='', smiles=None, adjacency_list=None, inchi=None, inchi_key=None, xyz=None,
+                 molecular_weight=None, symmetry_number=None, transport_data=None, energy_transfer_model=None,
+                 thermo=None, thermo_data=None, label=None, datetime=None, RMG_version=None, reactants=None,
+                 products=None, reaction_label=None, is_ts=None, charge=None, formula=None, multiplicity=None):
+        # reactants/products/reaction_label need to be in the init() to avoid error when loading a TS YAML file,
+        # but we don't use them
+        super(ArkaneSpecies, self).__init__()
+        if species is None and conformer is None:
+            # Expecting to get a species or a TS when generating the object within Arkane,
+            # or a conformer when parsing from YAML.
+            raise ValueError('No species (or TS) or conformer was passed to the ArkaneSpecies object')
+        if conformer is not None:
+            self.conformer = conformer
+        if label is None and species is not None:
+            self.label = species.label
+        else:
+            self.label = label
+        self.author = author
+        self.level_of_theory = level_of_theory
+        self.model_chemistry = model_chemistry
+
+def clean_dirr(base_dir_path: str = '',
               files_to_delete: List[str] = None,
               file_extensions_to_delete: List[str] = None,
               files_to_keep: List[str] = None,
