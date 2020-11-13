@@ -41,7 +41,7 @@ def _get_node_key(node):
         return base
 
 if __name__ == '__main__':
-    module = annotate("xxx=['one',1]",'test4.imports')
+    module = annotate("xxx={1:'3',1:3}",'test4.imports')
     dic_str = get_annotations_dict(module,0)
     # print(dic_str)
     json_object = json.dumps(dic_str)

@@ -1,34 +1,22 @@
 package python3.typeinference.core;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayType;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.UnionType;
-import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.jpp.PyASTParser;
-import org.jpp.astnodes.base.expr;
-import org.jpp.astnodes.base.mod;
-import python3.MapPyExpressionsJDK;
 import python3.PyMap;
-import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.typeinference.antlr.TypeInfo;
 import python3.typeinference.antlr.TypeTree;
-
-import java.util.HashMap;
 
 public class TypeStringToJDT extends PyMap{
     static Logger logger = Logger.getLogger(TypeStringToJDT.class);
@@ -85,7 +73,7 @@ public class TypeStringToJDT extends PyMap{
             if (typeTree.isError()){
                 logger.fatal("Error when parsing Type String :"+typeString);
             }
-            return convertToJDTType(ast,typeTree.getTree(),startPosition);
+            return convertToJDTType(ast,typeTree.getTree(),startPosition, false);
         } catch (RecognitionException e) {
             logger.fatal("Type tree formation error");
             logger.error(e);
@@ -94,11 +82,14 @@ public class TypeStringToJDT extends PyMap{
 
     }
 
-    private static Type convertToJDTType(AST ast, CommonTree typeTree,int startPosition) throws NodeNotFoundException {
+    private static Type convertToJDTType(AST ast, CommonTree typeTree, int startPosition, boolean forDict) throws NodeNotFoundException {
         CommonTree tree = typeTree;
 
         if (tree.getChildren()==null){
             if (tree.getText().equals("int")){
+                if (forDict){
+                    return ast.newSimpleType(ast.newName("Integer"));
+                }
                 PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.INT);
                 primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
                 return primitiveType;
@@ -153,7 +144,7 @@ public class TypeStringToJDT extends PyMap{
         }
         else if(tree.getChildren().size()==1){
             if (tree.getText().equals("List")){
-                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5));
+                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5, false));
                 arrayType.setSourceRange(startPosition,arrayType.toString().length());
                 return arrayType;
 
@@ -176,6 +167,13 @@ public class TypeStringToJDT extends PyMap{
             }
 
             return ast.newSimpleType(ast.newName(typeString));
+        }
+        else if (tree.getText().equals("Dict")){
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Map")));
+            for (Object child : tree.getChildren()) {
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+            }
+            return paraType;
         }
         else
         {

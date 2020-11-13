@@ -23,10 +23,10 @@ tokens {
 
 @members {
     public static void main(String[] args) throws Exception {
-        python3.typeinference.antlr.PyTypeLexer lex = new python3.typeinference.antlr.PyTypeLexer(new ANTLRFileStream(args[0]));
+        python3.typeinference.antlr.python3.typeinference.antlr.PyTypeLexer lex = new python3.typeinference.antlr.python3.typeinference.antlr.PyTypeLexer(new ANTLRFileStream(args[0]));
         CommonTokenStream tokens = new CommonTokenStream(lex);
 
-        python3.typeinference.antlr.PyTypeParser parser = new python3.typeinference.antlr.PyTypeParser(tokens);
+        python3.typeinference.antlr.python3.typeinference.antlr.PyTypeParser parser = new python3.typeinference.antlr.python3.typeinference.antlr.PyTypeParser(tokens);
 
         try {
             parser.expr();

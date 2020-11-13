@@ -2,7 +2,9 @@ package python3.typeinference.core;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.Type;
+import org.jpp.astnodes.ast.Dict;
 import org.jpp.astnodes.ast.List;
 import org.jpp.astnodes.ast.Num;
 import org.jpp.astnodes.ast.Str;
@@ -44,12 +46,35 @@ public class TypeApproximator {
                 return listString+"]";
             }
         }
+        else if (node instanceof Dict){
+            String typeString = getTypeString(ast, (Dict) node);
+            if (typeString!=null){
+                String listString = "Dict[";
+                listString+=typeString;
+                return listString+"]";
+            }
+        }
         return null;
     }
 
     private static String getTypeString(AST ast, List node){
+        return getTypeStringFromAstList(ast, (AstList) node.getElts());
+    }
+
+    private static String getTypeString(AST ast, Dict node){
+        String typeKeys = getTypeStringFromAstList(ast, (AstList) node.getKeys());
+        String typeValues = getTypeStringFromAstList(ast, (AstList) node.getValues());
+        if (typeKeys!=null && typeValues!=null){
+            return typeKeys +", "+typeValues;
+        }
+        else
+            return null;
+    }
+
+
+    private static String getTypeStringFromAstList(AST ast, AstList node){
         Set<String> hasString =  new HashSet<>();
-        for (Object elt : (AstList) node.getElts()) {
+        for (Object elt :  node) {
 
             String s = typeString(ast, (expr) elt);
             if (s!=null){
@@ -80,6 +105,7 @@ public class TypeApproximator {
             return types.toString()+"]";
         }
     }
+
 
     private static String typeString(AST ast,expr expression){
         if (expression instanceof Str){

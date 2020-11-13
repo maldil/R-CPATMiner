@@ -145,4 +145,15 @@ public class PyTypeParserTest {
         Assert.assertEquals(tree.getChild(0).getChild(0).toString(),"Jhon.Boo_12Zoo");
     }
 
+    @org.testng.annotations.Test
+    public void test13() throws RecognitionException {
+        String src = "Dict[int, String]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("Dict",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"int");
+        Assert.assertEquals(tree.getChild(1).toString(),"String");
+    }
+
 }
