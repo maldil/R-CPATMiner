@@ -2,6 +2,7 @@ package python3;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
@@ -15,6 +16,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jpp.astnodes.ast.FunctionDef;
 import org.jpp.astnodes.ast.ImportFrom;
+import org.jpp.astnodes.base.expr;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -26,6 +28,7 @@ import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
+import python3.typeinference.core.TypeApproximator;
 import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ import java.util.stream.Collectors;
 
 public class PythonASTUtil {
     static Logger logger = Logger.getLogger(PythonASTUtil.class);
-    private Map<TypeASTNode, String> typeinformation;
+    private Map<TypeASTNode, String> typeinformation=new HashMap<>();;
     public PyCompilationUnit parseSource(String content, Map<TypeASTNode, String> typeinfo) {
         mod ast = PyASTParser.parsePython(content);
         logger.debug(ast.toStringTree());
@@ -47,7 +50,7 @@ public class PythonASTUtil {
     }
 
 
-    private PyCompilationUnit createPyCompilationUnit(mod ast){
+    public PyCompilationUnit createPyCompilationUnit(mod ast){
         Map<String, String> options = JavaCore.getOptions();
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
@@ -131,15 +134,25 @@ public class PythonASTUtil {
 
                         }
                     }
-                    else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName) {
+                    else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof
+                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName) {
                         VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
                         variableDeclarationFragment.setName(asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier()));
-                        variableDeclarationFragment.setInitializer((Expression) ASTNode.copySubtree(asn, ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide()));
+                        Expression rightHandSide = ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide();
+                        Expression initilizer = (Expression) ASTNode.copySubtree(asn,rightHandSide );
+                        variableDeclarationFragment.setInitializer(initilizer);
                         FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
-                        String typeString = typeinformation.get(new TypeASTNode((((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getPyStartPosition(),
-                                ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide().getPyColumnOffSet(), ((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier(), null));
-                        Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
-                        fieldDeclaration.setType(jdtType);
+                        Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr)rightHandSide.getPyObject());
+                        if (type==null){
+                            String typeString = typeinformation.get(new TypeASTNode((((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getPyStartPosition(),
+                                    ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide().getPyColumnOffSet(), ((SimpleName) ((Assignment)
+                                    ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier(), null));
+                            Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
+                            fieldDeclaration.setType(jdtType);
+                        }
+                        else{
+                            fieldDeclaration.setType(type);
+                        }
                         fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
                         fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
                         global_stmts.add(fieldDeclaration);
@@ -188,8 +201,16 @@ public class PythonASTUtil {
             pyc.setTypes(otherCurrentHolder);
         }
 
+
+
         pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
                 .addAll(global_stmts.stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
+
+        pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
+                .addAll(pyc.getGlobal_variables().stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
+
+
+
         pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
 
         return pyc;

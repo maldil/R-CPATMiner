@@ -754,7 +754,7 @@ public class PythonToJavaConversion {
                 "    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
                 "    return center;\n" +
                 "  }\n" +
-                "  public static PyTypeError mass_by_symbol=Map.of(\"Og\",new float[][]{{294.78,294.21392}});\n" +
+                "  public static Map<String,float[][]> mass_by_symbol=Map.of(\"Og\",new float[][]{{294.78,294.21392}});\n" +
                 "}");
     }
 
@@ -930,6 +930,141 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.getProblems().length,0);
     }
 
+    @Test
+    public void testConversion19(){
+        String content = "i = 1\n" +
+                "while i > 3:\n" +
+                "                if network.get_leak_coefficient(T=temperature, P=pressure) > self.explore_tol * kchar:\n" +
+
+                "                    bath_gas = {species_dict[spec]: fraction for spec, fraction in bathGas.items()} if bathGas else None\n" ;
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion20(){
+        String content = "def explorer(source, explore_tol=0.01, energy_tol=np.inf, flux_tol=0.0, bathGas=None, maximumRadicalElectrons=np.inf):\n" +
+                "    \"\"\"Generate an explorer job\"\"\"\n" +
+                "    global job_list, species_dict\n" +
+                "    for job in job_list:\n" +
+                "        if isinstance(job, PressureDependenceJob):\n" +
+                "            pdepjob = job\n" +
+                "            break\n" +
+                "    else:\n" +
+                "        raise InputError('the explorer block must occur after the pressureDependence block')\n" +
+                "\n" +
+                "    source = [species_dict[name] for name in source]\n" +
+                "\n" +
+                "    bath_gas = {species_dict[spec]: fraction for spec, fraction in bathGas.items()} if bathGas else None\n" +
+                "\n" +
+                "    job = ExplorerJob(source=source, pdepjob=pdepjob, explore_tol=explore_tol,\n" +
+                "                      energy_tol=energy_tol, flux_tol=flux_tol, bath_gas=bath_gas,\n" +
+                "                      maximum_radical_electrons=maximumRadicalElectrons)\n" +
+                "    job_list.append(job)"+
+                "    for coord, symbol in zip(coords, symbols):\n" +
+                "        mass = get_element_mass(symbol)[0]\n" +
+                "        center += mass * coord\n" +
+                "        total_mass += mass\n";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion21(){
+        String check = "public class PyDummyClass {\n" +
+                "  void get_element_mass(){\n" +
+                "    PyTypeError number;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError number;\n" +
+                "    PyTypeError symbol;\n" +
+                "    PyTypeError number;\n" +
+                "    symbol=None;\n" +
+                "    number=None;\n" +
+                "    stream.forEach(System.out::println);"+
+                "    if (isinstance(input_element,integer)) {\n" +
+                "      symbol=symbol_by_number[input_element];\n" +
+                "      number=input_element;\n" +
+                "    }\n" +
+                " else     if (isinstance(input_element,str)) {\n" +
+                "      symbol=input_element;\n" +
+                "       bath_gas=dictc (key[0] ::: value for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value ::: key[0] ::: value for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value ::: symbol_by_number.items());"+
+                "      if ((symbol == None) || (number == None)) {\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+//        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}
+        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(cu.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion22(){
+        String content = "def draw(self, reaction, file_format, path=None):\n" +
+                        "        for i in range(n_left, -1, -1):\n" +
+                                        "            top = well_rects[i][1]\n" +
+                                        "            bottom = top + well_rects[i][3]\n" +
+                                        "            for column in columns:\n" +
+                                        "                for c in column:\n" +
+                                        "                    top0 = well_rects[c][1]\n" +
+                                        "                    bottom0 = top + well_rects[c][3]\n" +
+                                        "                    if (top0 <= top <= bottom0) or (top <= top0 <= bottom):\n" +
+                                        "                        # Can't put it in this column\n" +
+                                        "                        break\n" +
+                                        "                else:\n" +
+                                        "                    # Can put it in this column\n" +
+                                        "                    column.append(i)\n" +
+                                        "                    break";
+        CompilationUnit converted = Convert(content);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(6).collect(Collectors.joining( "\n" )),"    for (    PyTypeError i : range(n_left,-1,-1)) {\n" +
+                "      top=well_rects[i][1];\n" +
+                "      bottom=top + well_rects[i][3];\n" +
+                "      for (      PyTypeError column : columns) {\n" +
+                "        for (        PyTypeError c : column) {\n" +
+                "          top0=well_rects[c][1];\n" +
+                "          bottom0=top + well_rects[c][3];\n" +
+                "          if (((top0 <= top <= bottom0) || (top <= top0 <= bottom))) {\n" +
+                "            break;\n" +
+                "          }\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+    }
+
+    @Test
+    public void testConversion23(){
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+
+    @Test
+    public void testConversion24(){
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = [[i for i in range(5)] for _ in range(6)]" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
     public String readFile(String fileName) {
         Path resourceDirectory = Paths.get("src","test","resources","ASTConversion",fileName);
         FileInputStream inputStream = null;
