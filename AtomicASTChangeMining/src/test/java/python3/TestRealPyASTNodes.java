@@ -108,11 +108,12 @@ public class TestRealPyASTNodes {
         file16();
         file17();
         file18();
-     //   file19();
+        file19();
         file20();
         file21();
         file22();
-
+        file23();
+//        file24();
         printStats();
     }
 
@@ -270,6 +271,20 @@ public class TestRealPyASTNodes {
         Assert.assertEquals(converted.getProblems().length,0);
     }
 
+    @Test
+    public void file23(){
+        String content = readFile("sklearn/_affinity_propagation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file24(){
+        String content = readFile("sklearn/_agglomerative.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
 
     private CompilationUnit convert(String content) {
 
@@ -305,8 +320,13 @@ public class TestRealPyASTNodes {
         Assert.assertEquals(pyAstParser.getPythonASTStats().get("With").intValue(),jdtastVisitor.getStatFor("Java_PyWithStatement"));
         Assert.assertEquals(pyAstParser.getPythonASTStats().get("DictComp").intValue(),jdtastVisitor.getStatFor("Java_PyDictComprehensiont"));
         Assert.assertEquals(pyAstParser.getPythonASTStats().get("If").intValue(),jdtastVisitor.getStatFor("Java_IfStatement"));
-  //      Assert.assertEquals(pyAstParser.getPythonASTStats().get("Raise").intValue(),jdtastVisitor.getStatFor("Java_ThrowStatement"));
-
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("Raise").intValue(),jdtastVisitor.getStatFor("Java_ThrowStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("Return").intValue(),jdtastVisitor.getStatFor("Java_Return"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("TryExcept").intValue(),jdtastVisitor.getStatFor("Java_TryStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("Continue").intValue(),jdtastVisitor.getStatFor("Java_ContinueStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("AssertStmt").intValue(),jdtastVisitor.getStatFor("Java_AssertStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("While").intValue(),jdtastVisitor.getStatFor("Java_WhileStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("Lambda").intValue(),jdtastVisitor.getStatFor("Java_LambdaExpression"));
     }
 
     public String readFile(String fileName) {

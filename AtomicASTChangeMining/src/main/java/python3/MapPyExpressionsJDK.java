@@ -565,6 +565,12 @@ public class MapPyExpressionsJDK extends PyMap {
             if (((UnaryOp) pyexp).getInternalOp().equals(unaryopType.Not)){
                 prefixExpression.setOperator(PrefixExpression.Operator.NOT);
             }
+            else if (((UnaryOp) pyexp).getInternalOp().equals(unaryopType.USub)){
+                prefixExpression.setOperator(PrefixExpression.Operator.MINUS);
+            }
+            else if (((UnaryOp) pyexp).getInternalOp().equals(unaryopType.UAdd)){
+                prefixExpression.setOperator(PrefixExpression.Operator.PLUS);
+            }
             else{
                 logger.fatal("Unhandle Unary operator");
             }
@@ -995,6 +1001,9 @@ public class MapPyExpressionsJDK extends PyMap {
         }
         else if (keyword.equals("str")){
             return "String";
+        }
+        else if (keyword.equals("super")){
+            return "raise";
         }
 
         return keyword;
