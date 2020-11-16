@@ -3,15 +3,21 @@ package python3;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.PyDictComprehension;
 import org.eclipse.jdt.core.dom.PyListComprehension;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.PyWithStatement;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
+import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.WhileStatement;
+import org.jpp.astnodes.ast.Return;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +88,37 @@ public class JDTASTVisitor extends ASTVisitor {
         increment(jdtNodeMap,"Java_ThrowStatement");
         return super.visit(node);
     }
+
+    @Override
+    public boolean visit(ReturnStatement node) {
+        increment(jdtNodeMap,"Java_Return");
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(TryStatement node) {
+        increment(jdtNodeMap,"Java_TryStatement");
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ContinueStatement node) {
+        increment(jdtNodeMap,"Java_ContinueStatement");
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(WhileStatement node) {
+        increment(jdtNodeMap,"Java_WhileStatement");
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(LambdaExpression node) {
+        increment(jdtNodeMap,"Java_LambdaExpression");
+        return super.visit(node);
+    }
+
 
 
     public int getStatFor(String nodename){

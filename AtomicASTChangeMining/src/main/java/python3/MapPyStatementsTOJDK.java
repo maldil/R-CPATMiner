@@ -134,7 +134,13 @@ public class MapPyStatementsTOJDK extends PyMap{
             int start_import = startChar;
             for (PyObject pyObject : ((ImportFrom) node).getNames().asIterable()) {
                 ImportDeclaration import_dec =  asn.newImportDeclaration();
-                String[] import_name = (String[]) ArrayUtils.addAll(module,((alias) pyObject).getName().toString().split("\\."));
+                String[] import_name;
+                if (((ImportFrom) node).getModule().toString().equals("")){
+                    import_name = ((alias) pyObject).getName().toString().split("\\.");
+                }
+                else{
+                    import_name = (String[]) ArrayUtils.addAll(module,((alias) pyObject).getName().toString().split("\\."));
+                }
                 org.eclipse.jdt.core.dom.Name name = asn.newName(import_name);
                 name.setSourceRange(start_import+7,name.toString().length());
                 import_dec.setName(name);
@@ -470,6 +476,15 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
                 forstmt.getBody().setSourceRange(start_of_for_loop, node.toString().length());
             }
+            for (Object ch : (AstList)((For) node).getOrelse()){
+                for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,0, pyc)) {
+                    if (forstmt.getElseBody() ==null){
+                        forstmt.setElseBody(asn.newBlock());
+                    }
+                    ((Block)forstmt.getElseBody()).statements().add(o);
+                }
+            }
+
             forstmt.setSourceRange(startChar,node.toString().length());
             list_for.add(forstmt);
             return list_for;

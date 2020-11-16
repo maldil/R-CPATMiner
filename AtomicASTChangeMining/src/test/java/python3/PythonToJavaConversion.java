@@ -972,28 +972,35 @@ public class PythonToJavaConversion {
     @Test
     public void testConversion21(){
         String check = "public class PyDummyClass {\n" +
-                "  void get_element_mass(){\n" +
-                "    PyTypeError number;\n" +
-                "    PyTypeError symbol;\n" +
-                "    PyTypeError symbol;\n" +
-                "    PyTypeError number;\n" +
-                "    PyTypeError symbol;\n" +
-                "    PyTypeError number;\n" +
-                "    symbol=None;\n" +
-                "    number=None;\n" +
-                "    stream.forEach(System.out::println);"+
-                "    if (isinstance(input_element,integer)) {\n" +
-                "      symbol=symbol_by_number[input_element];\n" +
-                "      number=input_element;\n" +
-                "    }\n" +
-                " else     if (isinstance(input_element,str)) {\n" +
-                "      symbol=input_element;\n" +
-                "       bath_gas=dictc (key[0] ::: value for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value ::: key[0] ::: value for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError key,      PyTypeError value ::: symbol_by_number.items());"+
-                "      if ((symbol == None) || (number == None)) {\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+                "    void get_element_mass() {\n" +
+                "        PyTypeError number;\n" +
+                "        PyTypeError symbol;\n" +
+                "        PyTypeError symbol;\n" +
+                "        PyTypeError number;\n" +
+                "        PyTypeError symbol;\n" +
+                "        PyTypeError number;\n" +
+                "        symbol = None;\n" +
+                "        number = None;\n" +
+                "        if (isinstance(input_element, integer)) {\n" +
+                "            symbol = symbol_by_number[input_element];\n" +
+                "            number = input_element;\n" +
+                "        } else if (isinstance(input_element, str)) {\n" +
+                "            symbol = input_element;\n" +
+                "            bath_gas = dictc(key[0]:::value for DummyTerminalTypeNode DummyTerminalNode, PyTypeError key, PyTypeError\n" +
+                "            value:::key[0]:::value for DummyTerminalTypeNode DummyTerminalNode, PyTypeError key, PyTypeError value:::\n" +
+                "            symbol_by_number.items());\n" +
+                "            if ((symbol == None) || (number == None)) {\n" +
+                "            }\n" +
+                "            for (DummyTerminalTypeNode DummyTerminalNode, PyTypeError coord,PyTypeError symbol :zip(coords, symbols)){\n" +
+                "                mass = get_element_mass(symbol)[0];\n" +
+                "                center += mass * coord;\n" +
+                "                total_mass += mass;\n" +
+                "            } else{\n" +
+                "                boo++;\n" +
+                "                }\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }";
 //        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}
         CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
 //        "number = (key for key in symbol_by_number.items() if value > input_element);"+
@@ -1031,6 +1038,10 @@ public class PythonToJavaConversion {
                 "            break;\n" +
                 "          }\n" +
                 "        }\n" +
+                "        else{\n" +
+                "          column.append(i);\n" +
+                "          break;\n" +
+                "        }\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
@@ -1065,6 +1076,23 @@ public class PythonToJavaConversion {
 
         Assert.assertEquals(converted.getProblems().length,0);
     }
+
+    @Test
+    public void testConversion25(){  //TODO support ::n_samples + 1
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "        tmp -= np.sum(tmp, axis=0)\n" +
+                        "        dA = np.diag(tmp).copy()\n" +
+                        "        tmp.clip(0, np.inf, tmp)\n" +
+                        "        tmp.flat[::n_samples + 1] = dA" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+
+
+
     public String readFile(String fileName) {
         Path resourceDirectory = Paths.get("src","test","resources","ASTConversion",fileName);
         FileInputStream inputStream = null;
@@ -1092,11 +1120,6 @@ public class PythonToJavaConversion {
 
 
 }
-
-
-
-
-
 
 
 
