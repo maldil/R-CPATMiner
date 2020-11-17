@@ -114,6 +114,31 @@ public class TestRealPyASTNodes {
         file22();
         file23();
 //        file24();
+        //file26();
+   //     file27();
+        file28();
+        //file29();
+        file30();
+     //   file31();
+        file32();
+        file33();
+     //   file34();
+        file35();
+     //   file36();
+        //file37();
+      //  file38();
+      //  file39();
+     //   file40();
+     //   file41();
+        file42();
+        file43();
+        file44();
+      //  file45();
+        file46();
+        file47();
+        file48();
+        file49();
+    //    file50();
         printStats();
     }
 
@@ -285,6 +310,187 @@ public class TestRealPyASTNodes {
         Assert.assertEquals(converted.getProblems().length,0);
     }
 
+    @Test
+    public void file25(){
+        String content = readFile("sklearn/_bicluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file26(){
+        String content = readFile("sklearn/_birch.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file27(){
+        String content = readFile("sklearn/_birch.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file28(){
+        String content = readFile("sklearn/_dbscan.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file29(){
+        String content = readFile("sklearn/_feature_agglomeration.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file30(){
+        String content = readFile("sklearn/_kmeans.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file31(){
+        String content = readFile("sklearn/_mean_shift.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file32(){
+        String content = readFile("sklearn/_optics.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file33(){
+        String content = readFile("sklearn/_spectral.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file34(){
+        String content = readFile("sklearn/glm_distribution.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file35(){
+        String content = readFile("sklearn/openmp_helpers.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file36(){
+        String content = readFile("sklearn/pre_build_helpers.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file37(){
+        String content = readFile("sklearn/test_glm_distribution.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file38(){
+        String content = readFile("sklearn/benchmark/cluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file39(){
+        String content = readFile("sklearn/benchmark/cluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file40(){
+        String content = readFile("sklearn/benchmark/common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file41(){
+        String content = readFile("sklearn/benchmark/datasets.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file42(){
+        String content = readFile("sklearn/benchmark/decomposition.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file43(){
+        String content = readFile("sklearn/benchmark/ensemble.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file44(){
+        String content = readFile("sklearn/benchmark/linear_model.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file45(){
+        String content = readFile("sklearn/benchmark/manifold.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file46(){
+        String content = readFile("sklearn/benchmark/metrics.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file47(){
+        String content = readFile("sklearn/benchmark/model_selection.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file48(){
+        String content = readFile("sklearn/benchmark/neighbors.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file49(){
+        String content = readFile("sklearn/benchmark/svm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file50(){
+        String content = readFile("sklearn/benchmark/utils.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
 
     private CompilationUnit convert(String content) {
 
