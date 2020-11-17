@@ -399,7 +399,9 @@ public class MapPyExpressionsJDK extends PyMap {
             else if (((BinOp) pyexp).getInternalOp()== operatorType.FloorDiv) {
                 infixExpression.setOperator(InfixExpression.Operator.FLOORDIV);
             }
-            return infixExpression;
+            ParenthesizedExpression parenthesizedExpression = ast.newParenthesizedExpression();
+            parenthesizedExpression.setExpression(infixExpression);
+            return  parenthesizedExpression;
         }
         else if (pyexp instanceof IfExp){
             ConditionalExpression conditionalExpression = ast.newConditionalExpression();

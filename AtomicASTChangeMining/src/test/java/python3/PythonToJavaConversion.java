@@ -736,7 +736,7 @@ public class PythonToJavaConversion {
                 "    return center";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
                 "    if (((symbols == None) && (numbers == None))) {\n" +
                 "      throw new IndexError(\"Either symbols or numbers must be given.\");\n" +
                 "    }\n" +
@@ -744,14 +744,14 @@ public class PythonToJavaConversion {
                 "      symbols=      listc (symbol_by_number[number] for       PyTypeError number : numbers) ;\n" +
                 "    }\n" +
                 "    (    (total_mass pyjavatuple center))=(    (0 pyjavatuple np.zeros(3,np.float64)));\n" +
-                "    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number) );\n" +
+                "    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number) );\n" +
                 "    for (    PyTypeError coord,    PyTypeError symbol : zip(coords,symbols)) {\n" +
                 "      mass=get_element_mass(symbol)[0];\n" +
-                "      center+=mass * coord;\n" +
+                "      center+=(mass * coord);\n" +
                 "      total_mass+=mass;\n" +
                 "    }\n" +
                 "    center/=total_mass;\n" +
-                "    number=next(    gen (key + value for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
+                "    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
                 "    return center;\n" +
                 "  }\n" +
                 "  public static Map<String,float[][]> mass_by_symbol=Map.of(\"Og\",new float[][]{{294.78,294.21392}});\n" +
@@ -967,39 +967,62 @@ public class PythonToJavaConversion {
                 "        total_mass += mass\n";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
+
+        int boo = 4^2;
+
     }
 
     @Test
     public void testConversion21(){
         String check = "public class PyDummyClass {\n" +
-                "    void get_element_mass() {\n" +
-                "        PyTypeError number;\n" +
-                "        PyTypeError symbol;\n" +
-                "        PyTypeError symbol;\n" +
-                "        PyTypeError number;\n" +
-                "        PyTypeError symbol;\n" +
-                "        PyTypeError number;\n" +
-                "        symbol = None;\n" +
-                "        number = None;\n" +
-                "        if (isinstance(input_element, integer)) {\n" +
-                "            symbol = symbol_by_number[input_element];\n" +
-                "            number = input_element;\n" +
-                "        } else if (isinstance(input_element, str)) {\n" +
-                "            symbol = input_element;\n" +
-                "            bath_gas = dictc(key[0]:::value for DummyTerminalTypeNode DummyTerminalNode, PyTypeError key, PyTypeError\n" +
-                "            value:::key[0]:::value for DummyTerminalTypeNode DummyTerminalNode, PyTypeError key, PyTypeError value:::\n" +
-                "            symbol_by_number.items());\n" +
-                "            if ((symbol == None) || (number == None)) {\n" +
-                "            }\n" +
-                "            for (DummyTerminalTypeNode DummyTerminalNode, PyTypeError coord,PyTypeError symbol :zip(coords, symbols)){\n" +
-                "                mass = get_element_mass(symbol)[0];\n" +
-                "                center += mass * coord;\n" +
-                "                total_mass += mass;\n" +
-                "            } else{\n" +
-                "                boo++;\n" +
-                "                }\n" +
-                "            }\n" +
+                "void _kmeans_single_lloyd(){\n" +
+                "    PyTypeError n_clusters;\n" +
+                "    PyTypeError weight_in_clusters;\n" +
+                "    PyTypeError lloyd_iter;\n" +
+                "    PyTypeError inertia;\n" +
+                "    PyTypeError strict_convergence;\n" +
+                "    PyTypeError center_shift;\n" +
+                "    PyTypeError centers_new;\n" +
+                "    PyTypeError centers;\n" +
+                "    PyTypeError labels_old;\n" +
+                "    PyTypeError center_shift_tot;\n" +
+                "    PyTypeError _inertia;\n" +
+                "    PyTypeError labels;\n" +
+                "    n_clusters=centers_init.shape[0];\n" +
+                "    centers=centers_init;\n" +
+                "    centers_new=numpy.zeros_like(centers);\n" +
+                "    labels=numpy.full(X.shape[0],-1,numpy.int32);\n" +
+                "    labels_old=labels.copy();\n" +
+                "    weight_in_clusters=numpy.zeros(n_clusters,X.dtype);\n" +
+                "    center_shift=numpy.zeros(n_clusters,X.dtype);\n" +
+                "    if (scipy.sparse.issparse(X)) {\n" +
+                "      lloyd_iter=lloyd_iter_chunked_sparse;\n" +
+                "      _inertia=_inertia_sparse;\n" +
+                "    }\n" +
+                " else {\n" +
+                "      lloyd_iter=lloyd_iter_chunked_dense;\n" +
+                "      _inertia=_inertia_dense;\n" +
+                "    }\n" +
+                "    strict_convergence=False;\n" +
+                "    withstmt (threadpool_limits(1,\"blas\")) {\n" +
+                "      for (      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError i : range(max_iter)) {\n" +
+                "        lloyd_iter(X,sample_weight,x_squared_norms,centers,centers_new,weight_in_clusters,labels,center_shift,n_threads);\n" +
+                "        if (numpy.array_equal(labels,labels_old)) {\n" +
+                "          strict_convergence=True;\n" +
+                "          break;\n" +
                 "        }\n" +
+                " else {\n" +
+                "         // center_shift_tot=(center_shift ^ 2).sum();\n" +
+                "        }\n" +
+                "        labels_old[\"PythonSlice\"]=labels;\n" +
+                "      }\n" +
+                "      if (!strict_convergence) {\n" +
+                "        lloyd_iter(X,sample_weight,x_squared_norms,centers,centers,weight_in_clusters,labels,center_shift,n_threads,False);\n" +
+                "      }\n" +
+                "    }\n" +
+                "    inertia=_inertia(X,sample_weight,centers,labels);\n" +
+                "    return     (i + 1 pyjavatuple centers pyjavatuple inertia pyjavatuple labels);\n" +
+                "  }"+
                 "    }";
 //        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}
         CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
