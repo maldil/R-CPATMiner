@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PyErrorExpression;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.PyWithStatement;
+import org.eclipse.jdt.core.dom.PyYieldReturnStatement;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
@@ -40,6 +41,7 @@ import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import org.eclipse.jdt.internal.compiler.ast.YieldReturnStatement;
 import org.jpp.astnodes.PythonTree;
 import org.jpp.astnodes.ast.Assert;
 import org.jpp.astnodes.ast.Assign;
@@ -65,9 +67,11 @@ import org.jpp.astnodes.ast.Raise;
 import org.jpp.astnodes.ast.Return;
 import org.jpp.astnodes.ast.Str;
 import org.jpp.astnodes.ast.TryExcept;
+import org.jpp.astnodes.ast.TryFinally;
 import org.jpp.astnodes.ast.Tuple;
 import org.jpp.astnodes.ast.While;
 import org.jpp.astnodes.ast.With;
+import org.jpp.astnodes.ast.Yield;
 import org.jpp.astnodes.ast.alias;
 import org.jpp.astnodes.ast.arg;
 import org.jpp.astnodes.ast.arguments;
@@ -577,7 +581,18 @@ public class MapPyStatementsTOJDK extends PyMap{
                     return list_assign ;
                 }
             }
-            Expression exp = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes,0,typeNodes,pyc );
+            else if (((Expr) node).getValue() instanceof Yield){
+                PyYieldReturnStatement yieldReturnStatement = asn.newPyYieldReturnStatement();
+                yieldReturnStatement.setExpression(MapPyExpressionsJDK.mapExpression(((Yield) ((Expr) node).getValue()).getInternalValue(),asn,import_nodes,0,typeNodes,pyc));
+                ArrayList<PyYieldReturnStatement> list_assign = new ArrayList<>();
+                list_assign.add(yieldReturnStatement);
+                return list_assign ;
+            }
+
+            Expression exp  = MapPyExpressionsJDK.mapExpression((expr)((Expr) node).getValue(),asn, import_nodes,0,typeNodes,pyc );
+
+
+
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             ExpressionStatement expstmt= asn.newExpressionStatement(exp);
             expstmt.setSourceRange(node.getCharStartIndex()+PyMap.totalCharGains,node.getCharStopIndex()-node.getCharStartIndex());
@@ -700,13 +715,13 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
             });
             if (((TryExcept) node).getInternalOrelse().size()>0){
-                tryStatement.setFinally(asn.newBlock());
+                tryStatement.setElse(asn.newBlock());
             }
 
             (((TryExcept) node).getInternalOrelse()).stream().forEach(x->
                     {
                         try {
-                            tryStatement.getFinally().statements().addAll(getMappingPyNode(asn,  x, import_nodes, 0, pyc));
+                            tryStatement.getElse().statements().addAll(getMappingPyNode(asn,  x, import_nodes, 0, pyc));
                         } catch (NodeNotFoundException e) {
                             e.printStackTrace();
                         } catch (ExpressionNotFound expressionNotFound) {
@@ -874,6 +889,37 @@ public class MapPyStatementsTOJDK extends PyMap{
             ArrayList<AssertStatement> list_assign = new ArrayList<>();
             list_assign.add(assertStatement);
             return list_assign;
+        }
+        else if (node instanceof TryFinally){
+            if (((TryFinally) node).getInternalBody().size()>1){
+                logger.fatal("Size of body of try final is larger than one");
+                assert false;
+            }
+            if (((TryFinally) node).getInternalBody().get(0) instanceof TryExcept){
+                ArrayList<?> mappingPyNode = getMappingPyNode(asn, ((TryFinally) node).getInternalBody().get(0), import_nodes, 0, pyc);
+                TryStatement except =(TryStatement)mappingPyNode.get(0);
+
+                Block finalBlock = asn.newBlock();
+                ((TryFinally) node).getInternalFinalbody().stream().forEach(x-> {
+                    try {
+                        finalBlock.statements().addAll(getMappingPyNode(asn,x,import_nodes,0,pyc));
+                    } catch (NodeNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (ExpressionNotFound expressionNotFound) {
+                        expressionNotFound.printStackTrace();
+                    }
+                });
+                except.setFinally(finalBlock);
+                ArrayList<TryStatement> list_assign = new ArrayList<>();
+                list_assign.add(except);
+                return list_assign;
+            }
+            else{
+                logger.fatal("Type of the try final body is not try except");
+                assert false;
+                return new ArrayList<>();
+            }
+
         }
         else {
 

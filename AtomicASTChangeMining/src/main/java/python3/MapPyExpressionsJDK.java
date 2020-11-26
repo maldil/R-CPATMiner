@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
@@ -19,10 +20,13 @@ import org.eclipse.jdt.core.dom.PyListComprehension;
 import org.eclipse.jdt.core.dom.PyNotInExpression;
 import org.eclipse.jdt.core.dom.PySetComprehension;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
+import org.eclipse.jdt.core.dom.PyYieldReturnStatement;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.internal.core.dom.NaiveASTFlattener;
 import org.jpp.PyASTParser;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.BoolOp;
@@ -32,6 +36,7 @@ import org.jpp.astnodes.ast.DictComp;
 import org.jpp.astnodes.ast.ErrorExpr;
 import org.jpp.astnodes.ast.ExtSlice;
 import org.jpp.astnodes.ast.GeneratorExp;
+import org.jpp.astnodes.ast.Lambda;
 import org.jpp.astnodes.ast.ListComp;
 import org.jpp.astnodes.ast.Set;
 import org.jpp.astnodes.ast.SetComp;
@@ -39,6 +44,8 @@ import org.jpp.astnodes.ast.Slice;
 import org.jpp.astnodes.ast.Starred;
 import org.jpp.astnodes.ast.Tuple;
 import org.jpp.astnodes.ast.UnaryOp;
+import org.jpp.astnodes.ast.Yield;
+import org.jpp.astnodes.ast.arg;
 import org.jpp.astnodes.ast.boolopType;
 import org.jpp.astnodes.ast.cmpopType;
 import org.jpp.astnodes.ast.comprehension;
@@ -78,6 +85,7 @@ import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeApproximator;
 import python3.typeinference.core.TypeStringToJDT;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -951,7 +959,20 @@ public class MapPyExpressionsJDK extends PyMap {
             });
             return methodInvocation;
         }
+        else if (pyexp instanceof Lambda){
+            LambdaExpression expression = ast.newLambdaExpression();
+            for (arg internalArg : ((Lambda) pyexp).getInternalArgs().getInternalArgs()) {
+                assert(internalArg.getInternalAnnotation()==null);
+                VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
+                fragment.setName(ast.newSimpleName(mapPythonKeyWords(internalArg.getInternalArg())));
+                expression.parameters().add(fragment);
+            }
+            expression.setBody(MapPyExpressionsJDK.mapExpression((expr) ((Lambda) pyexp).getBody(),ast,import_nodes,0,typeNodes,pyc));
 
+            return expression;
+
+
+        }
 
         else {
             logger.fatal("Corresponding Expression is not Found "+pyexp.getClass() + pyexp.toStringTree());
