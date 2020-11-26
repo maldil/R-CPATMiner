@@ -857,8 +857,8 @@ public class PythonToJavaConversion {
                 "      if ((species.thermo != None)) {\n" +
                 "        self.thermo=species.thermo.as_dict();\n" +
                 "        data=species.get_thermo_data();\n" +
-                "        h298=data.get_enthalpy(298) / 4184.0;\n" +
-                "        s298=data.get_entropy(298) / 4.184;\n" +
+                "        h298=(data.get_enthalpy(298) / 4184.0);\n" +
+                "        s298=(data.get_entropy(298) / 4.184);\n" +
                 "        temperatures=np.array(new int[]{300,400,500,600,800,1000,1500,2000,2400});\n" +
                 "        cp=new Any[]{};\n" +
                 "      }\n" +
@@ -974,56 +974,19 @@ public class PythonToJavaConversion {
 
     @Test
     public void testConversion21(){
-        String check = "public class PyDummyClass {\n" +
-                "void _kmeans_single_lloyd(){\n" +
-                "    PyTypeError n_clusters;\n" +
-                "    PyTypeError weight_in_clusters;\n" +
-                "    PyTypeError lloyd_iter;\n" +
-                "    PyTypeError inertia;\n" +
-                "    PyTypeError strict_convergence;\n" +
-                "    PyTypeError center_shift;\n" +
-                "    PyTypeError centers_new;\n" +
-                "    PyTypeError centers;\n" +
-                "    PyTypeError labels_old;\n" +
-                "    PyTypeError center_shift_tot;\n" +
-                "    PyTypeError _inertia;\n" +
-                "    PyTypeError labels;\n" +
-                "    n_clusters=centers_init.shape[0];\n" +
-                "    centers=centers_init;\n" +
-                "    centers_new=numpy.zeros_like(centers);\n" +
-                "    labels=numpy.full(X.shape[0],-1,numpy.int32);\n" +
-                "    labels_old=labels.copy();\n" +
-                "    weight_in_clusters=numpy.zeros(n_clusters,X.dtype);\n" +
-                "    center_shift=numpy.zeros(n_clusters,X.dtype);\n" +
-                "    if (scipy.sparse.issparse(X)) {\n" +
-                "      lloyd_iter=lloyd_iter_chunked_sparse;\n" +
-                "      _inertia=_inertia_sparse;\n" +
+        String check = "public class Main {\n" +
+                "  public static void main(String[ ] args) {\n" +
+                "    try {\n" +
+                "      int[] myNumbers = {1, 2, 3};\n" +
+                "      System.out.println(myNumbers[10]);\n" +
+                "    } catch (Exception e) {\n" +
+                "      System.out.println(\"Something went wrong.\");\n" +
                 "    }\n" +
-                " else {\n" +
-                "      lloyd_iter=lloyd_iter_chunked_dense;\n" +
-                "      _inertia=_inertia_dense;\n" +
-                "    }\n" +
-                "    strict_convergence=False;\n" +
-                "    withstmt (threadpool_limits(1,\"blas\")) {\n" +
-                "      for (      DummyTerminalTypeNode DummyTerminalNode,      PyTypeError i : range(max_iter)) {\n" +
-                "        lloyd_iter(X,sample_weight,x_squared_norms,centers,centers_new,weight_in_clusters,labels,center_shift,n_threads);\n" +
-                "        if (numpy.array_equal(labels,labels_old)) {\n" +
-                "          strict_convergence=True;\n" +
-                "          break;\n" +
-                "        }\n" +
-                " else {\n" +
-                "         // center_shift_tot=(center_shift ^ 2).sum();\n" +
-                "        }\n" +
-                "        labels_old[\"PythonSlice\"]=labels;\n" +
-                "      }\n" +
-                "      if (!strict_convergence) {\n" +
-                "        lloyd_iter(X,sample_weight,x_squared_norms,centers,centers,weight_in_clusters,labels,center_shift,n_threads,False);\n" +
-                "      }\n" +
-                "    }\n" +
-                "    inertia=_inertia(X,sample_weight,centers,labels);\n" +
-                "    return     (i + 1 pyjavatuple centers pyjavatuple inertia pyjavatuple labels);\n" +
-                "  }"+
-                "    }";
+                "     else{\n"+
+                "           boo=3;\n"+
+                "       }\n"+
+                "  }\n" +
+                "}";
 //        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}
         CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
 //        "number = (key for key in symbol_by_number.items() if value > input_element);"+
@@ -1052,11 +1015,11 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.getProblems().length,0);
         Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(6).collect(Collectors.joining( "\n" )),"    for (    PyTypeError i : range(n_left,-1,-1)) {\n" +
                 "      top=well_rects[i][1];\n" +
-                "      bottom=top + well_rects[i][3];\n" +
+                "      bottom=(top + well_rects[i][3]);\n" +
                 "      for (      PyTypeError column : columns) {\n" +
                 "        for (        PyTypeError c : column) {\n" +
                 "          top0=well_rects[c][1];\n" +
-                "          bottom0=top + well_rects[c][3];\n" +
+                "          bottom0=(top + well_rects[c][3]);\n" +
                 "          if (((top0 <= top <= bottom0) || (top <= top0 <= bottom))) {\n" +
                 "            break;\n" +
                 "          }\n" +
@@ -1079,7 +1042,10 @@ public class PythonToJavaConversion {
                         "        return _software_ids[standardize_name(name)]\n" +
                         "    except KeyError:\n" +
                         "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
-                        "        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}" ;
+                        "        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}\n" +
+                        "    finally:\n" +
+                        "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                        "    "  ;
         CompilationUnit converted = Convert(content);
 
         Assert.assertEquals(converted.getProblems().length,0);
@@ -1113,7 +1079,199 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.getProblems().length,0);
     }
 
+    @Test
+    public  void testConversion26(){
+        String content = "def _iterate_sparse_X(X):\n" +
+                "    \"\"\"This little hack returns a densified row when iterating over a sparse\n" +
+                "    matrix, instead of constructing a sparse matrix for every row that is\n" +
+                "    expensive.\n" +
+                "    \"\"\"\n" +
+                "    n_samples = X.shape[0]\n" +
+                "    X_indices = X.indices\n" +
+                "    X_data = X.data\n" +
+                "    X_indptr = X.indptr\n" +
+                "\n" +
+                "    for i in range(n_samples):\n" +
+                "        row = np.zeros(X.shape[1])\n" +
+                "        startptr, endptr = X_indptr[i], X_indptr[i + 1]\n" +
+                "        nonzero_indices = X_indices[startptr:endptr]\n" +
+                "        row[nonzero_indices] = X_data[startptr:endptr]\n" +
+                "        yield row";
+        CompilationUnit converted = Convert(content);
 
+        Assert.assertEquals(converted.getProblems().length,0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(8).collect(Collectors.joining( "\n" )),"    n_samples=X.shape[0];\n" +
+                "    X_indices=X.indices;\n" +
+                "    X_data=X.data;\n" +
+                "    X_indptr=X.indptr;\n" +
+                "    for (    PyTypeError i : range(n_samples)) {\n" +
+                "      row=np.zeros(X.shape[1]);\n" +
+                "      (      (endptr pyjavatuple startptr))=(      (X_indptr[(i + 1)] pyjavatuple X_indptr[i]));\n" +
+                "      nonzero_indices=X_indices[\"PythonSlice\"];\n" +
+                "      row[nonzero_indices]=X_data[\"PythonSlice\"];\n" +
+                "      yieldr row;\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+    }
+
+    @Test
+    public void testConversion27(){  //TODO support ::n_samples + 1
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "       csr_linestyle = (0, (3, 1, 1, 1, 1, 1))  # densely dashdotdotted\n" +
+                        "       dense_linestyle = (0, ())  # solid" ;
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion28(){
+        String content = "def divide(x, y):\n" +
+                "    try:\n" +
+                "        result = x / y\n" +
+                "    except ZeroDivisionError:\n" +
+                "        print(\"division by zero!\")\n" +
+                "    else:\n" +
+                "        print(\"result is\", result)\n" +
+                "    finally:\n" +
+                "        print(\"executing finally clause\")";
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      result=(x / y);\n" +
+                "    }\n" +
+                " catch (    ZeroDivisionError PyCpatDummy) {\n" +
+                "      print(\"division by zero!\");\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      print(\"result is\",result);\n" +
+                "    }\n" +
+                " else {\n" +
+                "      print(\"executing finally clause\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+
+    }
+
+    @Test
+    public void testConversion29(){
+        String content = "def execute(self, output_file, plot, file_format='pdf', print_summary=True):\n" +
+                "        \"\"\"Execute a PressureDependenceJob\"\"\"\n" +
+                "        for config in self.network.isomers + self.network.reactants + self.network.products:\n" +
+                "            for spec in config.species:\n" +
+                "                if spec.conformer.E0 is None:\n" +
+                "                    raise AttributeError('species {0} is missing energy for its conformer'.format(spec.label))\n" +
+                "\n" +
+                "        # set transition state Energy if not set previously using same method as RMG pdep\n" +
+                "        for reaction in self.network.path_reactions:\n" +
+                "            transition_state = reaction.transition_state\n" +
+                "            if transition_state.conformer and transition_state.conformer.E0 is None:\n" +
+                "                transition_state.conformer.E0 = (sum([spec.conformer.E0.value_si for spec in reaction.reactants])\n" +
+                "                                                 + reaction.kinetics.Ea.value_si, 'J/mol')\n" +
+                "                logging.info('Approximated transitions state E0 for reaction {3} from kinetics '\n" +
+                "                             'A={0}, n={1}, Ea={2} J/mol'.format(reaction.kinetics.A.value_si,\n" +
+                "                                                                 reaction.kinetics.n.value_si,\n" +
+                "                                                                 reaction.kinetics.Ea.value_si, reaction.label))\n" +
+                "        if print_summary:\n" +
+                "            self.network.log_summary()\n" +
+                "\n" +
+                "        if output_file is not None:\n" +
+                "            self.draw(os.path.dirname(output_file), file_format)\n" +
+                "\n" +
+                "        self.initialize()\n" +
+                "\n" +
+                "        self.K = self.network.calculate_rate_coefficients(self.Tlist.value_si, self.Plist.value_si, self.method)\n" +
+                "\n" +
+                "        self.fit_interpolation_models()\n" +
+                "\n" +
+                "        if output_file is not None:\n" +
+                "            self.save(output_file)\n" +
+                "            if plot:\n" +
+                "                self.plot(os.path.dirname(output_file))\n" +
+                "            if self.sensitivity_conditions is not None:\n" +
+                "                perturbation = 0.1  # kcal/mol\n" +
+                "                logging.info('\\n\\nRunning sensitivity analysis...')\n" +
+                "                for i in range(3):\n" +
+                "                    try:\n" +
+                "                        SensAnalysis(self, os.path.dirname(output_file), perturbation=perturbation)\n" +
+                "                    except (InvalidMicrocanonicalRateError, ModifiedStrongCollisionError) as e:\n" +
+                "                        logging.warning('Could not complete the sensitivity analysis with a perturbation of {0} '\n" +
+                "                                        'kcal/mol, trying {1} kcal/mol instead.'.format(\n" +
+                "                            perturbation, perturbation / 2.0))\n" +
+                "                        perturbation /= 2.0\n" +
+                "                    else:\n" +
+                "                        break\n" +
+                "                else:\n" +
+                "                    logging.error(\"Could not complete the sensitivity analysis even with a perturbation of {0}\"\n" +
+                "                                  \" kcal/mol\".format(perturbation))\n" +
+                "                    raise e\n" +
+                "                logging.info(\"Completed the sensitivity analysis using a perturbation of {0} kcal/mol\".format(\n" +
+                "                    perturbation))\n" +
+                "        logging.debug('Finished pdep job for reaction {0}.'.format(self.network.label))\n" +
+                "        logging.debug(repr(self.network))";
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(4).collect(Collectors.joining( "\n" )),"    for (    PyTypeError config : ((self.network.isomers + self.network.reactants) + self.network.products)) {\n" +
+                "      for (      PyTypeError spec : config.species) {\n" +
+                "        if ((spec.conformer.E0 == None)) {\n" +
+                "          throw new AttributeError(\"species {0} is missing energy for its conformer\".format(spec.label));\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "    for (    PyTypeError reaction : self.network.path_reactions) {\n" +
+                "      transition_state=reaction.transition_state;\n" +
+                "      if ((transition_state.conformer && (transition_state.conformer.E0 == None))) {\n" +
+                "        transition_state.conformer.E0=(        (\"J/mol\" pyjavatuple (sum(        listc (spec.conformer.E0.value_si for         PyTypeError spec : reaction.reactants) ) + reaction.kinetics.Ea.value_si)));\n" +
+                "        logging.info(\"Approximated transitions state E0 for reaction {3} from kinetics A={0}, n={1}, Ea={2} J/mol\".format(reaction.kinetics.A.value_si,reaction.kinetics.n.value_si,reaction.kinetics.Ea.value_si,reaction.label));\n" +
+                "      }\n" +
+                "    }\n" +
+                "    if (print_summary) {\n" +
+                "      self.network.log_summary();\n" +
+                "    }\n" +
+                "    if ((output_file != None)) {\n" +
+                "      self.draw(os.path.dirname(output_file),file_format);\n" +
+                "    }\n" +
+                "    self.initialize();\n" +
+                "    self.K=self.network.calculate_rate_coefficients(self.Tlist.value_si,self.Plist.value_si,self.method);\n" +
+                "    self.fit_interpolation_models();\n" +
+                "    if ((output_file != None)) {\n" +
+                "      self.save(output_file);\n" +
+                "      if (plot) {\n" +
+                "        self.plot(os.path.dirname(output_file));\n" +
+                "      }\n" +
+                "      if ((self.sensitivity_conditions != None)) {\n" +
+                "        perturbation=0.1;\n" +
+                "        logging.info(\"\\n\\nRunning sensitivity analysis...\");\n" +
+                "        for (        PyTypeError i : range(3)) {\n" +
+                "          try {\n" +
+                "            SensAnalysis(self,os.path.dirname(output_file),perturbation);\n" +
+                "          }\n" +
+                " catch (          InvalidMicrocanonicalRateError e) {\n" +
+                "            logging.warning(\"Could not complete the sensitivity analysis with a perturbation of {0} kcal/mol, trying {1} kcal/mol instead.\".format(perturbation,(perturbation / 2.0)));\n" +
+                "            perturbation/=2.0;\n" +
+                "          }\n" +
+                " else {\n" +
+                "            break;\n" +
+                "          }\n" +
+                "        }\n" +
+                "        else{\n" +
+                "          logging.error(\"Could not complete the sensitivity analysis even with a perturbation of {0} kcal/mol\".format(perturbation));\n" +
+                "          throw new PythonException();\n" +
+                "        }\n" +
+                "        logging.info(\"Completed the sensitivity analysis using a perturbation of {0} kcal/mol\".format(perturbation));\n" +
+                "      }\n" +
+                "    }\n" +
+                "    logging.debug(\"Finished pdep job for reaction {0}.\".format(self.network.label));\n" +
+                "    logging.debug(repr(self.network));\n" +
+                "  }\n" +
+                "}");
+    }
 
 
     public String readFile(String fileName) {
