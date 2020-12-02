@@ -195,20 +195,40 @@ public class MapPyStatementsTOJDK extends PyMap{
             else
                 start_char_pos+=2+2;//{,\n , space, space
 
+            MethodDeclaration methodDeclaration = null;
+            int number_of_dummy_methods = 0;
             for (Object ch : (AstList)((ClassDef) node).getBody()){
                 for (Object o : getMappingPyNode(asn, (PythonTree) ch,import_nodes,start_char_pos,pyc )) {
+
                     if (o instanceof BodyDeclaration){
+                        if (methodDeclaration!=null){
+                            classdec.bodyDeclarations().add(methodDeclaration);
+                            methodDeclaration=null;
+
+                        }
+
+
                         classdec.bodyDeclarations().add(o);
                         start_char_pos+=o.toString().length()+2+2 +2*(o.toString().lines().count()-1) ; //space,space,two spaces in parameters
                     }
                     else {
+                        if (methodDeclaration==null){
+                            number_of_dummy_methods++;
+                            methodDeclaration = asn.newMethodDeclaration();
+                            methodDeclaration.setBody(asn.newBlock());
+                            methodDeclaration.setName(asn.newSimpleName(((ClassDef) node).getName().toString()+"_"+number_of_dummy_methods));
+                        }
                         if (!((o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof StringLiteral)|| o instanceof EmptyStatement )){
-                            logger.warn("The node is not node added :"+o.toString());
+                            methodDeclaration.getBody().statements().add(o);
+
                         }
                     }
 
                 }
 
+            }
+            if (methodDeclaration!=null){
+                classdec.bodyDeclarations().add(methodDeclaration);
             }
             classdec.setSourceRange(startChar,classdec.toString().length());
             list_class.add(classdec);
@@ -416,22 +436,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                 parameter_dummy.setName(asn.newSimpleName( "DummyTerminalNode"));
                 parameter_dummy.setType(asn.newSimpleType(asn.newName("DummyTerminalTypeNode")));
 
-
-                SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
-                parameter.setName(asn.newSimpleName(((Name)(((For) node).getTarget())).getId().toString()));
-                String typeString = this.typeNodes.get(new TypeASTNode(((Name)(((For) node).getTarget())).getLineno(),
-                        ((Name)(((For) node).getTarget())).getCol_offset(), ((Name)(((For) node).getTarget())).getId().toString(), null));
-
-                Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
-                if (jdtType!=null){
-                    parameter.setType(jdtType);
-                }
-                else
-                    logger.error("Type of for loop variable is not updated");
+                SingleVariableDeclaration parameter = updateForLoopLocalVariables(asn, (Name) ((For) node).getTarget());
                 forstmt.setParameter(parameter_dummy);
                 forstmt.Parameters().add(parameter);
-
-
             }
             else if (((For) node).getTarget() instanceof Tuple){
                 SingleVariableDeclaration parameter_dummy = asn.newSingleVariableDeclaration();
@@ -439,18 +446,16 @@ public class MapPyStatementsTOJDK extends PyMap{
                 parameter_dummy.setType(asn.newSimpleType(asn.newName("DummyTerminalTypeNode")));
                 forstmt.setParameter(parameter_dummy);
                 for (Object elt : (AstList) ((Tuple) ((For) node).getTarget()).getElts()) {
-                    SingleVariableDeclaration lo_parameter = asn.newSingleVariableDeclaration();
-                    lo_parameter.setName(asn.newSimpleName(((Name)elt).getId().toString()));
-                    String typeString = this.typeNodes.get(new TypeASTNode(((Name)elt).getLineno(),
-                            ((Name)elt).getCol_offset(), ((Name)elt).getId().toString(), null));
-
-                    Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
-                    if (jdtType!=null){
-                        lo_parameter.setType(jdtType);
+                    if (elt instanceof Tuple){
+                        for (Object elt1 : (AstList) ((Tuple) elt).getElts()) {
+                            SingleVariableDeclaration lo_parameter = updateForLoopLocalVariables(asn, (Name) elt1);
+                            forstmt.Parameters().add(lo_parameter);
+                        }
                     }
-                    else
-                        logger.error("Type of for loop variable is not updated");
-                    forstmt.Parameters().add(lo_parameter);
+                    else{
+                        SingleVariableDeclaration lo_parameter = updateForLoopLocalVariables(asn, (Name) elt);
+                        forstmt.Parameters().add(lo_parameter);
+                    }
 
                 }
             }
@@ -928,6 +933,20 @@ public class MapPyStatementsTOJDK extends PyMap{
             return new ArrayList<>();
         }
 
+    }
+
+    private SingleVariableDeclaration updateForLoopLocalVariables(AST asn, Name elt) throws NodeNotFoundException {
+        SingleVariableDeclaration lo_parameter = asn.newSingleVariableDeclaration();
+        lo_parameter.setName(asn.newSimpleName(elt.getId().toString()));
+        String typeString = this.typeNodes.get(new TypeASTNode(elt.getLineno(),
+                elt.getCol_offset(), elt.getId().toString(), null));
+
+        Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
+        if (jdtType != null) {
+            lo_parameter.setType(jdtType);
+        } else
+            logger.error("Type of for loop variable is not updated");
+        return lo_parameter;
     }
 
     private Set<TypeDecNeeds> getVariabelNeedsDecleration (PythonTree node) throws Exception {

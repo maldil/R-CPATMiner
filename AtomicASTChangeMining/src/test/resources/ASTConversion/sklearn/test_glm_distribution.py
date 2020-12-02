@@ -77,19 +77,7 @@ def test_deviance_zero(family, chk_values):
         assert_allclose(family.deviance(x, x), 0, atol=1e-9)
 
 
-@pytest.mark.parametrize(
-    'family',
-    [NormalDistribution(),
-     PoissonDistribution(),
-     GammaDistribution(),
-     InverseGaussianDistribution(),
-     TweedieDistribution(power=-2.5),
-     TweedieDistribution(power=-1),
-     TweedieDistribution(power=1.5),
-     TweedieDistribution(power=2.5),
-     TweedieDistribution(power=-4)],
-    ids=lambda x: x.__class__.__name__
-)
+
 def test_deviance_derivative(family):
     """Test deviance derivative for different families."""
     rng = np.random.RandomState(0)

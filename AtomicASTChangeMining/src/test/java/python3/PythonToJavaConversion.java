@@ -197,7 +197,6 @@ public class PythonToJavaConversion {
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.parseSource(content,typeASTNodeStringHashMap);
         return (CompilationUnit)JavaASTUtil.parseSource(pyCompilationUnit.toString());
     }
-
     @Test
     public void testConversion2(){
         String content = "def __repr__(self):\n" +
@@ -736,22 +735,22 @@ public class PythonToJavaConversion {
                 "    return center";
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
-        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen ((key + value)     for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
                 "    if (((symbols == None) && (numbers == None))) {\n" +
                 "      throw new IndexError(\"Either symbols or numbers must be given.\");\n" +
                 "    }\n" +
                 "    if ((numbers != None)) {\n" +
-                "      symbols=      listc (symbol_by_number[number] for       PyTypeError number : numbers) ;\n" +
+                "      symbols=      listc (symbol_by_number[number]       for       PyTypeError number : numbers) ;\n" +
                 "    }\n" +
                 "    (    (total_mass pyjavatuple center))=(    (0 pyjavatuple np.zeros(3,np.float64)));\n" +
-                "    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number) );\n" +
+                "    number=next(    gen ((key + value)     for     PyTypeError value,    PyTypeError key : symbol_by_number) );\n" +
                 "    for (    PyTypeError coord,    PyTypeError symbol : zip(coords,symbols)) {\n" +
                 "      mass=get_element_mass(symbol)[0];\n" +
                 "      center+=(mass * coord);\n" +
                 "      total_mass+=mass;\n" +
                 "    }\n" +
                 "    center/=total_mass;\n" +
-                "    number=next(    gen ((key + value) for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
+                "    number=next(    gen ((key + value)     for     PyTypeError value,    PyTypeError key : symbol_by_number.items() if (value == input_element)) );\n" +
                 "    return center;\n" +
                 "  }\n" +
                 "  public static Map<String,float[][]> mass_by_symbol=Map.of(\"Og\",new float[][]{{294.78,294.21392}});\n" +
@@ -956,6 +955,7 @@ public class PythonToJavaConversion {
                 "    source = [species_dict[name] for name in source]\n" +
                 "\n" +
                 "    bath_gas = {species_dict[spec]: fraction for spec, fraction in bathGas.items()} if bathGas else None\n" +
+                "    bath_gas1 = next(_id for _id, _names in _valid_software_names.items())\n"+
                 "\n" +
                 "    job = ExplorerJob(source=source, pdepjob=pdepjob, explore_tol=explore_tol,\n" +
                 "                      energy_tol=energy_tol, flux_tol=flux_tol, bath_gas=bath_gas,\n" +
@@ -1020,7 +1020,7 @@ public class PythonToJavaConversion {
                 "        for (        PyTypeError c : column) {\n" +
                 "          top0=well_rects[c][1];\n" +
                 "          bottom0=(top + well_rects[c][3]);\n" +
-                "          if (((top0 <= top <= bottom0) || (top <= top0 <= bottom))) {\n" +
+                "          if (((top0 <= top && top <= bottom0) || (top <= top0 && top0 <= bottom))) {\n" +
                 "            break;\n" +
                 "          }\n" +
                 "        }\n" +
@@ -1042,13 +1042,26 @@ public class PythonToJavaConversion {
                         "        return _software_ids[standardize_name(name)]\n" +
                         "    except KeyError:\n" +
                         "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
-                        "        _software_ids = {_name: _id for _id, _names in _valid_software_names.items() for _name in _names}\n" +
+                        "        _software_ids = [_name for _id, _names in _valid_software_names.items() for _name in _names if goo2]\n" +
                         "    finally:\n" +
-                        "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                        "        System.out.println(\"The 'try catch' is finished.\");\n" +
                         "    "  ;
         CompilationUnit converted = Convert(content);
-
+//        _software_ids = [_name for _id, _names in _valid_software_names.items() for _name in _names if goo]
         Assert.assertEquals(converted.getProblems().length,0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      return _software_ids[standardize_name(name)];\n" +
+                "    }\n" +
+                " catch (    KeyError PyCpatDummy) {\n" +
+                "      throw new ValueError();\n" +
+                "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if DUMMY_IF       for       PyTypeError _name : _names if goo2) ;\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
     }
 
 
@@ -1078,6 +1091,7 @@ public class PythonToJavaConversion {
 
         Assert.assertEquals(converted.getProblems().length,0);
     }
+
 
     @Test
     public  void testConversion26(){
@@ -1227,7 +1241,7 @@ public class PythonToJavaConversion {
                 "    for (    PyTypeError reaction : self.network.path_reactions) {\n" +
                 "      transition_state=reaction.transition_state;\n" +
                 "      if ((transition_state.conformer && (transition_state.conformer.E0 == None))) {\n" +
-                "        transition_state.conformer.E0=(        (\"J/mol\" pyjavatuple (sum(        listc (spec.conformer.E0.value_si for         PyTypeError spec : reaction.reactants) ) + reaction.kinetics.Ea.value_si)));\n" +
+                "        transition_state.conformer.E0=(        (\"J/mol\" pyjavatuple (sum(        listc (spec.conformer.E0.value_si         for         PyTypeError spec : reaction.reactants) ) + reaction.kinetics.Ea.value_si)));\n" +
                 "        logging.info(\"Approximated transitions state E0 for reaction {3} from kinetics A={0}, n={1}, Ea={2} J/mol\".format(reaction.kinetics.A.value_si,reaction.kinetics.n.value_si,reaction.kinetics.Ea.value_si,reaction.label));\n" +
                 "      }\n" +
                 "    }\n" +
@@ -1273,8 +1287,252 @@ public class PythonToJavaConversion {
                 "}");
     }
 
+    @Test
+    public void testConversion30() {
+        String content = "def draw(self, reaction, file_format, path=None):\n" +
+                "        for i in range(n_left, -1, -1):\n" +
+                "            top = well_rects[i][1]\n" +
+                "            bottom = top + well_rects[i][3]\n" +
+                "            for column, row2 in columns:\n" +
+                "                for c in column:\n" +
+                "                    top0 = well_rects[c][1]\n" +
+                "                    bottom0 = top + well_rects[c][3]\n" +
+                "                    if (top0 <= top <= bottom0) or (top <= top0 <= bottom):\n" +
+                "                        # Can't put it in this column\n" +
+                "                        break\n" +
+                "                else:\n" +
+                "                    # Can put it in this column\n" +
+                "                    column.append(i)\n" +
+                "                    break";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
 
+    @Test
+    public void testConversion31(){
+        String check = "public class PyDummyClass1 {\n" +
+                "  void explorer(){\n" +
+                "    bath_gas1=next(    gen (_id for     DummyTerminalTypeNode DummyTerminalNode,    PyTypeError _id,    PyTypeError _names : valid_software_names.items() if goo1>5 for     DummyTerminalTypeNode DummyTerminalNode,    PyTypeError _id,    PyTypeError _names : _valid_software_names.items() if goo>5) );\n" +
+                "    job=ExplorerJob(source,pdepjob,explore_tol,energy_tol,flux_tol,bath_gas,maximumRadicalElectrons);\n" +
+                "    job_list.append(job);\n" +
+                "  }\n" +
+                "}\n\n";
+
+        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(check);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(cu.getProblems().length,0);
+
+    }
+
+    @Test
+    public void testConversion32(){
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = [_name  for _id, _names in _valid_software_names.items() if goo & noo for _name in _names]\n" +
+                        "    finally:\n" +
+                        "        System.out.println(\"The 'try catch' is finished.\");\n";
+
+        CompilationUnit converted = Convert(content);
+//        _software_ids = [_name for _id, _names in _valid_software_names.items() for _name in _names if goo]
+        Assert.assertEquals(converted.getProblems().length,0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      return _software_ids[standardize_name(name)];\n" +
+                "    }\n" +
+                " catch (    KeyError PyCpatDummy) {\n" +
+                "      throw new ValueError();\n" +
+                "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo & noo)       for       PyTypeError _name : _names) ;\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+    }
+
+
+    @Test
+    public void testConversion33(){
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = [_name for _id, _names in xxx.items() if _id>0 ]\n" +
+                        "    finally:\n" +
+                        "        System.out.println(\"The 'try catch' is finished.\");\n";
+
+        CompilationUnit converted = Convert(content);
+//        _software_ids = [_name for _id, _names in _valid_software_names.items() for _name in _names if goo]
+        Assert.assertEquals(converted.getProblems().length,0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      return _software_ids[standardize_name(name)];\n" +
+                "    }\n" +
+                " catch (    KeyError PyCpatDummy) {\n" +
+                "      throw new ValueError();\n" +
+                "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : xxx.items() if (_id > 0)) ;\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+    }
+
+    @Test
+    public void testConversion34(){
+        String content =
+                "public class PyDummyClass1 {\n" +
+                        "  void get_software_id(){\n" +
+                        "    PyTypeError _software_ids;\n" +
+                        "    try {\n" +
+                        "      return _software_ids[standardize_name(name)];\n" +
+                        "    }\n" +
+                        " catch (    KeyError PyCpatDummy) {\n" +
+                        "      throw new ValueError();\n" +
+                        "      _software_ids=      dictc (_name ::: _id for       DummyTerminalTypeNode DummyTerminalNode,      PyTypeError _id,      PyTypeError _names : xxx.items() if (_id && _cool) for DummyTerminalTypeNode DummyTerminalNode, PyTypeError _name : _names) ;\n" +
+                        "    }\n" +
+                        " finally {\n" +
+                        "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}\n";
+
+        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(content);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(cu.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion35(){
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = {_name:_id  for _id, _names in _valid_software_names.items() if goo and noo for _name in _names}\n" +
+                        "    finally:\n" +
+                        "        System.out.println(\"The 'try catch' is finished.\");\n";
+
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      return _software_ids[standardize_name(name)];\n" +
+                "    }\n" +
+                " catch (    KeyError PyCpatDummy) {\n" +
+                "      throw new ValueError();\n" +
+                "      _software_ids=      dictc (_id ::: _name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo && noo)       for       PyTypeError _name : _names) ;\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+
+    }
+
+    @Test
+    public void testConversion36() {
+        String content =
+                "def get_software_id(name: str):\n" +
+                        "    try:\n" +
+                        "        return _software_ids[standardize_name(name)]\n" +
+                        "    except KeyError:\n" +
+                        "        raise ValueError(f'\\\"{name}\\\" is an invalid quantum chemistry software')\n" +
+                        "        _software_ids = {_name for _id, _names in _valid_software_names.items() if goo and noo for _name in _names}\n" +
+                        "    finally:\n" +
+                        "        System.out.println(\"The 'try catch' is finished.\");\n";
+
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length, 0);
+
+        Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(3).collect(Collectors.joining( "\n" )),"    try {\n" +
+                "      return _software_ids[standardize_name(name)];\n" +
+                "    }\n" +
+                " catch (    KeyError PyCpatDummy) {\n" +
+                "      throw new ValueError();\n" +
+                "      _software_ids=      dictc (SET_PYTHON ::: _name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo && noo)       for       PyTypeError _name : _names) ;\n" +
+                "    }\n" +
+                " finally {\n" +
+                "      System.out.println(\"The 'try catch' is finished.\");\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+    }
+
+    @Test
+    public void testConversion37(){
+        String content = "def power(self, power):\n" +
+                "        if 0 < power < 1 > goo:\n" +
+                "            # Extreme Stable or Normal distribution\n" +
+                "            self._lower_bound = DistributionBoundary(-np.Inf, inclusive=False)\n" +
+                "        self._power = power";
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length, 0);
+
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
+                "  void power(){\n" +
+                "    if ((0 < power && power < 1 && 1 > goo)) {\n" +
+                "      self._lower_bound=DistributionBoundary(-np.Inf,False);\n" +
+                "    }\n" +
+                "    self._power=power;\n" +
+                "  }\n" +
+                "}\n");
+    }
+
+
+
+    @Test
+    public void testConversion38(){
+        String content = "def power(self, power):\n" +
+                "        if 0 < power:\n" +
+                "            # Extreme Stable or Normal distribution\n" +
+                "            self._lower_bound = DistributionBoundary(-np.Inf, inclusive=False)\n" +
+                "        self._power = power";
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length, 0);
+
+        Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
+                "  void power(){\n" +
+                "    if ((0 < power)) {\n" +
+                "      self._lower_bound=DistributionBoundary(-np.Inf,False);\n" +
+                "    }\n" +
+                "    self._power=power;\n" +
+                "  }\n" +
+                "}\n");
+    }
+
+    @Test
+    public void testConversion39(){
+        String content = "def _synth_regression_dataset(n_samples=100000, n_features=100,\n" +
+                "                              dtype=np.float32):\n" +
+                "    X, y = make_regression(n_samples=n_samples, n_features=n_features,\n" +
+                "                           n_informative=n_features // 10, noise=50,\n" +
+                "                           random_state=0)\n" +
+                "    X = X.astype(dtype, copy=False)\n" +
+                "    X = StandardScaler().fit_transform(X)\n" +
+                "\n" +
+                "    X, X_val, y, y_val = train_test_split(X, y, test_size=0.1, random_state=0)\n" +
+                "    return X, X_val, y, y_val";
+
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length, 0);
+    }
     public String readFile(String fileName) {
+
         Path resourceDirectory = Paths.get("src","test","resources","ASTConversion",fileName);
         FileInputStream inputStream = null;
         try {

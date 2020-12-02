@@ -116,23 +116,23 @@ public class TestRealPyASTNodes {
         file21();
         file22();
         file23();
-//        file24();
+        file24();
         file26();
         file27();
         file28();
-        //file29();
+        file29();
         file30();
-     //   file31();
+        file31();
         file32();
         file33();
-     //   file34();
+        file34();
         file35();
         file36();
-        //file37();
+        file37();
         file38();
         file39();
-     //   file40();
-     //   file41();
+        file40();
+        file41();
         file42();
         file43();
         file44();
@@ -225,7 +225,7 @@ public class TestRealPyASTNodes {
         Assert.assertEquals(converted.getProblems().length,0);
     }
 
-    @Test
+    @Test  // This is not parsable due to a error in python to java
     public void file12(){
         String content = readFile("modelchem.py");
         CompilationUnit converted = convert(content);
