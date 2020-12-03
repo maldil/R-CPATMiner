@@ -396,10 +396,15 @@ public class MapPyStatementsTOJDK extends PyMap{
                             TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
                             methoddec.getBody().statements().add(dummyClass);
                         }
-                        else{
-                            methoddec.getBody().statements().add(o);
+                        else if (o instanceof TypeDeclaration ){
+                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                methoddec.getBody().statements().add(dummyClass);
+                        }
+                        else {
+                                methoddec.getBody().statements().add(o);
                         }
                     }
+
                     start_char_pos+=length;
                 }
             }
@@ -481,7 +486,20 @@ public class MapPyStatementsTOJDK extends PyMap{
                     if (forstmt.getBody() ==null){
                         forstmt.setBody(asn.newBlock());
                     }
-                    ((Block)forstmt.getBody()).statements().add(o);
+                    if (o instanceof MethodDeclaration) {
+                        TypeDeclaration typeDec = asn.newTypeDeclaration();
+                        typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                        typeDec.bodyDeclarations().add(o);
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                        ((Block)forstmt.getBody()).statements().add(dummyClass);
+                    }
+                    else if (o instanceof TypeDeclaration ){
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                        ((Block)forstmt.getBody()).statements().add(dummyClass);
+                    }
+                    else {
+                        ((Block)forstmt.getBody()).statements().add(o);
+                    }
                 }
                 forstmt.getBody().setSourceRange(start_of_for_loop, node.toString().length());
             }
@@ -490,7 +508,20 @@ public class MapPyStatementsTOJDK extends PyMap{
                     if (forstmt.getElseBody() ==null){
                         forstmt.setElseBody(asn.newBlock());
                     }
-                    ((Block)forstmt.getElseBody()).statements().add(o);
+                    if (o instanceof MethodDeclaration) {
+                        TypeDeclaration typeDec = asn.newTypeDeclaration();
+                        typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                        typeDec.bodyDeclarations().add(o);
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                        ((Block)forstmt.getElseBody()).statements().add(dummyClass);
+                    }
+                    else if (o instanceof TypeDeclaration ){
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                        ((Block)forstmt.getElseBody()).statements().add(dummyClass);
+                    }
+                    else {
+                        ((Block)forstmt.getElseBody()).statements().add(o);
+                    }
                 }
             }
 
@@ -525,6 +556,9 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
             else if (((AugAssign) node).getInternalOp() == operatorType.RShift){
                 assign.setOperator(Assignment.Operator.RIGHT_SHIFT_SIGNED_ASSIGN);
+            }
+            else if (((AugAssign) node).getInternalOp() == operatorType.Pow){
+                assign.setOperator(Assignment.Operator.POWER_ASSIGN);
             }
             else {
                 assert  false;
@@ -588,7 +622,13 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
             else if (((Expr) node).getValue() instanceof Yield){
                 PyYieldReturnStatement yieldReturnStatement = asn.newPyYieldReturnStatement();
-                yieldReturnStatement.setExpression(MapPyExpressionsJDK.mapExpression(((Yield) ((Expr) node).getValue()).getInternalValue(),asn,import_nodes,0,typeNodes,pyc));
+                if ( ((Yield) ((Expr) node).getValue()).getInternalValue()==null){
+                    yieldReturnStatement.setExpression(asn.newSimpleName("PyCpatDummy"));
+                }
+                else{
+                    yieldReturnStatement.setExpression(MapPyExpressionsJDK.mapExpression(((Yield) ((Expr) node).getValue()).getInternalValue(),asn,import_nodes,0,typeNodes,pyc));
+
+                }
                 ArrayList<PyYieldReturnStatement> list_assign = new ArrayList<>();
                 list_assign.add(yieldReturnStatement);
                 return list_assign ;
@@ -650,8 +690,37 @@ public class MapPyStatementsTOJDK extends PyMap{
                                     if (ifStatement.getElseStatement()==null){
                                         ifStatement.setElseStatement(asn.newBlock());
                                     }
-                                    ((Block)ifStatement.getElseStatement()).statements().addAll(getMappingPyNode(asn,
-                                            (PythonTree) ob,import_nodes,0,pyc ));
+                                    for (Object o : getMappingPyNode(asn,
+                                            (PythonTree) ob, import_nodes, 0, pyc)) {
+                                        if (o instanceof MethodDeclaration) {
+                                            TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                            typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                                            typeDec.bodyDeclarations().add(o);
+                                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                                            ((Block)ifStatement.getElseStatement()).statements().add(dummyClass);
+                                        }
+                                        else if (o instanceof TypeDeclaration ){
+                                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                            ((Block)ifStatement.getElseStatement()).statements().add(dummyClass);
+                                        }
+                                        else if (o instanceof ImportDeclaration){
+                                            pyc.imports().add(o);
+                                        }
+                                        else{
+                                            ((Block)ifStatement.getElseStatement()).statements().add(o);
+                                        }
+                                    }
+                                    ;
+
+
+
+
+
+
+
+
+
+
                                 } catch (NodeNotFoundException e) {
                                     e.printStackTrace();
                                 } catch (ExpressionNotFound expressionNotFound) {
@@ -699,9 +768,28 @@ public class MapPyStatementsTOJDK extends PyMap{
             Block block = asn.newBlock();
             ((AstList)((TryExcept) node).getBody()).stream().forEach(x-> {
                 try {
-                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
-                    block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
-                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
+                    for (Object o : getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc)) {
+                        if (o instanceof MethodDeclaration) {
+                            TypeDeclaration typeDec = asn.newTypeDeclaration();
+                            typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                            typeDec.bodyDeclarations().add(o);
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                            block.statements().add(dummyClass);
+                        }
+                        else if (o instanceof TypeDeclaration ){
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                            block.statements().add(dummyClass);
+                        }
+                        else if (o instanceof ImportDeclaration ) {
+                            pyc.imports().add(o);
+                        }
+                        else{
+                            block.statements().add(o);
+                        }
+                    }
+//                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
+//                    block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
+//                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
 
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
@@ -758,12 +846,18 @@ public class MapPyStatementsTOJDK extends PyMap{
                 }
             });
             SingleVariableDeclaration singleVarDec = asn.newSingleVariableDeclaration();
-            Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getExceptType(), asn, import_nodes, 0, typeNodes, pyc);
-            if (expression instanceof  org.eclipse.jdt.core.dom.PyTupleExpression){
-                singleVarDec.setType(asn.newSimpleType(asn.newSimpleName(((SimpleName) ((PyTupleExpression) expression).expressions().get(0)).getIdentifier())));//TODO change grammer to support multiple exceptions in catch claus
+            if (((ExceptHandler) node).getExceptType()!=null){
+                Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((ExceptHandler) node).getExceptType(), asn, import_nodes, 0, typeNodes, pyc);
+                if (expression instanceof  org.eclipse.jdt.core.dom.PyTupleExpression){
+                    singleVarDec.setType(asn.newSimpleType(asn.newSimpleName(((SimpleName) ((PyTupleExpression) expression).expressions().get(0)).getIdentifier())));//TODO change grammer to support multiple exceptions in catch claus
+                }
+                else{
+                    singleVarDec.setType(asn.newSimpleType((org.eclipse.jdt.core.dom.Name) expression));
+                }
             }
             else{
-                singleVarDec.setType(asn.newSimpleType((org.eclipse.jdt.core.dom.Name) expression));
+                SimpleType type = asn.newSimpleType(asn.newSimpleName("PyCpatDummy"));
+                singleVarDec.setType(type);
             }
 
 
@@ -817,7 +911,25 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
             ((With) node).getInternalBody().stream().forEach(x -> {
                     try {
-                        block.statements().addAll(getMappingPyNode(asn, x, import_nodes, 0, pyc));
+                        for (Object o : getMappingPyNode(asn, x, import_nodes, 0, pyc)) {
+                            if (o instanceof MethodDeclaration) {
+                                TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                                typeDec.bodyDeclarations().add(o);
+                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                                block.statements().add(dummyClass);
+                            }
+                            else if (o instanceof TypeDeclaration ){
+                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                block.statements().add(dummyClass);
+                            }
+                            else if (o instanceof ImportDeclaration ) {
+                                pyc.imports().add(o);
+                            }
+                            else{
+                                block.statements().add(o);
+                            }
+                        }
                     } catch (NodeNotFoundException e) {
                         e.printStackTrace();
                     } catch (ExpressionNotFound expressionNotFound) {
@@ -896,34 +1008,67 @@ public class MapPyStatementsTOJDK extends PyMap{
             return list_assign;
         }
         else if (node instanceof TryFinally){
-            if (((TryFinally) node).getInternalBody().size()>1){
-                logger.fatal("Size of body of try final is larger than one");
-                assert false;
-            }
-            if (((TryFinally) node).getInternalBody().get(0) instanceof TryExcept){
-                ArrayList<?> mappingPyNode = getMappingPyNode(asn, ((TryFinally) node).getInternalBody().get(0), import_nodes, 0, pyc);
-                TryStatement except =(TryStatement)mappingPyNode.get(0);
+            TryStatement tryStatement = asn.newTryStatement();
+            Block block = asn.newBlock();
+            ((AstList)((TryFinally) node).getBody()).stream().forEach(x-> {
+                try {
+                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
+                    block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
+                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
 
-                Block finalBlock = asn.newBlock();
-                ((TryFinally) node).getInternalFinalbody().stream().forEach(x-> {
-                    try {
-                        finalBlock.statements().addAll(getMappingPyNode(asn,x,import_nodes,0,pyc));
-                    } catch (NodeNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (ExpressionNotFound expressionNotFound) {
-                        expressionNotFound.printStackTrace();
-                    }
-                });
-                except.setFinally(finalBlock);
-                ArrayList<TryStatement> list_assign = new ArrayList<>();
-                list_assign.add(except);
-                return list_assign;
-            }
-            else{
-                logger.fatal("Type of the try final body is not try except");
-                assert false;
-                return new ArrayList<>();
-            }
+                } catch (NodeNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ExpressionNotFound expressionNotFound) {
+                    expressionNotFound.printStackTrace();
+                }
+            });
+            tryStatement.setBody(block);
+            Block final_block = asn.newBlock();
+            (((TryFinally) node).getInternalFinalbody()).stream().forEach(x-> {
+                try {
+                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
+                    final_block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
+                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
+
+                } catch (NodeNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ExpressionNotFound expressionNotFound) {
+                    expressionNotFound.printStackTrace();
+                }
+            });
+            tryStatement.setFinally(final_block);
+
+//            if (((TryFinally) node).getInternalBody().size()>1){
+//                logger.fatal("Size of body of try final is larger than one");
+//                assert false;
+//            }
+//            if (((TryFinally) node).getInternalBody().get(0) instanceof TryExcept){
+//                ArrayList<?> mappingPyNode = getMappingPyNode(asn, ((TryFinally) node).getInternalBody().get(0), import_nodes, 0, pyc);
+//                TryStatement except =(TryStatement)mappingPyNode.get(0);
+//
+//                Block finalBlock = asn.newBlock();
+//                ((TryFinally) node).getInternalFinalbody().stream().forEach(x-> {
+//                    try {
+//                        finalBlock.statements().addAll(getMappingPyNode(asn,x,import_nodes,0,pyc));
+//                    } catch (NodeNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (ExpressionNotFound expressionNotFound) {
+//                        expressionNotFound.printStackTrace();
+//                    }
+//                });
+//                except.setFinally(finalBlock);
+//                ArrayList<TryStatement> list_assign = new ArrayList<>();
+//                list_assign.add(except);
+//                return list_assign;
+//            }
+//            else{
+//                logger.fatal("Type of the try final body is not try except");
+//                assert false;
+//                return new ArrayList<>();
+//            }
+            ArrayList<TryStatement> list_assign = new ArrayList<>();
+            list_assign.add(tryStatement);
+            return list_assign;
 
         }
         else {

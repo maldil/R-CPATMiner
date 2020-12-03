@@ -128,6 +128,9 @@ public class PythonToJavaConversion {
 
         CompilationUnit convert = Convert(content);
         Assert.assertEquals(convert.toString(),"public class ArkaneSpecies extends RMGObject {\n" +
+                "  void ArkaneSpecies_1(){\n" +
+                "    i=12345;\n" +
+                "  }\n" +
                 "  void __init__(  ArkaneSpecies self){\n" +
                 "    PyTypeError boo;\n" +
                 "    super(ArkaneSpecies,self);\n" +
@@ -1530,6 +1533,20 @@ public class PythonToJavaConversion {
         CompilationUnit converted = Convert(content);
 
         Assert.assertEquals(converted.getProblems().length, 0);
+    }
+
+    @Test
+    public void testConversion40(){
+        String content =
+                "public class PyDummyClass1 {\n" +
+                        "  void get_software_id(){\n" +
+                        "       xx **= 2;\n"+
+                        "  }\n" +
+                        "}\n";
+
+        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(content);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(cu.getProblems().length,0);
     }
     public String readFile(String fileName) {
 
