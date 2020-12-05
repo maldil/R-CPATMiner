@@ -52,8 +52,6 @@ def _unique(values, *, return_inverse=False):
 
 class MissingValues(NamedTuple):
     """Data class for missing data information"""
-    nan: bool
-    none: bool
 
     def to_list(self):
         """Convert tuple to a list where None is always first."""

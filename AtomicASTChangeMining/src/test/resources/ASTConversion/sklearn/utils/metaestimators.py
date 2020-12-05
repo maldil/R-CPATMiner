@@ -19,7 +19,7 @@ __all__ = ['if_delegate_has_method']
 class _BaseComposition(BaseEstimator, metaclass=ABCMeta):
     """Handles parameter management for classifiers composed of named estimators.
     """
-    steps: List[Any]
+
 
     @abstractmethod
     def __init__(self):

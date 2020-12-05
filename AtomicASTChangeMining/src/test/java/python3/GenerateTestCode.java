@@ -12,11 +12,12 @@ public class GenerateTestCode {
 
     @Test
     public void genTestCode(){
-        String path= "sklearn/utils/";
+        String path= "sklearn/cross_decomposition/";
         Path resourceDirectory = Paths.get("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/src/test/resources/ASTConversion/",path);
         ArrayList<Path> arrayList = new ArrayList<>();
         listf(resourceDirectory,arrayList,resourceDirectory,path);
-        int start_int = 92;
+        int start_int = 464;
+        ArrayList<String> file_names  = new ArrayList<>();
         for (Path path1 : arrayList) {
             start_int++;
             System.out.println("@Test\n" +
@@ -25,8 +26,14 @@ public class GenerateTestCode {
             System.out.println("    CompilationUnit converted = convert(content);");
             System.out.println("    Assert.assertEquals(converted.getProblems().length,0);");
             System.out.println("    }");
+            file_names.add("file"+start_int+"();");
+
         }
 
+
+        for (String file_name : file_names) {
+            System.out.println(file_name);
+        }
 
 
         System.out.printf(arrayList.toString());

@@ -4,6 +4,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Block;
@@ -11,6 +12,7 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EmptyStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
@@ -22,10 +24,13 @@ import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PyErrorExpression;
+import org.eclipse.jdt.core.dom.PyNonLocalStatement;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.PyWithStatement;
 import org.eclipse.jdt.core.dom.PyYieldReturnStatement;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
@@ -62,6 +67,7 @@ import org.jpp.astnodes.ast.If;
 import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.ast.ImportFrom;
 import org.jpp.astnodes.ast.Name;
+import org.jpp.astnodes.ast.Nonlocal;
 import org.jpp.astnodes.ast.Pass;
 import org.jpp.astnodes.ast.Raise;
 import org.jpp.astnodes.ast.Return;
@@ -91,6 +97,7 @@ import python3.typeinference.core.TypeDecNeeds;
 import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -145,8 +152,11 @@ public class MapPyStatementsTOJDK extends PyMap{
                 else{
                     import_name = (String[]) ArrayUtils.addAll(module,((alias) pyObject).getName().toString().split("\\."));
                 }
-                org.eclipse.jdt.core.dom.Name name = asn.newName(import_name);
-                name.setSourceRange(start_import+7,name.toString().length());
+                List<String> import_name_clean = Arrays.stream(import_name).filter(x-> !x.equals("*")).collect(Collectors.toList());
+                String[] cleaned_import_names = new String[import_name_clean.size()];
+                import_name_clean.toArray(cleaned_import_names);
+
+                org.eclipse.jdt.core.dom.Name name = asn.newName(cleaned_import_names);
                 import_dec.setName(name);
                 PyObject asname = ((alias) pyObject).getAsname();
                 if (!(asname instanceof PyNone)){
@@ -187,10 +197,15 @@ public class MapPyStatementsTOJDK extends PyMap{
                 Expression className = MapPyExpressionsJDK.mapExpression((expr)
                         ((AstList) ((ClassDef) node).getBases()).get(0),asn,import_nodes,0,typeNodes,pyc);
                 if (className instanceof PyErrorExpression){return new ArrayList<>();}  //If python can not parse the class name correctly there is no point of converting this further
-
-                SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name) className);
-                classdec.setSuperclassType(simpleType); //TODO handle multiple inheritance
-
+                if (className instanceof MethodInvocation){
+                    SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name)
+                            ASTNode.copySubtree(asn,((MethodInvocation) className).getName()));
+                    classdec.setSuperclassType(simpleType);
+                }
+                else {
+                    SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name) className);
+                    classdec.setSuperclassType(simpleType); //TODO handle multiple inheritance
+                }
             }
             else
                 start_char_pos+=2+2;//{,\n , space, space
@@ -218,9 +233,11 @@ public class MapPyStatementsTOJDK extends PyMap{
                             methodDeclaration.setBody(asn.newBlock());
                             methodDeclaration.setName(asn.newSimpleName(((ClassDef) node).getName().toString()+"_"+number_of_dummy_methods));
                         }
-                        if (!((o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof StringLiteral)|| o instanceof EmptyStatement )){
+                        if (!((o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof StringLiteral)||
+                                o instanceof EmptyStatement ||
+                                ( o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof SimpleName) ||
+                                ( o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof ArrayAccess))){
                             methodDeclaration.getBody().statements().add(o);
-
                         }
                     }
 
@@ -371,7 +388,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
 
 
-             //two spaces
+            //two spaces
 
             for (Object ch : (AstList)((FunctionDef) node).getBody()){
                 start_char_pos+=2*number_of_par;
@@ -397,11 +414,26 @@ public class MapPyStatementsTOJDK extends PyMap{
                             methoddec.getBody().statements().add(dummyClass);
                         }
                         else if (o instanceof TypeDeclaration ){
-                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
-                                methoddec.getBody().statements().add(dummyClass);
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                            methoddec.getBody().statements().add(dummyClass);
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
                         }
                         else {
-                                methoddec.getBody().statements().add(o);
+                            methoddec.getBody().statements().add(o);
                         }
                     }
 
@@ -415,7 +447,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             return list_method;
         }
         else if (node instanceof Assign){
-                        ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
+            ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             for (expr target : ((Assign) node).getInternalTargets()) {
                 Assignment assign = asn.newAssignment();
                 assign.setOperator(new Assignment.Operator("="));
@@ -497,6 +529,21 @@ public class MapPyStatementsTOJDK extends PyMap{
                         TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
                         ((Block)forstmt.getBody()).statements().add(dummyClass);
                     }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                        continue;
+                    }
                     else {
                         ((Block)forstmt.getBody()).statements().add(o);
                     }
@@ -518,6 +565,21 @@ public class MapPyStatementsTOJDK extends PyMap{
                     else if (o instanceof TypeDeclaration ){
                         TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
                         ((Block)forstmt.getElseBody()).statements().add(dummyClass);
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                        continue;
                     }
                     else {
                         ((Block)forstmt.getElseBody()).statements().add(o);
@@ -623,7 +685,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             else if (((Expr) node).getValue() instanceof Yield){
                 PyYieldReturnStatement yieldReturnStatement = asn.newPyYieldReturnStatement();
                 if ( ((Yield) ((Expr) node).getValue()).getInternalValue()==null){
-                    yieldReturnStatement.setExpression(asn.newSimpleName("PyCpatDummy"));
+//                    yieldReturnStatement.setExpression(asn.newSimpleName("PyCpatDummy"));
                 }
                 else{
                     yieldReturnStatement.setExpression(MapPyExpressionsJDK.mapExpression(((Yield) ((Expr) node).getValue()).getInternalValue(),asn,import_nodes,0,typeNodes,pyc));
@@ -655,21 +717,38 @@ public class MapPyStatementsTOJDK extends PyMap{
                     ob-> {
                         try {
                             for (Object o : getMappingPyNode(asn, (PythonTree) ob, import_nodes, 0, pyc)) {
-                                if (!(o instanceof MethodDeclaration || o instanceof ImportDeclaration)){
-                                    ((Block)ifStatement.getThenStatement()).statements().add(o);
-                                }
-                                else if (o instanceof MethodDeclaration) {
+                                if (o instanceof MethodDeclaration) {
                                     TypeDeclaration typeDec = asn.newTypeDeclaration();
                                     typeDec.setName((SimpleName) ASTNode.copySubtree(asn,((MethodDeclaration)o).getName()));
                                     typeDec.bodyDeclarations().add(o);
                                     TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
                                     ((Block)ifStatement.getThenStatement()).statements().add(dummyClass);
                                 }
+                                else if (o instanceof TypeDeclaration ){
+                                    TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                    ((Block)ifStatement.getThenStatement()).statements().add(dummyClass);
+                                }
                                 else if (o instanceof ImportDeclaration){
                                     pyc.imports().add(o);
                                 }
-
-
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                    continue;
+                                }
+                                else{
+                                    ((Block)ifStatement.getThenStatement()).statements().add(o);
+                                }
                             }
 
                         } catch (NodeNotFoundException e) {
@@ -706,21 +785,25 @@ public class MapPyStatementsTOJDK extends PyMap{
                                         else if (o instanceof ImportDeclaration){
                                             pyc.imports().add(o);
                                         }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                                            continue;
+                                        }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                                            continue;
+                                        }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                                            continue;
+                                        }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                                            continue;
+                                        }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                            continue;
+                                        }
                                         else{
                                             ((Block)ifStatement.getElseStatement()).statements().add(o);
                                         }
                                     }
-                                    ;
-
-
-
-
-
-
-
-
-
-
                                 } catch (NodeNotFoundException e) {
                                     e.printStackTrace();
                                 } catch (ExpressionNotFound expressionNotFound) {
@@ -783,6 +866,21 @@ public class MapPyStatementsTOJDK extends PyMap{
                         else if (o instanceof ImportDeclaration ) {
                             pyc.imports().add(o);
                         }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
                         else{
                             block.statements().add(o);
                         }
@@ -800,7 +898,41 @@ public class MapPyStatementsTOJDK extends PyMap{
 
             ((AstList)((TryExcept) node).getHandlers()).stream().forEach(x-> {
                 try {
-                    tryStatement.catchClauses().addAll(getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc));
+                    for (Object o : getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc)) {
+                        if (o instanceof MethodDeclaration) {
+                            TypeDeclaration typeDec = asn.newTypeDeclaration();
+                            typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                            typeDec.bodyDeclarations().add(o);
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                            tryStatement.catchClauses().add(dummyClass);
+                        }
+                        else if (o instanceof TypeDeclaration ){
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                            tryStatement.catchClauses().add(dummyClass);
+                        }
+                        else if (o instanceof ImportDeclaration ) {
+                            pyc.imports().add(o);
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else{
+                            tryStatement.catchClauses().add(o);
+                        }
+                    }
+
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
                 } catch (ExpressionNotFound expressionNotFound) {
@@ -814,7 +946,40 @@ public class MapPyStatementsTOJDK extends PyMap{
             (((TryExcept) node).getInternalOrelse()).stream().forEach(x->
                     {
                         try {
-                            tryStatement.getElse().statements().addAll(getMappingPyNode(asn,  x, import_nodes, 0, pyc));
+                            for (Object o : getMappingPyNode(asn, x, import_nodes, 0, pyc)) {
+                                if (o instanceof MethodDeclaration) {
+                                    TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                    typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                                    typeDec.bodyDeclarations().add(o);
+                                    TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                                    tryStatement.getElse().statements().add(dummyClass);
+                                }
+                                else if (o instanceof TypeDeclaration ){
+                                    TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                    tryStatement.getElse().statements().add(dummyClass);
+                                }
+                                else if (o instanceof ImportDeclaration ) {
+                                    pyc.imports().add(o);
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                    continue;
+                                }
+                                else{
+                                    tryStatement.getElse().statements().add(o);
+                                }
+                            }
                         } catch (NodeNotFoundException e) {
                             e.printStackTrace();
                         } catch (ExpressionNotFound expressionNotFound) {
@@ -900,6 +1065,10 @@ public class MapPyStatementsTOJDK extends PyMap{
             }
             expr internalContext_expr = ((With) node).getInternalItems().get(0).getInternalContext_expr();
             Expression expression = MapPyExpressionsJDK.mapExpression(internalContext_expr, asn, import_nodes, 0, typeNodes,pyc );
+            if (expression instanceof PyErrorExpression){
+                expression =  asn.newSimpleName("PyCpatDummy");
+            }
+
             pyWithStatement.setExpression(expression);
             expr optional_vars = ((With) node).getInternalItems().get(0).getInternalOptional_vars();
 
@@ -910,37 +1079,52 @@ public class MapPyStatementsTOJDK extends PyMap{
                 block.statements().add(varDecStat);
             }
             ((With) node).getInternalBody().stream().forEach(x -> {
-                    try {
-                        for (Object o : getMappingPyNode(asn, x, import_nodes, 0, pyc)) {
-                            if (o instanceof MethodDeclaration) {
-                                TypeDeclaration typeDec = asn.newTypeDeclaration();
-                                typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
-                                typeDec.bodyDeclarations().add(o);
-                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
-                                block.statements().add(dummyClass);
-                            }
-                            else if (o instanceof TypeDeclaration ){
-                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
-                                block.statements().add(dummyClass);
-                            }
-                            else if (o instanceof ImportDeclaration ) {
-                                pyc.imports().add(o);
-                            }
-                            else{
-                                block.statements().add(o);
-                            }
+                try {
+                    for (Object o : getMappingPyNode(asn, x, import_nodes, 0, pyc)) {
+                        if (o instanceof MethodDeclaration) {
+                            TypeDeclaration typeDec = asn.newTypeDeclaration();
+                            typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                            typeDec.bodyDeclarations().add(o);
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                            block.statements().add(dummyClass);
                         }
-                    } catch (NodeNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (ExpressionNotFound expressionNotFound) {
-                        expressionNotFound.printStackTrace();
+                        else if (o instanceof TypeDeclaration ){
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                            block.statements().add(dummyClass);
+                        }
+                        else if (o instanceof ImportDeclaration ) {
+                            pyc.imports().add(o);
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else{
+                            block.statements().add(o);
+                        }
                     }
-                });
+                } catch (NodeNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ExpressionNotFound expressionNotFound) {
+                    expressionNotFound.printStackTrace();
+                }
+            });
             pyWithStatement.setBody(block);
             ArrayList<PyWithStatement> list_assign = new ArrayList<>();
             list_assign.add(pyWithStatement);
             return list_assign;
-            }
+        }
         else if (node instanceof Break){
             BreakStatement breakStatement = asn.newBreakStatement();
 
@@ -965,9 +1149,37 @@ public class MapPyStatementsTOJDK extends PyMap{
             statement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((While) node).getTest(),asn,import_nodes,0,typeNodes,pyc));
             AstList body = (AstList) ((While) node).getBody();
             statement.setBody(asn.newBlock());
-            for (Object o : body) {
-                for (Object stmt : getMappingPyNode(asn, (PythonTree) o, import_nodes, 0, pyc)) {
-                    ((Block)statement.getBody()).statements().add(stmt);
+            for (Object ob : body) {
+                for (Object stmt : getMappingPyNode(asn, (PythonTree) ob, import_nodes, 0, pyc)) {
+                    if (stmt instanceof MethodDeclaration) {
+                        TypeDeclaration typeDec = asn.newTypeDeclaration();
+                        typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) stmt).getName()));
+                        typeDec.bodyDeclarations().add(stmt);
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                        ((Block)statement.getBody()).statements().add(dummyClass);
+                    }
+                    else if (stmt instanceof TypeDeclaration ){
+                        TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) stmt);
+                        ((Block)statement.getBody()).statements().add(dummyClass);
+                    }
+                    else if (stmt instanceof ImportDeclaration ) {
+                        pyc.imports().add(stmt);
+                    }
+                    else if (stmt instanceof ExpressionStatement && ((ExpressionStatement)stmt).getExpression() instanceof QualifiedName){
+                        continue;
+                    }
+                    else if (stmt instanceof ExpressionStatement && ((ExpressionStatement)stmt).getExpression() instanceof SimpleName){
+                        continue;
+                    }
+                    else if (stmt instanceof ExpressionStatement && ((ExpressionStatement)stmt).getExpression() instanceof PyTupleExpression){
+                        continue;
+                    }
+                    else if (stmt instanceof ExpressionStatement && ((ExpressionStatement)stmt).getExpression() instanceof ParenthesizedExpression){
+                        continue;
+                    }
+                    else {
+                        ((Block)statement.getBody()).statements().add(stmt);
+                    }
                 }
             }
             ArrayList<WhileStatement> list_assign = new ArrayList<>();
@@ -977,8 +1189,6 @@ public class MapPyStatementsTOJDK extends PyMap{
         }
         else if (node instanceof Global){
             for (Name name :((Global) node).getInternalNameNodes()){
-
-
                 VariableDeclarationFragment declarationFragment = asn.newVariableDeclarationFragment();
                 declarationFragment.setPyObject(name);
                 declarationFragment.setName(asn.newSimpleName(name.getInternalId()));
@@ -1001,42 +1211,129 @@ public class MapPyStatementsTOJDK extends PyMap{
         }
         else if (node instanceof Assert){
             AssertStatement assertStatement = asn.newAssertStatement();
+            Expression expression1 = MapPyExpressionsJDK.mapExpression((expr) ((Assert) node).getTest(), asn, import_nodes, 0, typeNodes, pyc);
+            if (!(expression1 instanceof PyErrorExpression)){
+                assertStatement.setExpression(expression1);
+            }
+            else
+            {
+                assertStatement.setExpression(asn.newSimpleName("PyCpatDummy"));
+            }
+            if (((Assert) node).getInternalMsg()!=null){
+                Expression expression = MapPyExpressionsJDK.mapExpression(((Assert) node).getInternalMsg(), asn, import_nodes, 0, typeNodes, pyc);
+                if (!(expression instanceof PyErrorExpression))
+                    assertStatement.setMessage(expression);
 
-            assertStatement.setExpression(MapPyExpressionsJDK.mapExpression((expr) ((Assert) node).getTest(),asn,import_nodes,0,typeNodes,pyc));
+            }
             ArrayList<AssertStatement> list_assign = new ArrayList<>();
             list_assign.add(assertStatement);
             return list_assign;
         }
         else if (node instanceof TryFinally){
             TryStatement tryStatement = asn.newTryStatement();
-            Block block = asn.newBlock();
-            ((AstList)((TryFinally) node).getBody()).stream().forEach(x-> {
-                try {
-                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
-                    block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
-                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
-
-                } catch (NodeNotFoundException e) {
-                    e.printStackTrace();
-                } catch (ExpressionNotFound expressionNotFound) {
-                    expressionNotFound.printStackTrace();
+            if (((TryFinally) node).getInternalBody().size()==1 &&
+                    getMappingPyNode(asn,((TryFinally) node).getInternalBody().get(0), import_nodes, 0, pyc).get(0) instanceof TryStatement){
+                TryStatement trystmt = (TryStatement)getMappingPyNode(asn,((TryFinally) node).getInternalBody().get(0), import_nodes, 0, pyc).get(0);
+                for (Object clause : trystmt.catchClauses()) {
+                    tryStatement.catchClauses().add(ASTNode.copySubtree(asn, (ASTNode) clause));
                 }
-            });
-            tryStatement.setBody(block);
-            Block final_block = asn.newBlock();
+                tryStatement.setBody((Block) ASTNode.copySubtree(asn,  trystmt.getBody()));
+                tryStatement.setElse((Block) ASTNode.copySubtree(asn,  trystmt.getElse()));
+            }
+            else{
+                Block block = asn.newBlock();
+                ((AstList)((TryFinally) node).getBody()).stream().forEach(x-> {
+                    try {
+                        for (Object o : getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc)) {
+                            if (o instanceof MethodDeclaration) {
+                                TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                                typeDec.bodyDeclarations().add(o);
+                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                                block.statements().add(dummyClass);
+                            }
+                            else if (o instanceof TypeDeclaration ){
+                                TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                                block.statements().add(dummyClass);
+                            }
+                            else if (o instanceof ImportDeclaration ) {
+                                pyc.imports().add(o);
+                            }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                                continue;
+                            }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                                continue;
+                            }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                                continue;
+                            }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                                continue;
+                            }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                continue;
+                            }
+                            else {
+                                block.statements().add(o);
+                            }
+                        }
+                    } catch (NodeNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (ExpressionNotFound expressionNotFound) {
+                        expressionNotFound.printStackTrace();
+                    }
+                });
+                tryStatement.setBody(block);
+            }
+
+
             (((TryFinally) node).getInternalFinalbody()).stream().forEach(x-> {
+                Block final_block = asn.newBlock();
                 try {
-                    ArrayList<?> mappingPyNode = getMappingPyNode(asn, (PythonTree) x, import_nodes, 0, pyc);
-                    final_block.statements().addAll(mappingPyNode.stream().filter(Predicate.not(z->z instanceof ImportDeclaration)).collect(Collectors.toList()));
-                    pyc.imports().addAll(mappingPyNode.stream().filter(z->z instanceof ImportDeclaration).collect(Collectors.toList()));
-
+                    for (Object o : getMappingPyNode(asn, x, import_nodes, 0, pyc)) {
+                        if (o instanceof MethodDeclaration) {
+                            TypeDeclaration typeDec = asn.newTypeDeclaration();
+                            typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
+                            typeDec.bodyDeclarations().add(o);
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                            final_block.statements().add(dummyClass);
+                        }
+                        else if (o instanceof TypeDeclaration ){
+                            TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                            final_block.statements().add(dummyClass);
+                        }
+                        else if (o instanceof ImportDeclaration ) {
+                            pyc.imports().add(o);
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof SimpleName){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof PyTupleExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ParenthesizedExpression){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else{
+                            final_block.statements().add(o);
+                        }
+                    }
                 } catch (NodeNotFoundException e) {
                     e.printStackTrace();
                 } catch (ExpressionNotFound expressionNotFound) {
                     expressionNotFound.printStackTrace();
                 }
+                tryStatement.setFinally(final_block);
+
             });
-            tryStatement.setFinally(final_block);
+
 
 //            if (((TryFinally) node).getInternalBody().size()>1){
 //                logger.fatal("Size of body of try final is larger than one");
@@ -1071,6 +1368,16 @@ public class MapPyStatementsTOJDK extends PyMap{
             return list_assign;
 
         }
+
+        else if (node instanceof Nonlocal){
+            ArrayList<PyNonLocalStatement> list_assign = new ArrayList<>();
+            for (Name nameNode : ((Nonlocal) node).getInternalNameNodes()) {
+                PyNonLocalStatement nonlocal = asn.newNonLocal();
+                nonlocal.setExpression(MapPyExpressionsJDK.mapExpression(nameNode,asn,import_nodes,0,typeNodes,pyc));
+                list_assign.add(nonlocal);
+            }
+            return list_assign;
+        }
         else {
 
             logger.fatal("Corresponding Python node is not found : found "+node.getClass()+" Class "+node.toString());
@@ -1082,7 +1389,7 @@ public class MapPyStatementsTOJDK extends PyMap{
 
     private SingleVariableDeclaration updateForLoopLocalVariables(AST asn, Name elt) throws NodeNotFoundException {
         SingleVariableDeclaration lo_parameter = asn.newSingleVariableDeclaration();
-        lo_parameter.setName(asn.newSimpleName(elt.getId().toString()));
+        lo_parameter.setName(asn.newSimpleName(MapPyExpressionsJDK.mapPythonKeyWords(elt.getId().toString())));
         String typeString = this.typeNodes.get(new TypeASTNode(elt.getLineno(),
                 elt.getCol_offset(), elt.getId().toString(), null));
 

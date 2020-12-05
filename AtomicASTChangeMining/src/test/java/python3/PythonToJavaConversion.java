@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.compiler.parser.Parser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import python3.typeinference.PyASTVisitor;
 import python3.typeinference.core.TypeASTNode;
 import utils.JavaASTUtil;
 
@@ -1537,17 +1538,74 @@ public class PythonToJavaConversion {
 
     @Test
     public void testConversion40(){
-        String content =
-                "public class PyDummyClass1 {\n" +
-                        "  void get_software_id(){\n" +
-                        "       xx **= 2;\n"+
-                        "  }\n" +
-                        "}\n";
+        String content = "def _synth_regression_dataset\n"+
+                        "X, y = datasets.make_regression(\n" +
+                "        effective_rank=n_features * 2 // 3, tail_strength=0.6,\n" +
+                "        n_samples=1_000,\n" +
+                "        n_features=n_features,\n" +
+                "        n_informative=n_features * 2 // 3,\n" +
+                "        random_state=seed,\n" +
+                "    )";
 
-        CompilationUnit cu = (CompilationUnit)JavaASTUtil.parseSource(content);
+        CompilationUnit converted = Convert(content);
 //        "number = (key for key in symbol_by_number.items() if value > input_element);"+
-        Assert.assertEquals(cu.getProblems().length,0);
+        Assert.assertEquals(converted.getProblems().length,0);
+
     }
+
+    @Test
+    public void testConversion41(){
+        String content = "def _yield_checks(estimator):\n" +
+                "    yield \n";
+
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length, 0);
+    }
+
+    @Test
+    public void testConversion42(){
+        String content = "def _synth_regression_dataset\n"+
+                "    with pytest.raises(ValueError, match=msg):\n" +
+                "        x=pipe[start:end:-1]";
+
+        CompilationUnit converted = Convert(content);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
+    @Test
+    public void testConversion43(){
+        String content = "def _synth_regression_dataset\n"+
+                "    pipeline.set_params(steps=[('junk', ())])";
+
+        CompilationUnit converted = Convert(content);
+//        "number = (key for key in symbol_by_number.items() if value > input_element);"+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+    }
+
+    @Test
+    public void testConversion44(){
+        String content = "def divide(x, y):\n" +
+                "    try:\n" +
+                "       try:\n" +
+                "           result = x / y\n" +
+                "       except ZeroDivisionError:\n" +
+                "           print(\"division by zero!\")\n" +
+                "       else:\n" +
+                "           print(\"result is\", result)\n" +
+                "       gooo()\n"+
+                "    finally:\n" +
+                "        print(\"executing finally clause\")";
+        CompilationUnit converted = Convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+
+
+    }
+
     public String readFile(String fileName) {
 
         Path resourceDirectory = Paths.get("src","test","resources","ASTConversion",fileName);
@@ -1571,8 +1629,6 @@ public class PythonToJavaConversion {
         }
         return everything;
     }
-
-
 
 
 }
