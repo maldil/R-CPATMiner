@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import python3.MapPyExpressionsJDK;
 import python3.PyMap;
 import python3.pyerrors.NodeNotFoundException;
 import python3.typeinference.antlr.TypeInfo;
@@ -31,7 +32,7 @@ public class TypeStringToJDT extends PyMap{
         jdtType.setSourceRange(startPosition,jdtType.toString().length());
         variableDeclarationStatement.setType(jdtType);
 
-        SimpleName simpleName = ast.newSimpleName(needs.getName());
+        SimpleName simpleName = ast.newSimpleName(MapPyExpressionsJDK.mapPythonKeyWords(needs.getName()));
         simpleName.setSourceRange(startPosition + jdtType.toString().length()+1,simpleName.toString().length());
         variableDeclarationFragment.setName(simpleName);
 

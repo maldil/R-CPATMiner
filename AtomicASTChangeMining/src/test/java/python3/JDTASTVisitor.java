@@ -1,5 +1,6 @@
 package python3;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Assignment;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JDTASTVisitor extends ASTVisitor {
+    private static org.apache.log4j.Logger log = Logger.getLogger(JDTASTVisitor.class);
     private HashMap<String,Integer> jdtNodeMap = new HashMap<>();
     @Override
     public boolean visit(AssertStatement node) {

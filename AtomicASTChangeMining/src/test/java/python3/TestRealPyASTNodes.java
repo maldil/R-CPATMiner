@@ -127,7 +127,7 @@ public class TestRealPyASTNodes {
         file33();
         file34();
         file35();
-        file36();
+     //   file36();
         file37();
         file38();
         file39();
@@ -184,8 +184,412 @@ public class TestRealPyASTNodes {
         file90();
         file91();
         file92();
-
-
+        file93();
+        file94();
+        file95();
+        file96();
+        file97();
+        file98();
+        file99();
+        file100();
+        file101();
+        file102();
+        file103();
+        file104();
+        file105();
+        file106();
+        file107();
+        file108();
+        file109();
+        file110();
+        file111();
+        file112();
+        file114();
+        file115();
+        file116();
+        file117();
+        file118();
+        file119();
+        file120();
+        file121();
+        file122();
+        file123();
+        file124();
+        file125();
+  //      file126();
+        file127();
+        file128();
+        file129();
+        file130();
+        file131();
+        file132();
+        file133();
+        file134();
+        file135();
+        file136();
+        file137();
+        file138();
+        file139();
+        file140();
+        file142();
+        file143();
+        file144();
+        file145();
+        file146();
+        file147();
+        file149();
+        file150();
+        file151();
+        file152();
+        file153();
+        file154();
+        file155();
+        file156();
+        file157();
+        file158();
+        file159();
+        file160();
+        file161();
+        file162();
+        file163();
+        file164();
+        file165();
+        file166();
+        file167();
+        file168();
+        file170();
+        file171();
+        file173();
+        file174();
+        file175();
+        file176();
+        file177();
+        file178();
+        file179();
+        file180();
+        file181();
+        file182();
+        file183();
+        file184();
+        file186();
+        file187();
+        file188();
+        file189();
+        file190();
+        file191();
+        file192();
+        file193();
+        file195();
+        file196();
+        file197();
+        file198();
+        file199();
+        file200();
+        file201();
+        file202();
+        file203();
+        file204();
+        file205();
+        file206();
+        file207();
+        file208();
+        file209();
+        file210();
+        file211();
+        file212();
+        file213();
+        file214();
+        file215();
+        file216();
+        file218();
+        file219();
+     //   file220(); List comp with conditional
+        file221();
+        file222();
+        file223();
+     //   file224(); List comp with conditional
+        file225();
+        file226();
+        file228();
+        file229();
+        file230();
+        file231();
+        file232();
+        file233();
+        file235();
+        file236();
+        file237();
+        file238();
+        file239();
+    //    file240();  //conditional list comp
+        file241();
+        file242();
+        file243();
+        file244();
+        file245();
+   //     file246(); //conditional list comp
+   //     file247(); //conditional list comp
+   //     file248(); //conditional list comp
+        file249();
+        file250();
+        file251();
+        file252();
+        file253();
+        file254();
+        file255();
+        file256();
+        file257();
+   //     file258(); //conditional list comp
+        file259();
+        file260();
+   //     file261();  //conditional list comp
+        file262();
+        file263();
+        file264();
+        file265();
+        file267();
+        file268();
+        file269();
+        file270();
+        file271();
+        file272();
+        file273();
+        file274();
+        file275();
+        file276();
+        file277();
+        file279();
+        file280();
+        file281();
+        file282();
+        file283();
+        file284();
+        file285();
+        file286();
+        file287();
+        file288();
+        file289();
+        file290();
+        file291();
+        file292();
+        file293();
+        file294();
+        file295();
+        file296();
+        file297();
+        file298();
+        file299();
+        file300();
+        file301();
+        file302();
+        file303();
+        file304();
+        file305();
+        file306();
+        file307();
+        file308();
+        file309();
+        file310();
+        file311();
+        file312();
+        file314();
+        file315();
+        file316();
+    //    file317(); //conditional list comp
+        file318();
+        file319();
+        file320();
+        file321();
+        file322();
+        file323();
+        file324();
+        file325();
+        file326();
+        file327();
+        file328();
+        file329();
+    //    file330(); //conditional list comp
+    //    file331();  //conditional list comp
+        file332();
+        file333();
+        file334();
+        file335();
+        file336();
+        file337();
+        file338();
+        file339();
+        file340();
+        file341();
+        file342();
+        file343();
+        file344();
+        file345();
+        file346();
+        file347();
+        file348();
+        file349();
+        file350();
+        file351();
+        file352();
+        file353();
+        file354();
+        file355();
+        file356();
+        file357();
+        file358();
+        file359();
+        file360();
+        file361();
+        file362();
+        file363();
+        file364();
+        file365();
+        file366();
+        file367();
+        file368();
+        //    file369();  List Comp is with Conditionals
+        file370();
+        file371();
+      //  file372(); lambdas in arguments
+        file373();
+        file374();
+        file375();
+        file376();
+        file377();
+        file378();
+        file379();
+        file380();
+        file381();
+        file382();
+        file383();
+        file384();
+        file385();
+        file386();
+        file387();
+        file388();
+        file389();
+        file390();
+        file391();
+        file392();
+        file393();
+ //       file394(); yield from
+        file395();
+        file396();
+        file397();
+        file398();
+        file399();
+        file400();
+        file401();
+        file403();
+        file404();
+        file405();
+        file406();
+        file407();
+        file408();
+        file409();
+        file410();
+        file411();
+        file412();
+        file413();
+        file414();
+        file415();
+        file416();
+        file417();
+        file418();
+        file419();
+        file420();
+        file421();
+        file422();
+        file423();
+        file424();
+        file425();
+        file426();
+        file427();
+        file428();
+        file429();
+        file430();
+        file431();
+        file432();
+        file433();
+        file434();
+        file435();
+        file436();
+        file437();
+        file438();
+        file439();
+        file440();
+        file441();
+        file442();
+        file443();
+        file444();
+     //   file445();  Fix this
+        file446();
+        file447();
+        file448();
+        file449();
+        file450();
+        file451();
+        file452();
+        file453();
+        file454();
+        file455();
+ //       file456();  list comp with conditional exp
+        file457();
+        file458();
+        file459();
+        file460();
+        file461();
+        file462();
+        file463();
+        file464();
+        file465();
+   //     file466();  LMBDA in argument
+        file467();
+        file468();
+        file469();
+        file470();
+        file471();
+        file472();
+        file473();
+        file474();
+        file475();
+        file476();
+        file477();
+        file478();
+        file479();
+        file480();
+ //       file481();  Lambda in argmuments
+ //       file482();  List comp with generators
+        file483();
+        file484();
+        file485();
+        file486();
+        file487();
+        file488();
+        file489();
+        file490();
+        file491();
+        file492();
+        file493();
+        file494();
+        file495();
+        file496();
+        file497();
+        file498();
+        file499();
+        file500();
+        file501();
+  //      file502();  List comp with conditionals
+        file503();
+        file504();
+        file505();
+        file506();
+        file507();
+        file508();
+        file509();
+        file510();
+        file511();
+        file512();
         printStats();
     }
 
@@ -854,6 +1258,7 @@ public class TestRealPyASTNodes {
     }
     @Test
     public void file96(){
+            //error due to index error in yield statment
         String content = readFile("sklearn/utils/estimator_checks.py");
         CompilationUnit converted = convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
@@ -1128,6 +1533,2177 @@ public class TestRealPyASTNodes {
         CompilationUnit converted = convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
     }
+
+    @Test
+    public void file142(){
+        String content = readFile("sklearn/tree/tests/test_tree.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file143(){
+        String content = readFile("sklearn/tree/tests/test_reingold_tilford.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file144(){
+        String content = readFile("sklearn/tree/tests/test_export.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file145(){
+        String content = readFile("sklearn/tree/_export.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file146(){
+        String content = readFile("sklearn/tree/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file147(){
+        String content = readFile("sklearn/tree/_classes.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file149(){
+        String content = readFile("sklearn/tests/test_metaestimators.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file150(){
+        String content = readFile("sklearn/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file151(){
+        String content = readFile("sklearn/tests/test_multioutput.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file152(){
+        String content = readFile("sklearn/tests/test_isotonic.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file153(){
+        String content = readFile("sklearn/tests/test_docstring_parameters.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file154(){
+        String content = readFile("sklearn/tests/test_dummy.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file155(){
+        String content = readFile("sklearn/tests/test_check_build.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file156(){
+        String content = readFile("sklearn/tests/test_discriminant_analysis.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file157(){
+        String content = readFile("sklearn/tests/test_build.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file158(){
+        String content = readFile("sklearn/tests/test_multiclass.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file159(){
+        String content = readFile("sklearn/tests/test_min_dependencies_readme.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file160(){
+        String content = readFile("sklearn/tests/test_config.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file161(){
+        String content = readFile("sklearn/tests/test_kernel_ridge.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file162(){
+        String content = readFile("sklearn/tests/test_calibration.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file163(){
+        String content = readFile("sklearn/tests/test_naive_bayes.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file164(){
+        String content = readFile("sklearn/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file165(){
+        String content = readFile("sklearn/tests/test_init.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file166(){
+        String content = readFile("sklearn/tests/test_pipeline.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file167(){
+        String content = readFile("sklearn/tests/test_random_projection.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file168(){
+        String content = readFile("sklearn/tests/test_kernel_approximation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file170(){
+        String content = readFile("sklearn/semi_supervised/tests/test_label_propagation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file171(){
+        String content = readFile("sklearn/semi_supervised/_label_propagation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file173(){
+        String content = readFile("sklearn/preprocessing/_data.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file174(){
+        String content = readFile("sklearn/preprocessing/_encoders.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file175(){
+        String content = readFile("sklearn/preprocessing/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file176(){
+        String content = readFile("sklearn/preprocessing/tests/test_label.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file177(){
+        String content = readFile("sklearn/preprocessing/tests/test_encoders.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file178(){
+        String content = readFile("sklearn/preprocessing/tests/test_function_transformer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file179(){
+        String content = readFile("sklearn/preprocessing/tests/test_discretization.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file180(){
+        String content = readFile("sklearn/preprocessing/tests/test_data.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file181(){
+        String content = readFile("sklearn/preprocessing/_discretization.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file182(){
+        String content = readFile("sklearn/preprocessing/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file183(){
+        String content = readFile("sklearn/preprocessing/_label.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file184(){
+        String content = readFile("sklearn/preprocessing/_function_transformer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file186(){
+        String content = readFile("sklearn/neural_network/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file187(){
+        String content = readFile("sklearn/neural_network/_rbm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file188(){
+        String content = readFile("sklearn/neural_network/tests/test_mlp.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file189(){
+        String content = readFile("sklearn/neural_network/tests/test_rbm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file190(){
+        String content = readFile("sklearn/neural_network/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file191(){
+        String content = readFile("sklearn/neural_network/tests/test_stochastic_optimizers.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file192(){
+        String content = readFile("sklearn/neural_network/_stochastic_optimizers.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file193(){
+        String content = readFile("sklearn/neural_network/_multilayer_perceptron.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file195(){
+        String content = readFile("sklearn/neighbors/_classification.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file196(){
+        String content = readFile("sklearn/neighbors/_nca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file197(){
+        String content = readFile("sklearn/neighbors/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file198(){
+        String content = readFile("sklearn/neighbors/_graph.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file199(){
+        String content = readFile("sklearn/neighbors/_regression.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file200(){
+        String content = readFile("sklearn/neighbors/tests/test_nearest_centroid.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file201(){
+        String content = readFile("sklearn/neighbors/tests/test_kde.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file202(){
+        String content = readFile("sklearn/neighbors/tests/test_neighbors_pipeline.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file203(){
+        String content = readFile("sklearn/neighbors/tests/test_dist_metrics.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file204(){
+        String content = readFile("sklearn/neighbors/tests/test_lof.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file205(){
+        String content = readFile("sklearn/neighbors/tests/test_kd_tree.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file206(){
+        String content = readFile("sklearn/neighbors/tests/test_neighbors_tree.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file207(){
+        String content = readFile("sklearn/neighbors/tests/test_nca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file208(){
+        String content = readFile("sklearn/neighbors/tests/test_graph.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file209(){
+        String content = readFile("sklearn/neighbors/tests/test_neighbors.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file210(){
+        String content = readFile("sklearn/neighbors/tests/test_quad_tree.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file211(){
+        String content = readFile("sklearn/neighbors/tests/test_ball_tree.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file212(){
+        String content = readFile("sklearn/neighbors/_nearest_centroid.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file213(){
+        String content = readFile("sklearn/neighbors/_unsupervised.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file214(){
+        String content = readFile("sklearn/neighbors/_kde.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file215(){
+        String content = readFile("sklearn/neighbors/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file216(){
+        String content = readFile("sklearn/neighbors/_lof.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file218(){
+        String content = readFile("sklearn/model_selection/_search.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file219(){
+        String content = readFile("sklearn/model_selection/tests/test_split.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file220(){
+        String content = readFile("sklearn/model_selection/tests/test_validation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file221(){
+        String content = readFile("sklearn/model_selection/tests/test_search.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file222(){
+        String content = readFile("sklearn/model_selection/tests/common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file223(){
+        String content = readFile("sklearn/model_selection/tests/test_successive_halving.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file224(){
+//        {
+//            key: np.asarray([score[key] for score in scores])
+//            if isinstance(scores[0][key], numbers.Number)
+//        else [score[key] for score in scores]
+//            for key in scores[0]
+//        }
+        String content = readFile("sklearn/model_selection/_validation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file225(){
+        String content = readFile("sklearn/model_selection/_search_successive_halving.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file226(){
+        String content = readFile("sklearn/model_selection/_split.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file228(){
+        String content = readFile("sklearn/mixture/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file229(){
+        String content = readFile("sklearn/mixture/tests/test_mixture.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file230(){
+        String content = readFile("sklearn/mixture/tests/test_bayesian_mixture.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file231(){
+        String content = readFile("sklearn/mixture/tests/test_gaussian_mixture.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file232(){
+        String content = readFile("sklearn/mixture/_bayesian_mixture.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file233(){
+        String content = readFile("sklearn/mixture/_gaussian_mixture.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file235(){
+        String content = readFile("sklearn/metrics/_scorer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file236(){
+        String content = readFile("sklearn/metrics/_classification.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file237(){
+        String content = readFile("sklearn/metrics/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file238(){
+        String content = readFile("sklearn/metrics/cluster/_bicluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file239(){
+        String content = readFile("sklearn/metrics/cluster/tests/test_supervised.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file240(){
+        String content = readFile("sklearn/metrics/cluster/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file241(){
+        String content = readFile("sklearn/metrics/cluster/tests/test_bicluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file242(){
+        String content = readFile("sklearn/metrics/cluster/tests/test_unsupervised.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file243(){
+        String content = readFile("sklearn/metrics/cluster/_unsupervised.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file244(){
+        String content = readFile("sklearn/metrics/cluster/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file245(){
+        String content = readFile("sklearn/metrics/cluster/_supervised.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file246(){
+        String content = readFile("sklearn/metrics/_plot/det_curve.py");
+
+        CompilationUnit converted = convert(content);
+
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file247(){
+        String content = readFile("sklearn/metrics/_plot/tests/test_plot_precision_recall.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file248(){
+        String content = readFile("sklearn/metrics/_plot/tests/test_plot_roc_curve.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file249(){
+        String content = readFile("sklearn/metrics/_plot/tests/test_plot_curve_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file250(){
+        String content = readFile("sklearn/metrics/_plot/tests/test_plot_confusion_matrix.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file251(){
+        String content = readFile("sklearn/metrics/_plot/tests/test_plot_det_curve.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file252(){
+        String content = readFile("sklearn/metrics/_plot/precision_recall_curve.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file253(){
+        String content = readFile("sklearn/metrics/_plot/roc_curve.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file254(){
+        String content = readFile("sklearn/metrics/_plot/confusion_matrix.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file255(){
+        String content = readFile("sklearn/metrics/_plot/base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file256(){
+        String content = readFile("sklearn/metrics/_regression.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file257(){
+        String content = readFile("sklearn/metrics/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file258(){
+        String content = readFile("sklearn/metrics/tests/test_score_objects.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file259(){
+        String content = readFile("sklearn/metrics/tests/test_ranking.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file260(){
+        String content = readFile("sklearn/metrics/tests/test_pairwise.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file261(){
+        String content = readFile("sklearn/metrics/tests/test_classification.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file262(){
+        String content = readFile("sklearn/metrics/tests/test_regression.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file263(){
+        String content = readFile("sklearn/metrics/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file264(){
+        String content = readFile("sklearn/metrics/pairwise.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file265(){
+        String content = readFile("sklearn/metrics/_ranking.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file267(){
+        String content = readFile("sklearn/manifold/_locally_linear.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file268(){
+        String content = readFile("sklearn/manifold/_t_sne.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file269(){
+        String content = readFile("sklearn/manifold/tests/test_isomap.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file270(){
+        String content = readFile("sklearn/manifold/tests/test_mds.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file271(){
+        String content = readFile("sklearn/manifold/tests/test_t_sne.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file272(){
+        String content = readFile("sklearn/manifold/tests/test_spectral_embedding.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file273(){
+        String content = readFile("sklearn/manifold/tests/test_locally_linear.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file274(){
+        String content = readFile("sklearn/manifold/_isomap.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file275(){
+        String content = readFile("sklearn/manifold/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file276(){
+        String content = readFile("sklearn/manifold/_mds.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file277(){
+        String content = readFile("sklearn/manifold/_spectral_embedding.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file279(){
+        String content = readFile("sklearn/linear_model/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file280(){
+        String content = readFile("sklearn/linear_model/_least_angle.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file281(){
+        String content = readFile("sklearn/linear_model/_glm/link.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file282(){
+        String content = readFile("sklearn/linear_model/_glm/glm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file283(){
+        String content = readFile("sklearn/linear_model/_glm/tests/test_link.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file284(){
+        String content = readFile("sklearn/linear_model/_glm/tests/test_glm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file285(){
+        String content = readFile("sklearn/linear_model/_sag.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file286(){
+        String content = readFile("sklearn/linear_model/_passive_aggressive.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file287(){
+        String content = readFile("sklearn/linear_model/tests/test_logistic.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file288(){
+        String content = readFile("sklearn/linear_model/tests/test_sgd.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file289(){
+        String content = readFile("sklearn/linear_model/tests/test_huber.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file290(){
+        String content = readFile("sklearn/linear_model/tests/test_bayes.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file291(){
+        String content = readFile("sklearn/linear_model/tests/test_theil_sen.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file292(){
+        String content = readFile("sklearn/linear_model/tests/test_ridge.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file293(){
+        String content = readFile("sklearn/linear_model/tests/test_passive_aggressive.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file294(){
+        String content = readFile("sklearn/linear_model/tests/test_least_angle.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file295(){
+        String content = readFile("sklearn/linear_model/tests/test_ransac.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file296(){
+        String content = readFile("sklearn/linear_model/tests/test_coordinate_descent.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file297(){
+        String content = readFile("sklearn/linear_model/tests/test_sparse_coordinate_descent.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file298(){
+        String content = readFile("sklearn/linear_model/tests/test_perceptron.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file299(){
+        String content = readFile("sklearn/linear_model/tests/test_sag.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file300(){
+        String content = readFile("sklearn/linear_model/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file301(){
+        String content = readFile("sklearn/linear_model/tests/test_omp.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file302(){
+        String content = readFile("sklearn/linear_model/_logistic.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file303(){
+        String content = readFile("sklearn/linear_model/_omp.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file304(){
+        String content = readFile("sklearn/linear_model/_perceptron.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file305(){
+        String content = readFile("sklearn/linear_model/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file306(){
+        String content = readFile("sklearn/linear_model/_theil_sen.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file307(){
+        String content = readFile("sklearn/linear_model/_coordinate_descent.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file308(){
+        String content = readFile("sklearn/linear_model/_ridge.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file309(){
+        String content = readFile("sklearn/linear_model/_stochastic_gradient.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file310(){
+        String content = readFile("sklearn/linear_model/_huber.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file311(){
+        String content = readFile("sklearn/linear_model/_bayes.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file312(){
+        String content = readFile("sklearn/linear_model/_ransac.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file314(){
+        String content = readFile("sklearn/inspection/_partial_dependence.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file315(){
+        String content = readFile("sklearn/inspection/_plot/tests/test_plot_partial_dependence.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file316(){
+        String content = readFile("sklearn/inspection/_plot/partial_dependence.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file317(){
+        String content = readFile("sklearn/inspection/tests/test_partial_dependence.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file318(){
+        String content = readFile("sklearn/inspection/tests/test_permutation_importance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file319(){
+        String content = readFile("sklearn/inspection/_permutation_importance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file320(){
+        String content = readFile("sklearn/inspection/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file321(){
+        String content = readFile("sklearn/impute/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file322(){
+        String content = readFile("sklearn/impute/_knn.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file323(){
+        String content = readFile("sklearn/impute/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file324(){
+        String content = readFile("sklearn/impute/tests/test_knn.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file325(){
+        String content = readFile("sklearn/impute/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file326(){
+        String content = readFile("sklearn/impute/tests/test_impute.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file327(){
+        String content = readFile("sklearn/impute/_iterative.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file328(){
+        String content = readFile("sklearn/gaussian_process/_gpc.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file329(){
+        String content = readFile("sklearn/gaussian_process/tests/test_gpr.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file330(){
+        String content = readFile("sklearn/gaussian_process/tests/test_kernels.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file331(){
+        String content = readFile("sklearn/gaussian_process/tests/_mini_sequence_kernel.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file332(){
+        String content = readFile("sklearn/gaussian_process/tests/test_gpc.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file333(){
+        String content = readFile("sklearn/gaussian_process/kernels.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file334(){
+        String content = readFile("sklearn/gaussian_process/_gpr.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file335(){
+        String content = readFile("sklearn/feature_selection/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file336(){
+        String content = readFile("sklearn/feature_selection/_variance_threshold.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file337(){
+        String content = readFile("sklearn/feature_selection/tests/test_variance_threshold.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file338(){
+        String content = readFile("sklearn/feature_selection/tests/test_rfe.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file339(){
+        String content = readFile("sklearn/feature_selection/tests/test_from_model.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file340(){
+        String content = readFile("sklearn/feature_selection/tests/test_sequential.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file341(){
+        String content = readFile("sklearn/feature_selection/tests/test_feature_select.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file342(){
+        String content = readFile("sklearn/feature_selection/tests/test_chi2.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file343(){
+        String content = readFile("sklearn/feature_selection/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file344(){
+        String content = readFile("sklearn/feature_selection/tests/test_mutual_info.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file345(){
+        String content = readFile("sklearn/feature_selection/_rfe.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file346(){
+        String content = readFile("sklearn/feature_selection/_from_model.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file347(){
+        String content = readFile("sklearn/feature_selection/_mutual_info.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file348(){
+        String content = readFile("sklearn/feature_selection/_univariate_selection.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file349(){
+        String content = readFile("sklearn/feature_selection/_sequential.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file350(){
+        String content = readFile("sklearn/feature_selection/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file351(){
+        String content = readFile("sklearn/feature_selection/_variance_threshold.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file352(){
+        String content = readFile("sklearn/feature_selection/tests/test_variance_threshold.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file353(){
+        String content = readFile("sklearn/feature_selection/tests/test_rfe.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file354(){
+        String content = readFile("sklearn/feature_selection/tests/test_from_model.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file355(){
+        String content = readFile("sklearn/feature_selection/tests/test_sequential.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file356(){
+        String content = readFile("sklearn/feature_selection/tests/test_feature_select.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file357(){
+        String content = readFile("sklearn/feature_selection/tests/test_chi2.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file358(){
+        String content = readFile("sklearn/feature_selection/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file359(){
+        String content = readFile("sklearn/feature_selection/tests/test_mutual_info.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file360(){
+        String content = readFile("sklearn/feature_selection/_rfe.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file361(){
+        String content = readFile("sklearn/feature_selection/_from_model.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file362(){
+        String content = readFile("sklearn/feature_selection/_mutual_info.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file363(){
+        String content = readFile("sklearn/feature_selection/_univariate_selection.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file364(){
+        String content = readFile("sklearn/feature_selection/_sequential.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file365(){
+        String content = readFile("sklearn/externals/conftest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file366(){
+        String content = readFile("sklearn/externals/_pilutil.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file367(){
+        String content = readFile("sklearn/externals/_lobpcg.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file368(){
+        String content = readFile("sklearn/externals/_pep562.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file369(){
+        String content = readFile("sklearn/externals/_arff.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file370(){
+        String content = readFile("sklearn/feature_extraction/tests/test_dict_vectorizer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file371(){
+        String content = readFile("sklearn/feature_extraction/tests/test_image.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file372(){
+        String content = readFile("sklearn/feature_extraction/tests/test_text.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file373(){
+        String content = readFile("sklearn/feature_extraction/tests/test_feature_hasher.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file374(){
+        String content = readFile("sklearn/feature_extraction/_hash.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file375(){
+        String content = readFile("sklearn/feature_extraction/_dict_vectorizer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file376(){
+        String content = readFile("sklearn/feature_extraction/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file377(){
+        String content = readFile("sklearn/feature_extraction/_stop_words.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file378(){
+        String content = readFile("sklearn/feature_extraction/text.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file379(){
+        String content = readFile("sklearn/feature_extraction/image.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file380(){
+        String content = readFile("sklearn/ensemble/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file381(){
+        String content = readFile("sklearn/ensemble/_forest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file382(){
+        String content = readFile("sklearn/ensemble/_voting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file383(){
+        String content = readFile("sklearn/ensemble/_bagging.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file384(){
+        String content = readFile("sklearn/ensemble/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file385(){
+        String content = readFile("sklearn/ensemble/tests/test_voting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file386(){
+        String content = readFile("sklearn/ensemble/tests/test_forest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file387(){
+        String content = readFile("sklearn/ensemble/tests/test_bagging.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file388(){
+        String content = readFile("sklearn/ensemble/tests/test_gradient_boosting_loss_functions.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file389(){
+        String content = readFile("sklearn/ensemble/tests/test_stacking.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file390(){
+        String content = readFile("sklearn/ensemble/tests/test_weight_boosting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file391(){
+        String content = readFile("sklearn/ensemble/tests/test_gradient_boosting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file392(){
+        String content = readFile("sklearn/ensemble/tests/test_iforest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file393(){
+        String content = readFile("sklearn/ensemble/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file394(){
+        String content = readFile("sklearn/ensemble/_gb.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file395(){
+        String content = readFile("sklearn/ensemble/_weight_boosting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file396(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/predictor.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file397(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/binning.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file398(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file399(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_monotonic_contraints.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file400(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_grower.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file401(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_binning.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+//    @Test
+//    public void file402(){
+//        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/__init__.py");
+//        CompilationUnit converted = convert(content);
+//        Assert.assertEquals(converted.getProblems().length,0);
+//    }
+    @Test
+    public void file403(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_splitting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file404(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_predictor.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file405(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_loss.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file406(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file407(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_warm_start.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file408(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_compare_lightgbm.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file409(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/tests/test_histogram.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file410(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/__init__.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file411(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/loss.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file412(){
+        String content = readFile("sklearn/ensemble/_hist_gradient_boosting/grower.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file413(){
+        String content = readFile("sklearn/ensemble/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file414(){
+        String content = readFile("sklearn/ensemble/_gb_losses.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file415(){
+        String content = readFile("sklearn/ensemble/_iforest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file416(){
+        String content = readFile("sklearn/ensemble/_stacking.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file417(){
+        String content = readFile("sklearn/decomposition/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file418(){
+        String content = readFile("sklearn/decomposition/_factor_analysis.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file419(){
+        String content = readFile("sklearn/decomposition/_nmf.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file420(){
+        String content = readFile("sklearn/decomposition/_sparse_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file421(){
+        String content = readFile("sklearn/decomposition/_kernel_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file422(){
+        String content = readFile("sklearn/decomposition/tests/test_dict_learning.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file423(){
+        String content = readFile("sklearn/decomposition/tests/test_fastica.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file424(){
+        String content = readFile("sklearn/decomposition/tests/test_truncated_svd.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file425(){
+        String content = readFile("sklearn/decomposition/tests/test_nmf.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file426(){
+        String content = readFile("sklearn/decomposition/tests/test_online_lda.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file427(){
+        String content = readFile("sklearn/decomposition/tests/test_kernel_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file428(){
+        String content = readFile("sklearn/decomposition/tests/test_sparse_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file429(){
+        String content = readFile("sklearn/decomposition/tests/test_factor_analysis.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file430(){
+        String content = readFile("sklearn/decomposition/tests/test_incremental_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file431(){
+        String content = readFile("sklearn/decomposition/tests/test_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file432(){
+        String content = readFile("sklearn/decomposition/_incremental_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file433(){
+        String content = readFile("sklearn/decomposition/_fastica.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file434(){
+        String content = readFile("sklearn/decomposition/_pca.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file435(){
+        String content = readFile("sklearn/decomposition/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file436(){
+        String content = readFile("sklearn/decomposition/_truncated_svd.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file437(){
+        String content = readFile("sklearn/decomposition/_dict_learning.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file438(){
+        String content = readFile("sklearn/decomposition/_lda.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void file439(){
+        String content = readFile("sklearn/datasets/_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file440(){
+        String content = readFile("sklearn/datasets/_samples_generator.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file441(){
+        String content = readFile("sklearn/datasets/_olivetti_faces.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file442(){
+        String content = readFile("sklearn/datasets/_kddcup99.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file443(){
+        String content = readFile("sklearn/datasets/_california_housing.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file444(){
+        String content = readFile("sklearn/datasets/_species_distributions.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file445(){
+        String content = readFile("sklearn/datasets/_covtype.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file446(){
+        String content = readFile("sklearn/datasets/tests/test_california_housing.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file447(){
+        String content = readFile("sklearn/datasets/tests/conftest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file448(){
+        String content = readFile("sklearn/datasets/tests/test_common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file449(){
+        String content = readFile("sklearn/datasets/tests/test_lfw.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file450(){
+        String content = readFile("sklearn/datasets/tests/test_rcv1.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file451(){
+        String content = readFile("sklearn/datasets/tests/test_kddcup99.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file452(){
+        String content = readFile("sklearn/datasets/tests/test_covtype.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file453(){
+        String content = readFile("sklearn/datasets/tests/test_svmlight_format.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file454(){
+        String content = readFile("sklearn/datasets/tests/test_20news.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file455(){
+        String content = readFile("sklearn/datasets/tests/test_samples_generator.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file456(){
+        String content = readFile("sklearn/datasets/tests/test_openml.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file457(){
+        String content = readFile("sklearn/datasets/tests/test_base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file458(){
+        String content = readFile("sklearn/datasets/tests/test_olivetti_faces.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file459(){
+        String content = readFile("sklearn/datasets/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file460(){
+        String content = readFile("sklearn/datasets/_rcv1.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file461(){
+        String content = readFile("sklearn/datasets/_lfw.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file462(){
+        String content = readFile("sklearn/datasets/_svmlight_format_io.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file463(){
+        String content = readFile("sklearn/datasets/_twenty_newsgroups.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file464(){
+        String content = readFile("sklearn/datasets/_openml.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file465(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_mean_shift.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file466(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_k_means.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file467(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_feature_agglomeration.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file468(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_dbscan.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file469(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_birch.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file470(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_affinity_propagation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file471(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_optics.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file472(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_hierarchical.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file473(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/common.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file474(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_bicluster.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file475(){
+        String content = readFile("sklearn/cross_decomposition/cluster/tests/test_spectral.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file476(){
+        String content = readFile("sklearn/cross_decomposition/cluster/setup.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file477(){
+        String content = readFile("sklearn/cross_decomposition/conftest.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file478(){
+        String content = readFile("sklearn/cross_decomposition/multiclass.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file479(){
+        String content = readFile("sklearn/cross_decomposition/compose/_target.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file480(){
+        String content = readFile("sklearn/cross_decomposition/compose/tests/test_target.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file481(){
+        String content = readFile("sklearn/cross_decomposition/compose/tests/test_column_transformer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file482(){
+        String content = readFile("sklearn/cross_decomposition/compose/_column_transformer.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file483(){
+        String content = readFile("sklearn/cross_decomposition/kernel_approximation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file484(){
+        String content = readFile("sklearn/cross_decomposition/tests/test_pls.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file485(){
+        String content = readFile("sklearn/cross_decomposition/random_projection.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file486(){
+        String content = readFile("sklearn/cross_decomposition/isotonic.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file487(){
+        String content = readFile("sklearn/cross_decomposition/multioutput.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file488(){
+        String content = readFile("sklearn/cross_decomposition/kernel_ridge.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file489(){
+        String content = readFile("sklearn/cross_decomposition/conftest copy.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file490(){
+        String content = readFile("sklearn/cross_decomposition/_distributor_init.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file491(){
+        String content = readFile("sklearn/cross_decomposition/covariance/_graph_lasso.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file492(){
+        String content = readFile("sklearn/cross_decomposition/covariance/_empirical_covariance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file493(){
+        String content = readFile("sklearn/cross_decomposition/covariance/_shrunk_covariance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file494(){
+        String content = readFile("sklearn/cross_decomposition/covariance/_elliptic_envelope.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file495(){
+        String content = readFile("sklearn/cross_decomposition/covariance/tests/test_covariance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file496(){
+        String content = readFile("sklearn/cross_decomposition/covariance/tests/test_robust_covariance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file497(){
+        String content = readFile("sklearn/cross_decomposition/covariance/tests/test_graphical_lasso.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file498(){
+        String content = readFile("sklearn/cross_decomposition/covariance/tests/test_elliptic_envelope.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file499(){
+        String content = readFile("sklearn/cross_decomposition/covariance/_robust_covariance.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file500(){
+        String content = readFile("sklearn/cross_decomposition/_min_dependencies.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file501(){
+        String content = readFile("sklearn/cross_decomposition/naive_bayes.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file502(){
+        String content = readFile("sklearn/cross_decomposition/pipeline.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file503(){
+        String content = readFile("sklearn/cross_decomposition/maint_tools/check_pxd_in_installation.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file504(){
+        String content = readFile("sklearn/cross_decomposition/maint_tools/sort_whats_new.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file505(){
+        String content = readFile("sklearn/cross_decomposition/maint_tools/test_docstrings.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file506(){
+        String content = readFile("sklearn/cross_decomposition/discriminant_analysis.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file507(){
+        String content = readFile("sklearn/cross_decomposition/exceptions.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file508(){
+        String content = readFile("sklearn/cross_decomposition/_config.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file509(){
+        String content = readFile("sklearn/cross_decomposition/_pls.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file510(){
+        String content = readFile("sklearn/cross_decomposition/dummy.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file511(){
+        String content = readFile("sklearn/cross_decomposition/base.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+    @Test
+    public void file512(){
+        String content = readFile("sklearn/cross_decomposition/calibration.py");
+        CompilationUnit converted = convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+   // "search_holder"
     private CompilationUnit convert(String content) {
         mod ast = PyASTParser.parsePython(content);
         PythonASTUtil pythonASTUtil = new PythonASTUtil();
@@ -1149,6 +3725,7 @@ public class TestRealPyASTNodes {
 
         JDTASTVisitor jdtastVisitor = new JDTASTVisitor();
         CompilationUnit cu = (CompilationUnit) JavaASTUtil.parseSource(pyCompilationUnit.toString());
+        log.warn("Errors "+cu.getProblems().length);
         cu.accept(jdtastVisitor);
         comparePythonAndJDTnodes(astParser,jdtastVisitor);
 

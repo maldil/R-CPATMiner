@@ -225,6 +225,7 @@ class TestWarns(unittest.TestCase):
         failed = False
         filters = sys.modules['warnings'].filters[:]
         try:
+
             try:
                 # Should raise an AssertionError
 
