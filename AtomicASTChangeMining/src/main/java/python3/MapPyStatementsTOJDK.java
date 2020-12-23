@@ -432,6 +432,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
                             continue;
                         }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
+                            continue;
+                        }
                         else {
                             methoddec.getBody().statements().add(o);
                         }
@@ -485,8 +488,16 @@ public class MapPyStatementsTOJDK extends PyMap{
                 for (Object elt : (AstList) ((Tuple) ((For) node).getTarget()).getElts()) {
                     if (elt instanceof Tuple){
                         for (Object elt1 : (AstList) ((Tuple) elt).getElts()) {
-                            SingleVariableDeclaration lo_parameter = updateForLoopLocalVariables(asn, (Name) elt1);
-                            forstmt.Parameters().add(lo_parameter);
+                            if (elt1 instanceof Tuple){
+                                for (Object elt2 : (AstList) ((Tuple) elt1).getElts()) {
+                                    SingleVariableDeclaration lo_parameter = updateForLoopLocalVariables(asn, (Name) elt2);
+                                    forstmt.Parameters().add(lo_parameter);
+                                }
+                            }
+                            else{
+                                SingleVariableDeclaration lo_parameter = updateForLoopLocalVariables(asn, (Name) elt1);
+                                forstmt.Parameters().add(lo_parameter);
+                            }
                         }
                     }
                     else{
@@ -544,6 +555,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                     else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
                         continue;
                     }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
+                        continue;
+                    }
                     else {
                         ((Block)forstmt.getBody()).statements().add(o);
                     }
@@ -579,6 +593,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                         continue;
                     }
                     else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                        continue;
+                    }
+                    else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                         continue;
                     }
                     else {
@@ -746,6 +763,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                                 else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
                                     continue;
                                 }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
                                 else{
                                     ((Block)ifStatement.getThenStatement()).statements().add(o);
                                 }
@@ -798,6 +818,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                                             continue;
                                         }
                                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                            continue;
+                                        }
+                                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                                             continue;
                                         }
                                         else{
@@ -881,6 +904,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
                             continue;
                         }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
+                            continue;
+                        }
                         else{
                             block.statements().add(o);
                         }
@@ -926,6 +952,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                             continue;
                         }
                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                             continue;
                         }
                         else{
@@ -974,6 +1003,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                                     continue;
                                 }
                                 else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                                    continue;
+                                }
+                                else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                                     continue;
                                 }
                                 else{
@@ -1108,6 +1140,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                             continue;
                         }
                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                             continue;
                         }
                         else{
@@ -1274,6 +1309,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                             else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
                                 continue;
                             }
+                            else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
+                                continue;
+                            }
                             else {
                                 block.statements().add(o);
                             }
@@ -1319,6 +1357,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                             continue;
                         }
                         else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof ArrayAccess){
+                            continue;
+                        }
+                        else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof StringLiteral){
                             continue;
                         }
                         else{
