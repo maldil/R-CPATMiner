@@ -2,18 +2,24 @@ package python3;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.PyInExpression;
+import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.jpp.astnodes.Visitor;
+import org.jpp.astnodes.ast.ClassDef;
 import org.jpp.astnodes.ast.FunctionDef;
 import org.jpp.astnodes.ast.ImportFrom;
 import org.jpp.astnodes.base.expr;
@@ -56,8 +62,14 @@ public class PythonASTUtil {
         options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         AST asn = new AST(options);
+        PyASTVisitor pyNodeCounter = new PyASTVisitor();  //This is to count the number of classes and methods,
+                                                            // if it is zero only one Dummy class will be created
+        try {
+            pyNodeCounter.visit(ast);           //This could be a performance overhead
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
-
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
         PyMap.totalCharGains=0;
         PyMap.currentMethodGain=0;
@@ -135,7 +147,7 @@ public class PythonASTUtil {
                         }
                     }
                     else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof
-                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName) {
+                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName && (pyNodeCounter.classDef+ pyNodeCounter.funcDef!=0)) {
                         VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
                         variableDeclarationFragment.setName(asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier()));
                         Expression rightHandSide = ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide();
@@ -168,7 +180,13 @@ public class PythonASTUtil {
                             pyc.setTypes(currentHolder);
                             currentHolder=null;
                         }
-                        if (!(node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof StringLiteral)){
+                        if (!(node instanceof ExpressionStatement && (((ExpressionStatement) node).getExpression() instanceof StringLiteral ||
+                                ((ExpressionStatement) node).getExpression() instanceof SimpleName  ||
+                                ((ExpressionStatement) node).getExpression() instanceof ArrayAccess ||
+                                ((ExpressionStatement) node).getExpression() instanceof FieldAccess ||
+                                ((ExpressionStatement) node).getExpression() instanceof PyTupleExpression ||
+                                ((ExpressionStatement) node).getExpression() instanceof PyInExpression))
+                        ){
                             if (otherCurrentHolder==null){
                                 otherCurrentHolder=asn.newTypeDeclaration();
                                 otherCurrentHolder.setModifier(asn.newModifier(new Modifier.ModifierKeyword("public",1)));
@@ -201,8 +219,6 @@ public class PythonASTUtil {
             pyc.setTypes(otherCurrentHolder);
         }
 
-
-
         pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
                 .addAll(global_stmts.stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
 
@@ -215,6 +231,22 @@ public class PythonASTUtil {
 
         return pyc;
     }
+
+    class PyASTVisitor extends Visitor {
+        private int classDef= 0;
+        private int funcDef= 0;
+        @Override
+        public Object visitClassDef(ClassDef node) throws Exception {
+            classDef+=1;
+            return super.visitClassDef(node);
+        }
+        @Override
+        public Object visitFunctionDef(FunctionDef node) throws Exception {
+            classDef+=1;
+            return super.visitFunctionDef(node);
+        }
+    }
+
 
     public HashMap<String, Name> getImportsAndAlias(mod ast, AST asn) {
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
