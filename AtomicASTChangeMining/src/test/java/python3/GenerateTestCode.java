@@ -3,6 +3,8 @@ package python3;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,22 +14,37 @@ public class GenerateTestCode {
 
     @Test
     public void genTestCode(){
-        String path= "sklearn/examples/new/";
+        String path= "CPatMinerTest/PyTorch/";
         Path resourceDirectory = Paths.get("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/src/test/resources/ASTConversion/",path);
         ArrayList<Path> arrayList = new ArrayList<>();
         listf(resourceDirectory,arrayList,resourceDirectory,path);
-        int start_int = 541;
+        int start_int = 0;
+        StringBuilder content = new StringBuilder();
         ArrayList<String> file_names  = new ArrayList<>();
         for (Path path1 : arrayList) {
             start_int++;
             System.out.println("@Test\n" +
                     "public void file"+start_int+"(){");
+            content.append("@Test\n" + "public void file").append(start_int).append("(){\n");
             System.out.println("    String content = readFile(\""+path1+"\");");
+            content.append("    String content = readFile(\""+path1+"\");\n");
             System.out.println("    CompilationUnit converted = convert(content);");
+            content.append("    CompilationUnit converted = convert(content);\n");
             System.out.println("    Assert.assertEquals(converted.getProblems().length,0);");
+            content.append("    Assert.assertEquals(converted.getProblems().length,0);\n");
             System.out.println("    }");
+            content.append("    }\n");
             file_names.add("file"+start_int+"();");
 
+        }
+        try {
+            FileWriter myWriter = new FileWriter("testMethods.txt");
+            myWriter.write(String.valueOf(content));
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

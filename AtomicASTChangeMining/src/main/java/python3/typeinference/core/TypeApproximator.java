@@ -10,6 +10,7 @@ import org.jpp.astnodes.ast.Num;
 import org.jpp.astnodes.ast.Str;
 import org.jpp.astnodes.base.expr;
 import org.jpp.heart.AstList;
+import org.jpp.heart.PyComplex;
 import org.jpp.heart.PyFloat;
 import org.jpp.heart.PyInteger;
 import org.jpp.heart.PyLong;
@@ -120,6 +121,9 @@ public class TypeApproximator {
             }
             else if (((Num)expression).getN() instanceof PyLong){
                 return "int";
+            }
+            else if (((Num)expression).getN() instanceof PyComplex){
+                return "PyComplex";
             }
             else{
                 log.warn(((Num) expression).getN().getClass());
