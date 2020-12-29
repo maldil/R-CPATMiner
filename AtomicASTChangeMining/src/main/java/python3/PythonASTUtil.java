@@ -12,16 +12,21 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
+import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PyInExpression;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
+import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.jpp.astnodes.Visitor;
 import org.jpp.astnodes.ast.ClassDef;
+import org.jpp.astnodes.ast.ErrorMod;
 import org.jpp.astnodes.ast.FunctionDef;
 import org.jpp.astnodes.ast.ImportFrom;
+import org.jpp.astnodes.ast.Module;
 import org.jpp.astnodes.base.expr;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
@@ -42,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.ErrorManager;
 import java.util.stream.Collectors;
 
 public class PythonASTUtil {
@@ -70,6 +76,7 @@ public class PythonASTUtil {
             e.printStackTrace();
         }
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
+        if (ast==null|| ast instanceof ErrorMod || ((Module)ast).getInternalBody().size()==0){ return pyc;}
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
         PyMap.totalCharGains=0;
         PyMap.currentMethodGain=0;
@@ -194,13 +201,98 @@ public class PythonASTUtil {
                                 MethodDeclaration methoddec = asn.newMethodDeclaration();
                                 methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
                                 methoddec.setBody(asn.newBlock());
-                                methoddec.getBody().statements().add(node);
+                                if (node instanceof MethodDeclaration) {
+                                    TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                    typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName()));
+                                    typeDec.bodyDeclarations().add(node);
+                                    methoddec.getBody().statements().add(typeDec);
+                                }
+                                else if (node instanceof TypeDeclaration ){
+                                    TypeDeclarationStatement dummyClassLocal = asn.newTypeDeclarationStatement((TypeDeclaration) node);
+                                    methoddec.getBody().statements().add(dummyClassLocal);
+                                }
+                                else if (node instanceof ImportDeclaration ) {
+                                    pyc.imports().add(node);
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof QualifiedName){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof SimpleName){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PyTupleExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof ParenthesizedExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof ArrayAccess){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PyInExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof FieldAccess){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
+                                else{
+                                    methoddec.getBody().statements().add(node);
+                                }
                                 otherCurrentHolder.bodyDeclarations().add(methoddec);
                                 number_of_dummy_classes+=1;
                                 number_of_dummy_methods+=1;
                             }
                             else{
-                                ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(node);
+                                if (node instanceof MethodDeclaration) {
+                                    TypeDeclaration typeDec = asn.newTypeDeclaration();
+                                    typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName()));
+                                    typeDec.bodyDeclarations().add(node);
+                                    pyc.imports().add(typeDec);
+                                    ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(typeDec);
+                                }
+                                else if (node instanceof TypeDeclaration ){
+                                    TypeDeclarationStatement dummyClassLocal = asn.newTypeDeclarationStatement((TypeDeclaration) node);
+                                    ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(dummyClassLocal);
+                                }
+                                else if (node instanceof ImportDeclaration ) {
+                                    ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(node);
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof QualifiedName){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof SimpleName){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PyTupleExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof ParenthesizedExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof ArrayAccess){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PyInExpression){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof FieldAccess){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
+                                else{
+                                    ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(node);
+                                }
                             }
                         }
 //                        logger.fatal("Not implemented statement "+node+ node.toString());

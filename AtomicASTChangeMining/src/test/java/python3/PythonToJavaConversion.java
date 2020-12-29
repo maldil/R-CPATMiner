@@ -1126,8 +1126,8 @@ public class PythonToJavaConversion {
                 "    for (    PyTypeError i : range(n_samples)) {\n" +
                 "      row=np.zeros(X.shape[1]);\n" +
                 "      (      (endptr pyjavatuple startptr))=(      (X_indptr[(i + 1)] pyjavatuple X_indptr[i]));\n" +
-                "      nonzero_indices=X_indices[\"PythonSlice\"];\n" +
-                "      row[nonzero_indices]=X_data[\"PythonSlice\"];\n" +
+                "      nonzero_indices=X_indices[\"startptr_PyCpatDummy__endptr\"];\n" +
+                "      row[nonzero_indices]=X_data[\"startptr_PyCpatDummy__endptr\"];\n" +
                 "      yieldr row;\n" +
                 "    }\n" +
                 "  }\n" +
@@ -1270,7 +1270,7 @@ public class PythonToJavaConversion {
                 "          try {\n" +
                 "            SensAnalysis(self,os.path.dirname(output_file),perturbation);\n" +
                 "          }\n" +
-                " catch (          InvalidMicrocanonicalRateError e) {\n" +
+                " catch (          InvalidMicrocanonicalRateError|ModifiedStrongCollisionError e) {\n" +
                 "            logging.warning(\"Could not complete the sensitivity analysis with a perturbation of {0} kcal/mol, trying {1} kcal/mol instead.\".format(perturbation,(perturbation / 2.0)));\n" +
                 "            perturbation/=2.0;\n" +
                 "          }\n" +
@@ -1488,7 +1488,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void power(){\n" +
                 "    if ((0 < power && power < 1 && 1 > goo)) {\n" +
-                "      self._lower_bound=DistributionBoundary(-np.Inf,False);\n" +
+                "      self._lower_bound=DistributionBoundary(-np.Inf,false);\n" +
                 "    }\n" +
                 "    self._power=power;\n" +
                 "  }\n" +
@@ -1511,7 +1511,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),"public class PyDummyClass1 {\n" +
                 "  void power(){\n" +
                 "    if ((0 < power)) {\n" +
-                "      self._lower_bound=DistributionBoundary(-np.Inf,False);\n" +
+                "      self._lower_bound=DistributionBoundary(-np.Inf,false);\n" +
                 "    }\n" +
                 "    self._power=power;\n" +
                 "  }\n" +

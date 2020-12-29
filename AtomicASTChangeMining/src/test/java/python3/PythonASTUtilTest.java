@@ -42,7 +42,7 @@ public class PythonASTUtilTest {
                 "public class Test {\n" +
                 "  void add_arrays(  Test self){\n" +
                 "    Any result;\n" +
-                "    result=numpy.sum(numpy.array(M));\n" +
+                "    result=numpy.sum(numpy.array(M),1);\n" +
                 "  }\n" +
                 "}\n");
 

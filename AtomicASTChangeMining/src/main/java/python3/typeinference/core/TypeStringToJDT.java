@@ -54,7 +54,7 @@ public class TypeStringToJDT extends PyMap{
         jdtType.setSourceRange(startPosition,jdtType.toString().length());
         variableDeclarationStatement.setType(jdtType);
 
-        SimpleName simpleName = ast.newSimpleName(needs);
+        SimpleName simpleName = ast.newSimpleName(MapPyExpressionsJDK.mapPythonKeyWords(needs)  );
         simpleName.setSourceRange(startPosition + jdtType.toString().length()+1,simpleName.toString().length());
         variableDeclarationFragment.setName(simpleName);
 
