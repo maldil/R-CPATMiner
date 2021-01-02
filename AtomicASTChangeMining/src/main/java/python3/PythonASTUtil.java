@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
+import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PyInExpression;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -127,9 +128,7 @@ public class PythonASTUtil {
                             otherCurrentHolder=null;
 
                         }
-
                         pyc.setTypes((TypeDeclaration) node);
-
                     }
 //                    else if (node instanceof MethodDeclaration){
 //                        pyc.setTypes(node);
@@ -192,7 +191,8 @@ public class PythonASTUtil {
                                 ((ExpressionStatement) node).getExpression() instanceof ArrayAccess ||
                                 ((ExpressionStatement) node).getExpression() instanceof FieldAccess ||
                                 ((ExpressionStatement) node).getExpression() instanceof PyTupleExpression ||
-                                ((ExpressionStatement) node).getExpression() instanceof PyInExpression))
+                                ((ExpressionStatement) node).getExpression() instanceof PyInExpression ||
+                                ((ExpressionStatement) node).getExpression() instanceof PrefixExpression))
                         ){
                             if (otherCurrentHolder==null){
                                 otherCurrentHolder=asn.newTypeDeclaration();
@@ -239,6 +239,9 @@ public class PythonASTUtil {
                                     continue;
                                 }
                                 else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
+                                    continue;
+                                }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PrefixExpression){
                                     continue;
                                 }
                                 else{
@@ -290,7 +293,17 @@ public class PythonASTUtil {
                                 else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof StringLiteral){
                                     continue;
                                 }
+                                else if (node instanceof ExpressionStatement && ((ExpressionStatement)node).getExpression() instanceof PrefixExpression){
+                                    continue;
+                                }
                                 else{
+                                    if (otherCurrentHolder.bodyDeclarations().size()==0){
+                                        MethodDeclaration methoddec = asn.newMethodDeclaration();
+                                        methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
+                                        methoddec.setBody(asn.newBlock());
+                                        otherCurrentHolder.bodyDeclarations().add(methoddec);
+                                    }
+
                                     ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(node);
                                 }
                             }

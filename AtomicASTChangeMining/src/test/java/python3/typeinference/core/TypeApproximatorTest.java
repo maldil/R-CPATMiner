@@ -86,7 +86,7 @@ public class TypeApproximatorTest {
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         AST asn = new AST(options);
         Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr) ((Expr)ast.getChildren().get(0)).getValue());
-        Assert.assertEquals(Objects.requireNonNull(type).toString(),"String|int[]");
+        Assert.assertEquals(Objects.requireNonNull(type).toString(),"Union_String_int[]");
         log.info(type);
     }
 

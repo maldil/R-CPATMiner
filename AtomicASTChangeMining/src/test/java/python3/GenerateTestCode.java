@@ -14,7 +14,7 @@ public class GenerateTestCode {
 
     @Test
     public void genTestCode(){
-        String path= "CPatMinerTest/PyTorch/";
+        String path= "CPatMinerTest/NLTK/";
         Path resourceDirectory = Paths.get("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/src/test/resources/ASTConversion/",path);
         ArrayList<Path> arrayList = new ArrayList<>();
         listf(resourceDirectory,arrayList,resourceDirectory,path);
@@ -41,19 +41,19 @@ public class GenerateTestCode {
             FileWriter myWriter = new FileWriter("testMethods.txt");
             myWriter.write(String.valueOf(content));
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
+//            System.out.println("Successfully wrote to the file.");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        for (String file_name : file_names) {
-            System.out.println(file_name);
-        }
+//        for (String file_name : file_names) {
+//            System.out.println(file_name);
+//        }
 
 
-        System.out.printf(arrayList.toString());
+//        System.out.printf(arrayList.toString());
     }
 
     public void listf(Path directoryName, List<Path> files, Path resourceDirectory,String path) {
