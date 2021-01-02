@@ -30,7 +30,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
-                        "    self.is_ts=((is_ts != None) && (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
+                        "    self.is_ts=(((is_ts != None) && (is_ts == None)) ? is_ts : isinstance(coo,boo));\n" +
                         "  }\n" +
                         "}\n");
     }
@@ -43,7 +43,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
-                        "    self.is_ts=((is_ts != None) || (is_ts == None)) ? is_ts : isinstance(coo,boo);\n" +
+                        "    self.is_ts=(((is_ts != None) || (is_ts == None)) ? is_ts : isinstance(coo,boo));\n" +
                         "  }\n" +
                         "}\n");
     }
@@ -57,7 +57,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.toString(),
                 "public class PyDummyClass1 {\n" +
                         "  void add_arrays(){\n" +
-                        "    self.is_ts=(((is_ts != None) && (is_ts == None) && (1 != 4)) || (foo < kool)) ? is_ts : isinstance(coo,boo);\n" +
+                        "    self.is_ts=((((is_ts != None) && (is_ts == None) && (1 != 4)) || (foo < kool)) ? is_ts : isinstance(coo,boo));\n" +
                         "  }\n" +
                         "}\n");
     }
@@ -151,7 +151,7 @@ public class PythonToJavaConversion {
                 "      self.label=label;\n" +
                 "    }\n" +
                 "    if (((species == None) && (conformer == None))) {\n" +
-                "      throw new ValueError(\"No species (or TS) or conformer was passed to the ArkaneSpecies object\");\n" +
+                "      throw ValueError(\"No species (or TS) or conformer was passed to the ArkaneSpecies object\");\n" +
                 "    }\n" +
                 "    self.author=author;\n" +
                 "    self.level_of_theory=level_of_theory;\n" +
@@ -165,7 +165,7 @@ public class PythonToJavaConversion {
                 "    self.symmetry_number=symmetry_number;\n" +
                 "    self.charge=charge;\n" +
                 "    self.multiplicity=multiplicity;\n" +
-                "    self.is_ts=(((one != None) && voo && cool) || tool) ? is_ts : isinstance(coo,boo);\n" +
+                "    self.is_ts=((((one != None) && voo && cool) || tool) ? is_ts : isinstance(coo,boo));\n" +
                 "    if (!self.is_ts) {\n" +
                 "      self.chemkin_thermo_string=chemkin_thermo_string;\n" +
                 "      self.smiles=smiles;\n" +
@@ -187,8 +187,8 @@ public class PythonToJavaConversion {
                 "    if ((species != None)) {\n" +
                 "      self.update_species_attributes(species);\n" +
                 "    }\n" +
-                "    self.RMG_version=(RMG_version != None) ? RMG_version : __version__;\n" +
-                "    self.datetime=(datetime != None) ? datetime : time.strftime(\"%Y-%m-%d %H:%M\");\n" +
+                "    self.RMG_version=((RMG_version != None) ? RMG_version : __version__);\n" +
+                "    self.datetime=((datetime != None) ? datetime : time.strftime(\"%Y-%m-%d %H:%M\"));\n" +
                 "  }\n" +
                 "}\n");
 
@@ -428,7 +428,7 @@ public class PythonToJavaConversion {
                 "  void load_yaml(){\n" +
                 "    PyTypeError freq_data;\n" +
                 "    if ((class_name != \"ArkaneSpecies\")) {\n" +
-                "      throw new KeyError(\"Expected a ArkaneSpecies object, but got {0}\".format(class_name));\n" +
+                "      throw KeyError(\"Expected a ArkaneSpecies object, but got {0}\".format(class_name));\n" +
                 "    }\n" +
                 "    del(data[\"class\"]);\n" +
                 "    freq_data=None;\n" +
@@ -447,7 +447,7 @@ public class PythonToJavaConversion {
                 "        data[\"species\"]=Species(data[\"inchi\"]);\n" +
                 "      }\n" +
                 " else {\n" +
-                "        throw new ValueError(\"Cannot load ArkaneSpecies from YAML file {0}. Either `smiles`, `adjacency_list`, or InChI must be specified\".format(path));\n" +
+                "        throw ValueError(\"Cannot load ArkaneSpecies from YAML file {0}. Either `smiles`, `adjacency_list`, or InChI must be specified\".format(path));\n" +
                 "      }\n" +
                 "      data[\"species\"].label=data[\"label\"];\n" +
                 "    }\n" +
@@ -741,7 +741,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(converted.getProblems().length,0);
         Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(5).collect(Collectors.joining( "\n" )),"    number=next(    gen ((key + value)     for     PyTypeError value,    PyTypeError key : symbol_by_number.items()) );\n" +
                 "    if (((symbols == None) && (numbers == None))) {\n" +
-                "      throw new IndexError(\"Either symbols or numbers must be given.\");\n" +
+                "      throw IndexError(\"Either symbols or numbers must be given.\");\n" +
                 "    }\n" +
                 "    if ((numbers != None)) {\n" +
                 "      symbols=      listc (symbol_by_number[number]       for       PyTypeError number : numbers) ;\n" +
@@ -813,7 +813,7 @@ public class PythonToJavaConversion {
         CompilationUnit converted = Convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
         Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(9).collect(Collectors.joining( "\n" )),"    if ((species == None)) {\n" +
-                "      throw new ValueError(\"No species was passed to ArkaneSpecies\");\n" +
+                "      throw ValueError(\"No species was passed to ArkaneSpecies\");\n" +
                 "    }\n" +
                 "    self.label=(self.label || species.label);\n" +
                 "    if (isinstance(species,TransitionState)) {\n" +
@@ -1058,7 +1058,7 @@ public class PythonToJavaConversion {
                 "      return _software_ids[standardize_name(name)];\n" +
                 "    }\n" +
                 " catch (    KeyError PyCpatDummy) {\n" +
-                "      throw new ValueError();\n" +
+                "      throw ValueError();\n" +
                 "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if DUMMY_IF       for       PyTypeError _name : _names if goo2) ;\n" +
                 "    }\n" +
                 " finally {\n" +
@@ -1238,7 +1238,7 @@ public class PythonToJavaConversion {
         Assert.assertEquals(Arrays.stream(converted.toString().split("\n")).skip(4).collect(Collectors.joining( "\n" )),"    for (    PyTypeError config : ((self.network.isomers + self.network.reactants) + self.network.products)) {\n" +
                 "      for (      PyTypeError spec : config.species) {\n" +
                 "        if ((spec.conformer.E0 == None)) {\n" +
-                "          throw new AttributeError(\"species {0} is missing energy for its conformer\".format(spec.label));\n" +
+                "          throw AttributeError(\"species {0} is missing energy for its conformer\".format(spec.label));\n" +
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
@@ -1280,7 +1280,7 @@ public class PythonToJavaConversion {
                 "        }\n" +
                 "        else{\n" +
                 "          logging.error(\"Could not complete the sensitivity analysis even with a perturbation of {0} kcal/mol\".format(perturbation));\n" +
-                "          throw new PythonException();\n" +
+                "          throw e;\n" +
                 "        }\n" +
                 "        logging.info(\"Completed the sensitivity analysis using a perturbation of {0} kcal/mol\".format(perturbation));\n" +
                 "      }\n" +
@@ -1348,7 +1348,7 @@ public class PythonToJavaConversion {
                 "      return _software_ids[standardize_name(name)];\n" +
                 "    }\n" +
                 " catch (    KeyError PyCpatDummy) {\n" +
-                "      throw new ValueError();\n" +
+                "      throw ValueError();\n" +
                 "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo & noo)       for       PyTypeError _name : _names) ;\n" +
                 "    }\n" +
                 " finally {\n" +
@@ -1379,7 +1379,7 @@ public class PythonToJavaConversion {
                 "      return _software_ids[standardize_name(name)];\n" +
                 "    }\n" +
                 " catch (    KeyError PyCpatDummy) {\n" +
-                "      throw new ValueError();\n" +
+                "      throw ValueError();\n" +
                 "      _software_ids=      listc (_name       for       PyTypeError _names,      PyTypeError _id : xxx.items() if (_id > 0)) ;\n" +
                 "    }\n" +
                 " finally {\n" +
@@ -1433,7 +1433,7 @@ public class PythonToJavaConversion {
                 "      return _software_ids[standardize_name(name)];\n" +
                 "    }\n" +
                 " catch (    KeyError PyCpatDummy) {\n" +
-                "      throw new ValueError();\n" +
+                "      throw ValueError();\n" +
                 "      _software_ids=      dictc (_id ::: _name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo && noo)       for       PyTypeError _name : _names) ;\n" +
                 "    }\n" +
                 " finally {\n" +
@@ -1464,7 +1464,7 @@ public class PythonToJavaConversion {
                 "      return _software_ids[standardize_name(name)];\n" +
                 "    }\n" +
                 " catch (    KeyError PyCpatDummy) {\n" +
-                "      throw new ValueError();\n" +
+                "      throw ValueError();\n" +
                 "      _software_ids=      dictc (SET_PYTHON ::: _name       for       PyTypeError _names,      PyTypeError _id : _valid_software_names.items() if (goo && noo)       for       PyTypeError _name : _names) ;\n" +
                 "    }\n" +
                 " finally {\n" +

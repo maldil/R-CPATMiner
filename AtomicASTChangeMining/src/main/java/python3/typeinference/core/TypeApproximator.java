@@ -65,6 +65,20 @@ public class TypeApproximator {
     private static String getTypeString(AST ast, Dict node){
         String typeKeys = getTypeStringFromAstList(ast, (AstList) node.getKeys());
         String typeValues = getTypeStringFromAstList(ast, (AstList) node.getValues());
+
+        if (typeKeys!=null && typeKeys.equals("float")){
+            typeKeys="Float";
+        }
+        else if (typeKeys!=null && typeKeys.equals("int")){
+            typeKeys+="Integer";
+        }
+        if (typeValues!=null && typeValues.equals("float")){
+            typeValues="Float";
+        }
+        else if (typeValues!=null && typeValues.equals("int")){
+            typeValues+="Integer";
+        }
+
         if (typeKeys!=null && typeValues!=null){
             return typeKeys +", "+typeValues;
         }
