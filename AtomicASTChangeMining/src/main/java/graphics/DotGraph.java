@@ -21,6 +21,8 @@ import graph.PDGEntryNode;
 import graph.PDGEdge;
 import treed.TreedConstants;
 
+import static treed.TreedConstants.PROPERTY_STATUS;
+
 public class DotGraph {
 	public static final String SHAPE_BOX = "box";
 	public static final String SHAPE_DIAMOND = "diamond";
@@ -36,6 +38,62 @@ public class DotGraph {
 	public DotGraph(StringBuilder sb) {
 		this.graph = sb;
 	}
+
+	public DotGraph(PDGGraph pd){
+		graph = new StringBuilder();
+		graph.append(addStart());
+		HashMap<PDGNode, Integer> ids = new HashMap<>();
+		int id = 0;
+		for (PDGNode node : pd.getNodes()) {
+			ids.put(node, ++id);
+			String color = null;
+			String shape = null;
+			if (node instanceof PDGDataNode){
+				shape = SHAPE_ELLIPSE;
+			}
+			else if (node instanceof PDGActionNode){
+				shape = SHAPE_BOX;
+			}
+			else if (node instanceof PDGControlNode){
+				shape = SHAPE_DIAMOND;
+			}
+
+			if (node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&    (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_UNCHANGED){
+				color = "green";
+			}
+			else if (node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)== TreedConstants.STATUS_RELABELED){
+				color = "blue";
+			}
+			else if(node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_UNMAPPED){
+				color = "brown";
+			}
+			else if(node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_MOVED){
+				color = "red";
+			}
+			else{
+				color = "black";
+			}
+
+
+			graph.append(addNode(id, node.getLabel(), shape, null, color, color));
+		}
+
+		for (PDGNode node : pd.getNodes()) {
+			int tId = ids.get(node);
+			for (PDGEdge e : node.getInEdges()) {
+				int sId = ids.get(e.getSource());
+				String label = e.getLabel();
+				if (label.equals("T") || label.equals("F"))
+					graph.append(addEdge(sId, tId, null, null, label));
+				else
+					graph.append(addEdge(sId, tId, STYLE_DOTTED, null, label));
+			}
+		}
+
+		graph.append(addEnd());
+
+	}
+
 
 	public DotGraph(ChangeGraph cg) {
 		graph.append(addStart());

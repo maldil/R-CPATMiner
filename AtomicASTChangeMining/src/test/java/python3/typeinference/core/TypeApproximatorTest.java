@@ -86,7 +86,7 @@ public class TypeApproximatorTest {
         options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
         AST asn = new AST(options);
         Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr) ((Expr)ast.getChildren().get(0)).getValue());
-        Assert.assertEquals(Objects.requireNonNull(type).toString(),"Union_String_int[]");
+        Assert.assertEquals(Objects.requireNonNull(type).toString(),"Union<String,Integer>[]");
         log.info(type);
     }
 
@@ -116,5 +116,22 @@ public class TypeApproximatorTest {
         Assert.assertEquals(Objects.requireNonNull(type).toString(),"int[]");
         log.info(type);
     }
+
+    @Test
+    public void testGetSimpleTypeApproximation8() {
+        String test = "{{0.5,0.5},{1.5,0.5},{1,3}}";
+        mod ast = PyASTParser.parsePython(test);
+        Map<String, String> options = JavaCore.getOptions();
+        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+        options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+        AST asn = new AST(options);
+        Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr) ((Expr)ast.getChildren().get(0)).getValue());
+        Assert.assertEquals(Objects.requireNonNull(type).toString(),"Set<Union<Set<Float>,Set<Integer>>>");
+        log.info(type);
+    }
+
+
+
 
 }

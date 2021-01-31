@@ -3,6 +3,7 @@ package python3;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.jpp.PyASTParser;
 import org.jpp.astnodes.Visitor;
@@ -74,6 +75,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import python3.typeinference.PyASTVisitor;
+import python3.typeinference.core.PyASTMatcher;
 import utils.JavaASTUtil;
 
 import java.io.File;
@@ -985,7 +987,8 @@ public class TestASTConversion {
         md = ast;
         PythonASTUtil pythonASTUtil = new PythonASTUtil();
         PyCompilationUnit pyCompilationUnit = pythonASTUtil.createPyCompilationUnit(ast);
-
+        pyCompilationUnit.setPyStartPosition(ast.getCharStartIndex());
+        pyCompilationUnit.setPyLength(ast.getCharStartIndex()-ast.getCharStopIndex());
 
         PyASTVisitor astParser = new PyASTVisitor();
         try {
@@ -993,19 +996,31 @@ public class TestASTConversion {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
+        int[] x = new int[]{1,2,3};
         JDTASTVisitor jdtastVisitor = new JDTASTVisitor();
         CompilationUnit cu = (CompilationUnit) JavaASTUtil.parseSource(pyCompilationUnit.toString());
         log.warn("Errors " + cu.getProblems().length);
+        PyASTMatcher matcher = new PyASTMatcher();
+        matcher.DEBUG=true;
+        boolean matched = cu.subtreeMatch(matcher,pyCompilationUnit);  //update Python LOCs and lengths
+        updatePyLineNumbers(ast, cu);
+        if (!matched) log.fatal("Two CompilationUnits do not matched");
         cu.accept(jdtastVisitor);
         comparePythonAndJDTnodes(astParser, jdtastVisitor);
 
         return cu;
     }
 
+    private void updatePyLineNumbers(mod ast, ASTNode cu) {
+        cu.setPyStartPosition(ast.getCharStartIndex());
+        cu.setPyLength(ast.getCharStopIndex()- ast.getCharStartIndex());
+        cu.setPyLine(ast.getLine());
+        cu.setPyColumnOffSet(ast.getCharPositionInLine());
+    }
+
     public void comparePythonAndJDTnodes(PyASTVisitor pyAstParser, JDTASTVisitor jdtastVisitor) {
-        Assert.assertEquals(pyAstParser.getPythonASTStats().get("For").intValue(), jdtastVisitor.getStatFor("Java_EnhancedForStatement"));
+        Assert.assertEquals(pyAstParser.getPythonASTStats().get("For").intValue(), jdtastVisitor.getStatFor("Java_EnhancedForStatement")+
+                jdtastVisitor.getStatFor("Java_EnhancedForStatementWithElse"));
 //        Assert.assertTrue(pyAstParser.getPythonASTStats().get("ListComp").intValue()<=jdtastVisitor.getStatFor("Java_PyListComprehension"));
         Assert.assertEquals(pyAstParser.getPythonASTStats().get("With").intValue(), jdtastVisitor.getStatFor("Java_PyWithStatement"));
         Assert.assertTrue(pyAstParser.getPythonASTStats().get("DictComp").intValue() <= jdtastVisitor.getStatFor("Java_PyDictComprehensiont"));

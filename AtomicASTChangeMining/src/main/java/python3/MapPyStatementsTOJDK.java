@@ -1,6 +1,7 @@
 package python3;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -12,7 +13,6 @@ import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.BreakStatement;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
-import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EmptyStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
@@ -51,7 +51,6 @@ import org.eclipse.jdt.core.dom.UnionType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
-import org.eclipse.jdt.internal.compiler.ast.YieldReturnStatement;
 import org.jpp.astnodes.PythonErrorNode;
 import org.jpp.astnodes.PythonTree;
 import org.jpp.astnodes.ast.Assert;
@@ -97,7 +96,6 @@ import org.jpp.heart.AstList;
 import org.jpp.heart.PyNone;
 import org.jpp.heart.PyObject;
 import org.jpp.heart.PyUnicode;
-import org.jpp.modules.itertools.groupby;
 import python3.pyerrors.ExpressionNotFound;
 import python3.pyerrors.NodeNotFoundException;
 import python3.pyvisitors.PyVisitor;
@@ -113,9 +111,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MapPyStatementsTOJDK extends PyMap{
     static Logger logger = Logger.getLogger(MapPyStatementsTOJDK.class);
@@ -132,18 +128,20 @@ public class MapPyStatementsTOJDK extends PyMap{
             ArrayList<ImportDeclaration> list_imports = new ArrayList<>();
             for (PyObject pyObject : ((Import) node).getNames().asIterable()) {
                 ImportDeclaration import_dec =  asn.newImportDeclaration();
-                String[] import_name = ((alias) pyObject).getName().toString().split("\\.");
+                updatePythonLineNumbers(node,import_dec);
+                String[] import_name = Arrays.stream(((alias) pyObject).getName().toString().split("\\.")).sequential().map(MapPyExpressionsJDK::mapPythonKeyWords).toArray(String[]::new);
                 org.eclipse.jdt.core.dom.Name name = asn.newName(import_name);
-                name.setSourceRange(startChar+7,name.toString().length());
+
+                updatePythonLineNumbers(((alias) pyObject).getInternalNameNodes().get(0).getCharStartIndex() ,name.toString().length(),name);
+
                 import_dec.setName(name);
                 PyObject asname = ((alias) pyObject).getAsname();
                 if (!(asname instanceof PyNone)){
-                    import_dec.setasName( asn.newName(MapPyExpressionsJDK.mapPythonKeyWords(asname.asString())));
+                    org.eclipse.jdt.core.dom.Name name1 = asn.newName(MapPyExpressionsJDK.mapPythonKeyWords(asname.asString()));
+                    updatePythonLineNumbers(((alias) pyObject),name1);
+                    import_dec.setasName(name1 );
                 }
-                logger.debug(((alias) pyObject).getCharStartIndex());
-                int import_length = import_dec.toString().length();
-                import_dec.setSourceRange(start_import,import_length);
-                start_import+=import_length;
+
                 list_imports.add(import_dec);
             }
             return list_imports;
@@ -151,9 +149,10 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof ImportFrom){
             ArrayList<ImportDeclaration> list_imports = new ArrayList<>();
             String[] module = ((ImportFrom) node).getModule().toString().split("\\.");
-            int start_import = startChar;
+
             for (PyObject pyObject : ((ImportFrom) node).getNames().asIterable()) {
                 ImportDeclaration import_dec =  asn.newImportDeclaration();
+                updatePythonLineNumbers(node,import_dec);
                 String[] import_name;
                 if (((ImportFrom) node).getModule().toString().equals("")){
                     import_name = ((alias) pyObject).getName().toString().split("\\.");
@@ -169,6 +168,8 @@ public class MapPyStatementsTOJDK extends PyMap{
 
 
                 org.eclipse.jdt.core.dom.Name name = asn.newName(cleaned_import_names);
+                updatePythonLineNumbers((alias) pyObject,name);
+
                 import_dec.setName(name);
                 PyObject asname = ((alias) pyObject).getAsname();
                 if (!(asname instanceof PyNone)){
@@ -185,23 +186,14 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof ClassDef){
             int start_char_pos =startChar;
             TypeDeclaration classdec = asn.newTypeDeclaration();
-
-            Modifier.ModifierKeyword keyword= new Modifier.ModifierKeyword("public",1);
-            Modifier modifier = asn.newModifier(keyword);
-            int modifier_length = keyword.toString().length();
-            modifier.setSourceRange(start_char_pos,modifier_length);
-            start_char_pos+=modifier_length;
+            updatePythonLineNumbers(node,classdec);
+            Modifier modifier = asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD);
             classdec.setModifier(modifier);
 
-
-
             ArrayList<TypeDeclaration> list_class = new ArrayList<>();
-            SimpleName simpleName = asn.newSimpleName(((ClassDef) node).getName().toString());
-            int cls_length = simpleName.toString().length();
-            simpleName.setSourceRange(start_char_pos+7,cls_length);
-
+            SimpleName simpleName = asn.newSimpleName(((ClassDef) node).getInternalName());
+            updatePythonLineNumbers(node.getCharStartIndex(),((ClassDef) node).getInternalName().length(),simpleName);
             classdec.setName(simpleName);
-            start_char_pos+=(8+cls_length); //length of "class"(5) + 2 + length of class name + space
 
             if (((AstList)((ClassDef) node).getBases()).size()>0){
                 Expression className = MapPyExpressionsJDK.mapExpression((expr)
@@ -210,15 +202,19 @@ public class MapPyStatementsTOJDK extends PyMap{
                 if (className instanceof MethodInvocation){
                     SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name)
                             ASTNode.copySubtree(asn,((MethodInvocation) className).getName()));
+                    updatePythonLineNumbers((expr)((AstList) ((ClassDef) node).getBases()).get(0),simpleType);
                     classdec.setSuperclassType(simpleType);
                 }
                 else if (className instanceof ArrayAccess){
-                    classdec.setSuperclassType(asn.newSimpleType((org.eclipse.jdt.core.dom.Name)
-                            ASTNode.copySubtree(asn,((ArrayAccess) className).getArray())));
+                    SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name)
+                            ASTNode.copySubtree(asn, ((ArrayAccess) className).getArray()));
+                    updatePythonLineNumbers((expr)((AstList) ((ClassDef) node).getBases()).get(0),simpleType);
+                    classdec.setSuperclassType(simpleType);
                 }
                 else {
-
-                    SimpleType simpleType = asn.newSimpleType((org.eclipse.jdt.core.dom.Name) className);
+                    org.eclipse.jdt.core.dom.Name className1 = (org.eclipse.jdt.core.dom.Name) className;
+                    updatePythonLineNumbers((expr)((AstList) ((ClassDef) node).getBases()).get(0),className1);
+                    SimpleType simpleType = asn.newSimpleType(className1);
                     classdec.setSuperclassType(simpleType); //TODO handle multiple inheritance
                 }
             }
@@ -246,7 +242,12 @@ public class MapPyStatementsTOJDK extends PyMap{
                         if (methodDeclaration==null){
                             number_of_dummy_methods++;
                             methodDeclaration = asn.newMethodDeclaration();
-                            methodDeclaration.setBody(asn.newBlock());
+                            Block block = asn.newBlock();
+                            updatePythonLineNumbers(((PythonTree)((AstList) ((ClassDef) node).getBody()).get(0)).getCharStartIndex(),
+                                    ((PythonTree)((AstList)((ClassDef) node).getBody()).get(((AstList) ((ClassDef) node).getBody()).size()-1)).getCharStopIndex()-
+                                    ((PythonTree)((AstList) ((ClassDef) node).getBody()).get(0)).getCharStartIndex()
+                                    ,block);
+                            methodDeclaration.setBody(block);
                             methodDeclaration.setName(asn.newSimpleName(((ClassDef) node).getName().toString()+"_"+number_of_dummy_methods));
                         }
                         if (!((o instanceof ExpressionStatement && ((ExpressionStatement) o).getExpression() instanceof StringLiteral)||
@@ -273,10 +274,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             return list_class;
         }
         else if (node instanceof FunctionDef){
-            int start_char_pos =startChar;
-
-            MethodDeclaration methoddec = getMethodDeclaration(asn, node, import_nodes, startChar, pyc, start_char_pos);
-
+            MethodDeclaration methoddec = getMethodDeclaration(asn, node, import_nodes, startChar, pyc, 0);
             ArrayList<MethodDeclaration> list_method = new ArrayList<>();
             list_method.add(methoddec);
             return list_method;
@@ -284,7 +282,7 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof Assign){
             ArrayList<ExpressionStatement> list_assign = new ArrayList<>();
             Assignment assign = asn.newAssignment();
-
+            updatePythonLineNumbers(node,assign);
             assign.setOperator(new Assignment.Operator("="));
             Expression rightHandExpression = MapPyExpressionsJDK.mapExpression(((Assign) node).getInternalValue(), asn, import_nodes, 0, typeNodes, pyc);
             assign.setRightHandSide(rightHandExpression);
@@ -297,9 +295,13 @@ public class MapPyStatementsTOJDK extends PyMap{
                         tupleExpression.expressions().add(leftExpression);
                     }
                 }
+                updatePythonLineNumbers(((Assign) node).getInternalTargets().get(0).getCharStartIndex(),
+                        ((Assign) node).getInternalTargets().get(((Assign) node).getInternalTargets().size()-1).getCharStartIndex()
+                                -((Assign) node).getInternalTargets().get(0).getCharStartIndex(), tupleExpression);
                 assign.setLeftHandSide(tupleExpression);
                 if (!(tupleExpression.expressions().size()==0 || rightHandExpression instanceof PyErrorExpression)){
                     ExpressionStatement statement = asn.newExpressionStatement(assign);
+                    updatePythonLineNumbers(node,statement);
                     list_assign.add(statement);
                 }
                 return list_assign;
@@ -309,7 +311,9 @@ public class MapPyStatementsTOJDK extends PyMap{
                 assign.setLeftHandSide(expression);
                 if (!(expression instanceof PyErrorExpression || rightHandExpression instanceof PyErrorExpression)){
                     ExpressionStatement statement = asn.newExpressionStatement(assign);
+                    updatePythonLineNumbers(node,statement);
                     list_assign.add(statement);
+
                 }
                 return list_assign;
             }
@@ -332,7 +336,7 @@ public class MapPyStatementsTOJDK extends PyMap{
             //TODO change the grammer to add else statement
             int start_char_pos =startChar;
             EnhancedForStatement forstmt = asn.newEnhancedForStatement();
-
+            updatePythonLineNumbers(node,forstmt);
             ArrayList<EnhancedForStatement> list_for = new ArrayList<>();
             if (((For) node).getTarget() instanceof Name){
                 SingleVariableDeclaration parameter_dummy = asn.newSingleVariableDeclaration();
@@ -633,9 +637,14 @@ public class MapPyStatementsTOJDK extends PyMap{
         else if (node instanceof If){
             IfStatement ifStatement = asn.newIfStatement();
             Expression expression = MapPyExpressionsJDK.mapExpression((expr) ((If) node).getTest(), asn, import_nodes, 0, typeNodes, pyc);
-            if (expression instanceof PyErrorExpression){return new ArrayList<>();}
-            ifStatement.setExpression(expression);
 
+            if (expression instanceof PyErrorExpression){return new ArrayList<>();}
+            if (expression instanceof ParenthesizedExpression){
+                ifStatement.setExpression((Expression) ASTNode.copySubtree(asn,((ParenthesizedExpression) expression).getExpression()));
+            }
+            else {
+                ifStatement.setExpression(expression);
+            }
             ((AstList) ((If) node).getBody()).stream().forEach(
                     ob-> {
                         try {
@@ -1549,11 +1558,12 @@ public class MapPyStatementsTOJDK extends PyMap{
     private MethodDeclaration getMethodDeclaration(AST asn, PythonTree node, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes, int startChar, PyCompilationUnit pyc, int start_char_pos) throws NodeNotFoundException, ExpressionNotFound {
         Set<TypeDecNeeds> variableNeedsDeclaration=null;
         try {
-            variableNeedsDeclaration=getVariabelNeedsDecleration(node);
+            variableNeedsDeclaration=getVariabelNeedsDecleration(node,import_nodes);
         } catch (Exception e) {
             logger.error(e);
         }
         MethodDeclaration methoddec = asn.newMethodDeclaration();
+        updatePythonLineNumbers(node,methoddec);
         String name = node instanceof FunctionDef ? ((FunctionDef) node).getInternalName() : ((AsyncFunctionDef) node).getInternalName();
 
         SimpleName methodName = asn.newSimpleName(MapPyExpressionsJDK.mapPythonKeyWords(name));
@@ -1574,19 +1584,19 @@ public class MapPyStatementsTOJDK extends PyMap{
                 else
                     start_char_pos +=3;
                 SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
-
                 SimpleType simpleType = asn.newSimpleType(asn.newName(((ClassDef) node.getParent()).getInternalName()));
-                int type_length = simpleType.toString().length();
-                simpleType.setSourceRange(start_char_pos,type_length);
-
+                updatePythonLineNumbers(((PythonTree) arg).getCharStartIndex()+4,simpleType.toString().length(),simpleType);
                 SimpleName simpleName = asn.newSimpleName(((arg) arg).getArg().toString());
-                simpleName.setSourceRange(start_char_pos +type_length+1,simpleName.toString().length());
+                updatePythonLineNumbers((PythonTree) arg,simpleName);
+
                 parameter.setName(simpleName);
 //TODO uncomment above
                 parameter.setType(simpleType);
+                updatePythonLineNumbers(((PythonTree) arg).getCharStartIndex(),parameter.toString().length() ,parameter);
                 parameter.setSourceRange(start_char_pos,parameter.toString().length());
+
                 methoddec.parameters().add(parameter);
-                start_char_pos +=type_length+4+1;// "self", space, type length,  comma
+
             }
 
         }
@@ -1623,7 +1633,10 @@ public class MapPyStatementsTOJDK extends PyMap{
                         methoddec.getBody().statements().add(varDecStat);
                     }
                     else{
-                        List<String> collect1 = hash_Set.stream().filter(Predicate.not(x -> x.equals("Any") || x.equals("PyTypeError"))).collect(Collectors.toList());
+                        List<String> collect1 = hash_Set.stream().filter(Predicate.not(x -> {
+                            if (x == null) return true;
+                            return x.equals("Any") || x.equals("PyTypeError") || x.equals("None") || x.equals("nothing");
+                        })).collect(Collectors.toList());
                         if (collect1.size()==0){
                             if (hash_Set.contains("Any")){
                                 VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), "Any",0);
@@ -1688,17 +1701,15 @@ public class MapPyStatementsTOJDK extends PyMap{
         //two spaces
         AstList body = node instanceof FunctionDef? (AstList)((FunctionDef) node).getBody(): (AstList)((AsyncFunctionDef) node).getBody();
         for (Object ch : body){
-            start_char_pos +=2*number_of_par;
             if (ch instanceof Expr && ((Expr) ch).getValue() instanceof Str){
                 continue;  //remove comments
             }
-
             for (Object o : getMappingPyNode(asn, (PythonTree) ch, import_nodes, start_char_pos, pyc)) {
                 if (methoddec.getBody() ==null){
-                    methoddec.setBody(asn.newBlock());
+                    Block block = asn.newBlock();
+                    updatePythonLineNumbers((PythonTree)body.get(0),block);
+                    methoddec.setBody(block);
                 }
-                int length = o.toString().length();
-                ((ASTNode)o).setSourceRange(start_char_pos,length);
                 if (o instanceof ImportDeclaration){
                     pyc.imports().add(o);
                 }
@@ -1707,11 +1718,14 @@ public class MapPyStatementsTOJDK extends PyMap{
                         TypeDeclaration typeDec = asn.newTypeDeclaration();
                         typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) o).getName()));
                         typeDec.bodyDeclarations().add(o);
+                        updatePythonLineNumbers((PythonTree) ch,typeDec);
                         TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement(typeDec);
+                        updatePythonLineNumbers((PythonTree) ch,dummyClass);
                         methoddec.getBody().statements().add(dummyClass);
                     }
                     else if (o instanceof TypeDeclaration ){
                         TypeDeclarationStatement dummyClass = asn.newTypeDeclarationStatement((TypeDeclaration) o);
+                        updatePythonLineNumbers((PythonTree) ch,dummyClass);
                         methoddec.getBody().statements().add(dummyClass);
                     }
                     else if (o instanceof ExpressionStatement && ((ExpressionStatement)o).getExpression() instanceof QualifiedName){
@@ -1751,8 +1765,6 @@ public class MapPyStatementsTOJDK extends PyMap{
                         methoddec.getBody().statements().add(o);
                     }
                 }
-
-                start_char_pos +=length;
             }
         }
         methoddec.setSourceRange(startChar, methoddec.toString().length());
@@ -1773,8 +1785,8 @@ public class MapPyStatementsTOJDK extends PyMap{
         return lo_parameter;
     }
 
-    private Set<TypeDecNeeds> getVariabelNeedsDecleration (PythonTree node) throws Exception {
-        PyVisitor pyVisitor = new PyVisitor();
+    public static Set<TypeDecNeeds> getVariabelNeedsDecleration(PythonTree node, HashMap<String, org.eclipse.jdt.core.dom.Name> import_nodes) throws Exception {
+        PyVisitor pyVisitor = new PyVisitor(import_nodes);
         pyVisitor.visit(node);
         return pyVisitor.getTypeDecNeeds();
     }
@@ -1790,6 +1802,51 @@ public class MapPyStatementsTOJDK extends PyMap{
             parent=parent.getParent();
         }
         return number_of_parents;
+    }
+
+    public static void updatePythonLineNumbers(PythonTree ast, ASTNode node) {
+        node.setPyStartPosition(ast.getCharStartIndex());
+        node.setPyLength(ast.getCharStopIndex()- ast.getCharStartIndex());
+        node.setPyLine(ast.getLine());
+        node.setPyColumnOffSet(ast.getCharPositionInLine());
+    }
+
+    public static void updatePythonLineNumbers(int startChar, int length,  ASTNode node) {
+        int intitialStart = startChar;
+        node.setPyStartPosition(startChar);
+        node.setPyLength(length);
+
+        if (node instanceof QualifiedName){
+//            startChar = startChar+ node.toString().length();
+            int dots = StringUtils.countMatches(node.toString(), ".");
+            org.eclipse.jdt.core.dom.Name quals = ((QualifiedName) node).getQualifier();
+
+
+
+            for (int i=0;i<dots;i++){
+
+                if(quals.isQualifiedName()){
+
+                    quals.setPyStartPosition(intitialStart);
+                    quals.setPyLength(quals.toString().length());
+
+                    ((QualifiedName)quals).getName().setPyStartPosition(intitialStart+((QualifiedName) quals).getQualifier().toString().length());
+                    ((QualifiedName)quals).getName().setPyLength(((QualifiedName)quals).getName().toString().length());
+                    quals = ((QualifiedName) quals).getQualifier();
+                    startChar=startChar+1+quals.toString().length();
+                }
+                else{
+                    quals.setPyStartPosition(startChar);
+                    quals.setPyLength(quals.toString().length());
+                    startChar=startChar+quals.toString().length()+1;
+                }
+            }
+            ((QualifiedName)node).getName().setPyStartPosition(intitialStart + ((QualifiedName)node).getQualifier().toString().length());
+            ((QualifiedName)node).getName().setPyLength(((QualifiedName)node).getName().toString().length());
+
+
+        }
+
     }
 
 }

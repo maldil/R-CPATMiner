@@ -96,7 +96,8 @@ public class ChangeGraph implements Serializable {
 					|| node.astNodeType == ASTNode.SUPER_METHOD_INVOCATION
 					|| node.astNodeType == ASTNode.CLASS_INSTANCE_CREATION
 					|| node.astNodeType == ASTNode.CONSTRUCTOR_INVOCATION
-					|| node.astNodeType == ASTNode.SUPER_CONSTRUCTOR_INVOCATION)
+					|| node.astNodeType == ASTNode.SUPER_CONSTRUCTOR_INVOCATION
+					|| node.astNodeType == ASTNode.TRY_STATEMENT)
 				return true;
 		}
 		return false;

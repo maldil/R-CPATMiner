@@ -171,7 +171,8 @@ public class ChangeNode implements Serializable {
 		starts = new int[2];
 		lengths = new int[2];
 		starts[0] = astNode.getStartPosition();
-		lengths[0] = astNode.getParameter().getStartPosition() - starts[0];
+		lengths[0] = astNode.Parameters().size()==0?   astNode.getParameter().getStartPosition() - starts[0] :
+				((ASTNode)astNode.Parameters().get(astNode.Parameters().size()-1)).getStartPosition() - starts[0];
 		starts[1] = astNode.getExpression().getStartPosition() + astNode.getExpression().getLength();
 		lengths[1] = astNode.getBody().getStartPosition() - starts[1];
 	}
@@ -400,6 +401,101 @@ public class ChangeNode implements Serializable {
 		lengths[1] = astNode.getBody().getStartPosition() - starts[1];
 	}
 
+	private void setPositionInfo(PyListComprehension astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyGenerator astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PySetComprehension astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyDictComprehension astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyTupleExpression astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyInExpression astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyNonLocalStatement astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyNotInExpression astNode) {
+
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+
+	}
+
+	private void setPositionInfo(PyYieldReturnStatement astNode) {
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths = new int[]{astNode.getExpression() == null ? astNode.getLength() : astNode.getExpression().getStartPosition() - starts[0]};
+	}
+	private void setPositionInfo(PyComparator astNode) {
+		starts = new int[1];
+		lengths = new int[1];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] = astNode.getStartPosition() + astNode.getLength() - starts[0];
+	}
+
+	private void setPositionInfo(EnhancedForStatementWithElse astNode) {
+		starts = new int[2];
+		lengths = new int[2];
+		starts[0] = astNode.getStartPosition();
+		lengths[0] =    astNode.Parameters().size()==0?    astNode.getParameter().getStartPosition() - starts[0] : ((ASTNode)astNode.Parameters().get(astNode.Parameters().size()-1)).getStartPosition() - starts[0];
+		starts[1] = astNode.getExpression().getStartPosition() + astNode.getExpression().getLength();
+		lengths[1] =    astNode.getElseBody().getStartPosition() - starts[1];
+	}
+
+
 	private void setPositionInfo(ASTNode astNode) {
 		if (astNode instanceof ArrayAccess) setPositionInfo((ArrayAccess) astNode);
 		else if (astNode instanceof ArrayCreation) setPositionInfo((ArrayCreation) astNode);
@@ -444,6 +540,17 @@ public class ChangeNode implements Serializable {
 		else if (astNode instanceof VariableDeclarationFragment) setPositionInfo((VariableDeclarationFragment) astNode);
 		else if (astNode instanceof WhileStatement) setPositionInfo((WhileStatement) astNode);
 		else if (astNode instanceof PyWithStatement) setPositionInfo((PyWithStatement) astNode);
+		else if (astNode instanceof PyGenerator) setPositionInfo((PyGenerator) astNode);
+		else if (astNode instanceof PyListComprehension) setPositionInfo((PyListComprehension) astNode);
+		else if (astNode instanceof PySetComprehension) setPositionInfo((PySetComprehension) astNode);
+		else if (astNode instanceof PyDictComprehension) setPositionInfo((PyDictComprehension) astNode);
+		else if (astNode instanceof PyTupleExpression) setPositionInfo((PyTupleExpression) astNode);
+		else if (astNode instanceof PyInExpression) setPositionInfo((PyInExpression) astNode);
+		else if (astNode instanceof PyNotInExpression) setPositionInfo((PyNotInExpression) astNode);
+		else if (astNode instanceof PyNonLocalStatement) setPositionInfo((PyNonLocalStatement) astNode);
+		else if (astNode instanceof PyYieldReturnStatement) setPositionInfo((PyYieldReturnStatement) astNode);
+		else if (astNode instanceof EnhancedForStatementWithElse) setPositionInfo((EnhancedForStatementWithElse) astNode);
+		else if (astNode instanceof PyComparator) setPositionInfo((PyComparator) astNode);
 		else throw new IllegalArgumentException(astNode.getClass().toString());
 	}
 

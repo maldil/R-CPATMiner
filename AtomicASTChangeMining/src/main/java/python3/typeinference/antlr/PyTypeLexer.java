@@ -1,5 +1,5 @@
-package python3.typeinference.antlr;// $ANTLR 3.5.2 PyType.g 2020-11-06 21:04:05
-
+// $ANTLR 3.5.2 PyType.g 2021-01-20 15:55:10
+package python3.typeinference.antlr;
 import org.antlr.runtime.*;
 import java.util.Stack;
 import java.util.List;
@@ -13,16 +13,21 @@ public class PyTypeLexer extends Lexer {
 	public static final int DICT=6;
 	public static final int DIGIT=7;
 	public static final int DOT=8;
-	public static final int HYPHEN=9;
-	public static final int LETTER=10;
-	public static final int LIST=11;
-	public static final int NUMBER=12;
-	public static final int Nothing=13;
+	public static final int EMPTY_TUPLE=9;
+	public static final int HYPHEN=10;
+	public static final int LETTER=11;
+	public static final int LIST=12;
+	public static final int NUMBER=13;
 	public static final int OPEN_SQ_BR=14;
-	public static final int SimpleType=15;
-	public static final int UNDERSCORE=16;
-	public static final int UNION=17;
-	public static final int WHITESPACE=18;
+	public static final int OPTIONAL=15;
+	public static final int SET=16;
+	public static final int SimpleType=17;
+	public static final int THREE_DOTS=18;
+	public static final int TUPLE=19;
+	public static final int TYPE=20;
+	public static final int UNDERSCORE=21;
+	public static final int UNION=22;
+	public static final int WHITESPACE=23;
 
 	// delegates
 	// delegators
@@ -120,13 +125,34 @@ public class PyTypeLexer extends Lexer {
 	}
 	// $ANTLR end "DOT"
 
+	// $ANTLR start "EMPTY_TUPLE"
+	public final void mEMPTY_TUPLE() throws RecognitionException {
+		try {
+			int _type = EMPTY_TUPLE;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:6:13: ( '()' )
+			// PyType.g:6:15: '()'
+			{
+			match("()"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "EMPTY_TUPLE"
+
 	// $ANTLR start "HYPHEN"
 	public final void mHYPHEN() throws RecognitionException {
 		try {
 			int _type = HYPHEN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:6:8: ( '-' )
-			// PyType.g:6:10: '-'
+			// PyType.g:7:8: ( '-' )
+			// PyType.g:7:10: '-'
 			{
 			match('-'); 
 			}
@@ -145,8 +171,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = LIST;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:7:6: ( 'List' )
-			// PyType.g:7:8: 'List'
+			// PyType.g:8:6: ( 'List' )
+			// PyType.g:8:8: 'List'
 			{
 			match("List"); 
 
@@ -160,27 +186,6 @@ public class PyTypeLexer extends Lexer {
 		}
 	}
 	// $ANTLR end "LIST"
-
-	// $ANTLR start "Nothing"
-	public final void mNothing() throws RecognitionException {
-		try {
-			int _type = Nothing;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:8:9: ( 'nothing' )
-			// PyType.g:8:11: 'nothing'
-			{
-			match("nothing"); 
-
-			}
-
-			state.type = _type;
-			state.channel = _channel;
-		}
-		finally {
-			// do for sure before leaving
-		}
-	}
-	// $ANTLR end "Nothing"
 
 	// $ANTLR start "OPEN_SQ_BR"
 	public final void mOPEN_SQ_BR() throws RecognitionException {
@@ -202,13 +207,118 @@ public class PyTypeLexer extends Lexer {
 	}
 	// $ANTLR end "OPEN_SQ_BR"
 
+	// $ANTLR start "OPTIONAL"
+	public final void mOPTIONAL() throws RecognitionException {
+		try {
+			int _type = OPTIONAL;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:10:10: ( 'Optional' )
+			// PyType.g:10:12: 'Optional'
+			{
+			match("Optional"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "OPTIONAL"
+
+	// $ANTLR start "SET"
+	public final void mSET() throws RecognitionException {
+		try {
+			int _type = SET;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:11:5: ( 'Set' )
+			// PyType.g:11:7: 'Set'
+			{
+			match("Set"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "SET"
+
+	// $ANTLR start "THREE_DOTS"
+	public final void mTHREE_DOTS() throws RecognitionException {
+		try {
+			int _type = THREE_DOTS;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:12:12: ( '...' )
+			// PyType.g:12:14: '...'
+			{
+			match("..."); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "THREE_DOTS"
+
+	// $ANTLR start "TUPLE"
+	public final void mTUPLE() throws RecognitionException {
+		try {
+			int _type = TUPLE;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:13:7: ( 'Tuple' )
+			// PyType.g:13:9: 'Tuple'
+			{
+			match("Tuple"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "TUPLE"
+
+	// $ANTLR start "TYPE"
+	public final void mTYPE() throws RecognitionException {
+		try {
+			int _type = TYPE;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// PyType.g:14:6: ( 'Type' )
+			// PyType.g:14:8: 'Type'
+			{
+			match("Type"); 
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "TYPE"
+
 	// $ANTLR start "UNDERSCORE"
 	public final void mUNDERSCORE() throws RecognitionException {
 		try {
 			int _type = UNDERSCORE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:10:12: ( '_' )
-			// PyType.g:10:14: '_'
+			// PyType.g:15:12: ( '_' )
+			// PyType.g:15:14: '_'
 			{
 			match('_'); 
 			}
@@ -227,8 +337,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = UNION;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:11:7: ( 'Union' )
-			// PyType.g:11:9: 'Union'
+			// PyType.g:16:7: ( 'Union' )
+			// PyType.g:16:9: 'Union'
 			{
 			match("Union"); 
 
@@ -248,7 +358,7 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = DIGIT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:59:8: ( '0' .. '9' )
+			// PyType.g:107:8: ( '0' .. '9' )
 			// PyType.g:
 			{
 			if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
@@ -275,7 +385,7 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = LETTER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:61:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )
+			// PyType.g:109:8: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' )
 			// PyType.g:
 			{
 			if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
@@ -302,10 +412,10 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = NUMBER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:63:8: ( ( DIGIT )+ )
-			// PyType.g:63:10: ( DIGIT )+
+			// PyType.g:111:8: ( ( DIGIT )+ )
+			// PyType.g:111:10: ( DIGIT )+
 			{
-			// PyType.g:63:10: ( DIGIT )+
+			// PyType.g:111:10: ( DIGIT )+
 			int cnt1=0;
 			loop1:
 			while (true) {
@@ -354,8 +464,8 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = SimpleType;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:65:12: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' ) )
-			// PyType.g:65:14: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )
+			// PyType.g:113:12: ( ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' ) )
+			// PyType.g:113:14: ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )* ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )
 			{
 			if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
 				input.consume();
@@ -365,7 +475,7 @@ public class PyTypeLexer extends Lexer {
 				recover(mse);
 				throw mse;
 			}
-			// PyType.g:65:37: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
+			// PyType.g:113:37: ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | '_' | '.' )*
 			loop2:
 			while (true) {
 				int alt2=2;
@@ -425,10 +535,10 @@ public class PyTypeLexer extends Lexer {
 		try {
 			int _type = WHITESPACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// PyType.g:78:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
-			// PyType.g:78:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:123:12: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+			// PyType.g:123:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			{
-			// PyType.g:78:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			// PyType.g:123:14: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
 			int cnt3=0;
 			loop3:
 			while (true) {
@@ -475,8 +585,8 @@ public class PyTypeLexer extends Lexer {
 
 	@Override
 	public void mTokens() throws RecognitionException {
-		// PyType.g:1:8: ( CLOSE_SQ_BR | COMMA | DICT | DOT | HYPHEN | LIST | Nothing | OPEN_SQ_BR | UNDERSCORE | UNION | DIGIT | LETTER | NUMBER | SimpleType | WHITESPACE )
-		int alt4=15;
+		// PyType.g:1:8: ( CLOSE_SQ_BR | COMMA | DICT | DOT | EMPTY_TUPLE | HYPHEN | LIST | OPEN_SQ_BR | OPTIONAL | SET | THREE_DOTS | TUPLE | TYPE | UNDERSCORE | UNION | DIGIT | LETTER | NUMBER | SimpleType | WHITESPACE )
+		int alt4=20;
 		switch ( input.LA(1) ) {
 		case ']':
 			{
@@ -493,13 +603,13 @@ public class PyTypeLexer extends Lexer {
 			switch ( input.LA(2) ) {
 			case 'i':
 				{
-				int LA4_14 = input.LA(3);
-				if ( (LA4_14=='c') ) {
-					int LA4_23 = input.LA(4);
-					if ( (LA4_23=='t') ) {
-						int LA4_27 = input.LA(5);
-						if ( (LA4_27=='.'||(LA4_27 >= '0' && LA4_27 <= '9')||(LA4_27 >= 'A' && LA4_27 <= 'Z')||LA4_27=='_'||(LA4_27 >= 'a' && LA4_27 <= 'z')) ) {
-							alt4=14;
+				int LA4_17 = input.LA(3);
+				if ( (LA4_17=='c') ) {
+					int LA4_31 = input.LA(4);
+					if ( (LA4_31=='t') ) {
+						int LA4_38 = input.LA(5);
+						if ( (LA4_38=='.'||(LA4_38 >= '0' && LA4_38 <= '9')||(LA4_38 >= 'A' && LA4_38 <= 'Z')||LA4_38=='_'||(LA4_38 >= 'a' && LA4_38 <= 'z')) ) {
+							alt4=19;
 						}
 
 						else {
@@ -509,13 +619,13 @@ public class PyTypeLexer extends Lexer {
 					}
 
 					else {
-						alt4=14;
+						alt4=19;
 					}
 
 				}
 
 				else {
-					alt4=14;
+					alt4=19;
 				}
 
 				}
@@ -584,22 +694,35 @@ public class PyTypeLexer extends Lexer {
 			case 'y':
 			case 'z':
 				{
-				alt4=14;
+				alt4=19;
 				}
 				break;
 			default:
-				alt4=12;
+				alt4=17;
 			}
 			}
 			break;
 		case '.':
 			{
-			alt4=4;
+			int LA4_4 = input.LA(2);
+			if ( (LA4_4=='.') ) {
+				alt4=11;
+			}
+
+			else {
+				alt4=4;
+			}
+
+			}
+			break;
+		case '(':
+			{
+			alt4=5;
 			}
 			break;
 		case '-':
 			{
-			alt4=5;
+			alt4=6;
 			}
 			break;
 		case 'L':
@@ -607,29 +730,29 @@ public class PyTypeLexer extends Lexer {
 			switch ( input.LA(2) ) {
 			case 'i':
 				{
-				int LA4_17 = input.LA(3);
-				if ( (LA4_17=='s') ) {
-					int LA4_24 = input.LA(4);
-					if ( (LA4_24=='t') ) {
-						int LA4_28 = input.LA(5);
-						if ( (LA4_28=='.'||(LA4_28 >= '0' && LA4_28 <= '9')||(LA4_28 >= 'A' && LA4_28 <= 'Z')||LA4_28=='_'||(LA4_28 >= 'a' && LA4_28 <= 'z')) ) {
-							alt4=14;
+				int LA4_22 = input.LA(3);
+				if ( (LA4_22=='s') ) {
+					int LA4_32 = input.LA(4);
+					if ( (LA4_32=='t') ) {
+						int LA4_39 = input.LA(5);
+						if ( (LA4_39=='.'||(LA4_39 >= '0' && LA4_39 <= '9')||(LA4_39 >= 'A' && LA4_39 <= 'Z')||LA4_39=='_'||(LA4_39 >= 'a' && LA4_39 <= 'z')) ) {
+							alt4=19;
 						}
 
 						else {
-							alt4=6;
+							alt4=7;
 						}
 
 					}
 
 					else {
-						alt4=14;
+						alt4=19;
 					}
 
 				}
 
 				else {
-					alt4=14;
+					alt4=19;
 				}
 
 				}
@@ -698,139 +821,11 @@ public class PyTypeLexer extends Lexer {
 			case 'y':
 			case 'z':
 				{
-				alt4=14;
+				alt4=19;
 				}
 				break;
 			default:
-				alt4=12;
-			}
-			}
-			break;
-		case 'n':
-			{
-			switch ( input.LA(2) ) {
-			case 'o':
-				{
-				int LA4_18 = input.LA(3);
-				if ( (LA4_18=='t') ) {
-					int LA4_25 = input.LA(4);
-					if ( (LA4_25=='h') ) {
-						int LA4_29 = input.LA(5);
-						if ( (LA4_29=='i') ) {
-							int LA4_33 = input.LA(6);
-							if ( (LA4_33=='n') ) {
-								int LA4_35 = input.LA(7);
-								if ( (LA4_35=='g') ) {
-									int LA4_37 = input.LA(8);
-									if ( (LA4_37=='.'||(LA4_37 >= '0' && LA4_37 <= '9')||(LA4_37 >= 'A' && LA4_37 <= 'Z')||LA4_37=='_'||(LA4_37 >= 'a' && LA4_37 <= 'z')) ) {
-										alt4=14;
-									}
-
-									else {
-										alt4=7;
-									}
-
-								}
-
-								else {
-									alt4=14;
-								}
-
-							}
-
-							else {
-								alt4=14;
-							}
-
-						}
-
-						else {
-							alt4=14;
-						}
-
-					}
-
-					else {
-						alt4=14;
-					}
-
-				}
-
-				else {
-					alt4=14;
-				}
-
-				}
-				break;
-			case '.':
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-			case 'A':
-			case 'B':
-			case 'C':
-			case 'D':
-			case 'E':
-			case 'F':
-			case 'G':
-			case 'H':
-			case 'I':
-			case 'J':
-			case 'K':
-			case 'L':
-			case 'M':
-			case 'N':
-			case 'O':
-			case 'P':
-			case 'Q':
-			case 'R':
-			case 'S':
-			case 'T':
-			case 'U':
-			case 'V':
-			case 'W':
-			case 'X':
-			case 'Y':
-			case 'Z':
-			case '_':
-			case 'a':
-			case 'b':
-			case 'c':
-			case 'd':
-			case 'e':
-			case 'f':
-			case 'g':
-			case 'h':
-			case 'i':
-			case 'j':
-			case 'k':
-			case 'l':
-			case 'm':
-			case 'n':
-			case 'p':
-			case 'q':
-			case 'r':
-			case 's':
-			case 't':
-			case 'u':
-			case 'v':
-			case 'w':
-			case 'x':
-			case 'y':
-			case 'z':
-				{
-				alt4=14;
-				}
-				break;
-			default:
-				alt4=12;
+				alt4=17;
 			}
 			}
 			break;
@@ -839,15 +834,387 @@ public class PyTypeLexer extends Lexer {
 			alt4=8;
 			}
 			break;
+		case 'O':
+			{
+			switch ( input.LA(2) ) {
+			case 'p':
+				{
+				int LA4_23 = input.LA(3);
+				if ( (LA4_23=='t') ) {
+					int LA4_33 = input.LA(4);
+					if ( (LA4_33=='i') ) {
+						int LA4_40 = input.LA(5);
+						if ( (LA4_40=='o') ) {
+							int LA4_47 = input.LA(6);
+							if ( (LA4_47=='n') ) {
+								int LA4_51 = input.LA(7);
+								if ( (LA4_51=='a') ) {
+									int LA4_54 = input.LA(8);
+									if ( (LA4_54=='l') ) {
+										int LA4_55 = input.LA(9);
+										if ( (LA4_55=='.'||(LA4_55 >= '0' && LA4_55 <= '9')||(LA4_55 >= 'A' && LA4_55 <= 'Z')||LA4_55=='_'||(LA4_55 >= 'a' && LA4_55 <= 'z')) ) {
+											alt4=19;
+										}
+
+										else {
+											alt4=9;
+										}
+
+									}
+
+									else {
+										alt4=19;
+									}
+
+								}
+
+								else {
+									alt4=19;
+								}
+
+							}
+
+							else {
+								alt4=19;
+							}
+
+						}
+
+						else {
+							alt4=19;
+						}
+
+					}
+
+					else {
+						alt4=19;
+					}
+
+				}
+
+				else {
+					alt4=19;
+				}
+
+				}
+				break;
+			case '.':
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case 'A':
+			case 'B':
+			case 'C':
+			case 'D':
+			case 'E':
+			case 'F':
+			case 'G':
+			case 'H':
+			case 'I':
+			case 'J':
+			case 'K':
+			case 'L':
+			case 'M':
+			case 'N':
+			case 'O':
+			case 'P':
+			case 'Q':
+			case 'R':
+			case 'S':
+			case 'T':
+			case 'U':
+			case 'V':
+			case 'W':
+			case 'X':
+			case 'Y':
+			case 'Z':
+			case '_':
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
+			case 'g':
+			case 'h':
+			case 'i':
+			case 'j':
+			case 'k':
+			case 'l':
+			case 'm':
+			case 'n':
+			case 'o':
+			case 'q':
+			case 'r':
+			case 's':
+			case 't':
+			case 'u':
+			case 'v':
+			case 'w':
+			case 'x':
+			case 'y':
+			case 'z':
+				{
+				alt4=19;
+				}
+				break;
+			default:
+				alt4=17;
+			}
+			}
+			break;
+		case 'S':
+			{
+			switch ( input.LA(2) ) {
+			case 'e':
+				{
+				int LA4_24 = input.LA(3);
+				if ( (LA4_24=='t') ) {
+					int LA4_34 = input.LA(4);
+					if ( (LA4_34=='.'||(LA4_34 >= '0' && LA4_34 <= '9')||(LA4_34 >= 'A' && LA4_34 <= 'Z')||LA4_34=='_'||(LA4_34 >= 'a' && LA4_34 <= 'z')) ) {
+						alt4=19;
+					}
+
+					else {
+						alt4=10;
+					}
+
+				}
+
+				else {
+					alt4=19;
+				}
+
+				}
+				break;
+			case '.':
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case 'A':
+			case 'B':
+			case 'C':
+			case 'D':
+			case 'E':
+			case 'F':
+			case 'G':
+			case 'H':
+			case 'I':
+			case 'J':
+			case 'K':
+			case 'L':
+			case 'M':
+			case 'N':
+			case 'O':
+			case 'P':
+			case 'Q':
+			case 'R':
+			case 'S':
+			case 'T':
+			case 'U':
+			case 'V':
+			case 'W':
+			case 'X':
+			case 'Y':
+			case 'Z':
+			case '_':
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'f':
+			case 'g':
+			case 'h':
+			case 'i':
+			case 'j':
+			case 'k':
+			case 'l':
+			case 'm':
+			case 'n':
+			case 'o':
+			case 'p':
+			case 'q':
+			case 'r':
+			case 's':
+			case 't':
+			case 'u':
+			case 'v':
+			case 'w':
+			case 'x':
+			case 'y':
+			case 'z':
+				{
+				alt4=19;
+				}
+				break;
+			default:
+				alt4=17;
+			}
+			}
+			break;
+		case 'T':
+			{
+			switch ( input.LA(2) ) {
+			case 'u':
+				{
+				int LA4_25 = input.LA(3);
+				if ( (LA4_25=='p') ) {
+					int LA4_35 = input.LA(4);
+					if ( (LA4_35=='l') ) {
+						int LA4_42 = input.LA(5);
+						if ( (LA4_42=='e') ) {
+							int LA4_48 = input.LA(6);
+							if ( (LA4_48=='.'||(LA4_48 >= '0' && LA4_48 <= '9')||(LA4_48 >= 'A' && LA4_48 <= 'Z')||LA4_48=='_'||(LA4_48 >= 'a' && LA4_48 <= 'z')) ) {
+								alt4=19;
+							}
+
+							else {
+								alt4=12;
+							}
+
+						}
+
+						else {
+							alt4=19;
+						}
+
+					}
+
+					else {
+						alt4=19;
+					}
+
+				}
+
+				else {
+					alt4=19;
+				}
+
+				}
+				break;
+			case 'y':
+				{
+				int LA4_26 = input.LA(3);
+				if ( (LA4_26=='p') ) {
+					int LA4_36 = input.LA(4);
+					if ( (LA4_36=='e') ) {
+						int LA4_43 = input.LA(5);
+						if ( (LA4_43=='.'||(LA4_43 >= '0' && LA4_43 <= '9')||(LA4_43 >= 'A' && LA4_43 <= 'Z')||LA4_43=='_'||(LA4_43 >= 'a' && LA4_43 <= 'z')) ) {
+							alt4=19;
+						}
+
+						else {
+							alt4=13;
+						}
+
+					}
+
+					else {
+						alt4=19;
+					}
+
+				}
+
+				else {
+					alt4=19;
+				}
+
+				}
+				break;
+			case '.':
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case 'A':
+			case 'B':
+			case 'C':
+			case 'D':
+			case 'E':
+			case 'F':
+			case 'G':
+			case 'H':
+			case 'I':
+			case 'J':
+			case 'K':
+			case 'L':
+			case 'M':
+			case 'N':
+			case 'O':
+			case 'P':
+			case 'Q':
+			case 'R':
+			case 'S':
+			case 'T':
+			case 'U':
+			case 'V':
+			case 'W':
+			case 'X':
+			case 'Y':
+			case 'Z':
+			case '_':
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
+			case 'g':
+			case 'h':
+			case 'i':
+			case 'j':
+			case 'k':
+			case 'l':
+			case 'm':
+			case 'n':
+			case 'o':
+			case 'p':
+			case 'q':
+			case 'r':
+			case 's':
+			case 't':
+			case 'v':
+			case 'w':
+			case 'x':
+			case 'z':
+				{
+				alt4=19;
+				}
+				break;
+			default:
+				alt4=17;
+			}
+			}
+			break;
 		case '_':
 			{
-			int LA4_9 = input.LA(2);
-			if ( (LA4_9=='.'||(LA4_9 >= '0' && LA4_9 <= '9')||(LA4_9 >= 'A' && LA4_9 <= 'Z')||LA4_9=='_'||(LA4_9 >= 'a' && LA4_9 <= 'z')) ) {
-				alt4=14;
+			int LA4_12 = input.LA(2);
+			if ( (LA4_12=='.'||(LA4_12 >= '0' && LA4_12 <= '9')||(LA4_12 >= 'A' && LA4_12 <= 'Z')||LA4_12=='_'||(LA4_12 >= 'a' && LA4_12 <= 'z')) ) {
+				alt4=19;
 			}
 
 			else {
-				alt4=9;
+				alt4=14;
 			}
 
 			}
@@ -857,37 +1224,37 @@ public class PyTypeLexer extends Lexer {
 			switch ( input.LA(2) ) {
 			case 'n':
 				{
-				int LA4_20 = input.LA(3);
-				if ( (LA4_20=='i') ) {
-					int LA4_26 = input.LA(4);
-					if ( (LA4_26=='o') ) {
-						int LA4_30 = input.LA(5);
-						if ( (LA4_30=='n') ) {
-							int LA4_34 = input.LA(6);
-							if ( (LA4_34=='.'||(LA4_34 >= '0' && LA4_34 <= '9')||(LA4_34 >= 'A' && LA4_34 <= 'Z')||LA4_34=='_'||(LA4_34 >= 'a' && LA4_34 <= 'z')) ) {
-								alt4=14;
+				int LA4_28 = input.LA(3);
+				if ( (LA4_28=='i') ) {
+					int LA4_37 = input.LA(4);
+					if ( (LA4_37=='o') ) {
+						int LA4_44 = input.LA(5);
+						if ( (LA4_44=='n') ) {
+							int LA4_50 = input.LA(6);
+							if ( (LA4_50=='.'||(LA4_50 >= '0' && LA4_50 <= '9')||(LA4_50 >= 'A' && LA4_50 <= 'Z')||LA4_50=='_'||(LA4_50 >= 'a' && LA4_50 <= 'z')) ) {
+								alt4=19;
 							}
 
 							else {
-								alt4=10;
+								alt4=15;
 							}
 
 						}
 
 						else {
-							alt4=14;
+							alt4=19;
 						}
 
 					}
 
 					else {
-						alt4=14;
+						alt4=19;
 					}
 
 				}
 
 				else {
-					alt4=14;
+					alt4=19;
 				}
 
 				}
@@ -956,11 +1323,11 @@ public class PyTypeLexer extends Lexer {
 			case 'y':
 			case 'z':
 				{
-				alt4=14;
+				alt4=19;
 				}
 				break;
 			default:
-				alt4=12;
+				alt4=17;
 			}
 			}
 			break;
@@ -975,13 +1342,13 @@ public class PyTypeLexer extends Lexer {
 		case '8':
 		case '9':
 			{
-			int LA4_11 = input.LA(2);
-			if ( ((LA4_11 >= '0' && LA4_11 <= '9')) ) {
-				alt4=13;
+			int LA4_14 = input.LA(2);
+			if ( ((LA4_14 >= '0' && LA4_14 <= '9')) ) {
+				alt4=18;
 			}
 
 			else {
-				alt4=11;
+				alt4=16;
 			}
 
 			}
@@ -998,12 +1365,9 @@ public class PyTypeLexer extends Lexer {
 		case 'K':
 		case 'M':
 		case 'N':
-		case 'O':
 		case 'P':
 		case 'Q':
 		case 'R':
-		case 'S':
-		case 'T':
 		case 'V':
 		case 'W':
 		case 'X':
@@ -1022,6 +1386,7 @@ public class PyTypeLexer extends Lexer {
 		case 'k':
 		case 'l':
 		case 'm':
+		case 'n':
 		case 'o':
 		case 'p':
 		case 'q':
@@ -1035,13 +1400,13 @@ public class PyTypeLexer extends Lexer {
 		case 'y':
 		case 'z':
 			{
-			int LA4_12 = input.LA(2);
-			if ( (LA4_12=='.'||(LA4_12 >= '0' && LA4_12 <= '9')||(LA4_12 >= 'A' && LA4_12 <= 'Z')||LA4_12=='_'||(LA4_12 >= 'a' && LA4_12 <= 'z')) ) {
-				alt4=14;
+			int LA4_15 = input.LA(2);
+			if ( (LA4_15=='.'||(LA4_15 >= '0' && LA4_15 <= '9')||(LA4_15 >= 'A' && LA4_15 <= 'Z')||LA4_15=='_'||(LA4_15 >= 'a' && LA4_15 <= 'z')) ) {
+				alt4=19;
 			}
 
 			else {
-				alt4=12;
+				alt4=17;
 			}
 
 			}
@@ -1052,7 +1417,7 @@ public class PyTypeLexer extends Lexer {
 		case '\r':
 		case ' ':
 			{
-			alt4=15;
+			alt4=20;
 			}
 			break;
 		default:
@@ -1090,77 +1455,112 @@ public class PyTypeLexer extends Lexer {
 				}
 				break;
 			case 5 :
-				// PyType.g:1:37: HYPHEN
+				// PyType.g:1:37: EMPTY_TUPLE
+				{
+				mEMPTY_TUPLE(); 
+
+				}
+				break;
+			case 6 :
+				// PyType.g:1:49: HYPHEN
 				{
 				mHYPHEN(); 
 
 				}
 				break;
-			case 6 :
-				// PyType.g:1:44: LIST
+			case 7 :
+				// PyType.g:1:56: LIST
 				{
 				mLIST(); 
 
 				}
 				break;
-			case 7 :
-				// PyType.g:1:49: Nothing
-				{
-				mNothing(); 
-
-				}
-				break;
 			case 8 :
-				// PyType.g:1:57: OPEN_SQ_BR
+				// PyType.g:1:61: OPEN_SQ_BR
 				{
 				mOPEN_SQ_BR(); 
 
 				}
 				break;
 			case 9 :
-				// PyType.g:1:68: UNDERSCORE
+				// PyType.g:1:72: OPTIONAL
+				{
+				mOPTIONAL(); 
+
+				}
+				break;
+			case 10 :
+				// PyType.g:1:81: SET
+				{
+				mSET(); 
+
+				}
+				break;
+			case 11 :
+				// PyType.g:1:85: THREE_DOTS
+				{
+				mTHREE_DOTS(); 
+
+				}
+				break;
+			case 12 :
+				// PyType.g:1:96: TUPLE
+				{
+				mTUPLE(); 
+
+				}
+				break;
+			case 13 :
+				// PyType.g:1:102: TYPE
+				{
+				mTYPE(); 
+
+				}
+				break;
+			case 14 :
+				// PyType.g:1:107: UNDERSCORE
 				{
 				mUNDERSCORE(); 
 
 				}
 				break;
-			case 10 :
-				// PyType.g:1:79: UNION
+			case 15 :
+				// PyType.g:1:118: UNION
 				{
 				mUNION(); 
 
 				}
 				break;
-			case 11 :
-				// PyType.g:1:85: DIGIT
+			case 16 :
+				// PyType.g:1:124: DIGIT
 				{
 				mDIGIT(); 
 
 				}
 				break;
-			case 12 :
-				// PyType.g:1:91: LETTER
+			case 17 :
+				// PyType.g:1:130: LETTER
 				{
 				mLETTER(); 
 
 				}
 				break;
-			case 13 :
-				// PyType.g:1:98: NUMBER
+			case 18 :
+				// PyType.g:1:137: NUMBER
 				{
 				mNUMBER(); 
 
 				}
 				break;
-			case 14 :
-				// PyType.g:1:105: SimpleType
+			case 19 :
+				// PyType.g:1:144: SimpleType
 				{
 				mSimpleType(); 
 
 				}
 				break;
-			case 15 :
-				// PyType.g:1:116: WHITESPACE
+			case 20 :
+				// PyType.g:1:155: WHITESPACE
 				{
 				mWHITESPACE(); 
 

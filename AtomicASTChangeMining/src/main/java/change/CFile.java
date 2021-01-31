@@ -7,6 +7,7 @@ import java.util.Map;
 import core.Configurations;
 import org.apache.log4j.Logger;
 import python3.PythonASTUtil;
+import python3.typeinference.core.PyASTMatcher;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeInformation;
 import utils.JavaASTUtil;
@@ -27,7 +28,7 @@ public class CFile extends ChangeEntity {
 	static Logger logger = Logger.getLogger(CFile.class);
 
 	public CFile(RevisionAnalyzer revisionAnalyzer, String filePath,
-			String content,String projectPath) {
+			String content,String projectPath,Map<TypeASTNode, String> typeInformation1) {
 		this.startLine = 0;
 		this.cRevisionAnalyzer = revisionAnalyzer;
 		this.path = filePath;
@@ -35,11 +36,8 @@ public class CFile extends ChangeEntity {
 		this.url=projectPath;
 		try {
 			logger.debug(content);
-//			compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);  //TODO change this to python
 			if (Configurations.IS_PYTHON)
 			{
-				TypeInformation typeInformation = new TypeInformation();
-				Map<TypeASTNode, String> typeInformation1 = typeInformation.getTypeInformation(this.url+"/"+path, this.url, filePath.replace('/','.'));
 				PythonASTUtil astUtil = new PythonASTUtil();
 				CompilationUnit pyCompileUnit = astUtil.parseSource(content,typeInformation1);
 				logger.debug(pyCompileUnit.toString());
@@ -47,7 +45,9 @@ public class CFile extends ChangeEntity {
 				if (compileUnit.getProblems().length>0){
 					logger.error("Converted Java Compilation unit contains errors");
 				}
+				boolean matched = pyCompileUnit.subtreeMatch(new PyASTMatcher(),compileUnit);  //update Python LOCs and lengths
 				logger.debug(compileUnit);
+				if (!matched) logger.fatal("Two CompilationUnits do not matched");
 			}
 			else if (Configurations.IS_JAVA)
 			{

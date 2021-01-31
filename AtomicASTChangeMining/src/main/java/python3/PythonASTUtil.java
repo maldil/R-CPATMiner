@@ -3,7 +3,6 @@ package python3;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayAccess;
-import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
@@ -22,6 +21,7 @@ import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.jpp.astnodes.Visitor;
 import org.jpp.astnodes.ast.ClassDef;
 import org.jpp.astnodes.ast.ErrorMod;
@@ -41,14 +41,16 @@ import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeApproximator;
+import python3.typeinference.core.TypeDecNeeds;
 import python3.typeinference.core.TypeStringToJDT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.ErrorManager;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PythonASTUtil {
@@ -77,6 +79,7 @@ public class PythonASTUtil {
             e.printStackTrace();
         }
         PyCompilationUnit pyc = new PyCompilationUnit(asn);
+        updatePythonLineNumbers(ast, pyc);
         if (ast==null|| ast instanceof ErrorMod || ((Module)ast).getInternalBody().size()==0){ return pyc;}
         MapPyStatementsTOJDK pyStatementsTOJDK = new MapPyStatementsTOJDK(this.typeinformation);
         PyMap.totalCharGains=0;
@@ -153,7 +156,8 @@ public class PythonASTUtil {
                         }
                     }
                     else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof
-                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName && (pyNodeCounter.classDef+ pyNodeCounter.funcDef!=0)) {
+                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName &&
+                            (pyNodeCounter.classDef+ pyNodeCounter.funcDef!=0)) {
                         VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
                         variableDeclarationFragment.setName(asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier()));
                         Expression rightHandSide = ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide();
@@ -201,6 +205,13 @@ public class PythonASTUtil {
                                 MethodDeclaration methoddec = asn.newMethodDeclaration();
                                 methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
                                 methoddec.setBody(asn.newBlock());
+
+
+
+                                if (pyNodeCounter.classDef+ pyNodeCounter.funcDef==0 && number_of_dummy_classes==1){
+                                    updateVariableTypes(ast, asn, methoddec,import_nodes);
+                                }
+
                                 if (node instanceof MethodDeclaration) {
                                     TypeDeclaration typeDec = asn.newTypeDeclaration();
                                     typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName()));
@@ -335,6 +346,99 @@ public class PythonASTUtil {
         pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
 
         return pyc;
+    }
+
+    private void updatePythonLineNumbers(PythonTree ast, ASTNode node) {
+        node.setPyStartPosition(ast.getCharStartIndex());
+        node.setPyLength(ast.getCharStartIndex()- ast.getCharStopIndex());
+        node.setPyLine(ast.getLine());
+        node.setPyColumnOffSet(ast.getCharPositionInLine());
+    }
+
+    private void updateVariableTypes(mod ast, AST asn, MethodDeclaration methoddec, HashMap<String, Name> import_nodes) throws NodeNotFoundException {
+        Set<TypeDecNeeds> variableNeedsDeclaration=null;
+        try {
+            variableNeedsDeclaration=MapPyStatementsTOJDK.getVariabelNeedsDecleration(ast, import_nodes);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+
+        Map<String, List<TypeDecNeeds>> collect = variableNeedsDeclaration.stream().collect(Collectors.groupingBy(TypeDecNeeds::getName));
+        for (Map.Entry<String, List<TypeDecNeeds>> entry : collect.entrySet()){
+            if (entry.getValue().size()==1){
+                TypeDecNeeds typeDecNeeds = entry.getValue().get(0);
+                String typeString = this.typeinformation.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
+                VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString,0);
+                if (methoddec.getBody() == null) {
+                    methoddec.setBody(asn.newBlock());
+                }
+                methoddec.getBody().statements().add(varDecStat);
+            }
+            else{
+                Set<String> hash_Set= new HashSet<>();
+                for (TypeDecNeeds typeDecNeeds : entry.getValue()) {
+                    String typeString = this.typeinformation.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
+                    hash_Set.add(typeString);
+                }
+                if (hash_Set.size()==1){
+                    VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), hash_Set.iterator().next(),0);
+                    if (methoddec.getBody() == null) {
+                        methoddec.setBody(asn.newBlock());
+                    }
+                    methoddec.getBody().statements().add(varDecStat);
+                }
+                else{
+                    List<String> collect1 = new ArrayList<>();
+                    hash_Set.forEach(x->{
+                        if (x!=null && !(x.equals("Any") || x.equals("PyTypeError") ||  x.equals("None")) ){
+                            collect1.add(x);
+                        } });
+                    if (collect1.size()==0){
+                        if (hash_Set.contains("Any")){
+                            VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), "Any",0);
+                            if (methoddec.getBody() == null) {
+                                methoddec.setBody(asn.newBlock());
+                            }
+                            methoddec.getBody().statements().add(varDecStat);
+                        }
+                        else if (hash_Set.contains("PyTypeError")){
+                            VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), "PyTypeError",0);
+                            if (methoddec.getBody() == null) {
+                                methoddec.setBody(asn.newBlock());
+                            }
+                            methoddec.getBody().statements().add(varDecStat);
+                        }
+                    }
+                    else if (collect1.size()==1){
+                        VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), collect1.get(0),0);
+                        if (methoddec.getBody() == null) {
+                            methoddec.setBody(asn.newBlock());
+                        }
+                        methoddec.getBody().statements().add(varDecStat);
+                    }
+                    else{
+                        StringBuilder unionTypeStr = new StringBuilder("Union[");
+                        int type_length =0;
+                        for (String type:collect1){
+                            type_length+=1;
+                            if (type_length==collect1.size()) {
+                                unionTypeStr.append(type);
+                            }
+                            else {
+                                unionTypeStr.append(type).append(",");
+                            }
+                        }
+                        unionTypeStr.append("]");
+                        VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), unionTypeStr.toString(),0);
+                        if (methoddec.getBody() == null) {
+                            methoddec.setBody(asn.newBlock());
+                        }
+                        methoddec.getBody().statements().add(varDecStat);
+                    }
+                }
+            }
+        }
     }
 
     class PyASTVisitor extends Visitor {

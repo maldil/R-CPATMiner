@@ -73,12 +73,16 @@ public class TypeStringToJDT extends PyMap{
             typeTree = typeInfo.getTypeTree(typeString);
             if (typeTree.isError()){
                 logger.fatal("Error when parsing Type String :"+typeString);
+                return ast.newSimpleType(ast.newName("PyCpatDummy"));
             }
-            return convertToJDTType(ast,typeTree.getTree(),startPosition, false);
+            else{
+                return convertToJDTType(ast,typeTree.getTree(),startPosition, false);
+            }
+
         } catch (RecognitionException e) {
             logger.fatal("Type tree formation error");
             logger.error(e);
-            return null;
+            return ast.newSimpleType(ast.newName("PyCpatDummy"));
         }
 
     }
@@ -96,11 +100,17 @@ public class TypeStringToJDT extends PyMap{
                 return primitiveType;
             }
             else if (tree.getText().equals("long")){
+                if (forDict){
+                    return ast.newSimpleType(ast.newName("Long"));
+                }
                 PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.LONG);
                 primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
                 return primitiveType;
             }
             else if (tree.getText().equals("float")){
+                if (forDict){
+                    return ast.newSimpleType(ast.newName("Float"));
+                }
                 PrimitiveType primitiveType = ast.newPrimitiveType(PrimitiveType.FLOAT);
                 primitiveType.setSourceRange(startPosition,primitiveType.toString().length());
                 return primitiveType;
@@ -119,7 +129,7 @@ public class TypeStringToJDT extends PyMap{
                 any.setSourceRange(startPosition,3);
                 return any;
             }
-            else if (tree.getText().contains(".")){
+            else if (!tree.getText().contains("...") && tree.getText().contains(".")){
 
 //                    mod mod = PyASTParser.parsePython(tree.getText());
 //                    Expression expression = MapPyExpressionsJDK.mapExpression((expr) mod.getChild(0).getChild(0), ast, new HashMap<>());
@@ -136,38 +146,92 @@ public class TypeStringToJDT extends PyMap{
 //                any.setSourceRange(startPosition,4);
 //                return ast.newSimpleType(any);
             }
-
+            else if (tree.getText().contains("()")){
+                return ast.newSimpleType(ast.newName("EmptyBracket"));
+            }
+            else if (tree.getText().contains("...")){
+                return ast.newSimpleType(ast.newName("ThreeDots"));
+            }
             else{
                 logger.debug("SimpleType was assigned to  : "+tree.getText());
-                return ast.newSimpleType(ast.newName(tree.getText()));
+                SimpleType simpleType=null;
+                try {
+                    simpleType = ast.newSimpleType(ast.newName(tree.getText()));
+                }
+                catch (IllegalArgumentException arg){
+                    logger.info("");
+                }
+                return simpleType;
             }
 
         }
         else if(tree.getChildren().size()==1){
             if (tree.getText().equals("List")){
-                ArrayType arrayType = ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5, false));
-                arrayType.setSourceRange(startPosition,arrayType.toString().length());
-                return arrayType;
+                return ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5, false));
 
             }
+            else if (tree.getText().equals("Dict")){
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Map")));
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) tree.getChild(0),0, true));
+                return paraType;
+            }
+            else if (tree.getText().equals("Set")){
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Set")));
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) tree.getChild(0),0, true));
+                return paraType;
+//                return ast.newArrayType(convertToJDTType(ast, (CommonTree) tree.getChild(0), startPosition+5, false));
+            }
+            else if (tree.getText().equals("Union")){
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Union")));
+                for (Object child : tree.getChildren()) {
+                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+                }
+                return ast.newArrayType(paraType);
+            }
+            else if (tree.getText().equals("Tuple")){
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Tuple")));
+                for (Object child : tree.getChildren()) {
+                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+                }
+                return ast.newArrayType(paraType);
+            }
+            else if (tree.getText().equals("Optional")){
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Optional")));
+                for (Object child : tree.getChildren()) {
+                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+                }
+                return ast.newArrayType(paraType);
+            }
+            else if (tree.getText().equals("Type")){
+                if (tree.getChildren().size()==1){
+                    return convertToJDTType(ast, (CommonTree) tree.getChildren().get(0),0, true);
+                }
+                else {
+                    logger.fatal("Corresponding Python node is not found : " + tree.getText());
+                    throw new NodeNotFoundException("Corresponding Python node is not found : " + tree.getText());
+                }
+            }
             else {
-                logger.fatal("Corresponding Python node is not found : " + tree.getText());
-                throw new NodeNotFoundException("Corresponding Python node is not found : " + tree.getText());
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName(typeTree.getText())));
+                for (Object child : tree.getChildren()) {
+                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+                }
+                return ast.newArrayType(paraType);
             }
         }
         else if (tree.getText().equals("Union")){
-//            UnionType unionType = ast.newUnionType();
-//            for (Object child : tree.getChildren()) {
-//                unionType.types().add(convertToJDTType(ast, (CommonTree) child,startPosition+6));
-//            }
-//            unionType.setSourceRange(startPosition,unionType.toString().length());
-            String typeString = "Union";
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Union")));
             for (Object child : tree.getChildren()) {
-                typeString+="_";
-                typeString+= ((CommonTree) child).toString();
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
             }
+            return paraType;
+//            String typeString = "Union";
+//            for (Object child : tree.getChildren()) {
+//                typeString+="_";
+//                typeString+= ((CommonTree) child).toString();
+//            }
 
-            return ast.newSimpleType(ast.newName(typeString));
+//            return ast.newSimpleType(ast.newName(typeString));
         }
         else if (tree.getText().equals("Dict")){
             ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Map")));
@@ -176,10 +240,37 @@ public class TypeStringToJDT extends PyMap{
             }
             return paraType;
         }
+        else if (tree.getText().equals("Tuple")){
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Tuple")));
+            for (Object child : tree.getChildren()) {
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+            }
+            return paraType;
+        }
+        else if (tree.getText().equals("List")){
+
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Union")));
+            for (Object child : tree.getChildren()) {
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+            }
+
+            return ast.newArrayType(paraType);
+        }
+        else if (tree.getText().equals("Callable")){
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Callable")));
+            for (Object child : tree.getChildren()) {
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+            }
+
+            return paraType;
+        }
         else
         {
-            logger.fatal("Corresponding Python node is not found : "+tree.getText());
-            throw new NodeNotFoundException("Corresponding Python node is not found : "+tree.getText());
+            ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName(typeTree.getText())));
+            for (Object child : tree.getChildren()) {
+                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+            }
+            return paraType;
         }
 
     }

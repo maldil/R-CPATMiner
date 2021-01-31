@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.AssertStatement;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.ContinueStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.core.dom.EnhancedForStatementWithElse;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.LambdaExpression;
@@ -37,6 +38,14 @@ public class JDTASTVisitor extends ASTVisitor {
         increment(jdtNodeMap,"Java_EnhancedForStatement");
         return super.visit(node);
     }
+
+    @Override
+    public boolean visit(EnhancedForStatementWithElse node) {
+        increment(jdtNodeMap,"Java_EnhancedForStatementWithElse");
+        return super.visit(node);
+    }
+
+
 
     @Override
     public boolean visit(IfStatement node) {

@@ -1,5 +1,7 @@
 package change;
 
+import java.io.DataOutput;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +10,7 @@ import java.util.HashSet;
 
 import graph.PDGBuildingContext;
 import graph.PDGGraph;
+import graphics.DotGraph;
 import utils.FileIO;
 import utils.JavaASTUtil;
 import utils.Pair;
@@ -487,9 +490,18 @@ public class CMethod extends ChangeEntity {
 
 	public ChangeGraph getChangeGraph(Repository repository, RevCommit commit) {
 		PDGGraph pdg1 = new PDGGraph(this.declaration, new PDGBuildingContext(repository, commit, this.getCFile().getPath(), false,cClass.getCFile().getCompileUnit().imports()));
+		DotGraph drawM = new DotGraph(pdg1);
+
 		pdg1.buildChangeGraph(0);
 		PDGGraph pdg2 = new PDGGraph(this.mappedMethod.declaration, new PDGBuildingContext(repository, commit, this.mappedMethod.getCFile().getPath(), false,
 				cClass.getCFile().getCompileUnit().imports()));
+		DotGraph drawN = new DotGraph(pdg2);
+
+//		String dirPath = "./OUTPUT/DEBUG/";
+//		drawM.toDotFile(new File(dirPath  +commit.name()+this.name+"M.dot"));
+//		drawN.toDotFile(new File(dirPath  +commit.name()+this.name+"N.dot"));
+
+
 		pdg2.buildChangeGraph(1);
 		pdg2.buildChangeGraph(pdg1);
 		return new ChangeGraph(pdg2);

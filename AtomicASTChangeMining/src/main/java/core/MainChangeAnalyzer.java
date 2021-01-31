@@ -32,6 +32,7 @@ public class MainChangeAnalyzer {
 	public static void main(String[] args) {
 		logger.debug("++++++Starting the process AtomicASTChangeMining++++++++");
 		String content = null;
+
 		if (SystemUtils.IS_OS_WINDOWS) {
 			Configurations.THREAD_POOL_SIZE = 8;
 			pool = new NotifyingBlockingThreadPoolExecutor(Configurations.THREAD_POOL_SIZE, Configurations.THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
