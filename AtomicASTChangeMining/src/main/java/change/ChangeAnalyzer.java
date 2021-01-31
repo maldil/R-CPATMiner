@@ -33,6 +33,7 @@ public class ChangeAnalyzer {
 	private int numOfRevisions = -1, numOfCodeRevisions = -1, numOfExtractedRevisions = -1;
 	private SVNConnector svnConn;
 	private GitConnector gitConn;
+	private int typeErroredFails=0;
 	private HashMap<Long, SVNLogEntry> logEntries;
 	private ArrayList<RevisionAnalyzer> revisionAnalyzers = new ArrayList<RevisionAnalyzer>();
 	private CProject cproject;
@@ -220,7 +221,9 @@ public class ChangeAnalyzer {
 //		}
 		int num_commits =0;
 		for (final RevCommit commit : commits) {    //Iterate each commit
-			logger.debug(commit.toString());
+			logger.info("f "+commit.toString()+" f");
+//			if (!commit.toString().equals("commit e5835ec2b000729698ca25a04fcaad4f7358d204 1608627398 ----sp"))
+//				continue;
 			if (numOfExtractedRevisions >= Config.MAX_EXTRACTED_COMMITS)
 				break;
 			File file = new File(dir.getAbsolutePath() + "/" + commit.getName() + ".dat");
@@ -230,6 +233,7 @@ public class ChangeAnalyzer {
 			}
 			analyzeGit(commit);     //Start Analysing git commit
 			num_commits+=1;
+			logger.info(typeErroredFails+" commits did not analysed due to type errors");
 		}
 		this.cproject.numOfAllRevisions = this.numOfRevisions;
 		logger.debug(num_commits+" commits processed");
@@ -242,9 +246,9 @@ public class ChangeAnalyzer {
 			logger.info("Analyzing revision: " + this.numOfRevisions + " " + commit.getName() + " from " + projectName);
 		RevisionAnalyzer ra = new RevisionAnalyzer(this, commit,this.url);
 		boolean analyzed = ra.analyzeGit();
+		if (ra.isTypeError()) typeErroredFails++;
 		if (analyzed) {
 			HashMap<String, HashMap<String, ChangeGraph>> changeGraphs = new HashMap<>();
-
 			for (CMethod e : ra.getMappedMethodsM()) {
 				//System.out.println("Method: " + e.getQualName() + " - " + e.getMappedEntity().getQualName());
 				ChangeGraph cg = e.getChangeGraph(this.gitConn.getRepository(), commit);
@@ -254,12 +258,11 @@ public class ChangeAnalyzer {
 //						+ ":" + cg.summarize());
 				int[] csizes = cg.getChangeSizes();
 
-				if (csizes[0] > 0 && csizes[1] > 0 
-						&& (csizes[0] + csizes[1]) >= 3 
+				if (csizes[0] >= 0 && csizes[1] > 0
+						&& (csizes[0] + csizes[1]) >= 2
 						&& csizes[0] <= 100 && csizes[1] <= 100 
 						&& cg.hasMethods()) {
 					// DEBUG
-
 					DotGraph dg = new DotGraph(cg);
 					String dirPath = "./OUTPUT/DEBUG/";
 					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));

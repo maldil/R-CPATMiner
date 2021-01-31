@@ -4,15 +4,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ArrayType;
+import org.eclipse.jdt.core.dom.BooleanLiteral;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.NumberLiteral;
-import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PyComparator;
@@ -24,15 +23,12 @@ import org.eclipse.jdt.core.dom.PyListComprehension;
 import org.eclipse.jdt.core.dom.PyNotInExpression;
 import org.eclipse.jdt.core.dom.PySetComprehension;
 import org.eclipse.jdt.core.dom.PyTupleExpression;
-import org.eclipse.jdt.core.dom.PyYieldReturnStatement;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.eclipse.jdt.internal.core.dom.NaiveASTFlattener;
 import org.jpp.PyASTParser;
-import org.jpp.astnodes.PythonErrorNode;
 import org.jpp.astnodes.ast.Assign;
 import org.jpp.astnodes.ast.Await;
 import org.jpp.astnodes.ast.BoolOp;
@@ -63,11 +59,8 @@ import org.jpp.astnodes.ast.operatorType;
 import org.jpp.astnodes.ast.unaryopType;
 import org.jpp.astnodes.base.mod;
 import org.jpp.astnodes.base.slice;
-import org.jpp.astnodes.op.Sub;
-import org.jpp.heart.Py;
 import org.jpp.heart.PyComplex;
 import org.jpp.heart.PyFloat;
-import org.jpp.heart.PyObject;
 import python3.pyerrors.NodeNotFoundException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -96,7 +89,6 @@ import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeApproximator;
 import python3.typeinference.core.TypeStringToJDT;
 
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -144,13 +136,18 @@ public class MapPyExpressionsJDK extends PyMap {
         else if (pyexp instanceof Name){
             String id = mapPythonKeyWords(((Name) pyexp).getId().toString());
             if (((Name) pyexp).getInternalId().equals("True")){
-                return ast.newBooleanLiteral(true);
+                BooleanLiteral literal = ast.newBooleanLiteral(true);
+                MapPyStatementsTOJDK.updatePythonLineNumbers(pyexp,literal);
+                return literal;
             }
             else if ((((Name) pyexp).getInternalId().equals("False"))){
-                return ast.newBooleanLiteral(false);
+                BooleanLiteral literal = ast.newBooleanLiteral(false);
+                MapPyStatementsTOJDK.updatePythonLineNumbers(pyexp,literal);
+                return literal;
             }
             else{
                 SimpleName simpleName = ast.newSimpleName(mapPythonKeyWords(id));
+                MapPyStatementsTOJDK.updatePythonLineNumbers(pyexp,simpleName);
                 simpleName.setPyObject(pyexp);
                 return simpleName;
             }
@@ -170,7 +167,11 @@ public class MapPyExpressionsJDK extends PyMap {
                     }
                     else if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
                         ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression);
+                    }
+                    else if (expression instanceof ParenthesizedExpression){
+                        invocation.arguments().add(ASTNode.copySubtree(ast,((ParenthesizedExpression) expression).getExpression()));
                     }
                     else{
                         invocation.arguments().add(expression);
@@ -188,6 +189,7 @@ public class MapPyExpressionsJDK extends PyMap {
                         invocation.arguments().add(ASTNode.copySubtree(ast,((ParenthesizedExpression) expression).getExpression()) );
                     }
                     else if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
+                        ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression);
                     }
@@ -234,7 +236,11 @@ public class MapPyExpressionsJDK extends PyMap {
                     }
                     else if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
                         ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression);
+                    }
+                    else if (expression instanceof ParenthesizedExpression){
+                        invocation.arguments().add(ASTNode.copySubtree(ast,((ParenthesizedExpression) expression).getExpression()) );
                     }
                     else{
                         invocation.arguments().add(expression);
@@ -247,6 +253,7 @@ public class MapPyExpressionsJDK extends PyMap {
 //                        return ast.newPyErrorExpression();
                     }
                     else if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
+                        ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression);
                     }
@@ -291,6 +298,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
                     else{
@@ -305,6 +313,7 @@ public class MapPyExpressionsJDK extends PyMap {
 //                        return ast.newPyErrorExpression();
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
@@ -328,6 +337,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
                     else{
@@ -342,6 +352,7 @@ public class MapPyExpressionsJDK extends PyMap {
 //                        return ast.newPyErrorExpression();
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
@@ -368,6 +379,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
                     else{
@@ -382,6 +394,7 @@ public class MapPyExpressionsJDK extends PyMap {
 //                        return ast.newPyErrorExpression();
                     }
                     else if (expression1 instanceof PyTupleExpression && ((PyTupleExpression) expression1).expressions().size()==0){
+                        ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         ((PyTupleExpression) expression1).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         invocation.arguments().add(expression1);
                     }
@@ -423,6 +436,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     } else {
                         Expression expression = mapExpression((expr) ((Index) internalDim).getValue(), ast, import_nodes, 0, typeNodes, pyc);
                         if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
+                            ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                             ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                         }
                         tupleExpression.expressions().add(expression);
@@ -486,6 +500,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     Expression expression = mapExpression((expr) ((Index)((Subscript) pyexp).getSlice()).getValue(),ast, import_nodes,0,typeNodes, pyc);
                     if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
                         ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
+                        ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                     }
                     arrayAccess.setIndex(expression);
                 }
@@ -506,6 +521,7 @@ public class MapPyExpressionsJDK extends PyMap {
                     return ast.newPyErrorExpression();
                 }
                 else if (expression instanceof PyTupleExpression && ((PyTupleExpression) expression).expressions().size()==0){
+                    ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                     ((PyTupleExpression) expression).expressions().add(ast.newSimpleName("PyCpatDummy"));
                     arrayInitializer.expressions().add(expression);
                 }
@@ -532,12 +548,12 @@ public class MapPyExpressionsJDK extends PyMap {
                             String typeString = typeNodes.get(new TypeASTNode(((Attribute) o).getLineno(),
                                     ((Attribute) o).getCol_offset()+((Attribute) o).getValue().toString().length()+1, ((Attribute) o).getAttr().toString(), null));
 
-                            updateArrayTpe(ast, arrayCreation, typeString);
+                            updateArrayTpe(ast, arrayCreation, typeString,typeNodes);
                         }
                         else if (((AstList)((Assign)pyexp.getParent()).getTargets()).get(0) instanceof Name){
                             String typeString = typeNodes.get(new TypeASTNode(((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getLineno(),
                                     ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getCol_offset(), ((Name) ((AstList)((Assign)pyexp.getParent()).getTargets()).get(0)).getInternalId(), null));
-                            updateArrayTpe(ast, arrayCreation, typeString);
+                            updateArrayTpe(ast, arrayCreation, typeString,typeNodes);
                         }
                         else
                         {
@@ -681,18 +697,22 @@ public class MapPyExpressionsJDK extends PyMap {
                 }
                 pyInExpression.setLeftOperand(leftExpression);
                 pyInExpression.setRightOperand(rightExpression);
-                return pyInExpression;
+                ParenthesizedExpression para = ast.newParenthesizedExpression();
+                para.setExpression(pyInExpression);
+                return para;
             }
             else if (((AstList)((Compare) pyexp).getOps()).get(0).equals(cmpopType.NotIn)){
-                PyNotInExpression pyInExpression = ast.newPyNotInExpression();
+                PyNotInExpression pyNotInExpression = ast.newPyNotInExpression();
                 Expression leftExpression = mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  );
                 Expression rightExpression = mapExpression((expr) (comparators).get(0),ast,import_nodes,0,typeNodes,pyc  );
                 if (leftExpression instanceof PyErrorExpression || rightExpression instanceof PyErrorExpression){
                     return ast.newPyErrorExpression();
                 }
-                pyInExpression.setLeftOperand(leftExpression);
-                pyInExpression.setRightOperand(rightExpression);
-                return pyInExpression;
+                pyNotInExpression.setLeftOperand(leftExpression);
+                pyNotInExpression.setRightOperand(rightExpression);
+                ParenthesizedExpression para = ast.newParenthesizedExpression();
+                para.setExpression(pyNotInExpression);
+                return para;
             }
             InfixExpression infixExpression = ast.newInfixExpression();
             Expression leftExpression = mapExpression(((Compare) pyexp).getInternalLeft(),ast,import_nodes,0,typeNodes,pyc  );
@@ -708,8 +728,23 @@ public class MapPyExpressionsJDK extends PyMap {
                     if (y==0){
                         InfixExpression expression = ast.newInfixExpression();
                         Expression rightExpression1 =mapExpression((expr) comparators.get(y),ast,import_nodes,0,typeNodes,pyc);
-                        expression.setLeftOperand(leftExpression);
-                        expression.setRightOperand(rightExpression1);
+                        if (leftExpression instanceof PyInExpression){
+                            ParenthesizedExpression para = ast.newParenthesizedExpression();
+                            para.setExpression(leftExpression);
+                            expression.setLeftOperand(para);
+                        }
+                        else{
+                            expression.setLeftOperand(leftExpression);
+                        }
+                        if (leftExpression instanceof PyInExpression){
+                            ParenthesizedExpression para = ast.newParenthesizedExpression();
+                            para.setExpression(rightExpression1);
+                            expression.setRightOperand(para);
+                        }
+                        else{
+                            expression.setRightOperand(rightExpression1);
+                        }
+
                         expression.setOperator(setOperator(((Compare) pyexp).getInternalOps().get(y)));
                         compa.add(expression);
                     }
@@ -718,8 +753,22 @@ public class MapPyExpressionsJDK extends PyMap {
                         Expression leftExpression1 =mapExpression((expr) comparators.get(y-1),ast,import_nodes,0,typeNodes,pyc);
                         Expression rightExpression1 =mapExpression((expr) comparators.get(y),ast,import_nodes,0,typeNodes,pyc);
                         expression.setOperator(setOperator(((Compare) pyexp).getInternalOps().get(y)));
-                        expression.setRightOperand(rightExpression1);
-                        expression.setLeftOperand(leftExpression1);
+                        if (leftExpression instanceof PyInExpression){
+                            ParenthesizedExpression para = ast.newParenthesizedExpression();
+                            para.setExpression(leftExpression1);
+                            expression.setLeftOperand(para);
+                        }
+                        else{
+                            expression.setLeftOperand(leftExpression1);
+                        }
+                        if (leftExpression instanceof PyInExpression){
+                            ParenthesizedExpression para = ast.newParenthesizedExpression();
+                            para.setExpression(rightExpression1);
+                            expression.setRightOperand(para);
+                        }
+                        else {
+                            expression.setRightOperand(rightExpression1);
+                        }
                         compa.add(expression);
                     }
 
@@ -885,15 +934,31 @@ public class MapPyExpressionsJDK extends PyMap {
         }
         else if (pyexp instanceof Tuple){
             PyTupleExpression pyTupleExpression = ast.newPyTupleExpression();
-            for (expr elt : ((Tuple) pyexp).getInternalElts()) {
-                Expression  expression = mapExpression(elt,ast,import_nodes,0,typeNodes,pyc  );
+            for (int i = ((Tuple) pyexp).getInternalElts().size()-1;i>=0;i--){
+                Expression  expression = mapExpression(((Tuple) pyexp).getInternalElts().get(i),ast,import_nodes,0,typeNodes,pyc  );
                 if (expression instanceof PyErrorExpression){
                     return ast.newPyErrorExpression();
                 }
                 pyTupleExpression.expressions().add(expression);
             }
-            if (((Tuple) pyexp).getInternalElts().size()==0){
-                pyTupleExpression.expressions().add(ast.newSimpleName("PyEmptyTuple"));
+
+
+
+
+//            for (expr elt : ((Tuple) pyexp).getInternalElts()) {
+//                Expression  expression = mapExpression(elt,ast,import_nodes,0,typeNodes,pyc  );
+//                if (expression instanceof PyErrorExpression){
+//                    return ast.newPyErrorExpression();
+//                }
+//                pyTupleExpression.expressions().add(expression);
+//            }
+            if (((Tuple) pyexp).getInternalElts().size()==1){
+                SimpleName dummy = ast.newSimpleName("PyCpatDummy");
+                pyTupleExpression.expressions().add(dummy);
+            }
+            else if (((Tuple) pyexp).getInternalElts().size()==0){
+                pyTupleExpression.expressions().add(ast.newSimpleName("PyCpatDummy"));
+                pyTupleExpression.expressions().add(ast.newSimpleName("PyCpatDummy"));
             }
             return pyTupleExpression;
 
@@ -1455,7 +1520,7 @@ public class MapPyExpressionsJDK extends PyMap {
     }
 
 
-    private static void updateArrayTpe(AST ast, ArrayCreation arrayCreation, String typeString) throws NodeNotFoundException {
+    private static void updateArrayTpe(AST ast, ArrayCreation arrayCreation, String typeString, Map<TypeASTNode, String> typeNodes) throws NodeNotFoundException {
         if (typeString !=null) {
             Type jdtType = TypeStringToJDT.getJDTType(ast, typeString, 0);
             if (jdtType!=null) {
@@ -1465,13 +1530,13 @@ public class MapPyExpressionsJDK extends PyMap {
             {
                 Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
                 arrayCreation.setType((ArrayType) jdtType1);
-                logger.fatal("Created any type");
+                logger.fatal("Created any type"+ typeNodes);
             }
         }
         else{
             Type jdtType1 = TypeStringToJDT.getJDTType(ast, "List[Any]", 0);
             arrayCreation.setType((ArrayType) jdtType1);
-            logger.fatal("Created any type");
+            logger.fatal("Created any type "+ typeNodes);
         }
     }
 

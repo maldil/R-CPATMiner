@@ -1,14 +1,24 @@
 package python3.typeinference.core;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 import com.google.gson.Gson;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import python3.typeinference.antlr.TypeInfo;
 import python3.typeinference.antlr.TypeTree;
 import org.antlr.runtime.RecognitionException;
@@ -17,7 +27,8 @@ import org.apache.log4j.Logger;
 
 public class TypeInformation {
     static Logger logger = Logger.getLogger(TypeInformation.class);
-
+    private static Log typeana= LogFactory.getLog("ExternalAppLogger");
+    //    static Logger typeLogger = Logger.getLogger("typeerror");
     public Map<TypeASTNode, TypeTree> getTypeTreeInformation(String filePath, String projectPath, String fileName, ArrayList<TypeASTNode> requiredNodes) throws RecognitionException {
         TypeInfo typeInfo = new TypeInfo();
         Map<TypeASTNode, TypeTree> typeASTNodeTypeTreeMap = new HashMap<>();
@@ -30,10 +41,57 @@ public class TypeInformation {
         return typeASTNodeTypeTreeMap;
     }
 
+
+    public Map<python3.typeinference.core.TypeASTNode,String> getTypeInformationFromJsonFile(String fileSource ,String projectName, String commitHex, String postfix, String fileName){
+        Map<TypeASTNode,String> type_string = new HashMap<>();
+        try {
+            String json_file = fileSource +"/" +projectName+"/"+ commitHex +   postfix +"/" +  fileName.substring(0,fileName.length()-3) +".json";
+            Gson gson = new Gson();
+
+            String s = Files.readString(Path.of(json_file));
+
+
+            if (s ==null) return null;
+            TypeASTNode[] astArray = gson.fromJson(s, TypeASTNode[].class);
+            for(TypeASTNode node : astArray) {
+                logger.debug(node.toString());
+                String type = node.getType();
+                node.setType(null);
+                type_string.put(node, type);
+            }
+//            JSONArray a = (JSONArray) parser.parse(new FileReader(json_file));
+//            JSONObject o = (JSONObject)a.get(0);
+
+        }
+        catch (NoSuchFileException e){
+            return null;
+        }
+        catch (IOException e) {
+            return null;
+        }
+
+
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        return type_string;
+
+    }
+
+
+
+
+
+
+
+
     public Map<TypeASTNode,String> getTypeInformation(String filePath,String project_path,String file_name){
         Map<TypeASTNode,String> type_string = new HashMap<>();
         try {
-            logger.debug("Generating pytype files : File path:"+filePath+" Project path : "+project_path+" String file name : "+file_name);
+            typeana.info("Generating pytype files : File path:"+filePath+" Project path : "+project_path+" String file name : "+file_name);
+            typeana.info(Configurations.PYTHON_VIRTUAL_ENVIRONMENT+ " "+
+                    System.getProperty("user.dir")+"/src/main/java/python3/typeinference/pythonscripts/mainPyTypetest.py " +
+                    ""+filePath+" "+project_path+" "+file_name+"/");
             Process process = Runtime.getRuntime().exec(Configurations.PYTHON_VIRTUAL_ENVIRONMENT+ " "+
                     System.getProperty("user.dir")+"/src/main/java/python3/typeinference/pythonscripts/mainPyTypetest.py " +
                     ""+filePath+" "+project_path+" "+file_name+"/");
@@ -42,10 +100,10 @@ public class TypeInformation {
             String line;
             boolean error = false;
             while ((line = stdError.readLine()) != null) {
-                logger.error(line);
-                System.err.println(line);
+                typeana.info(line);
                 error=true;
             }
+            if (error) return null;
 
             String typeString = getTypeString(stdINput);
 

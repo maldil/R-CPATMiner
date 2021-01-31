@@ -1,15 +1,21 @@
 package change;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import com.ibm.icu.impl.Assert;
 import core.Configurations;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -25,16 +31,24 @@ import org.eclipse.jgit.treewalk.filter.PathSuffixFilter;
 import org.eclipse.jgit.util.io.NullOutputStream;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
+import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeInformation;
 import utils.Config;
 import change.ChangeEntity.Type;
 
+import static core.Configurations.PYTHON_TYPE_SOURCE;
+import static python3.typeinference.core.Configurations.TYPE_REPOSITORY;
+
 public class RevisionAnalyzer {
+
 	private ChangeAnalyzer changeAnalyzer;
 	private long revision;
 	private RevCommit gitCommit;
 	private String url;
+	private boolean typeError;
 	static Logger logger = Logger.getLogger(RevisionAnalyzer.class);
+	private static Log typeana= LogFactory.getLog("ExternalAppLogger");
+//	static Logger typeLogger = Logger.getLogger("typeerror");
 
 	private HashSet<CFile> mappedFilesM = new HashSet<CFile>(),
 			mappedFilesN = new HashSet<CFile>();
@@ -139,11 +153,12 @@ public class RevisionAnalyzer {
 		if (Config.countChangeFileOnly)
 			return true;
 		if (!map())
-		logger.debug("methodsM: "+methodsM);//removed methods
-		logger.debug("methodsN: "+methodsN); //Added methods
-		logger.debug("mappedMethodsM: "+mappedMethodsM); //All coexisting methods in removed code
-		logger.debug("mappedMethodsN: "+mappedMethodsN); //All coexisting methods in added code
+		logger.info("methodsM: "+methodsM);//removed methods
+		logger.info("methodsN: "+methodsN); //Added methods
 		deriveChanges();
+		logger.info("mappedMethodsM: "+mappedMethodsM); //All coexisting methods in removed code
+		logger.info("mappedMethodsN: "+mappedMethodsN); //All coexisting methods in added code
+
 		if (this.mappedMethodsM.size() > 100)
 			return false;
 		return true;
@@ -229,8 +244,8 @@ public class RevisionAnalyzer {
 				continue;
 
 			CFile fileM = new CFile(this, copiedPaths.get(changedPath),
-					contentM,this.url);
-			CFile fileN = new CFile(this, changedPath, contentN,this.url);
+					contentM,this.url,new HashMap<>());
+			CFile fileN = new CFile(this, changedPath, contentN,this.url,new HashMap<>());
 			this.mappedFilesM.add(fileM);
 //			this.crevision.files.add(new CSourceFile(changedPath, fileM
 //					.getSourceFile().getLines().size()));
@@ -329,30 +344,79 @@ public class RevisionAnalyzer {
 						if (oldContent.isEmpty() || newContent.isEmpty()){
 							continue;
 						}
+						CFile fileN;
+						CFile fileM;
+						if (Configurations.IS_PYTHON ){
+							if (PYTHON_TYPE_SOURCE == Configurations.TYPE_SOURCE.FILE){
+								if (!Files.exists(Path.of(Configurations.TYPE_REPOSITORY +"/" +new File(url).getName()+"/"+ gitCommit.getName() +   "O" +"/"))){
+									assert false :"the folder does not exists"+ Configurations.TYPE_REPOSITORY +"/" +new File(url).getName()+"/"+ gitCommit.getName() +   "O" +"/";
+								}
+								TypeInformation typeM = new TypeInformation();
+								Map<TypeASTNode, String> typeInfoM =typeM.getTypeInformationFromJsonFile
+										(Configurations.TYPE_REPOSITORY,new File(url).getName(),gitCommit.getName(),"O",diff.getOldPath().replace('/', '_'));
+								if (typeInfoM == null) {
+									typeError = true;
+									return false;
+								}
+								fileM = new CFile(this, diff.getOldPath(),
+										oldContent, this.url, typeInfoM);
 
-						if (Configurations.IS_PYTHON){
-							logger.debug("checked out : "+this.gitCommit.getName());
-							try {
-								this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call(); //TODO change this to checkout a commit only once.
-								this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
-							} catch (GitAPIException e) {
-								logger.error(e);
+								TypeInformation typeN = new TypeInformation();
+								Map<TypeASTNode, String> typeInfoN = typeN.getTypeInformationFromJsonFile
+										(Configurations.TYPE_REPOSITORY,new File(url).getName(),gitCommit.getName(),"N",diff.getNewPath().replace('/', '_'));
+								if (typeInfoN == null) {
+									typeError = true;
+									return false;
+								}
+								fileN = new CFile(this, diff.getNewPath(),
+										newContent, this.url, typeInfoN);
 							}
+							else {
+								logger.debug("checked out : " + this.gitCommit.getName());
+								try {
+									typeana.info(this.gitCommit.getName());
+									this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call(); //TODO change this to checkout a commit only once.
+									this.changeAnalyzer.getGitConn().getGit().checkout().setName(this.gitCommit.getName()).call();
+								} catch (GitAPIException e) {
+									logger.error(e);
+								}
+								TypeInformation typeInformation1 = new TypeInformation();
+								Map<TypeASTNode, String> typeInfor1 = typeInformation1.getTypeInformation(this.url + "/" + diff.getNewPath(), this.url, diff.getNewPath().replace('/', '.'));
+								if (typeInfor1 == null) {
+									typeError = true;
+									return false;
+								}
+								fileN = new CFile(this, diff.getNewPath(),
+										newContent, this.url, typeInfor1);
+								logger.debug("checked out : " + parent.getName());
+								try {
+									typeana.info(this.gitCommit.getName());
+									this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
+									this.changeAnalyzer.getGitConn().getGit().checkout().setName(parent.getName()).call();
+								} catch (GitAPIException e) {
+									logger.error(e);
+								}
+								TypeInformation typeInformation2 = new TypeInformation();
+								Map<TypeASTNode, String> typeInfo2 = typeInformation2.getTypeInformation(this.url + "/" + diff.getOldPath(), this.url, diff.getOldPath().replace('/', '.'));
+								if (typeInfo2 == null) {
+									typeError = true;
+									return false;
+								}
+								fileM = new CFile(this, diff.getOldPath(),
+										oldContent, this.url, typeInfo2);
+							}
+
+						}
+						else {
+							fileM = new CFile(this, diff.getOldPath(),
+									oldContent,this.url,null);
+							fileN = new CFile(this, diff.getNewPath(),
+									newContent,this.url,null);
 						}
 
-						CFile fileN = new CFile(this, diff.getNewPath(),
-								newContent,this.url);
-						if (Configurations.IS_PYTHON) {
-							logger.debug("checked out : "+parent.getName());
-							try {
-								this.changeAnalyzer.getGitConn().getGit().checkout().setAllPaths(true).call();
-								this.changeAnalyzer.getGitConn().getGit().checkout().setName(parent.getName()).call();
-							} catch (GitAPIException e) {
-								logger.error(e);
-							}
-						}
-						CFile fileM = new CFile(this, diff.getOldPath(),
-								oldContent,this.url);
+
+
+
 
 						this.mappedFilesM.add(fileM);
 //						this.crevision.files.add(new CSourceFile(diff
@@ -572,5 +636,9 @@ public class RevisionAnalyzer {
 
 	private String getSourceCode(String changedPath, long revision) {
 		return this.changeAnalyzer.getSourceCode(changedPath, revision);
+	}
+
+	public boolean isTypeError() {
+		return typeError;
 	}
 }
