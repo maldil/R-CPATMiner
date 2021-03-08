@@ -56,7 +56,7 @@ public class MineChangePatterns {
 		if(SystemUtils.IS_OS_MAC){
 			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/SemanticChangeGraphMiner/SemanticChangeGraphMiner/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_LINUX) {
-			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
+			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/AtomicASTChangeMining_Ref/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
 			content = FileIO.readStringFromFile(new File(reposPath).getParentFile().getAbsolutePath() + "/" + new File(reposPath).getName() + ".csv");
 		}
@@ -82,7 +82,7 @@ public class MineChangePatterns {
 							projectNames.add(name);
 							System.out.println("Project " + projectNames.size() + " " + name);
 						}
-						mine(graphs, 1, name.replace("/", "---"));
+						mine(graphs, 2, name.replace("/", "---"));
 						System.out.println("Done " + name);
 					}
 				});
@@ -103,7 +103,7 @@ public class MineChangePatterns {
 		if (Pattern.mode != 0) {
 			File currDir = new File("output/patterns/" + new File(changesPath).getName() + (Pattern.mode == -1 ? "-hybrid" : "-cross"));
 			currDir.mkdirs();
-			mine(allGraphs, 1, currDir.getName());
+			mine(allGraphs, 2, currDir.getName());
 		}
 		System.out.println("Projects: " + projectNames.size());
 		System.out.println("Commits: " + numOfCommits);
