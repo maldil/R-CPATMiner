@@ -78,13 +78,6 @@ public class TypeInformation {
 
     }
 
-
-
-
-
-
-
-
     public Map<TypeASTNode,String> getTypeInformation(String filePath,String project_path,String file_name){
         Map<TypeASTNode,String> type_string = new HashMap<>();
         try {

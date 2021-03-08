@@ -50,6 +50,7 @@ public class TypeStringToJDT extends PyMap{
 
 
         Type jdtType = getJDTType(ast, typeString, startPosition);
+
         assert jdtType != null;
         jdtType.setSourceRange(startPosition,jdtType.toString().length());
         variableDeclarationStatement.setType(jdtType);
@@ -73,7 +74,7 @@ public class TypeStringToJDT extends PyMap{
             typeTree = typeInfo.getTypeTree(typeString);
             if (typeTree.isError()){
                 logger.fatal("Error when parsing Type String :"+typeString);
-                return ast.newSimpleType(ast.newName("PyCpatDummy"));
+                return ast.newSimpleType(ast.newName("PyTypeError"));
             }
             else{
                 return convertToJDTType(ast,typeTree.getTree(),startPosition, false);
@@ -82,7 +83,7 @@ public class TypeStringToJDT extends PyMap{
         } catch (RecognitionException e) {
             logger.fatal("Type tree formation error");
             logger.error(e);
-            return ast.newSimpleType(ast.newName("PyCpatDummy"));
+            return ast.newSimpleType(ast.newName("PyTypeError"));
         }
 
     }
@@ -125,7 +126,7 @@ public class TypeStringToJDT extends PyMap{
                 return any;
             }
             else if (tree.getText().equals("nothing")){
-                SimpleType any = ast.newSimpleType(ast.newName("Any"));
+                SimpleType any = ast.newSimpleType(ast.newName("Nothing"));
                 any.setSourceRange(startPosition,3);
                 return any;
             }
@@ -151,6 +152,9 @@ public class TypeStringToJDT extends PyMap{
             }
             else if (tree.getText().contains("...")){
                 return ast.newSimpleType(ast.newName("ThreeDots"));
+            }
+            else if (tree.getText().equals("super")){
+                return ast.newSimpleType(ast.newName("Super"));
             }
             else{
                 logger.debug("SimpleType was assigned to  : "+tree.getText());
@@ -214,7 +218,13 @@ public class TypeStringToJDT extends PyMap{
             else {
                 ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName(typeTree.getText())));
                 for (Object child : tree.getChildren()) {
-                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+                    try {
+                        paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child, 0, true));
+                    }
+                    catch (IllegalArgumentException e) {
+                        System.out.println();
+                    }
+
                 }
                 return ast.newArrayType(paraType);
             }
@@ -236,7 +246,12 @@ public class TypeStringToJDT extends PyMap{
         else if (tree.getText().equals("Dict")){
             ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName("Map")));
             for (Object child : tree.getChildren()) {
-                paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
+//                if (child.toString().equals("Callable") ){
+//                    Type jdtType = getJDTType(ast, "PyTypeError", startPosition);
+//                    paraType.typeArguments().add(jdtType);
+//                }
+//                else
+                    paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child,0, true));
             }
             return paraType;
         }

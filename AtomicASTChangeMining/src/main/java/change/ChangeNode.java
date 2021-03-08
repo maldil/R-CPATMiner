@@ -18,6 +18,9 @@ public class ChangeNode implements Serializable {
 	int changeType = -1;
 	int version = -1;
 	int[] starts, lengths;
+	int []  pyStart=new int[1];
+	int []  pyLength =new int[1];
+	int []  pyLine=new int[1];
 	String type, label;
 	String dataType, dataName;
 	ArrayList<ChangeEdge> inEdges = new ArrayList<>(), outEdges = new ArrayList<>();
@@ -447,7 +450,6 @@ public class ChangeNode implements Serializable {
 	}
 
 	private void setPositionInfo(PyInExpression astNode) {
-
 		starts = new int[1];
 		lengths = new int[1];
 		starts[0] = astNode.getStartPosition();
@@ -497,6 +499,9 @@ public class ChangeNode implements Serializable {
 
 
 	private void setPositionInfo(ASTNode astNode) {
+		pyLength[0]=astNode.getPyLength();
+		pyLine[0]=astNode.getPyLine();
+		pyStart[0]=astNode.getPyStartPosition();
 		if (astNode instanceof ArrayAccess) setPositionInfo((ArrayAccess) astNode);
 		else if (astNode instanceof ArrayCreation) setPositionInfo((ArrayCreation) astNode);
 		else if (astNode instanceof ArrayInitializer) setPositionInfo((ArrayInitializer) astNode);

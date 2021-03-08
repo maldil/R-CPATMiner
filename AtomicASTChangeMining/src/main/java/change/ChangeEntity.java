@@ -18,6 +18,7 @@ public abstract class ChangeEntity implements Serializable {
 	protected static int thresholdDistance = 20;
 	
 	protected int startLine = -1;
+	protected int startPyLine = -1;
 	private Type cType = Type.Unchanged;
 	protected HashMap<Integer, Integer> vector;
 	protected int vectorLength = 0;

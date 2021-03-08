@@ -31,6 +31,7 @@ public class CInitializer extends ChangeEntity {
 	@SuppressWarnings("unchecked")
 	public CInitializer(CClass cClass, int staticId, Initializer initializer) {
 		this.startLine = ((CompilationUnit) initializer.getRoot()).getLineNumber(initializer.getBody().getStartPosition());
+		this.startPyLine = initializer.getBody().getPyLine();
 		this.cClass = cClass;
 		this.name = "init#" + staticId;
 		this.initializer = initializer;

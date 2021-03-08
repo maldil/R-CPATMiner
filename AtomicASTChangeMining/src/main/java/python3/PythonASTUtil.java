@@ -39,6 +39,7 @@ import org.jpp.astnodes.PythonTree;
 import org.jpp.astnodes.ast.Import;
 import org.jpp.astnodes.base.mod;
 import python3.pyerrors.ExpressionNotFound;
+import python3.typeinference.core.PyASTMatcher;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeApproximator;
 import python3.typeinference.core.TypeDecNeeds;
@@ -59,11 +60,9 @@ public class PythonASTUtil {
     public PyCompilationUnit parseSource(String content, Map<TypeASTNode, String> typeinfo) {
         mod ast = PyASTParser.parsePython(content);
         logger.debug(ast.toStringTree());
-
         this.typeinformation=typeinfo;
         return createPyCompilationUnit(ast);
     }
-
 
     public PyCompilationUnit createPyCompilationUnit(mod ast){
         Map<String, String> options = JavaCore.getOptions();
@@ -99,6 +98,8 @@ public class PythonASTUtil {
         TypeDeclaration otherCurrentHolder = null;
         int number_of_dummy_classes = 1;
         int number_of_dummy_methods = 1;
+        boolean update_line_numbers_method_dec = false;
+        boolean update_other_current_holder = false;
         for (PythonTree ch : ast.getChildren()){
             logger.debug(ch.toString());
             try {
@@ -146,6 +147,7 @@ public class PythonASTUtil {
                             currentHolder.setModifier(asn.newModifier(new Modifier.ModifierKeyword("public",1)));
                             currentHolder.setName(asn.newSimpleName("PyDummyClass"+number_of_dummy_classes));
                             currentHolder.bodyDeclarations().add(node);
+                            MapPyStatementsTOJDK.updatePythonLineNumbers(ch,currentHolder);
                             number_of_dummy_classes+=1;
                         }
 
@@ -155,36 +157,43 @@ public class PythonASTUtil {
 
                         }
                     }
-                    else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof
-                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName &&
-                            (pyNodeCounter.classDef+ pyNodeCounter.funcDef!=0)) {
-                        VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
-                        variableDeclarationFragment.setName(asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier()));
-                        Expression rightHandSide = ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide();
-                        Expression initilizer = (Expression) ASTNode.copySubtree(asn,rightHandSide );
-                        variableDeclarationFragment.setInitializer(initilizer);
-                        FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
-                        Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr)rightHandSide.getPyObject());
-                        if (type==null){
-                            String typeString = typeinformation.get(new TypeASTNode((((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getPyStartPosition(),
-                                    ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide().getPyColumnOffSet(), ((SimpleName) ((Assignment)
-                                    ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier(), null));
-                            Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
-                            fieldDeclaration.setType(jdtType);
-                        }
-                        else{
-                            fieldDeclaration.setType(type);
-                        }
-                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
-                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
-                        global_stmts.add(fieldDeclaration);
-                        if (otherCurrentHolder!=null){
-                            pyc.setTypes(otherCurrentHolder);
-                            otherCurrentHolder=null;
-
-                        }
-
-                    }
+                    //Uncomment below code if you want to assign assign statements as class atttributes
+//                    else if (node instanceof ExpressionStatement && ((ExpressionStatement) node).getExpression() instanceof
+//                            Assignment && ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide() instanceof SimpleName &&
+//                            (pyNodeCounter.classDef+ pyNodeCounter.funcDef!=0)) {
+//                        VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
+//                        SimpleName name = asn.newSimpleName(((SimpleName) ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier());
+//                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,name);
+//                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,variableDeclarationFragment);
+//                        variableDeclarationFragment.setName(name);
+//
+//                        Expression rightHandSide = ((Assignment) ((ExpressionStatement) node).getExpression()).getRightHandSide();
+//                        Expression initilizer = (Expression) ASTNode.copySubtree(asn,rightHandSide );
+//                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,initilizer);
+//                        variableDeclarationFragment.setInitializer(initilizer);
+//                        FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
+//
+//                        Type type = TypeApproximator.getSimpleTypeApproximation(asn, (expr)rightHandSide.getPyObject());
+//                        if (type==null){
+//                            String typeString = typeinformation.get(new TypeASTNode((((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getPyStartPosition(),
+//                                    ((Assignment) ((ExpressionStatement) node).getExpression()).getLeftHandSide().getPyColumnOffSet(), ((SimpleName) ((Assignment)
+//                                    ((ExpressionStatement) node).getExpression()).getLeftHandSide()).getIdentifier(), null));
+//                            Type jdtType = TypeStringToJDT.getJDTType(asn, typeString, 0);
+//                            fieldDeclaration.setType(jdtType);
+//                        }
+//                        else{
+//                            fieldDeclaration.setType(type);
+//                        }
+//                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
+//                        fieldDeclaration.modifiers().add(asn.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
+//                        global_stmts.add(fieldDeclaration);
+//                        if (otherCurrentHolder!=null){
+//                            pyc.setTypes(otherCurrentHolder);
+//                            otherCurrentHolder=null;
+//
+//                        }
+//
+//                    }
                     else {
                         if (currentHolder!=null && (currentCursor instanceof MethodDeclaration|| currentCursor==null)){
                             pyc.setTypes(currentHolder);
@@ -202,11 +211,11 @@ public class PythonASTUtil {
                                 otherCurrentHolder=asn.newTypeDeclaration();
                                 otherCurrentHolder.setModifier(asn.newModifier(new Modifier.ModifierKeyword("public",1)));
                                 otherCurrentHolder.setName(asn.newSimpleName("PyDummyClass"+number_of_dummy_classes));
+                                update_other_current_holder =true;
                                 MethodDeclaration methoddec = asn.newMethodDeclaration();
                                 methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
                                 methoddec.setBody(asn.newBlock());
-
-
+                                update_line_numbers_method_dec = true;
 
                                 if (pyNodeCounter.classDef+ pyNodeCounter.funcDef==0 && number_of_dummy_classes==1){
                                     updateVariableTypes(ast, asn, methoddec,import_nodes);
@@ -214,13 +223,23 @@ public class PythonASTUtil {
 
                                 if (node instanceof MethodDeclaration) {
                                     TypeDeclaration typeDec = asn.newTypeDeclaration();
-                                    typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName()));
+                                    SimpleName name = (SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName());
+                                    ((MethodDeclaration) node).getName().subtreeMatch(new PyASTMatcher(),name);
+                                    typeDec.setName(name);
                                     typeDec.bodyDeclarations().add(node);
                                     methoddec.getBody().statements().add(typeDec);
+                                    if (update_line_numbers_method_dec){
+                                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,methoddec);
+                                    }
+
                                 }
                                 else if (node instanceof TypeDeclaration ){
                                     TypeDeclarationStatement dummyClassLocal = asn.newTypeDeclarationStatement((TypeDeclaration) node);
                                     methoddec.getBody().statements().add(dummyClassLocal);
+                                    if (update_line_numbers_method_dec){
+                                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,methoddec);
+                                    }
+
                                 }
                                 else if (node instanceof ImportDeclaration ) {
                                     pyc.imports().add(node);
@@ -257,17 +276,27 @@ public class PythonASTUtil {
                                 }
                                 else{
                                     methoddec.getBody().statements().add(node);
+                                    if (update_line_numbers_method_dec){
+                                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,methoddec);
+                                    }
+
+                                }
+                                if (otherCurrentHolder.bodyDeclarations().size()==0){
+                                    MapPyStatementsTOJDK.updatePythonLineNumbers(ch,otherCurrentHolder);
                                 }
                                 otherCurrentHolder.bodyDeclarations().add(methoddec);
+
                                 number_of_dummy_classes+=1;
                                 number_of_dummy_methods+=1;
                             }
                             else{
                                 if (node instanceof MethodDeclaration) {
                                     TypeDeclaration typeDec = asn.newTypeDeclaration();
-                                    typeDec.setName((SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName()));
+                                    SimpleName name = (SimpleName) ASTNode.copySubtree(asn, ((MethodDeclaration) node).getName());
+                                    ((MethodDeclaration) node).getName().subtreeMatch(new PyASTMatcher(),name);
+                                    typeDec.setName(name);
                                     typeDec.bodyDeclarations().add(node);
-                                    pyc.imports().add(typeDec);
+//                                    pyc.imports().add(typeDec);
                                     ((MethodDeclaration)otherCurrentHolder.bodyDeclarations().get(0)).getBody().statements().add(typeDec);
                                 }
                                 else if (node instanceof TypeDeclaration ){
@@ -312,6 +341,7 @@ public class PythonASTUtil {
                                         MethodDeclaration methoddec = asn.newMethodDeclaration();
                                         methoddec.setName(asn.newSimpleName(("PyDummyMethod"+number_of_dummy_methods)));
                                         methoddec.setBody(asn.newBlock());
+                                        MapPyStatementsTOJDK.updatePythonLineNumbers(ch,methoddec);
                                         otherCurrentHolder.bodyDeclarations().add(methoddec);
                                     }
 
@@ -336,14 +366,25 @@ public class PythonASTUtil {
         }
 
         pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
-                .addAll(global_stmts.stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
+                .addAll(global_stmts.stream().map(y->{
+                    ASTNode node = ASTNode.copySubtree(asn, y);
+                    ((ASTNode)y).subtreeMatch(new PyASTMatcher(),node);
+                    return node;
+                }).collect(Collectors.toList())));
 
         pyc.types().stream().filter(sc -> sc instanceof TypeDeclaration).forEach(x->((TypeDeclaration) x).bodyDeclarations()
-                .addAll(pyc.getGlobal_variables().stream().map(y->ASTNode.copySubtree(asn,y)).collect(Collectors.toList())));
+                .addAll(pyc.getGlobal_variables().stream().map(y->
+                        {
+                            ASTNode node = ASTNode.copySubtree(asn, y);
+                            ((ASTNode)y).subtreeMatch(new PyASTMatcher(),node);
+                            return node;
+                        }
+
+                ).collect(Collectors.toList())));
 
 
 
-        pyc.setSourceRange(ast.getCharStartIndex(),ast.getCharStopIndex()+PyMap.totalCharGains-ast.getCharStartIndex());
+
 
         return pyc;
     }
@@ -355,7 +396,7 @@ public class PythonASTUtil {
         node.setPyColumnOffSet(ast.getCharPositionInLine());
     }
 
-    private void updateVariableTypes(mod ast, AST asn, MethodDeclaration methoddec, HashMap<String, Name> import_nodes) throws NodeNotFoundException {
+    private void updateVariableTypes(mod ast, AST asn, MethodDeclaration method, HashMap<String, Name> import_nodes) throws NodeNotFoundException {
         Set<TypeDecNeeds> variableNeedsDeclaration=null;
         try {
             variableNeedsDeclaration=MapPyStatementsTOJDK.getVariabelNeedsDecleration(ast, import_nodes);
@@ -370,10 +411,10 @@ public class PythonASTUtil {
                 TypeDecNeeds typeDecNeeds = entry.getValue().get(0);
                 String typeString = this.typeinformation.get(new TypeASTNode(typeDecNeeds.getRow(), typeDecNeeds.getCol_offset(), typeDecNeeds.getName(), null));
                 VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, typeDecNeeds, typeString,0);
-                if (methoddec.getBody() == null) {
-                    methoddec.setBody(asn.newBlock());
+                if (method.getBody() == null) {
+                    method.setBody(asn.newBlock());
                 }
-                methoddec.getBody().statements().add(varDecStat);
+                method.getBody().statements().add(varDecStat);
             }
             else{
                 Set<String> hash_Set= new HashSet<>();
@@ -383,10 +424,10 @@ public class PythonASTUtil {
                 }
                 if (hash_Set.size()==1){
                     VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), hash_Set.iterator().next(),0);
-                    if (methoddec.getBody() == null) {
-                        methoddec.setBody(asn.newBlock());
+                    if (method.getBody() == null) {
+                        method.setBody(asn.newBlock());
                     }
-                    methoddec.getBody().statements().add(varDecStat);
+                    method.getBody().statements().add(varDecStat);
                 }
                 else{
                     List<String> collect1 = new ArrayList<>();
@@ -397,25 +438,25 @@ public class PythonASTUtil {
                     if (collect1.size()==0){
                         if (hash_Set.contains("Any")){
                             VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), "Any",0);
-                            if (methoddec.getBody() == null) {
-                                methoddec.setBody(asn.newBlock());
+                            if (method.getBody() == null) {
+                                method.setBody(asn.newBlock());
                             }
-                            methoddec.getBody().statements().add(varDecStat);
+                            method.getBody().statements().add(varDecStat);
                         }
                         else if (hash_Set.contains("PyTypeError")){
                             VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), "PyTypeError",0);
-                            if (methoddec.getBody() == null) {
-                                methoddec.setBody(asn.newBlock());
+                            if (method.getBody() == null) {
+                                method.setBody(asn.newBlock());
                             }
-                            methoddec.getBody().statements().add(varDecStat);
+                            method.getBody().statements().add(varDecStat);
                         }
                     }
                     else if (collect1.size()==1){
                         VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), collect1.get(0),0);
-                        if (methoddec.getBody() == null) {
-                            methoddec.setBody(asn.newBlock());
+                        if (method.getBody() == null) {
+                            method.setBody(asn.newBlock());
                         }
-                        methoddec.getBody().statements().add(varDecStat);
+                        method.getBody().statements().add(varDecStat);
                     }
                     else{
                         StringBuilder unionTypeStr = new StringBuilder("Union[");
@@ -431,10 +472,10 @@ public class PythonASTUtil {
                         }
                         unionTypeStr.append("]");
                         VariableDeclarationStatement varDecStat = TypeStringToJDT.mapTypeStringToTypeTree(asn, entry.getKey(), unionTypeStr.toString(),0);
-                        if (methoddec.getBody() == null) {
-                            methoddec.setBody(asn.newBlock());
+                        if (method.getBody() == null) {
+                            method.setBody(asn.newBlock());
                         }
-                        methoddec.getBody().statements().add(varDecStat);
+                        method.getBody().statements().add(varDecStat);
                     }
                 }
             }
