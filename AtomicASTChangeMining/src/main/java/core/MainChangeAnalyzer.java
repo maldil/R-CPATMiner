@@ -1,12 +1,16 @@
 package core;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import change.ChangeAnalyzer;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import python3.typeinference.antlr.TypeInfo;
 import utils.FileIO;
 import utils.NotifyingBlockingThreadPoolExecutor;
@@ -22,7 +26,7 @@ public class MainChangeAnalyzer {
 	};
 	private static NotifyingBlockingThreadPoolExecutor pool = new NotifyingBlockingThreadPoolExecutor(Configurations.THREAD_POOL_SIZE, Configurations.THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
 
-	//	public static String inputPath = "C:/repos/repos-junit", outputPath = "C:/change graphs/repos-junit";
+//	public static String inputPath = "C:/repos/repos-junit", outputPath = "C:/change graphs/repos-junit";
 //	public static String inputPath = "F:/testrepos/repos-test", outputPath = "F:/change graphs/repos-test";
 //	public static String inputPath = "F:/github/testchange", outputPath = "D:/temp/testchanges";
 //	public static String inputPath = "/Users/michaelhilton/Development/Research/GraphMinerData/junit";
@@ -44,7 +48,7 @@ public class MainChangeAnalyzer {
 //			inputPath = "E:/github/repos-5stars-50commits"; outputPath = "T:/change graphs/repos-5stars-50commits-fresh";
 //			content = FileIO.readStringFromFile("E:/github/repos-5stars-50commits-fresh-remain.csv");
 		} else if (SystemUtils.IS_OS_MAC) {
-			Configurations.THREAD_POOL_SIZE = 1;
+			Configurations.THREAD_POOL_SIZE = 10;
 			Configurations.inputPath = "/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/";
 			Configurations.outputPath = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/OUTPUT/";
 
@@ -75,6 +79,13 @@ public class MainChangeAnalyzer {
 				index = line.length();
 			String name = line.substring(0, index);
 			File dir = new File(Configurations.inputPath + "/" + name);
+			if(!Files.exists(Path.of(Configurations.inputPath + "/" + name))){
+				try {
+					Git.cloneRepository().setURI("https://github.com/"+name+".git").setDirectory(new File(Configurations.inputPath + "/" + name)).call();
+				} catch (GitAPIException e) {
+					e.printStackTrace();
+				}
+			}
 			logger.info("Started analysing : "+dir+" , Project name : "+name);
 			analyze(dir, name);
 		}

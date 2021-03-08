@@ -69,6 +69,12 @@ public class RevisionAnalyzer {
 	private HashSet<CInitializer> mappedInitsM = new HashSet<CInitializer>(),
 			mappedInitsN = new HashSet<CInitializer>();
 	CRevision crevision;
+	private boolean success;
+
+	public boolean getSuceessRate(){
+		return success;
+	}
+
 
 	public RevisionAnalyzer(ChangeAnalyzer changeAnalyzer, long revision) {
 		this.changeAnalyzer = changeAnalyzer;
@@ -348,26 +354,28 @@ public class RevisionAnalyzer {
 						CFile fileM;
 						if (Configurations.IS_PYTHON ){
 							if (PYTHON_TYPE_SOURCE == Configurations.TYPE_SOURCE.FILE){
-								if (!Files.exists(Path.of(Configurations.TYPE_REPOSITORY +"/" +new File(url).getName()+"/"+ gitCommit.getName() +   "O" +"/"))){
-									assert false :"the folder does not exists"+ Configurations.TYPE_REPOSITORY +"/" +new File(url).getName()+"/"+ gitCommit.getName() +   "O" +"/";
+								if (!Files.exists(Path.of(Configurations.TYPE_REPOSITORY +new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath() + gitCommit.getName() +   "O" +"/"))){
+//									assert false :Configurations.TYPE_REPOSITORY  +new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath() + gitCommit.getName() +   "O" +"/";
 								}
 								TypeInformation typeM = new TypeInformation();
 								Map<TypeASTNode, String> typeInfoM =typeM.getTypeInformationFromJsonFile
-										(Configurations.TYPE_REPOSITORY,new File(url).getName(),gitCommit.getName(),"O",diff.getOldPath().replace('/', '_'));
-								if (typeInfoM == null) {
+										(Configurations.TYPE_REPOSITORY,new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath(),gitCommit.getName(),"O",diff.getOldPath().replace('/', '_'));
+								TypeInformation typeN = new TypeInformation();
+								Map<TypeASTNode, String> typeInfoN = typeN.getTypeInformationFromJsonFile
+										(Configurations.TYPE_REPOSITORY,new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath(),gitCommit.getName(),"N",diff.getNewPath().replace('/', '_'));
+
+
+								if (typeInfoM == null || typeInfoN==null) {
 									typeError = true;
 									return false;
+								}
+								else {
+									success = true;
 								}
 								fileM = new CFile(this, diff.getOldPath(),
 										oldContent, this.url, typeInfoM);
 
-								TypeInformation typeN = new TypeInformation();
-								Map<TypeASTNode, String> typeInfoN = typeN.getTypeInformationFromJsonFile
-										(Configurations.TYPE_REPOSITORY,new File(url).getName(),gitCommit.getName(),"N",diff.getNewPath().replace('/', '_'));
-								if (typeInfoN == null) {
-									typeError = true;
-									return false;
-								}
+
 								fileN = new CFile(this, diff.getNewPath(),
 										newContent, this.url, typeInfoN);
 							}

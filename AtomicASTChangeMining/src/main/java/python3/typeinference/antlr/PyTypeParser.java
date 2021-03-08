@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 PyType.g 2021-01-20 15:55:10
+// $ANTLR 3.5.2 PyType.g 2021-03-04 12:38:42
 package python3.typeinference.antlr;
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -11,32 +11,33 @@ import org.antlr.runtime.tree.*;
 @SuppressWarnings("all")
 public class PyTypeParser extends Parser {
 	public static final String[] tokenNames = new String[] {
-		"<invalid>", "<EOR>", "<DOWN>", "<UP>", "CLOSE_SQ_BR", "COMMA", "DICT", 
-		"DIGIT", "DOT", "EMPTY_TUPLE", "HYPHEN", "LETTER", "LIST", "NUMBER", "OPEN_SQ_BR", 
-		"OPTIONAL", "SET", "SimpleType", "THREE_DOTS", "TUPLE", "TYPE", "UNDERSCORE", 
-		"UNION", "WHITESPACE"
+		"<invalid>", "<EOR>", "<DOWN>", "<UP>", "CALLABLE", "CLOSE_SQ_BR", "COMMA", 
+		"DICT", "DIGIT", "DOT", "EMPTY_TUPLE", "HYPHEN", "LETTER", "LIST", "NUMBER", 
+		"OPEN_SQ_BR", "OPTIONAL", "SET", "SimpleType", "THREE_DOTS", "TUPLE", 
+		"TYPE", "UNDERSCORE", "UNION", "WHITESPACE"
 	};
 	public static final int EOF=-1;
-	public static final int CLOSE_SQ_BR=4;
-	public static final int COMMA=5;
-	public static final int DICT=6;
-	public static final int DIGIT=7;
-	public static final int DOT=8;
-	public static final int EMPTY_TUPLE=9;
-	public static final int HYPHEN=10;
-	public static final int LETTER=11;
-	public static final int LIST=12;
-	public static final int NUMBER=13;
-	public static final int OPEN_SQ_BR=14;
-	public static final int OPTIONAL=15;
-	public static final int SET=16;
-	public static final int SimpleType=17;
-	public static final int THREE_DOTS=18;
-	public static final int TUPLE=19;
-	public static final int TYPE=20;
-	public static final int UNDERSCORE=21;
-	public static final int UNION=22;
-	public static final int WHITESPACE=23;
+	public static final int CALLABLE=4;
+	public static final int CLOSE_SQ_BR=5;
+	public static final int COMMA=6;
+	public static final int DICT=7;
+	public static final int DIGIT=8;
+	public static final int DOT=9;
+	public static final int EMPTY_TUPLE=10;
+	public static final int HYPHEN=11;
+	public static final int LETTER=12;
+	public static final int LIST=13;
+	public static final int NUMBER=14;
+	public static final int OPEN_SQ_BR=15;
+	public static final int OPTIONAL=16;
+	public static final int SET=17;
+	public static final int SimpleType=18;
+	public static final int THREE_DOTS=19;
+	public static final int TUPLE=20;
+	public static final int TYPE=21;
+	public static final int UNDERSCORE=22;
+	public static final int UNION=23;
+	public static final int WHITESPACE=24;
 
 	// delegates
 	public Parser[] getDelegates() {
@@ -87,7 +88,7 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "parse"
-	// PyType.g:45:1: parse : expr ;
+	// PyType.g:46:1: parse : expr ;
 	public final PyTypeParser.parse_return parse() throws RecognitionException {
 		PyTypeParser.parse_return retval = new PyTypeParser.parse_return();
 		retval.start = input.LT(1);
@@ -98,13 +99,13 @@ public class PyTypeParser extends Parser {
 
 
 		try {
-			// PyType.g:46:5: ( expr )
-			// PyType.g:46:8: expr
+			// PyType.g:47:5: ( expr )
+			// PyType.g:47:8: expr
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			pushFollow(FOLLOW_expr_in_parse217);
+			pushFollow(FOLLOW_expr_in_parse228);
 			expr1=expr();
 			state._fsp--;
 
@@ -139,7 +140,7 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "expr"
-	// PyType.g:49:1: expr : ( list_expr | EMPTY_TUPLE | THREE_DOTS | set_expr | SimpleType | union_expr | dict_expr | tuple_expr | optional_expr | type_expr | generic_expr );
+	// PyType.g:50:1: expr : ( list_expr | EMPTY_TUPLE | THREE_DOTS | set_expr | SimpleType | union_expr | callable_expr | dict_expr | tuple_expr | optional_expr | type_expr | generic_expr );
 	public final PyTypeParser.expr_return expr() throws RecognitionException {
 		PyTypeParser.expr_return retval = new PyTypeParser.expr_return();
 		retval.start = input.LT(1);
@@ -152,19 +153,20 @@ public class PyTypeParser extends Parser {
 		ParserRuleReturnScope list_expr2 =null;
 		ParserRuleReturnScope set_expr5 =null;
 		ParserRuleReturnScope union_expr7 =null;
-		ParserRuleReturnScope dict_expr8 =null;
-		ParserRuleReturnScope tuple_expr9 =null;
-		ParserRuleReturnScope optional_expr10 =null;
-		ParserRuleReturnScope type_expr11 =null;
-		ParserRuleReturnScope generic_expr12 =null;
+		ParserRuleReturnScope callable_expr8 =null;
+		ParserRuleReturnScope dict_expr9 =null;
+		ParserRuleReturnScope tuple_expr10 =null;
+		ParserRuleReturnScope optional_expr11 =null;
+		ParserRuleReturnScope type_expr12 =null;
+		ParserRuleReturnScope generic_expr13 =null;
 
 		CommonTree EMPTY_TUPLE3_tree=null;
 		CommonTree THREE_DOTS4_tree=null;
 		CommonTree SimpleType6_tree=null;
 
 		try {
-			// PyType.g:49:6: ( list_expr | EMPTY_TUPLE | THREE_DOTS | set_expr | SimpleType | union_expr | dict_expr | tuple_expr | optional_expr | type_expr | generic_expr )
-			int alt1=11;
+			// PyType.g:50:6: ( list_expr | EMPTY_TUPLE | THREE_DOTS | set_expr | SimpleType | union_expr | callable_expr | dict_expr | tuple_expr | optional_expr | type_expr | generic_expr )
+			int alt1=12;
 			switch ( input.LA(1) ) {
 			case LIST:
 				{
@@ -193,7 +195,7 @@ public class PyTypeParser extends Parser {
 					alt1=5;
 				}
 				else if ( (LA1_5==OPEN_SQ_BR) ) {
-					alt1=11;
+					alt1=12;
 				}
 
 				else {
@@ -215,24 +217,29 @@ public class PyTypeParser extends Parser {
 				alt1=6;
 				}
 				break;
-			case DICT:
+			case CALLABLE:
 				{
 				alt1=7;
 				}
 				break;
-			case TUPLE:
+			case DICT:
 				{
 				alt1=8;
 				}
 				break;
-			case OPTIONAL:
+			case TUPLE:
 				{
 				alt1=9;
 				}
 				break;
-			case TYPE:
+			case OPTIONAL:
 				{
 				alt1=10;
+				}
+				break;
+			case TYPE:
+				{
+				alt1=11;
 				}
 				break;
 			default:
@@ -242,12 +249,12 @@ public class PyTypeParser extends Parser {
 			}
 			switch (alt1) {
 				case 1 :
-					// PyType.g:49:8: list_expr
+					// PyType.g:50:8: list_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_list_expr_in_expr230);
+					pushFollow(FOLLOW_list_expr_in_expr241);
 					list_expr2=list_expr();
 					state._fsp--;
 
@@ -256,36 +263,36 @@ public class PyTypeParser extends Parser {
 					}
 					break;
 				case 2 :
-					// PyType.g:50:7: EMPTY_TUPLE
+					// PyType.g:51:7: EMPTY_TUPLE
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					EMPTY_TUPLE3=(Token)match(input,EMPTY_TUPLE,FOLLOW_EMPTY_TUPLE_in_expr238); 
+					EMPTY_TUPLE3=(Token)match(input,EMPTY_TUPLE,FOLLOW_EMPTY_TUPLE_in_expr249); 
 					EMPTY_TUPLE3_tree = (CommonTree)adaptor.create(EMPTY_TUPLE3);
 					adaptor.addChild(root_0, EMPTY_TUPLE3_tree);
 
 					}
 					break;
 				case 3 :
-					// PyType.g:51:7: THREE_DOTS
+					// PyType.g:52:7: THREE_DOTS
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					THREE_DOTS4=(Token)match(input,THREE_DOTS,FOLLOW_THREE_DOTS_in_expr246); 
+					THREE_DOTS4=(Token)match(input,THREE_DOTS,FOLLOW_THREE_DOTS_in_expr257); 
 					THREE_DOTS4_tree = (CommonTree)adaptor.create(THREE_DOTS4);
 					adaptor.addChild(root_0, THREE_DOTS4_tree);
 
 					}
 					break;
 				case 4 :
-					// PyType.g:52:7: set_expr
+					// PyType.g:53:7: set_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_set_expr_in_expr254);
+					pushFollow(FOLLOW_set_expr_in_expr265);
 					set_expr5=set_expr();
 					state._fsp--;
 
@@ -294,24 +301,24 @@ public class PyTypeParser extends Parser {
 					}
 					break;
 				case 5 :
-					// PyType.g:53:7: SimpleType
+					// PyType.g:54:7: SimpleType
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					SimpleType6=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_expr262); 
+					SimpleType6=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_expr273); 
 					SimpleType6_tree = (CommonTree)adaptor.create(SimpleType6);
 					adaptor.addChild(root_0, SimpleType6_tree);
 
 					}
 					break;
 				case 6 :
-					// PyType.g:54:7: union_expr
+					// PyType.g:55:7: union_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_union_expr_in_expr270);
+					pushFollow(FOLLOW_union_expr_in_expr281);
 					union_expr7=union_expr();
 					state._fsp--;
 
@@ -320,72 +327,86 @@ public class PyTypeParser extends Parser {
 					}
 					break;
 				case 7 :
-					// PyType.g:55:7: dict_expr
+					// PyType.g:56:7: callable_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_dict_expr_in_expr278);
-					dict_expr8=dict_expr();
+					pushFollow(FOLLOW_callable_expr_in_expr289);
+					callable_expr8=callable_expr();
 					state._fsp--;
 
-					adaptor.addChild(root_0, dict_expr8.getTree());
+					adaptor.addChild(root_0, callable_expr8.getTree());
 
 					}
 					break;
 				case 8 :
-					// PyType.g:56:7: tuple_expr
+					// PyType.g:57:7: dict_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_tuple_expr_in_expr286);
-					tuple_expr9=tuple_expr();
+					pushFollow(FOLLOW_dict_expr_in_expr297);
+					dict_expr9=dict_expr();
 					state._fsp--;
 
-					adaptor.addChild(root_0, tuple_expr9.getTree());
+					adaptor.addChild(root_0, dict_expr9.getTree());
 
 					}
 					break;
 				case 9 :
-					// PyType.g:57:7: optional_expr
+					// PyType.g:58:7: tuple_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_optional_expr_in_expr294);
-					optional_expr10=optional_expr();
+					pushFollow(FOLLOW_tuple_expr_in_expr305);
+					tuple_expr10=tuple_expr();
 					state._fsp--;
 
-					adaptor.addChild(root_0, optional_expr10.getTree());
+					adaptor.addChild(root_0, tuple_expr10.getTree());
 
 					}
 					break;
 				case 10 :
-					// PyType.g:58:7: type_expr
+					// PyType.g:59:7: optional_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_type_expr_in_expr302);
-					type_expr11=type_expr();
+					pushFollow(FOLLOW_optional_expr_in_expr313);
+					optional_expr11=optional_expr();
 					state._fsp--;
 
-					adaptor.addChild(root_0, type_expr11.getTree());
+					adaptor.addChild(root_0, optional_expr11.getTree());
 
 					}
 					break;
 				case 11 :
-					// PyType.g:59:7: generic_expr
+					// PyType.g:60:7: type_expr
 					{
 					root_0 = (CommonTree)adaptor.nil();
 
 
-					pushFollow(FOLLOW_generic_expr_in_expr310);
-					generic_expr12=generic_expr();
+					pushFollow(FOLLOW_type_expr_in_expr321);
+					type_expr12=type_expr();
 					state._fsp--;
 
-					adaptor.addChild(root_0, generic_expr12.getTree());
+					adaptor.addChild(root_0, type_expr12.getTree());
+
+					}
+					break;
+				case 12 :
+					// PyType.g:61:7: generic_expr
+					{
+					root_0 = (CommonTree)adaptor.nil();
+
+
+					pushFollow(FOLLOW_generic_expr_in_expr329);
+					generic_expr13=generic_expr();
+					state._fsp--;
+
+					adaptor.addChild(root_0, generic_expr13.getTree());
 
 					}
 					break;
@@ -418,37 +439,37 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "list_element"
-	// PyType.g:61:1: list_element : OPEN_SQ_BR expr CLOSE_SQ_BR -> expr ;
+	// PyType.g:63:1: list_element : OPEN_SQ_BR expr CLOSE_SQ_BR -> expr ;
 	public final PyTypeParser.list_element_return list_element() throws RecognitionException {
 		PyTypeParser.list_element_return retval = new PyTypeParser.list_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR13=null;
-		Token CLOSE_SQ_BR15=null;
-		ParserRuleReturnScope expr14 =null;
+		Token OPEN_SQ_BR14=null;
+		Token CLOSE_SQ_BR16=null;
+		ParserRuleReturnScope expr15 =null;
 
-		CommonTree OPEN_SQ_BR13_tree=null;
-		CommonTree CLOSE_SQ_BR15_tree=null;
+		CommonTree OPEN_SQ_BR14_tree=null;
+		CommonTree CLOSE_SQ_BR16_tree=null;
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:62:5: ( OPEN_SQ_BR expr CLOSE_SQ_BR -> expr )
-			// PyType.g:62:7: OPEN_SQ_BR expr CLOSE_SQ_BR
+			// PyType.g:64:5: ( OPEN_SQ_BR expr CLOSE_SQ_BR -> expr )
+			// PyType.g:64:7: OPEN_SQ_BR expr CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR13=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_list_element322);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR13);
+			OPEN_SQ_BR14=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_list_element341);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR14);
 
-			pushFollow(FOLLOW_expr_in_list_element324);
-			expr14=expr();
+			pushFollow(FOLLOW_expr_in_list_element343);
+			expr15=expr();
 			state._fsp--;
 
-			stream_expr.add(expr14.getTree());
-			CLOSE_SQ_BR15=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_list_element326);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR15);
+			stream_expr.add(expr15.getTree());
+			CLOSE_SQ_BR16=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_list_element345);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR16);
 
 			// AST REWRITE
 			// elements: expr
@@ -461,7 +482,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 62:35: -> expr
+			// 64:35: -> expr
 			{
 				adaptor.addChild(root_0, stream_expr.nextTree());
 			}
@@ -498,40 +519,40 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "union_element"
-	// PyType.g:65:1: union_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	// PyType.g:67:1: union_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
 	public final PyTypeParser.union_element_return union_element() throws RecognitionException {
 		PyTypeParser.union_element_return retval = new PyTypeParser.union_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR16=null;
-		Token COMMA18=null;
-		Token CLOSE_SQ_BR20=null;
-		ParserRuleReturnScope expr17 =null;
-		ParserRuleReturnScope expr19 =null;
+		Token OPEN_SQ_BR17=null;
+		Token COMMA19=null;
+		Token CLOSE_SQ_BR21=null;
+		ParserRuleReturnScope expr18 =null;
+		ParserRuleReturnScope expr20 =null;
 
-		CommonTree OPEN_SQ_BR16_tree=null;
-		CommonTree COMMA18_tree=null;
-		CommonTree CLOSE_SQ_BR20_tree=null;
+		CommonTree OPEN_SQ_BR17_tree=null;
+		CommonTree COMMA19_tree=null;
+		CommonTree CLOSE_SQ_BR21_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:66:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:66:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:68:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:68:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR16=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_union_element347);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR16);
+			OPEN_SQ_BR17=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_union_element366);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR17);
 
-			pushFollow(FOLLOW_expr_in_union_element349);
-			expr17=expr();
+			pushFollow(FOLLOW_expr_in_union_element368);
+			expr18=expr();
 			state._fsp--;
 
-			stream_expr.add(expr17.getTree());
-			// PyType.g:66:23: ( COMMA expr )*
+			stream_expr.add(expr18.getTree());
+			// PyType.g:68:23: ( COMMA expr )*
 			loop2:
 			while (true) {
 				int alt2=2;
@@ -542,16 +563,16 @@ public class PyTypeParser extends Parser {
 
 				switch (alt2) {
 				case 1 :
-					// PyType.g:66:24: COMMA expr
+					// PyType.g:68:24: COMMA expr
 					{
-					COMMA18=(Token)match(input,COMMA,FOLLOW_COMMA_in_union_element352);  
-					stream_COMMA.add(COMMA18);
+					COMMA19=(Token)match(input,COMMA,FOLLOW_COMMA_in_union_element371);  
+					stream_COMMA.add(COMMA19);
 
-					pushFollow(FOLLOW_expr_in_union_element354);
-					expr19=expr();
+					pushFollow(FOLLOW_expr_in_union_element373);
+					expr20=expr();
 					state._fsp--;
 
-					stream_expr.add(expr19.getTree());
+					stream_expr.add(expr20.getTree());
 					}
 					break;
 
@@ -560,8 +581,8 @@ public class PyTypeParser extends Parser {
 				}
 			}
 
-			CLOSE_SQ_BR20=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_union_element359);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR20);
+			CLOSE_SQ_BR21=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_union_element378);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR21);
 
 			// AST REWRITE
 			// elements: expr
@@ -574,7 +595,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 66:50: -> ( expr )+
+			// 68:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -610,48 +631,48 @@ public class PyTypeParser extends Parser {
 	// $ANTLR end "union_element"
 
 
-	public static class dict_element_return extends ParserRuleReturnScope {
+	public static class callable_element_return extends ParserRuleReturnScope {
 		CommonTree tree;
 		@Override
 		public CommonTree getTree() { return tree; }
 	};
 
 
-	// $ANTLR start "dict_element"
-	// PyType.g:68:1: dict_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
-	public final PyTypeParser.dict_element_return dict_element() throws RecognitionException {
-		PyTypeParser.dict_element_return retval = new PyTypeParser.dict_element_return();
+	// $ANTLR start "callable_element"
+	// PyType.g:70:1: callable_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	public final PyTypeParser.callable_element_return callable_element() throws RecognitionException {
+		PyTypeParser.callable_element_return retval = new PyTypeParser.callable_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR21=null;
-		Token COMMA23=null;
-		Token CLOSE_SQ_BR25=null;
-		ParserRuleReturnScope expr22 =null;
-		ParserRuleReturnScope expr24 =null;
+		Token OPEN_SQ_BR22=null;
+		Token COMMA24=null;
+		Token CLOSE_SQ_BR26=null;
+		ParserRuleReturnScope expr23 =null;
+		ParserRuleReturnScope expr25 =null;
 
-		CommonTree OPEN_SQ_BR21_tree=null;
-		CommonTree COMMA23_tree=null;
-		CommonTree CLOSE_SQ_BR25_tree=null;
+		CommonTree OPEN_SQ_BR22_tree=null;
+		CommonTree COMMA24_tree=null;
+		CommonTree CLOSE_SQ_BR26_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:69:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:69:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:71:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:71:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR21=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_dict_element376);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR21);
+			OPEN_SQ_BR22=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_callable_element395);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR22);
 
-			pushFollow(FOLLOW_expr_in_dict_element378);
-			expr22=expr();
+			pushFollow(FOLLOW_expr_in_callable_element397);
+			expr23=expr();
 			state._fsp--;
 
-			stream_expr.add(expr22.getTree());
-			// PyType.g:69:23: ( COMMA expr )*
+			stream_expr.add(expr23.getTree());
+			// PyType.g:71:23: ( COMMA expr )*
 			loop3:
 			while (true) {
 				int alt3=2;
@@ -662,16 +683,16 @@ public class PyTypeParser extends Parser {
 
 				switch (alt3) {
 				case 1 :
-					// PyType.g:69:24: COMMA expr
+					// PyType.g:71:24: COMMA expr
 					{
-					COMMA23=(Token)match(input,COMMA,FOLLOW_COMMA_in_dict_element381);  
-					stream_COMMA.add(COMMA23);
+					COMMA24=(Token)match(input,COMMA,FOLLOW_COMMA_in_callable_element400);  
+					stream_COMMA.add(COMMA24);
 
-					pushFollow(FOLLOW_expr_in_dict_element383);
-					expr24=expr();
+					pushFollow(FOLLOW_expr_in_callable_element402);
+					expr25=expr();
 					state._fsp--;
 
-					stream_expr.add(expr24.getTree());
+					stream_expr.add(expr25.getTree());
 					}
 					break;
 
@@ -680,8 +701,8 @@ public class PyTypeParser extends Parser {
 				}
 			}
 
-			CLOSE_SQ_BR25=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_dict_element388);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR25);
+			CLOSE_SQ_BR26=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_callable_element407);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR26);
 
 			// AST REWRITE
 			// elements: expr
@@ -694,7 +715,127 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 69:50: -> ( expr )+
+			// 71:50: -> ( expr )+
+			{
+				if ( !(stream_expr.hasNext()) ) {
+					throw new RewriteEarlyExitException();
+				}
+				while ( stream_expr.hasNext() ) {
+					adaptor.addChild(root_0, stream_expr.nextTree());
+				}
+				stream_expr.reset();
+
+			}
+
+
+			retval.tree = root_0;
+
+			}
+
+			retval.stop = input.LT(-1);
+
+			retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
+			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+			retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+		}
+		finally {
+			// do for sure before leaving
+		}
+		return retval;
+	}
+	// $ANTLR end "callable_element"
+
+
+	public static class dict_element_return extends ParserRuleReturnScope {
+		CommonTree tree;
+		@Override
+		public CommonTree getTree() { return tree; }
+	};
+
+
+	// $ANTLR start "dict_element"
+	// PyType.g:73:1: dict_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	public final PyTypeParser.dict_element_return dict_element() throws RecognitionException {
+		PyTypeParser.dict_element_return retval = new PyTypeParser.dict_element_return();
+		retval.start = input.LT(1);
+
+		CommonTree root_0 = null;
+
+		Token OPEN_SQ_BR27=null;
+		Token COMMA29=null;
+		Token CLOSE_SQ_BR31=null;
+		ParserRuleReturnScope expr28 =null;
+		ParserRuleReturnScope expr30 =null;
+
+		CommonTree OPEN_SQ_BR27_tree=null;
+		CommonTree COMMA29_tree=null;
+		CommonTree CLOSE_SQ_BR31_tree=null;
+		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
+		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
+		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
+		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
+
+		try {
+			// PyType.g:74:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:74:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			{
+			OPEN_SQ_BR27=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_dict_element424);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR27);
+
+			pushFollow(FOLLOW_expr_in_dict_element426);
+			expr28=expr();
+			state._fsp--;
+
+			stream_expr.add(expr28.getTree());
+			// PyType.g:74:23: ( COMMA expr )*
+			loop4:
+			while (true) {
+				int alt4=2;
+				int LA4_0 = input.LA(1);
+				if ( (LA4_0==COMMA) ) {
+					alt4=1;
+				}
+
+				switch (alt4) {
+				case 1 :
+					// PyType.g:74:24: COMMA expr
+					{
+					COMMA29=(Token)match(input,COMMA,FOLLOW_COMMA_in_dict_element429);  
+					stream_COMMA.add(COMMA29);
+
+					pushFollow(FOLLOW_expr_in_dict_element431);
+					expr30=expr();
+					state._fsp--;
+
+					stream_expr.add(expr30.getTree());
+					}
+					break;
+
+				default :
+					break loop4;
+				}
+			}
+
+			CLOSE_SQ_BR31=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_dict_element436);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR31);
+
+			// AST REWRITE
+			// elements: expr
+			// token labels: 
+			// rule labels: retval
+			// token list labels: 
+			// rule list labels: 
+			// wildcard labels: 
+			retval.tree = root_0;
+			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
+
+			root_0 = (CommonTree)adaptor.nil();
+			// 74:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -738,70 +879,70 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "tuple_element"
-	// PyType.g:71:1: tuple_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	// PyType.g:76:1: tuple_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
 	public final PyTypeParser.tuple_element_return tuple_element() throws RecognitionException {
 		PyTypeParser.tuple_element_return retval = new PyTypeParser.tuple_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR26=null;
-		Token COMMA28=null;
-		Token CLOSE_SQ_BR30=null;
-		ParserRuleReturnScope expr27 =null;
-		ParserRuleReturnScope expr29 =null;
+		Token OPEN_SQ_BR32=null;
+		Token COMMA34=null;
+		Token CLOSE_SQ_BR36=null;
+		ParserRuleReturnScope expr33 =null;
+		ParserRuleReturnScope expr35 =null;
 
-		CommonTree OPEN_SQ_BR26_tree=null;
-		CommonTree COMMA28_tree=null;
-		CommonTree CLOSE_SQ_BR30_tree=null;
+		CommonTree OPEN_SQ_BR32_tree=null;
+		CommonTree COMMA34_tree=null;
+		CommonTree CLOSE_SQ_BR36_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:72:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:72:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:77:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:77:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR26=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_tuple_element405);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR26);
+			OPEN_SQ_BR32=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_tuple_element453);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR32);
 
-			pushFollow(FOLLOW_expr_in_tuple_element407);
-			expr27=expr();
+			pushFollow(FOLLOW_expr_in_tuple_element455);
+			expr33=expr();
 			state._fsp--;
 
-			stream_expr.add(expr27.getTree());
-			// PyType.g:72:23: ( COMMA expr )*
-			loop4:
+			stream_expr.add(expr33.getTree());
+			// PyType.g:77:23: ( COMMA expr )*
+			loop5:
 			while (true) {
-				int alt4=2;
-				int LA4_0 = input.LA(1);
-				if ( (LA4_0==COMMA) ) {
-					alt4=1;
+				int alt5=2;
+				int LA5_0 = input.LA(1);
+				if ( (LA5_0==COMMA) ) {
+					alt5=1;
 				}
 
-				switch (alt4) {
+				switch (alt5) {
 				case 1 :
-					// PyType.g:72:24: COMMA expr
+					// PyType.g:77:24: COMMA expr
 					{
-					COMMA28=(Token)match(input,COMMA,FOLLOW_COMMA_in_tuple_element410);  
-					stream_COMMA.add(COMMA28);
+					COMMA34=(Token)match(input,COMMA,FOLLOW_COMMA_in_tuple_element458);  
+					stream_COMMA.add(COMMA34);
 
-					pushFollow(FOLLOW_expr_in_tuple_element412);
-					expr29=expr();
+					pushFollow(FOLLOW_expr_in_tuple_element460);
+					expr35=expr();
 					state._fsp--;
 
-					stream_expr.add(expr29.getTree());
+					stream_expr.add(expr35.getTree());
 					}
 					break;
 
 				default :
-					break loop4;
+					break loop5;
 				}
 			}
 
-			CLOSE_SQ_BR30=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_tuple_element417);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR30);
+			CLOSE_SQ_BR36=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_tuple_element465);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR36);
 
 			// AST REWRITE
 			// elements: expr
@@ -814,7 +955,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 72:50: -> ( expr )+
+			// 77:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -858,70 +999,70 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "optional_element"
-	// PyType.g:74:1: optional_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	// PyType.g:79:1: optional_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
 	public final PyTypeParser.optional_element_return optional_element() throws RecognitionException {
 		PyTypeParser.optional_element_return retval = new PyTypeParser.optional_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR31=null;
-		Token COMMA33=null;
-		Token CLOSE_SQ_BR35=null;
-		ParserRuleReturnScope expr32 =null;
-		ParserRuleReturnScope expr34 =null;
+		Token OPEN_SQ_BR37=null;
+		Token COMMA39=null;
+		Token CLOSE_SQ_BR41=null;
+		ParserRuleReturnScope expr38 =null;
+		ParserRuleReturnScope expr40 =null;
 
-		CommonTree OPEN_SQ_BR31_tree=null;
-		CommonTree COMMA33_tree=null;
-		CommonTree CLOSE_SQ_BR35_tree=null;
+		CommonTree OPEN_SQ_BR37_tree=null;
+		CommonTree COMMA39_tree=null;
+		CommonTree CLOSE_SQ_BR41_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:75:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:75:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:80:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:80:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR31=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_optional_element434);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR31);
+			OPEN_SQ_BR37=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_optional_element482);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR37);
 
-			pushFollow(FOLLOW_expr_in_optional_element436);
-			expr32=expr();
+			pushFollow(FOLLOW_expr_in_optional_element484);
+			expr38=expr();
 			state._fsp--;
 
-			stream_expr.add(expr32.getTree());
-			// PyType.g:75:23: ( COMMA expr )*
-			loop5:
+			stream_expr.add(expr38.getTree());
+			// PyType.g:80:23: ( COMMA expr )*
+			loop6:
 			while (true) {
-				int alt5=2;
-				int LA5_0 = input.LA(1);
-				if ( (LA5_0==COMMA) ) {
-					alt5=1;
+				int alt6=2;
+				int LA6_0 = input.LA(1);
+				if ( (LA6_0==COMMA) ) {
+					alt6=1;
 				}
 
-				switch (alt5) {
+				switch (alt6) {
 				case 1 :
-					// PyType.g:75:24: COMMA expr
+					// PyType.g:80:24: COMMA expr
 					{
-					COMMA33=(Token)match(input,COMMA,FOLLOW_COMMA_in_optional_element439);  
-					stream_COMMA.add(COMMA33);
+					COMMA39=(Token)match(input,COMMA,FOLLOW_COMMA_in_optional_element487);  
+					stream_COMMA.add(COMMA39);
 
-					pushFollow(FOLLOW_expr_in_optional_element441);
-					expr34=expr();
+					pushFollow(FOLLOW_expr_in_optional_element489);
+					expr40=expr();
 					state._fsp--;
 
-					stream_expr.add(expr34.getTree());
+					stream_expr.add(expr40.getTree());
 					}
 					break;
 
 				default :
-					break loop5;
+					break loop6;
 				}
 			}
 
-			CLOSE_SQ_BR35=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_optional_element446);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR35);
+			CLOSE_SQ_BR41=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_optional_element494);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR41);
 
 			// AST REWRITE
 			// elements: expr
@@ -934,7 +1075,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 75:50: -> ( expr )+
+			// 80:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -978,70 +1119,70 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "type_element"
-	// PyType.g:77:1: type_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	// PyType.g:82:1: type_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
 	public final PyTypeParser.type_element_return type_element() throws RecognitionException {
 		PyTypeParser.type_element_return retval = new PyTypeParser.type_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR36=null;
-		Token COMMA38=null;
-		Token CLOSE_SQ_BR40=null;
-		ParserRuleReturnScope expr37 =null;
-		ParserRuleReturnScope expr39 =null;
+		Token OPEN_SQ_BR42=null;
+		Token COMMA44=null;
+		Token CLOSE_SQ_BR46=null;
+		ParserRuleReturnScope expr43 =null;
+		ParserRuleReturnScope expr45 =null;
 
-		CommonTree OPEN_SQ_BR36_tree=null;
-		CommonTree COMMA38_tree=null;
-		CommonTree CLOSE_SQ_BR40_tree=null;
+		CommonTree OPEN_SQ_BR42_tree=null;
+		CommonTree COMMA44_tree=null;
+		CommonTree CLOSE_SQ_BR46_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:78:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:78:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:83:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:83:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR36=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_type_element463);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR36);
+			OPEN_SQ_BR42=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_type_element511);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR42);
 
-			pushFollow(FOLLOW_expr_in_type_element465);
-			expr37=expr();
+			pushFollow(FOLLOW_expr_in_type_element513);
+			expr43=expr();
 			state._fsp--;
 
-			stream_expr.add(expr37.getTree());
-			// PyType.g:78:23: ( COMMA expr )*
-			loop6:
+			stream_expr.add(expr43.getTree());
+			// PyType.g:83:23: ( COMMA expr )*
+			loop7:
 			while (true) {
-				int alt6=2;
-				int LA6_0 = input.LA(1);
-				if ( (LA6_0==COMMA) ) {
-					alt6=1;
+				int alt7=2;
+				int LA7_0 = input.LA(1);
+				if ( (LA7_0==COMMA) ) {
+					alt7=1;
 				}
 
-				switch (alt6) {
+				switch (alt7) {
 				case 1 :
-					// PyType.g:78:24: COMMA expr
+					// PyType.g:83:24: COMMA expr
 					{
-					COMMA38=(Token)match(input,COMMA,FOLLOW_COMMA_in_type_element468);  
-					stream_COMMA.add(COMMA38);
+					COMMA44=(Token)match(input,COMMA,FOLLOW_COMMA_in_type_element516);  
+					stream_COMMA.add(COMMA44);
 
-					pushFollow(FOLLOW_expr_in_type_element470);
-					expr39=expr();
+					pushFollow(FOLLOW_expr_in_type_element518);
+					expr45=expr();
 					state._fsp--;
 
-					stream_expr.add(expr39.getTree());
+					stream_expr.add(expr45.getTree());
 					}
 					break;
 
 				default :
-					break loop6;
+					break loop7;
 				}
 			}
 
-			CLOSE_SQ_BR40=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_type_element475);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR40);
+			CLOSE_SQ_BR46=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_type_element523);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR46);
 
 			// AST REWRITE
 			// elements: expr
@@ -1054,7 +1195,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 78:50: -> ( expr )+
+			// 83:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -1098,70 +1239,70 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "generic_element"
-	// PyType.g:80:1: generic_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
+	// PyType.g:85:1: generic_element : OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ ;
 	public final PyTypeParser.generic_element_return generic_element() throws RecognitionException {
 		PyTypeParser.generic_element_return retval = new PyTypeParser.generic_element_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPEN_SQ_BR41=null;
-		Token COMMA43=null;
-		Token CLOSE_SQ_BR45=null;
-		ParserRuleReturnScope expr42 =null;
-		ParserRuleReturnScope expr44 =null;
+		Token OPEN_SQ_BR47=null;
+		Token COMMA49=null;
+		Token CLOSE_SQ_BR51=null;
+		ParserRuleReturnScope expr48 =null;
+		ParserRuleReturnScope expr50 =null;
 
-		CommonTree OPEN_SQ_BR41_tree=null;
-		CommonTree COMMA43_tree=null;
-		CommonTree CLOSE_SQ_BR45_tree=null;
+		CommonTree OPEN_SQ_BR47_tree=null;
+		CommonTree COMMA49_tree=null;
+		CommonTree CLOSE_SQ_BR51_tree=null;
 		RewriteRuleTokenStream stream_COMMA=new RewriteRuleTokenStream(adaptor,"token COMMA");
 		RewriteRuleTokenStream stream_CLOSE_SQ_BR=new RewriteRuleTokenStream(adaptor,"token CLOSE_SQ_BR");
 		RewriteRuleTokenStream stream_OPEN_SQ_BR=new RewriteRuleTokenStream(adaptor,"token OPEN_SQ_BR");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
-			// PyType.g:81:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
-			// PyType.g:81:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
+			// PyType.g:86:5: ( OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR -> ( expr )+ )
+			// PyType.g:86:7: OPEN_SQ_BR expr ( COMMA expr )* CLOSE_SQ_BR
 			{
-			OPEN_SQ_BR41=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_generic_element492);  
-			stream_OPEN_SQ_BR.add(OPEN_SQ_BR41);
+			OPEN_SQ_BR47=(Token)match(input,OPEN_SQ_BR,FOLLOW_OPEN_SQ_BR_in_generic_element540);  
+			stream_OPEN_SQ_BR.add(OPEN_SQ_BR47);
 
-			pushFollow(FOLLOW_expr_in_generic_element494);
-			expr42=expr();
+			pushFollow(FOLLOW_expr_in_generic_element542);
+			expr48=expr();
 			state._fsp--;
 
-			stream_expr.add(expr42.getTree());
-			// PyType.g:81:23: ( COMMA expr )*
-			loop7:
+			stream_expr.add(expr48.getTree());
+			// PyType.g:86:23: ( COMMA expr )*
+			loop8:
 			while (true) {
-				int alt7=2;
-				int LA7_0 = input.LA(1);
-				if ( (LA7_0==COMMA) ) {
-					alt7=1;
+				int alt8=2;
+				int LA8_0 = input.LA(1);
+				if ( (LA8_0==COMMA) ) {
+					alt8=1;
 				}
 
-				switch (alt7) {
+				switch (alt8) {
 				case 1 :
-					// PyType.g:81:24: COMMA expr
+					// PyType.g:86:24: COMMA expr
 					{
-					COMMA43=(Token)match(input,COMMA,FOLLOW_COMMA_in_generic_element497);  
-					stream_COMMA.add(COMMA43);
+					COMMA49=(Token)match(input,COMMA,FOLLOW_COMMA_in_generic_element545);  
+					stream_COMMA.add(COMMA49);
 
-					pushFollow(FOLLOW_expr_in_generic_element499);
-					expr44=expr();
+					pushFollow(FOLLOW_expr_in_generic_element547);
+					expr50=expr();
 					state._fsp--;
 
-					stream_expr.add(expr44.getTree());
+					stream_expr.add(expr50.getTree());
 					}
 					break;
 
 				default :
-					break loop7;
+					break loop8;
 				}
 			}
 
-			CLOSE_SQ_BR45=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_generic_element504);  
-			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR45);
+			CLOSE_SQ_BR51=(Token)match(input,CLOSE_SQ_BR,FOLLOW_CLOSE_SQ_BR_in_generic_element552);  
+			stream_CLOSE_SQ_BR.add(CLOSE_SQ_BR51);
 
 			// AST REWRITE
 			// elements: expr
@@ -1174,7 +1315,7 @@ public class PyTypeParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 81:50: -> ( expr )+
+			// 86:50: -> ( expr )+
 			{
 				if ( !(stream_expr.hasNext()) ) {
 					throw new RewriteEarlyExitException();
@@ -1218,53 +1359,53 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "list_expr"
-	// PyType.g:83:1: list_expr : LIST ^ ( list_element )* ;
+	// PyType.g:88:1: list_expr : LIST ^ ( list_element )* ;
 	public final PyTypeParser.list_expr_return list_expr() throws RecognitionException {
 		PyTypeParser.list_expr_return retval = new PyTypeParser.list_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token LIST46=null;
-		ParserRuleReturnScope list_element47 =null;
+		Token LIST52=null;
+		ParserRuleReturnScope list_element53 =null;
 
-		CommonTree LIST46_tree=null;
+		CommonTree LIST52_tree=null;
 
 		try {
-			// PyType.g:84:5: ( LIST ^ ( list_element )* )
-			// PyType.g:84:7: LIST ^ ( list_element )*
+			// PyType.g:89:5: ( LIST ^ ( list_element )* )
+			// PyType.g:89:7: LIST ^ ( list_element )*
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			LIST46=(Token)match(input,LIST,FOLLOW_LIST_in_list_expr521); 
-			LIST46_tree = (CommonTree)adaptor.create(LIST46);
-			root_0 = (CommonTree)adaptor.becomeRoot(LIST46_tree, root_0);
+			LIST52=(Token)match(input,LIST,FOLLOW_LIST_in_list_expr569); 
+			LIST52_tree = (CommonTree)adaptor.create(LIST52);
+			root_0 = (CommonTree)adaptor.becomeRoot(LIST52_tree, root_0);
 
-			// PyType.g:84:13: ( list_element )*
-			loop8:
+			// PyType.g:89:13: ( list_element )*
+			loop9:
 			while (true) {
-				int alt8=2;
-				int LA8_0 = input.LA(1);
-				if ( (LA8_0==OPEN_SQ_BR) ) {
-					alt8=1;
+				int alt9=2;
+				int LA9_0 = input.LA(1);
+				if ( (LA9_0==OPEN_SQ_BR) ) {
+					alt9=1;
 				}
 
-				switch (alt8) {
+				switch (alt9) {
 				case 1 :
-					// PyType.g:84:13: list_element
+					// PyType.g:89:13: list_element
 					{
-					pushFollow(FOLLOW_list_element_in_list_expr524);
-					list_element47=list_element();
+					pushFollow(FOLLOW_list_element_in_list_expr572);
+					list_element53=list_element();
 					state._fsp--;
 
-					adaptor.addChild(root_0, list_element47.getTree());
+					adaptor.addChild(root_0, list_element53.getTree());
 
 					}
 					break;
 
 				default :
-					break loop8;
+					break loop9;
 				}
 			}
 
@@ -1297,53 +1438,53 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "set_expr"
-	// PyType.g:86:1: set_expr : SET ^ ( list_element )* ;
+	// PyType.g:91:1: set_expr : SET ^ ( list_element )* ;
 	public final PyTypeParser.set_expr_return set_expr() throws RecognitionException {
 		PyTypeParser.set_expr_return retval = new PyTypeParser.set_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token SET48=null;
-		ParserRuleReturnScope list_element49 =null;
+		Token SET54=null;
+		ParserRuleReturnScope list_element55 =null;
 
-		CommonTree SET48_tree=null;
+		CommonTree SET54_tree=null;
 
 		try {
-			// PyType.g:87:5: ( SET ^ ( list_element )* )
-			// PyType.g:87:7: SET ^ ( list_element )*
+			// PyType.g:92:5: ( SET ^ ( list_element )* )
+			// PyType.g:92:7: SET ^ ( list_element )*
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			SET48=(Token)match(input,SET,FOLLOW_SET_in_set_expr537); 
-			SET48_tree = (CommonTree)adaptor.create(SET48);
-			root_0 = (CommonTree)adaptor.becomeRoot(SET48_tree, root_0);
+			SET54=(Token)match(input,SET,FOLLOW_SET_in_set_expr585); 
+			SET54_tree = (CommonTree)adaptor.create(SET54);
+			root_0 = (CommonTree)adaptor.becomeRoot(SET54_tree, root_0);
 
-			// PyType.g:87:12: ( list_element )*
-			loop9:
+			// PyType.g:92:12: ( list_element )*
+			loop10:
 			while (true) {
-				int alt9=2;
-				int LA9_0 = input.LA(1);
-				if ( (LA9_0==OPEN_SQ_BR) ) {
-					alt9=1;
+				int alt10=2;
+				int LA10_0 = input.LA(1);
+				if ( (LA10_0==OPEN_SQ_BR) ) {
+					alt10=1;
 				}
 
-				switch (alt9) {
+				switch (alt10) {
 				case 1 :
-					// PyType.g:87:12: list_element
+					// PyType.g:92:12: list_element
 					{
-					pushFollow(FOLLOW_list_element_in_set_expr540);
-					list_element49=list_element();
+					pushFollow(FOLLOW_list_element_in_set_expr588);
+					list_element55=list_element();
 					state._fsp--;
 
-					adaptor.addChild(root_0, list_element49.getTree());
+					adaptor.addChild(root_0, list_element55.getTree());
 
 					}
 					break;
 
 				default :
-					break loop9;
+					break loop10;
 				}
 			}
 
@@ -1376,34 +1517,55 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "union_expr"
-	// PyType.g:89:1: union_expr : UNION ^ union_element ;
+	// PyType.g:94:1: union_expr : UNION ^ ( union_element )* ;
 	public final PyTypeParser.union_expr_return union_expr() throws RecognitionException {
 		PyTypeParser.union_expr_return retval = new PyTypeParser.union_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token UNION50=null;
-		ParserRuleReturnScope union_element51 =null;
+		Token UNION56=null;
+		ParserRuleReturnScope union_element57 =null;
 
-		CommonTree UNION50_tree=null;
+		CommonTree UNION56_tree=null;
 
 		try {
-			// PyType.g:90:5: ( UNION ^ union_element )
-			// PyType.g:90:7: UNION ^ union_element
+			// PyType.g:95:5: ( UNION ^ ( union_element )* )
+			// PyType.g:95:7: UNION ^ ( union_element )*
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			UNION50=(Token)match(input,UNION,FOLLOW_UNION_in_union_expr553); 
-			UNION50_tree = (CommonTree)adaptor.create(UNION50);
-			root_0 = (CommonTree)adaptor.becomeRoot(UNION50_tree, root_0);
+			UNION56=(Token)match(input,UNION,FOLLOW_UNION_in_union_expr601); 
+			UNION56_tree = (CommonTree)adaptor.create(UNION56);
+			root_0 = (CommonTree)adaptor.becomeRoot(UNION56_tree, root_0);
 
-			pushFollow(FOLLOW_union_element_in_union_expr556);
-			union_element51=union_element();
-			state._fsp--;
+			// PyType.g:95:14: ( union_element )*
+			loop11:
+			while (true) {
+				int alt11=2;
+				int LA11_0 = input.LA(1);
+				if ( (LA11_0==OPEN_SQ_BR) ) {
+					alt11=1;
+				}
 
-			adaptor.addChild(root_0, union_element51.getTree());
+				switch (alt11) {
+				case 1 :
+					// PyType.g:95:14: union_element
+					{
+					pushFollow(FOLLOW_union_element_in_union_expr604);
+					union_element57=union_element();
+					state._fsp--;
+
+					adaptor.addChild(root_0, union_element57.getTree());
+
+					}
+					break;
+
+				default :
+					break loop11;
+				}
+			}
 
 			}
 
@@ -1426,6 +1588,64 @@ public class PyTypeParser extends Parser {
 	// $ANTLR end "union_expr"
 
 
+	public static class callable_expr_return extends ParserRuleReturnScope {
+		CommonTree tree;
+		@Override
+		public CommonTree getTree() { return tree; }
+	};
+
+
+	// $ANTLR start "callable_expr"
+	// PyType.g:97:1: callable_expr : CALLABLE ^ callable_element ;
+	public final PyTypeParser.callable_expr_return callable_expr() throws RecognitionException {
+		PyTypeParser.callable_expr_return retval = new PyTypeParser.callable_expr_return();
+		retval.start = input.LT(1);
+
+		CommonTree root_0 = null;
+
+		Token CALLABLE58=null;
+		ParserRuleReturnScope callable_element59 =null;
+
+		CommonTree CALLABLE58_tree=null;
+
+		try {
+			// PyType.g:98:5: ( CALLABLE ^ callable_element )
+			// PyType.g:98:7: CALLABLE ^ callable_element
+			{
+			root_0 = (CommonTree)adaptor.nil();
+
+
+			CALLABLE58=(Token)match(input,CALLABLE,FOLLOW_CALLABLE_in_callable_expr617); 
+			CALLABLE58_tree = (CommonTree)adaptor.create(CALLABLE58);
+			root_0 = (CommonTree)adaptor.becomeRoot(CALLABLE58_tree, root_0);
+
+			pushFollow(FOLLOW_callable_element_in_callable_expr620);
+			callable_element59=callable_element();
+			state._fsp--;
+
+			adaptor.addChild(root_0, callable_element59.getTree());
+
+			}
+
+			retval.stop = input.LT(-1);
+
+			retval.tree = (CommonTree)adaptor.rulePostProcessing(root_0);
+			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+			retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+		}
+		finally {
+			// do for sure before leaving
+		}
+		return retval;
+	}
+	// $ANTLR end "callable_expr"
+
+
 	public static class dict_expr_return extends ParserRuleReturnScope {
 		CommonTree tree;
 		@Override
@@ -1434,34 +1654,34 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "dict_expr"
-	// PyType.g:92:1: dict_expr : DICT ^ dict_element ;
+	// PyType.g:100:1: dict_expr : DICT ^ dict_element ;
 	public final PyTypeParser.dict_expr_return dict_expr() throws RecognitionException {
 		PyTypeParser.dict_expr_return retval = new PyTypeParser.dict_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token DICT52=null;
-		ParserRuleReturnScope dict_element53 =null;
+		Token DICT60=null;
+		ParserRuleReturnScope dict_element61 =null;
 
-		CommonTree DICT52_tree=null;
+		CommonTree DICT60_tree=null;
 
 		try {
-			// PyType.g:93:5: ( DICT ^ dict_element )
-			// PyType.g:93:7: DICT ^ dict_element
+			// PyType.g:101:5: ( DICT ^ dict_element )
+			// PyType.g:101:7: DICT ^ dict_element
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			DICT52=(Token)match(input,DICT,FOLLOW_DICT_in_dict_expr568); 
-			DICT52_tree = (CommonTree)adaptor.create(DICT52);
-			root_0 = (CommonTree)adaptor.becomeRoot(DICT52_tree, root_0);
+			DICT60=(Token)match(input,DICT,FOLLOW_DICT_in_dict_expr632); 
+			DICT60_tree = (CommonTree)adaptor.create(DICT60);
+			root_0 = (CommonTree)adaptor.becomeRoot(DICT60_tree, root_0);
 
-			pushFollow(FOLLOW_dict_element_in_dict_expr571);
-			dict_element53=dict_element();
+			pushFollow(FOLLOW_dict_element_in_dict_expr635);
+			dict_element61=dict_element();
 			state._fsp--;
 
-			adaptor.addChild(root_0, dict_element53.getTree());
+			adaptor.addChild(root_0, dict_element61.getTree());
 
 			}
 
@@ -1492,34 +1712,34 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "tuple_expr"
-	// PyType.g:95:1: tuple_expr : TUPLE ^ tuple_element ;
+	// PyType.g:103:1: tuple_expr : TUPLE ^ tuple_element ;
 	public final PyTypeParser.tuple_expr_return tuple_expr() throws RecognitionException {
 		PyTypeParser.tuple_expr_return retval = new PyTypeParser.tuple_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token TUPLE54=null;
-		ParserRuleReturnScope tuple_element55 =null;
+		Token TUPLE62=null;
+		ParserRuleReturnScope tuple_element63 =null;
 
-		CommonTree TUPLE54_tree=null;
+		CommonTree TUPLE62_tree=null;
 
 		try {
-			// PyType.g:96:5: ( TUPLE ^ tuple_element )
-			// PyType.g:96:7: TUPLE ^ tuple_element
+			// PyType.g:104:5: ( TUPLE ^ tuple_element )
+			// PyType.g:104:7: TUPLE ^ tuple_element
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			TUPLE54=(Token)match(input,TUPLE,FOLLOW_TUPLE_in_tuple_expr583); 
-			TUPLE54_tree = (CommonTree)adaptor.create(TUPLE54);
-			root_0 = (CommonTree)adaptor.becomeRoot(TUPLE54_tree, root_0);
+			TUPLE62=(Token)match(input,TUPLE,FOLLOW_TUPLE_in_tuple_expr647); 
+			TUPLE62_tree = (CommonTree)adaptor.create(TUPLE62);
+			root_0 = (CommonTree)adaptor.becomeRoot(TUPLE62_tree, root_0);
 
-			pushFollow(FOLLOW_tuple_element_in_tuple_expr586);
-			tuple_element55=tuple_element();
+			pushFollow(FOLLOW_tuple_element_in_tuple_expr650);
+			tuple_element63=tuple_element();
 			state._fsp--;
 
-			adaptor.addChild(root_0, tuple_element55.getTree());
+			adaptor.addChild(root_0, tuple_element63.getTree());
 
 			}
 
@@ -1550,34 +1770,34 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "optional_expr"
-	// PyType.g:98:1: optional_expr : OPTIONAL ^ optional_element ;
+	// PyType.g:106:1: optional_expr : OPTIONAL ^ optional_element ;
 	public final PyTypeParser.optional_expr_return optional_expr() throws RecognitionException {
 		PyTypeParser.optional_expr_return retval = new PyTypeParser.optional_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token OPTIONAL56=null;
-		ParserRuleReturnScope optional_element57 =null;
+		Token OPTIONAL64=null;
+		ParserRuleReturnScope optional_element65 =null;
 
-		CommonTree OPTIONAL56_tree=null;
+		CommonTree OPTIONAL64_tree=null;
 
 		try {
-			// PyType.g:99:5: ( OPTIONAL ^ optional_element )
-			// PyType.g:99:7: OPTIONAL ^ optional_element
+			// PyType.g:107:5: ( OPTIONAL ^ optional_element )
+			// PyType.g:107:7: OPTIONAL ^ optional_element
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			OPTIONAL56=(Token)match(input,OPTIONAL,FOLLOW_OPTIONAL_in_optional_expr600); 
-			OPTIONAL56_tree = (CommonTree)adaptor.create(OPTIONAL56);
-			root_0 = (CommonTree)adaptor.becomeRoot(OPTIONAL56_tree, root_0);
+			OPTIONAL64=(Token)match(input,OPTIONAL,FOLLOW_OPTIONAL_in_optional_expr664); 
+			OPTIONAL64_tree = (CommonTree)adaptor.create(OPTIONAL64);
+			root_0 = (CommonTree)adaptor.becomeRoot(OPTIONAL64_tree, root_0);
 
-			pushFollow(FOLLOW_optional_element_in_optional_expr603);
-			optional_element57=optional_element();
+			pushFollow(FOLLOW_optional_element_in_optional_expr667);
+			optional_element65=optional_element();
 			state._fsp--;
 
-			adaptor.addChild(root_0, optional_element57.getTree());
+			adaptor.addChild(root_0, optional_element65.getTree());
 
 			}
 
@@ -1608,34 +1828,34 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "type_expr"
-	// PyType.g:101:1: type_expr : TYPE ^ type_element ;
+	// PyType.g:109:1: type_expr : TYPE ^ type_element ;
 	public final PyTypeParser.type_expr_return type_expr() throws RecognitionException {
 		PyTypeParser.type_expr_return retval = new PyTypeParser.type_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token TYPE58=null;
-		ParserRuleReturnScope type_element59 =null;
+		Token TYPE66=null;
+		ParserRuleReturnScope type_element67 =null;
 
-		CommonTree TYPE58_tree=null;
+		CommonTree TYPE66_tree=null;
 
 		try {
-			// PyType.g:102:5: ( TYPE ^ type_element )
-			// PyType.g:102:7: TYPE ^ type_element
+			// PyType.g:110:5: ( TYPE ^ type_element )
+			// PyType.g:110:7: TYPE ^ type_element
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			TYPE58=(Token)match(input,TYPE,FOLLOW_TYPE_in_type_expr615); 
-			TYPE58_tree = (CommonTree)adaptor.create(TYPE58);
-			root_0 = (CommonTree)adaptor.becomeRoot(TYPE58_tree, root_0);
+			TYPE66=(Token)match(input,TYPE,FOLLOW_TYPE_in_type_expr679); 
+			TYPE66_tree = (CommonTree)adaptor.create(TYPE66);
+			root_0 = (CommonTree)adaptor.becomeRoot(TYPE66_tree, root_0);
 
-			pushFollow(FOLLOW_type_element_in_type_expr618);
-			type_element59=type_element();
+			pushFollow(FOLLOW_type_element_in_type_expr682);
+			type_element67=type_element();
 			state._fsp--;
 
-			adaptor.addChild(root_0, type_element59.getTree());
+			adaptor.addChild(root_0, type_element67.getTree());
 
 			}
 
@@ -1666,34 +1886,34 @@ public class PyTypeParser extends Parser {
 
 
 	// $ANTLR start "generic_expr"
-	// PyType.g:104:1: generic_expr : SimpleType ^ generic_element ;
+	// PyType.g:112:1: generic_expr : SimpleType ^ generic_element ;
 	public final PyTypeParser.generic_expr_return generic_expr() throws RecognitionException {
 		PyTypeParser.generic_expr_return retval = new PyTypeParser.generic_expr_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token SimpleType60=null;
-		ParserRuleReturnScope generic_element61 =null;
+		Token SimpleType68=null;
+		ParserRuleReturnScope generic_element69 =null;
 
-		CommonTree SimpleType60_tree=null;
+		CommonTree SimpleType68_tree=null;
 
 		try {
-			// PyType.g:105:5: ( SimpleType ^ generic_element )
-			// PyType.g:105:7: SimpleType ^ generic_element
+			// PyType.g:113:5: ( SimpleType ^ generic_element )
+			// PyType.g:113:7: SimpleType ^ generic_element
 			{
 			root_0 = (CommonTree)adaptor.nil();
 
 
-			SimpleType60=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_generic_expr630); 
-			SimpleType60_tree = (CommonTree)adaptor.create(SimpleType60);
-			root_0 = (CommonTree)adaptor.becomeRoot(SimpleType60_tree, root_0);
+			SimpleType68=(Token)match(input,SimpleType,FOLLOW_SimpleType_in_generic_expr694); 
+			SimpleType68_tree = (CommonTree)adaptor.create(SimpleType68);
+			root_0 = (CommonTree)adaptor.becomeRoot(SimpleType68_tree, root_0);
 
-			pushFollow(FOLLOW_generic_element_in_generic_expr633);
-			generic_element61=generic_element();
+			pushFollow(FOLLOW_generic_element_in_generic_expr697);
+			generic_element69=generic_element();
 			state._fsp--;
 
-			adaptor.addChild(root_0, generic_element61.getTree());
+			adaptor.addChild(root_0, generic_element69.getTree());
 
 			}
 
@@ -1719,65 +1939,73 @@ public class PyTypeParser extends Parser {
 
 
 
-	public static final BitSet FOLLOW_expr_in_parse217 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_list_expr_in_expr230 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_EMPTY_TUPLE_in_expr238 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_THREE_DOTS_in_expr246 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_set_expr_in_expr254 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_SimpleType_in_expr262 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_union_expr_in_expr270 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_dict_expr_in_expr278 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_tuple_expr_in_expr286 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_optional_expr_in_expr294 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_type_expr_in_expr302 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_generic_expr_in_expr310 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_list_element322 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_list_element324 = new BitSet(new long[]{0x0000000000000010L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_list_element326 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_union_element347 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_union_element349 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_union_element352 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_union_element354 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_union_element359 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_dict_element376 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_dict_element378 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_dict_element381 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_dict_element383 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_dict_element388 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_tuple_element405 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_tuple_element407 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_tuple_element410 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_tuple_element412 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_tuple_element417 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_optional_element434 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_optional_element436 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_optional_element439 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_optional_element441 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_optional_element446 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_type_element463 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_type_element465 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_type_element468 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_type_element470 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_type_element475 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPEN_SQ_BR_in_generic_element492 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_generic_element494 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_COMMA_in_generic_element497 = new BitSet(new long[]{0x00000000005F9240L});
-	public static final BitSet FOLLOW_expr_in_generic_element499 = new BitSet(new long[]{0x0000000000000030L});
-	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_generic_element504 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_LIST_in_list_expr521 = new BitSet(new long[]{0x0000000000004002L});
-	public static final BitSet FOLLOW_list_element_in_list_expr524 = new BitSet(new long[]{0x0000000000004002L});
-	public static final BitSet FOLLOW_SET_in_set_expr537 = new BitSet(new long[]{0x0000000000004002L});
-	public static final BitSet FOLLOW_list_element_in_set_expr540 = new BitSet(new long[]{0x0000000000004002L});
-	public static final BitSet FOLLOW_UNION_in_union_expr553 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_union_element_in_union_expr556 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_DICT_in_dict_expr568 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_dict_element_in_dict_expr571 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_TUPLE_in_tuple_expr583 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_tuple_element_in_tuple_expr586 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_OPTIONAL_in_optional_expr600 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_optional_element_in_optional_expr603 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_TYPE_in_type_expr615 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_type_element_in_type_expr618 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_SimpleType_in_generic_expr630 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_generic_element_in_generic_expr633 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_expr_in_parse228 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_list_expr_in_expr241 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_EMPTY_TUPLE_in_expr249 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_THREE_DOTS_in_expr257 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_set_expr_in_expr265 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_SimpleType_in_expr273 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_union_expr_in_expr281 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_callable_expr_in_expr289 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_dict_expr_in_expr297 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_tuple_expr_in_expr305 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_optional_expr_in_expr313 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_type_expr_in_expr321 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_generic_expr_in_expr329 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_list_element341 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_list_element343 = new BitSet(new long[]{0x0000000000000020L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_list_element345 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_union_element366 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_union_element368 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_union_element371 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_union_element373 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_union_element378 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_callable_element395 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_callable_element397 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_callable_element400 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_callable_element402 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_callable_element407 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_dict_element424 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_dict_element426 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_dict_element429 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_dict_element431 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_dict_element436 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_tuple_element453 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_tuple_element455 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_tuple_element458 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_tuple_element460 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_tuple_element465 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_optional_element482 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_optional_element484 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_optional_element487 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_optional_element489 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_optional_element494 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_type_element511 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_type_element513 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_type_element516 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_type_element518 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_type_element523 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPEN_SQ_BR_in_generic_element540 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_generic_element542 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_COMMA_in_generic_element545 = new BitSet(new long[]{0x0000000000BF2490L});
+	public static final BitSet FOLLOW_expr_in_generic_element547 = new BitSet(new long[]{0x0000000000000060L});
+	public static final BitSet FOLLOW_CLOSE_SQ_BR_in_generic_element552 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_LIST_in_list_expr569 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_list_element_in_list_expr572 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_SET_in_set_expr585 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_list_element_in_set_expr588 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_UNION_in_union_expr601 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_union_element_in_union_expr604 = new BitSet(new long[]{0x0000000000008002L});
+	public static final BitSet FOLLOW_CALLABLE_in_callable_expr617 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_callable_element_in_callable_expr620 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_DICT_in_dict_expr632 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_dict_element_in_dict_expr635 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_TUPLE_in_tuple_expr647 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_tuple_element_in_tuple_expr650 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_OPTIONAL_in_optional_expr664 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_optional_element_in_optional_expr667 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_TYPE_in_type_expr679 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_type_element_in_type_expr682 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_SimpleType_in_generic_expr694 = new BitSet(new long[]{0x0000000000008000L});
+	public static final BitSet FOLLOW_generic_element_in_generic_expr697 = new BitSet(new long[]{0x0000000000000002L});
 }

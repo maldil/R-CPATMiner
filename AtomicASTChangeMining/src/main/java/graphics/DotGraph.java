@@ -31,7 +31,9 @@ public class DotGraph {
 	public static final String COLOR_RED = "red";
 	public static final String STYLE_ROUNDED = "rounded";
 	public static final String STYLE_DOTTED = "dotted";
-	public static String EXEC_DOT = "D:/Program Files (x86)/Graphviz2.36/bin/dot.exe"; // Windows
+	public static final String STYLE_SOLID = "solid";
+	public static final String STYLE_DASHED = "dashed";
+	public static String EXEC_DOT = "/usr/local/bin/dot"; // Windows
 	private static int idCounter = 0;
 	private StringBuilder graph = new StringBuilder();
 
@@ -58,6 +60,12 @@ public class DotGraph {
 				shape = SHAPE_DIAMOND;
 			}
 
+			String style=null;
+			if (node.version ==0)
+				style=STYLE_DASHED;
+			else if (node.version==1)
+				style=STYLE_SOLID;
+
 			if (node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&    (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_UNCHANGED){
 				color = "green";
 			}
@@ -75,7 +83,7 @@ public class DotGraph {
 			}
 
 
-			graph.append(addNode(id, node.getLabel(), shape, null, color, color));
+			graph.append(addNode(id, node.getLabel(), shape, style, color, color));
 		}
 
 		for (PDGNode node : pd.getNodes()) {
@@ -111,7 +119,6 @@ public class DotGraph {
 				shape = SHAPE_DIAMOND;
 			else if (node.getType().equals("d"))
 				shape = SHAPE_ELLIPSE;
-
 			if (node.getChangeType()== TreedConstants.STATUS_UNCHANGED){
 				color = "green";
 			}
@@ -121,10 +128,20 @@ public class DotGraph {
 			else if(node.getChangeType()== TreedConstants.STATUS_MOVED){
 				color = "red";
 			}
+			else if(node.getChangeType()== TreedConstants.STATUS_UNMAPPED){
+				color = "brown";
+			}
 			else if (node.getChangeType() == -1){
 				color = "pink";
 			}
-			graph.append(addNode(id, node.getLabel(), shape, null, color, color));
+			String style=null;
+			if (node.getVersion()==0)
+				style=STYLE_DASHED;
+			else if (node.getVersion()==1)
+				style=STYLE_SOLID;
+
+
+			graph.append(addNode(id, node.getLabel(), shape, style, color, color));
 
 
 

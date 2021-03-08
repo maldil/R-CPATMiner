@@ -15,6 +15,7 @@ tokens {
     TUPLE = 'Tuple';
     TYPE = 'Type';
     COMMA = ',';
+    CALLABLE = 'Callable';
  /*   Nothing = 'nothing'; */
     OPTIONAL = 'Optional';
     HYPHEN = '-' ;
@@ -52,6 +53,7 @@ expr : list_expr
     | set_expr
     | SimpleType
     | union_expr
+    | callable_expr
     | dict_expr
     | tuple_expr
     | optional_expr
@@ -62,7 +64,12 @@ list_element
     : OPEN_SQ_BR expr CLOSE_SQ_BR -> expr
     ;
 
+
+
 union_element
+    : OPEN_SQ_BR expr (COMMA expr)*  CLOSE_SQ_BR -> expr+;
+
+callable_element
     : OPEN_SQ_BR expr (COMMA expr)*  CLOSE_SQ_BR -> expr+;
 
 dict_element
@@ -87,7 +94,10 @@ set_expr
     : SET^ list_element*;
 
 union_expr
-    : UNION^ union_element;
+    : UNION^ union_element*;
+
+callable_expr
+    : CALLABLE^ callable_element;
 
 dict_expr
     : DICT^ dict_element;

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import change.CFile;
 import core.Configurations;
 import graphics.DotGraph;
+import misc.ListAPINames;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayAccess;
@@ -604,7 +605,8 @@ public class PDGGraph implements Serializable {
 		PDGDataNode dummy = new PDGDataNode(null, ASTNode.SIMPLE_NAME,
 				PDGNode.PREFIX_DUMMY + astNode.getStartPosition() + "_"
 						+ astNode.getLength(), "boolean", PDGNode.PREFIX_DUMMY, false, true);
-		PDGGraph[] pgs = new PDGGraph[astNode.expressions().size()];
+		int size_filterd_array = ((List)astNode.expressions().stream().filter(x -> !(x instanceof SimpleName && ((SimpleName) x).getIdentifier().equals("PyCpatDummy"))).collect(Collectors.toList())).size();
+		PDGGraph[] pgs = new PDGGraph[size_filterd_array];
 		if (astNode.expressions().size() <= 10) {
 			for (int i = 0; i < astNode.expressions().size(); i++){
 				if (astNode.expressions().get(i) instanceof SimpleName && ((SimpleName) astNode.expressions().get(i)).getIdentifier().equals("PyCpatDummy"))
@@ -621,8 +623,10 @@ public class PDGGraph implements Serializable {
 		PDGNode node = new PDGActionNode(control, branch, astNode, astNode.getNodeType(), null, "()", "()");
 
 		if (pgs.length > 0) {
-			for (PDGGraph pg : pgs)
-				pg.mergeSequentialData(node, Type.PARAMETER);
+			for (PDGGraph pg : pgs) {
+				if (pg != null)
+					pg.mergeSequentialData(node, Type.PARAMETER);
+			}
 			PDGGraph pdg = new PDGGraph(context);
 			pdg.mergeParallel(pgs);
 			if (astNode.getProperty("Assignment")=="Assignment"){
@@ -1284,7 +1288,7 @@ public class PDGGraph implements Serializable {
 		}
 
 		if (!(astNode.internalGetConditionalExpression()==null ||
-				(astNode.internalGetConditionalExpression() instanceof SimpleName &&
+				!(astNode.internalGetConditionalExpression() instanceof SimpleName &&
 						(((SimpleName)astNode.internalGetConditionalExpression()).getIdentifier().equals("DUMMY")
 						||
 						((SimpleName)astNode.internalGetConditionalExpression()).getIdentifier().equals("DUMMY_IF")
@@ -1319,7 +1323,7 @@ public class PDGGraph implements Serializable {
 //					tg.mergeSequentialData(new PDGDataNode(dummy), Type.DEFINITION);
 
 		}
-		PDGControlNode node = new PDGControlNode(control, branch, astNode, ASTNode.ENHANCED_FOR_STATEMENT);
+		PDGControlNode node = new PDGControlNode(control, branch, astNode, ASTNode.PY_COMPARATOR);
 		graph.mergeSequentialData(node, Type.CONDITION);
 		graph.mergeSequentialControl(new PDGActionNode(node, "",
 				null, ASTNode.EMPTY_STATEMENT, null, null, "empty"), "");
@@ -2545,14 +2549,15 @@ public class PDGGraph implements Serializable {
 					node.version = version;
 				}
 			}
+			node.version = version;
 		}
 		prune();
 		buildClosure();
 		cleanUp();
-		/*DotGraph dg = new DotGraph(this, false);
-		String dirPath = "D:/temp";
-		dg.toDotFile(new File(dirPath + "/" + "pdg.dot"));
-		dg.toGraphics(dirPath + "/" + "pdg", "png");*/
+//		DotGraph dg = new DotGraph(this, false);
+//		String dirPath = "./OUTPUT/DEBUG";
+//		dg.toDotFile(new File(dirPath + "/" + "pdg.dot"));
+//		dg.toGraphics(dirPath + "/" + "pdg", "png");
 	}
 
 	private void addDefinitions() {

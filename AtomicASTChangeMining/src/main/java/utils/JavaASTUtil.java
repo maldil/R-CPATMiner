@@ -75,6 +75,10 @@ public class JavaASTUtil {
 		modifierType.put(ModifierKeyword.VOLATILE_KEYWORD, 7);
 	}
 
+	public static HashMap<ModifierKeyword, Integer> getModifierType(){
+		return modifierType;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static ASTNode parseSource(String source) {
 		Map options = JavaCore.getOptions();

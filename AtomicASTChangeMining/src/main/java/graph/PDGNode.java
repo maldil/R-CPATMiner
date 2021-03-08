@@ -219,6 +219,15 @@ public abstract class PDGNode {
 		return defs;
 	}
 
+	public ArrayList<PDGNode> getChangedDataNodes() {
+		ArrayList<PDGNode> defs = new ArrayList<>();
+		for (PDGEdge e : this.outEdges) {
+			if (e instanceof PDGDataEdge && ((PDGDataEdge) e).type == Type.DEFINITION)
+				defs.add(e.source);
+		}
+		return defs;
+	}
+
 	public boolean hasInEdge(PDGNode node, String label) {
 		for (PDGEdge e : inEdges)
 			if (e.source == node && e.getLabel().equals(label))
@@ -258,4 +267,6 @@ public abstract class PDGNode {
 		}
 		return true;
 	}
+
+
 }

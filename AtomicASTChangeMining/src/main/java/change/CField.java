@@ -36,6 +36,7 @@ public class CField extends ChangeEntity {
 	public CField(CClass cClass, FieldDeclaration field, String type,
 			VariableDeclarationFragment fragment) {
 		this.startLine = ((CompilationUnit) field.getRoot()).getLineNumber(field.getType().getStartPosition());
+		this.startLine = field.getType().getPyLine();
 		this.cClass = cClass;
 		this.modifiers = field.getModifiers();
 		for (int i = 0; i < field.modifiers().size(); i++) {

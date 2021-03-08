@@ -41,6 +41,7 @@ public class CClass extends ChangeEntity {
 
 	public CClass(CFile cFile, TypeDeclaration type, CClass outterClass) {
 		this.startLine = ((CompilationUnit) type.getRoot()).getLineNumber(type.getStartPosition());
+		this.startPyLine = type.getPyLine();
 		this.cFile = cFile;
 		this.outterClass = outterClass;
 		this.modifiers = type.getModifiers();
@@ -116,6 +117,7 @@ public class CClass extends ChangeEntity {
 	public CClass(CFile cFile, AnnotationTypeDeclaration type,
 			CClass outterClass) {
 		this.startLine = ((CompilationUnit) type.getRoot()).getLineNumber(type.getStartPosition());
+		this.startPyLine = type.getPyLine();
 		this.cFile = cFile;
 		this.outterClass = outterClass;
 		this.modifiers = type.getModifiers();
