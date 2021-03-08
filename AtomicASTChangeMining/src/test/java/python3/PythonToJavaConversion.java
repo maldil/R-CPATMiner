@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PythonToJavaConversion {
@@ -1600,10 +1601,33 @@ public class PythonToJavaConversion {
                 "    finally:\n" +
                 "        print(\"executing finally clause\")";
         CompilationUnit converted = Convert(content);
-
         Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion45(){
+        String content = "def demo():\n" +
+                "    vectors = [numpy.array(f) for f in [[0.5, 0.5], [1.5, 0.5], [1, 3]]]\n" +
+                "    means = [[4, 2], [4, 2.01]]";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
 
 
+    @Test
+    public void testConversion47(){
+        String content = "self.charnum = dict(((i, j), charnum[j]) or i in range(len(rules) + 1) for j in range(len(charnum)))";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
+    }
+
+    @Test
+    public void testConversion46(){
+        String content = "intersection = _count_intersection(\n" +
+                "            ((0, 0), (self.ui, self.oi)), self.coords[-2:]\n" +
+                "            )";
+        CompilationUnit converted = Convert(content);
+        Assert.assertEquals(converted.getProblems().length,0);
     }
 
     public String readFile(String fileName) {

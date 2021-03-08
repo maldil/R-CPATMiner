@@ -5,13 +5,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 import core.Configurations;
 import graphics.DotGraph;
 
+import io.vavr.control.Try;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.revwalk.RevSort;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.CommitTimeRevFilter;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
+
 import python3.typeinference.core.TypeInformation;
 import repository.SVNConnector;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -25,6 +36,9 @@ import repository.GitConnector;
 import utils.Config;
 import utils.FileIO;
 
+import static io.vavr.API.Try;
+import static java.util.stream.Collectors.toList;
+
 public class ChangeAnalyzer {
 	private String projectName;
 	private int projectId;
@@ -33,11 +47,18 @@ public class ChangeAnalyzer {
 	private int numOfRevisions = -1, numOfCodeRevisions = -1, numOfExtractedRevisions = -1;
 	private SVNConnector svnConn;
 	private GitConnector gitConn;
+	private int typeErroredFails=0;
 	private HashMap<Long, SVNLogEntry> logEntries;
 	private ArrayList<RevisionAnalyzer> revisionAnalyzers = new ArrayList<RevisionAnalyzer>();
 	private CProject cproject;
 //	private PrintStream ps;
 	static Logger logger = Logger.getLogger(ChangeAnalyzer.class);
+	private int sucessRate;
+
+	public int getSuccessRate(){
+		return sucessRate;
+	}
+
 	public ChangeAnalyzer(String projectName, int projectId, String svnUrl,
 			long start, long end) {
 		this.projectName = projectName;
@@ -188,22 +209,46 @@ public class ChangeAnalyzer {
 		analyze(this.startRevision, this.endRevision);
 	}
 
+	public static List<RevCommit> getCommits(Git git, RevSort order) {
+		List<RevCommit> commits = new ArrayList<>(Try.of(() -> {
+			RevWalk walk = new RevWalk(git.getRepository());
+			walk.markStart(walk.parseCommit(git.getRepository().resolve(Constants.HEAD)));
+			walk.sort(order);
+			walk.setRevFilter(RevFilter.NO_MERGES);
+			return walk;
+		})
+				.map(walk -> {
+					Iterator<RevCommit> iter = walk.iterator();
+					List<RevCommit> l = new ArrayList<>();
+					while (iter.hasNext()) {
+						l.add(iter.next());
+					}
+					walk.dispose();
+					return l;
+				})
+				.onSuccess(l -> System.out.println(l.size() + " number of commits found for " + git.getRepository().getDirectory().getParentFile().getName()))
+				.onFailure(Throwable::printStackTrace)
+				.getOrElse(new ArrayList<>()));
+		Collections.reverse(commits);
+		return commits;
+	}
+
+
+
 	public void analyzeGit() {
 		this.cproject = new CProject(projectId, projectName);
 		this.cproject.revisions = new ArrayList<>();
 		File dir = new File(Configurations.outputPath + "/" + projectName);
 		Iterable<RevCommit> commits = null;
 		try {
-			ObjectId head = this.gitConn.getRepository().resolve(Constants.HEAD);
+//			ObjectId head = this.gitConn.getRepository().resolve(Constants.HEAD);
+//			commits = this.gitConn.getGit().log().add(head).call();
+			commits = getCommits(this.gitConn.getGit(),RevSort.REVERSE);
 
-			commits = this.gitConn.getGit().log().add(head).call();
-		} catch (GitAPIException e) {
-			logger.error(e.getMessage());
+			assert StreamSupport.stream(commits.spliterator(), false).count()>0;
+
 		} catch (RuntimeException e) {
 			logger.error(e.getMessage());
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
 		}
 		if (commits == null)
 			return;
@@ -220,9 +265,12 @@ public class ChangeAnalyzer {
 //		}
 		int num_commits =0;
 		for (final RevCommit commit : commits) {    //Iterate each commit
-			logger.debug(commit.toString());
+			logger.info("f "+commit.toString()+" f");
+//			if (commit.getName().equals("acdaf20b92ccdc21f179fa4cb10a6a561058a01a"))
+//				System.out.println();
 			if (numOfExtractedRevisions >= Config.MAX_EXTRACTED_COMMITS)
 				break;
+
 			File file = new File(dir.getAbsolutePath() + "/" + commit.getName() + ".dat");
 			if (file.exists()) {
 				numOfExtractedRevisions++;
@@ -230,6 +278,8 @@ public class ChangeAnalyzer {
 			}
 			analyzeGit(commit);     //Start Analysing git commit
 			num_commits+=1;
+			logger.info(typeErroredFails+" commits did not analysed due to type errors  "+projectName);
+			logger.info(sucessRate+" commits analysed  "+projectName);
 		}
 		this.cproject.numOfAllRevisions = this.numOfRevisions;
 		logger.debug(num_commits+" commits processed");
@@ -241,10 +291,22 @@ public class ChangeAnalyzer {
 		if (this.numOfRevisions % 1000 == 0)
 			logger.info("Analyzing revision: " + this.numOfRevisions + " " + commit.getName() + " from " + projectName);
 		RevisionAnalyzer ra = new RevisionAnalyzer(this, commit,this.url);
+//		if (!commit.getName().equals("ed954196928dec0112f069548cee16afcb476568")&&
+//		!commit.getName().equals("56f6342f9e587f867d9f40d00eef5a2c46174faa")&&
+//		!commit.getName().equals("b52af78373e60bb55b61c1bdd8a2c4d0ef55ea37")&&
+//		!commit.getName().equals("60a68e53d7730ea52e2a25cd6a713cd1ad106d46")&&
+//				!commit.getName().equals("5a8cd57f20307773efa40021ad712323cb37ba48")&&
+//				!commit.getName().equals("064a0dba709973ba3b6f69b6c72857550986b0da")){
+//			System.out.printf("");
+//			return;
+//		}
 		boolean analyzed = ra.analyzeGit();
+		if (ra.isTypeError()) typeErroredFails++;
+
+		if (ra.getSuceessRate()) sucessRate++;
+
 		if (analyzed) {
 			HashMap<String, HashMap<String, ChangeGraph>> changeGraphs = new HashMap<>();
-
 			for (CMethod e : ra.getMappedMethodsM()) {
 				//System.out.println("Method: " + e.getQualName() + " - " + e.getMappedEntity().getQualName());
 				ChangeGraph cg = e.getChangeGraph(this.gitConn.getRepository(), commit);
@@ -252,29 +314,46 @@ public class ChangeAnalyzer {
 //						+ ":" + e.getCFile().getPath()
 //						+ ":" + e.getCClass().getName() + "." + e.getSimpleName() + "(" + e.getNumOfParameters()+ ")" + e.getParameterTypes()
 //						+ ":" + cg.summarize());
+				if (commit.getName().equals("d9858e310969497677ed6066566ef7df10311799")){
+					System.out.println();
+				}
 				int[] csizes = cg.getChangeSizes();
 
-				if (csizes[0] > 0 && csizes[1] > 0 
-						&& (csizes[0] + csizes[1]) >= 3 
+				if (csizes[0] > 0 && csizes[1] > 0
+						&& (csizes[0] + csizes[1]) >= 2
 						&& csizes[0] <= 100 && csizes[1] <= 100 
-						&& cg.hasMethods()) {
+						&& (cg.hasMethods()||cg.hasArrays()||cg.hasForLoops())) {
 					// DEBUG
-
-					DotGraph dg = new DotGraph(cg);
-					String dirPath = "./OUTPUT/DEBUG/";
-					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
-			//		dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
+//					DotGraph dg = new DotGraph(cg);
+//					String dirPath = "./OUTPUT/DEBUG/";
+//					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
+//					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
 					imageID+=1;
 					HashMap<String, ChangeGraph> cgs = changeGraphs.get(e.getCFile().getPath());
 					if (cgs == null) {
 						cgs = new HashMap<>();
 						changeGraphs.put(e.getCFile().getPath(), cgs);
 					}
-					cgs.put(e.getCClass().getName() + "," + e.getSimpleName()
-							+ "," + e.getParameterTypes() + "," + e.startLine, cg);
+					String className = e.getCClass().getName().contains("PyDummyClass")? "": e.getCClass().getName();
+					String methodName = e.getSimpleName().contains("PyDummyMethod") ? "":e.getSimpleName();
+					String paraName = e.getParameterTypes();
+					if (e.getCClass().getName().contains("PyDummyClass")){
+
+					}
+//					if (e.startPyLine==-1)
+//					{
+//						assert false;
+//					}
+					if (Configurations.IS_PYTHON){
+						cgs.put(className+"," + methodName + "," + paraName + "," + e.startPyLine, cg);
+					}
+					else{
+						cgs.put(className+"," + methodName + "," + paraName + "," + e.startLine, cg);
+					}
+
 				}
 				else{
-					logger.info("PDG was not created - CSIZES monitor : "+ Arrays.toString(csizes));
+					logger.info("PDG was not created - CSIZES monitor : "+ Arrays.toString(csizes) + "Has methods "+cg.hasMethods());
 				}
 				e.cleanForStats();
 			}

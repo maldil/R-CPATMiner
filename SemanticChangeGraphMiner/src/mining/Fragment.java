@@ -415,6 +415,7 @@ public class Fragment {
 			dir.mkdirs();
 		//name += "_ " + FileIO.getSimpleFileName(GROUMNode.fileNames.get(this.graph.getFileID()));
 		dg.toDotFile(new File(path + "/" + name + ".dot"));
+		DotGraph.toGraphics(path + "/" + name, "png");
 	}
 	
 	public void toGraphics(String path, String name) {
@@ -819,8 +820,8 @@ public class Fragment {
 			if (node.isCoreAction() && !node.isGoto())
 				hasGotoOnly = false;
 		}
-		if (hasGotoOnly)
-			return false;
+//		if (hasGotoOnly)	// Python Modifications
+//			return false;
 		boolean hasOld = false, hasNew = false;
 		for (GROUMNode node : nodes) {
 			if (!node.isCoreAction() && !node.isControl()) continue;

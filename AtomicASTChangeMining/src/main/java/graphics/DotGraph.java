@@ -21,6 +21,8 @@ import graph.PDGEntryNode;
 import graph.PDGEdge;
 import treed.TreedConstants;
 
+import static treed.TreedConstants.PROPERTY_STATUS;
+
 public class DotGraph {
 	public static final String SHAPE_BOX = "box";
 	public static final String SHAPE_DIAMOND = "diamond";
@@ -29,13 +31,77 @@ public class DotGraph {
 	public static final String COLOR_RED = "red";
 	public static final String STYLE_ROUNDED = "rounded";
 	public static final String STYLE_DOTTED = "dotted";
-	public static String EXEC_DOT = "D:/Program Files (x86)/Graphviz2.36/bin/dot.exe"; // Windows
+	public static final String STYLE_SOLID = "solid";
+	public static final String STYLE_DASHED = "dashed";
+	public static String EXEC_DOT = "/usr/local/bin/dot"; // Windows
 	private static int idCounter = 0;
 	private StringBuilder graph = new StringBuilder();
 
 	public DotGraph(StringBuilder sb) {
 		this.graph = sb;
 	}
+
+	public DotGraph(PDGGraph pd){
+		graph = new StringBuilder();
+		graph.append(addStart());
+		HashMap<PDGNode, Integer> ids = new HashMap<>();
+		int id = 0;
+		for (PDGNode node : pd.getNodes()) {
+			ids.put(node, ++id);
+			String color = null;
+			String shape = null;
+			if (node instanceof PDGDataNode){
+				shape = SHAPE_ELLIPSE;
+			}
+			else if (node instanceof PDGActionNode){
+				shape = SHAPE_BOX;
+			}
+			else if (node instanceof PDGControlNode){
+				shape = SHAPE_DIAMOND;
+			}
+
+			String style=null;
+			if (node.version ==0)
+				style=STYLE_DASHED;
+			else if (node.version==1)
+				style=STYLE_SOLID;
+
+			if (node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&    (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_UNCHANGED){
+				color = "green";
+			}
+			else if (node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)== TreedConstants.STATUS_RELABELED){
+				color = "blue";
+			}
+			else if(node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_UNMAPPED){
+				color = "brown";
+			}
+			else if(node.getAstNode()!=null && node.getAstNode().getProperty(PROPERTY_STATUS)!=null &&  (int)node.getAstNode().getProperty(PROPERTY_STATUS)==TreedConstants.STATUS_MOVED){
+				color = "red";
+			}
+			else{
+				color = "black";
+			}
+
+
+			graph.append(addNode(id, node.getLabel(), shape, style, color, color));
+		}
+
+		for (PDGNode node : pd.getNodes()) {
+			int tId = ids.get(node);
+			for (PDGEdge e : node.getInEdges()) {
+				int sId = ids.get(e.getSource());
+				String label = e.getLabel();
+				if (label.equals("T") || label.equals("F"))
+					graph.append(addEdge(sId, tId, null, null, label));
+				else
+					graph.append(addEdge(sId, tId, STYLE_DOTTED, null, label));
+			}
+		}
+
+		graph.append(addEnd());
+
+	}
+
 
 	public DotGraph(ChangeGraph cg) {
 		graph.append(addStart());
@@ -53,7 +119,6 @@ public class DotGraph {
 				shape = SHAPE_DIAMOND;
 			else if (node.getType().equals("d"))
 				shape = SHAPE_ELLIPSE;
-
 			if (node.getChangeType()== TreedConstants.STATUS_UNCHANGED){
 				color = "green";
 			}
@@ -63,10 +128,20 @@ public class DotGraph {
 			else if(node.getChangeType()== TreedConstants.STATUS_MOVED){
 				color = "red";
 			}
+			else if(node.getChangeType()== TreedConstants.STATUS_UNMAPPED){
+				color = "brown";
+			}
 			else if (node.getChangeType() == -1){
 				color = "pink";
 			}
-			graph.append(addNode(id, node.getLabel(), shape, null, color, color));
+			String style=null;
+			if (node.getVersion()==0)
+				style=STYLE_DASHED;
+			else if (node.getVersion()==1)
+				style=STYLE_SOLID;
+
+
+			graph.append(addNode(id, node.getLabel(), shape, style, color, color));
 
 
 

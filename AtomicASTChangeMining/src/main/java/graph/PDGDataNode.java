@@ -33,8 +33,12 @@ public class PDGDataNode extends PDGNode {
 
 	@Override
 	public String getLabel() {
-		if (astNodeType == ASTNode.CHARACTER_LITERAL || astNodeType == ASTNode.STRING_LITERAL)
-			return dataType + "(lit(" + dataName.substring(1, dataName.length()-1) + "))";
+		if (astNodeType == ASTNode.CHARACTER_LITERAL || astNodeType == ASTNode.STRING_LITERAL){
+			if (dataName.length()==1){
+				return dataType + "(lit(" + dataName + "))";
+			}
+			return dataType + "(lit(" + dataName+ "))";
+		}
 		return dataType + "(" + dataName + ")";
 	}
 

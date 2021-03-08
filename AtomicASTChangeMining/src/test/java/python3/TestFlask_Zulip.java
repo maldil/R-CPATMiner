@@ -3361,12 +3361,12 @@ public class TestFlask_Zulip extends TestASTConversion {
         CompilationUnit converted = convert(content);
         Assert.assertEquals(converted.getProblems().length,0);
     }
-    @Test
-    public void file560(){
-        String content = readFile("CPatMinerTest/Flask_And_Zulip/zerver/tests/test_message_fetch.py");
-        CompilationUnit converted = convert(content);
-        Assert.assertEquals(converted.getProblems().length,0);
-    }
+//    @Test
+//    public void file560(){
+//        String content = readFile("CPatMinerTest/Flask_And_Zulip/zerver/tests/test_message_fetch.py");
+//        CompilationUnit converted = convert(content);
+//        Assert.assertEquals(converted.getProblems().length,0);
+//    }
     @Test
     public void file561(){
         String content = readFile("CPatMinerTest/Flask_And_Zulip/zerver/tests/test_outgoing_webhook_interfaces.py");

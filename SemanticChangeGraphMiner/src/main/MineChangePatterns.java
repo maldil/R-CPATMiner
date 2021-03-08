@@ -41,7 +41,7 @@ public class MineChangePatterns {
 //		changesPath = "contains a set of GitHub repos each of which is in the structure of username/reponame/*.dat."
 //				+ "E.g. inPath = repos-junit should contains junit-team/junit/*.dat"
 //				+ "or inPath = repos could contains junit-team/junit/*.dat and JetBrains/intellij-community/*.dat";
-		changesPath = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/OUTPUT";
+		changesPath = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/OUTPUT/";
 		reposPath = "/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner";
 		if (args.length > 0) {
 			Pattern.mode = Integer.parseInt(args[0]);
@@ -54,7 +54,7 @@ public class MineChangePatterns {
 		HashSet<String> projectNames = new HashSet<String>();
 		String content = null;
 		if(SystemUtils.IS_OS_MAC){
-			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
+			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/SemanticChangeGraphMiner/SemanticChangeGraphMiner/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_LINUX) {
 			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
@@ -112,7 +112,9 @@ public class MineChangePatterns {
 		System.out.println((end - start) / 1000 + " s.");
 		if (Pattern.mode == 0) {
 			try {
-				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+//				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+				pool.shutdown();
+				pool.awaitTermination(1, TimeUnit.MINUTES);
 			} catch (final InterruptedException e) { }
 		}
 	}
@@ -123,6 +125,7 @@ public class MineChangePatterns {
 		if (level == 1) {
 			return miner.mine(graphs, reposPath);
 		} else {
+			miner.setReposPath(reposPath);
 			return miner.superMine(graphs);
 		}
 	}
@@ -144,7 +147,7 @@ public class MineChangePatterns {
 			@SuppressWarnings("unchecked")
 			HashMap<String, HashMap<String, ChangeGraph>> fileChangeGraphs = (HashMap<String, HashMap<String, ChangeGraph>>) FileIO.readObjectFromFile(sub.getAbsolutePath());
 			for (String fp : fileChangeGraphs.keySet()) {
-				//System.out.println(fp);
+//				System.out.println(fp);
 				HashMap<String, ChangeGraph> cgs = fileChangeGraphs.get(fp);
 				for (String method : cgs.keySet()) {
 					//System.out.println(method);
@@ -154,9 +157,10 @@ public class MineChangePatterns {
 				    }
 					String name = FileIO.getSimpleFileName(sub.getName().substring(0, index)) + "," + fp + "," + method;
 					ChangeGraph cg = cgs.get(method);
-					if (cg.getNodes().size() <= 2) continue;
+					if (cg.getNodes().size() <= 1) continue;
 					numOfGraphs.incrementAndGet();
 					GROUMGraph g = new GROUMGraph(cg, name);
+
 					// FIXME
 					g.pruneDoubleEdges();
 					g.setProject(projectName);

@@ -41,6 +41,9 @@ public class PyTypeParserTest {
         Assert.assertEquals("int",tree.getChild(0).toString());
         Assert.assertEquals("int",tree.getChild(1).toString());
     }
+//
+
+
 
     @org.testng.annotations.Test
     public void test4() throws RecognitionException {
@@ -156,4 +159,20 @@ public class PyTypeParserTest {
         Assert.assertEquals(tree.getChild(1).toString(),"String");
     }
 
+    @org.testng.annotations.Test
+    public void test14() throws RecognitionException {
+        String src = "collections.OrderedDict[Any, Union[Callable[Any, Any], Callable[..., Any]]]";
+        PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(src));
+        PyTypeParser parser = new python3.typeinference.antlr.PyTypeParser(new CommonTokenStream(lexer));
+        CommonTree tree = (CommonTree) parser.parse().getTree();
+        Assert.assertEquals("collections.OrderedDict",tree.toString());
+        Assert.assertEquals(tree.getChild(0).toString(),"Any");
+        Assert.assertEquals(tree.getChild(1).toString(),"Union");
+        Assert.assertEquals(tree.getChild(1).getChild(0).toString(),"Callable");
+
+        //                DOTTreeGenerator gen = new DOTTreeGenerator();
+//        org.antlr.stringtemplate.StringTemplate stringTemplate = gen.toDOT(tree);
+//        System.out.println(stringTemplate);
+
+    }
 }

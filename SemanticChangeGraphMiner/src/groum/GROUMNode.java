@@ -19,9 +19,17 @@ public class GROUMNode {
 	public static final int TYPE_MULTIPLE = 2;
 	public static final int TYPE_LOOP = 3;
 	public static int numOfNodes = 0;
-	private static HashSet<Character> invocationTypes = new HashSet<>(), controlTypes = new HashSet<>(), literalTypes = new HashSet<>();
+	private static HashSet<Character> invocationTypes = new HashSet<>(), controlTypes = new HashSet<>(), literalTypes = new HashSet<>(),required=new HashSet<>();
 	private static HashMap<String, Character> infixExpressionLables = new HashMap<>();
 	static {
+		required.add((char)ASTNode.ENHANCED_FOR_STATEMENT);
+		required.add((char)ASTNode.ENHANCED_FOR_STATEMENT_WITH_ELSE);
+//		required.add((char)ASTNode.METHOD_INVOCATION);
+//		required.add((char)ASTNode.ARRAY_INITIALIZER);
+//		required.add((char)ASTNode.ARRAY_CREATION);
+//		required.add((char)ASTNode.ARRAY_ACCESS);
+//		required.add((char)ASTNode.TUPLE_EXPRESSION);
+
 		invocationTypes.add((char) ASTNode.ARRAY_ACCESS);
 		invocationTypes.add((char) ASTNode.ARRAY_CREATION);
 		invocationTypes.add((char) ASTNode.ARRAY_INITIALIZER);
@@ -37,6 +45,11 @@ public class GROUMNode {
 		invocationTypes.add((char) ASTNode.SUPER_CONSTRUCTOR_INVOCATION);
 		invocationTypes.add((char) ASTNode.SUPER_METHOD_INVOCATION);
 		invocationTypes.add((char) ASTNode.THROW_STATEMENT);
+		invocationTypes.add((char) ASTNode.PY_IN_EXPRESSION);
+		invocationTypes.add((char) ASTNode.PY_YIELD_RETURN_STATEMENT);
+		invocationTypes.add((char) ASTNode.PY_NON_LOCAL);
+		invocationTypes.add((char) ASTNode.PY_NOT_IN_EXPRESSION);
+		invocationTypes.add((char) ASTNode.TUPLE_EXPRESSION);
 		
 		controlTypes.add((char) ASTNode.CATCH_CLAUSE);
 		controlTypes.add((char) ASTNode.DO_STATEMENT);
@@ -47,6 +60,14 @@ public class GROUMNode {
 		controlTypes.add((char) ASTNode.SYNCHRONIZED_STATEMENT);
 		controlTypes.add((char) ASTNode.TRY_STATEMENT);
 		controlTypes.add((char) ASTNode.WHILE_STATEMENT);
+		controlTypes.add((char) ASTNode.PY_WITH_STATEMENT);
+		controlTypes.add((char) ASTNode.ENHANCED_FOR_STATEMENT_WITH_ELSE);
+		controlTypes.add((char) ASTNode.PY_COMPARATOR);
+		controlTypes.add((char) ASTNode.PY_DICT_COMPREHENSION_EXPRESSION);
+		controlTypes.add((char) ASTNode.PY_LIST_COMPREHENSION_EXPRESSION);
+		controlTypes.add((char) ASTNode.PY_SET_COMPREHENSION_EXPRESSION);
+		controlTypes.add((char) ASTNode.PY_GENERATOR_EXPRESSION);
+
 		
 		literalTypes.add((char) ASTNode.BOOLEAN_LITERAL);
 		literalTypes.add((char) ASTNode.CHARACTER_LITERAL);
@@ -61,6 +82,8 @@ public class GROUMNode {
 		infixExpressionLables.put(InfixExpression.Operator.PLUS.toString(), 'a');
 		infixExpressionLables.put(InfixExpression.Operator.REMAINDER.toString(), 'a');
 		infixExpressionLables.put(InfixExpression.Operator.TIMES.toString(), 'a');
+		infixExpressionLables.put(InfixExpression.Operator.POW.toString(), 'a');
+		infixExpressionLables.put(InfixExpression.Operator.FLOORDIV.toString(), 'a');
 		// Equality and Relational Operators
 		infixExpressionLables.put(InfixExpression.Operator.EQUALS.toString(), 'r');
 		infixExpressionLables.put(InfixExpression.Operator.GREATER.toString(), 'r');
@@ -78,6 +101,12 @@ public class GROUMNode {
 		infixExpressionLables.put(InfixExpression.Operator.LEFT_SHIFT.toString(), 's');
 		infixExpressionLables.put(InfixExpression.Operator.RIGHT_SHIFT_SIGNED.toString(), 's');
 		infixExpressionLables.put(InfixExpression.Operator.RIGHT_SHIFT_UNSIGNED.toString(), 's');
+
+		infixExpressionLables.put(InfixExpression.Operator.IN.toString(), 'i');
+		infixExpressionLables.put(InfixExpression.Operator.NOT_IN.toString(), 'i');
+
+
+
 	}
 	
 	private int id;
@@ -86,6 +115,7 @@ public class GROUMNode {
 	private int type = TYPE_OTHER, changeType = -1, version = -1;
 	private char astType = 0;
 	private int[] starts, lengths;
+	private int[] pyStart, pyLength, pyLine;
 	private String dataType, dataName;
 	private GROUMGraph graph;
 	private HashSet<GROUMEdge> inEdges = new HashSet<GROUMEdge>();
@@ -99,14 +129,26 @@ public class GROUMNode {
 			this.starts = Arrays.copyOf(node.getStarts(), node.getStarts().length);
 		if (node.getLengths() != null)
 			this.lengths = Arrays.copyOf(node.getLengths(), node.getLengths().length);
+		if (node.getPyStart() != null)
+			this.pyStart = Arrays.copyOf(node.getPyStart(), node.getPyStart().length);
+		if (node.getPyLength() != null)
+			this.pyLength = Arrays.copyOf(node.getPyLength(), node.getPyLength().length);
+		if (node.getPyLine() != null)
+			this.pyLine = Arrays.copyOf(node.getPyLine(), node.getPyLine().length);
+
 		this.dataType = node.getDataType();
 		this.label = String.valueOf(this.astType);;
-		/*if (node.getAstNodeType() == ASTNode.ARRAY_ACCESS) {
+		if (node.getAstNodeType() == ASTNode.ARRAY_ACCESS) {
 			this.type = TYPE_ACTION;
 			this.label = "[]";
-		} else if(node.getAstNodeType() == ASTNode.FIELD_ACCESS || node.getAstNodeType() == ASTNode.QUALIFIED_NAME) {
+		}
+		else if(node.getAstNodeType() == ASTNode.ARRAY_CREATION && node.getAstNodeType() == ASTNode.ARRAY_INITIALIZER ) {
 			this.type = TYPE_ACTION;
-		} else */if (node.getType().equals("a")) {
+			this.label = "{}";
+		}
+		else if(node.getAstNodeType() == ASTNode.FIELD_ACCESS || node.getAstNodeType() == ASTNode.QUALIFIED_NAME) {
+			this.type = TYPE_ACTION;
+		} else if (node.getType().equals("a")) {
 			this.type = TYPE_ACTION;
 			if (isInvocation(this.astType))
 				this.label = node.getLabel();
@@ -144,6 +186,14 @@ public class GROUMNode {
 			this.starts = Arrays.copyOf(node.starts, node.starts.length);
 		if (node.lengths != null)
 			this.lengths = Arrays.copyOf(node.lengths, node.lengths.length);
+
+		if (node.pyStart!=null)
+			this.pyStart = Arrays.copyOf(node.pyStart,node.pyStart.length);
+		if (node.pyLine!=null)
+			this.pyLine = Arrays.copyOf(node.pyLine,node.pyLine.length);
+		if (node.pyLength!=null)
+			this.pyLength = Arrays.copyOf(node.pyLength,node.pyLength.length);
+
 	}
 
 	public GROUMNode(String id, int version, HashMap<String, String> attributes) {
@@ -207,6 +257,12 @@ public class GROUMNode {
 	public int[] getLengths() {
 		return lengths;
 	}
+
+	public int[] getPyStart () { return pyStart;}
+
+	public int[] getPyLength() {return pyLength;}
+
+	public int[] getPyLine() {return pyLine;}
 
 	public String getDataType() {
 		return dataType;
@@ -395,6 +451,17 @@ public class GROUMNode {
 		return label.length() > 1;
 	}
 
+	public static boolean isRequiredPattern(String label) {
+
+//		if (label.equals("[]"))
+//			return true;
+//		else if (label.equals("{}"))
+//			return true;
+
+		char type = label.charAt(0);
+		return required.contains(type);
+	}
+
 	public static boolean isInvocation(char astNodeType) {
 		return invocationTypes.contains(astNodeType);
 	}
@@ -416,6 +483,6 @@ public class GROUMNode {
 	}
 
 	public boolean isGoto() {
-		return this.astType == ASTNode.RETURN_STATEMENT || this.astType == ASTNode.BREAK_STATEMENT || this.astType == ASTNode.CONTINUE_STATEMENT;
+		return this.astType == ASTNode.RETURN_STATEMENT || this.astType == ASTNode.BREAK_STATEMENT || this.astType == ASTNode.CONTINUE_STATEMENT || this.astType == ASTNode.PY_YIELD_RETURN_STATEMENT;
 	}
 }

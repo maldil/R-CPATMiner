@@ -37,8 +37,8 @@ public class AnalyzeRepoMetadata {
 
 
 	public static void main(String[] args) throws NoHeadException, GitAPIException, FileNotFoundException {
-//		extractRepoMetadata();
-		readRepoMetadata();
+		extractRepoMetadata();
+//		readRepoMetadata();
 	}
 
 
@@ -82,9 +82,9 @@ public class AnalyzeRepoMetadata {
 	public static void extractRepoMetadata() {
 //		final String inputPath = "T:/github/repos-selected";
 //		final String inputPath = "G:/github/repos-5stars-50commits";
-		final String inputPath = "E:/github/repos-5stars-50commits";
+		final String inputPath = Configurations.inputPath;
 
-		String content = FileIO.readStringFromFile(new File(inputPath).getParentFile().getAbsolutePath() + "/" + new File(inputPath).getName() + ".csv");
+		String content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
 		Scanner sc = new Scanner(content);
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
@@ -131,10 +131,10 @@ public class AnalyzeRepoMetadata {
 						}
 						sb.append(rc.getName() + "," + rc.getCommitTime() + "," + email + "\n");
 					}
-					FileIO.writeObjectToFile(commitEmail, "T:/github/repos-metadata/" + name.replace("/", "---") + ".email", false);
-					FileIO.writeObjectToFile(commitAuthor, "T:/github/repos-metadata/" + name.replace("/", "---") + ".author", false);
-					FileIO.writeObjectToFile(commitTime, "T:/github/repos-metadata/" + name.replace("/", "---") + ".time", false);
-					FileIO.writeStringToFile(sb.toString(), "T:/github/repos-metadata/" + name.replace("/", "---") + ".csv");
+					FileIO.writeObjectToFile(commitEmail, Configurations.metaData + name.replace("/", "---") + ".email", false);
+					FileIO.writeObjectToFile(commitAuthor, Configurations.metaData + name.replace("/", "---") + ".author", false);
+					FileIO.writeObjectToFile(commitTime, Configurations.metaData + name.replace("/", "---") + ".time", false);
+					FileIO.writeStringToFile(sb.toString(), Configurations.metaData + name.replace("/", "---") + ".csv");
 					gitConn.close();
 				}
 			});

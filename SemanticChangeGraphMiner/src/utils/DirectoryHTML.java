@@ -25,7 +25,8 @@ public class DirectoryHTML {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<HTML><H1>Patterns That Have Been Found:</H1><body>");
+        sb.append("<HTML><H1>An Empirical Study of Frequent Code Edit Patterns In Machine Learning Systems</H1><body>");
+        sb.append("<HTML><H2>Patterns That Have Been Found:</H1><body>");
 //        sb.append("<link rel=\"stylesheet\" href=\"../../sortable-theme-minimal.css\" />\n" +
 //                "<script src=\"../../sortable.js\"></script>");
 
@@ -39,7 +40,9 @@ public class DirectoryHTML {
         sb.append("<th class=\"sort\" data-sort=\"id\">ID</th>");
         sb.append("<th class=\"sort\" data-sort=\"size\">Pattern Size</th>");
         sb.append("<th class=\"sort\" data-sort=\"numFound\">NumberFound</th>");
-        sb.append("<th class=\"sort\" data-sort=\"details\">details</th>");
+        sb.append("<th class=\"sort\" data-sort=\"details\">Details</th>");
+        sb.append("<th class=\"sort\" data-sort=\"projects\">Projects</th>");
+        sb.append("<th class=\"sort\" data-sort=\"commits\">Commits</th>");
         sb.append("<th class=\"sort\" data-sort=\"nodeTypes\">NodeTypes</th>");
 
 
@@ -56,10 +59,15 @@ public class DirectoryHTML {
                 sb.append("</td>");
 
                 sb.append("<td class=\"numFound\">"+pattern.get(4) + "</td>");
+
                 sb.append("</td><td class=\"details\"><a href='");
                 sb.append(pattern.get(2));
                 sb.append("/details.html");
                 sb.append("'>locations</a>");
+
+                sb.append("<td class=\"projects\">"+pattern.get(6) + "</td>");
+                sb.append("<td class=\"commits\">"+pattern.get(7) + "</td>");
+
                 sb.append("</td><td class=\"nodeTypes\">");
                 sb.append(pattern.get(5));
                 sb.append("</td>");

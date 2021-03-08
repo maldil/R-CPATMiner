@@ -28,7 +28,7 @@ public class TypeApproximator {
                 return TypeStringToJDT.getJDTType(ast, s, 0);
             }
             else {
-                log.warn("Unable to approximate the type");
+                log.debug("Unable to approximate the type");
                 return null;
             }
         } catch (NodeNotFoundException e) {
@@ -55,11 +55,26 @@ public class TypeApproximator {
                 return listString+"]";
             }
         }
+        else if (node instanceof org.jpp.astnodes.ast.Set){
+            String typeString = getTypeString(ast, (org.jpp.astnodes.ast.Set) node);
+            if (typeString!=null){
+                String listString = "Set[";
+                listString+=typeString;
+                return listString+"]";
+            }
+
+        }
         return null;
     }
 
     private static String getTypeString(AST ast, List node){
         return getTypeStringFromAstList(ast, (AstList) node.getElts());
+
+    }
+
+    private static String getTypeString(AST ast, org.jpp.astnodes.ast.Set node){
+        return getTypeStringFromAstList(ast, (AstList)node.getElts());
+
     }
 
     private static String getTypeString(AST ast, Dict node){
@@ -146,6 +161,12 @@ public class TypeApproximator {
 
         }
         else if (expression instanceof List){
+            return getTypeString (ast,expression);
+        }
+        else if (expression instanceof org.jpp.astnodes.ast.Set){
+            return getTypeString (ast,expression);
+        }
+        else if (expression instanceof Dict){
             return getTypeString (ast,expression);
         }
 

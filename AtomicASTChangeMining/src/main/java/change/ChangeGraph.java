@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import graph.PDGActionNode;
+import graph.PDGDataEdge;
 import graph.PDGGraph;
 import org.eclipse.jdt.core.dom.ASTNode;
 
@@ -18,14 +20,47 @@ public class ChangeGraph implements Serializable {
 
 	public ChangeGraph(PDGGraph pdg) {
 		HashSet<PDGNode> changedNodes = pdg.getChangedNodes();
+		HashSet<PDGNode> nonChangedNodes = new HashSet<>();
 		if (changedNodes.isEmpty())
 			return;
 		HashMap<PDGNode, ChangeNode> map = new HashMap<>();
+
+		for (PDGNode node : changedNodes) {
+			if (node instanceof PDGActionNode){
+				for (PDGEdge outEdge : node.getOutEdges()) {
+					if (outEdge instanceof PDGDataEdge && ((PDGDataEdge) outEdge).getType() == PDGDataEdge.Type.DEFINITION){
+						ChangeNode cn = new ChangeNode(outEdge.getTarget());
+						map.put(outEdge.getTarget(), cn);
+						nonChangedNodes.add(outEdge.getTarget());
+
+						for (PDGEdge edge : outEdge.getTarget().getOutEdges()) {
+							if (edge instanceof PDGDataEdge && ((PDGDataEdge) edge).getType() == PDGDataEdge.Type.MAP){
+								ChangeNode cn1 = new ChangeNode(edge.getTarget());
+								map.put(edge.getSource(), cn1);
+								nonChangedNodes.add(edge.getSource());
+							}
+						}
+
+						for (PDGEdge edge : outEdge.getTarget().getInEdges()) {
+							if (edge instanceof PDGDataEdge && ((PDGDataEdge) edge).getType() == PDGDataEdge.Type.MAP){
+								ChangeNode cn1 = new ChangeNode(edge.getSource());
+								map.put(edge.getSource(), cn1);
+								nonChangedNodes.add(edge.getSource());
+							}
+						}
+					}
+				}
+			}
+		}
+
+		changedNodes.addAll(nonChangedNodes);
+
 		for (PDGNode node : changedNodes) {
 			ChangeNode cn = new ChangeNode(node);
 			map.put(node, cn);
 			nodes.add(cn);
 		}
+
 		for (PDGNode node : changedNodes) {
 			ChangeNode cn = map.get(node);
 			for (PDGEdge e : node.getInEdges()) {
@@ -96,7 +131,30 @@ public class ChangeGraph implements Serializable {
 					|| node.astNodeType == ASTNode.SUPER_METHOD_INVOCATION
 					|| node.astNodeType == ASTNode.CLASS_INSTANCE_CREATION
 					|| node.astNodeType == ASTNode.CONSTRUCTOR_INVOCATION
-					|| node.astNodeType == ASTNode.SUPER_CONSTRUCTOR_INVOCATION)
+					|| node.astNodeType == ASTNode.SUPER_CONSTRUCTOR_INVOCATION
+					|| node.astNodeType == ASTNode.TRY_STATEMENT)
+				return true;
+		}
+		return false;
+	}
+
+	public boolean hasArrays() {
+		for (ChangeNode node : nodes) {
+			if (node.astNodeType == ASTNode.ARRAY_TYPE
+					|| node.astNodeType == ASTNode.ARRAY_ACCESS
+					|| node.astNodeType == ASTNode.ARRAY_CREATION
+					|| node.astNodeType == ASTNode.ARRAY_INITIALIZER)
+				return true;
+		}
+		return false;
+	}
+
+	public boolean hasForLoops() {
+		for (ChangeNode node : nodes) {
+			if (node.astNodeType == ASTNode.FOR_STATEMENT
+					|| node.astNodeType == ASTNode.ENHANCED_FOR_STATEMENT
+					|| node.astNodeType == ASTNode.ENHANCED_FOR_STATEMENT_WITH_ELSE
+			||node.astNodeType == ASTNode.IF_STATEMENT)
 				return true;
 		}
 		return false;

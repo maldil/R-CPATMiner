@@ -1,5 +1,7 @@
 package change;
 
+import java.io.DataOutput;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +10,7 @@ import java.util.HashSet;
 
 import graph.PDGBuildingContext;
 import graph.PDGGraph;
+import graphics.DotGraph;
 import utils.FileIO;
 import utils.JavaASTUtil;
 import utils.Pair;
@@ -29,7 +32,7 @@ import treed.TreedMapper;
 public class CMethod extends ChangeEntity {
 	private static final long serialVersionUID = 2920972217396599104L;
 	private static final String separatorParameter = "#";
-	private static final double thresholdSignatureSimilarity = 0.625;
+	private static final double thresholdSignatureSimilarity = 0.8;
 	private static final double thresholdBodySimilarity = 0.75;
 	@SuppressWarnings("unused")
 	private static final double thresholdDiffability = 0.5;
@@ -51,6 +54,7 @@ public class CMethod extends ChangeEntity {
 	@SuppressWarnings("unchecked")
 	public CMethod(CClass cClass, MethodDeclaration method) {
 		this.startLine = ((CompilationUnit) method.getRoot()).getLineNumber(method.getBody().getStartPosition());
+		this.startPyLine = method.getPyLine();
 		this.cClass = cClass;
 		this.modifiers = method.getModifiers();
 		for (int i = 0; i < method.modifiers().size(); i++) {
@@ -408,15 +412,16 @@ public class CMethod extends ChangeEntity {
 		}
 
 		// map other methods
-		HashSet<CMethod> tmpMappedMethodsM = new HashSet<CMethod>();
-		HashSet<CMethod> tmpMappedMethodsN = new HashSet<CMethod>();
-		map(methodsM, methodsN, tmpMappedMethodsM, tmpMappedMethodsN,
-				inMappedClasses);
-		mappedMethodsM.addAll(tmpMappedMethodsM);
-		mappedMethodsN.addAll(tmpMappedMethodsN);
-		methodsM.removeAll(tmpMappedMethodsM);
-		methodsN.removeAll(tmpMappedMethodsN);
-		size[0] += tmpMappedMethodsM.size();
+		//TODO Removed method mapping considering similarity for Python
+//		HashSet<CMethod> tmpMappedMethodsM = new HashSet<CMethod>();
+//		HashSet<CMethod> tmpMappedMethodsN = new HashSet<CMethod>();
+//		map(methodsM, methodsN, tmpMappedMethodsM, tmpMappedMethodsN,
+//				inMappedClasses);
+//		mappedMethodsM.addAll(tmpMappedMethodsM);
+//		mappedMethodsN.addAll(tmpMappedMethodsN);
+//		methodsM.removeAll(tmpMappedMethodsM);
+//		methodsN.removeAll(tmpMappedMethodsN);
+//		size[0] += tmpMappedMethodsM.size();
 
 		return size;
 	}
@@ -487,11 +492,32 @@ public class CMethod extends ChangeEntity {
 
 	public ChangeGraph getChangeGraph(Repository repository, RevCommit commit) {
 		PDGGraph pdg1 = new PDGGraph(this.declaration, new PDGBuildingContext(repository, commit, this.getCFile().getPath(), false,cClass.getCFile().getCompileUnit().imports()));
+//		DotGraph drawM = new DotGraph(pdg1);
+		String dirPath = "./OUTPUT/DEBUG/";
 		pdg1.buildChangeGraph(0);
+
+
+
 		PDGGraph pdg2 = new PDGGraph(this.mappedMethod.declaration, new PDGBuildingContext(repository, commit, this.mappedMethod.getCFile().getPath(), false,
 				cClass.getCFile().getCompileUnit().imports()));
+
+
+
 		pdg2.buildChangeGraph(1);
+
 		pdg2.buildChangeGraph(pdg1);
+//		DotGraph drawM = new DotGraph(pdg2);
+//
+//		DotGraph drawN = new DotGraph(pdg1);
+//
+//		drawN.toDotFile(new File(dirPath  +commit.name()+this.name+"N_c.dot"));
+//		drawN.toGraphics(dirPath  +commit.name()+this.name+"N_c", "png");
+//		drawM.toDotFile(new File(dirPath  +commit.name()+this.name+"M_c.dot"));
+//		drawM.toGraphics(dirPath  +commit.name()+this.name+"M_c", "png");
+//
+
+
+
 		return new ChangeGraph(pdg2);
 	}
 }

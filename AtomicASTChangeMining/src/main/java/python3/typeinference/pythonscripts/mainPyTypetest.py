@@ -60,17 +60,19 @@ def main1():
   if len(sys.argv)>1:
     file_path = sys.argv[1]
   else:
-    file_path = '/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/CPatMinerTest/test4.py'
+    file_path = '/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/django-debug-toolbar/tests/settings.py'
 
   if len(sys.argv)>2:
     project_name = sys.argv[2]
   else:
-    project_name = '/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/CPatMinerTest'
+    project_name = '/Users/malinda/Documents/Research_Topic_2/DATA_FOR_CPATMiner/django-debug-toolbar'
 
   if len(sys.argv)>3:
     file_name = sys.argv[3]
   else:
-    file_name = 'test4..py'
+    file_name = 'tests.settings..py'
+
+
 
   generate_pytype_folder(project_path=project_name,file_path=file_path)
 

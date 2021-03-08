@@ -17,10 +17,11 @@ public class ChangeNode implements Serializable {
 	private int changeType = -1;
 	private int version = -1;
 	private int[] starts, lengths;
+	private int[] pyStart, pyLength , pyLine;
 	private String type, label;
 	private String dataType, dataName;
 	private ArrayList<ChangeEdge> inEdges = new ArrayList<>(), outEdges = new ArrayList<>();
-	
+
 	public int getAstNodeType() {
 		return astNodeType;
 	}
@@ -35,6 +36,18 @@ public class ChangeNode implements Serializable {
 
 	public int[] getStarts() {
 		return starts;
+	}
+
+	public int[] getPyStart(){
+		return pyStart;
+	}
+
+	public int[] getPyLine(){
+		return pyLine;
+	}
+
+	public int[] getPyLength(){
+		return pyLength;
 	}
 
 	public int[] getLengths() {
