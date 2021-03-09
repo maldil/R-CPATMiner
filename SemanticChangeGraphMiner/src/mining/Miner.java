@@ -31,8 +31,8 @@ public class Miner {
 	private int level = 0;
 	private String reposPath;
 	private String currDir;
-	private HashMap<String, String> commitEmail = readEmail(new File(Configurations.metaData));
-	private HashMap<String, Integer> commitTime = readTime(new File(Configurations.metaData));
+	private HashMap<String, String> commitEmail = readEmail(new File("T:/github/repos-metadata/"));
+	private HashMap<String, Integer> commitTime = readTime(new File("T:/github/repos-metadata/"));
 
 	public ArrayList<Lattice> lattices = new ArrayList<Lattice>();
 	
@@ -84,6 +84,7 @@ public class Miner {
 		for (GROUMGraph groum : groums) {
 			groum.deleteAssignmentNodes();
 //			groum.deleteUnaryOperationNodes();
+			//groum.deleteUnaryOperationNodes();
 			groum.collapseLiterals();
 		}
 		HashMap<String, HashSet<GROUMNode[]>> nodesOfLabel = new HashMap<>();
@@ -195,7 +196,7 @@ public class Miner {
 
 
 
-	public void printOutResults(File dir, int step, Pattern p, ArrayList<ArrayList<String>> patterns, boolean isAbstract) {
+	private void printOutResults(File dir, int step, Pattern p, ArrayList<ArrayList<String>> patterns, boolean isAbstract) {
 		File patternDir = new File(dir.getAbsolutePath() + "/" + step + "/"  + p.getId());
 		if (!patternDir.exists())
 			patternDir.mkdirs();
@@ -216,6 +217,11 @@ public class Miner {
 //		sampleChange.append("<link rel=\"stylesheet\" href=\"../../default.css\">\n" +
 //				"<script src=\"../../highlight.pack.js\"></script> \n" +
 //				"<script>hljs.initHighlightingOnLoad();</script>\n");
+		sb.append(name + "\n");
+		sb.append("</h3>");
+
+
+		StringBuilder sampleChange = new StringBuilder();
 		sampleChange.append("<link rel=\"stylesheet\" href=\"../../../../default.css\">\n" +
 				"<script src=\"../../../../highlight.pack.js\"></script> \n" +
 				"<script>hljs.initHighlightingOnLoad();</script>\n");
@@ -230,6 +236,7 @@ public class Miner {
 //		if(representativeGraph.getName().split(",")[0].equals("3cb4397b975536a3dbcb0568c777dcd7bbd78d33")){
 //			System.out.println();
 //		}
+
 		ArrayList<String> beforeAndAfter = null;
 		try {
 			beforeAndAfter = JGitUtil.getFileFromDir(new File(reposPath + "/" + representativeGraph.getProject()), name);
@@ -252,6 +259,11 @@ public class Miner {
 
 
 		sb.append("<img src=\""+ rf.getId()   +".png\" alt=\"Italian Trulli\"   style=\"width:500px;height:500px;\">");
+			sampleChange.append(writeDiffs(beforeAndAfter, rf));
+		} catch (StringIndexOutOfBoundsException e) {
+			return;
+		}
+
 		sb.append("<div id='inPattern'>In pattern: SUPERPATTERN</div><BR>");
 		
 		sb.append("<div id='frequency'>Frequency: " + p.getFreq() + "</div><BR>");
@@ -307,6 +319,14 @@ public class Miner {
 			else
 				addFragmentsToHTML(sb, currGraph, name, projectName, p, isAbstract, Integer.parseInt(currGraph.getName().split(",")[5]));
 
+		addFragmentsToHTML(sb, representativeGraph, name, projectName, p, isAbstract);
+
+		for (Fragment f : p.getFragments()) {
+			if (f == p.getRepresentative()) continue;
+			GROUMGraph currGraph = f.getGraph();
+			projectName = currGraph.getProject();
+			name = currGraph.getName();
+			addFragmentsToHTML(sb, currGraph, name, projectName, p, isAbstract);
 		}
 
 
@@ -433,6 +453,12 @@ public class Miner {
 	}
 
 
+		currPattern.add(String.valueOf(p.getFragments().size()));
+//		currPattern.add(listOfNodeTypes(lat.getPatterns().get(0).getRepresentative().getNodes()));
+		currPattern.add(listOfNodeTypes(p.getRepresentative().getNodes()));
+		patterns.add(currPattern);
+	}
+
 	private String writeDiffs(ArrayList<String> beforeAndAfter, Fragment rf) {
 		ArrayList<ArrayList<Integer>> beforeHighlights = new ArrayList<>();
 		ArrayList<ArrayList<Integer>> afterHighlights = new ArrayList<>();
@@ -535,6 +561,7 @@ public class Miner {
 			}
 		});
 		Object[] sortedArray = highlights.toArray();
+<<<<<<< HEAD
 		if (sortedArray.length>0){
 			ArrayList<Integer> first = ((ArrayList<Integer>) sortedArray[0]);
 			int fPos = first.get(0);
@@ -589,6 +616,53 @@ public class Miner {
 
 		
 
+=======
+		ArrayList<Integer> first = ((ArrayList<Integer>) sortedArray[0]);
+		int fPos = first.get(0);
+		for (int i = 0; i < 4; i++) {
+			fPos = str.lastIndexOf('\n', fPos-1);
+			if (fPos == -1) {
+				fPos = 0;
+				break;
+			}
+		}
+		markedupString.append(str.substring(fPos, first.get(0)).replace("<","&lt;").replace(">","&gt;"));
+		
+		int end = -1;
+		for (int i = 0; i < sortedArray.length-1; i++){
+			ArrayList<Integer> al = (ArrayList<Integer>) sortedArray[i];
+			if (al.get(0) + al.get(1) > end) {
+				markedupString.append("<a id=\"change\">");
+				markedupString.append(str.substring(Math.max(al.get(0), end), al.get(0) + al.get(1)).replace("<", "&lt;").replace(">", "&gt;"));
+				markedupString.append("</a>");
+			
+				end = al.get(0) + al.get(1);
+			}
+			if (i < sortedArray.length){
+				ArrayList<Integer> next = (ArrayList<Integer>) sortedArray[i+1];
+				if (next.get(0) > end)
+					markedupString.append(str.substring(end, next.get(0)).replace("<", "&lt;").replace(">", "&gt;"));
+				else if (next.get(0) + next.get(1) > end)
+					System.err.print(""); // DEBUG
+			}
+		}
+		ArrayList<Integer> last = ((ArrayList<Integer>) sortedArray[sortedArray.length-1]);
+		if (last.get(0) + last.get(1) > end) {
+			markedupString.append("<a id=\"change\">");
+			markedupString.append(str.substring(Math.max(last.get(0), end), last.get(0) + last.get(1)).replace("<", "&lt;").replace(">", "&gt;"));
+			markedupString.append("</a>");
+		
+			end = last.get(0) + last.get(1);
+		}
+		int lPos = end;
+		for (int i = 0; i < 4; i++) {
+			lPos = str.indexOf('\n', lPos+1);
+			if (lPos == -1) {
+				lPos = str.length();
+				break;
+			}
+		}
+		markedupString.append(str.substring(end, lPos).replace("<", "&lt;").replace(">", "&gt;"));
 
 		return String.valueOf(markedupString);
 	}
@@ -619,6 +693,7 @@ public class Miner {
 		try {
 			byte[] bytesOfMessage = parts[1].getBytes("UTF-8");
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
+	//		MessageDigest md = MessageDigest.getInstance("MD5");
 			thedigest = md.digest(bytesOfMessage);
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			thedigest = null;
@@ -649,6 +724,13 @@ public class Miner {
 		sb.append("<div id='class'> Class Name: " + parts[2]+ "</div>");
 		sb.append("<div id='method'> Method Name: " + parts[3]+ "</div>");
 
+		String githubLocation = "https://github.com/" + projectName  + "/commit/" + parts[0] + "#diff-" + md5s + "L" + parts[5];
+		
+		sb.append("<BR>");
+		sb.append("<div id='link'><a href='" + githubLocation + "' target='_blank'>Link</a></div>");
+		sb.append("<div id='time'>" + this.commitTime.get(parts[0]) + "</div>");
+		sb.append("<div id='author'>" + this.commitEmail.get(parts[0]) + "</div>");
+		sb.append("<div id='method'>" + projectName + "," + name + "</div>");
 		sb.append("<BR>");
 		/*if(isAbstract || level > 1) {
             sb.append("<div id='fromPattern' > From pattern: <a href='../../../" + (isAbstract ? this.level : (this.level - 1)) + "/" + representativeGraph.getNodes().size() + "/" + representativeGraph.getPatternId() + "/details.html'>" + representativeGraph.getPatternId() + "<a></div><BR>");
@@ -753,6 +835,9 @@ public class Miner {
 		Pattern.mode = 1;
 		HashMap<String, HashSet<GROUMNode[]>> nodesOfLabel = new HashMap<>();
 
+		Pattern.minFreq = 2;
+		Pattern.mode = 0;
+		HashMap<String, HashSet<GROUMNode[]>> nodesOfLabel = new HashMap<>();
 		for (GROUMGraph groum : groums) {
 			for (GROUMNode node : groum.getNodes()) {
 				if (node.getVersion() != 0) continue;
@@ -825,6 +910,15 @@ public class Miner {
 		}
 		System.out.println("Got all first pairs");
 
+		for (String label : new HashSet<String>(nodesOfLabel.keySet())) {
+			HashSet<GROUMNode[]> nodes = nodesOfLabel.get(label);
+			String[] labels = label.split(PAIR_SEPARATOR);
+			if (nodes.size() < Pattern.minFreq
+					|| (!GROUMNode.isCoreAction(labels[0]) && !GROUMNode.isControl(labels[0]))
+					|| (!GROUMNode.isCoreAction(labels[1]) && !GROUMNode.isControl(labels[1])))
+				nodesOfLabel.remove(label);
+		}
+		System.out.println("Got all first pairs");
 		for (String label : nodesOfLabel.keySet()) {
 			HashSet<GROUMNode[]> pairs = nodesOfLabel.get(label);
 			HashSet<Fragment> fragments = new HashSet<>();
@@ -838,7 +932,6 @@ public class Miner {
 		System.out.println("Done mining level " + this.level);
 		Lattice.filter(lattices);
 		System.out.println("Done filtering level " + this.level);
-
 
 
 		printOutResults();
@@ -910,6 +1003,7 @@ public class Miner {
 			}
 			if (rep == null || xrep == null)
 				throw new NullPointerException();
+<<<<<<< HEAD
 //			ArrayList<String> labels = new ArrayList<>();
 //			for (int j = rep.getNodes().size(); j < xrep.getNodes().size(); j++) {
 //				GROUMNode node = xrep.getNodes().get(j);
@@ -942,6 +1036,37 @@ public class Miner {
 //					+ " patterns: " + Pattern.nextID
 //					+ " fragments: " + Fragment.numofFragments
 //					+ " next fragment: " + Fragment.nextFragmentId);
+=======
+			/*ArrayList<String> labels = new ArrayList<>();
+			for (int j = rep.getNodes().size(); j < xrep.getNodes().size(); j++) {
+				GROUMNode node = xrep.getNodes().get(j);
+				String label = node.getLabel();
+				int type = node.getType();
+				if (type == GROUMNode.TYPE_ACTION) {
+					if (!node.isInvocation()) {
+						if (label.length() == 1 && label.charAt(0) >= 128)
+							label = ASTNode.nodeClassForType(node.getAstType()).getSimpleName() + ":" + ((char) (label.charAt(0) - 128));
+						else
+							label = ASTNode.nodeClassForType(node.getAstType()).getSimpleName();
+					}
+				} else if (label.length() == 1) {
+					label = ASTNode.nodeClassForType(node.getAstType()).getSimpleName();
+					char ch = label.charAt(0);
+					if (ch >= 128)
+						label += "*";
+				}
+				labels.add(label);
+			}
+			System.out.println("{Extending pattern of size " + rep.getNodes().size()
+					+ " " + rep.getNodes()
+					+ " occurences: " + pattern.getFragments().size()
+					+ " frequency: " + pattern.getFreq()
+					+ " with label " + labels
+					+ " occurences: " + group.size()
+					+ " frequency: " + xfreq
+					+ " patterns: " + Pattern.nextID 
+					+ " fragments: " + Fragment.numofFragments 
+					+ " next fragment: " + Fragment.nextFragmentId);*/
 			pattern.clear();
 			superExtend(xp);
 			//System.out.println("}");

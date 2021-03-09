@@ -115,6 +115,7 @@ public class MineChangePatterns {
 //				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 				pool.shutdown();
 				pool.awaitTermination(1, TimeUnit.MINUTES);
+				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 			} catch (final InterruptedException e) { }
 		}
 	}
@@ -148,6 +149,7 @@ public class MineChangePatterns {
 			HashMap<String, HashMap<String, ChangeGraph>> fileChangeGraphs = (HashMap<String, HashMap<String, ChangeGraph>>) FileIO.readObjectFromFile(sub.getAbsolutePath());
 			for (String fp : fileChangeGraphs.keySet()) {
 //				System.out.println(fp);
+				//System.out.println(fp);
 				HashMap<String, ChangeGraph> cgs = fileChangeGraphs.get(fp);
 				for (String method : cgs.keySet()) {
 					//System.out.println(method);
@@ -161,6 +163,9 @@ public class MineChangePatterns {
 					numOfGraphs.incrementAndGet();
 					GROUMGraph g = new GROUMGraph(cg, name);
 
+					if (cg.getNodes().size() <= 2) continue;
+					numOfGraphs.incrementAndGet();
+					GROUMGraph g = new GROUMGraph(cg, name);
 					// FIXME
 					g.pruneDoubleEdges();
 					g.setProject(projectName);

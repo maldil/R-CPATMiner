@@ -30,6 +30,9 @@ public class GROUMNode {
 //		required.add((char)ASTNode.ARRAY_ACCESS);
 //		required.add((char)ASTNode.TUPLE_EXPRESSION);
 
+	private static HashSet<Character> invocationTypes = new HashSet<>(), controlTypes = new HashSet<>(), literalTypes = new HashSet<>();
+	private static HashMap<String, Character> infixExpressionLables = new HashMap<>();
+	static {
 		invocationTypes.add((char) ASTNode.ARRAY_ACCESS);
 		invocationTypes.add((char) ASTNode.ARRAY_CREATION);
 		invocationTypes.add((char) ASTNode.ARRAY_INITIALIZER);
@@ -129,6 +132,7 @@ public class GROUMNode {
 			this.starts = Arrays.copyOf(node.getStarts(), node.getStarts().length);
 		if (node.getLengths() != null)
 			this.lengths = Arrays.copyOf(node.getLengths(), node.getLengths().length);
+<<<<<<< HEAD
 		if (node.getPyStart() != null)
 			this.pyStart = Arrays.copyOf(node.getPyStart(), node.getPyStart().length);
 		if (node.getPyLength() != null)
@@ -149,6 +153,14 @@ public class GROUMNode {
 		else if(node.getAstNodeType() == ASTNode.FIELD_ACCESS || node.getAstNodeType() == ASTNode.QUALIFIED_NAME) {
 			this.type = TYPE_ACTION;
 		} else if (node.getType().equals("a")) {
+		this.dataType = node.getDataType();
+		this.label = String.valueOf(this.astType);;
+		/*if (node.getAstNodeType() == ASTNode.ARRAY_ACCESS) {
+			this.type = TYPE_ACTION;
+			this.label = "[]";
+		} else if(node.getAstNodeType() == ASTNode.FIELD_ACCESS || node.getAstNodeType() == ASTNode.QUALIFIED_NAME) {
+			this.type = TYPE_ACTION;
+		} else */if (node.getType().equals("a")) {
 			this.type = TYPE_ACTION;
 			if (isInvocation(this.astType))
 				this.label = node.getLabel();
