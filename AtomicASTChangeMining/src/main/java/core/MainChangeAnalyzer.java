@@ -13,11 +13,7 @@ import change.ChangeAnalyzer;
 import io.vavr.control.Try;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.revwalk.filter.RevFilter;
-import python3.typeinference.antlr.TypeInfo;
+
 import utils.FileIO;
 import utils.NotifyingBlockingThreadPoolExecutor;
 import org.apache.commons.lang.SystemUtils;
