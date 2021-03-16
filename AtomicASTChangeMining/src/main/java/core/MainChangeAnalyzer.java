@@ -1,6 +1,8 @@
 package core;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -8,9 +10,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import change.ChangeAnalyzer;
+import io.vavr.control.Try;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import python3.typeinference.antlr.TypeInfo;
 import utils.FileIO;
 import utils.NotifyingBlockingThreadPoolExecutor;
@@ -33,7 +39,7 @@ public class MainChangeAnalyzer {
 //	public static String outputPath = "/Users/michaelhilton/Development/Research/GraphMinerData/output";
 //	public static String inputPath = "G:/github/repos-bare", outputPath = "T:/change graphs/repos-99";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		logger.debug("++++++Starting the process AtomicASTChangeMining++++++++");
 		String content = null;
 
@@ -79,12 +85,11 @@ public class MainChangeAnalyzer {
 				index = line.length();
 			String name = line.substring(0, index);
 			File dir = new File(Configurations.inputPath + "/" + name);
-			if(!Files.exists(Path.of(Configurations.inputPath + "/" + name))){
-				try {
+			if(!Files.exists(Path.of(Configurations.inputPath + "/" + name))|| isDirEmpty(Path.of(Configurations.inputPath + "/" + name))){
+				Try.of(() -> {
 					Git.cloneRepository().setURI("https://github.com/"+name+".git").setDirectory(new File(Configurations.inputPath + "/" + name)).call();
-				} catch (GitAPIException e) {
-					e.printStackTrace();
-				}
+					return null;
+				}).onFailure(Throwable::printStackTrace);
 			}
 			logger.info("Started analysing : "+dir+" , Project name : "+name);
 			analyze(dir, name);
@@ -93,6 +98,12 @@ public class MainChangeAnalyzer {
 		try {
 			pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch (final InterruptedException e) { }
+	}
+
+	private static boolean isDirEmpty(final Path directory) throws IOException {
+		try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+			return !dirStream.iterator().hasNext();
+		}
 	}
 
 	private static void analyze(final File dir, final String name) {

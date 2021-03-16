@@ -2185,7 +2185,11 @@ public class PDGGraph implements Serializable {
 			for (PDGNode n : sinks)
 				if (n instanceof PDGDataNode)
 					return (PDGDataNode) n;
-		System.err.println("ERROR in getting the only data output node!!!");
+
+
+		if (this.context.revCommit.getName().equals("26c07ada835f1d2a25bc9606a2d4531eaf0a9657"))
+			return null;
+		System.err.println("ERROR in getting the only data output node!!!"+this.context.repository.getDirectory().toString());
 		System.exit(-1);
 		return null;
 	}

@@ -266,8 +266,8 @@ public class ChangeAnalyzer {
 		int num_commits =0;
 		for (final RevCommit commit : commits) {    //Iterate each commit
 			logger.info("f "+commit.toString()+" f");
-//			if (commit.getName().equals("acdaf20b92ccdc21f179fa4cb10a6a561058a01a"))
-//				System.out.println();
+			if (commit.getName().equals("26c07ada835f1d2a25bc9606a2d4531eaf0a9657"))
+				System.out.println();
 			if (numOfExtractedRevisions >= Config.MAX_EXTRACTED_COMMITS)
 				break;
 
@@ -324,10 +324,10 @@ public class ChangeAnalyzer {
 						&& csizes[0] <= 100 && csizes[1] <= 100 
 						&& (cg.hasMethods()||cg.hasArrays()||cg.hasForLoops())) {
 					// DEBUG
-//					DotGraph dg = new DotGraph(cg);
-//					String dirPath = "./OUTPUT/DEBUG/";
-//					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
-//					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
+					DotGraph dg = new DotGraph(cg);
+					String dirPath = "./OUTPUT/DEBUG/";
+					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
+					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
 					imageID+=1;
 					HashMap<String, ChangeGraph> cgs = changeGraphs.get(e.getCFile().getPath());
 					if (cgs == null) {

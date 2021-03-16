@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 
 
 public class TypeInfo {
-
     static Logger logger = Logger.getLogger(TypeInfo.class);
     public TypeTree getTypeTree(String typeString) throws RecognitionException {
         PyTypeLexer lexer = new PyTypeLexer(new ANTLRStringStream(typeString));
