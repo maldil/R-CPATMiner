@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def proj(self, X, U):
+        UNew = U - multiprod(
+            X, <a id="change">multiprod(multitransp(X), U)</a> + multiprod(multitransp(U), X)) / 2
+        <a id="change">return UNew</a>
+
+    egrad2rgrad = proj
+
+    def ehess2rhess(self, X, egrad, ehess, H):</code></pre><h3>After Change</h3><pre><code class='java'>
+        return np.tensordot(G, H, axes=G.ndim)
+
+    def proj(self, X, U):
+        return U - multiprod(X, multisym(<a id="change">multiprod(multitransp(X), U)</a>))
+
+    egrad2rgrad = proj
+</code></pre>

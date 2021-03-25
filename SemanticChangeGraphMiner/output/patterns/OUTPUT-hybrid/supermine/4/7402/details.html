@@ -1,0 +1,24 @@
+<html><h3>c11520dbcc6c1c3889bc76a2b76f6adf5e99c54d,cde/density_estimator/BaseNNEstimator.py,BaseNNEstimator,fit_by_cv,#BaseNNEstimator#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 check if all results are available and rerun failed fit_evals
+        for i, j in zip(param_ids, fold_ids):
+            <a id="change">if (i, j) not in set(score_dict.keys()):
+                _fit_eval(i, j)
+       </a> assert len(score_dict.keys()) == len(param_list) * len(train_splits)
+        print(score_dict)
+
+        &#47&#47 Select the best parameter setting</code></pre><h3>After Change</h3><pre><code class='java'>
+            failed_runs = [x for x in zip(param_ids, fold_ids) if x not in score_dict]
+            if not failed_runs:
+                break
+            <a id="change">if verbose:
+                print("{} runs succeeded, {} runs failed. Rerunning failed runs".format(len(score_dict.keys()),
+                                                                                        len(failed_runs)))
+           </a> for (p, f) in failed_runs:
+                try:
+                    _fit_eval(p, f, verbose=verbose, i_rand=i)
+                except Exception as e:</code></pre><img src="28561943.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/freelunchtheorem/Conditional_Density_Estimation/commit/c11520dbcc6c1c3889bc76a2b76f6adf5e99c54d#diff-d8c98681f4762bc1e5769f0ef886a8554b26a977412087eaf8dc567c86448e2aL75' target='_blank'>Link</a></div><div id='project'> Project Name: freelunchtheorem/Conditional_Density_Estimation</div><div id='commit'> Commit Name: c11520dbcc6c1c3889bc76a2b76f6adf5e99c54d</div><div id='time'> Time: 2019-05-02</div><div id='author'> Author: simonboehm@mailbox.org</div><div id='file'> File Name: cde/density_estimator/BaseNNEstimator.py</div><div id='class'> Class Name: BaseNNEstimator</div><div id='method'> Method Name: fit_by_cv</div><BR><BR><div id='link'><a href='https://github.com/acl-org/acl-anthology/commit/7419eacac2dfa909b280881524e685d7ea4d7ec7#diff-7db43524af3373c6565669485bfc7fb0dd98fd8e91e86bbce9e200e07b445e3aL62' target='_blank'>Link</a></div><div id='project'> Project Name: acl-org/acl-anthology</div><div id='commit'> Commit Name: 7419eacac2dfa909b280881524e685d7ea4d7ec7</div><div id='time'> Time: 2020-04-24</div><div id='author'> Author: post@cs.jhu.edu</div><div id='file'> File Name: bin/add_attachments.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_attachment</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/de83e84dd87aef0dea564de76c648c72d0f6b5a1#diff-6aa1816a051a1fd91c0947878726947436b0e70902cf9881f5df2084ac98f0b0L220' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: de83e84dd87aef0dea564de76c648c72d0f6b5a1</div><div id='time'> Time: 2017-04-05</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/analogy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_google_analogies</div><BR>

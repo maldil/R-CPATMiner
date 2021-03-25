@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  resources = config.project.get(&quotresources&quot, {})
+  if &quotiam_custom_roles&quot in resources:
+    want_apis.add(&quotiam.googleapis.com&quot)
+  <a id="change">for chc_resource_type in _SUPPORT_CHC_RESOURCE_TYPES:
+    if chc_resource_type in resources:
+      want_apis.add(&quothealthcare.googleapis.com&quot)
+      break
+
+ </a> want_apis = list(want_apis)
+
+  &#47&#47 Send in batches to avoid hitting quota limits.
+  for i in range(0, len(want_apis), 10):</code></pre><h3>After Change</h3><pre><code class='java'>
+    want_apis.add(&quotiam.googleapis.com&quot)
+  if &quotchc_datasets&quot in resources:
+    want_apis.add(&quothealthcare.googleapis.com&quot)
+  <a id="change">if &quotgke_clusters&quot in resources:
+    want_apis.add(&quotcontainer.googleapis.com&quot)
+
+ </a> want_apis = list(want_apis)
+
+  &#47&#47 Send in batches to avoid hitting quota limits.
+  for i in range(0, len(want_apis), 10):</code></pre>

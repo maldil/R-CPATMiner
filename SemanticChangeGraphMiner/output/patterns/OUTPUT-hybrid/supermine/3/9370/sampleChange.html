@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    
+    M = _compute_lqr_Q_matrix(lqr, K)
+    <a id="change">return -s.T @ M @ s</a>
+
+
+def compute_lqg_Q(s, lqr, K, Sigma):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+
+    M = _compute_lqr_Q_matrix(lqr, K)
+    m = lambda x, y: x.T @ M @ x
+    return <a id="change">-1. * pairwise_distances(s, metric=m).diagonal().reshape((-1, 1))</a>
+
+
+def compute_lqg_Q(s, lqr, K, Sigma):
+    </code></pre>

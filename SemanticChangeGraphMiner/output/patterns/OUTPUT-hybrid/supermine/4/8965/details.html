@@ -1,0 +1,21 @@
+<html><h3>f7b4c6de2037ebedf6bc8ea5979e81666d54534f,research/object_detection/meta_architectures/center_net_meta_arch.py,,convert_strided_predictions_to_normalized_boxes,#,992
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        filter_nonoverlapping=False)
+    return boxes
+
+  box_lists = [box_list.BoxList(boxes) <a id="change">for</a> boxes in tf.unstack(boxes, axis=0)]
+  true_heights, true_widths, _ = tf.unstack(true_image_shapes, axis=1)
+
+  true_heights_list = tf.unstack(true_heights, axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Note: We use tf ops instead of functions in box_list_ops to make this
+  &#47&#47 function compatible with dynamic batch size.
+  boxes = boxes * stride
+  true_image_shapes = <a id="change">tf.tile(true_image_shapes[:, tf.newaxis, :2], [1, 1, 2])</a>
+  <a id="change">boxes = boxes / tf.cast(true_image_shapes, tf.float32)</a>
+  boxes = tf.clip_by_value(boxes, 0.0, 1.0)
+  return boxes
+
+</code></pre><img src="35027686.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/f7b4c6de2037ebedf6bc8ea5979e81666d54534f#diff-ee421de3daf8a640c16b7f6f5a5d3399d28ded3a5c073b9ee10e5e2a88b7e94fL1012' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: f7b4c6de2037ebedf6bc8ea5979e81666d54534f</div><div id='time'> Time: 2020-12-01</div><div id='author'> Author: rathodv@google.com</div><div id='file'> File Name: research/object_detection/meta_architectures/center_net_meta_arch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_strided_predictions_to_normalized_boxes</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/f4999d0ee32742d680cc09b4898c13a4aaa8b9bf#diff-2e45a21bfc7502bbfccca176f2e9f7e4492843a5bf935abe393d96f26874f559L50' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: f4999d0ee32742d680cc09b4898c13a4aaa8b9bf</div><div id='time'> Time: 2021-02-02</div><div id='author'> Author: ryan.hammonds@utexas.edu</div><div id='file'> File Name: neurodsp/plts/time_series.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_time_series</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/5dd5b8652f28426322309c4e983c94a3caa8fa8e#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL20' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 5dd5b8652f28426322309c4e983c94a3caa8fa8e</div><div id='time'> Time: 2014-12-19</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: A</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/7537cc093489dc1b38d52c8b0f5d9dd543c8c7fe#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L223' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: 7537cc093489dc1b38d52c8b0f5d9dd543c8c7fe</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR>

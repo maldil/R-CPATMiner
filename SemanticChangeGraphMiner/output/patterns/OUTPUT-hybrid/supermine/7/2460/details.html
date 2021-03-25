@@ -1,0 +1,23 @@
+<html><h3>2ab1119596b420cc696a783271d617562ccf7e28,cesium/tests/fixtures.py,,sample_featureset,#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                           for i in range(n_channels)])
+                 for f in features}
+    fset = xr.Dataset(feat_dict)
+    <a id="change">fset.coords[&quotname&quot]</a> = ts_names
+    fset.coords[&quotchannel&quot] = range(n_channels)
+    if targets:
+        ts_targets = np.array(list(islice(cycle(targets), size)))</code></pre><h3>After Change</h3><pre><code class='java'>
+def sample_featureset(size, n_channels=1, features=[&quotmean&quot], targets=None,
+                      names=None, meta_features=[]):
+    ts_names = np.arange(size).astype(&quotstr&quot)
+    index = pd.MultiIndex.from_tuples(<a id="change">[(f, i) for f in features for i in range(n_channels)]</a>,
+                                      names=[&quotfeature&quot, &quotchannel&quot])
+    <a id="change">fset = pd.DataFrame(np.random.random((size, len(features) * n_channels)),
+                        columns=index)</a>
+    if targets:
+        targets = np.array(list(islice(cycle(targets), size)))
+    if names:
+        fset.index = names</code></pre><img src="11403532.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-8900c0e1cb75b4171b1763d7502f4de71e92505ef8ff8b757c282336313e84aeL44' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/fixtures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_featureset</div><BR><BR><div id='link'><a href='https://github.com/QUANTAXIS/QUANTAXIS/commit/5c34d497ab32ea731b687c5863f104615f666d06#diff-7d56f8db284b13496fcb2e2c4509c63ad0f610992658f7def0cf50c4eb0394a8L303' target='_blank'>Link</a></div><div id='project'> Project Name: QUANTAXIS/QUANTAXIS</div><div id='commit'> Commit Name: 5c34d497ab32ea731b687c5863f104615f666d06</div><div id='time'> Time: 2019-02-16</div><div id='author'> Author: yutiansut@qq.com</div><div id='file'> File Name: QUANTAXIS/QAFetch/QAQuery.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QA_fetch_index_min</div><BR><BR><div id='link'><a href='https://github.com/QUANTAXIS/QUANTAXIS/commit/5c34d497ab32ea731b687c5863f104615f666d06#diff-7d56f8db284b13496fcb2e2c4509c63ad0f610992658f7def0cf50c4eb0394a8L257' target='_blank'>Link</a></div><div id='project'> Project Name: QUANTAXIS/QUANTAXIS</div><div id='commit'> Commit Name: 5c34d497ab32ea731b687c5863f104615f666d06</div><div id='time'> Time: 2019-02-16</div><div id='author'> Author: yutiansut@qq.com</div><div id='file'> File Name: QUANTAXIS/QAFetch/QAQuery.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QA_fetch_index_day</div><BR>

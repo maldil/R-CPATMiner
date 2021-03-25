@@ -1,0 +1,22 @@
+<html><h3>646012c26db9335f69216c5d8656090c4211f323,storage/cloud-client/bucket_lock_test.py,,bucket,#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def bucket():
+    Creates a test bucket and deletes it upon completion.
+    client = storage.Client()
+    bucket_name = "bucket-lock-" + <a id="change">str(int(time.time()))</a>
+    <a id="change">bucket = client.create_bucket(bucket_name)</a>
+    yield bucket
+    bucket.delete(force=True)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Yields a bucket that is deleted after the test completes.
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = <a id="change">"bucket-lock-{}".format(uuid.uuid4())</a>
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    yield bucket
+    bucket.delete(force=True)</code></pre><img src="14445674.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/646012c26db9335f69216c5d8656090c4211f323#diff-df2150750d0514f1d172e7ed23f8486edc94d774a9cb6514e76159c3ac71a0bfL42' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 646012c26db9335f69216c5d8656090c4211f323</div><div id='time'> Time: 2020-03-05</div><div id='author'> Author: crwilcox@google.com</div><div id='file'> File Name: storage/cloud-client/bucket_lock_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucket</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/6c7f63e58534ff60c524324a1cf8628c838df772#diff-47d9f8b8689fddb590eb710aadeb69738f9edec084f40ac46167cdbdd03022d3L35' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 6c7f63e58534ff60c524324a1cf8628c838df772</div><div id='time'> Time: 2020-03-05</div><div id='author'> Author: crwilcox@google.com</div><div id='file'> File Name: storage/cloud-client/iam_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucket</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/7029fcc6ff92856d43119a56b9d3367ae0fd7b55#diff-82c2fe665613d75fce2ecfd9c5247bdfb07126ae266d58fb3072257d21444f6cL42' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 7029fcc6ff92856d43119a56b9d3367ae0fd7b55</div><div id='time'> Time: 2020-04-21</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: container_registry/container_analysis/samples_test.py</div><div id='class'> Class Name: TestContainerAnalysisSamples</div><div id='method'> Method Name: setup_method</div><BR>

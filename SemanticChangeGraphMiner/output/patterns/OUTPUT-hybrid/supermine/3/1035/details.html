@@ -1,0 +1,19 @@
+<html><h3>d7655e440766a593e8d29997add6d739ec19a6f1,GPy/kern/_src/psi_comp/linear_psi_comp.py,,psicomputations,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    psi0 = (variance*(np.square(mu)+S)).sum(axis=1)
+    psi1 = np.dot(mu,(variance*Z).T)
+    if not return_psi2_n:
+        psi2 = np.dot(S.sum(axis=0)*<a id="change">np.square(variance)</a>*Z,Z.T)+ tdot(psi1.T)
+    else:
+        raise NotImplementedError
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Zv = variance * Z
+    psi1 = np.dot(mu,Zv.T)
+    if return_psi2_n:
+        psi2 = psi1[:,:,None] * psi1[:,None,:] + np.dot(S[:,None,:] * Zv[<a id="change">None,:,:</a>], Zv.T)
+    else:
+        psi2 = np.dot(S.sum(axis=0) * Zv, Zv.T) + tdot(psi1.T)
+</code></pre><img src="4178046.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/d7655e440766a593e8d29997add6d739ec19a6f1#diff-75d49362ed59811e0d5ef15de2521aebd9fbda40b909826e31da333cc3bfbe57L20' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: d7655e440766a593e8d29997add6d739ec19a6f1</div><div id='time'> Time: 2015-09-04</div><div id='author'> Author: james.hensman@gmail.com</div><div id='file'> File Name: GPy/kern/_src/psi_comp/linear_psi_comp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: psicomputations</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/e906da0309620bad16c4e36a040e407c0c131c2d#diff-02c7017745a7495d38402b4d6a8d57927bc90659310903a9f0bd491745651a1aL81' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: e906da0309620bad16c4e36a040e407c0c131c2d</div><div id='time'> Time: 2015-09-06</div><div id='author'> Author: z.dai@sheffield.ac.uk</div><div id='file'> File Name: GPy/kern/_src/mlp.py</div><div id='class'> Class Name: MLP</div><div id='method'> Method Name: update_gradients_diag</div><BR><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/688e64fd31e85371d51f44053bac2acde2328f1e#diff-70158145f8c3017473e154d3e9318cd7ebab5469186eddb6bcbe943621b770a0L22' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 688e64fd31e85371d51f44053bac2acde2328f1e</div><div id='time'> Time: 2017-10-30</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulelayers.py</div><div id='class'> Class Name: Mask</div><div id='method'> Method Name: call</div><BR>

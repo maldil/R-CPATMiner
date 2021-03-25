@@ -1,0 +1,22 @@
+<html><h3>26572a6f569dbe13d3b707ae103d089c8c425933,unet3d/utils/utils.py,,resize,#,64
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def resize(image, new_shape, interpolation="continuous"):
+    input_shape = np.asarray(image.shape, dtype=np.float16)
+    ras_image = reorder_img(image, resample=interpolation)
+    <a id="change">output_shape = np.asarray(new_shape)</a>
+    new_spacing = input_shape/output_shape
+    new_affine = np.copy(ras_image.affine)
+    new_affine[:3, :3] = ras_image.affine[:3, :3] * np.diag(new_spacing)
+    <a id="change">return resample_img(ras_image, target_affine=new_affine, target_shape=output_shape, interpolation=interpolation)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def resize(image, new_shape, interpolation="continuous"):
+    image = reorder_img(image, resample=interpolation)
+    zoom_level = np.divide(new_shape, image.shape)
+    <a id="change">new_diagonal = (image.affine.diagonal()[:3] / zoom_level).tolist() + [1]</a>
+    new_affine = np.copy(image.affine)
+    np.fill_diagonal(new_affine, new_diagonal)
+    new_data = zoom(image.get_data(), zoom_level)
+    return new_img_like(image, new_data, affine=new_affine)</code></pre><img src="13652145.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/26572a6f569dbe13d3b707ae103d089c8c425933#diff-539932f1f652340880de2efaf8caa7ce0fe37eb07ca0979c449462bb185f223cL65' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: 26572a6f569dbe13d3b707ae103d089c8c425933</div><div id='time'> Time: 2018-03-14</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: unet3d/utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: resize</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/31f768dd2cd555649d2b0e494935cb37cf223142#diff-c79bb02bf62bfaa0d7a0fe3ca8376185c502d1c748b0c5cc0c225b166481b3f9L375' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 31f768dd2cd555649d2b0e494935cb37cf223142</div><div id='time'> Time: 2019-03-22</div><div id='author'> Author: datarian@againstthecurrent.ch</div><div id='file'> File Name: category_encoders/one_hot.py</div><div id='class'> Class Name: OneHotEncoder</div><div id='method'> Method Name: reverse_dummies</div><BR><BR><div id='link'><a href='https://github.com/ANTsX/ANTsPy/commit/d23adb96056f3a4ff2d477ae9051a79b481d625b#diff-943e82292dca14f7157de83b95de5f4f7f93f5290281301d16792fbee0aa2978L40' target='_blank'>Link</a></div><div id='project'> Project Name: ANTsX/ANTsPy</div><div id='commit'> Commit Name: d23adb96056f3a4ff2d477ae9051a79b481d625b</div><div id='time'> Time: 2018-11-23</div><div id='author'> Author: stnava@gmail.com</div><div id='file'> File Name: ants/utils/mask_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_image</div><BR>

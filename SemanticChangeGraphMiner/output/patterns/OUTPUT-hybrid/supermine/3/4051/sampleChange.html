@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                dtype=torch.long, device=device)
+
+        n_id = torch.cat([src, pos_dst, neg_dst]).unique()
+        query_t = <a id="change">t[0]</a>
+        adj_t, n_id = sampler(n_id, t=query_t.cpu())
+        assoc[n_id] = torch.arange(n_id.size(0), device=device)
+
+        z, _ = model(n_id, query_t)</code></pre><h3>After Change</h3><pre><code class='java'>
+@torch.no_grad()
+def test(data):
+    memory.eval()
+    <a id="change">gnn.eval()</a>
+    link_pred.eval()
+
+    torch.manual_seed(12345)  &#47&#47 Ensure deterministic sampling across epochs.
+</code></pre>

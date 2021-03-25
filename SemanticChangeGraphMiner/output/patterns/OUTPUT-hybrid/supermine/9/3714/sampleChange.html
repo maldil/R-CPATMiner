@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        elif self.data_type == &quotlmdb&quot:
+            keys = pickle.load(open(osp.join(opt[&quotdataroot_GT&quot], &quot_keys_cache.p&quot), &quotrb&quot))
+            self.paths_GT = sorted([key for key in keys if not key.endswith(&quot.meta&quot)])
+            <a id="change">keys = pickle.load(open(osp.join(opt[&quotdataroot_LR&quot], &quot_keys_cache.p&quot), &quotrb&quot))</a>
+            <a id="change">self.paths_LR = sorted([key for key in keys if not key.endswith(&quot.meta&quot)])</a>
+        assert self.paths_GT, &quotError: GT path is empty.&quot
+        if self.paths_LR and self.paths_GT:
+            assert len(self.paths_LR) == len(self.paths_GT), \
+                &quotGT and LR datasets have different number of images - {}, {}.&quot.format(\</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.opt = opt
+        self.data_type = self.opt[&quotdata_type&quot]
+        self.paths_LR, self.paths_GT = None, None
+        self.sizes_LR, self.sizes_GT = <a id="change">None</a>, None
+        self.LR_env, self.GT_env = None, None  &#47&#47 environment for lmdb
+
+        self.paths_GT, self.sizes_GT = util.get_image_paths(self.data_type, opt[&quotdataroot_GT&quot])</code></pre>

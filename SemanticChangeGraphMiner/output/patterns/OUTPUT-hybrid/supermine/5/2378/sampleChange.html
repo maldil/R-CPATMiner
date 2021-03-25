@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 What lanes will we touch?
+        startingLane, endingLane = self._determineLaneRange(fileNames, roleIndex, startingLane)
+        <a id="change">if startingLane is None:
+            &#47&#47 Something went wrong.
+            return
+
+        &#47&#47 If we&quotre only adding new lanes, NOT modifying existing lanes...
+       </a> adding_only = startingLane == len(self.topLevelOperator)
+
+        &#47&#47 Create a list of DatasetInfos
+        try:</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        originalNumLanes = self.getNumLanes()
+        startingLane, endingLane = self._determineLaneRange(paths, startingLane)
+        <a id="change">if originalNumLanes &lt; endingLane+1:
+            self.topLevelOperator.DatasetGroup.resize(endingLane+1)
+       </a> info_slots = self.getInfoSlots(roleIndex)[startingLane:endingLane+1]
+
+        try:
+            new_infos = self._createDatasetInfos(roleIndex, paths, rois)</code></pre>

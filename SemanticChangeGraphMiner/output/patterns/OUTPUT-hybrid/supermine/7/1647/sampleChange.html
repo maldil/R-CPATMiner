@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      +" layer but it is not an activation layer"
+                      +", which seems odd...if doing regression, make"
+                      +" sure to set the target layer to the last layer")
+            <a id="change">deeplift.util.assert_is_type(final_activation_layer,
+                                         layers.Activation,
+                                         "final_activation_layer")</a>
+            final_activation_type = type(final_activation_layer).__name__
+
+            if (final_activation_type == "Sigmoid"):
+                scoring_mode=ScoringMode.OneAndZeros</code></pre><h3>After Change</h3><pre><code class='java'>
+                  +" classification)")
+        scoring_mode=ScoringMode.OneAndZeros
+        if (len(target_layer.get_output_layers())&gt;0):
+            <a id="change">if (len(target_layer.get_output_layers())&gt;1):
+                print("WARNING: the target layer"
+                      +str(target_layer.get_name())
+                      +" has multiple output layers"
+                      +str(target_layer.get_output_layers()))
+            else: 
+                final_activation_layer = target_layer.get_output_layers()[0]
+                if (deeplift.util.is_type(final_activation_layer,
+                                          layers.Activation)==False):
+                    print("\n\nWARNING!!! There is a layer after your target"
+                          +" layer but it is not an activation layer"
+                          +", which is unusual; double check you have set"
+                          +" the target layer correctly.\n\n")
+                scoring_mode=ScoringMode.OneAndZeros
+       </a> target_layer.set_scoring_mode(scoring_mode)    
+    
+    def save_to_yaml_only(self, file_name):
+        raise NotImplementedError()    </code></pre>

@@ -1,0 +1,43 @@
+<html><h3>570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd,implementations/cgan/cgan.py,Generator,__init__,#Generator#,45
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.init_size = opt.img_size // 4
+        self.l1 = nn.Sequential(nn.Linear(opt.latent_dim, 128*self.init_size**2))
+
+        <a id="change">cnn_layers</a> = <a id="change">[  nn.Upsample(scale_factor=2),
+                        nn.Conv2d(128, 128, 3, stride=1, padding=1),
+                        nn.BatchNorm2d(128, 0.8),
+                        nn.LeakyReLU(0.2, inplace=True),
+                        nn.Upsample(scale_factor=2),
+                        nn.Conv2d(128, 64, 3, stride=1, padding=1),
+                        nn.BatchNorm2d(64, 0.8),
+                        nn.LeakyReLU(0.2, inplace=True),
+                        nn.Conv2d(64, opt.channels, 3, stride=1, padding=1),
+                        nn.Tanh() ]</a>
+
+        self.model = <a id="change">nn.Sequential(*cnn_layers)</a>
+
+    def forward(self, noise, labels):
+        gen_input = torch.mul(self.label_emb(labels), noise)
+        out = self.l1(gen_input)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.init_size = opt.img_size // 4
+        self.l1 = nn.Sequential(nn.Linear(opt.latent_dim, 128*self.init_size**2))
+
+        self.model = <a id="change">nn.Sequential(
+            nn.Upsample(scale_factor=2),
+            nn.Conv2d(128, 128, 3, stride=1, padding=1),
+            nn.BatchNorm2d(128, 0.8),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Upsample(scale_factor=2),
+            nn.Conv2d(128, 64, 3, stride=1, padding=1),
+            nn.BatchNorm2d(64, 0.8),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Conv2d(64, opt.channels, 3, stride=1, padding=1),
+            nn.Tanh()
+        )</a>
+
+    def forward(self, noise, labels):
+        gen_input = torch.mul(self.label_emb(labels), noise)
+        out = self.l1(gen_input)</code></pre><img src="2489253.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L53' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd</div><div id='time'> Time: 2018-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Generator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L53' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd</div><div id='time'> Time: 2018-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Generator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/61228f3243eaee39cba31a9abd2afc6ead9612a8#diff-9903008c4dd9e13a11faec769eb2a60eec5ea5c9267151d03f6d0a59a11a90a6L45' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 61228f3243eaee39cba31a9abd2afc6ead9612a8</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/pix2pix/models.py</div><div id='class'> Class Name: GeneratorUNet</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/61228f3243eaee39cba31a9abd2afc6ead9612a8#diff-e0bfef5d3f1652dbb7b4effdf1e88e499b91b97706cb0b6720c431c9aba01d05L46' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 61228f3243eaee39cba31a9abd2afc6ead9612a8</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/discogan/models.py</div><div id='class'> Class Name: GeneratorUNet</div><div id='method'> Method Name: __init__</div><BR>

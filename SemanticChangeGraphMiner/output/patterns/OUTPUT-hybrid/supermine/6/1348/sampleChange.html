@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if count_fr == 1:
+            chromogram = chroma_feature_matrix.T
+        else:
+            <a id="change">chromogram = np.vstack((chromogram, chroma_feature_matrix.T))</a>
+    freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        chroma_names, chroma_feature_matrix = chroma_features(X, sampling_rate,
+                                                              num_fft)
+        chroma_feature_matrix = chroma_feature_matrix[:, 0]
+        <a id="change">chromogram[count_fr-1, :]</a> = chroma_feature_matrix.T
+    freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]</code></pre>

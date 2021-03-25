@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.n &gt; len(self.points):
+            raise ValueError("n can&quott be higher than the number of points in the PyntCloud.")
+        remaining_points = self.points.values
+        <a id="change">solution_set = list()</a>
+        solution_set.append(remaining_points.pop(
+            random.randint(0, len(remaining_points) - 1)))
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, <a id="change">solution_set[0]</a>) for p in remaining_points]
+            for i, p in enumerate(remaining_points):
+                <a id="change">for j, s in enumerate(solution_set):
+                    distances[i] = min(distances[i], self.cal_distance(p, s))
+           </a> solution_set.append(remaining_points.pop(distances.index(max(distances))))
+        return pd.DataFrame(solution_set)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        select_idx = np.random.randint(low=0, high=len(self.points))
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        solution_set = remaining_points[select_idx: select_idx+1]
+        <a id="change">remaining_points = np.delete(remaining_points, select_idx)</a>
+
+        for _ in range(self.n - 1):
+            distance_sum = self.cal_distance(remaining_points, solution_set)
+            select_idx = np.argmax(distance_sum)
+            <a id="change">solution_set = np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)</a>
+            remaining_points = np.delete(remaining_points, select_idx)
+
+        return pd.DataFrame(solution_set, columns=self.points.columns)
+</code></pre>

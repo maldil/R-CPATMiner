@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self._verbose:
+            print(&quot\r[POS Extractor] postprocessing was done 100.00 %    &quot)
+            print(&quot[POS Extractor] &#47&#47&#47&#47 statistics &#47&#47&#47&#47&quot)
+            <a id="change">templates</a> = <a id="change">&quot[POS Extractor] {} ({:.3f} %): {}&quot</a>
+            print(templates.format(len(nouns_), as_percent(nouns_), &quotNoun + [Josa/Predicator]&quot))
+            print(templates.format(len(confused_nouns), as_percent(confused_nouns), &quotConfused nouns&quot))
+            print(templates.format(len(adjectives_), as_percent(adjectives_), &quot[Noun] + Adjective&quot))
+            <a id="change">print(templates.format(len(verbs_), as_percent(verbs_), &quot[Noun] + Verb&quot))</a>
+            print(templates.format(len(not_covered), as_percent(not_covered), &quotnot covered&quot))
+
+        return nouns_, confused_nouns, adjectives_, verbs_, not_covered
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self._verbose:
+            print(&quot\r[POS Extractor] postprocessing was done 100.00 %    &quot)
+            print(&quot\n[POS Extractor] &#47&#47&#47&#47 statistics &#47&#47&#47&#47&quot)
+            <a id="change">statistics</a> = [
+                (len(nouns_), as_percent(nouns_), &quotNoun + [Josa/Predicator]&quot),
+                (len(confused_nouns), as_percent(confused_nouns), &quotConfused nouns&quot),
+                (len(adjectives_), as_percent(adjectives_), &quot[Noun] + Adjective&quot),
+                <a id="change">(len(verbs_), as_percent(verbs_), &quot[Noun] + Verb&quot)</a>,
+                (len(not_covered), as_percent(not_covered), &quotnot covered&quot)
+            ]
+            <a id="change">for stats in statistics:
+                print(&quot[POS Extractor] {} ({:.3f} %): {}&quot.format(*stats))
+
+       </a> return nouns_, confused_nouns, adjectives_, verbs_, not_covered
+
+    def _word_match(self, word, references):
+        if word in references:</code></pre>

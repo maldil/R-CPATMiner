@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n_samples = 0
+        for aligned_meters_chunk in align_two_meters(pred_meter, 
+                                                     ground_truth_meter):
+            <a id="change">diff = aligned_meters_chunk.icol(0) - aligned_meters_chunk.icol(1)</a>
+            diff.dropna(inplace=True)
+            sum_of_squared_diff += (diff ** 2).sum()
+            n_samples += len(diff)
+
+        <a id="change">error[pred_meter.instance()]</a> = math.sqrt(sum_of_squared_diff / n_samples)
+
+    return pd.Series(error)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples = 0
+        for aligned_meters_chunk in align_two_meters(pred_meter, 
+                                                     ground_truth_meter):
+            <a id="change">diff = aligned_meters_chunk.iloc[:, 0] - aligned_meters_chunk.iloc[:, 1]</a>
+            diff.dropna(inplace=True)
+            sum_of_squared_diff += (diff ** 2).sum()
+            n_samples += len(diff)
+
+        <a id="change">error[pred_meter.instance()]</a> = math.sqrt(sum_of_squared_diff / n_samples)
+
+    return pd.Series(error)
+</code></pre>

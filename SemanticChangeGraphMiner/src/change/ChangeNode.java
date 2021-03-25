@@ -22,10 +22,6 @@ public class ChangeNode implements Serializable {
 	private String dataType, dataName;
 	private ArrayList<ChangeEdge> inEdges = new ArrayList<>(), outEdges = new ArrayList<>();
 
-	private String type, label;
-	private String dataType, dataName;
-	private ArrayList<ChangeEdge> inEdges = new ArrayList<>(), outEdges = new ArrayList<>();
-	
 	public int getAstNodeType() {
 		return astNodeType;
 	}

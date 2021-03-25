@@ -1,0 +1,39 @@
+<html><h3>a34e171a4ae9071af30733b2ebca61199977f2c8,enthought/chaco/tools/range_selection_overlay.py,RangeSelectionOverlay,_mapper_default,#RangeSelectionOverlay#,173
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 use the container&quots mapper instead. 
+        
+        mapper = getattr(self.plot, self.axis + "_mapper")
+        <a id="change">if isinstance(mapper, GridMapper) \
+                and self.plot.container is not None:
+            return getattr(self.plot.container, self.axis + "_mapper")
+
+    &#47&#47------------------------------------------------------------------------
+    &#47&#47 Property getter/setters
+    &#47&#47------------------------------------------------------------------------
+        
+   </a> @cached_property
+    def _get_plot(self):
+        return self.component    
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        mapper = getattr(self.plot, self.axis + "_mapper")
+        
+        <a id="change">if isinstance(mapper, GridMapper):
+            if self.axis == &quotindex&quot:
+                return mapper._xmapper
+            else:
+                return mapper._ymapper
+        else:
+            return mapper
+
+    &#47&#47------------------------------------------------------------------------
+    &#47&#47 Property getter/setters
+    &#47&#47------------------------------------------------------------------------
+        
+   </a> @cached_property
+    def _get_plot(self):
+        return self.component    
+</code></pre><img src="3880221.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/a34e171a4ae9071af30733b2ebca61199977f2c8#diff-71dc4437a601755b64bebe32877906266363f12ab30c0ba59e99ce8e4deb41eeL178' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: a34e171a4ae9071af30733b2ebca61199977f2c8</div><div id='time'> Time: 2009-11-10</div><div id='author'> Author: bhendrix@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/tools/range_selection_overlay.py</div><div id='class'> Class Name: RangeSelectionOverlay</div><div id='method'> Method Name: _mapper_default</div><BR>

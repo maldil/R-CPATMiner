@@ -1,0 +1,29 @@
+<html><h3>3ab4b8614054e9920676ae479df1ff4c2c2e438b,pliers/extractors/api.py,IndicoAPIExtractor,_extract,#IndicoAPIExtractor#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        results = []
+        for i, stim in enumerate(stims):
+            features, data = [], []
+            <a id="change">for j, score in enumerate(scores):
+                if isinstance(score[i], float):
+                    features.append(self.names[j])
+                    data.append(score[i])
+                elif isinstance(score[i], dict):
+                    for k in score[i].keys():
+                        features.append(self.names[j] + &quot_&quot + k)
+                        data.append(score[i][k])
+
+           </a> results.append(ExtractorResult([data], stim, self,
+                                           features=features,
+                                           onsets=stim.onset,
+                                           durations=stim.duration))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        results = []
+        for i, stim in enumerate(stims):
+            <a id="change">stim_scores = [s[i] for s in scores]</a>
+            results.append(ExtractorResult(None, stim, self,
+                                           raw=stim_scores))
+        return results
+</code></pre><img src="9325086.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/3ab4b8614054e9920676ae479df1ff4c2c2e438b#diff-3948ef8cecdf97181e8b1d10a64432dd55757d923d13ee733abb0002b4c2a643L69' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 3ab4b8614054e9920676ae479df1ff4c2c2e438b</div><div id='time'> Time: 2018-02-13</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/extractors/api.py</div><div id='class'> Class Name: IndicoAPIExtractor</div><div id='method'> Method Name: _extract</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/fc56073588771c81b4e134bff54195f5e74e6b43#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L53' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: fc56073588771c81b4e134bff54195f5e74e6b43</div><div id='time'> Time: 2020-01-21</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: minibatch</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/fc56073588771c81b4e134bff54195f5e74e6b43#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L83' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: fc56073588771c81b4e134bff54195f5e74e6b43</div><div id='time'> Time: 2020-01-21</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: multibatch</div><BR>

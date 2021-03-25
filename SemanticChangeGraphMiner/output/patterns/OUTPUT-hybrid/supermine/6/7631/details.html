@@ -1,0 +1,33 @@
+<html><h3>1c8608f922bd80188a6c708ea42789627e34bdb5,pgmpy/inference/Sampling.py,BayesianModelSampling,forward_sample,#BayesianModelSampling#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        [{&quotintel&quot: &quotintel_0&quot, &quotgrade&quot: &quotgrade_1&quot, &quotdiff&quot: &quotdiff_1&quot},
+        {&quotintel&quot:  &quotintel_1&quot, &quotgrade&quot: &quotgrade_0&quot, &quotdiff&quot: &quotdiff_0&quot}]
+        
+        <a id="change">sampled = []</a>
+        for _ in range(size):
+            particle = {}
+            for node in self.topological_order:
+                cpd = self.cpds[node]
+                if cpd.evidence:
+                    evid = []
+                    for var in cpd.evidence:
+                        evid.append(particle[var])
+                    weights = cpd.reduce(evid, inplace=False).values
+                else:
+                    weights = cpd.values
+                particle[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            <a id="change">sampled.append(particle)</a>
+        return sampled
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        0  diff_1  intel_0  grade_1
+        1  diff_1  intel_0  grade_2
+        
+        <a id="change">sampled = DataFrame(index=range(0, size),
+                            columns=self.topological_order)</a>
+        for i in range(size):
+            particle = {}
+            for node in self.topological_order:
+                cpd = self.cpds[node]</code></pre><img src="29205166.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/1c8608f922bd80188a6c708ea42789627e34bdb5#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL34' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 1c8608f922bd80188a6c708ea42789627e34bdb5</div><div id='time'> Time: 2015-06-02</div><div id='author'> Author: pratyaksh@me.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: forward_sample</div><BR><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/f819a34e2fbea2dab4997b3b236b517fa12d115d#diff-687074a9424d2ec73413c9c6e19ae408d3f34c75fdeb709aae0f83a920152737L115' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: f819a34e2fbea2dab4997b3b236b517fa12d115d</div><div id='time'> Time: 2018-06-08</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: examples/02_predict_employee_salaries.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/f819a34e2fbea2dab4997b3b236b517fa12d115d#diff-8097d607e48a65da63b3562129827e7d54f6bec3c09f0c42214afabe392f06ceL111' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: f819a34e2fbea2dab4997b3b236b517fa12d115d</div><div id='time'> Time: 2018-06-08</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: examples/03_midwest_survey.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

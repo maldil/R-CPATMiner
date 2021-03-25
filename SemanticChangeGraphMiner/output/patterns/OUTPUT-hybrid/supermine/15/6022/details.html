@@ -1,0 +1,23 @@
+<html><h3>c896658601de967992b8fd40e81d42a924360db1,cube/models/vocoder.py,BeeCoder,learn,#BeeCoder#,83
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            batch_y = torch.tensor(y).reshape(len(x), self.UPSAMPLE_COUNT).to(device)
+            y_pred = self.network(batch_x)
+            &#47&#47 loss = self.criterion.forward(y_pred, batch_y.to(device))
+            loss = <a id="change">(y_pred - batch_y).pow(2).sum() / len(x)</a>
+            loss.backward()
+            self.trainer.step()
+            total_loss += loss
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            batch_y = torch.tensor(y).reshape(len(x), self.UPSAMPLE_COUNT).to(device)
+            y_pred = self.network(batch_x)
+
+            <a id="change">fft_orig = torch.rfft(batch_y, 1, onesided=False)</a>
+            <a id="change">fft_pred = torch.rfft(y_pred, 1, onesided=False)</a>
+            <a id="change">loss = torch.abs(torch.abs(fft_orig) - torch.abs(fft_pred)).sum()</a>
+
+            angle_orig = torch.atan(batch_y)
+            angle_pred = torch.atan(y_pred)
+            loss += (angle_pred - angle_orig).pow(2).sum()</code></pre><img src="24808090.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/c896658601de967992b8fd40e81d42a924360db1#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L92' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: c896658601de967992b8fd40e81d42a924360db1</div><div id='time'> Time: 2018-11-05</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/ab967e887ab37a3c15652f1e03aa7f490e3b1ebd#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L92' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: ab967e887ab37a3c15652f1e03aa7f490e3b1ebd</div><div id='time'> Time: 2018-11-05</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/d5f47b3c3ba8afda509c36fbdc958d2b1ec25f7f#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L92' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: d5f47b3c3ba8afda509c36fbdc958d2b1ec25f7f</div><div id='time'> Time: 2018-11-06</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/c896658601de967992b8fd40e81d42a924360db1#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L92' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: c896658601de967992b8fd40e81d42a924360db1</div><div id='time'> Time: 2018-11-05</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR>

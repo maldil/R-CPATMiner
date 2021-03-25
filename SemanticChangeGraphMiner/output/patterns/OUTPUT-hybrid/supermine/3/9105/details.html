@@ -1,0 +1,29 @@
+<html><h3>a29e0ce05cade3d3f842e570dee4204f12bd28c2,osmnx/utils_graph.py,,add_edge_lengths,#,146
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise KeyError(f"Edge(s) missing nodes {missing_str} possibly due to clipping issue")
+
+    df_coords = pd.DataFrame(coords, columns=["u", "v", "k", "u_y", "u_x", "v_y", "v_x"])
+    <a id="change">df_coords[["u", "v", "k"]] = df_coords[["u", "v", "k"]].astype(np.int64)</a>
+    df_coords = df_coords.set_index(["u", "v", "k"])
+
+    &#47&#47 then calculate the great circle distance with the vectorized function
+    gc_distances = distance.great_circle_vec(
+        lat1=df_coords["u_y"], lng1=df_coords["u_x"], lat2=df_coords["v_y"], lng2=df_coords["v_x"]
+    )
+
+    &#47&#47 fill nulls with zeros and round
+    gc_distances = gc_distances.fillna(value=0).round(precision)
+    nx.set_edge_attributes(G, name="length", values=<a id="change">gc_distances.to_dict()</a>)
+
+    utils.log("Added edge lengths to graph")
+    return G</code></pre><h3>After Change</h3><pre><code class='java'>
+    try:
+        coords = (
+            (u, v, k, G.nodes[u]["y"], G.nodes[u]["x"], G.nodes[v]["y"], G.nodes[v]["x"])
+            <a id="change">for</a> u, v, k in G.edges
+        )
+    except KeyError:  &#47&#47 pragma: no cover
+        missing_nodes = {</code></pre><img src="35490701.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/a29e0ce05cade3d3f842e570dee4204f12bd28c2#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L167' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: a29e0ce05cade3d3f842e570dee4204f12bd28c2</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_edge_lengths</div><BR><BR><div id='link'><a href='https://github.com/neuropsychology/NeuroKit.py/commit/e3d8cb47bdcf01e991739905a5d6391aafd693a6#diff-4b102fe3a92d8f5fcdc23c1016f5fc133c7c2a3b1359dd17973204720e1f896cL147' target='_blank'>Link</a></div><div id='project'> Project Name: neuropsychology/NeuroKit.py</div><div id='commit'> Commit Name: e3d8cb47bdcf01e991739905a5d6391aafd693a6</div><div id='time'> Time: 2017-05-26</div><div id='author'> Author: dom.mak19@gmail.com</div><div id='file'> File Name: neurokit/bio/bio_ecg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ecg_process</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/429ddb8fb8cc6d1492c9d459cd2120b75352f125#diff-44a1d3a051d8e7bf77b14a5ce3ee0e3a90c98fcc1084fe02cca9dd91472d93f8L215' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 429ddb8fb8cc6d1492c9d459cd2120b75352f125</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: jkleint</div><div id='file'> File Name: category_encoders/leave_one_out.py</div><div id='class'> Class Name: LeaveOneOutEncoder</div><div id='method'> Method Name: fit_leave_one_out</div><BR><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/9dcfc9d8e8af9a3c39f02fa340f97295c46d6d6e#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L548' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: 9dcfc9d8e8af9a3c39f02fa340f97295c46d6d6e</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_edge_lengths</div><BR>

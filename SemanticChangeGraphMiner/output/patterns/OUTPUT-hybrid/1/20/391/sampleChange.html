@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif batch_reduce == &quotaverage&quot:
+        min_neg = torch.mean(dist_without_min_on_diag,1)[0]
+        if anchor_swap:
+            min_neg2 = torch.t(<a id="change">torch</a>.mean(dist_without_min_on_diag,0)[0])
+            min_neg = torch.min(min_neg,min_neg2)
+        <a id="change">min_neg</a> = torch.t(min_neg).squeeze(0)
+    elif batch_reduce == &quotrandom&quot:
+        idxs = torch.randperm(anchor.size()[0]).long()
+        min_neg = dist_without_min_on_diag.gather(1,idxs.view(-1,1))
+        if anchor_swap:
+            min_neg2 = torch.t(dist_without_min_on_diag.gather(0,idxs.view(-1,1))) 
+            min_neg = torch.min(min_neg,min_neg2)
+        min_neg = torch.t(min_neg).squeeze(0)
+    else: 
+        print (&quotUnknown batch reduce mode. Try min, average or random&quot)
+        sys.exit(1)
+
+    if loss_type == "triplet_margin":
+        <a id="change">loss</a> = torch.clamp(margin + pos - min_neg, min=0.0)
+    elif loss_type == &quotsoftmax&quot:
+        exp_pos = torch.exp(2.0 - pos);
+        <a id="change">exp_den</a> = exp_pos + torch.exp(2.0 - min_neg) + eps;
+        <a id="change">loss</a> = - torch.log( exp_pos / exp_den )
+    elif loss_type == &quotcontrastive&quot:
+        loss = torch.clamp(margin - min_neg, min=0.0) + pos;
+    else: </code></pre><h3>After Change</h3><pre><code class='java'>
+    elif batch_reduce == &quotaverage&quot:
+        min_neg = torch.mean(dist_without_min_on_diag,1)
+        if anchor_swap:
+            min_neg2 = torch.t(<a id="change">torch.mean(dist_without_min_on_diag,0)</a>)
+            min_neg = torch.min(min_neg,min_neg2)
+        <a id="change">min_neg</a> = torch.t(min_neg).squeeze(0)
+    elif batch_reduce == &quotrandom&quot:
+        idxs = torch.autograd.Variable(torch.randperm(anchor.size()[0]).long()).cuda()
+        min_neg = dist_without_min_on_diag.gather(1,idxs.view(-1,1))
+        if anchor_swap:
+            min_neg2 = torch.t(dist_without_min_on_diag).gather(1,idxs.view(-1,1)) 
+            min_neg = torch.min(min_neg,min_neg2)
+        min_neg = torch.t(min_neg).squeeze(0)
+    else: 
+        print (&quotUnknown batch reduce mode. Try min, average or random&quot)
+        sys.exit(1)
+
+    if loss_type == "triplet_margin":
+        <a id="change">loss</a> = torch.clamp(margin + pos - min_neg, min=0.0)
+    elif loss_type == &quotsoftmax&quot:
+        exp_pos = torch.exp(2.0 - pos);
+        <a id="change">exp_den</a> = exp_pos + torch.exp(2.0 - min_neg) + eps;
+        <a id="change">loss</a> = - torch.log( exp_pos / exp_den )
+    elif loss_type == &quotcontrastive&quot:
+        loss = torch.clamp(margin - min_neg, min=0.0) + pos;
+    else: </code></pre>

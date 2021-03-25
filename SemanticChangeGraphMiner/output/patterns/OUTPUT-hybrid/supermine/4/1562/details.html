@@ -1,0 +1,20 @@
+<html><h3>8b621a409cd07d0f5610a2648b6413322c39a822,GPy/likelihoods/likelihood.py,Likelihood,ep_gradients,#Likelihood#,230
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    Y_metadata_list.append(Y_metadata_i)
+
+                val = self.site_derivatives_ep(Y[index], tau[index], v[index], Y_metadata_i)
+                dlik_dtheta[<a id="change">:, index</a>] = val.ravel()
+
+            f = partial(self.integrate)
+            quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten())))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    Y_metadata_list.append(Y_metadata_i)
+
+            if quad_mode == &quotgk&quot:
+                <a id="change">f = partial(self.integrate_gk)</a>
+                quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten()), Y_metadata_list))
+                quads = np.vstack(quads)
+                quads.reshape(self.size, shape[0], shape[1])
+            elif quad_mode == &quotgh&quot:</code></pre><img src="8051368.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/8b621a409cd07d0f5610a2648b6413322c39a822#diff-b3ddd4154ab46ee45d5fe4011676bb22abbd19d70c4bcd4a4adcf36cc9a00237L230' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 8b621a409cd07d0f5610a2648b6413322c39a822</div><div id='time'> Time: 2017-08-10</div><div id='author'> Author: akash.dhaka@aalto.fi</div><div id='file'> File Name: GPy/likelihoods/likelihood.py</div><div id='class'> Class Name: Likelihood</div><div id='method'> Method Name: ep_gradients</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b7ca885dd1148a94c13e87789d5a5947eaedfc37#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L183' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b7ca885dd1148a94c13e87789d5a5947eaedfc37</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: histogram</div><BR>

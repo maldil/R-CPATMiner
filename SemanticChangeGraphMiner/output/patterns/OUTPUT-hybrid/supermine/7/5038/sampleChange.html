@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 for each seq-batch-feature combination
+        x = [x[i:i + self.context + 1] for i in range(seq_len)]  &#47&#47 TxLxNxH - sequence, context, batch, feature
+        x = torch.stack(x)
+        x = <a id="change">x.permute(0, 2, 3, 1)</a>  &#47&#47 TxNxHxL - sequence, batch, feature, context
+
+        x = torch.mul(x, self.weight).sum(dim=3)
+        return x</code></pre><h3>After Change</h3><pre><code class='java'>
+                              groups=self.n_features, padding=0, bias=None)
+
+    def forward(self, x):
+        x = <a id="change">x</a>.transpose(<a id="change">0</a>, <a id="change">1</a>).transpose(1, 2)
+        x = F.pad(x, pad=self.pad, value=0)
+        x = self.conv(x)
+        x = x.transpose(1, 2).transpose(0, 1).contiguous()</code></pre>

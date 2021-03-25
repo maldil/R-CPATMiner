@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+readme = "README.rst"
+if os.path.isfile(readme):
+    with <a id="change">open(readme)</a> as f:
+        long_description = f.read()
+else:
+    long_description = ""</code></pre><h3>After Change</h3><pre><code class='java'>
+    cmd = "pandoc --from=markdown --to=rst " + readme
+    p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, executable="/bin/bash")
+    out, err = p.communicate()
+    <a id="change">if p.returncode != 0:
+        raise Exception("pandoc conversion failed: " + err)
+   </a> long_description = out
+else:
+    long_description = ""
+</code></pre>

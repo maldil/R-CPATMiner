@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    positions = np.arange(0, n, max(1, float(n) / bins_per_octave))
+
+    &#47&#47 Labels start at 9 here because chroma starts at A.
+    values = core.midi_to_note(<a id="change">np.arange(9, 9+12)</a>, octave=False)
+    ticker(positions, values)
+    labeler(&quotPitch class&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Generate the template positions
+    pos = np.asarray([0, 2, 3, 5, 7, 8, 10]) * bins_per_octave // 12
+
+    n_octaves = np.ceil(<a id="change">n / float(bins_per_octave)</a>)
+
+    positions = pos.copy()
+    for i in <a id="change">range(1, int(n_octaves))</a>:
+        positions = np.append(positions, pos + i * bins_per_octave, axis=0)
+
+    &#47&#47 Labels start at 9 here because chroma starts at A.</code></pre>

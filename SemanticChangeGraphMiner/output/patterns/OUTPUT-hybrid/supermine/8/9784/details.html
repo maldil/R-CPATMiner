@@ -1,0 +1,62 @@
+<html><h3>288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7,cube/models/vocoder.py,BeeCoder,learn,#BeeCoder#,161
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        dy.pickneglogsoftmax(softmax_outputs[ii], disc[mgc_index * self.UPSAMPLE_COUNT + ii]))
+                losses.append(dy.esum(frame_losses))
+
+                history = <a id="change">wave[
+                          (mgc_index + 1) * self.UPSAMPLE_COUNT - self.HISTORY:(mgc_index + 1) * self.UPSAMPLE_COUNT]</a>
+
+            if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 wave += np.array(wave, dtype=np.int32)
+        &#47&#47 wave += 32768
+        wave = wave / 32768
+        <a id="change">wave += 1.0</a>
+        wave = <a id="change">wave * 65535</a>
+        wave = <a id="change">np.clip(np.array(wave, np.int32), 0, 65535)</a>
+
+        &#47&#47 wave = np.array(wave, dtype=np.uint16)
+        &#47&#47 from ipdb import set_trace
+        &#47&#47 set_trace()
+        &#47&#47 print(signal_fft)
+        last_proc = 0
+        dy.renew_cg()
+        total_loss = 0
+        losses = []
+        cnt = 0
+        last_state = None
+        last_val = 32768
+        for mgc_index in range(len(mgc)):
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+
+            if mgc_index &lt; len(mgc) - 1:
+                pred_output, softmax_outputs, last_state = self._predict_one(mgc[mgc_index], history=last_val,
+                                                                             gs_output=wave[
+                                                                                       mgc_index * self.UPSAMPLE_COUNT:mgc_index * self.UPSAMPLE_COUNT +
+                                                                                                                       self.UPSAMPLE_COUNT],
+                                                                             last_state=last_state)
+                frame_losses = []
+                for ii in range(len(softmax_outputs)):
+                    frame_losses.append(
+                        dy.pickneglogsoftmax(softmax_outputs[ii][0],
+                                             int(wave[mgc_index * self.UPSAMPLE_COUNT + ii]) / 256))
+                    frame_losses.append(
+                        dy.pickneglogsoftmax(softmax_outputs[ii][1],
+                                             int(wave[mgc_index * self.UPSAMPLE_COUNT + ii]) % 256))
+
+                losses.append(dy.esum(frame_losses))
+
+                <a id="change">last_val = wave[(mgc_index + 1) * self.UPSAMPLE_COUNT - 1]</a>
+
+            if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()</code></pre><img src="37437886.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L152' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L161' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/has2k1/plotnine/commit/e77a2cb4eca82cfa46c132b535091ec5940bf8c5#diff-c0239f99960ab1c2d3e14d3ddf479b95528a03b1df3a40aab159211773c2b53eL75' target='_blank'>Link</a></div><div id='project'> Project Name: has2k1/plotnine</div><div id='commit'> Commit Name: e77a2cb4eca82cfa46c132b535091ec5940bf8c5</div><div id='time'> Time: 2019-12-16</div><div id='author'> Author: has2k1@gmail.com</div><div id='file'> File Name: plotnine/scales/scale_xy.py</div><div id='class'> Class Name: scale_position_discrete</div><div id='method'> Method Name: map</div><BR><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/985496146dd1ebdc3a43ac921de627c6b61b5200#diff-48b7d4784bafae5cfa537df9852e80a83a705130b7d4821b054fbead2e0a57a1L10' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 985496146dd1ebdc3a43ac921de627c6b61b5200</div><div id='time'> Time: 2019-08-25</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: audio.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_wav</div><BR>

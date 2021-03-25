@@ -1,0 +1,38 @@
+<html><h3>5d273e0093fdd8fa063819274dfb2ed56d198d3e,robosat/metrics.py,MeanIoU,add,#MeanIoU#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        confusion = predicted / actual
+
+        <a id="change">matrix = np.array(
+            [
+                [
+                    torch.sum(torch.isnan(confusion)).item(),
+                    torch.sum(confusion == float("inf")).item(),
+                ],
+                [torch.sum(confusion == 0).item(), torch.sum(confusion == 1).item()],
+            ]
+        )</a>
+
+        if self.confusion_matrix is None:
+            <a id="change">self.confusion_matrix</a> = matrix
+        else:
+            self.confusion_matrix += matrix
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        confusion = predicted / actual
+
+        tn = <a id="change">torch.sum(torch.isnan(confusion)).item()</a>
+        fn = <a id="change">torch.sum(confusion == float("inf")).item()</a>
+        fp = <a id="change">torch.sum(confusion == 0).item()</a>
+        tp = <a id="change">torch.sum(confusion == 1).item()</a>
+
+        <a id="change">matrix = np.array([[tn, fn], [fp, tp]])</a>
+
+        if self.confusion_matrix is None:
+            <a id="change">self.confusion_matrix</a> = matrix
+        else:
+            self.confusion_matrix += matrix
+</code></pre><img src="844429.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 18</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/5d273e0093fdd8fa063819274dfb2ed56d198d3e#diff-c19fe6cb0bc7fccb50d1b1cda177cda786c3419add55a39568ecee1cdc006647L32' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 5d273e0093fdd8fa063819274dfb2ed56d198d3e</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/metrics.py</div><div id='class'> Class Name: MeanIoU</div><div id='method'> Method Name: add</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/e2c849fc70c258b3e09a302866ddd038589876af#diff-c19fe6cb0bc7fccb50d1b1cda177cda786c3419add55a39568ecee1cdc006647L32' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: e2c849fc70c258b3e09a302866ddd038589876af</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/metrics.py</div><div id='class'> Class Name: MeanIoU</div><div id='method'> Method Name: add</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/b8f55323541eae6bbdaf348932b4eaa67320c432#diff-c19fe6cb0bc7fccb50d1b1cda177cda786c3419add55a39568ecee1cdc006647L32' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: b8f55323541eae6bbdaf348932b4eaa67320c432</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/metrics.py</div><div id='class'> Class Name: MeanIoU</div><div id='method'> Method Name: add</div><BR>

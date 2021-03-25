@@ -1,0 +1,30 @@
+<html><h3>28b8b9d39f53d8327dbf658048a81b7046ae398f,magpie/nn/models.py,,cnn,#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ngram_layer.add(MaxPooling1D(pool_length=pool_length))
+        conv_layers.append(ngram_layer)
+
+    model = <a id="change">Sequential()</a>
+    <a id="change">model.add(Merge(conv_layers, mode=&quotconcat&quot))</a>
+
+    model.add(Dropout(0.5))
+    <a id="change">model.add(Flatten())</a>
+
+    <a id="change">model.add(Dense(output_length, activation=&quotsigmoid&quot))</a>
+
+    model.compile(
+        loss=&quotbinary_crossentropy&quot,
+        optimizer=&quotadam&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+        pooling = MaxPooling1D(pool_size=pool_size)(convolution)
+        conv_layers.append(pooling)
+
+    <a id="change">merged = Concatenate()(conv_layers)</a>
+    <a id="change">dropout = Dropout(0.5)(merged)</a>
+    flattened = Flatten()(dropout)
+    <a id="change">outputs = Dense(output_length, activation=&quotsigmoid&quot)(flattened)</a>
+
+    model = Model(inputs=inputs, outputs=outputs)
+
+    model.compile(</code></pre><img src="22074312.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L58' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnn</div><BR><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/37f599f61067cc6947c9bf783eace05227c0f450#diff-bc5d25ee3851bdc4309fd1e5f652feac88005eea3ad3332685fdcbd90f9d67afL35' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 37f599f61067cc6947c9bf783eace05227c0f450</div><div id='time'> Time: 2017-11-13</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: CapsNet</div><BR>

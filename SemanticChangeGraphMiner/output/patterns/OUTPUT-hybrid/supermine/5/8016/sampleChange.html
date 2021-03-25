@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Add TreeDLib relation features
+            if candidates[0].xmltree.root is not None:
+                get_feats = compile_relation_feature_generator()
+                <a id="change">feature_generators.append(self._generate_context_feats( \
+                    lambda c : get_feats(c.xmltree.root, c1idxs, c2idxs), &quotTDLIB_&quot, candidates))</a>
+        return feature_generators
+
+
+class LegacyCandidateFeaturizer(Featurizer):</code></pre><h3>After Change</h3><pre><code class='java'>
+                feature_generators.append(self._generate_context_feats( \
+                    lambda c : get_feats(c.xmltree.root, range(c.word_start, c.word_end+1)), &quotTDL_&quot, candidates))
+
+        <a id="change">if self.arity == 2:
+            raise NotImplementedError("Featurizer needs to be implemented for binary relations!")
+       </a> return feature_generators
+
+
+class LegacyCandidateFeaturizer(Featurizer):</code></pre>

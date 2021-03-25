@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                surr_obj_v = adv_v * torch.exp(logprob_pi_v - logprob_old_pi_v)
+                clipped_surr_v = torch.clamp(surr_obj_v, 1.0 - PPO_EPS, 1.0 + PPO_EPS)
+                loss_policy_v = -torch.min(surr_obj_v, clipped_surr_v).mean()
+                entropy_loss_v = ENTROPY_BETA * (-(<a id="change">torch.log(2*math.pi*var_v)</a> + 1)/2).mean()
+
+                loss_v = <a id="change">loss_policy_v</a> + entropy_loss_v + loss_value_v
+                loss_v.backward()
+                optimizer.step()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        net_act.cuda()
+        net_crt.cuda()
+    print(net_act)
+    <a id="change">print(net_crt)</a>
+
+    writer = SummaryWriter(comment="-ppo_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=args.cuda)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)</code></pre>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                st_time = time.time()
+                cross_pop, mutant_pop = [], []
+                &#47&#47 Generate crossover population
+                c_total = self.RouletteWheelSelection(fitness_dict, <a id="change">math.ceil(self.crossover_size*len(pop))</a>)
+                <a id="change">combi</a> = list(itertools.combinations(list(set(c_total)), 2))
+                co_pop = []
+                for i, j in zip(list(set(c_total))[::2], list(set(c_total))[1::2]):
+                    co_pop.append((i, j))
+                c_rem = [i for <a id="change">i</a> in combi if i not in co_pop]
+                diff = math.ceil(self.crossover_size*len(pop)/2) - len(co_pop)
+                if diff&gt;0: co_pop += c_rem[:diff]
+                for child1, child2 in co_pop:</code></pre><h3>After Change</h3><pre><code class='java'>
+                st_time = time.time()
+                cross_pop, mutant_pop = [], []
+                &#47&#47 Generate crossover population
+                c_total = self.RouletteWheelSelection(fitness_dict, <a id="change">int(math.ceil(self.crossover_size*len(pop)))</a>)
+                <a id="change">combi</a> = list(itertools.combinations(list(set(c_total)), 2))
+                co_pop = []
+                for i, j in zip(list(set(c_total))[::2], list(set(c_total))[1::2]):
+                    co_pop.append((i, j))
+                c_rem = [i for <a id="change">i</a> in combi if i not in co_pop]
+                diff = int(math.ceil(self.crossover_size*len(pop)/2)) - len(co_pop)
+                if diff&gt;0: co_pop += c_rem[:diff]
+                for child1, child2 in co_pop:</code></pre>

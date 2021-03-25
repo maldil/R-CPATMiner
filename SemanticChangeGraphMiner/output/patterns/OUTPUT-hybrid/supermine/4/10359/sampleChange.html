@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    .reshape(single_model_prediction.shape[0], 1)
+            else:
+                single_model_prediction = model.predict_proba(X)
+            all_model_predictions = np.hstack(<a id="change">(all_model_predictions.
+                                               astype(single_model_prediction
+                                                      .dtype),
+                                               single_model_prediction)</a>)
+        <a id="change">return all_model_predictions</a>
+
+    def predict(self, X):
+         Predict target values for X.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            per_model_preds.append(prediction)
+
+        <a id="change">return np.hstack(per_model_preds)</a>
+
+    def _stack_first_level_features(self, X, meta_features):
+        if sparse.issparse(X):
+            stack_fn = sparse.hstack</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    <a id="change">x</a>, a, _ = fmin_l_bfgs_b(
+                        gaussian_acquisition_1D, x0,
+                        args=(gp, np.min(yi), acq_func, xi, kappa),
+                        bounds=space.transformed_bounds,</code></pre><h3>After Change</h3><pre><code class='java'>
+                    args=(gp, np.min(yi), acq_func, xi, kappa),
+                    bounds=space.transformed_bounds,
+                    approx_grad=False,
+                    maxiter=20) <a id="change">for</a> x in x0)
+                <a id="change">results = parallel(jobs)</a>
+
+            cand_xs = np.array([r[0] for r in results])
+            <a id="change">cand_acqs = np.array([r[1] for r in results])</a>
+            best_ind = np.argmin(cand_acqs)
+            <a id="change">a = cand_acqs[best_ind]</a>
+            if a &lt; best:
+                next_x, best = cand_xs[best_ind], a
+
+        &#47&#47 lbfg should handle this but just in case there are precision errors.</code></pre>

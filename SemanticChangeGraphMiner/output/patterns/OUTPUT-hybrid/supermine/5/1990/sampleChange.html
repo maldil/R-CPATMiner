@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def generate_url(self, plat: Platform) -&gt; str:
+        version = self.get_options().version
+        <a id="change">if version in {"2.4.1", "2.5.0", "2.6.1"}:
+            &#47&#47 Very old versions of protoc don&quott have binaries available in their github releases.
+            &#47&#47 So for now we rely on the pants-hosted binaries.
+            &#47&#47 TODO: Get rid of or update our tests that rely on this very old version.
+            &#47&#47  Then we can consider whether to stop supporting it.
+            if plat == Platform.darwin:
+                plat_str = "mac/10.13"
+            elif plat == Platform.linux:
+                plat_str = "linux/x86_64"
+            else:
+                raise ExternalToolError()
+            return f"https://binaries.pantsbuild.org/bin/protoc/{plat_str}/{version}/protoc"
+
+       </a> if plat == Platform.darwin:
+            plat_str = "osx"
+        elif plat == Platform.linux:
+            plat_str = "linux"</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def generate_url(self, plat: Platform) -&gt; str:
+        version = self.options.version
+        plat_str = match(plat, {Platform.darwin: "osx", <a id="change">Platform.linux</a>: "linux"})
+        return (
+            f"https://github.com/protocolbuffers/protobuf/releases/download/"
+            f"v{version}/protoc-{version}-{plat_str}-x86_64.zip"</code></pre>

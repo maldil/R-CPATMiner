@@ -1,0 +1,24 @@
+<html><h3>ca337ebba627326cd7b15b454053e31f51b5e441,pgmpy/inference/Sampling.py,BayesianModelSampling,rejection_sample,#BayesianModelSampling#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        while len(sampled) &lt; size:
+            _size = int((size - len(sampled)) / prob)
+            _sampled = self.forward_sample(_size)
+            <a id="change">for i in range(_size):
+                for var in evidence:
+                    if evidence[var] != _sampled[var][i]:
+                        _sampled.drop(i, inplace=True)
+                        break
+           </a> prob = max(len(_sampled) / _size, 0.01)  &#47&#47 0.01 assumed if len(sampled) is small or zero
+            sampled = sampled.append(_sampled)
+        sampled.reset_index(inplace=True, drop=True)
+        return sampled[:size]</code></pre><h3>After Change</h3><pre><code class='java'>
+            _size = int(((size - len(sampled)) / prob) * 1.5)
+            _sampled = self.forward_sample(_size)
+            for evid in evidence:
+                _sampled = _sampled[_sampled.ix[<a id="change">:, evid</a>.var] == evid]
+            prob = max(len(_sampled) / _size, 0.01)
+            sampled = sampled.append(_sampled)
+        sampled.reset_index(inplace=True, drop=True)</code></pre><img src="7318799.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca337ebba627326cd7b15b454053e31f51b5e441#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL118' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca337ebba627326cd7b15b454053e31f51b5e441</div><div id='time'> Time: 2015-06-16</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: rejection_sample</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/b95f40991c2a34fa0a143cd22257517f703a5b71#diff-61e20cc007ba8bdedcc37e7f706570f6af6c2b0ce1e66535288c3f04c60ff088L726' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: b95f40991c2a34fa0a143cd22257517f703a5b71</div><div id='time'> Time: 2014-01-29</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/BayesianModel/BayesianModel.py</div><div id='class'> Class Name: BayesianModel</div><div id='method'> Method Name: set_observations</div><BR><BR><div id='link'><a href='https://github.com/tech-srl/code2vec/commit/d806f81888342b0652d320bd387b895deb454156#diff-621b21abc0eb5284eb662c880505d603cae2a5616152376ab5fdbc02a1f653dfL414' target='_blank'>Link</a></div><div id='project'> Project Name: tech-srl/code2vec</div><div id='commit'> Commit Name: d806f81888342b0652d320bd387b895deb454156</div><div id='time'> Time: 2019-04-15</div><div id='author'> Author: eladnah@gmail.com</div><div id='file'> File Name: tensorflow_model.py</div><div id='class'> Class Name: Code2VecModel</div><div id='method'> Method Name: _log_predictions_during_evaluation</div><BR>

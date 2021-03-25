@@ -1,0 +1,41 @@
+<html><h3>f7a04171e58eb43dfe5b18d06c76481cdf1c5da9,deslib/dcs/lca.py,LCA,estimate_competence,#LCA#,85
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dists, idx_neighbors = self._get_region_competence(query)
+        competences = np.zeros(self.n_classifiers)
+
+        <a id="change">for clf_index, clf in enumerate(self.pool_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                result = []
+                predicted_label = predictions[clf_index]
+                for index in idx_neighbors:
+                    &#47&#47 Get only neighbors from the same class as predicted by the
+                    &#47&#47 classifier (clf) to form the region of competence
+                    if self.DSEL_target[index] == predicted_label:
+                        result.append(self.processed_dsel[index][clf_index])
+
+                if len(result) == 0:
+                    competences[clf_index] = 0.0
+                else:
+                    competences[clf_index] = np.mean(result)
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        predictions = np.atleast_2d(predictions)
+
+        &#47&#47 Expanding the dimensions of the predictions and target arrays in order to compare both.
+        predictions_3d = np.expand_dims(predictions, axis=1)
+        <a id="change">target_3d = np.expand_dims(self.DSEL_target[idx_neighbors], axis=2)</a>
+        &#47&#47 Create a mask to remove the neighbors belonging to a different class than the predicted by the base classifier
+        mask = (predictions_3d != target_3d)
+        masked_preprocessed = np.ma.MaskedArray(self.processed_dsel[<a id="change">idx_neighbors, :</a>], mask=mask)
+
+        competences_masked = np.mean(masked_preprocessed, axis=1)
+        &#47&#47 Fill 0 to the masked values in the resulting array (when no neighbors belongs to the class predicted by</code></pre><img src="8603170.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-4aa9336c477916c68a0a0c1dd39a6df0343168ed578ac17b07ab57957c50d302L137' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knop.py</div><div id='class'> Class Name: KNOP</div><div id='method'> Method Name: select</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-418b7e06c6963d234362daf596e7ecf369548db4acebef3dd2ed15c37ac1c1eeL99' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_u.py</div><div id='class'> Class Name: KNORAU</div><div id='method'> Method Name: select</div><BR>

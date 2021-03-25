@@ -1,0 +1,23 @@
+<html><h3>0368a2665b52b843785ffe0b18b3154fd32539b0,pro_gan_pytorch/Losses.py,CondLSGAN_SIGMOID,dis_loss,#CondLSGAN_SIGMOID#,382
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def dis_loss(self, real_samps, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid
+        <a id="change">real_scores</a> = <a id="change">th.mean(sigmoid(self.dis(real_samps, labels, height, alpha)))</a>
+        fake_scores = th.mean(sigmoid(self.dis(fake_samps, labels, height, alpha)))
+        return 0.5 * (<a id="change">((real_scores - 1) ** 2)</a> + (fake_scores ** 2))
+
+    def gen_loss(self, _, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def dis_loss(self, real_samps, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid
+        <a id="change">real_scores</a> = <a id="change">sigmoid(self.dis(real_samps, labels, height, alpha))</a>
+        fake_scores = sigmoid(self.dis(fake_samps, labels, height, alpha))
+        return 0.5 * (<a id="change">th.mean((real_scores - 1) ** 2)</a> + th.mean(fake_scores ** 2))
+
+    def gen_loss(self, _, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid</code></pre><img src="3700334.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/0368a2665b52b843785ffe0b18b3154fd32539b0#diff-9470d11b80ca906d7046837973118d2f1fe08a62a7688df33028d118be0872d2L384' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 0368a2665b52b843785ffe0b18b3154fd32539b0</div><div id='time'> Time: 2019-01-04</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: pro_gan_pytorch/Losses.py</div><div id='class'> Class Name: CondLSGAN_SIGMOID</div><div id='method'> Method Name: dis_loss</div><BR><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/0368a2665b52b843785ffe0b18b3154fd32539b0#diff-9470d11b80ca906d7046837973118d2f1fe08a62a7688df33028d118be0872d2L185' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 0368a2665b52b843785ffe0b18b3154fd32539b0</div><div id='time'> Time: 2019-01-04</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: pro_gan_pytorch/Losses.py</div><div id='class'> Class Name: LSGAN_SIGMOID</div><div id='method'> Method Name: dis_loss</div><BR><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/0368a2665b52b843785ffe0b18b3154fd32539b0#diff-9470d11b80ca906d7046837973118d2f1fe08a62a7688df33028d118be0872d2L191' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 0368a2665b52b843785ffe0b18b3154fd32539b0</div><div id='time'> Time: 2019-01-04</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: pro_gan_pytorch/Losses.py</div><div id='class'> Class Name: LSGAN_SIGMOID</div><div id='method'> Method Name: gen_loss</div><BR><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/0368a2665b52b843785ffe0b18b3154fd32539b0#diff-9470d11b80ca906d7046837973118d2f1fe08a62a7688df33028d118be0872d2L390' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 0368a2665b52b843785ffe0b18b3154fd32539b0</div><div id='time'> Time: 2019-01-04</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: pro_gan_pytorch/Losses.py</div><div id='class'> Class Name: CondLSGAN_SIGMOID</div><div id='method'> Method Name: gen_loss</div><BR>

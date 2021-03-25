@@ -1,0 +1,20 @@
+<html><h3>1b8b1ee7ac530f74a31a72cd28add5ad5ec37c45,memcnn/models/revop.py,ReversibleModule,forward,#ReversibleModule#,89
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &#47&#47 PyTorch 1.0+ way to clear storage
+                    input_tensor.storage().resize_(0)
+            if self.training:
+                xin.register_hook(hook=<a id="change">partial(signal_hook, rev_block=self, direction="forward")</a>)
+                y.register_hook(hook=partial(backward_hook, keep_input=self.keep_input, rev_block=self,
+                                             compute_input_fn=self._fn.inverse, compute_output_fn=self._fn.forward,
+                                             direction="forward", input_tensor=input_tensor, output_tensor=output_tensor))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    &#47&#47 PyTorch 1.0+ way to clear storage
+                    input_tensor.storage().resize_(0)
+            if self.training:
+                <a id="change">self._valid_states.append(True)</a>
+                xin.register_hook(hook=partial(signal_hook, valid_states=self._valid_states, state_index=self._state_counter))
+                y.register_hook(hook=partial(backward_hook, keep_input=self.keep_input,
+                                             compute_input_fn=self._fn.inverse, compute_output_fn=self._fn.forward,
+                                             valid_states=self._valid_states, state_index=self._state_counter,</code></pre><img src="4001669.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/1b8b1ee7ac530f74a31a72cd28add5ad5ec37c45#diff-e1f25583db6ccc8e4ce2a4f9a7a4cd0af82a5f4a3119aaa72c2b23f26e9e84c7L89' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 1b8b1ee7ac530f74a31a72cd28add5ad5ec37c45</div><div id='time'> Time: 2019-12-13</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/revop.py</div><div id='class'> Class Name: ReversibleModule</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/7743f789123b8ea206253ba9da98a6a9ed0f7a8f#diff-d25adeae4ab872feb61ef0965aba5e82b13097752f67f25517370554e41b21f1L21' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 7743f789123b8ea206253ba9da98a6a9ed0f7a8f</div><div id='time'> Time: 2016-07-23</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/tests/test_common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/1b8b1ee7ac530f74a31a72cd28add5ad5ec37c45#diff-e1f25583db6ccc8e4ce2a4f9a7a4cd0af82a5f4a3119aaa72c2b23f26e9e84c7L128' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 1b8b1ee7ac530f74a31a72cd28add5ad5ec37c45</div><div id='time'> Time: 2019-12-13</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/revop.py</div><div id='class'> Class Name: ReversibleModule</div><div id='method'> Method Name: inverse</div><BR>

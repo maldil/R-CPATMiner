@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def predict_proba(self, x_test):
+        &#47&#47Calculate the prediction of a LogRegression
+        <a id="change">if self.intercept == True:
+            x_test = np.hstack((np.ones((x_test.shape[0], 1)), x_test))
+       </a> <a id="change">p</a> = np.zeros((x_test.shape[0], 2))
+        <a id="change">p[:, 1]</a> = <a id="change">self.sigmoid(np.dot(x_test, self.theta))</a>
+        <a id="change">p[:, 0]</a> = 1 - p[:, 1]
+        return p
+
+    def predict(self, x_test, cut_point=0.5):</code></pre><h3>After Change</h3><pre><code class='java'>
+        T : array-like, shape = [n_samples, 2]
+            Returns the probability of the sample for each class in the model.
+        
+        <a id="change">y_prob</a> = np.zeros((X.shape[0], 2))
+        <a id="change">y_prob[:, 1]</a> = <a id="change">_sigmoid(np.dot(X, self.coef_) + self.intercept_)</a>
+        <a id="change">y_prob[:, 0]</a> = 1 - y_prob[:, 1]
+        return y_prob
+
+    def predict(self, X, cut_point=0.5):</code></pre>

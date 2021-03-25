@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if type(cuts) is int:
+            cuts = (&quotequidistant&quot, cuts)
+        elif hasattr(cuts, &quot__iter__&quot):
+            <a id="change">if (type(cuts[0]) is not str):
+                self.idu = IdxDiscUnknownC(cuts)
+                assert dtype is None, "Need dtype to be None for spesified cuts"
+                self.dtype = type(cuts[0])
+                self._dtype = self.dtype
+                self._predefined_cuts = True
+       </a> self._cuts = cuts
+        self.min_ = min_
+        self._dtype = dtype
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.cuts = None
+        if hasattr(cuts, &quot__iter__&quot):
+            if type(cuts) is list:
+                cuts = <a id="change">np.array(cuts)</a>
+            <a id="change">self.cuts = cuts</a>
+            self.idu = IdxDiscUnknownC(self.cuts)
+            assert dtype is None, "Need `dtype` to be `None` for specified cuts"
+            self._dtype = type(self.cuts[0])
+            self._dtype_init = self._dtype</code></pre>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rho = 0.5 * svds.max() * svds.min()
+
+    &#47&#47 Cast up to float64 because numba isn&quott smart about typing
+    return _nnls(<a id="change">A.astype(np.float64)</a>,
+                 B.astype(np.float64),
+                 rho=rho,
+                 eps_abs=eps_abs,</code></pre><h3>After Change</h3><pre><code class='java'>
+    if B.ndim == 1:
+        return scipy.optimize.nnls(A, B)[0]
+
+    <a id="change">if B.size &gt; A.size:
+        A = A.astype(B.dtype)
+    elif B.size &lt; A.size:
+        B = B.astype(A.dtype)
+
+    &#47&#47 Otherwise, initialize our step size
+   </a> svds = np.linalg.svd(A, compute_uv=False)
+
+    &#47&#47 Explicitly cast to float so that numba isn&quott confused
+    rho = np.asanyarray(0.5 * svds.max() * svds.min(), dtype=<a id="change">A.dtype</a>)
+
+    return _nnls(A, B,
+                 rho=rho,</code></pre>

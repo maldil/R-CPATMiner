@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_reig_nystroem_complex128():
+    m, k = 20, 10
+    <a id="change">A</a> = np.array(<a id="change">np.random.randn(m, k)</a>, np.float64) + 1j * np.array(<a id="change">np.random.randn(m, k)</a>, np.float64)
+    <a id="change">A</a> = A.dot(A.conj().T)
+
+    w, v = reigh_nystroem(A, k=k, p=0, q=2)
+    Ak = (v*w).dot(v.conj().T)
+
+    percent_error = <a id="change">100 * np.linalg.norm(A - Ak) / np.linalg.norm(A)</a>
+    assert percent_error &lt; atol_float64
+
+
+&#47&#47 =============================================================================</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_reig_nystroem_complex128():
+    m, k = 20, 10
+    <a id="change">A</a> = <a id="change">np</a>.random.randn(m, k).astype(np.float64) + \
+            1j * <a id="change">np</a>.random.randn(m, k).astype(np.float64)
+    <a id="change">A</a> = A.dot(A.conj().T)
+
+    w, v = reigh_nystroem(A, k, oversample=0, n_subspace=2)
+    Ak = (v * w).dot(v.conj().T)</code></pre>

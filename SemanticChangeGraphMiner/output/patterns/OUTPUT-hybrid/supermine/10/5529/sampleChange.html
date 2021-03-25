@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if node_input.node().scopeName():
+                node_input_names.append(get_node_id(node_input.node()))
+
+        <a id="change">if len(node_input_names) == 0:
+            if len(node_inputs) &gt; 0:
+                if node_inputs[0] in model_inputs:
+                    node_input_names.append(model_inputs[node_inputs[0]])
+                else:
+                    input_name = &quotinput{0}&quot.format(input_index)
+                    if input_name not in layers:
+                        continue
+                    node_input_names.append(input_name)
+                    input_index += 1
+                    model_inputs[node_inputs[0]] = input_name
+
+       </a> node_type = node.kind()
+        &#47&#47 print(dir(node))
+
+        node_scope_name = node.scopeName()</code></pre><h3>After Change</h3><pre><code class='java'>
+    print(&quotGraph outputs:&quot, graph_outputs)
+
+
+    graph_inputs = [n.uniqueName() <a id="change">for</a> n in trace.graph().inputs()]
+    print(&quotGraph inputs:&quot, graph_inputs)
+
+    &#47&#47 Collect model state dict
+    state_dict = _unique_state_dict(model)
+    if verbose:
+        print(&quotState dict:&quot, list(state_dict))
+
+    import re
+    import keras
+    from keras import backend as K
+    K.set_image_data_format(&quotchannels_first&quot)
+
+    layers = dict()
+    keras_inputs = []
+    for i in range(len(args)):
+        layers[&quotinput{0}&quot.format(i)] = keras.layers.InputLayer(
+            input_shape=input_shapes[i], name=&quotinput{0}&quot.format(i)
+        ).output
+        keras_inputs.append(layers[&quotinput{0}&quot.format(i)])
+
+    outputs = []
+
+    input_index = 0
+    <a id="change">model_inputs = [&quotinput&quot + i for i in graph_inputs]</a>
+
+    for node in nodes:
+        node_inputs = list(node.inputs())
+        &#47&#47 print(node_inputs, model_inputs)</code></pre>

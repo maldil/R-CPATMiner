@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    except TypeError:
+        alphabets = ((2, 2),)*alphabets
+
+    alphabets = <a id="change">tuple(tuple(map(int, alpha)) for alpha in alphabets)</a>
+
+    <a id="change">alphabets = [draw(integers(*alpha)) for alpha in alphabets]</a>
+
+    pmf = draw(arrays(np.float, shape=alphabets, elements=floats(0, 1)))
+
+    assume(pmf.sum() &gt; 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+    except TypeError:
+        alphabets = ((2, 2),)*alphabets
+
+    alphabets = [<a id="change">int(draw(integers(*alpha)))</a> for alpha in alphabets]
+
+    pmf = draw(arrays(np.float, shape=alphabets, elements=floats(0, 1)))
+</code></pre>

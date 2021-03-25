@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            cpds = self.cpd_expr.searchString(block)
+            if &quottable&quot in block:
+                arr = [float(j) for i in cpds for j in i]
+                <a id="change">arr = numpy.array(arr)</a>
+                arr = arr.reshape((len(self.variable_states[var_name]),
+                                   arr.size // len(self.variable_states[var_name])))
+            else:
+                arr_length = numpy.prod([len(self.variable_states[var]) for var in parents])</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                arr_length = np.prod([len(self.variable_states[var]) for var in parents])
+                arr = np.zeros((len(self.variable_states[var_name]), arr_length))
+                values_dict = <a id="change">{}</a>
+                for prob_line in cpds:
+                    states = prob_line[:len(parents)]
+                    vals = [float(i) for i in prob_line[len(parents):]]
+                    values_dict[tuple(states)] = vals</code></pre>

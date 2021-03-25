@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                true_children = set([(c.formeme, c.t_lemma, c &gt; node) for c in node.get_children()])
+                for cand in cdfs[node.formeme]:
+                    feats = self.features.get_features(cand, node)
+                    feats[&quotsel&quot] = <a id="change">cand in true_children</a>
+                    train.append(feats)
+        &#47&#47 save to file
+        log_info(&quotWriting &quot + train_arff_fname)
+        train_set = DataSet()</code></pre><h3>After Change</h3><pre><code class='java'>
+                true_children = [(c.formeme, c.t_lemma, c &gt; node) for c in node.get_children()]
+                &#47&#47 generate false candidate instances
+                pdist = {}
+                <a id="change">if node.formeme in cdfs:
+                    true_children_set = set(true_children)
+                    pdist = self.cdf_to_dist(cdfs[node.formeme])
+                    for cand, prob in pdist.iteritems():
+                        if cand in true_children_set:
+                            continue
+                        feats = self.features.get_features((cand, prob), node)
+                        feats[&quotsel&quot] = 0
+                        train.append(feats)
+                &#47&#47 generate true instances
+               </a> for true_child in true_children:
+                    feats = self.features.get_features((true_child, pdist.get(true_child, self.LO_PROB)), node)
+                    feats[&quotsel&quot] = 1
+                    train.append(feats)</code></pre>

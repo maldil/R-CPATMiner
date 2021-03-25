@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            pred = 2 * pred  - 1
+
+        if(self.use_gpu):
+            <a id="change">target = target.cuda()</a>
+            pred = pred.cuda()
+
+        if(not self.spatial):
+            <a id="change">return self.model.forward_pair(target, pred)</a>
+        else:
+            return self.model.forward(target, pred)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if(self.use_gpu):
+            target = Variable(target.to(device=self.gpu_ids[0]), requires_grad=True)
+            <a id="change">pred = Variable(pred.to(device=self.gpu_ids[0]), requires_grad=True)</a>
+
+        return self.model.forward(target, pred)
+
+def normalize_tensor(in_feat,eps=1e-10):</code></pre>

@@ -1,0 +1,33 @@
+<html><h3>970491cd9b3cb21b043c22b50b4d09f9dd2481a7,category_encoders/woe.py,WOEEncoder,_score,#WOEEncoder#,256
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _score(self, X, y):
+        for switch in self.mapping:
+            &#47&#47 Get column name (can be anything: str, number,...)
+            column = <a id="change">switch.get(&quotcol&quot)</a>
+
+            &#47&#47 Score the column
+            transformed_column = pd.Series([np.nan] * X.shape[0], name=column)
+            for val in switch.get(&quotwoe&quot):
+                transformed_column.loc[X[column] == val] = switch.get(&quotwoe&quot)[val] &#47&#47 THIS LINE IS SLOW
+
+            &#47&#47 Replace missing values only in the computed columns
+            if self.impute_missing:
+                if self.handle_unknown == &quotimpute&quot:
+                    transformed_column.fillna(0, inplace=True)
+                elif self.handle_unknown == &quoterror&quot:
+                    <a id="change">missing = transformed_column.isnull()</a>
+                    if any(missing):
+                        raise ValueError(&quotUnexpected categories found in column %s&quot % switch.get(&quotcol&quot))
+
+            &#47&#47 Randomization is meaningful only for training data -&gt; we do it only if y is present</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _score(self, X, y):
+        for col in self.cols:
+            &#47&#47 Score the column
+            <a id="change">X[col] = X[col].map(self.mapping[col])</a>
+
+            &#47&#47 Replace missing values only in the computed columns
+            if self.impute_missing:
+                if self.handle_unknown == &quotimpute&quot:</code></pre><img src="1742937.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/970491cd9b3cb21b043c22b50b4d09f9dd2481a7#diff-116471deb85482bd18aef44e1ac5d44f3b407b6428b5945adc3e483b6291e43cL251' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 970491cd9b3cb21b043c22b50b4d09f9dd2481a7</div><div id='time'> Time: 2018-10-19</div><div id='author'> Author: jan@motl.us</div><div id='file'> File Name: category_encoders/woe.py</div><div id='class'> Class Name: WOEEncoder</div><div id='method'> Method Name: _score</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/b5034279b48ae96ffdd4714f96e0f62b0f4807fc#diff-ec89fc16a024e906dde0693b4d8cbc46e946c810a1e9e45c4d8f214b87ba6af9L246' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: b5034279b48ae96ffdd4714f96e0f62b0f4807fc</div><div id='time'> Time: 2018-10-26</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/ordinal.py</div><div id='class'> Class Name: OrdinalEncoder</div><div id='method'> Method Name: ordinal_encoding</div><BR><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/cc410f68b6c1d1417322ec02e22ea7713ca0bc48#diff-72b79f834898dc54a80021688b0be6135a4eed760bcf17437e9f6da223e6726dL77' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: cc410f68b6c1d1417322ec02e22ea7713ca0bc48</div><div id='time'> Time: 2020-03-18</div><div id='author'> Author: ruben@lighthacking.nl</div><div id='file'> File Name: trackpy/locate_functions/brightfield_ring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: locate_brightfield_ring</div><BR>

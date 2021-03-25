@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        kwargs["points"] = self.xyz
+        
+        if name in F_XYZ:
+            <a id="change">valid_args = crosscheck_kwargs_function(kwargs, F_XYZ[name])</a>
+            <a id="change">return F_XYZ[name](**valid_args)</a>
+
+        elif name in F_KDTREE:
+            kwargs["kdtree"] = self.kdtrees[kwargs["kdtree"]]
+            valid_args = crosscheck_kwargs_function(kwargs, F_KDTREE[name])</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        if name in ALL_FILTERS:
+            <a id="change">F = ALL_FILTERS[name](self, **kwargs)</a>
+            <a id="change">F.extract_info()</a>
+            return <a id="change">F.compute()</a>
+
+        else:
+            raise ValueError("Unsupported filter. Check docstring")
+            </code></pre>

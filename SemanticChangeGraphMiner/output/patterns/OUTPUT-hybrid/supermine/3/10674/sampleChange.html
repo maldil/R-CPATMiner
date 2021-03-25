@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not doJif:
+        if len(label_list) != len(atlas_list):
+            raise ValueError("len(label_list) != len(atlas_list)")
+        inlabs = <a id="change">np.sort(np.unique(label_list[0][target_image_mask != 0]))</a>
+        mymask = target_image_mask.clone()
+    else:
+        mymask = target_image_mask
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not doJif:
+        if len(label_list) != len(atlas_list):
+            raise ValueError("len(label_list) != len(atlas_list)")
+        <a id="change">if no_zeroes:
+            for label in label_list:
+                target_image_mask[label == 0] = 0
+       </a> inlabs = set()
+        for label in label_list:
+            values = np.unique(label[target_image_mask != 0 and label != 0])
+            inlabs = inlabs.union(values)</code></pre>

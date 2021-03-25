@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.__q_nxt_all = __build_layers(self.__state_nxt, "target_net", w_init, b_init)
+
+        with tf.variable_scope("q_target"):
+            <a id="change">max_actions = tf.argmax(self.__q_eval_all, axis=1, output_type=tf.int32, name="max_actions")</a>
+            action_indices = <a id="change">tf.stack([indices, max_actions], axis=1)</a>
+            &#47&#47 Shape: (None, )
+            <a id="change">q_target = self.__reward + self.__gamma * \
+                       tf.gather_nd(self.__q_nxt_all, action_indices, name="gather_nd")</a>
+            self.__q_target = tf.stop_gradient(q_target)
+
+        with tf.variable_scope("loss"):
+            self.__loss = tf.reduce_mean(tf.squared_difference(</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.__q_target = tf.placeholder(
+            tf.float32, [None, ], name="q_target")
+
+        <a id="change">scope_eval, scope_target = "eval_net", "target_net"</a>
+        w_init = tf.random_normal_initializer(mean=0, stddev=0.3)
+        b_init = tf.constant_initializer(0.1)
+
+        &#47&#47 Eval net output / Shape: (None, num_actions)</code></pre>

@@ -1,0 +1,86 @@
+<html><h3>5c6c50274c11ecbf9be54052394922fabde80923,kymatio/scattering2d/core/scattering2d.py,,scattering2d,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            out_S_2.append(S_2_r)
+
+    <a id="change">out_S = []</a>
+    out_S.extend(out_S_0)
+    out_S.extend(out_S_1)
+    out_S.extend(out_S_2)
+
+    <a id="change">out_S = concatenate(out_S)</a>
+    return out_S
+
+
+__all__ = [&quotscattering2d&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+    concatenate = backend.concatenate
+
+    &#47&#47 S is simply a dictionary if we do not perform the averaging...
+    <a id="change">S = {}</a>
+
+    U_r = pad(x)
+
+    U_0_c = fft(U_r, &quotC2C&quot)
+
+    &#47&#47 First low pass filter
+    U_1_c = cdgmm(U_0_c, phi[0])
+    U_1_c = subsample_fourier(U_1_c, k=2 ** J)
+
+    S_0 = fft(U_1_c, &quotC2R&quot, inverse=True)
+    S_0 = unpad(S_0)
+
+    <a id="change">S[()]</a> = S_0
+
+    for n1 in range(len(psi)):
+        j1 = psi[n1][&quotj&quot]
+        U_1_c = cdgmm(U_0_c, psi[n1][0])
+        if j1 &gt; 0:
+            U_1_c = subsample_fourier(U_1_c, k=2 ** j1)
+        U_1_c = fft(U_1_c, &quotC2C&quot, inverse=True)
+        U_1_c = modulus(U_1_c)
+        U_1_c = fft(U_1_c, &quotC2C&quot)
+
+        &#47&#47 Second low pass filter
+        S_1_c = cdgmm(U_1_c, phi[j1])
+        S_1_c = subsample_fourier(S_1_c, k=2 ** (J - j1))
+
+        S_1_r = fft(S_1_c, &quotC2R&quot, inverse=True)
+        S_1_r = unpad(S_1_r)
+
+
+        <a id="change">S[(n1,)]</a> = S_1_r
+
+        if max_order &lt; 2:
+            continue
+        for n2 in range(len(psi)):
+            j2 = psi[n2][&quotj&quot]
+            if j2 &lt;= j1:
+                continue
+            U_2_c = cdgmm(U_1_c, psi[n2][j1])
+            U_2_c = subsample_fourier(U_2_c, k=2 ** (j2 - j1))
+            U_2_c = fft(U_2_c, &quotC2C&quot, inverse=True)
+            U_2_c = modulus(U_2_c)
+            U_2_c = fft(U_2_c, &quotC2C&quot)
+
+            &#47&#47 Third low pass filter
+            S_2_c = cdgmm(U_2_c, phi[j2])
+            S_2_c = subsample_fourier(S_2_c, k=2 ** (J - j2))
+
+            S_2_r = fft(S_2_c, &quotC2R&quot, inverse=True)
+            S_2_r = unpad(S_2_r)
+
+            <a id="change">S[(n1, n2)] = S_2_r</a>
+
+    if vectorize:
+        <a id="change">sorted_keys = sorted(S.keys(), key=lambda x: (len(x),) + x)</a>
+
+        S = [S[key] <a id="change">for</a> key in sorted_keys]
+
+        <a id="change">S = concatenate(S)</a>
+
+    return S
+
+</code></pre><img src="9297741.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/5c6c50274c11ecbf9be54052394922fabde80923#diff-35c177116306959429a401a00a1fc3a638f7c1d77a19d7b93feda9ae6eb3480dL11' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 5c6c50274c11ecbf9be54052394922fabde80923</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: edouard.oyallon@lip6.fr</div><div id='file'> File Name: kymatio/scattering2d/core/scattering2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scattering2d</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/eb9f8cce1d00417520f3282807ae99c40801346d#diff-e35f73c2bed3aae1187b8ccf7cab5aa1ff6fd343dc79890a7b5ffbb8dd4dc927L188' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: eb9f8cce1d00417520f3282807ae99c40801346d</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: 8103276+zjpoh@users.noreply.github.com</div><div id='file'> File Name: tests/test_features/test_pcoords.py</div><div id='class'> Class Name: TestParallelCoordinates</div><div id='method'> Method Name: test_pandas_integration_fast</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/eb9f8cce1d00417520f3282807ae99c40801346d#diff-e35f73c2bed3aae1187b8ccf7cab5aa1ff6fd343dc79890a7b5ffbb8dd4dc927L162' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: eb9f8cce1d00417520f3282807ae99c40801346d</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: 8103276+zjpoh@users.noreply.github.com</div><div id='file'> File Name: tests/test_features/test_pcoords.py</div><div id='class'> Class Name: TestParallelCoordinates</div><div id='method'> Method Name: test_pandas_integration_sampled</div><BR>

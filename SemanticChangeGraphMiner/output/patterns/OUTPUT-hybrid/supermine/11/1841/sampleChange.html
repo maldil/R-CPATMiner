@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            dom_tree = minidom.parse(f)
+            docs = dom_tree.documentElement.getElementsByTagName(&quotDOC&quot)
+            <a id="change">for doc in docs:
+                source_text = doc.getElementsByTagName(&quotTEXT&quot)[0]. \
+                    childNodes[0].data.strip()
+                target_text = doc.getElementsByTagName(&quotCORRECTION&quot)[0]. \
+                    childNodes[0].data.strip()
+                source = segment(source_text, cut_type=&quotchar&quot)
+                target = segment(target_text, cut_type=&quotchar&quot)
+                yield source, target
+
+   </a> def unknown_token(self):
+        return CGEDReader.UNKNOWN_TOKEN
+
+    def read_tokens(self, path, is_infer=False):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def read_samples_by_string(self, path):
+        with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            while True:
+                <a id="change">line_src = f.readline()</a>
+                line_dst = f.readline()
+                if not line_src or len(line_src) &lt; 5:
+                    break
+                source = <a id="change">line_src.lower()[5:].strip().split()</a>
+                <a id="change">target = line_dst.lower()[5:].strip().split()</a>
+                yield source, target
+
+
+    def unknown_token(self):</code></pre>

@@ -1,0 +1,27 @@
+<html><h3>b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6,skimage/color/colorconv.py,,rgba2rgb,#,163
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    channels = arr[..., :-1]
+    out = np.empty_like(channels)
+
+    for ichan in range(<a id="change">channels.shape[-1]</a>):
+        out[..., ichan] = np.clip(
+            (1 - alpha) * background[ichan] + alpha * channels[..., ichan],
+            a_min=0, a_max=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    arr = dtype.img_as_float(arr)
+
+    <a id="change">background = np.ravel(background).astype(arr.dtype)</a>
+    if len(background) != 3:
+        raise ValueError(&quotbackground must be an array-like containing 3 RGB &quot
+                         f&quotvalues. Got {len(background)} items&quot)
+    <a id="change">if np.any(background &lt; 0) or np.any(background &gt; 1):
+        raise ValueError(&quotbackground RGB values must be floats between &quot
+                         &quot0 and 1.&quot)
+
+   </a> background = background[np.newaxis, ...]
+    alpha = arr[..., -1, np.newaxis]
+    channels = arr[np.newaxis, ..., :-1]
+</code></pre><img src="31329307.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/fefe628658fbbca925a35d0fc741b77acee35bad#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL32' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: fefe628658fbbca925a35d0fc741b77acee35bad</div><div id='time'> Time: 2017-10-03</div><div id='author'> Author: marcel.stimberg@inserm.fr</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: valid_gsl_dir</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/2999e509688a82f8be65600727a5922b5739822b#diff-253b7b1370893f9dae749cbbb879fcd47ad5744716c706119d4cad41054156f8L314' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 2999e509688a82f8be65600727a5922b5739822b</div><div id='time'> Time: 2017-03-08</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/wordsim.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compute_semeval_score</div><BR>

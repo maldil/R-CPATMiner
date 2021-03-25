@@ -1,0 +1,23 @@
+<html><h3>6d6a32dd677aa6097c4e77b359f81989c3e949af,src/pyscenic/rnkdb.py,,build_rankings,#,439
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    result = np.full(shape=(n_features, n_identifiers), fill_value=rank_unknown, dtype=INVERTED_DB_DTYPE)
+    for row_idx in prange(n_features):
+        ranked_identifiers4feature = ranked_identifiers[row_idx, :]  &#47&#47 The values of a row are the identifiers
+        ranks = np.array([<a id="change">np</a>.where(ranked_identifiers4feature == elem)[0] <a id="change">for</a> elem in reference_identifiers], dtype=INVERTED_DB_DTYPE)
+        col_idxs = np.nonzero(reference_identifiers.isin(ranked_identifiers4feature))
+        result[row_idx, col_idxs] = ranks
+    return result</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_features = ranked_identifiers.shape[0]; n_identifiers = len(reference_identifiers)
+    result = np.empty(shape=(n_features, n_identifiers), dtype=INVERTED_DB_DTYPE)
+    for row_idx in prange(n_features):
+        <a id="change">for col_idx in range(n_identifiers):
+            &#47&#47 TODO: Currently doing brute-force linear search at near C-speed. Time complexity could be greatly reduced
+            &#47&#47 TODO: if resorting to binary search or something similar [from O(N) to O(log2(N)) where N is 50k, i.e. top N features]
+            result[row_idx, col_idx] = find(ranked_identifiers[row_idx, :], reference_identifiers[col_idx], rank_unknown)
+   </a> return result
+
+
+def convert2feather(fname: str, out_folder: str, name: str, extension: str="feather") -&gt; str:</code></pre><img src="26116222.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/6d6a32dd677aa6097c4e77b359f81989c3e949af#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L440' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: 6d6a32dd677aa6097c4e77b359f81989c3e949af</div><div id='time'> Time: 2018-04-05</div><div id='author'> Author: vandesande.bram@gmail.com</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_rankings</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/cec517350d259a4f49a58a769db784c248cfffa8#diff-3186d94ca92c068c84a3d8440e9803a47d3856f400f492272dacd39837f65e97L49' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: cec517350d259a4f49a58a769db784c248cfffa8</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/evaluate/accuracy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: accuracy_score</div><BR><BR><div id='link'><a href='https://github.com/deepmind/ai-safety-gridworlds/commit/c43cb31143431421b5d2b661a2458efb301da9a3#diff-ac81bb96218cdbf9f05cf438fc8d532b23df4d3fc121a39ab9c58b2973eeca19L223' target='_blank'>Link</a></div><div id='project'> Project Name: deepmind/ai-safety-gridworlds</div><div id='commit'> Commit Name: c43cb31143431421b5d2b661a2458efb301da9a3</div><div id='time'> Time: 2020-10-13</div><div id='author'> Author: miljanm@google.com</div><div id='file'> File Name: ai_safety_gridworlds/environments/side_effects_sokoban.py</div><div id='class'> Class Name: BoxSprite</div><div id='method'> Method Name: _calculate_wall_penalty</div><BR>

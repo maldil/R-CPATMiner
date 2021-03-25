@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+Stream = namedtuple(&quotStream&quot, [&quotptr&quot])
+
+def _get_dtype(t):
+    <a id="change">if isinstance(t, torch.cuda.FloatTensor):
+        return &quotfloat&quot
+    elif isinstance(t, torch.cuda.DoubleTensor):
+        return &quotdouble&quot
+
+</a>def _iscomplex(x):
+    return x.shape[-1] == 2
+
+def _isreal(x):</code></pre><h3>After Change</h3><pre><code class='java'>
+Stream = namedtuple(&quotStream&quot, [&quotptr&quot])
+
+def _get_dtype(t):
+    <a id="change">dtypes = {torch.float32: &quotfloat&quot,
+              torch.float64: &quotdouble&quot}</a>
+
+    return dtypes[t.dtype]
+
+def _iscomplex(x):</code></pre>

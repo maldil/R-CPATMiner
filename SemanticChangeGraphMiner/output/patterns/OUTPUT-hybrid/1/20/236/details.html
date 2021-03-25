@@ -1,0 +1,175 @@
+<html><h3>934970c18af492b3874f4d9b4ab341ecd582603c,nilmtk/dataset_converters/dataport/download_dataport.py,,download_dataport,#,124
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 if user has specified buildings
+    if periods_to_load:
+        buildings_to_load = <a id="change">periods_to_load.keys()</a>
+    else:
+        &#47&#47 get buildings present in all tables
+        sql_query = &quot&quot
+        for table in database_tables:
+            sql_query = (sql_query + &quot(SELECT DISTINCT dataid&quot + 
+                         &quot FROM "&quot + database_schema + &quot".&quot + table + 
+                         &quot) UNION &quot)
+        sql_query = sql_query[:-7]
+        sql_query = (sql_query + &quot ORDER BY dataid&quot) 
+        buildings_to_load = pd.read_sql(sql_query, conn)[&quotdataid&quot].tolist()
+
+    &#47&#47 for each user specified building or all buildings in database
+    for building_id in buildings_to_load:
+        print("Loading building {:d} @ {}"
+              .format(building_id, datetime.datetime.now()))
+        sys.stdout.flush()
+
+        &#47&#47 create new list of chunks for concatenating later
+        dataframe_list = []
+
+        &#47&#47 for each table of 1 month data
+        for database_table in database_tables:
+            print("  Loading table {:s}".format(database_table))
+            sys.stdout.flush()
+
+            &#47&#47 get buildings present in electricity_egauge_minutes table
+            sql_query = (&quotSELECT DISTINCT dataid&quot +
+                         &quot FROM university.metadata&quot +
+                         &quot WHERE egauge_min_time IS NOT NULL&quot +
+                         &quot ORDER BY dataid&quot)
+            buildings_in_table = pd.read_sql(sql_query, conn)[&quotdataid&quot].tolist()
+
+            if building_id in buildings_in_table:
+                &#47&#47 get first and last timestamps for this house in electricity_egauge_minutes table
+                sql_query = (&quotSELECT MIN(egauge_min_time) AS minlocalminute,&quot +
+                             &quot MAX(egauge_max_time) AS maxlocalminute&quot +
+                             &quot FROM university.metadata&quot +
+                             &quot WHERE dataid=&quot + str(building_id))
+                range = pd.read_sql(sql_query, conn)
+                first_timestamp_in_table = range[&quotminlocalminute&quot][0]
+                <a id="change">last_timestamp_in_table</a> = range[&quotmaxlocalminute&quot][0]
+
+                &#47&#47 get requested start and end and localize them
+                requested_start = None
+                requested_end = None
+                database_timezone = &quotUS/Central&quot
+                if periods_to_load:
+                    if periods_to_load[building_id][0]:
+                        requested_start = pd.Timestamp(periods_to_load[building_id][0])
+                        requested_start = requested_start.tz_localize(database_timezone)
+                    if periods_to_load[building_id][1]:
+                        requested_end = pd.Timestamp(periods_to_load[building_id][1])
+                        <a id="change">requested_end</a> = requested_end.tz_localize(database_timezone)
+
+                &#47&#47 check user start is not after end
+                if requested_start &gt; requested_end:
+                    print(&quotrequested end is before requested start&quot)
+                    sys.stdout.flush()
+                else:                        
+                    &#47&#47 clip data to smallest range
+                    if requested_start:
+                        start = max(requested_start, first_timestamp_in_table)
+                    else:
+                        <a id="change">start</a> = first_timestamp_in_table
+                    if requested_end:
+                        end = min(requested_end, last_timestamp_in_table)
+                    else:
+                        end = last_timestamp_in_table
+
+                    &#47&#47 download data in chunks
+                    chunk_start = start
+                    chunk_size = datetime.timedelta(10)  &#47&#47 1 day
+                    while chunk_start &lt; end:
+                        chunk_end = chunk_start + chunk_size 
+                        if chunk_end &gt; end:
+                            chunk_end = end
+                        &#47&#47 subtract 1 second so end is exclusive
+                        <a id="change">chunk_end</a> = chunk_end - datetime.timedelta(0, 1)
+
+                        &#47&#47 query power data for all channels
+                        format = &quot%Y-%m-%d %H:%M:%S&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 if user has specified buildings
+    if periods_to_load:
+        buildings_to_load = <a id="change">list(periods_to_load.keys())</a>
+    else:
+        &#47&#47 get buildings present in all tables
+        sql_query = &quot&quot
+        for table in database_tables:
+            sql_query = (sql_query + &quot(SELECT DISTINCT dataid&quot + 
+                         &quot FROM "&quot + database_schema + &quot".&quot + table + 
+                         &quot) UNION &quot)
+        sql_query = sql_query[:-7]
+        sql_query = (sql_query + &quot ORDER BY dataid&quot) 
+        buildings_to_load = pd.read_sql(sql_query, conn)[&quotdataid&quot].tolist()
+
+    &#47&#47 for each user specified building or all buildings in database
+    for building_id in buildings_to_load:
+        print("Loading building {:d} @ {}"
+              .format(building_id, datetime.datetime.now()))
+        sys.stdout.flush()
+
+        &#47&#47 create new list of chunks for concatenating later
+        dataframe_list = []
+
+        &#47&#47 for each table of 1 month data
+        for database_table in database_tables:
+            print("  Loading table {:s}".format(database_table))
+            sys.stdout.flush()
+
+            &#47&#47 get buildings present in electricity_egauge_minutes table
+            sql_query = (&quotSELECT DISTINCT dataid&quot +
+                         &quot FROM university.metadata&quot +
+                         &quot WHERE egauge_min_time IS NOT NULL&quot +
+                         &quot ORDER BY dataid&quot)
+            buildings_in_table = pd.read_sql(sql_query, conn)[&quotdataid&quot].tolist()
+
+            if building_id in buildings_in_table:
+                &#47&#47 get first and last timestamps for this house in electricity_egauge_minutes table
+                sql_query = (&quotSELECT MIN(egauge_min_time) AS minlocalminute,&quot +
+                             &quot MAX(egauge_max_time) AS maxlocalminute&quot +
+                             &quot FROM university.metadata&quot +
+                             &quot WHERE dataid=&quot + str(building_id))
+                range = pd.read_sql(sql_query, conn)
+                first_timestamp_in_table = range[&quotminlocalminute&quot][0]
+                <a id="change">last_timestamp_in_table</a> = range[&quotmaxlocalminute&quot][0]
+
+                &#47&#47 get requested start and end and localize them
+                requested_start = None
+                requested_end = None
+                database_timezone = &quotUS/Central&quot
+                if periods_to_load:
+                    if periods_to_load[building_id][0]:
+                        requested_start = pd.Timestamp(periods_to_load[building_id][0])
+                        requested_start = requested_start.tz_localize(database_timezone)
+                    if periods_to_load[building_id][1]:
+                        requested_end = pd.Timestamp(periods_to_load[building_id][1])
+                        <a id="change">requested_end</a> = requested_end.tz_localize(database_timezone)
+
+                &#47&#47 check user start is not after end
+                if requested_start &gt; requested_end:
+                    print(&quotrequested end is before requested start&quot)
+                    sys.stdout.flush()
+                else:                        
+                    &#47&#47 clip data to smallest range
+                    if requested_start:
+                        start = max(requested_start, first_timestamp_in_table)
+                    else:
+                        <a id="change">start</a> = first_timestamp_in_table
+                    if requested_end:
+                        end = min(requested_end, last_timestamp_in_table)
+                    else:
+                        end = last_timestamp_in_table
+
+                    &#47&#47 download data in chunks
+                    chunk_start = start
+                    chunk_size = datetime.timedelta(10)  &#47&#47 1 day
+                    while chunk_start &lt; end:
+                        chunk_end = chunk_start + chunk_size 
+                        if chunk_end &gt; end:
+                            chunk_end = end
+                        &#47&#47 subtract 1 second so end is exclusive
+                        <a id="change">chunk_end</a> = chunk_end - datetime.timedelta(0, 1)
+
+                        &#47&#47 query power data for all channels
+                        format = &quot%Y-%m-%d %H:%M:%S&quot</code></pre><img src="1382101.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/934970c18af492b3874f4d9b4ab341ecd582603c#diff-24cfb68010768bfa84f15338ddaacb6adbe5ef49dbd5112cb62d2a18f1e8aa3fL181' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 934970c18af492b3874f4d9b4ab341ecd582603c</div><div id='time'> Time: 2018-04-22</div><div id='author'> Author: 10246101+PMeira@users.noreply.github.com</div><div id='file'> File Name: nilmtk/dataset_converters/dataport/download_dataport.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: download_dataport</div><BR><BR><div id='link'><a href='https://github.com/A2Zadeh/CMU-MultimodalSDK/commit/ea8d6d88196690aa43483d698b8230bdc5c9ac82#diff-0c3f330b05cbf075177cf2996e8e08b6e9b621440ba2ab286d4c702f5b7898edL170' target='_blank'>Link</a></div><div id='project'> Project Name: A2Zadeh/CMU-MultimodalSDK</div><div id='commit'> Commit Name: ea8d6d88196690aa43483d698b8230bdc5c9ac82</div><div id='time'> Time: 2019-10-08</div><div id='author'> Author: abagherz@cs.cmu.edu</div><div id='file'> File Name: mmsdk/mmdatasdk/dataset/dataset.py</div><div id='class'> Class Name: mmdataset</div><div id='method'> Method Name: revert</div><BR><BR><div id='link'><a href='https://github.com/scipy-lectures/scipy-lecture-notes/commit/890244b04eafb8313be6d49d8a34a134801f7a0c#diff-be0a7933705daadce7e9f40c39a5ec8743b8010920a40f6681670a017d640689L14' target='_blank'>Link</a></div><div id='project'> Project Name: scipy-lectures/scipy-lecture-notes</div><div id='commit'> Commit Name: 890244b04eafb8313be6d49d8a34a134801f7a0c</div><div id='time'> Time: 2017-09-28</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: advanced/mathematical_optimization/examples/plot_compare_optimizers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/1f63c86c4ed82316d87d17977987c6323bf3fe41#diff-75df609d35691d0bad9e8209c057f116c2c8e0316b1bcc5d9921bb93a4070352L342' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 1f63c86c4ed82316d87d17977987c6323bf3fe41</div><div id='time'> Time: 2017-02-22</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/profiles/information_partitions.py</div><div id='class'> Class Name: DependencyDecomposition</div><div id='method'> Method Name: to_string</div><BR><BR><div id='link'><a href='https://github.com/scipy-lectures/scipy-lecture-notes/commit/54478492154195895518b5624f1a081ca9d572f4#diff-be0a7933705daadce7e9f40c39a5ec8743b8010920a40f6681670a017d640689L14' target='_blank'>Link</a></div><div id='project'> Project Name: scipy-lectures/scipy-lecture-notes</div><div id='commit'> Commit Name: 54478492154195895518b5624f1a081ca9d572f4</div><div id='time'> Time: 2017-09-06</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: advanced/mathematical_optimization/examples/plot_compare_optimizers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/ef5fa3833043874c08cf6904359e3ba7f3b94ac8#diff-78b9e10919c691713ccc1c9c83f7e7fd18a1c48469cca2e807892cb9d116e6a8L454' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: ef5fa3833043874c08cf6904359e3ba7f3b94ac8</div><div id='time'> Time: 2018-01-10</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/entity2rec.py</div><div id='class'> Class Name: Entity2Rec</div><div id='method'> Method Name: _compute_features</div><BR>

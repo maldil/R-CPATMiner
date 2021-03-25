@@ -1,0 +1,35 @@
+<html><h3>8182ea386e6529a1a2294d8e2d33fc040d0cbfb2,deepctr/inputs.py,,get_linear_logit,#,153
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    _, dense_input_list = input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix)
+
+    if len(linear_emb_list[0]) &gt; 1:
+        linear_term = concat_fun([<a id="change">add(linear_emb)</a> <a id="change">for</a> linear_emb in linear_emb_list])
+    elif len(linear_emb_list[0]) == 1:
+        linear_term = concat_fun([linear_emb[0] for linear_emb in linear_emb_list])
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    linear_emb_list = [input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix+str(i))[0] for i in range(units)]
+    _, dense_input_list = input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix)
+
+    <a id="change">linear_logit_list = []</a>
+    for i in range(units):
+
+        if len(linear_emb_list[0])&gt;0 and len(dense_input_list) &gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            <a id="change">dense_input = concat_fun(dense_input_list)</a>
+            linear_logit = Linear(l2_reg,mode=2)([sparse_input,dense_input])
+        elif len(linear_emb_list[0])&gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            linear_logit = Linear(l2_reg,mode=0)(sparse_input)
+        elif len(dense_input_list) &gt;0:
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=1)(dense_input)
+        else:
+            raise NotImplementedError
+        <a id="change">linear_logit_list.append(linear_logit)</a>
+
+    return concat_fun(linear_logit_list)
+
+def embedding_lookup(sparse_embedding_dict,sparse_input_dict,sparse_feature_columns,return_feat_list=(), mask_feat_list=()):</code></pre><img src="26952091.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/ad8e98817f58c721f7173e188281ccec251ef7a8#diff-caac845e37a00c075a8e44a6a4fca89cceb3027968760da47d4979d6b3f1bfb6L274' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: ad8e98817f58c721f7173e188281ccec251ef7a8</div><div id='time'> Time: 2020-01-06</div><div id='author'> Author: premy.enseirb@gmail.com</div><div id='file'> File Name: tcn/tcn.py</div><div id='class'> Class Name: TCN</div><div id='method'> Method Name: call</div><BR>

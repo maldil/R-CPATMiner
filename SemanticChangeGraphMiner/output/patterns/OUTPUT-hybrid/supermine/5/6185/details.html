@@ -1,0 +1,30 @@
+<html><h3>d7b2db3c5262c82c44958afc2500efe0838f0884,osmnx/utils_graph.py,,_update_edge_keys,#,536
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 for each set of duplicate edges
+    for _, group in groups:
+
+        <a id="change">if len(group) &gt; 2:
+            &#47&#47 if there are more than 2 edges here, make sure to compare all
+            li = group["geometry"].tolist()
+            li.append(li[0])
+            geom_pairs = list(zip(li[:-1], li[1:]))
+        else:
+            &#47&#47 otherwise, just compare the first edge to the second edge
+            geom_pairs = [(group["geometry"].iloc[0], group["geometry"].iloc[1])]
+
+        &#47&#47 for each pair of edges to compare
+       </a> for geom1, geom2 in geom_pairs:
+            &#47&#47 if they don&quott have the same geometry, flag them as different streets
+            if not _is_same_geometry(geom1, geom2):
+                &#47&#47 add edge uvk, but not edge vuk, otherwise we&quotll iterate both their keys</code></pre><h3>After Change</h3><pre><code class='java'>
+                different_streets.append(group.index[0])
+
+    &#47&#47 for each unique different street, give it a unique key
+    set_different_streets = <a id="change">set(different_streets)</a>
+    utils.log(f"Found {len(set_different_streets)} different streets")
+    for u, v, k in set(different_streets):
+        new_key = max(list(G[u][v]) + list(G[v][u])) + 1
+        G.add_edge(u, v, key=new_key, **G.get_edge_data(u, v, k))</code></pre><img src="25324855.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/d7b2db3c5262c82c44958afc2500efe0838f0884#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L556' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: d7b2db3c5262c82c44958afc2500efe0838f0884</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _update_edge_keys</div><BR><BR><div id='link'><a href='https://github.com/AlexEMG/DeepLabCut/commit/0ef2bfb1adda578c45e9c56412f86c02b950c0a3#diff-7184ffc0655cc12c00f07d62817ad8dbe7ed01513e0ad2ac44ac6629c241fed4L213' target='_blank'>Link</a></div><div id='project'> Project Name: AlexEMG/DeepLabCut</div><div id='commit'> Commit Name: 0ef2bfb1adda578c45e9c56412f86c02b950c0a3</div><div id='time'> Time: 2020-06-18</div><div id='author'> Author: saveliy.m.yusufov@gmail.com</div><div id='file'> File Name: deeplabcut/utils/make_labeled_video.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: CreateVideoSlow</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/79d149dd39dc7e7d22c623c0a4a4d3ab99e61c76#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL159' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 79d149dd39dc7e7d22c623c0a4a4d3ab99e61c76</div><div id='time'> Time: 2017-06-15</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: choose_small_vocabulary</div><BR>

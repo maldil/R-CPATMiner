@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def save(model, weights_path):
+    sess = tf.get_default_session()
+    <a id="change">assert sess is not None, &quotThe default session should be given.&quot</a>
+
+    weights = get_weights(model)
+    names = [w.name for w in weights]
+    values = sess.run(weights)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def save(model, weights_path, sess):
+    <a id="change">if sess is None:
+        sess = tf.get_default_session()
+        assert sess is not None, &quotThe default session should be given.&quot
+
+   </a> weights = get_weights(model)
+    names = [w.name for w in weights]
+    values = sess.run(weights)
+    np.savez(weights_path, names=names, values=values)</code></pre>

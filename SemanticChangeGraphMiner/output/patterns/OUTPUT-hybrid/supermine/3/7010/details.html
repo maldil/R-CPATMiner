@@ -1,0 +1,25 @@
+<html><h3>72cdace0d8b96567f5e4b6cb42dc5f745c88c617,nilmtk/api.py,API,test_jointly,#API#,244
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                test_mains=next(test.buildings[building].elec.mains().load(physical_quantity=&quotpower&quot, ac_type=self.power[&quotmains&quot], sample_period=self.sample_period))
+                appliance_readings=[]
+
+                <a id="change">for appliance in self.appliances:
+                    test_df=next((test.buildings[building].elec[appliance].load(physical_quantity=&quotpower&quot, ac_type=self.power[&quotappliance&quot], sample_period=self.sample_period)))
+                    appliance_readings.append(test_df)
+
+                
+               </a> if self.DROP_ALL_NANS:
+                    test_mains, appliance_readings = self.dropna(test_mains, appliance_readings)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                test.set_window(start=d[dataset][&quotbuildings&quot][building][&quotstart_time&quot],end=d[dataset][&quotbuildings&quot][building][&quotend_time&quot])
+                test_mains=next(test.buildings[building].elec.mains().load(physical_quantity=&quotpower&quot, ac_type=&quotapparent&quot, sample_period=self.sample_period))
+                if self.DROP_ALL_NANS and self.site_only:
+                    <a id="change">test_mains, _= self.dropna(test_mains,[])</a>
+
+                if self.site_only != True:
+                    appliance_readings=[]
+</code></pre><img src="27582358.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/72cdace0d8b96567f5e4b6cb42dc5f745c88c617#diff-bec4ce162debac8eefc54c25318b1a8eff7b6b1d7da09237c22c543094efb0d1L243' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 72cdace0d8b96567f5e4b6cb42dc5f745c88c617</div><div id='time'> Time: 2021-01-06</div><div id='author'> Author: faizanzahid09@hotmail.com</div><div id='file'> File Name: nilmtk/api.py</div><div id='class'> Class Name: API</div><div id='method'> Method Name: test_jointly</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/720e035944157e9f885abed8be550b08c0ab7161#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L161' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 720e035944157e9f885abed8be550b08c0ab7161</div><div id='time'> Time: 2014-07-10</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rms_error_power</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/720e035944157e9f885abed8be550b08c0ab7161#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L126' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 720e035944157e9f885abed8be550b08c0ab7161</div><div id='time'> Time: 2014-07-10</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_normalized_error_power</div><BR>

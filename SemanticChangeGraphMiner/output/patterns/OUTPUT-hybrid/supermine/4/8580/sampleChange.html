@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_agree_ref = 0.0
+    n_agree_est = 0.0
+    for i in xrange(len(y_ref)):
+        <a id="change">for j in xrange(i + 1, len(y_ref)):
+            &#47&#47 Do i and j match in reference?
+            ref_match = (y_ref[i] == y_ref[j])
+            n_agree_ref += ref_match
+
+            &#47&#47 Or in estimate?
+            est_match = (y_est[i] == y_est[j])
+            n_agree_est += est_match
+
+            &#47&#47 If both, we have agreement
+            matches += (ref_match & est_match)
+            
+   </a> precision   = matches / n_agree_est
+    recall      = matches / n_agree_ref
+    f_measure   = util.f_measure(precision, recall, beta=beta)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Repeat for estimate
+    agree_est   = np.equal.outer(y_est, y_est)
+    n_agree_est = (agree_est.sum() - <a id="change">len(y_est)</a>) / 2.0
+
+    &#47&#47 Find where they agree
+    matches     = np.logical_and(agree_ref, agree_est)</code></pre>

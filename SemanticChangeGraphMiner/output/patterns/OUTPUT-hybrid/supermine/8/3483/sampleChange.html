@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        channel_means = x.mean(1)
+        <a id="change">for i in range(2,x.dim()):
+            channel_means = channel_means.mean(i)
+       </a> channel_means = channel_means.expand_as(x)
+
+        x = (x - channel_means) * self.var + channel_means
+        if y is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = th.clamp((x - channel_means) * self.value + channel_means,0,1)
+
+        if y is not None:
+            <a id="change">channel_means = y.mean(1).mean(2).expand_as(y)</a>
+            y = th.clamp((y - channel_means) * self.value + channel_means,0,1)       
+            return x, y
+        return x
+</code></pre>

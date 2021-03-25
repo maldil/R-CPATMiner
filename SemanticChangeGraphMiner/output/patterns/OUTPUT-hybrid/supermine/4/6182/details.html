@@ -1,0 +1,30 @@
+<html><h3>234ed9457aa8bdaf10fd46b75e794eeae29bbc87,main_chips.py,,,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	eval_metric = metric.RCNNAccMetric(config)
+	cls_metric  = metric.RCNNLogLossMetric(config)
+	bbox_metric = metric.RCNNL1LossCRCNNMetric(config)
+	<a id="change">eval_metrics = mx.metric.CompositeEvalMetric()</a>
+	eval_metrics.add(eval_metric)
+	<a id="change">eval_metrics.add(cls_metric)</a>
+	eval_metrics.add(bbox_metric) 
+
+
+	eval_metrics = mx.metric.CompositeEvalMetric()</code></pre><h3>After Change</h3><pre><code class='java'>
+	sym_inst.infer_shape(shape_dict)
+	arg_params, aux_params = load_param(config.network.pretrained,config.network.pretrained_epoch,convert=True)
+
+	narg_params = <a id="change">{}</a>
+	naux_params = {}
+	for name in arg_params:
+		narg_params[&quotf_&quot + name] = arg_params[name]
+	for name in aux_params:
+		naux_params[&quotf_&quot + name] = aux_params[name]
+
+	<a id="change">arg_params = dict(arg_params.items() + narg_params.items())</a>
+	aux_params = dict(aux_params.items() + naux_params.items())
+ 
+
+	sym_inst.init_weight_rcnn(config,arg_params,aux_params)</code></pre><img src="25289505.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mahyarnajibi/SNIPER/commit/234ed9457aa8bdaf10fd46b75e794eeae29bbc87#diff-4b305f74eb10efb01152f880143214a736558465a32836795fa576eea1af6bf4L53' target='_blank'>Link</a></div><div id='project'> Project Name: mahyarnajibi/SNIPER</div><div id='commit'> Commit Name: 234ed9457aa8bdaf10fd46b75e794eeae29bbc87</div><div id='time'> Time: 2018-03-17</div><div id='author'> Author: mahyarnajibi@gmail.com</div><div id='file'> File Name: main_chips.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/83d1a46c72c12f8140d5232de59097d894d9d5f7#diff-611d02d0de9d7bfb648c272e6ba8de9ababfdfa496663f40c65baaf6cac6587aL103' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: 83d1a46c72c12f8140d5232de59097d894d9d5f7</div><div id='time'> Time: 2013-01-22</div><div id='author'> Author: daniel.b.allan@gmail.com</div><div id='file'> File Name: mr/fitting.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: NLS</div><BR><BR><div id='link'><a href='https://github.com/onnx/onnx-coreml/commit/7f7a30cae66e7d65917ceea966225292f582d809#diff-f45f4e3fd0ef5830e4edeb95c97ead20725c1de6b7bf6711727deacbc69eb969L797' target='_blank'>Link</a></div><div id='project'> Project Name: onnx/onnx-coreml</div><div id='commit'> Commit Name: 7f7a30cae66e7d65917ceea966225292f582d809</div><div id='time'> Time: 2019-10-04</div><div id='author'> Author: bhushan.s.94@gmail.com</div><div id='file'> File Name: onnx_coreml/_transformers.py</div><div id='class'> Class Name: DeadCodeElimination</div><div id='method'> Method Name: __call__</div><BR>

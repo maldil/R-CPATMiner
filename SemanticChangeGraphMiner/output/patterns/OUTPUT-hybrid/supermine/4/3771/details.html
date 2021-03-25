@@ -1,0 +1,24 @@
+<html><h3>e949a7462a0552c36e13f5d0d9147c4fc52cee32,librosa/feature/utils.py,,sync,#,233
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ParameterError(&quotSynchronized data has ndim={:d},&quot
+                         &quot must be 1 or 2.&quot.format(data.ndim))
+
+    <a id="change">data = np.atleast_2d(data)</a>
+
+    if aggregate is None:
+        aggregate = np.mean
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    data_agg = np.empty(agg_shape, order=&quotF&quot)
+
+    idx_in = [slice(None)] * data.ndim
+    <a id="change">idx_agg = [slice(None)] * data_agg.ndim</a>
+
+    for (i, segment) in enumerate(slices):
+        idx_in[axis] = segment
+        <a id="change">idx_agg[axis]</a> = i
+        data_agg[idx_agg] = aggregate(data[idx_in], axis=axis)
+
+    return data_agg</code></pre><img src="16683326.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/e949a7462a0552c36e13f5d0d9147c4fc52cee32#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL315' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: e949a7462a0552c36e13f5d0d9147c4fc52cee32</div><div id='time'> Time: 2015-08-14</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sync</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/0e079c3de49b0f221495e3bbebbeb44f8ed7c255#diff-c563295221637cd185ffad4213ba15b18af223d9a21c646b65ab7b8dc29c7062L476' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 0e079c3de49b0f221495e3bbebbeb44f8ed7c255</div><div id='time'> Time: 2015-08-25</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: subsegment</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/85d5c30d2186d07857d1f0fb7c269eb08d2b7d79#diff-8f7a6bbb5cc4b2c27507b741ab3849957f6e35ee2de8ef4d6566aaa92617c5c8L227' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 85d5c30d2186d07857d1f0fb7c269eb08d2b7d79</div><div id='time'> Time: 2018-04-07</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_clustering.py</div><div id='class'> Class Name: DESClustering</div><div id='method'> Method Name: classify_with_ds</div><BR>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    _, dense_input_list = input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix)
+
+    if len(linear_emb_list[0]) &gt; 1:
+        linear_term = concat_fun([<a id="change">add(linear_emb)</a> <a id="change">for</a> linear_emb in linear_emb_list])
+    elif len(linear_emb_list[0]) == 1:
+        linear_term = concat_fun([linear_emb[0] for linear_emb in linear_emb_list])
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    linear_logit_list = []
+    for i in range(units):
+
+        <a id="change">if len(linear_emb_list[0])&gt;0 and len(dense_input_list) &gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=2)([sparse_input,dense_input])
+        elif len(linear_emb_list[0])&gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            linear_logit = Linear(l2_reg,mode=0)(sparse_input)
+        elif len(dense_input_list) &gt;0:
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=1)(dense_input)
+        else:
+            raise NotImplementedError
+       </a> linear_logit_list.append(linear_logit)
+
+    return concat_fun(linear_logit_list)
+</code></pre>

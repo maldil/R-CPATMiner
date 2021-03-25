@@ -1,0 +1,23 @@
+<html><h3>9bdbb11cf27060e7847a87dcdf691dd6b96ce6df,rlkit/data_management/obs_dict_replay_buffer.py,ObsDictRelabelingBuffer,random_batch,#ObsDictRelabelingBuffer#,171
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                num_options = len(possible_future_obs_idxs)
+                next_obs_i = int(np.random.randint(0, num_options))
+                future_obs_idxs.append(possible_future_obs_idxs[next_obs_i])
+            <a id="change">future_obs_idxs = np.array(future_obs_idxs)</a>
+            resampled_goals[-num_future_goals:] = self._next_obs[
+                self.achieved_goal_key
+            ][future_obs_idxs]
+            for goal_key in self.goal_keys:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if num_future_goals &gt; 0:
+            &#47&#47&#47&#47 better future obs sample algorithm
+            future_indices = indices[-num_future_goals:]
+            possible_future_obs_lens = np.array([<a id="change">len(self._idx_to_future_obs_idx[i])</a> for i in future_indices])
+            next_obs_idxs = <a id="change">(np.random.random(num_future_goals) * possible_future_obs_lens)</a>.astype(np.int)
+            <a id="change">future_obs_idxs = np.array([self._idx_to_future_obs_idx[ids][next_obs_idxs[i]] for i, ids in enumerate(future_indices)])</a>
+
+            resampled_goals[-num_future_goals:] = self._next_obs[
+                self.achieved_goal_key
+            ][future_obs_idxs]</code></pre><img src="2280746.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/vitchyr/rlkit/commit/9bdbb11cf27060e7847a87dcdf691dd6b96ce6df#diff-2178a345f4deabd282ac87d8dcb0e8ccc6d47221247628b8dbc0938f186b7b3aL171' target='_blank'>Link</a></div><div id='project'> Project Name: vitchyr/rlkit</div><div id='commit'> Commit Name: 9bdbb11cf27060e7847a87dcdf691dd6b96ce6df</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 38036768+YangRui2015@users.noreply.github.com</div><div id='file'> File Name: rlkit/data_management/obs_dict_replay_buffer.py</div><div id='class'> Class Name: ObsDictRelabelingBuffer</div><div id='method'> Method Name: random_batch</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/4e70cb5fc9a9494e866ccd7d2e1a9046091b6337#diff-122c1355ed3ef969705713dddf92fa1753f8935cd2721ddfc41996f3f5735760L18' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 4e70cb5fc9a9494e866ccd7d2e1a9046091b6337</div><div id='time'> Time: 2018-11-16</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/density_estimation/gauss_mixture.py</div><div id='class'> Class Name: GaussianMixture1D</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/313b23e39765031385ca8940f02ff60fb6bbe43b#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL236' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 313b23e39765031385ca8940f02ff60fb6bbe43b</div><div id='time'> Time: 2016-08-25</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: featurize_time_series</div><BR>

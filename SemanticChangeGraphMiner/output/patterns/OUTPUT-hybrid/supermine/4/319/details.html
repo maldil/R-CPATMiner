@@ -1,0 +1,25 @@
+<html><h3>cc410f68b6c1d1417322ec02e22ea7713ca0bc48,trackpy/locate_functions/brightfield_ring.py,,locate_brightfield_ring,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Make a copy of old coords and overwrite with result
+        &#47&#47 In this way any extra columns from previous_coords are preserved
+        new_coords = <a id="change">coords.copy()</a>
+        for column in result.index.tolist():
+            &#47&#47 make a new column if necessary, otherwise overwrite
+            new_coords[column] = result.get(column)
+        refined[i] = new_coords</code></pre><h3>After Change</h3><pre><code class='java'>
+        return coords_df
+
+    if not pool:
+        refined = map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) <a id="change">for</a> _, coords in coords_df.iterrows()])
+    else:
+        refined = pool.map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+
+    <a id="change">refined = [ref for ref in refined if ref is not None]</a>
+
+    columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:
+        warnings.warn("No particles found in the image after refinement.")</code></pre><img src="1731387.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/cc410f68b6c1d1417322ec02e22ea7713ca0bc48#diff-72b79f834898dc54a80021688b0be6135a4eed760bcf17437e9f6da223e6726dL77' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: cc410f68b6c1d1417322ec02e22ea7713ca0bc48</div><div id='time'> Time: 2020-03-18</div><div id='author'> Author: ruben@lighthacking.nl</div><div id='file'> File Name: trackpy/locate_functions/brightfield_ring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: locate_brightfield_ring</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/6d6f8612a0b12636269e3837c6bb27d2ff94e9d3#diff-56decff727f456f4ac58959c41ec8c8b1a801ed410a3d7a9efa5b0bc526a0c5cL80' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: 6d6f8612a0b12636269e3837c6bb27d2ff94e9d3</div><div id='time'> Time: 2019-01-10</div><div id='author'> Author: henryee333@gmail.com</div><div id='file'> File Name: softlearning/samplers/remote_sampler.py</div><div id='class'> Class Name: RemoteSampler</div><div id='method'> Method Name: __getstate__</div><BR><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/420747a2f5f6f23b84f62f9a00481ef53a4a4623#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L83' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: 420747a2f5f6f23b84f62f9a00481ef53a4a4623</div><div id='time'> Time: 2016-11-11</div><div id='author'> Author: tim@Tims-MacBook-Pro.local</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_from_model</div><BR>

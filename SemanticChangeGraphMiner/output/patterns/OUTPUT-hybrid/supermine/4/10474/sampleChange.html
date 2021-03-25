@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with tf.Session(graph=imported_graph) as sess:
+            with tf.device("/gpu:0"):
+                softmax_tensor = sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+                predictions = <a id="change">sess.run(softmax_tensor, {&quotDecodeJpeg:0&quot: image_array})</a>
+                predictions = np.squeeze(predictions)
+                answer = {}
+                for node_id in range(len(predictions)):
+                    answer[self.labels[node_id]] = predictions[node_id]</code></pre><h3>After Change</h3><pre><code class='java'>
+                threads = [pool.apply_async(self.operation,
+                                            args=(sess, softmax_tensor, np_images[image_number], image_number,)) for
+                           image_number in range(len(np_images))]
+                <a id="change">answers = []</a>
+                for thread in threads:
+                    prediction, image_number = thread.get()
+                    prediction = np.squeeze(prediction)
+                    answer = {&quotimage_number&quot: image_number}
+                    for node_id in range(len(prediction)):
+                        answer[self.labels[node_id]] = prediction[node_id]
+                    answers.append(answer)
+                <a id="change">return answers</a>
+
+    @staticmethod
+    def _pil_to_np(image):
+        return np.array(image)[:, :, 0:3]</code></pre>

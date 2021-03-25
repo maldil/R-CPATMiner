@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_from_contents(typ=set, id_column=&quotid&quot):
+    <a id="change">contents</a> = {&quotcat1&quot: {&quotaa&quot, &quotbb&quot, &quotcc&quot},
+                &quotcat2&quot: <a id="change">{&quotcc&quot, &quotdd&quot}</a>,
+                &quotcat3&quot: {&quotee&quot},
+                }
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot])
+    <a id="change">baseline</a> = from_contents(OrderedDict(contents), data=empty_data,
+                             id_column=id_column)
+    &#47&#47 data=None
+    <a id="change">out</a> = from_contents(OrderedDict(contents), id_column=id_column)
+    assert_frame_equal(out.sort_values(id_column), baseline)
+
+    &#47&#47 unordered contents dict
+    <a id="change">out</a> = from_contents({&quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat1&quot: contents[&quotcat1&quot]},
+                        data=empty_data, id_column=id_column)
+    assert_frame_equal(out.reorder_levels([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]),
+                       baseline)
+
+    &#47&#47 empty category
+    <a id="change">out</a> = from_contents({&quotcat1&quot: contents[&quotcat1&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat4&quot: []},</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_from_contents(typ=set, id_column=&quotid&quot):
+    <a id="change">contents</a> = OrderedDict([(&quotcat1&quot, {&quotaa&quot, &quotbb&quot, &quotcc&quot}),
+                            <a id="change">(&quotcat2&quot, {&quotcc&quot, &quotdd&quot})</a>,
+                            (&quotcat3&quot, {&quotee&quot})])
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot])
+    <a id="change">baseline</a> = from_contents(contents, data=empty_data,
+                             id_column=id_column)
+    &#47&#47 data=None
+    <a id="change">out</a> = from_contents(contents, id_column=id_column)
+    assert_frame_equal(out.sort_values(id_column), baseline)
+
+    &#47&#47 unordered contents dict
+    <a id="change">out</a> = from_contents({&quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat1&quot: contents[&quotcat1&quot]},
+                        data=empty_data, id_column=id_column)
+    assert_frame_equal(out.reorder_levels([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]),
+                       baseline)
+
+    &#47&#47 empty category
+    <a id="change">out</a> = from_contents({&quotcat1&quot: contents[&quotcat1&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat4&quot: []},</code></pre>

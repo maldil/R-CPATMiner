@@ -1,0 +1,37 @@
+digraph G {
+subgraph cluster0 {
+1 [label="numpy" a="32" s="5614" l="7" shape="box"];
+3 [label="cpu" a="32" s="5608" l="5" shape="box"];
+4 [label="FieldAccess" a="22" s="5594" l="8" shape="box"];
+5 [label="cuda" a="32" s="4845" l="6" shape="box"];
+6 [label="FieldAccess" a="22" s="4817" l="13" shape="box"];
+7 [label="cuda" a="32" s="4229" l="6" shape="box"];
+8 [label="FieldAccess" a="22" s="4219" l="9" shape="box"];
+9 [label="FieldAccess" a="22" s="4796" l="4" shape="box"];
+10 [label="IfStatement" a="25" s="4194,4207" l="4,2" shape="diamond"];
+11 [label="Assignment:=" a="7" s="4830" l="1" shape="box"];
+12 [label="IfStatement" a="25" s="4792,4805" l="4,2" shape="diamond"];
+13 [label="FieldAccess" a="22" s="4796" l="4" shape="box"];
+14 [label="FieldAccess" a="22" s="4198" l="4" shape="box"];
+15 [label="FieldAccess" a="22" s="4831" l="13" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="IfStatement" a="25" s="3832" l="3" shape="diamond"];
+label = "New";
+style="dotted";
+}
+3 -> 1 [label="_recv_"];
+4 -> 3 [label="_recv_"];
+5 -> 11 [label="_para_"];
+8 -> 7 [label="_recv_"];
+10 -> 7 [label="_control_"];
+11 -> 6 [label="_def_"];
+11 -> 3 [label="_recv_"];
+12 -> 5 [label="_control_"];
+12 -> 11 [label="_control_"];
+13 -> 12 [label="_cond_"];
+14 -> 10 [label="_cond_"];
+15 -> 5 [label="_recv_"];
+}

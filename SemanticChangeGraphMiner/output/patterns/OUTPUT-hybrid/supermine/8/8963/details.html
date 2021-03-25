@@ -1,0 +1,45 @@
+<html><h3>66584dea87782aed5509e4269a9f015002e1f5c1,pytext/torchscript/module.py,PyTextEmbeddingModuleWithDense,forward,#PyTextEmbeddingModuleWithDense#,1232
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            languages=squeeze_1d(None),
+        )
+        &#47&#47 call model
+        <a id="change">dense_feat = self.normalizer.normalize(dense_feat)</a>
+        dense_tensor = <a id="change">torch.tensor(dense_feat, dtype=torch.float)</a>
+        if self.tensorizer.device != "":
+            dense_tensor = dense_tensor.to(self.tensorizer.device)
+
+        sentence_embedding = self._forward(inputs, dense_tensor)
+        if self.concat_dense:
+            <a id="change">return torch.cat([sentence_embedding, dense_tensor], 1)</a>
+        else:
+            return sentence_embedding
+
+    @torch.jit.script_method</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        result = self.forward_impl(texts[:max_batch], dense_feat[:max_batch])
+
+        <a id="change">if input_len &gt; max_batch:
+            texts = texts[max_batch:]
+            dense_feat = dense_feat[max_batch:]
+
+            while len(texts) &gt; 0:
+                result_extension = self.forward_impl(
+                    texts[:max_batch], dense_feat[:max_batch]
+                )
+                &#47&#47 the result of forward is either a torch.Tensor or a List[Any]
+                if isinstance(result, torch.Tensor):
+                    result = torch.cat([result, result_extension], dim=0)
+                else:
+                    result.extend(result_extension)
+
+                texts = texts[max_batch:]
+                dense_feat = dense_feat[max_batch:]
+
+       </a> <a id="change">return result</a>
+
+    @torch.jit.script_method
+    def make_prediction(
+        self,</code></pre><img src="35026502.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/66584dea87782aed5509e4269a9f015002e1f5c1#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL1233' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 66584dea87782aed5509e4269a9f015002e1f5c1</div><div id='time'> Time: 2021-02-23</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: PyTextEmbeddingModuleWithDense</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff#diff-aea3495328514bc68256872a4bcf515b46f9ca204264d5875abd8053e5c4800eL87' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/SO3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: irr_repr</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR>

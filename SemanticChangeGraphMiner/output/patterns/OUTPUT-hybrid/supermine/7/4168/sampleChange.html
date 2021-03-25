@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        def calculate_loss():
+            return self.compute_classification_loss(output, target)
+        
+        loss = <a id="change">tensorflow.cond(keras.backend.not_equal(keras.backend.shape(output)[1], keras.backend.shape(target)[1]), no_loss, calculate_loss)</a>
+
+        self.add_loss(loss, inputs)
+
+        return output</code></pre><h3>After Change</h3><pre><code class='java'>
+            return self.compute_classification_loss(output, target)
+
+        x = keras.backend.shape(output)[1]
+        <a id="change">y = keras.backend.shape(target)[1]</a>
+
+        predicate = keras.backend.not_equal(x, y)
+
+        loss = <a id="change">tensorflow.cond(predicate, no_loss, calculate_loss)</a>
+
+        self.add_loss(loss, inputs)
+
+        return output</code></pre>

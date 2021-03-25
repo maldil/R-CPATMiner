@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    cat_values = input_grouping.values
+    cs = np.unique(cat_values)
+    cat_dists = {k: mat[cat_values == k] for k in cs}
+    cat_means = <a id="change">{k: np.mean(v, axis=0) for k, v in cat_dists.items()}</a>
+    cat_means = pd.DataFrame.from_dict(cat_means)
+    cat_means.columns = [&quotMean: %s&quot % e <a id="change">for</a> e in cat_means.columns]
+    cat_stds = {k: np.std(v, axis=0) for k, v in cat_dists.items()}
+    cat_stds = pd.DataFrame.from_dict(cat_stds)
+    cat_stds.columns = [&quotStd: %s&quot % e for e in cat_stds.columns]</code></pre><h3>After Change</h3><pre><code class='java'>
+    cat_values = input_grouping.values
+    cs = np.unique(cat_values)
+    cat_dists = {k: mat[cat_values == k] for k in cs}
+    <a id="change">cat_percentiles = []</a>
+    for percentile in percentiles:
+        data = {k: np.percentile(v, percentile, axis=0)
+                     for k, v in cat_dists.items()}
+        data = pd.DataFrame.from_dict(data)</code></pre>

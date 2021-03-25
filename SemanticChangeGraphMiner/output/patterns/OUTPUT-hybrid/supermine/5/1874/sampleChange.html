@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Find the minimum sample period.
+    &#47&#47 For the sake of speed, only use the first 100 samples.
+    FWD_DIFF = np.diff(datetime_index.values[:100]).astype(np.float)
+    MIN_SAMPLE_PERIOD = <a id="change">FWD_DIFF.min()</a> / 1E9
+    MAX_SAMPLES_PER_PERIOD = _secs_per_period_alias(freq) / MIN_SAMPLE_PERIOD
+    MAX_SAMPLES_PER_2_PERIODS = MAX_SAMPLES_PER_PERIOD * 2
+    n_rows_processed = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+        datetime_index = copy.copy(datetime_index)
+        ts = datetime_index[0] &#47&#47 &quotts&quot = timestamp
+        &#47&#47 Calculate timezone offset relative to UTC
+        tz_offset = <a id="change">ts.replace(tzinfo=None) - ts.tz_convert(&quotUTC&quot).replace(tzinfo=None)</a>
+        datetime_index = datetime_index.tz_convert(&quotUTC&quot) + tz_offset
+        &#47&#47 We end up with a datetime_index being tz-aware, localised to UTC
+        &#47&#47 but offset so that the UTC time is the same as the local time
+        &#47&#47 e.g. if, prior to conversion, 
+        &#47&#47     datetime_index[0] = 12:00-04:00 US/Eastern
+        &#47&#47 then after conversion:
+        &#47&#47     datetime_index[0] = 12:00+00:00 UTC
+
+    periods = pd.period_range(datetime_index[0], datetime_index[-1], freq=freq)
+
+    &#47&#47 Declare and initialise some constants and variables used
+    &#47&#47 during the loop...
+
+    &#47&#47 Find the minimum sample period.
+    <a id="change">MIN_SAMPLE_PERIOD = int(sample_period(datetime_index))</a>
+    MAX_SAMPLES_PER_PERIOD = <a id="change">int(_secs_per_period_alias(freq) / MIN_SAMPLE_PERIOD)</a>
+    MAX_SAMPLES_PER_2_PERIODS = MAX_SAMPLES_PER_PERIOD * 2
+    n_rows_processed = 0
+    boundaries = {}
+    for period in periods:</code></pre>

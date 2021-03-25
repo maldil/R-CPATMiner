@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data_len = len(altitude)
+        sfc = np.zeros([data_len,1])  
+        thr = np.zeros([data_len,1]) 
+        <a id="change">for ii,_ in enumerate(altitude):            
+            sfc[ii] = sfc_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])    
+            thr[ii] = thr_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])   &#47&#47This is the fix when sklearn is update.
+
+        
+       </a> F    = thr
+        mdot = thr*sfc*self.number_of_engines
+        
+        &#47&#47 Save the output</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47*self.thrust_input_scale*self.thrust_rubber_scale
+            
+        if self.use_extended_surrogate:
+            <a id="change">lo_blender = Cubic_Spline_Blender(0, .01)</a>
+            <a id="change">hi_blender = Cubic_Spline_Blender(0.99, 1)</a>            
+            sfc = self.extended_sfc_surrogate(sfc_surrogate, cond, lo_blender, hi_blender)
+            <a id="change">thr = self.extended_thrust_surrogate(thr_surrogate, cond, lo_blender, hi_blender)</a>
+        else:
+            sfc = sfc_surrogate.predict(cond)
+            thr = <a id="change">thr_surrogate.predict(cond)</a>
+
+        sfc = sfc*self.sfc_input_scale*self.sfc_anchor_scale
+        thr = thr*self.thrust_input_scale*self.thrust_anchor_scale
+       
+        F    = thr
+        &#47&#47from SUAVE.Core import Units
+        mdot = thr*sfc*self.number_of_engines&#47&#47*Units.lb/Units.lbf/Units.hr
+       
+        &#47&#47 Save the output
+        results = Data()
+        results.thrust_force_vector = self.number_of_engines * F * [np.cos(self.thrust_angle),0,-np.sin(self.thrust_angle)]    
+        results.vehicle_mass_rate   = mdot
+        results.tsfc                = sfc
+        <a id="change">results.thrust_scalar_value = thr</a>
+   
+        return results          
+   
+    def build_surrogate(self,my_data=None):</code></pre>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if lang == &quoten&quot:
+        from metanl import english
+        normalized, disambig = english.normalize_topic(text)
+    elif <a id="change">lang</a> == &quotja&quot:
+        from metanl import japanese
+        <a id="change">normalized, disambig = japanese.normalize(text), None</a>
+    elif <a id="change">lang in (&quotpt&quot, &quothu&quot, &quotnl&quot, &quotes&quot)</a>:
+        &#47&#47 languages where we know the stopword list
+        import simplenlp
+        nlp = simplenlp.get(lang)
+        disambig = None
+        <a id="change">normalized, disambig = nlp.normalize(text), None</a>
+    else:
+        normalized = text
+        <a id="change">disambig = None</a>
+    if disambiguation is not None:
+        disambig = disambiguation
+    if disambig is not None:
+        disambig = disambig.replace(&quot &quot, &quot_&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return match.group(1), &quotn/&quot + match.group(2).strip(&quot _&quot)
+
+def make_concept_uri(text, lang, disambiguation=None):
+    <a id="change">if disambiguation is None:
+        text, disambiguation = handle_disambig(text)
+
+   </a> if lang == &quoten&quot:
+        normalized = english.normalize(text)
+    else:
+        normalized = preprocess_text(text).lower()</code></pre>

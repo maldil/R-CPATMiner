@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    This kernel will take over the active dims of it&quots subkernels passed in.
+    
+    def __init__(self, subkerns, name=&quotsum&quot):
+        for i, kern in <a id="change">enumerate(subkerns[:])</a>:
+            if isinstance(kern, Add):
+                <a id="change">del subkerns[i]</a>
+                <a id="change">for part in kern.parts[::-1]:
+                    &#47&#47kern.unlink_parameter(part)
+                    subkerns.insert(i, part.copy())
+       </a> super(Add, self).__init__(subkerns, name)
+        self._exact_psicomp = self._check_exact_psicomp()
+
+    def _check_exact_psicomp(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+    unexpected behavior. 
+    
+    def __init__(self, subkerns, name=&quotsum&quot):
+        <a id="change">_newkerns = []</a>
+        for kern in subkerns:
+            if isinstance(kern, Add):
+                <a id="change">for part in kern.parts:
+                    &#47&#47kern.unlink_parameter(part)
+                    _newkerns.append(part.copy())
+           </a> else:
+                <a id="change">_newkerns.append(kern.copy())</a>
+                    
+        super(Add, self).__init__(_newkerns, name)
+        self._exact_psicomp = self._check_exact_psicomp()
+</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        while len(sampled) &lt; size:
+            _size = int((size - len(sampled)) / prob)
+            _sampled = self.forward_sample(_size)
+            <a id="change">for i in range(_size):
+                for var in evidence:
+                    if evidence[var] != _sampled[var][i]:
+                        _sampled.drop(i, inplace=True)
+                        break
+           </a> prob = max(len(_sampled) / _size, 0.01)  &#47&#47 0.01 assumed if len(sampled) is small or zero
+            sampled = sampled.append(_sampled)
+        sampled.reset_index(inplace=True, drop=True)
+        return sampled[:size]</code></pre><h3>After Change</h3><pre><code class='java'>
+            _size = int(((size - len(sampled)) / prob) * 1.5)
+            _sampled = self.forward_sample(_size)
+            for evid in evidence:
+                _sampled = _sampled[_sampled.ix[<a id="change">:, evid</a>.var] == evid]
+            prob = max(len(_sampled) / _size, 0.01)
+            sampled = sampled.append(_sampled)
+        sampled.reset_index(inplace=True, drop=True)</code></pre>

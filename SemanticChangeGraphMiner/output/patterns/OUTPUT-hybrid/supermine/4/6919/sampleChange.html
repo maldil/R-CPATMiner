@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def featGenerator(flist, tmpdir=None, ffmpeg=&quotffmpeg&quot):
+    thread = ThreadReturning(target = media2feats, args=[flist.pop(0), tmpdir, None, None, ffmpeg])
+    thread.start()
+    <a id="change">while len(flist) &gt; 0:
+        ret = thread.join()
+        thread = ThreadReturning(target = media2feats, args=[flist.pop(0), tmpdir, None, None, ffmpeg])
+        thread.start()
+        yield ret
+   </a> ret = thread.join()
+    yield ret
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47        print(&quotnew list&quot, ilist)
+        &#47&#47ilist = ilist[len(msg):]
+        &#47&#47olist = olist[len(msg):]
+        if <a id="change">len(ilist)</a> == 0:
+            break
+        thread = ThreadReturning(target = medialist2feats, args=[ilist, olist, tmpdir, ffmpeg, skipifexist, nbtry, trydelay])
+        thread.start()</code></pre>

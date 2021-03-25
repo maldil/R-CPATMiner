@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 Create long description from README.rst and doc/CHANGES.rst.
+&#47&#47 PYPI page will contain complete PyInstaller changelog.
+def read(filename):
+    <a id="change">try:
+        return unicode(codecs.open(filename, encoding=&quotutf-8&quot).read())
+    except NameError:
+        return open(filename, &quotr&quot, encoding=&quotutf-8&quot).read()
+</a>long_description = u&quot\n\n&quot.join([read(&quotREADME.rst&quot),
+                                 read(&quotdoc/_dummy-roles.txt&quot),
+                                 read(&quotdoc/CHANGES.rst&quot)])
+if sys.version_info &lt; (3,):</code></pre><h3>After Change</h3><pre><code class='java'>
+def read(filename):
+    if is_py2:
+        with codecs.open(filename, encoding=&quotutf-8&quot) as fp:
+            return unicode(<a id="change">fp.read()</a>)
+    else:
+        with open(filename, &quotr&quot, encoding=&quotutf-8&quot) as fp:
+            return fp.read()</code></pre>

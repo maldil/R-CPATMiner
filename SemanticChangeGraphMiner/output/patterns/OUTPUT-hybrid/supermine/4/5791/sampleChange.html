@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        doc = etree.parse(fp)
+        image = doc.find(&quot.//{*}Page&quot)
+        if image is None or image.get(&quotimageFilename&quot) is None:
+            <a id="change">raise KrakenInputException(&quotNo valid filename found in PageXML file&quot)</a>
+        lines = doc.findall(&quot.//{*}TextLine&quot)
+        data = {&quotimage&quot: os.path.join(base_dir, image.get(&quotimageFilename&quot)), &quotlines&quot: []}
+        for line in lines:
+            pol = line.find(&quot./{*}Coords&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise KrakenInputException(&quotParsing {} failed: {}&quot.format(filename, e))
+        image = doc.find(&quot.//{*}Page&quot)
+        if image is None or image.get(&quotimageFilename&quot) is None:
+            raise KrakenInputException(<a id="change">&quotNo valid image filename found in PageXML file {}&quot.format(filename)</a>)
+        lines = doc.findall(&quot.//{*}TextLine&quot)
+        data = {&quotimage&quot: os.path.join(base_dir, image.get(&quotimageFilename&quot)), &quotlines&quot: []}
+        for line in lines:</code></pre>

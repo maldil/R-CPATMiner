@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def run(self):
+        print("running Dragon%s ..."%self.version)
+        <a id="change">os.system(&quotnohup dragon%sshell -s %s&quot%(self.version,self.output_directory+self.drs_name))</a>
+        &#47&#47 print subprocess.check_output([&quotnohup dragon%sshell -s %s&quot%(self.version,self.drs)])
+        print("... Dragon job completed!")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def run(self):
+        print("running Dragon%i ..." % self.version)
+        <a id="change">os_ret = os.system(&quotnohup dragon%sshell -s %s&quot %
+                           (self.version, os.path.join(self.output_directory, self.drs_name)))</a>
+        if os_ret != 0:
+            msg = "Oops, dragon%ishell command didn&quott work! Are you sure Dragon%i software is installed on your machine?" % (
+                self.version, self.version)
+            raise ImportError(msg)</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        C_src = np.zeros((self.n_samples, self.n_classifiers))
+        for clf_index in range(self.n_classifiers):
+            <a id="change">supports = self._get_scores_dsel(clf_index)</a>
+            is_correct = self.processed_dsel[:, clf_index]
+            <a id="change">C_src[:, clf_index]</a> = entropy_func(self.n_classes, supports, is_correct)
+
+        return C_src
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        C_src = np.zeros((self.n_samples, self.n_classifiers))
+        for clf_index in range(self.n_classifiers):
+            <a id="change">supports = self.dsel_scores[:, clf_index, :]</a>
+            is_correct = self.processed_dsel[:, clf_index]
+            <a id="change">C_src[:, clf_index]</a> = entropy_func(self.n_classes, supports, is_correct)
+
+        return C_src
+</code></pre>

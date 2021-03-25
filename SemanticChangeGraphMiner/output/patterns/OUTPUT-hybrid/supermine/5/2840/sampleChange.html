@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 construct an array of names
+    docs_np_name = np.asarray([temp_labels[i] for i in other_file_indexes])
+
+    <a id="change">docs_np = np.column_stack((docs_np_name, docs_np_score))</a>
+    &#47&#47 sort by score
+    sorted_docs_np = docs_np[docs_np[:, 1].argsort()]
+
+    &#47&#47 extract the array of name and score out from sorted_docs_list
+    docs_name = sorted_docs_np[:, 0]
+    <a id="change">docs_score = np.round(sorted_docs_np[:, 1].astype(float), decimals=4)</a>
+
+    &#47&#47 pack the scores and names in data_frame
+    score_name_data_frame = pd.DataFrame(docs_score.reshape(
+        docs_score.size, 1), index=docs_name, columns=["Cosine similarity"])</code></pre><h3>After Change</h3><pre><code class='java'>
+    dist = 1 - cosine_similarity(final_matrix)
+
+    &#47&#47 get an array of file index in filemanager.files
+    <a id="change">num_row = len(dtm_data_frame.index)</a>
+    other_file_indexes = np.asarray([file_index for file_index in range(
+        num_row)if file_index != comp_file_index])
+
+    &#47&#47 construct an array of scores</code></pre>

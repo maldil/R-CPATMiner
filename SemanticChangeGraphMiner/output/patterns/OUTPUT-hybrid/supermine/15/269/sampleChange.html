@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_reduce_func_sumofsqrt_linewidth_3():
+    prof = profile_line(pyth_image, (1, 2), (4, 2), linewidth=3, order=0,
+                        reduce_func=lambda x: np.sum(x**0.5))
+    <a id="change">expected_prof = np.array([2.89083412, 3.45787824, 2.11623746, 0.77459667])</a>
+    assert_almost_equal(prof, expected_prof)
+
+
+def test_bool_array_input():</code></pre><h3>After Change</h3><pre><code class='java'>
+        return np.sum(x ** 0.5)
+    prof = profile_line(pyth_image, (1, 2), (4, 2), linewidth=3, order=0,
+                        reduce_func=reduce_func, mode=&quotconstant&quot)
+    <a id="change">expected_prof = np.apply_along_axis(reduce_func,
+                                        arr=pyth_image[1:5, 1:4], axis=1)</a>
+    assert_almost_equal(prof, expected_prof)
+
+
+def test_oob_coodinates():</code></pre>

@@ -1,0 +1,43 @@
+<html><h3>14d9448978c808b4b86e5b3429d7649485782568,entity2rec/ItemKNNSImilarity.py,ItemKNNSimilarity,__init__,#ItemKNNSimilarity#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.model = self.learn_model_surprise()
+
+        <a id="change">self.sim_matrix = self.model.compute_similarities()</a>
+
+        <a id="change">self.avg_s = np.mean(self.sim_matrix)</a>
+
+    def learn_model_surprise(self):
+
+        file_path = os.path.expanduser(self.train)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.dataset = dataset
+
+        <a id="change">data = tc.SFrame.read_csv(&quotdatasets/&quot+&quot%s/FM/&quot %self.dataset
+                                  +&quottrain.dat&quot, delimiter=&quot &quot)</a>
+
+        if implicit:
+
+            self.model = tc.item_similarity_recommender.create(data,
+                        user_id=&quotuser_id&quot, item_id=&quotitem_id&quot)
+
+        else:
+
+            self.model = tc.item_similarity_recommender.create(data,
+                        user_id=&quotuser_id&quot, item_id=&quotitem_id&quot, target=&quotrating&quot)
+        
+        similarities = self.model.get_similar_items()
+        
+        self.sim_matrix = {}
+
+        <a id="change">for s in similarities:
+
+            self.sim_matrix[s[&quotitem_id&quot], s[&quotsimilar&quot]] = s[&quotscore&quot]
+
+   </a> def collab_similarities(self, item_1, item_2):
+
+        try:
+</code></pre><img src="23583014.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/14d9448978c808b4b86e5b3429d7649485782568#diff-972fd1e3549eec497eff9900e0d165ecba2070456299089663cc569985dd7455L16' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: 14d9448978c808b4b86e5b3429d7649485782568</div><div id='time'> Time: 2018-11-15</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/ItemKNNSImilarity.py</div><div id='class'> Class Name: ItemKNNSimilarity</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7c228ae83c93215fd116bb4586c2da57c7a62773728754ee6b11426e56a2c6d1L97' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/avg_precision.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_avg_precision</div><BR><BR><div id='link'><a href='https://github.com/biocore/scikit-bio/commit/30d73c7518adcde7ed8340d76e306bd290e0949a#diff-1475afe11caa9fbbcaa552ffa1c7998339c558a91e64e86e628aa5c70bdb9af9L876' target='_blank'>Link</a></div><div id='project'> Project Name: biocore/scikit-bio</div><div id='commit'> Commit Name: 30d73c7518adcde7ed8340d76e306bd290e0949a</div><div id='time'> Time: 2016-06-07</div><div id='author'> Author: gregcaporaso@gmail.com</div><div id='file'> File Name: skbio/stats/composition.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ancom</div><BR>

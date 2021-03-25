@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 handling small values
+            diff_op_t = diff_op_t + 1e-7
+            diff_potential = -1 * np.log(diff_op_t)
+        elif <a id="change">self.potential_method == &quotsqrt&quot</a>:
+            <a id="change">diff_potential = np.sqrt(diff_op_t)</a>
+        else:
+            raise ValueError(<a id="change">"Allowable &quotpotential_method&quot values: &quotlog&quot or "
+                             "&quotsqrt&quot. &quot{}&quot was passed.".format(
+                                 self.potential_method)</a>)
+        log_complete("diffusion potential")
+        return diff_potential
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 handling small values
+            diff_op_t = diff_op_t + 1e-7
+            diff_potential = -1 * np.log(diff_op_t)
+        elif <a id="change">self.gamma == -1:
+  </a>          <a id="change">diff_potential = diff_op_t</a>
+        else:
+            <a id="change">c = (1 - self.gamma) / 2</a>
+            diff_potential = ((diff_op_t)**c) / c
+        log_complete("diffusion potential")
+        return diff_potential
+</code></pre>

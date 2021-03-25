@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  hub_layer = hub.KerasLayer(hub_module, trainable=True)
+  pooled_output, sequence_output = hub_layer(
+      [input_word_ids, input_mask, input_type_ids])
+  <a id="change">return tf.keras.Model(
+      inputs=[input_word_ids, input_mask, input_type_ids],
+      outputs=[sequence_output, pooled_output])</a>
+
+
+def predict(predict_step_fn: Callable[[Any], Any],
+            aggregate_fn: Callable[[Any, Any], Any], dataset: tf.data.Dataset):</code></pre><h3>After Change</h3><pre><code class='java'>
+    logging.info(&quotUse the new hub module with dict as input/output.&quot)
+    output_dict = hub_layer(dict_input)
+
+  <a id="change">return tf.keras.Model(inputs=dict_input, outputs=output_dict)</a>
+
+
+def predict(predict_step_fn: Callable[[Any], Any],
+            aggregate_fn: Callable[[Any, Any], Any], dataset: tf.data.Dataset):</code></pre>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            new_log_prob = self.new_network.log_prob(actions_taken, new_logits)
+            old_log_prob = self.old_network.log_prob(actions_taken, old_logits)
+            mean_actor_loss = -tf.reduce_mean(self._actor_loss(old_log_prob, new_log_prob, advantages))
+            <a id="change">mean_critic_loss</a> = <a id="change">tf.reduce_mean(self._critic_loss(returns, values))</a>
+            loss = mean_actor_loss + self.config["vf_coef"] * mean_critic_loss - \
+                self.config["entropy_coef"] * tf.reduce_mean(self.new_network.entropy(new_logits))
+            <a id="change">gradients</a> = tape.gradient(loss, self.new_network.trainable_weights)
+        self.optimizer.apply_gradients(zip(gradients, self.new_network.trainable_weights))
+        return mean_actor_loss, mean_critic_loss, loss, tf.linalg.global_norm(gradients), old_log_prob, new_log_prob, new_logits
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            new_log_prob = self.new_network.log_prob(actions_taken, new_logits)
+            old_log_prob = self.old_network.log_prob(actions_taken, old_logits)
+            mean_actor_loss = -tf.reduce_mean(self._actor_loss(old_log_prob, new_log_prob, advantages))
+            <a id="change">mean_critic_loss</a> = .5 * <a id="change">tf.reduce_mean(self._critic_loss(returns, values))</a>
+            loss = mean_actor_loss + self.config["vf_coef"] * mean_critic_loss - \
+                self.config["entropy_coef"] * tf.reduce_mean(self.new_network.entropy(new_logits))
+            <a id="change">gradients</a> = tape.gradient(loss, self.new_network.trainable_weights)
+        self.optimizer.apply_gradients(zip(gradients, self.new_network.trainable_weights))
+        return mean_actor_loss, mean_critic_loss, loss, tf.linalg.global_norm(gradients), old_log_prob, new_log_prob, new_logits
+</code></pre>

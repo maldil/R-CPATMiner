@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
+            labels = tf.reshape(self.y, [-1, n_class])
+
+            <a id="change">weight_map = tf.mul(labels, class_weights)</a>
+            <a id="change">weight_map = tf.reduce_sum(weight_map, axis=1)</a>
+
+            loss_map = tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), labels)
+            <a id="change">weighted_loss = tf.mul(loss_map, weight_map)</a>
+
+            <a id="change">loss = tf.reduce_mean(weighted_loss)</a>
+            
+        else:
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), 
+                                                                               tf.reshape(self.y, [-1, n_class])))</code></pre><h3>After Change</h3><pre><code class='java'>
+        if class_weights is not None:
+            class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
+            weighted_logits = tf.mul(tf.reshape(logits, [-1, n_class]), class_weights)
+            loss = <a id="change">tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(weighted_logits, tf.reshape(self.y, [-1, n_class])))</a>
+            
+        else:
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), 
+                                                                               tf.reshape(self.y, [-1, n_class])))</code></pre>

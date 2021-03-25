@@ -1,0 +1,31 @@
+<html><h3>f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9,chaospy/descriptives/sensitivity/main.py,,Sens_m,#,9
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dim = len(dist)
+    poly = setdim(poly, dim)
+
+    <a id="change">zero = [0]*dim</a>
+    out = numpy.zeros((dim,) + poly.shape)
+    V = Var(poly, dist, **kws)
+    for i in range(dim):
+        <a id="change">zero[i]</a> = 1
+        <a id="change">out[i] = Var(E_cond(poly, zero, dist, **kws),
+                     dist, **kws)/(V+(V == 0))*(V != 0)</a>
+        zero[i] = 0
+    return out
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    out = numpy.zeros((dim,) + poly.shape)
+    variance = Var(poly, dist, **kws)
+    <a id="change">valids = variance != 0</a>
+
+    <a id="change">for idx, unit_vec in enumerate(numpy.eye(dim, dtype=int)):
+
+        conditional = E_cond(poly[valids], unit_vec, dist, **kws)
+        out[idx, valids] = Var(conditional, dist, **kws)
+        out[idx, valids] /= variance[valids]
+
+   </a> return out
+</code></pre><img src="22115409.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jonathf/chaospy/commit/f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9#diff-3a24fab6513bacb6c3198c06c9a8ec65ed4a2ba5694a7127f42358b8aaa08357L35' target='_blank'>Link</a></div><div id='project'> Project Name: jonathf/chaospy</div><div id='commit'> Commit Name: f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9</div><div id='time'> Time: 2020-06-10</div><div id='author'> Author: jonathf@gmail.com</div><div id='file'> File Name: chaospy/descriptives/sensitivity/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Sens_m</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L68' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/jonathf/chaospy/commit/f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9#diff-5b4e248618e3b0f2b9b16e66bc2b37faf8bc40e17bf273705cf3640e025b6f65L36' target='_blank'>Link</a></div><div id='project'> Project Name: jonathf/chaospy</div><div id='commit'> Commit Name: f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9</div><div id='time'> Time: 2020-06-10</div><div id='author'> Author: jonathf@gmail.com</div><div id='file'> File Name: chaospy/descriptives/sensitivity/total.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Sens_t</div><BR>

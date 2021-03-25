@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __repr__(self):
+        if isinstance(self._ntype, list):
+            ret = <a id="change">{}</a>
+            for (i, ntype) in enumerate(self._ntype):
+                data = self._graph._get_n_repr(self._ntid[i], self._nodes)
+                value = {key : data[key]
+                         for key in self._graph._node_frames[self._ntid[i]]}
+                <a id="change">ret[ntype] = value</a>
+            return repr(ret)
+        else:
+            data = self._graph._get_n_repr(self._ntid, self._nodes)
+            return repr({key : data[key]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def __repr__(self):
+        if isinstance(self._ntype, list):
+            ret = <a id="change">defaultdict(dict)</a>
+            for (i, ntype) in enumerate(self._ntype):
+                data = self._graph._get_n_repr(self._ntid[i], self._nodes)
+                for key in self._graph._node_frames[self._ntid[i]]:
+                    ret[key][ntype] = data[key]</code></pre>

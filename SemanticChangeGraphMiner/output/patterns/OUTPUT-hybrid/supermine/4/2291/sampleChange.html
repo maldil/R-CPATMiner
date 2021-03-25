@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if train_opt[&quotfeature_weight&quot] &gt; 0:
+                l_fea_type = train_opt[&quotfeature_criterion&quot]
+                if l_fea_type == &quotl1&quot:
+                    self.cri_fea = <a id="change">nn.L1Loss()</a>
+                elif l_fea_type == &quotl2&quot:
+                    self.cri_fea = nn.MSELoss()
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_fea_type)</code></pre><h3>After Change</h3><pre><code class='java'>
+            if train_opt[&quotfeature_weight&quot] &gt; 0:
+                l_fea_type = train_opt[&quotfeature_criterion&quot]
+                if l_fea_type == &quotl1&quot:
+                    self.cri_fea = <a id="change">nn.L1Loss().to(self.device)</a>
+                elif l_fea_type == &quotl2&quot:
+                    self.cri_fea = nn.MSELoss().to(self.device)
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_fea_type)</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>6096c0e6ec4df6a902747059a47e0f6f1bec7d77,aocr/util/data_gen.py,DataGen,__init__,#DataGen#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                            for i in range(self.bucket_max_width + 1)}
+
+        filename_queue = tf.train.string_input_producer([self.annotation_path], num_epochs=self.epochs)
+        <a id="change">self</a>.images, self.labels = parse_tfrecords(filename_queue)
+
+    def clear(self):
+        self.bucket_data = {i: BucketData()</code></pre><h3>After Change</h3><pre><code class='java'>
+        dataset = tf.contrib.data.TFRecordDataset([self.annotation_path])
+        dataset = dataset.map(self._parse_record)
+        dataset = dataset.shuffle(buffer_size=10000)
+        <a id="change">self.dataset = dataset.repeat(self.epochs)</a>
+
+    def clear(self):
+        self.bucket_data = {i: BucketData()
+                            for i in range(self.bucket_max_width + 1)}</code></pre><img src="25457711.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/emedvedev/attention-ocr/commit/6096c0e6ec4df6a902747059a47e0f6f1bec7d77#diff-c4a7be20aaa87a2f11ca2c9ab86f79417302d4b998179a5cf6996f3151f86db9L18' target='_blank'>Link</a></div><div id='project'> Project Name: emedvedev/attention-ocr</div><div id='commit'> Commit Name: 6096c0e6ec4df6a902747059a47e0f6f1bec7d77</div><div id='time'> Time: 2017-07-21</div><div id='author'> Author: edward.medvedev@gmail.com</div><div id='file'> File Name: aocr/util/data_gen.py</div><div id='class'> Class Name: DataGen</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/lmcinnes/pynndescent/commit/c1c31db36facdf8d557f4dcc69866ac86814b83f#diff-db9824f558d2d2dff121f6cf56c63a5d019a6bb2e7388f2f0089e1b2d77d50e9L900' target='_blank'>Link</a></div><div id='project'> Project Name: lmcinnes/pynndescent</div><div id='commit'> Commit Name: c1c31db36facdf8d557f4dcc69866ac86814b83f</div><div id='time'> Time: 2020-09-01</div><div id='author'> Author: leland.mcinnes@gmail.com</div><div id='file'> File Name: pynndescent/pynndescent_.py</div><div id='class'> Class Name: NNDescent</div><div id='method'> Method Name: _init_search_graph</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/c28c88a380ed74c5179a1e05fed317098e0990d1#diff-fbf6d26d7e82d8e79000579864d3cdccf1d9a3767794a3b9e2e90df7fac7330eL31' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: c28c88a380ed74c5179a1e05fed317098e0990d1</div><div id='time'> Time: 2019-04-09</div><div id='author'> Author: tdonoghue@ucsd.edu</div><div id='file'> File Name: neurodsp/plts/spectral.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_power_spectra</div><BR>

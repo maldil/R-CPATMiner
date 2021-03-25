@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Displaying the desired values.
+    if (step_idx+1) % FLAGS.log_step == 0:
+        print(&quotStep &#47&#47%d, Loss= %f, training accuracy= %f, testing accuracy= %f &quot % <a id="change">(step_idx+1, loss_step, train_acc_step, test_acc_step)</a>)
+
+if FLAGS.is_evaluation:
+    [[w1], [w2]] = sess.run(W)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 coor_neg_list = [negative_X, negative_y]
+
+    for index, data in enumerate(X):
+        <a id="change">if y[index] == 1:
+            positive_X = data[1]
+            positive_y = data[0]
+        elif y[index] == 0:
+            negative_X = data[1]
+            negative_y = data[0]
+        else:
+            sys.exit("Invalid label!")
+
+    &#47&#47 Plotting the SVM decision boundary.
+   </a> plt.plot(positive_X, positive_y, &quot+&quot, label=&quotPositive&quot)
+    plt.plot(negative_X, negative_y, &quoto&quot, label=&quotNegative&quot)
+    plt.plot(x_line, line, &quotr-&quot, label=&quotSeparator&quot, linewidth=3)
+    plt.legend(loc=&quotbest&quot)</code></pre>

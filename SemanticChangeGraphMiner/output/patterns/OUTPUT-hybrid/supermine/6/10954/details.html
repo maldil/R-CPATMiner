@@ -1,0 +1,25 @@
+<html><h3>530367b89414bf6570a2e1a70bc9fa71035274bc,dragonn/interpret/ism.py,,in_silico_mutagenesis,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for base_letter in range(output_dim[3]):
+                cur_base=np.array(empty_onehot)
+                cur_base[base_letter]=1
+                Xtmp=np.array(<a id="change">np.expand_dims(X[sample_index],axis=0)</a>)
+                Xtmp[0][0][base_pos]=cur_base
+                &#47&#47get the logit of Xtmp
+                <a id="change">Xtmp_logit=np.squeeze(preact_function(Xtmp),axis=0)</a>
+                mutants_expanded[sample_index][0][base_pos][base_letter]=<a id="change">Xtmp_logit[task_index]</a>
+    &#47&#47subtract wt_expanded from mutants_expanded
+    ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values
+    ism_vals_mean=np.expand_dims(np.mean(ism_vals,axis=3),axis=3)</code></pre><h3>After Change</h3><pre><code class='java'>
+        wt_logit_for_task_sample=wild_type_logits[sample_index]
+        wt_expanded[sample_index]=np.tile(wt_logit_for_task_sample,(output_dim[2],output_dim[3]))
+        &#47&#47mutagenize each position
+        <a id="change">temp_batch = []</a>
+        tempbatch_baseposandletter = []
+        for base_pos in range(start_pos,end_pos):
+            &#47&#47for each position, iterate through the 4 bases
+            for base_letter in range(output_dim[3]):</code></pre><img src="39989858.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kundajelab/dragonn/commit/530367b89414bf6570a2e1a70bc9fa71035274bc#diff-685d3e89c8b313cbde1f81adbcf2a54a7faa9d6dc034e1006e50d07f4b2a1caeL31' target='_blank'>Link</a></div><div id='project'> Project Name: kundajelab/dragonn</div><div id='commit'> Commit Name: 530367b89414bf6570a2e1a70bc9fa71035274bc</div><div id='time'> Time: 2019-07-10</div><div id='author'> Author: annashcherbina@gmail.com</div><div id='file'> File Name: dragonn/interpret/ism.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: in_silico_mutagenesis</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/b5e848af46b4a6fc21e718803dbf3d7c72afd72a#diff-7face591fab8dfa5417223cb318942f0c6a24ac982474cb5ecfb76a1877116c2L17' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: b5e848af46b4a6fc21e718803dbf3d7c72afd72a</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch08/lib/validation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validation_run</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/b5e848af46b4a6fc21e718803dbf3d7c72afd72a#diff-8bd9d24ffcd428cd577f2a829afd133c776577d772587dc1099eae72ce94c099L37' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: b5e848af46b4a6fc21e718803dbf3d7c72afd72a</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch08/run_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

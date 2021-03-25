@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def worker_func(worker_id, params_queue, rewards_queue, cuda, noise_std):
+    env = make_env()
+    net = <a id="change">Net(env.observation_space.shape[0], env.action_space.shape[0])</a>
+    net.eval()
+    if cuda:
+        net.cuda()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def worker_func(worker_id, params_queue, rewards_queue, device, noise_std):
+    env = make_env()
+    net = <a id="change">Net(env.observation_space.shape[0], env.action_space.shape[0]).to(device)</a>
+    net.eval()
+
+    while True:
+        params = params_queue.get()</code></pre>

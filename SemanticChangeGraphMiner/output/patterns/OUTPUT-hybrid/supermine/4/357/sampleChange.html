@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		pixradius  = int(diameter / (2 * downsample))
+		boxsize    = boxerTopaz.boxerwindow.vbbsize.getValue()
+
+		<a id="change">launch_childprocess(f". {boxerTopaz.conda_init_path} && {boxerTopaz.conda_activate_cmd} && topaz extract topaz/processed/micrographs/*.mrc --model topaz/model_epoch10.sav --radius {pixradius} --threshold {threshold} --num-workers {threads} --output topaz/processed/predicted_particles/predicted.txt ;echo")</a>
+		launch_childprocess(f". {boxerTopaz.conda_init_path} && {boxerTopaz.conda_activate_cmd} && topaz convert -x {downsample} -o topaz/processed/predicted_particles/all_predicted_full.txt topaz/processed/predicted_particles/predicted.txt ;echo")
+
+		with open(f"topaz/processed/predicted_particles/all_predicted_full.txt", "r") as f:
+			next(f)</code></pre><h3>After Change</h3><pre><code class='java'>
+		pixradius  = int(diameter / (2 * downsample))
+		boxsize    = boxerTopaz.boxerwindow.vbbsize.getValue()
+
+		<a id="change">boxerTopaz._launch_childprocess(f"topaz extract topaz/processed/micrographs/*.mrc --model topaz/model_epoch10.sav --radius {pixradius} --threshold {threshold} --num-workers {threads} --output topaz/processed/predicted_particles/predicted.txt ;echo")</a>
+		<a id="change">boxerTopaz._launch_childprocess(f"topaz convert -x {downsample} -o topaz/processed/predicted_particles/all_predicted_full.txt topaz/processed/predicted_particles/predicted.txt ;echo")</a>
+
+		with open(f"topaz/processed/predicted_particles/all_predicted_full.txt", "r") as f:
+			next(f)
+			newboxes = [(&quotmicrographs/&quot+(line.split()[0])+&quot.hdf&quot,int((line.split())[1]),int((line.split())[2]),"auto_topaz") for line in f]</code></pre>

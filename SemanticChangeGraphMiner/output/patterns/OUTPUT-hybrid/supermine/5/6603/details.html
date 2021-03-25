@@ -1,0 +1,27 @@
+<html><h3>ee05a458afb49cdc775d4a4498a67cbf78d9ead7,mahotas/convolve.py,,find,#,236
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &quot&quot&quot
+    template = template.astype(f.dtype)
+    <a id="change">output = _get_output(f, None, &quotfind&quot)</a>
+    _check_mode(mode, cval, &quotfind&quot)
+    match = _convolve.template_match(f, template, output, mode2int[mode], 1)
+
+    &#47&#47 We now need to adjust the positions
+    <a id="change">coords = np.where(match == 0)
+   </a> coords = np.array(coords).T
+    coords -= np.array(template.shape)//2
+    return coords.T
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        output of ``np.where``, but in an ndarray.
+
+    &quot&quot&quot
+    <a id="change">if f.ndim != 2:
+        raise ValueError(&quotmahotas.find: Cannot handle multi-dimensional images&quot)
+   </a> template = template.astype(f.dtype)
+    out = np.empty(f.shape, bool)
+    match = _convolve.find2d(f, template, out)
+    return np.array(np.where(match))</code></pre><img src="26115837.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/ee05a458afb49cdc775d4a4498a67cbf78d9ead7#diff-1ddd3490b321bca5f3450f750acefae467e664792349a9cf3aa4410d2d14b2f2L257' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: ee05a458afb49cdc775d4a4498a67cbf78d9ead7</div><div id='time'> Time: 2014-03-27</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: mahotas/convolve.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: find</div><BR><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/5f078112011a66a93432cb6d38c03935a10f382e#diff-62ccdba6294fdae2d58d248d4af399f9c0fcd90f6fa3626059a71f2e728eb196L486' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: 5f078112011a66a93432cb6d38c03935a10f382e</div><div id='time'> Time: 2020-07-10</div><div id='author'> Author: git@ameyer.me</div><div id='file'> File Name: tensorly/decomposition/candecomp_parafac.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_negative_parafac</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/a3645eada1fd6b0dc2f262033a93b81a6ca84b55#diff-31e053da5c3b0af75839a741740dedd9337ca6b9f92e9cd8c7751f80f29124faL154' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: a3645eada1fd6b0dc2f262033a93b81a6ca84b55</div><div id='time'> Time: 2019-12-23</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/unitaries.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _rotate_basis_state</div><BR>

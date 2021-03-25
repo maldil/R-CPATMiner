@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            surr = ratio * self.tfadv
+        if METHOD[&quotname&quot] == &quotkl_pen&quot:
+            self.tflam = tf.placeholder(tf.float32, None, &quotlambda&quot)
+            with <a id="change">tf.variable_scope(&quotloss&quot)</a>:
+                kl = tf.stop_gradient(kl_divergence(oldpi, pi))
+                self.kl_mean = tf.reduce_mean(kl)
+                self.aloss = -(tf.reduce_mean(surr - self.tflam * kl))</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 actor
+        pi, pi_params = self._build_anet(&quotpi&quot, trainable=True)
+        oldpi, oldpi_params = self._build_anet(&quotoldpi&quot, trainable=False)
+        <a id="change">with tf.variable_scope(&quotsample_action&quot):
+            self.sample_op = tf.squeeze(pi.sample(1), axis=0)       &#47&#47 choosing action
+       </a> with tf.variable_scope(&quotupdate_oldpi&quot):
+            self.update_oldpi_op = [oldp.assign(p) for p, oldp in zip(pi_params, oldpi_params)]
+
+        self.tfa = tf.placeholder(tf.float32, [None, A_DIM], &quotaction&quot)</code></pre>

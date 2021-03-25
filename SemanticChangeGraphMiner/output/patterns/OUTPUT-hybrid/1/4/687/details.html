@@ -1,0 +1,21 @@
+<html><h3>d95f630a7b7f88621bc4abb4ac92692647f03781,main.py,,validate,#,270
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    end = time.time()
+    for i, (input, target) in enumerate(val_loader):
+        target = target.cuda(async=True)
+        input_var = <a id="change">torch.autograd.Variable(torch.cat(input,1).cuda(), volatile=True)</a>
+        target_var = torch.autograd.Variable(target, volatile=True)
+
+        &#47&#47 compute output
+        output = model(input_var)</code></pre><h3>After Change</h3><pre><code class='java'>
+    end = time.time()
+    for i, (input, target) in enumerate(val_loader):
+        target = target.to(device)
+        input = <a id="change">torch.cat(input,1).to(device)</a>
+
+        &#47&#47 compute output
+        output = model(input)
+        flow2_EPE = args.div_flow*realEPE(output, target, sparse=args.sparse)</code></pre><img src="3517797.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L281' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/naoto0804/pytorch-AdaIN/commit/4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L56' target='_blank'>Link</a></div><div id='project'> Project Name: naoto0804/pytorch-AdaIN</div><div id='commit'> Commit Name: 4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: inoue@hal.t.u-tokyo.ac.jp</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

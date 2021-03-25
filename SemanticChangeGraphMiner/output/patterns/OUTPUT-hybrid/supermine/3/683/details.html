@@ -1,0 +1,22 @@
+<html><h3>fca285821740bcc013bfe27b5dd11b7fdb9b9812,gpytorch/lazy/kronecker_product_added_diag_lazy_tensor.py,KroneckerProductAddedDiagLazyTensor,_solve,#KroneckerProductAddedDiagLazyTensor#,49
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                lt = self.lazy_tensor.to(torch.double)
+                dlt = self.diag_tensor.to(torch.double)
+
+                <a id="change">KDinv = KroneckerProductLazyTensor(
+                    *[tfull.matmul(tdiag.inverse()) for tfull, tdiag in zip(lt.lazy_tensors, dlt.lazy_tensors)]
+                )</a>
+                &#47&#47 TODO: Figure out how to cache the decompositon for use in later solves
+                Lambda, S = KDinv.symeig(eigenvectors=True)
+                LambdaI = DiagLazyTensor(Lambda + 1)
+                tmp_term = S.matmul(LambdaI.inv_matmul(S._transpose_nonbatch().matmul(rhs)))</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 K^{-1} b - K^{-1} (S (Lambda + I)^{-1} S^T b).
+                &#47&#47 Each sub-matrix D_i^{-1} has constant diagonal, so we may scale the eigenvalues of the
+                &#47&#47 eigendecomposition of K_i by its inverse to get an eigendecomposition of K_i D_i^{-1}.
+                <a id="change">sub_evals</a>, sub_evecs = [], []
+                for lt_, dlt_ in zip(lt.lazy_tensors, dlt.lazy_tensors):
+                    evals_, evecs_ = lt_.symeig(eigenvectors=True)
+                    sub_evals.append(DiagLazyTensor(evals_ / dlt_.diag_values))</code></pre><img src="3262871.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cornellius-gp/gpytorch/commit/fca285821740bcc013bfe27b5dd11b7fdb9b9812#diff-0f50cb4e0b4cf9c73183d596ab2cb722f4c2449c8ff5dd220f4262f778146078L71' target='_blank'>Link</a></div><div id='project'> Project Name: cornellius-gp/gpytorch</div><div id='commit'> Commit Name: fca285821740bcc013bfe27b5dd11b7fdb9b9812</div><div id='time'> Time: 2021-01-18</div><div id='author'> Author: balandat@fb.com</div><div id='file'> File Name: gpytorch/lazy/kronecker_product_added_diag_lazy_tensor.py</div><div id='class'> Class Name: KroneckerProductAddedDiagLazyTensor</div><div id='method'> Method Name: _solve</div><BR><BR><div id='link'><a href='https://github.com/geomstats/geomstats/commit/315990901cdcdca241013ee5e6c581391bae2523#diff-fb08d78939d176309b96de2a44530e9c4360c565605b4d65e428a3d319542732L718' target='_blank'>Link</a></div><div id='project'> Project Name: geomstats/geomstats</div><div id='commit'> Commit Name: 315990901cdcdca241013ee5e6c581391bae2523</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: yann.thanwerdas@gmail.com</div><div id='file'> File Name: geomstats/geometry/spd_matrices.py</div><div id='class'> Class Name: SPDMetricBuresWasserstein</div><div id='method'> Method Name: inner_product</div><BR><BR><div id='link'><a href='https://github.com/geomstats/geomstats/commit/315990901cdcdca241013ee5e6c581391bae2523#diff-fb08d78939d176309b96de2a44530e9c4360c565605b4d65e428a3d319542732L749' target='_blank'>Link</a></div><div id='project'> Project Name: geomstats/geomstats</div><div id='commit'> Commit Name: 315990901cdcdca241013ee5e6c581391bae2523</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: yann.thanwerdas@gmail.com</div><div id='file'> File Name: geomstats/geometry/spd_matrices.py</div><div id='class'> Class Name: SPDMetricBuresWasserstein</div><div id='method'> Method Name: exp</div><BR>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            extracted_files.extend(extract_archive(dataset_tar))
+    elif isinstance(URLS[dataset_name], str):
+        dataset_tar = download_from_url(URLS[dataset_name], root=root, hash_value=MD5[dataset_name], hash_type=&quotmd5&quot)
+        <a id="change">extracted_files.extend(extract_archive(dataset_tar))</a>
+    else:
+        raise ValueError(
+            "URLS for {} has to be in a form or list or string".format(
+                dataset_name))</code></pre><h3>After Change</h3><pre><code class='java'>
+        if dataset_name == &quotIWSLT&quot:
+            &#47&#47 IWSLT dataset&quots url downloads a multilingual tgz.
+            &#47&#47 We need to take an extra step to pick out the specific language pair from it.
+            <a id="change">src_language = train_filenames[0].split(".")[-1]</a>
+            tgt_language = train_filenames[1].split(".")[-1]
+            languages = "-".join([src_language, tgt_language])
+            iwslt_tar = &quot.data/2016-01/texts/{}/{}/{}.tgz&quot
+            <a id="change">iwslt_tar = iwslt_tar.format(
+                src_language, tgt_language, languages)</a>
+            extracted_dataset_tar = extract_archive(iwslt_tar)
+        <a id="change">extracted_files.extend(extracted_dataset_tar)</a>
+    else:
+        raise ValueError(
+            "URLS for {} has to be in a form or list or string".format(
+                dataset_name))</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            embedding = self.embeddings(hashed_indices.view(-1), self._offsets)
+            embedding = embedding.view(batch_size, seq_size, -1)
+        else:
+            <a id="change">hashed_indices</a> = <a id="change">Variable(self._get_hashed_indices(indices))</a>
+
+            embedding = self.embeddings(hashed_indices)
+            embedding = embedding.sum(1)
+            <a id="change">embedding</a> = embedding.view(batch_size, seq_size, -1)
+
+        return embedding
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            embedding = self.embeddings(hashed_indices.view(-1), self._offsets)
+            embedding = embedding.view(batch_size, seq_size, -1)
+        else:
+            <a id="change">hashed_indices</a> = <a id="change">self._get_hashed_indices(indices)</a>
+
+            embedding = self.embeddings(hashed_indices)
+            embedding = embedding.sum(1)
+            <a id="change">embedding</a> = embedding.view(batch_size, seq_size, -1)
+
+        return embedding
+</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return self.trajectories[&quotlengths&quot].sum()
+
+    def __getitem__(self, i):
+        <a id="change">traj_idx = 0</a>
+
+        <a id="change">while self.trajectories[&quotlengths&quot][traj_idx] &lt;= i:
+            i -= self.trajectories[&quotlengths&quot][traj_idx]
+            traj_idx += 1
+
+       </a> return self.trajectories[&quotstates&quot][traj_idx][i], self.trajectories[
+            &quotactions&quot][traj_idx][i],
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return self.length
+
+    def __getitem__(self, i):
+        traj_idx, i = <a id="change">self.get_idx[i]</a>
+
+        return self.trajectories[&quotstates&quot][traj_idx][i], self.trajectories[
+            &quotactions&quot][traj_idx][i]</code></pre>

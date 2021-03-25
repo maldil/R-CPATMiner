@@ -1,0 +1,47 @@
+<html><h3>c71dea1c929f08d290142f50679a06303eb5bd9c,Python/phate/mds.py,,embed_MDS,#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 MDS embeddings, each gives a different output.
+    X_dist = squareform(pdist(X, distance_metric))
+
+    <a id="change">if how == &quotclassic&quot:
+        &#47&#47 classical MDS as defined in cmdscale
+        &#47&#47 Y = cmdscale(X_dist)[0][:,:ndim]
+        Y = cmdscale_fast(X_dist, ndim)
+    elif how == &quotmetric&quot:
+        &#47&#47 First compute CMDS
+        Y_cmds = cmdscale_fast(X_dist, ndim)
+        &#47&#47 Metric MDS from sklearn
+        Y = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y_cmds)
+    elif how == &quotnonmetric&quot:
+        &#47&#47 First compute CMDS
+        Y_cmds = cmdscale_fast(X_dist, ndim)
+        &#47&#47 Then compute Metric MDS
+        Y_mmds = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                     dissimilarity="precomputed", random_state=seed,
+                     n_jobs=n_jobs, n_init=1).fit_transform(X_dist,
+                                                            init=Y_cmds)
+        &#47&#47 Nonmetric MDS from sklearn using metric MDS as an initialization
+        Y = MDS(n_components=ndim, metric=False, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y_mmds)
+    else:
+        raise ValueError("Allowable &quothow&quot values for MDS: &quotclassic&quot, "
+                         "&quotmetric&quot, or &quotnonmetric&quot. "
+                         "&quot{}&quot was passed.".format(how))
+   </a> return Y
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 initialize all by CMDS
+    Y = cmdscale_fast(X_dist, ndim)
+    if how in [&quotmetric&quot, &quotnonmetric&quot]:
+        <a id="change">log_debug("Performing metric MDS on "
+                  "{} of shape {}...".format(type(X_dist),
+                                             X_dist.shape))</a>
+        &#47&#47 Metric MDS from sklearn
+        Y = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y)</code></pre><img src="36732008.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/c71dea1c929f08d290142f50679a06303eb5bd9c#diff-33d42cc50fe1b3acd3aed401816f031af5727849c68091181736865a5019f05eL79' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: c71dea1c929f08d290142f50679a06303eb5bd9c</div><div id='time'> Time: 2018-05-30</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/mds.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: embed_MDS</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/e0e0edc8d1b6478acfce87702592d4c084dc2ee4#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L519' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: e0e0edc8d1b6478acfce87702592d4c084dc2ee4</div><div id='time'> Time: 2018-05-31</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/be95ff167e1ea0195e32beb0618228d18a4098eb#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L510' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: be95ff167e1ea0195e32beb0618228d18a4098eb</div><div id='time'> Time: 2018-05-28</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: transform</div><BR>

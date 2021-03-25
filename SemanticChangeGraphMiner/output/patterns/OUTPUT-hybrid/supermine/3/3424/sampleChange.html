@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i in range(attempts):
+            try:
+                <a id="change">self.runs.save(self.run_entry)</a>
+                return
+            except pymongo.errors.AutoReconnect:
+                if i &lt; attempts - 1:
+                    time.sleep(1)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for i in range(attempts):
+            try:
+                self.runs.update_one({&quot_id&quot: <a id="change">self.run_entry[&quot_id&quot]</a>},
+                                     {&quot$set&quot: self.run_entry}, upsert=True)
+                return
+            except pymongo.errors.AutoReconnect:</code></pre>

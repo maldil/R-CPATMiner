@@ -1,0 +1,90 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(batch_states) &lt; BATCH_SIZE:
+            continue
+
+        states_v = <a id="change">Variable(torch.from_numpy(np.array(batch_states, dtype=np.float32)))</a>
+        batch_actions_t = torch.LongTensor(batch_actions)
+        batch_scale_v = Variable(torch.FloatTensor(batch_scales))
+
+        optimizer.zero_grad()
+        logits_v = net(states_v)
+        log_prob_v = F.log_softmax(logits_v, dim=1)
+        log_prob_actions_v = batch_scale_v * log_prob_v[range(BATCH_SIZE), batch_actions_t]
+        <a id="change">loss_policy_v</a> = -log_prob_actions_v.mean()
+
+        prob_v = F.softmax(logits_v, dim=1)
+        entropy_v = -(prob_v * log_prob_v).sum(dim=1).mean()
+        entropy_loss_v = -ENTROPY_BETA * entropy_v
+        loss_v = loss_policy_v + entropy_loss_v
+
+        loss_v.backward()
+        optimizer.step()
+
+        &#47&#47 calc KL-div
+        <a id="change">new_logits_v</a> = net(states_v)
+        new_prob_v = F.softmax(new_logits_v, dim=1)
+        kl_div_v = -((new_prob_v / prob_v).log() * prob_v).sum(dim=1).mean()
+        writer.add_scalar("kl", <a id="change">kl_div_v.data.cpu().numpy()[0]</a>, step_idx)
+
+        grad_max = 0.0
+        grad_means = 0.0
+        grad_count = 0
+        for p in net.parameters():
+            grad_max = max(grad_max, p.grad.abs().max().data.cpu().numpy()[0])
+            grad_means += (p.grad ** 2).mean().sqrt().data.cpu().numpy()[0]
+            grad_count += 1
+
+        writer.add_scalar("baseline", baseline, step_idx)
+        writer.add_scalar("entropy", entropy_v.data.cpu().numpy()[0], step_idx)
+        writer.add_scalar("batch_scales", np.mean(batch_scales), step_idx)
+        writer.add_scalar("loss_entropy", entropy_loss_v.data.cpu().numpy()[0], step_idx)
+        writer.add_scalar("loss_policy", loss_policy_v.data.cpu().numpy()[0], step_idx)
+        writer.add_scalar("loss_total", <a id="change">loss_v.data.cpu().numpy()[0]</a>, step_idx)
+        writer.add_scalar("grad_l2", grad_means / grad_count, step_idx)
+        writer.add_scalar("grad_max", grad_max, step_idx)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(batch_states) &lt; BATCH_SIZE:
+            continue
+
+        states_v = <a id="change">torch.FloatTensor(batch_states)</a>
+        batch_actions_t = torch.LongTensor(batch_actions)
+        batch_scale_v = torch.FloatTensor(batch_scales)
+
+        optimizer.zero_grad()
+        logits_v = net(states_v)
+        log_prob_v = F.log_softmax(logits_v, dim=1)
+        log_prob_actions_v = batch_scale_v * log_prob_v[range(BATCH_SIZE), batch_actions_t]
+        <a id="change">loss_policy_v</a> = -log_prob_actions_v.mean()
+
+        prob_v = F.softmax(logits_v, dim=1)
+        entropy_v = -(prob_v * log_prob_v).sum(dim=1).mean()
+        entropy_loss_v = -ENTROPY_BETA * entropy_v
+        loss_v = loss_policy_v + entropy_loss_v
+
+        loss_v.backward()
+        optimizer.step()
+
+        &#47&#47 calc KL-div
+        <a id="change">new_logits_v</a> = net(states_v)
+        new_prob_v = F.softmax(new_logits_v, dim=1)
+        kl_div_v = -((new_prob_v / prob_v).log() * prob_v).sum(dim=1).mean()
+        writer.add_scalar("kl", <a id="change">kl_div_v.item()</a>, step_idx)
+
+        grad_max = 0.0
+        grad_means = 0.0
+        grad_count = 0
+        for p in net.parameters():
+            grad_max = max(grad_max, p.grad.abs().max().item())
+            grad_means += (p.grad ** 2).mean().sqrt().item()
+            grad_count += 1
+
+        writer.add_scalar("baseline", baseline, step_idx)
+        writer.add_scalar("entropy", entropy_v.item(), step_idx)
+        writer.add_scalar("batch_scales", np.mean(batch_scales), step_idx)
+        writer.add_scalar("loss_entropy", <a id="change">entropy_loss_v.item()</a>, step_idx)
+        writer.add_scalar("loss_policy", loss_policy_v.item(), step_idx)
+        writer.add_scalar("loss_total", loss_v.item(), step_idx)
+        writer.add_scalar("grad_l2", grad_means / grad_count, step_idx)</code></pre>

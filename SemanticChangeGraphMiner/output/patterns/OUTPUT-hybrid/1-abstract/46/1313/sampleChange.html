@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(values) &lt; 2:
+            return pd.DataFrame()
+
+        backwards_difference_matrix = Diff().code_without_intercept(<a id="change">values.get_values()</a>)
+        <a id="change">df</a> = pd.DataFrame(data=backwards_difference_matrix.matrix, columns=<a id="change">backwards_difference_matrix.column_suffixes</a>)
+        df.index += 1
+
+        if handle_unknown == &quotreturn_nan&quot:
+            df.loc[-1] = np.nan
+        elif handle_unknown == &quotvalue&quot:
+            <a id="change">df.loc[-1]</a> = <a id="change">np.zeros(len(values) - 1)</a>
+
+        if handle_missing == &quotreturn_nan&quot:
+            df.loc[values.loc[np.nan]] = np.nan
+        elif handle_missing == &quotvalue&quot:
+            <a id="change">df.loc[-2]</a> = <a id="change">np.zeros(len(values) - 1)</a>
+
+        return df
+
+    @staticmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+        if handle_missing == &quotvalue&quot:
+            values = values[values &gt; 0]
+
+        <a id="change">values_to_encode</a> = <a id="change">values.get_values()</a>
+
+        if len(values) &lt; 2:
+            return pd.DataFrame(index=values_to_encode)
+
+        <a id="change">if handle_unknown == &quotindicator&quot:
+            values_to_encode = np.append(values_to_encode, -1)
+
+       </a> backwards_difference_matrix = Diff().code_without_intercept(values_to_encode)
+        <a id="change">df</a> = pd.DataFrame(data=backwards_difference_matrix.matrix, index=values_to_encode,
+                          columns=<a id="change">[str(col) + &quot_%d&quot % (i, ) for i in range(len(backwards_difference_matrix.column_suffixes))]</a>)
+
+        if handle_unknown == &quotreturn_nan&quot:
+            df.loc[-1] = np.nan
+        elif handle_unknown == &quotvalue&quot:
+            <a id="change">df.loc[-1]</a> = <a id="change">np.zeros(len(values_to_encode) - 1)</a>
+
+        if handle_missing == &quotreturn_nan&quot:
+            df.loc[values.loc[np.nan]] = np.nan
+        elif handle_missing == &quotvalue&quot:
+            <a id="change">df.loc[-2]</a> = <a id="change">np.zeros(len(values_to_encode) - 1)</a>
+
+        return df
+
+    @staticmethod</code></pre>

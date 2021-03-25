@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 then we add its non-container components to the list of candidates;
+        &#47&#47 any nested containers are lower priority than primary plot components.
+        candidates = []
+        <a id="change">component = self.component</a>
+        if isinstance(component, BasePlotContainer) or isinstance(component, BaseXYPlot):
+            candidates = get_nested_components(self.component)
+        elif isinstance(component, PlotAxis):
+            candidates = [(component, (0,0))]
+        else:
+            &#47&#47 We don&quott support clicking on unrecognized components
+            return
+
+        &#47&#47 Hittest against all the candidate and take the first one
+        item = None
+        for candidate, offset in candidates:
+            if isinstance(candidate, PlotAxis):
+                if candidate.is_in(x-offset[0], y-offset[1]):
+                    item = candidate
+                    break
+            elif isinstance(candidate, BaseXYPlot):
+                <a id="change">if candidate.hittest((x-offset[0], y-offset[1])):
+                    item = candidate
+                    break
+
+       </a> if item:
+            self.component.active_tool = self
+            item.edit_traits(kind="livemodal")
+            event.handled = True</code></pre><h3>After Change</h3><pre><code class='java'>
+            
+        if item is not None:
+            self.component.active_tool = self
+            <a id="change">if item.__class__ in self.views:
+                item.edit_traits(kind="livemodal",
+                                 view=self.views[item.__class__],
+                                 parent=event.window.control)
+            else:
+                item.edit_traits(kind="livemodal",
+                                 parent=event.window.control)
+           </a> event.handled = True
+            self.component.active_tool = None
+            item.request_redraw()
+</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.dim = emb_dim
+
+            if bert is not None:
+                <a id="change">if not isinstance(bert, (tuple, list)) or len(bert) != 2:
+                    raise ValueError("`bert` should be a tuple/list of config and fine-tuned model "
+                                     "such as (\"bert-base-uncased\", \"fine-tuned-model.pth\").")
+               </a> self.emb_table = BertEmbeddingPredictor(
+                    bert[0], text_encoder, bert[1])
+            else:
+                self.emb_table = nn.Embedding.from_pretrained(</code></pre><h3>After Change</h3><pre><code class='java'>
+        if enable:
+            if bert is not None:
+                self.use_bert = True
+                <a id="change">if not isinstance(bert, str):
+                    raise ValueError("`bert` should be a str specifying bert config such as \"bert-base-uncased\".")
+               </a> self.emb_table = BertEmbeddingPredictor(bert, tokenizer, src)
+                <a id="change">vocab_size, emb_dim = self.emb_table.model.bert.embeddings.word_embeddings.weight.shape</a>
+                vocab_size = vocab_size-3 &#47&#47 cls,sep,mask not used
+                self.dim = emb_dim
+            else:
+                self.use_bert = False</code></pre>

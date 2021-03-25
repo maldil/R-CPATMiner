@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            bias_initializer=self.b_init,
+            name=self.name,
+        )
+        <a id="change">if self.data_format == "channels_first":
+            self.in_channels = inputs_shape[1]
+        else:
+            self.in_channels = inputs_shape[-1]
+
+       </a> _out = self.layer(
+            tf.convert_to_tensor(np.random.uniform(size=inputs_shape), dtype=np.float32)
+        )  &#47&#47self.layer(np.random.uniform([1] + list(inputs_shape)))  &#47&#47 initialize weights
+        outputs_shape = _out.shape</code></pre><h3>After Change</h3><pre><code class='java'>
+            bias_initializer=self.b_init,
+            name=self.name,
+        )
+        <a id="change">if inputs_shape is not None:
+            self.in_channels = inputs_shape[1 if self.data_format == "channels_first" else -1]
+        elif self.in_channels is not None:
+            inputs_shape = [1, self.in_channels, 1, 1, 1] if self.data_format == "channels_first" else [1, 1, 1, 1, self.in_channels]
+        else:
+            raise ValueError("Either inputs_shape or in_channels must be specified for build.")
+       </a> _out = self.layer(
+            tf.convert_to_tensor(np.random.uniform(size=inputs_shape), dtype=np.float32)
+        )  &#47&#47self.layer(np.random.uniform([1] + list(inputs_shape)))  &#47&#47 initialize weights
+        outputs_shape = _out.shape</code></pre>

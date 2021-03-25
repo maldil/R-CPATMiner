@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                  given the visible state
+        :rtype torch.Tensor:
+        
+        <a id="change">if v.dim() &lt; 2:  &#47&#47 create extra axis, if needed
+            v = v.unsqueeze(0)
+            unsqueezed = True
+        else:
+            unsqueezed = False
+
+       </a> <a id="change">p = torch.addmm(
+            self.aux_bias.data, v, self.weights_U.data.t(), out=out
+        ).sigmoid_()</a>
+
+        <a id="change">if unsqueezed:
+            return p.squeeze_(0)  &#47&#47 remove superfluous axis, if it exists
+        else:
+            return p
+
+   </a> def prob_v_given_ha(self, h, a, out=None):
+        rGiven a hidden and auxiliary unit configuration, compute
+        the probability vector of the hidden units being on
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                  given the visible state
+        :rtype torch.Tensor:
+        
+        <a id="change">return torch.addmm(
+            self.aux_bias.data, v, self.weights_U.data.t(), out=out
+        ).sigmoid_()</a>
+
+    @auto_unsqueeze_arg(1, 2)
+    def prob_v_given_ha(self, h, a, out=None):
+        rGiven a hidden and auxiliary unit configuration, compute</code></pre>

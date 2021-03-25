@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return optimizer_tests.WrappedTFOptimizer(tf.optimizers.Adam(**kwargs))
+
+
+<a id="change">if __name__ == "__main__":
+  &#47&#47 tf.enable_v2_behavior()
+  tf.test.main()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+from sonnet.src.optimizers import optimizer_tests
+import tensorflow as tf
+
+<a id="change">CONFIGS = optimizer_tests.named_product(learning_rate=(0.1, 0.01, 0.001),
+                                        beta_1=(0.9, 0.99, 0.999),
+                                        beta_2=(0.9, 0.99, 0.999),
+                                        epsilon=(1e-8,),
+                                        seed=(28, 2, 90))</a>
+
+
+class ComparisonTest(optimizer_tests.AbstractFuzzTest):
+  Ensures Sonnet optimizers have equivalent behavior to TensorFlow.</code></pre>

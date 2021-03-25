@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                 decaying spike activation).
+        
+        &#47&#47 Compute multiplication of spike activations by weights and add bias.
+        post = <a id="change">s</a>.float().view(s.size(0), -1) @ self.w + self.b
+        return post.view(s.size(0), *self.target.shape)
+
+    def update(self, **kwargs) -&gt; None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.b is None:
+            post = s.view(s.size(0), -1).float() @ self.w
+        else:
+            post = <a id="change">s.view(s.size(0), -1).float()</a> @ self.w + self.b
+        return post.view(s.size(0), *self.target.shape)
+
+    def update(self, **kwargs) -&gt; None:</code></pre>

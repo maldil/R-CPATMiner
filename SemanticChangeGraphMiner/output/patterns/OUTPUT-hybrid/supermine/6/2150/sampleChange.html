@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        updates = tensorflow.convert_to_tensor(updates, name="updates")
+
+        <a id="change">ref_shape = tensorflow.shape(ref, out_type=indices.dtype, name="ref_shape")</a>
+
+        scattered_updates = tensorflow.scatter_nd(
+            indices, updates, ref_shape, name="scattered_updates"
+        )
+
+        with tensorflow.control_dependencies(
+            [
+                tensorflow.assert_equal(
+                    ref_shape,
+                    tensorflow.shape(scattered_updates, out_type=indices.dtype),
+                )
+            ]
+        ):
+            <a id="change">output = tensorflow.add(ref, scattered_updates, name=scope)</a>
+
+        <a id="change">return output</a>
+
+
+def meshgrid(*args, **kwargs):
+    return tensorflow.meshgrid(*args, **kwargs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    :return: Same as ref. Returned as a convenience for operations that want
+    to use the updated values after the update is done.
+    
+    <a id="change">return tensorflow.tensor_scatter_nd_add(ref, indices, updates, name)</a>
+
+
+def meshgrid(*args, **kwargs):
+    return tensorflow.compat.v1.meshgrid(*args, **kwargs)</code></pre>

@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		nx=goodrefs[0]["nx"]
+		downsample=old_div(8.0,apix)			&#47&#47 we downsample to 10 A/pix
+		nxdown=good_size(int(old_div(nx,downsample)))
+		downsample=old_div(<a id="change">float(nx)</a>,float(nxdown))
+		microdown=micrograph.process("normalize.edgemean").process("math.fft.resample",{"n":downsample})
+		print("downsample by ",downsample)
+		
+		&#47&#47 Each thread tries one reference
+		owner=EMData(microdown["nx"],microdown["ny"],1)
+		<a id="change">maxav</a>=Averagers.get("minmax",{"max":1,"owner":owner})
+		
+		&#47&#47 This prevents some threading issues
+		r=goodrefs[0].process("math.fft.resample",{"n":downsample})
+		r.align("rotate_translate",r)
+		
+		jsd=queue.Queue(0)
+		thrds=[threading.Thread(target=boxerLocal.ccftask,args=(jsd,ref,downsample,microdown,ri)) for ri,ref in enumerate(goodrefs)]
+
+		n=-1
+
+		&#47&#47 here we run the threads and save the results, no actual alignment done here
+		print(len(thrds)," threads")
+		thrtolaunch=0
+		while thrtolaunch&lt;len(thrds) or threading.active_count()&gt;1:
+			&#47&#47 If we haven&quott launched all threads yet, then we wait for an empty slot, and launch another
+			&#47&#47 note that it&quots ok that we wait here forever, since there can&quott be new results if an existing
+			&#47&#47 thread hasn&quott finished.
+			if thrtolaunch&lt;len(thrds) and threading.active_count()!=nthreads:
+&#47&#47				print "Starting thread {}/{}".format(thrtolaunch,len(thrds))
+				thrds[thrtolaunch].start()
+				thrtolaunch+=1
+			else: 
+				time.sleep(0.05)
+				if prog!=None : 
+					prog.setValue(prog.value())
+					if prog.wasCanceled() : break
+		
+			while not jsd.empty():
+				&#47&#47 add each ccf image to our maxval image as it comes in
+				ccf=jsd.get()
+				maxav.add_image(ccf)
+				sys.stdout.flush()
+		print("")
+
+		for t in thrds:
+			t.join()
+
+			
+		<a id="change">final</a>=maxav.finish()
+		&#47&#47 smooth out a few spurious peaks. Hopefully doesn&quott mess up ownership assignment significantly
+		final.process_inplace("filter.lowpass.gauss",{"cutoff_freq":0.2})
+		&#47&#47 get rid of nasty edges</code></pre><h3>After Change</h3><pre><code class='java'>
+		nx=goodrefs[0]["nx"]
+		downsample=8/apix			&#47&#47 we downsample to 10 A/pix
+		nxdown=good_size(int(nx/downsample))
+		downsample=<a id="change">float(nx)</a>/float(nxdown)
+		microdown=micrograph.process("normalize.edgemean").process("math.fft.resample",{"n":downsample})
+		print("downsample by ",downsample)
+		
+		&#47&#47 Each thread tries one reference
+		owner=EMData(microdown["nx"],microdown["ny"],1)
+		<a id="change">maxav</a>=Averagers.get("minmax",{"max":1,"owner":owner})
+		
+		&#47&#47 This prevents some threading issues
+		r=goodrefs[0].process("math.fft.resample",{"n":downsample})
+		r.align("rotate_translate",r)
+		
+		jsd=queue.Queue(0)
+		thrds=[threading.Thread(target=boxerLocal.ccftask,args=(jsd,ref,downsample,microdown,ri)) for ri,ref in enumerate(goodrefs)]
+
+		n=-1
+
+		&#47&#47 here we run the threads and save the results, no actual alignment done here
+		print(len(thrds)," threads")
+		thrtolaunch=0
+		while thrtolaunch&lt;len(thrds) or threading.active_count()&gt;1:
+			&#47&#47 If we haven&quott launched all threads yet, then we wait for an empty slot, and launch another
+			&#47&#47 note that it&quots ok that we wait here forever, since there can&quott be new results if an existing
+			&#47&#47 thread hasn&quott finished.
+			if thrtolaunch&lt;len(thrds) and threading.active_count()!=nthreads:
+&#47&#47				print "Starting thread {}/{}".format(thrtolaunch,len(thrds))
+				thrds[thrtolaunch].start()
+				thrtolaunch+=1
+			else: 
+				time.sleep(0.05)
+				if prog!=None : 
+					prog.setValue(prog.value())
+					if prog.wasCanceled() : break
+		
+			while not jsd.empty():
+				&#47&#47 add each ccf image to our maxval image as it comes in
+				ccf=jsd.get()
+				maxav.add_image(ccf)
+				sys.stdout.flush()
+		print("")
+
+		for t in thrds:
+			t.join()
+
+			
+		<a id="change">final</a>=maxav.finish()
+		&#47&#47 smooth out a few spurious peaks. Hopefully doesn&quott mess up ownership assignment significantly
+		final.process_inplace("filter.lowpass.gauss",{"cutoff_freq":0.2})
+		&#47&#47 get rid of nasty edges</code></pre>

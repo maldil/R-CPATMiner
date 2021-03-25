@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        targets, dim=-1, index=indices_for_sort
+    )
+    true_sorted_by_pred_shrink = true_sorted_by_preds[:, :k]
+    <a id="change">hits = torch.sum(true_sorted_by_pred_shrink, dim=1) / k</a>
+    return hits
+
+
+__all__ = ["hitrate"]</code></pre><h3>After Change</h3><pre><code class='java'>
+        hitrate_at_k (List[torch.Tensor]):
+            the hit rate score
+    
+    <a id="change">results = []</a>
+
+    targets_sort_by_outputs = process_recsys_components(outputs, targets)
+    for k in topk:
+        k = min(outputs.size(1), k)
+        hits_score = <a id="change">torch.sum(targets_sort_by_outputs[:, :k], dim=1) / k</a>
+        <a id="change">results.append(torch.mean(hits_score))</a>
+
+    return results
+
+</code></pre>

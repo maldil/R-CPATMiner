@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        yield ()
+        return
+    for i in xrange(2**len(set_) / 2):
+        <a id="change">parts = [set(), set()]</a>
+        for item in set_:
+            <a id="change">parts[i&1].add(item)</a>
+            i &gt;&gt;= 1
+        for b in partitions(parts[1]):
+            yield (parts[0],) + b
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    
+    &#47&#47 Handle iterators.
+    <a id="change">seq = list(seq)</a>
+
+    if tuples:
+        for partition in partitions1( seq ):
+            &#47&#47 Convert the partition into a list of sorted tuples.
+            partition = map(tuple, map(sorted, partition))
+
+            &#47&#47 Convert the partition into a sorted tuple of sorted tuples.
+            &#47&#47 Sort by smallest parts first, then lexicographically.
+            partition = tuple(sorted(partition, cmp=len_cmp))
+
+            yield partition
+
+    else:
+        <a id="change">for partition in partitions1( seq ):
+            partition = frozenset( map(frozenset, partition) )
+            yield partition
+
+</a>def ordered_partitions(seq, tuples=False):
+    
+    Generates ordered partitions of elements in `seq`.
+</code></pre>

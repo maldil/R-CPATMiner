@@ -1,0 +1,22 @@
+<html><h3>e6a8a482f15803b24fc4bda6e2a0bd001ca77c87,data.py,,read_subject_folder,#,60
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    flair_image = read_image(os.path.join(folder, "Flair.nii.gz"), image_shape=image_shape, crop=crop)
+    t1_image = read_image(os.path.join(folder, "T1.nii.gz"), image_shape=image_shape, crop=crop)
+    t1c_image = read_image(os.path.join(folder, "T1c.nii.gz"), image_shape=image_shape, crop=crop)
+    truth_image = <a id="change">read_image(os.path.join(folder, "truth.nii.gz"), image_shape=image_shape,
+                             interpolation="nearest", crop=crop)</a>
+    return np.asarray([t1_image.get_data(), t1c_image.get_data(), flair_image.get_data(), <a id="change">truth_image.get_data()</a>])
+
+
+def read_image(in_file, image_shape, interpolation=&quotcontinuous&quot, crop=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+    for modality in config["training_modalities"]:
+        data_list.append(read_image(os.path.join(folder, modality + ".nii.gz"), image_shape=image_shape,
+                                    crop=crop)).get_data()
+    data_list.append(<a id="change">read_image(os.path.join(folder, "truth.nii.gz"), image_shape=image_shape, interpolation="nearest",
+                                crop=crop)</a>)
+    return np.asarray(data_list)
+
+</code></pre><img src="62779.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/e6a8a482f15803b24fc4bda6e2a0bd001ca77c87#diff-d731aa0a69942c45b89e96b58be82442077536914f50df9a49d7ce411b10e15dL61' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: e6a8a482f15803b24fc4bda6e2a0bd001ca77c87</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_subject_folder</div><BR><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/c8b1cf5ae63f817e0463199d54f75da7deab0265#diff-539932f1f652340880de2efaf8caa7ce0fe37eb07ca0979c449462bb185f223cL34' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: c8b1cf5ae63f817e0463199d54f75da7deab0265</div><div id='time'> Time: 2017-05-19</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: unet3d/utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_image_files</div><BR>

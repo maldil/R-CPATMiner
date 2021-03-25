@@ -1,0 +1,98 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                     [None, n_updated_actions, *self._action_shape])
+
+        Q_log_targets = tuple(
+            Q([<a id="change">tf.tile(self._observations_ph, (n_fixed_actions, 1))</a>,
+               tf.reshape(fixed_actions, (-1, *self._action_shape))])
+            for Q in self._Qs)
+        <a id="change">min_Q_log_target</a> = tf.reduce_min(Q_log_targets, axis=0)
+        svgd_target_values = tf.reshape(
+            min_Q_log_target,
+            (-1, n_fixed_actions, 1))
+
+        &#47&#47 Target log-density. Q_soft in Equation 13:
+        assert self._policy._squash
+        squash_correction = tf.reduce_sum(
+            tf.log(1 - fixed_actions ** 2 + EPS), axis=-1, keepdims=True)
+        log_probs = svgd_target_values + squash_correction
+
+        grad_log_probs = tf.gradients(log_probs, fixed_actions)[0]
+        grad_log_probs = tf.expand_dims(grad_log_probs, axis=2)
+        grad_log_probs = tf.stop_gradient(grad_log_probs)
+        assert_shape(grad_log_probs,
+                     [None, n_fixed_actions, 1, *self._action_shape])
+
+        kernel_dict = self._kernel_fn(xs=fixed_actions, ys=updated_actions)
+
+        &#47&#47 Kernel function in Equation 13:
+        kappa = kernel_dict["output"][..., tf.newaxis]
+        assert_shape(kappa, [None, n_fixed_actions, n_updated_actions, 1])
+
+        &#47&#47 Stein Variational Gradient in Equation 13:
+        action_gradients = tf.reduce_mean(
+            kappa * grad_log_probs + kernel_dict["gradient"], axis=1)
+        assert_shape(action_gradients,
+                     [None, n_updated_actions, *self._action_shape])
+
+        &#47&#47 Propagate the gradient through the policy network (Equation 14).
+        gradients = tf.gradients(
+            updated_actions,
+            self._policy.trainable_variables,
+            grad_ys=action_gradients)
+
+        <a id="change">surrogate_loss</a> = tf.reduce_sum([
+            tf.reduce_sum(w * tf.stop_gradient(g))
+            for w, g in zip(self._policy.trainable_variables, gradients)
+        ])</code></pre><h3>After Change</h3><pre><code class='java'>
+        Q_log_targets = tuple(
+            Q([
+                tf.reshape(
+                    <a id="change">tf.tile(
+                        self._observations_ph[:, None, :],
+                        (1, n_fixed_actions, 1))</a>,
+                    (-1, *self._observation_shape)),
+                tf.reshape(fixed_actions, (-1, *self._action_shape))
+            ])
+            for Q in self._Qs)
+        <a id="change">min_Q_log_target</a> = tf.reduce_min(Q_log_targets, axis=0)
+        svgd_target_values = tf.reshape(
+            min_Q_log_target,
+            (-1, n_fixed_actions, 1))
+
+        &#47&#47 Target log-density. Q_soft in Equation 13:
+        assert self._policy._squash
+        squash_correction = tf.reduce_sum(
+            tf.log(1 - fixed_actions ** 2 + EPS), axis=-1, keepdims=True)
+        log_probs = svgd_target_values + squash_correction
+
+        grad_log_probs = tf.gradients(log_probs, fixed_actions)[0]
+        grad_log_probs = tf.expand_dims(grad_log_probs, axis=2)
+        grad_log_probs = tf.stop_gradient(grad_log_probs)
+        assert_shape(grad_log_probs,
+                     [None, n_fixed_actions, 1, *self._action_shape])
+
+        kernel_dict = self._kernel_fn(xs=fixed_actions, ys=updated_actions)
+
+        &#47&#47 Kernel function in Equation 13:
+        kappa = kernel_dict["output"][..., tf.newaxis]
+        assert_shape(kappa, [None, n_fixed_actions, n_updated_actions, 1])
+
+        &#47&#47 Stein Variational Gradient in Equation 13:
+        action_gradients = tf.reduce_mean(
+            kappa * grad_log_probs + kernel_dict["gradient"], axis=1)
+        assert_shape(action_gradients,
+                     [None, n_updated_actions, *self._action_shape])
+
+        &#47&#47 Propagate the gradient through the policy network (Equation 14).
+        gradients = tf.gradients(
+            updated_actions,
+            self._policy.trainable_variables,
+            grad_ys=action_gradients)
+
+        <a id="change">surrogate_loss</a> = tf.reduce_sum([
+            tf.reduce_sum(w * tf.stop_gradient(g))
+            for w, g in zip(self._policy.trainable_variables, gradients)
+        ])</code></pre>

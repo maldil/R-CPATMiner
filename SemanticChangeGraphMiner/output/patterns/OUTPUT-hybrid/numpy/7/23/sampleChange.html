@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return y_pred
+
+    def _softmax(self, z):
+        return <a id="change">(np.exp(z.T) / np.sum(np.exp(z), axis=1))</a>.T
+
+    def _cross_entropy(self, output, y_target):
+        return - np.sum(np.log(output) * (y_target), axis=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return y_pred
+
+    def _softmax(self, z):
+        e_x = <a id="change">np.exp(z - z.max(axis=1, keepdims=True))</a>
+        out = <a id="change">e_x / e_x.sum(axis=1, keepdims=True)</a>
+        return out
+        &#47&#47 return (np.exp(z.T) / np.sum(np.exp(z), axis=1)).T
+
+    def _cross_entropy(self, output, y_target):</code></pre>

@@ -1,0 +1,32 @@
+<html><h3>688e56c09d028c0a956d1434ee16c60aea820de1,inaSpeechSegmenter/segmenter.py,Segmenter,__call__,#Segmenter#,157
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        do segmentation on any kind on media file, including urls
+        slower than segmentwav method
+        
+        <a id="change">base</a>, _ = os.path.splitext(os.path.basename(medianame))
+
+        with tempfile.TemporaryDirectory(dir=tmpdir) as tmpdirname:
+            tmpwav = tmpdirname + &quot/&quot + base + &quot.wav&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+        do segmentation on any kind on media file, including urls
+        slower than segmentwav method
+        
+        alles = [os.path.splitext(os.path.basename(e)) <a id="change">for</a> e in <a id="change">medianame</a>]
+        base = [alles[i][0] <a id="change">for</a> i in range(len(alles))]
+        &#47&#47 ext = [alles[i][1] for i in range(len(alles))]
+
+        with tempfile.TemporaryDirectory(dir=tmpdir) as tmpdirname:
+            <a id="change">tmpwav = [&quot%s/%s.wav&quot % (tmpdirname, elem) for elem in base]</a>
+            list_of_data = list()
+            <a id="change">for media_name, tmp_wav in zip(medianame, tmpwav):
+                args = [ffmpeg, &quot-y&quot, &quot-i&quot, media_name, &quot-ar&quot, &quot16000&quot, &quot-ac&quot, &quot1&quot, tmp_wav]
+                p = Popen(args, stdout=PIPE, stderr=PIPE)
+                output, error = p.communicate()
+                assert p.returncode == 0, error
+                list_of_data.append(self.segmentwav(tmp_wav))
+           </a> return list_of_data
+
+def seg2csv(lseg, fout=None):
+    if fout is None:</code></pre><img src="32146603.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ina-foss/inaSpeechSegmenter/commit/688e56c09d028c0a956d1434ee16c60aea820de1#diff-c08e2e8722bff2ae0218035fc1de93122ebd6e869bb8ca1ad5f9fa8a0f6036deL162' target='_blank'>Link</a></div><div id='project'> Project Name: ina-foss/inaSpeechSegmenter</div><div id='commit'> Commit Name: 688e56c09d028c0a956d1434ee16c60aea820de1</div><div id='time'> Time: 2018-04-19</div><div id='author'> Author: eliottlechapt@yahoo.fr</div><div id='file'> File Name: inaSpeechSegmenter/segmenter.py</div><div id='class'> Class Name: Segmenter</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/d6d7cb7db51776b026514a1a2caa4073b9e998ad#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L124' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: d6d7cb7db51776b026514a1a2caa4073b9e998ad</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: pad</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/44ad29832a7c8adb134f53f1017dd7c0c7fc98ef#diff-4308b3c5dc5fed8da98e8e285723533abf55d2c1d263488e6515d196b36b359bL32' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 44ad29832a7c8adb134f53f1017dd7c0c7fc98ef</div><div id='time'> Time: 2012-10-28</div><div id='author'> Author: vanderplas@astro.washington.edu</div><div id='file'> File Name: astroML/plotting/tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: devectorize_axes</div><BR>

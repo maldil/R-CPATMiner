@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return loss
+
+    def backward(self, grad_output):
+        <a id="change">return self.grads, None, None, None</a>
+
+
+class CTCCriterion(Module):
+    r</code></pre><h3>After Change</h3><pre><code class='java'>
+        label_prob = self.label_probability(self.yseq.shape[2],
+                                            self.path,
+                                            self.path_length,
+                                            np.exp(<a id="change">self.prob_trans - total_probability[:, None]</a>))
+        self.yseq -= label_prob
+        &#47&#47 mask
+        <a id="change">self.yseq *= (np.arange(len(self.yseq))[:, None] &lt; self.input_length)[..., None]</a>
+        <a id="change">return torch.tensor(self.yseq).permute(1, 2, 0), None</a>
+
+
+class CTCCriterion(Module):
+    r</code></pre>

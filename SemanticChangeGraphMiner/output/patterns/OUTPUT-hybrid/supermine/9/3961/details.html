@@ -1,0 +1,54 @@
+<html><h3>1cf4c73059ba4435f37a93a316edbd426263cbf0,pytorch2keras/converter.py,,pytorch_to_keras,#,141
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if len(node_input_names) == 0:
+            if len(node_inputs) &gt; 0:
+                <a id="change">if node_inputs[0] in model_inputs:
+                    node_input_names.append(model_inputs[node_inputs[0]])
+                else:
+                    input_name = &quotinput{0}&quot.format(input_index)
+                    if input_name not in layers:
+                        continue
+                    node_input_names.append(input_name)
+                    input_index += 1
+                    model_inputs[node_inputs[0]] = input_name
+
+       </a> node_type = node.kind()
+        &#47&#47 print(dir(node))
+
+        node_scope_name = node.scopeName()</code></pre><h3>After Change</h3><pre><code class='java'>
+    print(&quotGraph outputs:&quot, graph_outputs)
+
+
+    <a id="change">graph_inputs = [n.uniqueName() for n in trace.graph().inputs()]</a>
+    print(&quotGraph inputs:&quot, graph_inputs)
+
+    &#47&#47 Collect model state dict
+    state_dict = _unique_state_dict(model)
+    if verbose:
+        print(&quotState dict:&quot, list(state_dict))
+
+    import re
+    import keras
+    from keras import backend as K
+    K.set_image_data_format(&quotchannels_first&quot)
+
+    layers = dict()
+    keras_inputs = []
+    for i in range(len(args)):
+        layers[&quotinput{0}&quot.format(i)] = keras.layers.InputLayer(
+            input_shape=input_shapes[i], name=&quotinput{0}&quot.format(i)
+        ).output
+        keras_inputs.append(layers[&quotinput{0}&quot.format(i)])
+
+    outputs = []
+
+    input_index = 0
+    <a id="change">model_inputs = [&quotinput&quot + i for i in graph_inputs]</a>
+
+    for node in nodes:
+        node_inputs = list(node.inputs())
+        &#47&#47 print(node_inputs, model_inputs)</code></pre><img src="17234782.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nerox8664/pytorch2keras/commit/1cf4c73059ba4435f37a93a316edbd426263cbf0#diff-493a5e63f976397ce99961a7d8a50bacdef08087997a9d7fd43c8a6ab6f5c758L244' target='_blank'>Link</a></div><div id='project'> Project Name: nerox8664/pytorch2keras</div><div id='commit'> Commit Name: 1cf4c73059ba4435f37a93a316edbd426263cbf0</div><div id='time'> Time: 2018-12-20</div><div id='author'> Author: nerox8664@gmail.com</div><div id='file'> File Name: pytorch2keras/converter.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pytorch_to_keras</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/e403821323d529980407c05da77409c7e1c5c2a0#diff-deca020824819a3a4a394a4b8bd2c68ea761168c2a54ab11b313514fe55c3ae0L39' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: e403821323d529980407c05da77409c7e1c5c2a0</div><div id='time'> Time: 2008-09-08</div><div id='author'> Author: rob@cogit8.org</div><div id='file'> File Name: debug_toolbar/panels/headers.py</div><div id='class'> Class Name: HeaderDebugPanel</div><div id='method'> Method Name: content</div><BR><BR><div id='link'><a href='https://github.com/markovmodel/PyEMMA/commit/044f5f26e1b661c74c6cb60aef2906a6e372a2f1#diff-ce2fe97b9ea69a242a78460413f8450a51f4ed417ef659e13ba397be17cf8977L12' target='_blank'>Link</a></div><div id='project'> Project Name: markovmodel/PyEMMA</div><div id='commit'> Commit Name: 044f5f26e1b661c74c6cb60aef2906a6e372a2f1</div><div id='time'> Time: 2018-09-10</div><div id='author'> Author: m.scherer@fu-berlin.de</div><div id='file'> File Name: doc/nbconvert_filter.py</div><div id='class'> Class Name: RemoveWidgetNotice</div><div id='method'> Method Name: preprocess_cell</div><BR>

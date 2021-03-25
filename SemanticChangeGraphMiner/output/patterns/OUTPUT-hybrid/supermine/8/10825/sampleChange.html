@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Evaluate sentence
+            if beam_size == 1:
+                output_words = evaluate(encoder, decoder, voc, input_sentence, beam_size)
+                output_sentence = <a id="change">&quot &quot.join(output_words)</a>
+                <a id="change">print(&quotbot:&quot, output_sentence)</a>
+            else:
+                output_words_list = evaluate(encoder, decoder, voc, input_sentence, beam_size)
+                for output_words, score in output_words_list:
+                    output_sentence = &quot &quot.join(output_words)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Evaluate sentence
+            output_words = evaluate(encoder, decoder, searcher, voc, input_sentence)
+            &#47&#47 Format and print response sentence
+            <a id="change">output_words[:] = [x for x in output_words if not (x == &quotEOS&quot or x == &quotPAD&quot)]</a>
+            print(&quotBot:&quot, &quot &quot.join(output_words))
+
+        except KeyError:
+            print("Error: Encountered unknown word.")</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    finalsegvec2 = finalsegvec.copy()
+    &#47&#47 mapfinalsegvec to original labels
+    for i in range(len(probsout)):
+        segnum = <a id="change">str.split(probsout[i], "prob")[1].split(".nii.gz")[0]</a>
+        finalsegvec2[finalsegvec == i] = segnum
+    outimg = iio2.make_image(target_image_mask, finalsegvec2)
+
+    return {"segmentation": outimg, "intensity": outimgi, "probabilityimages": probimgs}</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 mapfinalsegvec to original labels
+    for i in range(len(probsout)):
+        temp = str.split(probsout[i], "prob")
+        segnum = <a id="change">temp[len(temp) - 1].split(".nii.gz")[0]</a>
+        finalsegvec2[finalsegvec == i] = segnum
+    outimg = iio2.make_image(target_image_mask, finalsegvec2)
+
+    return {"segmentation": outimg, "intensity": outimgi, "probabilityimages": probimgs}</code></pre>

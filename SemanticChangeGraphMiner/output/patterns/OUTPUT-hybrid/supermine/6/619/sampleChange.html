@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 We test on a single item from MUSDB
+musdb = hooks.MUSDB18(download=True)
+<a id="change">item = musdb[40]</a>
+
+&#47&#47 Put sources in tempfiles
+item_tempfile = tempfile.NamedTemporaryFile()
+mix_loc = item_tempfile.name
+item["mix"].write_audio_to_file(item_tempfile.name)
+source_tempfiles = {}
+<a id="change">for name, source in item["sources"].items():
+    source_tempfile = tempfile.NamedTemporaryFile()
+    source.write_audio_to_file(source_tempfile.name)
+    source_tempfiles[name] = source_tempfile
+
+
+</a>def test_stretch():
+    stretch_factor = .8
+
+    augmented = time_stretch(item["mix"], stretch_factor)</code></pre><h3>After Change</h3><pre><code class='java'>
+import librosa
+import pytest
+
+<a id="change">REGRESSION_PATH="tests/core/regression/augmentation"</a>
+<a id="change">os.makedirs(REGRESSION_PATH, exist_ok=True)</a>
+
+&#47&#47 &#47&#47 We test on a single item from MUSDB
+&#47&#47 musdb = hooks.MUSDB18(download=True)
+&#47&#47 item = musdb[40]</code></pre>

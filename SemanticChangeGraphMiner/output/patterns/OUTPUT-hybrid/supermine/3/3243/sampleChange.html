@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    pred_dict = {&quotinput_generator&quot: [np.random.uniform(0., 1., size=[100])]}
+    g = gen_net.predict(pred_dict)[0]
+    temp = [[ii, ii, ii] for ii in list(g)]
+    <a id="change">a[0][i].imshow(np.reshape(temp, (28, 28, 3)))</a>
+    temp = [[ii, ii, ii] for ii in list(g)]
+    a[1][i].imshow(np.reshape(temp, (28, 28, 3)))
+f.show()
+plt.draw()</code></pre><h3>After Change</h3><pre><code class='java'>
+    loss_gan = gan_net.fit_batch({&quotinput_stacked&quot: noise},
+                                 {&quottarget_stacked&quot: Y_batch})
+
+    <a id="change">if i % 10 == 0:
+        print("Loss Disc", loss_disc)
+        print("Loss GAN", loss_gan)
+
+</a>f, a = plt.subplots(1, 10)
+for i in range(10):
+    pred_dict = {&quotinput_generator&quot: [np.random.uniform(-1., 1., size=[100])]}
+    g = gen_net.predict(pred_dict)[0]</code></pre>

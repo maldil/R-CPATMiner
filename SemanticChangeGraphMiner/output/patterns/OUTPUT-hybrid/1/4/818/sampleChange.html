@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif which_model_netG == &quotunet_256&quot:
+        netG = UnetGenerator(input_nc, output_nc, 8, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    else:
+        <a id="change">print(&quotGenerator model name [%s] is not recognized&quot % which_model_netG)</a>
+    if len(gpu_ids) &gt; 0:
+        netG.cuda(device_id=gpu_ids[0])
+    netG.apply(weights_init)
+    return netG</code></pre><h3>After Change</h3><pre><code class='java'>
+    elif which_model_netG == &quotunet_256&quot:
+        netG = UnetGenerator(input_nc, output_nc, 8, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    else:
+        <a id="change">raise NotImplementedError(&quotGenerator model name [%s] is not recognized&quot % which_model_netG)</a>
+    if len(gpu_ids) &gt; 0:
+        netG.cuda(device_id=gpu_ids[0])
+    netG.apply(weights_init)
+    return netG</code></pre>

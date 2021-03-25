@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        print("peaknames file should be a GNIS CSV file with | separator")
+        sys.exit(1)
+
+    demfile = <a id="change">sys.argv[1]</a>
+    lat = float(<a id="change">sys.argv[2]</a>)
+    lon = float(<a id="change">sys.argv[3]</a>)
+
+    <a id="change">if len(sys.argv) &gt; 4:
+        peak_gnis = sys.argv[4]
+    else:
+        peak_gnis = None
+
+   </a> viewshed2view(demfile, lon, lat, peak_gnis=peak_gnis)
+
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+if __name__ == &quot__main__&quot:
+    <a id="change">parser = argparse.ArgumentParser(description=""
+        Convert a viewshed file to a 360-degree view from a given point.
+
+Coordinates are specified in decimal degrees,
+                                     formatter_class=
+                                         argparse.RawTextHelpFormatter)</a>
+
+    <a id="change">parser.add_argument(&quot-p&quot, &quot--peaknames&quot, dest=&quotpeakfile&quot,
+                        help="a GNIS CSV file with | separator")</a>
+
+    &#47&#47 Required arguments:
+    parser.add_argument(&quotviewshed&quot
+                        , help="Viewshed file; GeoTIF format recommended")
+    parser.add_argument(&quotlat&quot, type=float, help="latitude")
+    <a id="change">parser.add_argument(&quotlon&quot, type=float, help="longitude")</a>
+
+    args = <a id="change">parser.parse_args(sys.argv[1:])</a>
+
+    viewshed2view(args.viewshed, args.lon, args.lat, peak_gnis=args.peakfile)
+
+</code></pre>

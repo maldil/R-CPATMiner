@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def test_step(self, batch, batch_idx):
+        input, _, mean, std, fname, slice = batch
+        output = self.forward(input)
+        <a id="change">mean = mean.unsqueeze(1).unsqueeze(2)</a>
+        std = std.unsqueeze(1).unsqueeze(2)
+        return {
+            &quotfname&quot: fname,
+            &quotslice&quot: slice,</code></pre><h3>After Change</h3><pre><code class='java'>
+    def test_step(self, batch, batch_idx):
+        masked_kspace, mask, target, fname, slice, _ = batch
+        output = self.forward(masked_kspace, mask)
+        <a id="change">_</a>, output = T.center_crop_to_smallest(target, output)
+        return {
+            &quotfname&quot: fname,
+            &quotslice&quot: slice,</code></pre>

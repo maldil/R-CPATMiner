@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        key_for_cached_stat = self.key_for_cached_stat(results_obj.name)
+        if loader_kwargs.get(&quotpreprocessing&quot) is None:
+            cached_stat = self.get_cached_stat(key_for_cached_stat)
+            <a id="change">for section in sections:
+                try:
+                    row = cached_stat.loc[section.start]
+                except KeyError:
+                    sections_to_compute.append(section)
+                else:
+                    end_time = row[&quotend&quot]
+                    if end_time == section.end:
+                        usable_sections_from_cache = (
+                            usable_sections_from_cache.append(row))
+                    else:
+                        sections_to_compute.append(section)
+       </a> else:
+            sections_to_compute = sections
+
+        if not sections_to_compute:</code></pre><h3>After Change</h3><pre><code class='java'>
+            
+            &#47&#47 Get sections_to_compute
+            sections_to_compute = set(sections) - set(results_obj.timeframes())
+            <a id="change">sections_to_compute = list(sections_to_compute)</a>
+            <a id="change">sections_to_compute.sort()</a>
+        else:
+            sections_to_compute = sections
+
+        if not results_obj._data.empty:</code></pre>

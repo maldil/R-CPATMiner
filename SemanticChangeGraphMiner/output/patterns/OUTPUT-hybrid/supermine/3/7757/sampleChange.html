@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            lr_img = tensor2im(data[&quotinput&quot], mean, stddev)
+            if args.eval:
+                hr_img = tensor2im(
+                    data.get(&quottarget&quot, <a id="change">data[&quotraw_input&quot]</a>), mean, stddev)
+                print_evaluation(
+                    osp.basename(data[&quotinput_fn&quot][0]),
+                    *eval_psnr_and_ssim(sr_img, hr_img, args.upscale_factor))</code></pre><h3>After Change</h3><pre><code class='java'>
+    model = cls_model(**checkpoint[&quotparams&quot][&quotG&quot])
+    model.load_state_dict(checkpoint[&quotstate_dict&quot])
+
+    <a id="change">info(&quotPhase: {}&quot.format(config.phase.TEST))</a>
+    info(&quotCheckpoint: {}&quot.format(osp.basename(args.checkpoint)))
+
+    model.eval()
+</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            Of shape (minibatch_size, sequence_length).
+        
+
+        target_embedding = <a id="change">(self.item_embeddings(targets)
+                            .permute(0, 2, 1))</a>
+        target_bias = self.item_biases(targets).squeeze(1)
+
+        dot = ((user_representations * target_embedding)
+               .sum(1)</code></pre><h3>After Change</h3><pre><code class='java'>
+            Of shape (minibatch_size, sequence_length).
+        
+
+        target_embedding = <a id="change">(self.item_embeddings(targets)
+                            .permute(0, 2, 1)
+                            .squeeze())</a>
+        target_bias = self.item_biases(targets).squeeze()
+
+        dot = ((user_representations * target_embedding)
+               .sum(1)</code></pre>

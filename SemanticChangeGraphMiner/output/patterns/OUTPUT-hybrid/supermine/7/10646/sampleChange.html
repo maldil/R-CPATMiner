@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        fg = featGenerator(linput.copy())
+        for i, (mspec, loge, difflen) in enumerate(fg):
+            if verbose == True:
+                <a id="change">print(i, linput[i], loutput[i])</a>
+            lseg = self.segment_feats(mspec, loge, difflen, 0)
+            seg2csv(lseg, loutput[i])
+        
+def seg2csv(lseg, fout=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+            mspec, loge, difflen = feats
+            &#47&#47if verbose == True:
+            &#47&#47    print(i, linput[i], loutput[i])
+            <a id="change">b = time.time()</a>
+            lseg = self.segment_feats(mspec, loge, difflen, 0)
+            seg2csv(lseg, loutput[len(lmsg) -1])
+            lmsg[-1] += <a id="change">&quot &quot + str(time.time() -b)</a>
+        return lmsg
+
+def seg2csv(lseg, fout=None):
+    df = pd.DataFrame.from_records(lseg, columns=[&quotlabels&quot, &quotstart&quot, &quotstop&quot])</code></pre>

@@ -1,0 +1,30 @@
+<html><h3>ce83340731ff66c88ff3d09aa7b70667b7db3f74,ffn/training/model.py,FFNModel,set_up_optimizer,#FFNModel#,134
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if trainables:
+      var = trainables[0]
+      tf.contrib.deprecated.histogram_summary(var.op.name, var)
+    <a id="change">with deprecation.silence():
+      for var in trainables[1:]:
+        tf.contrib.deprecated.histogram_summary(var.op.name, var)
+      for grad, var in grads_and_vars:
+        tf.contrib.deprecated.histogram_summary(
+            &quotgradients/&quot + var.op.name, grad)
+
+   </a> self.train_op = opt.apply_gradients(grads_and_vars,
+                                        global_step=self.global_step,
+                                        name=&quottrain&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if trainables:
+      for var in trainables:
+        tf.summary.histogram(var.name.replace(&quot:0&quot, &quot&quot), var)
+    <a id="change">for grad, var in grads_and_vars:
+      tf.summary.histogram(
+          &quotgradients/%s&quot % var.name.replace(&quot:0&quot, &quot&quot), grad)
+
+   </a> update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    with tf.control_dependencies(update_ops):
+      self.train_op = opt.apply_gradients(grads_and_vars,
+                                          global_step=self.global_step,</code></pre><img src="18460010.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/google/ffn/commit/ce83340731ff66c88ff3d09aa7b70667b7db3f74#diff-8fc3042900df568f5fdcd32525e4b15eb20e9e19864ece63f7f1bb407e38298eL155' target='_blank'>Link</a></div><div id='project'> Project Name: google/ffn</div><div id='commit'> Commit Name: ce83340731ff66c88ff3d09aa7b70667b7db3f74</div><div id='time'> Time: 2018-10-28</div><div id='author'> Author: mjanusz@google.com</div><div id='file'> File Name: ffn/training/model.py</div><div id='class'> Class Name: FFNModel</div><div id='method'> Method Name: set_up_optimizer</div><BR><BR><div id='link'><a href='https://github.com/gyoisamurai/GyoiThon/commit/4f53bca9b044b20bc4aa8b7719bbbb2984623b3a#diff-9f46c9586b383e950a66c7b10f5fe4511b4d5750b64b26f02d379114cbc3e948L279' target='_blank'>Link</a></div><div id='project'> Project Name: gyoisamurai/GyoiThon</div><div id='commit'> Commit Name: 4f53bca9b044b20bc4aa8b7719bbbb2984623b3a</div><div id='time'> Time: 2018-06-04</div><div id='author'> Author: gyoiler3@gmail.com</div><div id='file'> File Name: classifier4gyoithon/GyoiClassifier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/gyoisamurai/GyoiThon/commit/5765f471197edbf64a57dd2628dcd3051c7ea46c#diff-e64c3752c5b7f77bb87aeded8437cda7b5fb464700306722cb08e80c60c1d11cL207' target='_blank'>Link</a></div><div id='project'> Project Name: gyoisamurai/GyoiThon</div><div id='commit'> Commit Name: 5765f471197edbf64a57dd2628dcd3051c7ea46c</div><div id='time'> Time: 2018-06-04</div><div id='author'> Author: gyoiler3@gmail.com</div><div id='file'> File Name: gyoithon.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

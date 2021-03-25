@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        "n_jobs": n_jobs}
+    acq_func_kwargs = {"xi": xi, "kappa": kappa}
+
+    <a id="change">if n_random_starts is not None:
+        warnings.warn(("n_random_starts has been renamed to "
+                       "n_initial_points."),
+                      DeprecationWarning)
+        n_initial_points = n_random_starts
+
+   </a> optimizer = Optimizer(dimensions, base_estimator,
+                          n_initial_points=n_initial_points,
+                          acq_func=acq_func, acq_optimizer=acq_optimizer,
+                          random_state=random_state,</code></pre><h3>After Change</h3><pre><code class='java'>
+    callbacks = check_callback(callback)
+    if verbose:
+        callbacks.append(VerboseCallback(
+            n_init=<a id="change">len</a>(x0) if <a id="change">not y0</a> else 0,
+            n_random=n_random_starts,
+            n_total=n_calls))
+</code></pre>

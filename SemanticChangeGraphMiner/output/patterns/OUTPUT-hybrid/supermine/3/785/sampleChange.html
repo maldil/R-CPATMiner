@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            for e_class_id, entities in edge.get_any_entities_in_sentences(predicted=False).items():
+                count = len(entities)
+                <a id="change">if e_class_id in [edge.entity1.class_id, edge.entity2.class_id]:
+                    &#47&#47 Rest -1 thus removing each consider pair of entities
+                    count -= 1
+
+                &#47&#47 TODO feature select with integer value or binary representation ?
+                &#47&#47 self.add(f_set, is_train, edge, &quotf_counts&quot, &quotbinary&quot, e_class_id, &quotis&quot, count)
+               </a> self.add_with_value(f_set, is_train, edge, &quotf_counts&quot, count, &quotint&quot, e_class_id)
+
+            for e_class_id, entities in edge.get_any_entities_between_entities(predicted=False).items():
+                count = str(len(entities))</code></pre><h3>After Change</h3><pre><code class='java'>
+            for e_class_id, entities in edge.get_any_entities_in_sentences(predicted=False).items():
+                count = -1  &#47&#47 start from -1, as one is already one of the edge&quots entities
+                count += len(entities)
+                <a id="change">assert count &gt;= 0</a>
+                self.add_with_value(f_set, is_train, edge, &quotf_counts&quot, count, &quotint&quot, e_class_id)
+
+            count = 0
+            for e_class_id, entities in edge.get_any_entities_between_entities(predicted=False).items():</code></pre>

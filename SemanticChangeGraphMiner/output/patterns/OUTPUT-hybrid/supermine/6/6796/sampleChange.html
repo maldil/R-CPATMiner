@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        prefix = HashEmbed(width // 2, 100, column=2)
+        suffix = HashEmbed(width // 2, 100, column=3)
+
+        model = <a id="change">(
+            with_flatten(
+                (lower_case | shape | prefix | suffix)
+                &gt;&gt; Maxout(width, pieces=3), pad=depth)
+            &gt;&gt; with_pad_and_mask(
+                MultiHeadedAttention(nM=width, nH=4)
+            )
+            &gt;&gt; with_flatten(Softmax(nr_tag))
+        )</a>
+
+    train_X, train_y = preprocess(model.ops, extracter, train_data, nr_tag)
+    dev_X, dev_y = preprocess(model.ops, extracter, check_data, nr_tag)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        prefix = HashEmbed(width // 2, 100, column=2)
+        suffix = HashEmbed(width // 2, 100, column=3)
+
+        model = <a id="change">(
+            with_flatten(
+                (lower_case | shape | prefix | suffix)
+                &gt;&gt; Maxout(width, pieces=3), pad=0)
+            &gt;&gt; PositionEncode(1000, width)
+            &gt;&gt; flatten_add_lengths
+            &gt;&gt; MultiHeadedAttention(nM=width, nH=8)
+            &gt;&gt; with_getitem(0, LayerNorm(nO=width))
+            &gt;&gt; unflatten
+            &gt;&gt; with_flatten(Softmax(nr_tag))
+        )</a>
+
+    train_X, train_y = preprocess(model.ops, extracter, train_data, nr_tag)
+    dev_X, dev_y = preprocess(model.ops, extracter, check_data, nr_tag)
+</code></pre>

@@ -1,0 +1,33 @@
+<html><h3>e90157e7f01c85e9ef22f9679f1a40bda0efb51f,src/utils/utils.py,,split_data,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return imresize(image_array, size)
+
+def split_data(ground_truth_data, training_ratio=.8, do_shuffle=False):
+    <a id="change">ground_truth_keys = sorted(ground_truth_data.keys())</a>
+    if do_shuffle == True:
+        shuffle(ground_truth_keys)
+    num_train = int(round(training_ratio * len(ground_truth_keys)))
+    train_keys = ground_truth_keys[:num_train]
+    <a id="change">validation_keys = ground_truth_keys[num_train:]</a>
+    <a id="change">return train_keys, validation_keys</a>
+
+def display_image(image_array):
+    image_array =  np.squeeze(image_array).astype(&quotuint8&quot)
+    plt.imshow(image_array)</code></pre><h3>After Change</h3><pre><code class='java'>
+def split_data(x, y, validation_split=.2):
+    num_samples = len(x)
+    num_train_samples = int((1 - validation_split)*num_samples)
+    <a id="change">train_x = x[:num_train_samples]</a>
+    <a id="change">train_y = y[:num_train_samples]</a>
+    val_x = x[num_train_samples:]
+    <a id="change">val_y = y[num_train_samples:]</a>
+    <a id="change">train_data = (train_x, train_y)</a>
+    <a id="change">val_data = (val_x, val_y)</a>
+    <a id="change">return train_data, val_data</a>
+
+
+
+def display_image(image_array):</code></pre><img src="8539267.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/oarriaga/face_classification/commit/e90157e7f01c85e9ef22f9679f1a40bda0efb51f#diff-ea2db586282a8ad1000497fab6d8d11e91c7988ada13e74d86ab780f4010af3bL27' target='_blank'>Link</a></div><div id='project'> Project Name: oarriaga/face_classification</div><div id='commit'> Commit Name: e90157e7f01c85e9ef22f9679f1a40bda0efb51f</div><div id='time'> Time: 2017-06-30</div><div id='author'> Author: arriaga.camargo@gmail.com</div><div id='file'> File Name: src/utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: split_data</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/82833059b7ee72896c07489bfc0369079ccedd77#diff-f64b7b593ad63cb575792316f2e4bce638651f1910af267c86def02e764caf6aL31' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 82833059b7ee72896c07489bfc0369079ccedd77</div><div id='time'> Time: 2018-05-21</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: algo/ppo.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/ranking/commit/6bf3f51cd0a312da842157665663c2dad9983248#diff-ac0a8b23265c0fdd56da5d2709bf0e7dfce716e2713c8c9fd8d44f4fd9461ff7L930' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/ranking</div><div id='commit'> Commit Name: 6bf3f51cd0a312da842157665663c2dad9983248</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: xuanhui@google.com</div><div id='file'> File Name: tensorflow_ranking/python/losses_impl.py</div><div id='class'> Class Name: ClickEMLoss</div><div id='method'> Method Name: _compute_latent_prob</div><BR>

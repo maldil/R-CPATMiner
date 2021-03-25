@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        --------
+        float : Value of the distribution at X
+        
+        <a id="change">if not isinstance(X, np.matrix):
+            if isinstance(X, (np.ndarray, list, tuple, set, frozenset)):
+                X = np.matrix(X)
+                X = np.reshape(X, (1, len(X)))
+            else:
+                raise TypeError("mean_vec should be a 1d array type object")
+       </a> X = np.reshape(X, (len(X), 1))
+        sub_vec = X - self.mean_vec
+        n = len(sub_vec)
+        return float(np.exp(-0.5 * sub_vec.transpose() * self.precision_matrix * sub_vec) /</code></pre><h3>After Change</h3><pre><code class='java'>
+        --------
+        float : Value of the distribution at X
+        
+        if isinstance(X, (<a id="change">np.matrix</a>, np.ndarray, list, tuple, set, frozenset)):
+            X = <a id="change">np.array(X).flatten()</a>
+            X = <a id="change">np.matrix(np.reshape(X, (len(X), 1)))</a>
+        else:
+            raise TypeError("X should be a 1d array type object")
+        sub_vec = X - self.mean_vec
+        n = len(sub_vec)</code></pre>

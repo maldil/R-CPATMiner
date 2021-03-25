@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+train_set.plot(kind=&quotscatter&quot, x=&quotlongitude&quot, y=&quotlatitude&quot, alpha=0.4,
+				s=train_set[&quotpopulation&quot]/100, label=&quotpopulation&quot, figsize=<a id="change">(10,7)</a>,
+				c=&quotmedian_house_value&quot, cmap=plt.get_cmap(&quotjet&quot), colorbar=True)
+plt.legend() 
+plt.show()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+city_coords = {}
+
+<a id="change">for dat in city_lat_long.iterrows():
+    row = dat[1]
+    if row[&quotName&quot] not in city_pop_data[&quotCity&quot].values:   
+        continue           
+    else: 
+        city_coords[row[&quotName&quot]] = (float(row[&quotLatitude&quot]), float(row[&quotLongitude&quot]))
+
+
+&#47&#47clean pop
+&#47&#47fill in the missing 1980s values with avg rate of change
+&#47&#47make a dictonary of cities lat/long pass in a tuple of lat/longs
+&#47&#47for a given point and do the comparison
+
+&#47&#47two functions
+&#47&#471. take two lat long tuples as input
+	&#47&#47return the distance between the two
+    &#47&#47vincenty(tuple1, tuple2)
+
+
+&#47&#47example below
+</a>newport_ri = (41.49008, -71.312796)
+cleveland_oh = (41.499498, -81.695391)
+x = vincenty(newport_ri, cleveland_oh)
+x &#47&#47distance stored in km, see units on printing</code></pre>

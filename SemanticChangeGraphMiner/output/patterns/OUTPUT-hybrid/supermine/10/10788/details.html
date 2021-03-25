@@ -1,0 +1,53 @@
+<html><h3>2c6ce0ebfa9537246878e8fb9144e0c879fca17d,cube/models/vocoder.py,BeeCoder,synthesize,#BeeCoder#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return np.random.choice(np.arange(256), p=scaled_prediction)
+
+    def synthesize(self, mgc, batch_size, sample=True, temperature=1.0):
+        <a id="change">synth = []</a>
+        dy.renew_cg()
+        history = dy.inputVector([127 for x in range(self.HISTORY)])
+        last_proc = 0
+        for mgc_index in range(len(mgc)):
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+            pred_probs = self._predict_one(mgc[mgc_index], history, runtime=True)
+            for output in pred_probs:
+                synth.append(self._pick_sample(output.npvalue(), temperature=temperature))
+
+            hist = <a id="change">synth[-self.HISTORY:]</a>
+            dy.renew_cg()
+            history = (dy.inputVector(hist) - 127.0) / 128.0
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def synthesize(self, mgc, batch_size, sample=True, temperature=1.0):
+        last_fft = None
+        <a id="change">predicted = np.zeros((len(mgc), 513), dtype=np.complex)</a>
+        last_proc = 0
+        for mgc_index in range(len(mgc)):
+            dy.renew_cg()
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+            [output_real, output_imag] = self._predict_one(mgc[mgc_index], last_fft=last_fft, runtime=True)
+
+            last_fft = np.zeros(self.FFT_SIZE, dtype=np.complex)
+            out_real = output_real.value()
+            out_imag = output_imag.value()
+            for ii in range(self.FFT_SIZE):
+                last_fft[ii] = np.complex(out_real[ii], out_imag[ii])
+                <a id="change">predicted[mgc_index, ii] = np.complex(out_real[ii], out_imag[ii])</a>
+
+        synth = self.vocoder.ifft(predicted, sample_rate=self.params.target_sample_rate)
+        &#47&#47 print(synth)
+        synth = np.array((synth + 1) * 32767, dtype=np.int16)</code></pre><img src="39355496.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L52' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/b9927f30cb9c92040c30d0fe8c735d8baea167b2#diff-d9d023afb253a6e42aecdf8460b7c8fb54104e41717b2703805d7b94457677a9L62' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: b9927f30cb9c92040c30d0fe8c735d8baea167b2</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gconvbn</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/e2bf248a400175ac1a153cdba62147e9162a710f#diff-ea56f1bf7453ce837b455f69b197251e9a74c8545c1d94d9b15a4e9684b42d75L544' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: e2bf248a400175ac1a153cdba62147e9162a710f</div><div id='time'> Time: 2019-04-17</div><div id='author'> Author: gkiar07@gmail.com</div><div id='file'> File Name: nilearn/image/tests/test_resampling.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_resample_identify_affine_int_translation</div><BR>

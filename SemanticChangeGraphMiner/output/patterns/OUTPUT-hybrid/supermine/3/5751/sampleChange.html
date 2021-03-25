@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                   "sequence_error" : sequence_error}, 
+                                                  every_n_iter=100)
+    return tf.estimator.EstimatorSpec(mode=mode, loss=loss, predictions=tf.nn.softmax(logits), 
+                                      train_op=None, prediction_hooks=<a id="change">[logging_hook]</a>)
+    
+def main(argv=None):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                logits,sequence_length,label,length)
+
+        global_step = tf.convert_to_tensor(tf.train.get_or_create_global_step())
+        global_step = <a id="change">tf.cast(global_step, tf.float32)</a>
+        sequence_error = tf.cast(sequence_error, tf.float32)
+
+        &#47&#47Get the correct format to pass tp estimator spec
+        <a id="change">result = tf.convert_to_tensor([(tf.stack([global_step,
+                                                  loss, 
+                                                  label_error, 
+                                                  sequence_error], axis=0))])</a>
+
+    return tf.estimator.EstimatorSpec(mode=mode, loss=loss, 
+                                      predictions=result, 
+                                      train_op=None)</code></pre>

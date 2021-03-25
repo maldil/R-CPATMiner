@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+              % (self.version, pdbbind_version), file=sys.stderr)
+
+        error = rmse(self.model.predict(self.test_descs), self.test_target)
+        r2 = <a id="change">self.model.score(self.test_descs, self.test_target)</a>
+        r = np.sqrt(r2)
+        print(&quotTest set:&quot,
+              &quotR**2: %.4f&quot % r2,
+              &quotR: %.4f&quot % r,</code></pre><h3>After Change</h3><pre><code class='java'>
+        print(&quotTraining RFScore v%i on PDBBind v%i&quot
+              % (self.version, pdbbind_version), file=sys.stderr)
+
+        <a id="change">sets = [
+            (&quotTest&quot, self.model.predict(self.test_descs), self.test_target),
+            (&quotTrain&quot, self.model.predict(self.train_descs), self.train_target),
+            (&quotOOB&quot, self.model.oob_prediction_, self.train_target)]</a>
+
+        for name, pred, target in sets:
+            print(&quot%s set:&quot % name,
+                  &quotR2_score: %.4f&quot % r2_score(target, pred),
+                  &quotRp: %.4f&quot % <a id="change">pearsonr(target, pred)[0]</a>,
+                  &quotRMSE: %.4f&quot % rmse(target, pred),
+                  sep=&quot\t&quot, file=sys.stderr)
+</code></pre>

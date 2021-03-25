@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def compute_gradient(self, function, arguments):
+        num_arguments = len(arguments)
+        gradient = autograd.grad(function, argnum=list(range(num_arguments)))
+        if <a id="change">num_arguments &gt; 1:
+    </a>        return gradient
+        <a id="change">return self._unpack_return_value(gradient)</a>
+
+    @Backend._assert_backend_available
+    def compute_hessian_vector_product(self, function, arguments):
+        num_arguments = len(arguments)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def compute_gradient(self, function, arguments):
+        num_arguments = len(arguments)
+        gradient = autograd.grad(function, argnum=list(range(num_arguments)))
+        if <a id="change">num_arguments == 1:
+   </a>         <a id="change">return unpack_singleton_iterable_return_value(gradient)</a>
+        return gradient
+
+    @Backend._assert_backend_available
+    def compute_hessian_vector_product(self, function, arguments):</code></pre>

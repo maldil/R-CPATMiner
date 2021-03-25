@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test(self):
+        self.netG.eval()
+        <a id="change">for k, v in self.netG.named_parameters():
+            v.requires_grad = False
+       </a> self.fake_H = self.netG(self.var_L)
+        <a id="change">for k, v in self.netG.named_parameters():
+            v.requires_grad = True
+       </a> self.netG.train()
+
+    def get_current_log(self):
+        return self.log_dict</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test(self):
+        self.netG.eval()
+        <a id="change">with torch.no_grad():
+            self.fake_H = self.netG(self.var_L)
+       </a> self.netG.train()
+
+    def get_current_log(self):
+        return self.log_dict</code></pre>

@@ -1,0 +1,24 @@
+<html><h3>3a3dc678e50e60f9cf05e95e992ab873046c1b8f,cifar10.py,,,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47                    validation_data=(testX, Y_test),
+&#47&#47                    nb_val_samples=testX.shape[0], verbose=1)
+
+yPreds = <a id="change">model.predict(testX)</a>
+yPred = np.argmax(yPreds, axis=1)
+yTrue = testY
+
+<a id="change">accuracy = metrics.accuracy_score(yTrue, yPred) * 100</a>
+error = 100 - accuracy
+print("Accuracy : ", accuracy)
+print("Error : ", error)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+model.load_weights("weights/DenseNet-40-12-CIFAR10.h5")
+print("Model loaded.")
+
+model.fit_generator(generator.flow(trainX, Y_train, batch_size=batch_size), samples_per_epoch=<a id="change">len(trainX)</a>, nb_epoch=nb_epoch,
+                   callbacks=[ModelCheckpoint("weights/DenseNet-40-12-CIFAR10.h5", monitor="val_acc", save_best_only=True,
+                                              save_weights_only=True)],
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),</code></pre><img src="39232454.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/3a3dc678e50e60f9cf05e95e992ab873046c1b8f#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 3a3dc678e50e60f9cf05e95e992ab873046c1b8f</div><div id='time'> Time: 2016-12-05</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/ufal/npfl114/commit/65869e202012462ad86ccd71e841bdf3f406e685#diff-c6d04fa1fe77309fcb8a7c8fd84a996158e551534643fe77aadf7503f5cc9e47L24' target='_blank'>Link</a></div><div id='project'> Project Name: ufal/npfl114</div><div id='commit'> Commit Name: 65869e202012462ad86ccd71e841bdf3f406e685</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: milan@strakovi.com</div><div id='file'> File Name: labs/02/gym_cartpole_evaluate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/ccd0eb54b8541c4814fa1028b3b1e65c8fb9291a#diff-a59e00123f52fae535fb376c3e442f1d4a30907dee8d7bf0d4a1e4eea4152a31L12' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: ccd0eb54b8541c4814fa1028b3b1e65c8fb9291a</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: aperez@thoughtworks.com</div><div id='file'> File Name: fer/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

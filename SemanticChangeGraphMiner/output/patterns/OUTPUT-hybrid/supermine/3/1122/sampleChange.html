@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with temporary_dir(root_dir=get_buildroot()) as tmpdir:
+            tmpdir_relative = Path(tmpdir).relative_to(get_buildroot())
+
+            <a id="change">src_root1 = Path(tmpdir, "src_root1/project")</a>
+            src_root1.mkdir(parents=True)
+            (src_root1 / "app.py").write_text(
+                dedent(
+                    \</code></pre><h3>After Change</h3><pre><code class='java'>
+            ),
+            "src_root2/utils/BUILD": "python_library()",
+        }
+        <a id="change">with self.setup_tmpdir(sources) as tmpdir:
+            result = self.run_pants(
+                [
+                    "--backend-packages=pants.backend.python",
+                    f"--source-root-patterns=[&quot/{tmpdir}/src_root1&quot, &quot/{tmpdir}/src_root2&quot]",
+                    "--pants-ignore=__pycache__",
+                    "--pants-ignore=/src/python",
+                    "run",
+                    f"{tmpdir}/src_root1/project/app.py",
+                ]
+            )
+
+       </a> assert "Hola, mundo.\n" in result.stderr
+        assert result.stdout == "HELLO WORLD.\n"
+        assert result.exit_code == 23
+</code></pre>

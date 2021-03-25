@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class Mnist_Logistic(nn.Module):
+    def __init__(self):
+        super().__init__()
+        <a id="change">self.weights = nn.Parameter(torch.randn(784, 10) / math.sqrt(784))</a>
+        <a id="change">self.bias</a> = <a id="change">nn.Parameter(torch.zeros(10))</a>
+
+    def forward(self, xb):
+        return xb @ self.weights + self.bias
+</code></pre><h3>After Change</h3><pre><code class='java'>
+class Mnist_Logistic(nn.Module):
+    def __init__(self):
+        super().__init__()
+        <a id="change">self.lin</a> = <a id="change">nn.Linear(784, 10)</a>
+
+    def forward(self, xb):
+        return self.lin(xb)
+</code></pre>

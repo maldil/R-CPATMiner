@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                continue
+            src = proto_df[&quot%s.srcport&quot % ip_proto]
+            dst = proto_df[&quot%s.dstport&quot % ip_proto]
+            for field_name, wk_ports in <a id="change">(
+                    (&quotpriv&quot, self.WK_PRIV_TCPUDP_PORTS),
+                    (&quotnonpriv&quot, self.WK_NONPRIV_TCPUDP_PORTS),
+                )</a>:
+                src_counts = src[src.isin(wk_ports)].value_counts()
+                dst_counts = <a id="change">dst</a>[dst.isin(wk_ports)].value_counts()
+                for port in wk_ports:
+                    src_count = src_counts.get(port, None)
+                    dst_count = dst_counts.get(port, None)</code></pre><h3>After Change</h3><pre><code class='java'>
+                    dst_count = dst_counts.get(port, None)
+                    mac_row_ports.update({
+                        &quottshark_%s_%s_packet_ratio_io_port_%s&quot % (ip_proto, field_name, port): calc_ratio(src_count, dst_count)})
+                src_count = port_src[~<a id="change">port_src.isin(wk_ports)</a>].value_counts().sum()
+                dst_count = port_dst[~port_dst.isin(wk_ports)].value_counts().sum()
+                mac_row_ports.update({
+                    &quottshark_%s_%s_packet_ratio_io_port_%s&quot % (ip_proto, field_name, &quotother&quot): calc_ratio(src_count, dst_count)})</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Skip templates that we are generating through the debug toolbar.
+        if (isinstance(template.name, six.string_types) and
+                <a id="change">template.name.startswith(
+                    tuple(self.toolbar.config[&quotSKIP_TEMPLATE_PREFIXES&quot]))</a>):
+            return
+
+        context_list = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        template, context = kwargs[&quottemplate&quot], kwargs[&quotcontext&quot]
+
+        &#47&#47 Skip templates that we are generating through the debug toolbar.
+        if (isinstance(template.name, six.string_types) and <a id="change">(
+            template.name.startswith(&quotdebug_toolbar/&quot) or
+            template.name.startswith(
+                tuple(self.toolbar.config[&quotSKIP_TEMPLATE_PREFIXES&quot])))</a>):
+            return
+
+        context_list = []</code></pre>

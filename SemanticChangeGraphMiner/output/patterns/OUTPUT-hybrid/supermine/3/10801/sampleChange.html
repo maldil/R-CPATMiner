@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                predictions = self.sess.run(softmax_tensor, {&quotDecodeJpeg:0&quot: image})
+                predictions = np.squeeze(predictions)
+                answer = {}
+                <a id="change">for node_id in range(len(predictions)):
+                    answer[self.labels[node_id]] = predictions[node_id]
+               </a> answers.append(answer)
+            return answers
+
+    @staticmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with tf.device("/gpu:0"):
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            threads = [<a id="change">pool.apply_async(operation, args=(self.sess, softmax_tensor, image_array_list[i],))</a> for i in
+                       range(10)]
+            results = []
+            for x in threads:</code></pre>

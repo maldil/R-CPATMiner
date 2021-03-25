@@ -1,0 +1,23 @@
+<html><h3>28b8b9d39f53d8327dbf658048a81b7046ae398f,magpie/nn/models.py,,cnn,#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ngram_layer.add(MaxPooling1D(pool_length=pool_length))
+        conv_layers.append(ngram_layer)
+
+    model = <a id="change">Sequential()</a>
+    model.add(Merge(conv_layers, mode=&quotconcat&quot))
+
+    model.add(Dropout(0.5))
+    model.add(Flatten())</code></pre><h3>After Change</h3><pre><code class='java'>
+        conv_layers.append(pooling)
+
+    merged = Concatenate()(conv_layers)
+    dropout = <a id="change">Dropout(0.5)(merged)</a>
+    flattened = Flatten()(dropout)
+    <a id="change">outputs = Dense(output_length, activation=&quotsigmoid&quot)(flattened)</a>
+
+    model = Model(inputs=inputs, outputs=outputs)
+
+    model.compile(</code></pre><img src="9020552.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/a4697d7e45e66a3264eb56dcf489d67d4df40d23#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L74' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: a4697d7e45e66a3264eb56dcf489d67d4df40d23</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L58' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnn</div><BR>

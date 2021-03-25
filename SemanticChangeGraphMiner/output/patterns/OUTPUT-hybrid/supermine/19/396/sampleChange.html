@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    u = UMAP(metric="foobar")
+    assert_raises(ValueError, u.fit, nn_data)
+    u = UMAP(metric=2.75)
+    <a id="change">assert_raises(ValueError, u.fit, nn_data)</a>
+    u = UMAP(output_metric="foobar")
+    assert_raises(ValueError, u.fit, nn_data)
+    u = UMAP(output_metric=2.75)
+    assert_raises(ValueError, u.fit, nn_data)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_umap_bad_metrics(nn_data):
+    u = UMAP(metric="foobar")
+    <a id="change">with pytest.raises(ValueError):
+        u.fit(nn_data)
+   </a> u = UMAP(metric=2.75)
+    with pytest.raises(ValueError):
+        u.fit(nn_data)
+    u = UMAP(output_metric="foobar")
+    <a id="change">with pytest.raises(ValueError):
+        u.fit(nn_data)
+   </a> u = UMAP(output_metric=2.75)
+    <a id="change">with pytest.raises(ValueError):
+        u.fit(nn_data)
+    &#47&#47 u = UMAP(target_metric="foobar")
+    &#47&#47 assert_raises(ValueError, u.fit, nn_data)
+    &#47&#47 u = UMAP(target_metric=2.75)
+    &#47&#47 assert_raises(ValueError, u.fit, nn_data)
+
+
+</a>def test_umap_bad_n_jobs(nn_data):
+    u = UMAP(n_jobs=-2)
+    with pytest.raises(ValueError):
+        u.fit(nn_data)</code></pre>

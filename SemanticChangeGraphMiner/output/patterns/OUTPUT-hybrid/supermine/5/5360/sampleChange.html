@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot Perform word embedding regularization training for ASR&quot&quot&quot
+    def __init__(self, tokenizer, dec_dim, enable, src, distance, weight, fuse, temperature, 
+                 freeze=True, fuse_normalize=False, dropout=0.0):
+        <a id="change">super().__init__()</a>
+        self.enable = enable
+        if enable:
+            pretrained_emb = torch.FloatTensor(load_embedding(tokenizer,src))
+            &#47&#47pretrained_emb = nn.functional.normalize(pretrained_emb,dim=-1) &#47&#47 ToDo : Check impact on old version</code></pre><h3>After Change</h3><pre><code class='java'>
+            vocab_size, emb_dim = pretrained_emb.shape
+            self.dim = emb_dim
+
+            <a id="change">if bert is not None:
+                if not isinstance(bert, (tuple, list)) or len(bert) != 2:
+                    raise ValueError("`bert` should be a tuple/list of config and fine-tuned model "
+                                     "such as (\"bert-base-uncased\", \"fine-tuned-model.pth\").")
+                self.emb_table = BertEmbeddingPredictor(
+                    bert[0], text_encoder, bert[1])
+            else:
+                self.emb_table = nn.Embedding.from_pretrained(
+                    pretrained_emb, freeze=freeze, padding_idx=0)
+
+           </a> self.emb_net = nn.Sequential(nn.Linear(dec_dim, (emb_dim+dec_dim)//2),
+                                         nn.ReLU(),
+                                         nn.Linear((emb_dim+dec_dim)//2, emb_dim))
+            self.weight = weight</code></pre>

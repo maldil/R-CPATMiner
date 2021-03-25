@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def linear_mmd2(self, f_of_X, f_of_Y):
+        loss = 0.0
+        delta = f_of_X - f_of_Y
+        loss = torch.mean((<a id="change">delta[:-1]</a> * delta[1:]).sum(1))
+        return loss
+
+    def forward(self, source, target):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def linear_mmd2(self, f_of_X, f_of_Y):
+        loss = 0.0
+        delta = f_of_X.float().mean() - f_of_Y.float().mean()
+        <a id="change">loss = delta.dot(delta.T)</a>
+        return loss
+
+    def forward(self, source, target):
+        if self.kernel_type == &quotlinear&quot:</code></pre>

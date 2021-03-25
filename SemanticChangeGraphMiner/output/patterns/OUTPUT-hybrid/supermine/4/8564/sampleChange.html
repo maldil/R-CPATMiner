@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    cbar.ax.set_ylim(cbar.norm(cbar_vmin), cbar.norm(cbar_vmax))
+    outline = cbar.outline.get_xy()
+    outline[:2, 1] += cbar.norm(cbar_vmin)
+    <a id="change">outline[2:6, 1]</a> -= (1. - cbar.norm(cbar_vmax))
+    outline[6:, 1] += cbar.norm(cbar_vmin)
+    cbar.outline.set_xy(outline)
+    cbar.set_ticks(new_tick_locs, update_ticks=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 matplotlib &gt;= 3.2.0 no longer normalizes axes between 0 and 1
+    &#47&#47 See https://matplotlib.org/3.2.1/api/prev_api_changes/api_changes_3.2.0.html
+    if <a id="change">LooseVersion(matplotlib.__version__) &gt;= LooseV</a><a id="change">ersion("3.2.0")</a>:
+        cbar.ax.set_ylim(cbar_vmin, cbar_vmax)
+        X, _ = cbar._mesh()
+        new_X = np.array([X[0], X[-1]])</code></pre>

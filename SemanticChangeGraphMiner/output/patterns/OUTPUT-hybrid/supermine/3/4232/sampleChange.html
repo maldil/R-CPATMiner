@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        actions, agent_infos = self.policy.get_actions(observations)
+        sigma = self._max_sigma - (self._max_sigma - self._min_sigma) * min(
+            1.0, self._iteration * 1.0 / self._decay_period)
+        return <a id="change">np.clip(actions + np.random.normal(size=actions.shape) * sigma,
+                       self._action_space.low,
+                       self._action_space.high)</a>, agent_infos
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        actions, agent_infos = self.policy.get_actions(observations)
+        for itr, _ in enumerate(actions):
+            <a id="change">actions[itr] = np.clip(
+                actions[itr] +
+                np.random.normal(size=actions[itr].shape) * self._sigma(),
+                self._action_space.low, self._action_space.high)</a>
+            self._total_env_steps += 1
+        return actions, agent_infos
+
+    def _sigma(self):</code></pre>

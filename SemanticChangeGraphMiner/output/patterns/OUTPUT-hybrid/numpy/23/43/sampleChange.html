@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Y1_Y  = Y1-Y
+    Z_Z1  = Z-Z1    
+
+    <a id="change">DENUM =  Z_Z1*Z_Z1 + Y1_Y*Y1_Y</a>
+    DENUM[DENUM==0] = 1e-32
+    XVEC  = -Y1_Y*np.sin(tw)/DENUM
+    YVEC  = Z_Z1/DENUM
+    ZVEC  = Y1_Y*np.cos(tw)/DENUM
+    RVEC   = np.array([XVEC, YVEC, ZVEC])
+    BRAC  =  1 + (X_X1 / (np.sqrt(<a id="change">X_X1*X_X1+ Y_Y1*Y_Y1+ Z_Z1*Z_Z1</a>)))    
+    COEF  = -(1/(4*np.pi))*RVEC*BRAC      
+    
+    <a id="change">if np.isnan(COEF).any():
+        print(&quotNaN!&quot)   
+        
+   </a> return COEF
+
+def compute_mach_cone_matrix(XC,YC,ZC,MCM,mach):
+    for m_idx in range(len(mach)):</code></pre><h3>After Change</h3><pre><code class='java'>
+    Y1_Y  = Y1-Y
+    Z_Z1  = Z-Z1    
+
+    DENUM =  <a id="change">np.square(Z_Z1) + np.square(Y1_Y)</a>
+    DENUM[DENUM==0] = 1e-32
+    XVEC  = -Y1_Y*np.sin(tw)/DENUM
+    YVEC  = Z_Z1/DENUM
+    ZVEC  = Y1_Y*np.cos(tw)/DENUM
+    RVEC  = np.array([XVEC, YVEC, ZVEC])
+    BRAC  = 1 + (X_X1 / (np.sqrt(<a id="change">np.square(X_X1)</a>+ <a id="change">np.square(Y_Y1)</a>+ np.square(Z_Z1))))    
+    COEF  = -(1/(4*np.pi))*RVEC*BRAC      
+
+    return COEF</code></pre>

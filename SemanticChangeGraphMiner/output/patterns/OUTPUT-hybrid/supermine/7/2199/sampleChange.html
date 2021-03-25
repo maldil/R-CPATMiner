@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _initialize_sufficient_statistics(self):
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()
+        <a id="change">stats[&quotnorm&quot] = [np.zeros(g.weights_.shape) for g in self.gmms_]</a>
+        stats[&quotmeans&quot] = [np.zeros(np.shape(g.means_)) for g in self.gmms_]
+        stats[&quotcovars&quot] = [np.zeros(np.shape(g.covars_)) for g in self.gmms_]
+        return stats
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()
+        stats[&quotn_samples&quot] = 0
+        stats[&quotpost_comp_mix&quot] = None
+        <a id="change">stats[&quotpost_mix_sum&quot] = np.zeros((self.n_components, self.n_mix))</a>
+        stats[&quotpost_sum&quot] = np.zeros(self.n_components)
+        stats[&quotsamples&quot] = None
+        stats[&quotcentered&quot] = None
+        return stats</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            states_v = states_v.cuda()
+        action_values_v = net(states_v)
+        best_action_values_v = action_values_v.max(1)[0]
+        mean_val = <a id="change">best_action_values_v.mean().data.cpu().numpy()[0]</a>
+        mean_vals.append(mean_val)
+    return np.mean(mean_vals)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        states_v = torch.tensor(batch).to(device)
+        action_values_v = net(states_v)
+        best_action_values_v = action_values_v.max(1)[0]
+        mean_vals.append(<a id="change">best_action_values_v.mean().item()</a>)
+    return np.mean(mean_vals)
+
+</code></pre>

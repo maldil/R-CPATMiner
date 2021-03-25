@@ -1,0 +1,26 @@
+<html><h3>6c3a117b9b39fd7f993c85091f7a1a0d96d10d08,datasets/KITTI.py,,load_flow_from_png,#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def load_flow_from_png(png_path):
+    <a id="change">return(imread(png_path)[:,:,0:2].astype(float) - 128)</a>
+
+
+def make_dataset(dir, split, occ=True):
+    &quot&quot&quotWill search in training folder for folders &quotflow_noc&quot or &quotflow_occ&quot and &quotcolored_0&quot (KITTI 2012) or &quotimage_2&quot (KITTI 2015) &quot&quot&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def load_flow_from_png(png_path):
+    flo_file = cv2.imread(png_path,cv2.IMREAD_UNCHANGED)
+    flo_img = <a id="change">flo_file[:,:,1::-1].astype(np.float32)</a>
+    invalid = (flo_file[:,:,2] == 0)
+    flo_img = flo_img - 32768
+    flo_img = <a id="change">flo_img / 64</a>
+    flo_img[invalid, :] = np.NaN
+    <a id="change">return(flo_img)</a>
+
+
+def make_dataset(dir, split, occ=True):
+    &quot&quot&quotWill search in training folder for folders &quotflow_noc&quot or &quotflow_occ&quot and &quotcolored_0&quot (KITTI 2012) or &quotimage_2&quot (KITTI 2015) &quot&quot&quot</code></pre><img src="16256233.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/6c3a117b9b39fd7f993c85091f7a1a0d96d10d08#diff-a0e225ebca2a9a4940b5fba14bcad9e250fd959a777c7a78ef5ee4f5dc8643b6L17' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: 6c3a117b9b39fd7f993c85091f7a1a0d96d10d08</div><div id='time'> Time: 2018-01-29</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: datasets/KITTI.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_flow_from_png</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L673' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgb2xyz</div><BR><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/8ac327667161ae6e2c37f88ff3782e6591c19b48#diff-d47506ddcaebd71c3e54dc8fa09edaf048a0dc0a70bd4ab21303b1411c203827L36' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: 8ac327667161ae6e2c37f88ff3782e6591c19b48</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/common/wrappers.py</div><div id='class'> Class Name: PreprocessImage</div><div id='method'> Method Name: _observation</div><BR>

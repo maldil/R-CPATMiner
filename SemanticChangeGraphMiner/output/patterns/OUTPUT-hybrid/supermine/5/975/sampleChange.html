@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    
+
+    result = scipy.signal.fftconvolve(y, <a id="change">y[::-1]</a>, mode=&quotfull&quot)
+
+    result = result[int(len(result)/2):]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Slice down to max_size
+    subslice = [Ellipsis] * autocorr.ndim
+    <a id="change">subslice[axis] = slice(max_size)</a>
+
+    return autocorr[subslice]
+
+</code></pre>

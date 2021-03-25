@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError(&quotFactors not associated for all the random&quot
+                             &quotvariables.&quot)
+
+        factor_nodes = set(self.nodes()) - <a id="change">set(variable_nodes)</a>
+        if len(factor_nodes) != len(self.factors):
+            raise ValueError(&quotFactors not associated with all the factor nodes.&quot)
+
+        cardinalities = self.get_cardinality()</code></pre><h3>After Change</h3><pre><code class='java'>
+        variable_nodes = set([x for factor in self.factors for x in factor.scope()])
+        factor_nodes = set(self.nodes()) - variable_nodes
+
+        <a id="change">if not all(isinstance(factor_node, Factor) for factor_node in factor_nodes):
+            raise ValueError(&quotFactors not associated for all the random variables&quot)
+
+       </a> if (not (bipartite.is_bipartite(self)) or 
+           not (bipartite.is_bipartite_node_set(self, variable_nodes) or 
+                bipartite.is_bipartite_node_set(self, variable_nodes))):
+            raise ValueError(&quotEdges can only be between variables and factors&quot)</code></pre>

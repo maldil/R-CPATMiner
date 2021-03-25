@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.time_enc = time_enc
+
+    def forward(self, x, adj_t, t):
+        <a id="change">if adj_t.nnz() &gt; 0:
+            _, _, value = adj_t.coo()
+            
+            edge_t = value[:, 0].squeeze()
+            rel_t = edge_t - t
+            rel_t_enc = self.time_enc(rel_t.float())
+            
+            edge_feat = value[:, 1:]
+            
+            edge_attr = torch.cat([rel_t_enc, edge_feat], dim=1)
+            adj_t.set_value_(edge_attr, layout=&quotcoo&quot)
+            x = self.conv((x, x[:adj_t.size(0)]), adj_t)
+        else:
+            x = self.conv.lin_skip(x) 
+       </a> <a id="change">return x</a>
+
+
+class LinkPredictor(torch.nn.Module):
+    def __init__(self, in_channels):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, x, last_update, edge_index, t, msg):
+        rel_t = last_update[edge_index[0]] - t
+        rel_t_enc = self.time_enc(<a id="change">rel_t.to(x.dtype)</a>)
+        edge_attr = torch.cat([rel_t_enc, msg], dim=-1)
+        <a id="change">return self.conv(x, edge_index, edge_attr)</a>
+
+
+class LinkPredictor(torch.nn.Module):
+    def __init__(self, in_channels):</code></pre>

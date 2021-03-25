@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            jac_large_angle = phi.__class__(
+                len(large_angle_inds), cls.dim, cls.dim)
+            jac_large_angle[:, 0, 0] = A
+            jac_large_angle[<a id="change">:, 0, 1</a>] = -B
+            jac_large_angle[:, 1, 0] = B
+            jac_large_angle[:, 1, 1] = A
+            jac[large_angle_inds] = jac_large_angle</code></pre><h3>After Change</h3><pre><code class='java'>
+                jac[large_angle_inds])
+            B = ((1. - c) / angle).unsqueeze_(dim=1).unsqueeze_(
+                dim=2).expand_as(jac[large_angle_inds]) * \
+                <a id="change">cls.wedge(phi.__class__([1.]))</a>
+
+            <a id="change">jac[large_angle_inds] = A + B</a>
+
+        return jac.squeeze_()
+
+    @classmethod</code></pre>

@@ -1,0 +1,39 @@
+<html><h3>e4d313478124e00a931ec40ab25643accad88641,beancount_import/source/generic_importer_source.py,ImporterSource,prepare,#ImporterSource#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for entry in f_entries:
+                hash_ = self._hash_entry(entry, frozenset([&quotfilename&quot,&quotlineno&quot]))
+                &#47&#47 skip the existing entries from other statements
+                <a id="change">if hash_ in entries: continue
+</a>                &#47&#47 If the entry exists in the journal, skip
+                if self._is_existing(journal, entry): continue
+                &#47&#47 add importer name as sorce description to source postings
+                self._add_description(entry)
+                &#47&#47 balance amount
+                self.balance_amounts(entry)
+                <a id="change">hashed_entries[hash_] = entry</a>
+            entries = {**entries, **hashed_entries}
+
+        results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def prepare(self, journal: &quotJournalEditor&quot, results: SourceResults) -&gt; None:
+        results.add_account(self.account)
+        entries = <a id="change">defaultdict(list)</a>
+        for f in self.files:
+            f_entries = self.importer.extract(f)
+            &#47&#47 collect  all entries in current statement, grouped by hash
+            hashed_entries = defaultdict(list)
+            for entry in f_entries:
+                hash_ = self._hash_entry(entry, frozenset([&quotfilename&quot,&quotlineno&quot]))
+                hashed_entries[hash_].append(entry)
+            &#47&#47 deduplicate across statements
+            for hash_ in hashed_entries:
+                &#47&#47 skip the existing entries from other statements. add remaining
+                <a id="change">n = len(entries[hash_])</a>
+                entries[hash_].extend(hashed_entries[hash_][n:])
+
+        uncleared_entries = defaultdict(list)
+        for hash_ in entries:</code></pre><img src="24322163.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jbms/beancount-import/commit/e4d313478124e00a931ec40ab25643accad88641#diff-127ae9abdac941d936f3929fc61ef6a9fa0abb1fd038905af4a28165892e5df2L55' target='_blank'>Link</a></div><div id='project'> Project Name: jbms/beancount-import</div><div id='commit'> Commit Name: e4d313478124e00a931ec40ab25643accad88641</div><div id='time'> Time: 2020-08-06</div><div id='author'> Author: dumbpyx@gmail.com</div><div id='file'> File Name: beancount_import/source/generic_importer_source.py</div><div id='class'> Class Name: ImporterSource</div><div id='method'> Method Name: prepare</div><BR><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/fdb83626b1f22ff6e7523cb3ea281847be5c69bb#diff-aa6a290768ff26db18aa23fee14145ff2166e47f103500e53d20a5bb5277ccbdL20' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: fdb83626b1f22ff6e7523cb3ea281847be5c69bb</div><div id='time'> Time: 2019-05-28</div><div id='author'> Author: nishanth.kumar20@gmail.com</div><div id='file'> File Name: simple_rl/agents/RMaxAgentClass.py</div><div id='class'> Class Name: RMaxAgent</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/8d68d307af04166e7aa4fde915b95a41560b8f19#diff-e296eec2221ad3739525843362327b719176deff1de6c248c8c0319cc8daaf21L139' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 8d68d307af04166e7aa4fde915b95a41560b8f19</div><div id='time'> Time: 2014-02-11</div><div id='author'> Author: davidgameswolfe@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/sql/panel.py</div><div id='class'> Class Name: SQLPanel</div><div id='method'> Method Name: process_response</div><BR>

@@ -1,0 +1,24 @@
+<html><h3>1d6771befb95f4ae94f308899633294a003dcfd6,src/fonduer/utils/data_model_utils/structural.py,,lowest_common_ancestor_depth,#,188
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    spans = [_to_span(i) for i in c]
+    ancestors = [np.array(span.sentence.xpath.split("/")) for span in spans]
+    min_len = min([a.size for a in ancestors])
+    <a id="change">arrays = np.array([a[:min_len] for a in ancestors])</a>
+    <a id="change">arg_min = np.argmin(arrays[:-1] == arrays[1:], axis=1)</a>
+    val = np.min(arg_min[np.nonzero(arg_min)])
+    return min_len - val
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    spans = [_to_span(i) for i in c]
+    ancestors = [np.array(span.sentence.xpath.split("/")) for span in spans]
+    min_len = min([a.size for a in ancestors])
+    <a id="change">ancestor = ancestors[0]</a>
+    ind = 0  &#47&#47 all the ancestors are common up to this index (exclusive).
+    while ind &lt; min_len:
+        <a id="change">if not all([a[ind] == ancestor[ind] for a in ancestors]):
+            break
+       </a> <a id="change">ind += 1</a>
+    return min_len - ind
+</code></pre><img src="31319769.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/1d6771befb95f4ae94f308899633294a003dcfd6#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L212' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 1d6771befb95f4ae94f308899633294a003dcfd6</div><div id='time'> Time: 2020-07-24</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/1d6771befb95f4ae94f308899633294a003dcfd6#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L212' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 1d6771befb95f4ae94f308899633294a003dcfd6</div><div id='time'> Time: 2020-07-24</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/1d6771befb95f4ae94f308899633294a003dcfd6#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L180' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 1d6771befb95f4ae94f308899633294a003dcfd6</div><div id='time'> Time: 2020-07-24</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: common_ancestor</div><BR><BR><div id='link'><a href='https://github.com/jonathf/chaospy/commit/f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9#diff-5b4e248618e3b0f2b9b16e66bc2b37faf8bc40e17bf273705cf3640e025b6f65L36' target='_blank'>Link</a></div><div id='project'> Project Name: jonathf/chaospy</div><div id='commit'> Commit Name: f47485cc4a21fb18564ede7ab0cc9001dbd0f1d9</div><div id='time'> Time: 2020-06-10</div><div id='author'> Author: jonathf@gmail.com</div><div id='file'> File Name: chaospy/descriptives/sensitivity/total.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Sens_t</div><BR>

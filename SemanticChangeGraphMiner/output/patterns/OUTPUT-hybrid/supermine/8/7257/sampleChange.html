@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not challenge.logo:
+            try:
+                logo = f"https://grand-challenges.grand-challenge.org/serve/public_html/images/all_challenges/{challenge.short_name.lower()}.png/"
+                img = <a id="change">urlopen(logo).read()</a>
+                challenge.logo = ContentFile(img,
+                                             f"{challenge.short_name.lower()}.png")
+            except HTTPError:
+                print(f"Could not find logo for {challenge.short_name}")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if not challenge.logo:
+            try:
+                logo = <a id="change">os.path.join(settings.MEDIA_ROOT,
+                                    settings.MAIN_PROJECT_NAME,
+                                    settings.EXTERNAL_PROJECTS_IMAGE_FOLDER,
+                                    f&quot{challenge.short_name.lower()}.png&quot)</a>
+
+                <a id="change">with open(logo, &quotrb&quot) as f:
+                    img = f.read()
+               </a> challenge.logo = ContentFile(img,
+                                             f"{challenge.short_name.lower()}.png")
+                
+            except Exception:</code></pre>

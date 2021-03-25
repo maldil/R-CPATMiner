@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    for shape in [(4, ), (4, 5), (4, 5, 6)]:
+        a = np.random.random(shape)
+        <a id="change">for axis in (None, 0):
+            for ddof in (0, 1):
+                yield (check_mean_sigma, a, axis, ddof)
+
+
+&#47&#47---------------------------------------------------------------------------
+&#47&#47 Check that the keepdims argument works as expected
+&#47&#47  we&quotll later compare median_sigmaG to these results, so that
+&#47&#47  is effectively tested as well.
+</a>def check_mean_sigma_keepdims(a, axis):
+    mu1, sigma1 = mean_sigma(a, axis, keepdims=False)
+    mu2, sigma2 = mean_sigma(a, axis, keepdims=True)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    np.random.seed(0)
+
+    a = np.random.random(a_shape)
+    <a id="change">mu1, sigma1 = mean_sigma(a, axis=axis,
+                             ddof=ddof)</a>
+
+    mu2 = np.mean(a, axis=axis)
+    sigma2 = np.std(a, axis=axis, ddof=ddof)
+</code></pre>

@@ -1,0 +1,21 @@
+<html><h3>e79449afe45f4da6f1756a7d92bdd3cd6618c638,qanta/guesser/dan.py,DanGuesser,_guess_batch,#DanGuesser#,434
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        out = self.model(input_dict, lengths_dict, qnums)
+        probs = [p for p in F.softmax(out).data.cpu().numpy()]
+        logits = [l for l in <a id="change">out.data.cpu().numpy()</a>]
+        preds = [np.argsort(-l)[:10] <a id="change">for</a> l in logits]
+        guesses = []
+        for i, ps in enumerate(preds):
+            guesses.append([])</code></pre><h3>After Change</h3><pre><code class='java'>
+        guesses = []
+        out = self.model(input_dict, lengths_dict, qnums)
+        probs = F.softmax(out).data.cpu().numpy()
+        n_examples = <a id="change">probs.shape[0]</a>
+        preds = np.argsort(-probs, axis=1)
+        for i in range(n_examples):
+            guesses.append([])
+            for p in preds[i][:max_n_guesses]:</code></pre><img src="18950897.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Pinafore/qb/commit/e79449afe45f4da6f1756a7d92bdd3cd6618c638#diff-e52573ae7a7c5beef51db11be8214218f3aa1b82c3b45e1830ac0b9e813e63abL461' target='_blank'>Link</a></div><div id='project'> Project Name: Pinafore/qb</div><div id='commit'> Commit Name: e79449afe45f4da6f1756a7d92bdd3cd6618c638</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: sjtufs@gmail.com</div><div id='file'> File Name: qanta/guesser/dan.py</div><div id='class'> Class Name: DanGuesser</div><div id='method'> Method Name: _guess_batch</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/1433d4c435a253e891009b08a9280bc452087db0#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL40' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 1433d4c435a253e891009b08a9280bc452087db0</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL160' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL120' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

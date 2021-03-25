@@ -1,0 +1,35 @@
+digraph G {
+subgraph cluster0 {
+1 [label="train" a="32" s="4181,4191" l="6,1" shape="box"];
+7 [label="FieldAccess" a="22" s="4176" l="4" shape="box"];
+8 [label="EnhancedForStatement" a="70" s="4079,4160" l="65,2" shape="diamond"];
+9 [label="SimpleName" a="42" s="4148" l="4" shape="ellipse"];
+10 [label="Assignment:=" a="7" s="4180" l="1" shape="box"];
+11 [label="Assignment:=" a="7" s="4079,4160" l="65,2" shape="box"];
+12 [label="SimpleName" a="42" s="4187" l="4" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="IfStatement" a="25" s="4140,4158" l="4,2" shape="diamond"];
+3 [label="InfixExpression:r" a="27" s="4153" l="4" shape="box"];
+4 [label="NumberLiteral" a="34" s="4157" l="1" shape="ellipse"];
+5 [label="InfixExpression:a" a="27" s="4146" l="3" shape="box"];
+6 [label="NumberLiteral" a="34" s="4149" l="3" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 10 [label="_para_"];
+3 -> 2 [label="_cond_"];
+4 -> 3 [label="_para_"];
+5 -> 3 [label="_para_"];
+6 -> 5 [label="_para_"];
+8 -> 1 [label="_control_"];
+8 -> 10 [label="_control_"];
+9 -> 8 [label="_cond_"];
+9 -> 12 [label="_ref_"];
+10 -> 7 [label="_def_"];
+11 -> 10 [label="_para_"];
+11 -> 9 [label="_def_"];
+12 -> 1 [label="_para_"];
+}

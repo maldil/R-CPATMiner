@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  mapping = GetSampaToIpaMapping(phonemes)
+  with open(dictionary, &quotr&quot) as f:
+    for orth, sampa, ipa in ReadPronunciationDictionary(f, mapping):
+      <a id="change">if orth == &quotapreli&quot:  &#47&#47 known issue
+        continue
+     </a> expected = xltor.transliterate(orth)
+      if expected != ipa:
+        STDOUT.write(&quot%s\t%s\t%s != %s\n&quot %
+                     (orth, &quot &quot.join(sampa), ipa, expected))</code></pre><h3>After Change</h3><pre><code class='java'>
+  assert 3 &lt;= len(sys.argv) &lt;= 4
+  xltor = GetPronunciationRules(sys.argv[1], &quotxh-xh_FONIPA&quot)
+  mapping = GetSampaToIpaMapping(sys.argv[2])
+  <a id="change">if len(sys.argv) &gt; 3:
+    TestPronunciationRules(xltor, mapping, sys.argv[3])
+  else:
+    ApplyPronunciationRules(xltor, mapping)</a>
+</code></pre>

@@ -1,0 +1,40 @@
+<html><h3>7a77233231c67038271c9945760b7a1d711b242d,pyroomacoustics/beamforming.py,Beamformer,steering_vector_2D_from_point,#Beamformer#,361
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            X = source[:, np.newaxis]
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            X -= self.center
+            Xn = np.sqrt(np.sum(X**2, axis=0))
+            X *= constants.get(&quotffdist&quot)/Xn
+            X += self.center
+
+       </a> D = distance(self.R, X)
+        omega = 2 * np.pi * frequency
+
+        if attn:</code></pre><h3>After Change</h3><pre><code class='java'>
+        omega = 2 * np.pi * frequency
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            &#47&#47 unit vectors pointing towards sources
+            p = (X - self.center)
+            p /= np.linalg.norm(p)
+
+            &#47&#47 The projected microphone distances on the unit vectors
+            D = np.dot(self.R.T, p)
+
+            &#47&#47 subtract minimum in each column
+            D -= np.min(D)
+
+        else:
+
+            D = distance(self.R, X)
+
+       </a> phase = np.exp(-1j * omega * D / constants.get(&quotc&quot))
+
+        if attn:
+            &#47&#47 TO DO 1: This will mean slightly different absolute value for</code></pre><img src="4132508.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/7a77233231c67038271c9945760b7a1d711b242d#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 7a77233231c67038271c9945760b7a1d711b242d</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/5214393bb75498ded8fc140914edd79c1799af05#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 5214393bb75498ded8fc140914edd79c1799af05</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/mathurinm/celer/commit/5f6b523b722ca6f724bc92a63a776bf6b68173c1#diff-40d1103292143afec620f585a71102fb01716ae17371f2eb128dacac8f8dec14L195' target='_blank'>Link</a></div><div id='project'> Project Name: mathurinm/celer</div><div id='commit'> Commit Name: 5f6b523b722ca6f724bc92a63a776bf6b68173c1</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: mathurinm@users.noreply.github.com</div><div id='file'> File Name: celer/tests/test_lasso.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_celer_single_alpha</div><BR><BR><div id='link'><a href='https://github.com/mathurinm/celer/commit/5f6b523b722ca6f724bc92a63a776bf6b68173c1#diff-40d1103292143afec620f585a71102fb01716ae17371f2eb128dacac8f8dec14L91' target='_blank'>Link</a></div><div id='project'> Project Name: mathurinm/celer</div><div id='commit'> Commit Name: 5f6b523b722ca6f724bc92a63a776bf6b68173c1</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: mathurinm@users.noreply.github.com</div><div id='file'> File Name: celer/tests/test_lasso.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_celer_path</div><BR>

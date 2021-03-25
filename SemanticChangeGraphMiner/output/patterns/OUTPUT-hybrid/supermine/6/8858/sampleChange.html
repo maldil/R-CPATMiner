@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def create_plot(all_data, xn, yn, linestyle, j2_env, additional_label = "", plottype = "line"):
+    xm, ym = (metrics[xn], metrics[yn])
+    render_all_points = plottype == "bubble"
+    <a id="change">return {"xlabel" :  xm["description"],
+            "ylabel" : ym["description"],
+            "plottype" : plottype,
+            "plotlabel" : get_plot_label(xm, ym),
+            "label": additional_label,
+            "datapoints" : create_data_points(all_data, xn, yn,
+                linestyle, render_all_points),
+            "buttonlabel" : hashlib.sha224((get_plot_label(xm, ym) +
+                additional_label).encode("utf-8")).hexdigest(),
+            "latexcode" :  get_latex_plot(all_data, xn, yn, xm, ym, render_all_points, j2_env)}</a>
+
+def build_detail_site(data, label_func, j2_env):
+    for (name, runs) in data.items():
+        print("Building &quot%s&quot" % name)</code></pre><h3>After Change</h3><pre><code class='java'>
+def create_plot(all_data, xn, yn, linestyle, j2_env, additional_label = "", plottype = "line"):
+    xm, ym = (metrics[xn], metrics[yn])
+    render_all_points = plottype == "bubble"
+    <a id="change">plot_data = get_lines(all_data, xn, yn, render_all_points)</a>
+    latex_code = <a id="change">j2_env.get_template("latex.template").\
+                    render(plot_data = plot_data, caption = get_plot_label(xm, ym),
+                    xlabel = xm["description"], ylabel = ym["description"])</a>
+    plot_data = get_lines(all_data, xn, yn, render_all_points)
+    <a id="change">button_label = hashlib.sha224((get_plot_label(xm, ym) +
+                additional_label).encode("utf-8")).hexdigest()</a>
+    <a id="change">return j2_env.get_template("chartjs.template").\
+            render(args = args, latex_code = latex_code, button_label = button_label,
+                    data_points = plot_data,
+                    xlabel = xm["description"], ylabel = ym["description"],
+                    plottype = plottype, plot_label = get_plot_label(xm, ym),
+                    label = additional_label, linestyle = linestyle,
+                    render_all_points = render_all_points)</a>
+
+def build_detail_site(data, label_func, j2_env):
+    for (name, runs) in data.items():
+        print("Building &quot%s&quot" % name)</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &gt;&gt;&gt; edges = filters.sobel(camera)
+    
+    check_nD(image, 2)
+    <a id="change">out = np.sqrt(sobel_h(image, mask) ** 2 + sobel_v(image, mask) ** 2)</a>
+    <a id="change">out /= np.sqrt(2)</a>
+    return out
+
+
+def sobel_h(image, mask=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &gt;&gt;&gt; camera = data.camera()
+    &gt;&gt;&gt; edges = filters.sobel(camera)
+    
+    <a id="change">image = img_as_float(image)</a>
+    <a id="change">output = _generic_edge_filter(image, smooth_weights=SOBEL_SMOOTH,
+                                  axis=axis, mode=mode, cval=cval)</a>
+    <a id="change">if image.ndim == 2 and mask is not None:
+        output = _mask_filter_result(output, mask)
+   </a> return output
+
+
+def sobel_h(image, mask=None):</code></pre>

@@ -1,0 +1,31 @@
+<html><h3>3d535702dc92b55d6bc8cc0c02d45d98c439b733,enthought/chaco/scatterplot.py,ScatterPlot,_gather_points_old,#ScatterPlot#,171
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    indices = ds.metadata[&quotselections&quot]
+                    point_mask = point_mask[indices]
+                    points = transpose(array((index[indices], value[indices])))
+                elif <a id="change">ds.metadata.get(&quotselection_mask&quot, None) is not N</a>one:
+                    point_mask &= ds.metadata[&quotselection_mask&quot]
+                else:
+                    continue</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 we&quotll have to define a small algebra about how they are combined,
+            &#47&#47 and this will fall out...
+            for ds in (self.index, self.value):
+                <a id="change">if ds.metadata.get(&quotselection_masks&quot, None) is not None:
+                    for mask in ds.metadata[&quotselection_masks&quot]:
+                        point_mask &= mask
+                    indices = where(point_mask == True)
+                    points = transpose(array((index[indices], value[indices])))
+                elif ds.metadata.get(&quotselections&quot, None) is not None:
+                    indices = ds.metadata[&quotselections&quot]
+                    point_mask = point_mask[indices]
+                    points = transpose(array((index[indices], value[indices])))
+                else:
+                    continue
+                
+               </a> self._cached_selection_point_mask = point_mask
+                self._cached_selected_pts = points
+                self._selection_cache_valid = True
+                break</code></pre><img src="2268802.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/3d535702dc92b55d6bc8cc0c02d45d98c439b733#diff-a171d688e80cc0edcac8ab17a40da4db62d22065e20bf3b962e21261e182f37dL196' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 3d535702dc92b55d6bc8cc0c02d45d98c439b733</div><div id='time'> Time: 2008-12-01</div><div id='author'> Author: bhendrix@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/scatterplot.py</div><div id='class'> Class Name: ScatterPlot</div><div id='method'> Method Name: _gather_points_old</div><BR><BR><div id='link'><a href='https://github.com/J535D165/recordlinkage/commit/702899ea0aeb57b5761b85c43d1416ca81d4da00#diff-e33f3a13a371d4a0756b91075f5c35a764519c71fb238fe038047e123da6b863L129' target='_blank'>Link</a></div><div id='project'> Project Name: J535D165/recordlinkage</div><div id='commit'> Commit Name: 702899ea0aeb57b5761b85c43d1416ca81d4da00</div><div id='time'> Time: 2019-03-14</div><div id='author'> Author: jonathandebruinos@gmail.com</div><div id='file'> File Name: recordlinkage/compare.py</div><div id='class'> Class Name: String</div><div id='method'> Method Name: _compute_vectorized</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/0514d4b6de97d652e6cd99c7b557018890a6ec99#diff-ee4b78ba1254b772fc00e785d492d8d1f56bf407d106c481ebeff9607b3aa3b9L152' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 0514d4b6de97d652e6cd99c7b557018890a6ec99</div><div id='time'> Time: 2017-06-26</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/disc_learning.py</div><div id='class'> Class Name: TFNoiseAwareModel</div><div id='method'> Method Name: train</div><BR>

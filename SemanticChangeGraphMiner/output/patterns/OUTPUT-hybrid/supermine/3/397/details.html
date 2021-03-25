@@ -1,0 +1,20 @@
+<html><h3>b45f35862afbca09ff1c70be1cc4d1d6ca6c9617,pyriemann/classification.py,MDM,_predict_distances,#MDM#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for m in range(Nc):
+            for k in range(Nt):
+                <a id="change">dist[k, m]</a> = distance(covtest[k, :, :], self.covmeans[m],
+                                      metric=self.metric_dist)
+        return dist
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            dist = [distance(covtest, self.covmeans[m], self.metric_dist)
+                    for m in range(Nc)]
+        else:
+            <a id="change">dist = Parallel(n_jobs=self.n_jobs)(delayed(distance)(covtest, self.covmeans[m], self.metric_dist) for m in range(Nc))</a>
+
+        dist = numpy.concatenate(dist, axis=1)
+        return dist
+</code></pre><img src="1898463.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/b45f35862afbca09ff1c70be1cc4d1d6ca6c9617#diff-73b613902d1c35be5ff198082c22011ed69d2361ea1639a200f2e7a3cb5e9e9bL47' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: b45f35862afbca09ff1c70be1cc4d1d6ca6c9617</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/classification.py</div><div id='class'> Class Name: MDM</div><div id='method'> Method Name: _predict_distances</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/96a364e27fe2d4cb55328150a2c4b2d97acc8f3f#diff-9c906e0569935543542ea4bf9376685cff7a69575e556325dc34557d6714d20fL185' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 96a364e27fe2d4cb55328150a2c4b2d97acc8f3f</div><div id='time'> Time: 2020-07-26</div><div id='author'> Author: git@jjerphan.xyz</div><div id='file'> File Name: sklearn/calibration.py</div><div id='class'> Class Name: CalibratedClassifierCV</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b4ae3a5a56f63b1ed65370d2bb074503026cc1c4#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L230' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b4ae3a5a56f63b1ed65370d2bb074503026cc1c4</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: label</div><BR>

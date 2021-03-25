@@ -1,0 +1,41 @@
+<html><h3>f877a9a1b2cb25bb045d5e513a412d4bd6f165fc,datalabeling/label_image_test.py,,test_label_image,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_label_image(capsys, annotation_spec_set, instruction, dataset):
+
+    &#47&#47 Start labeling.
+    <a id="change">response = label_image.label_image(
+        dataset.name,
+        instruction.name,
+        annotation_spec_set.name
+    )</a>
+    out, _ = capsys.readouterr()
+    assert &quotLabel_image operation name: &quot in out
+    <a id="change">operation_name = response.operation.name</a>
+
+    &#47&#47 Cancels the labeling operation.
+    response.cancel()
+    assert response.cancelled() is True
+
+    <a id="change">client = datalabeling.DataLabelingServiceClient()</a>
+
+    &#47&#47 If provided, use a provided test endpoint - this will prevent tests on
+    &#47&#47 this snippet from triggering any action by a real human
+    <a id="change">if &quotDATALABELING_ENDPOINT&quot in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv(&quotDATALABELING_ENDPOINT&quot))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
+   </a> <a id="change">client.transport._operations_client.cancel_operation(
+            operation_name)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return label_image.label_image(
+            dataset.name, instruction.name, annotation_spec_set.name)
+
+    <a id="change">response = run_sample()</a>
+    <a id="change">cleaner.append(response.operation.name)</a>
+
+    out, _ = capsys.readouterr()
+    assert &quotLabel_image operation name: &quot in out
+</code></pre><img src="4010492.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 22</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/f877a9a1b2cb25bb045d5e513a412d4bd6f165fc#diff-977897bc4c83f17c2303e5bdaa09eab271a48ef96c4be69a3ada194572df7a50L89' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: f877a9a1b2cb25bb045d5e513a412d4bd6f165fc</div><div id='time'> Time: 2020-04-22</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: datalabeling/label_image_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_label_image</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/f877a9a1b2cb25bb045d5e513a412d4bd6f165fc#diff-747118439d6c1dfc05cb4f6d93533646f5e8d38e2d93cedb97029ba795329d09L90' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: f877a9a1b2cb25bb045d5e513a412d4bd6f165fc</div><div id='time'> Time: 2020-04-22</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: datalabeling/label_video_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_label_video</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/f877a9a1b2cb25bb045d5e513a412d4bd6f165fc#diff-77e8f62d98dd53a0e0b62689ae9397bb75868a49cc257ebe51bfdf4a9827a6b2L90' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: f877a9a1b2cb25bb045d5e513a412d4bd6f165fc</div><div id='time'> Time: 2020-04-22</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: datalabeling/label_text_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_label_text</div><BR>

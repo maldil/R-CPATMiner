@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.lagrangian:
+            w = module.weight
+            norm = th.norm(w,2,self.axis)
+            return self.scale * th.sum(<a id="change">th.clamp(norm-self.value,0,1e-15)</a>)
+        else:
+            w = module.weight
+            norm = th.norm(w,2,self.axis).expand_as(w) / float(self.value)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.lagrangian:
+            w = module.weight
+            norm_diff = th.norm(w,2,self.axis).sub(self.value)
+            return self.scale * th.sum(<a id="change">norm_diff.gt(0).float().mul(norm_diff)</a>)
+        else:
+            module.weight.data = th.renorm(module.weight.data, 2, self.axis, self.value)
+</code></pre>

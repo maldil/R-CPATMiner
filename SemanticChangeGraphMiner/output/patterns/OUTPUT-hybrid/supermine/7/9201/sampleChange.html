@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def get_estimator(flags):
+  &#47&#47 TODO: Allow pre-processing to be configurable through flags
+  classifier = <a id="change">ensemble.RandomForestClassifier(**flags)</a>
+
+  numeric_transformer = pipeline.Pipeline([
+      (&quotimputer&quot, impute.SimpleImputer(strategy=&quotmedian&quot)),
+      (&quotscaler&quot, preprocessing.StandardScaler()),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def get_estimator(flags):
+  &#47&#47 TODO: Allow pre-processing to be configurable through flags
+  classifier = <a id="change">ensemble.RandomForestClassifier(
+      n_estimators=flags.n_estimators,
+      max_depth=flags.max_depth,
+      min_samples_leaf=flags.min_samples_leaf,
+      criterion=flags.criterion,
+  )</a>
+
+  numeric_transformer = pipeline.Pipeline([
+      (&quotimputer&quot, impute.SimpleImputer(strategy=&quotmedian&quot)),
+      (&quotscaler&quot, preprocessing.StandardScaler()),</code></pre>

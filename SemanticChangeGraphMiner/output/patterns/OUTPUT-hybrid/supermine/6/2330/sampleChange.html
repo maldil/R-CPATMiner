@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                lis.append(LI_HTML.format(data=li_data, context_id=context.id))
+
+                &#47&#47 TODO: Remove this hack
+                <a id="change">try:
+                    page_cids += [c.id for c in sorted(candidates, key=lambda c : c.char_start)]
+                except:
+                    page_cids += [c.id for c in sorted(candidates, key=lambda c : c.span0.char_start)]
+           </a> pages.append(PAGE_HTML.format(pid=pid, data=&quot&quot.join(lis)))
+            cids.append(page_cids)
+            pid += 1
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 Construct the &lt;li&gt; and page view elements
+                li_data = self._tag_context(context, candidates, gold)
+                lis.append(LI_HTML.format(data=li_data, context_id=context.id))
+                page_cids += <a id="change">[self.candidates.index(c) for c in candidates]</a>
+
+            &#47&#47 Assemble the page...
+            pages.append(PAGE_HTML.format(pid=pid, data=&quot&quot.join(lis)))
+            cids.append(page_cids)</code></pre>

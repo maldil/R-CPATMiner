@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    inputs, outputs = [], []
+    for inp, outs in data.items():
+        inputs.append(list(inp))
+        outputs.append(<a id="change">np.maximum.reduce(outs)</a>)
+    return inputs, outputs
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    inputs, outputs = [], []
+    for inp, outs in data.items():
+        inputs.append(list(inp))
+        combined = [0] * len(<a id="change">outs[0]</a>)
+        for i in range(len(combined)):
+            combined[i] = max(j[i] for j in outs)
+        outputs.append(combined)</code></pre>

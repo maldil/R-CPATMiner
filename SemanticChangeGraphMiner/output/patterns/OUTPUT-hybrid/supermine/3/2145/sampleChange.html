@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  while True:
+    try:
+      &#47&#47 get images and labels from tf.data.Dataset
+      <a id="change">img</a>, lbl = sess.run([&quotinf_image:0&quot, &quotinf_image:1&quot])
+
+      &#47&#47 inference by feeding these images and labels into the input tensors
+      &#47&#47 you can view the exported model signatures via:</code></pre><h3>After Change</h3><pre><code class='java'>
+  output_file = tf.io.gfile.GFile("{}/part-{:05d}".format(args.output, worker_num), mode=&quotw&quot)
+
+  for batch in ds:
+    <a id="change">predictions = predict(conv2d_input=batch[0])</a>
+    labels = np.reshape(batch[1], -1).astype(np.int)
+    preds = np.argmax(predictions[&quotdense_1&quot], axis=1)
+    for x in zip(labels, preds):
+      output_file.write("{} {}\n".format(x[0], x[1]))</code></pre>

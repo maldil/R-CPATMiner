@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.W = t3f.get_variable(name, initializer=initializer)
+    self.b = None
+    if self.use_bias:
+      b_name = <a id="change">&quottt_dense_b_{}&quot.format(KerasDense.counter)</a>
+      b_init = tf.constant_initializer(self.bias_initializer)
+      self.b = tf.get_variable(b_name, shape=self.output_dim,
+                               initializer=b_init)
+    KerasDense.counter += 1</code></pre><h3>After Change</h3><pre><code class='java'>
+                       &quot"he", and "lecun"  are supported&quot
+                       % self.kernel_initializer)
+    name = &quottt_dense_{}&quot.format(self.counter)
+    <a id="change">with tf.variable_scope(name):
+      self.matrix = t3f.get_variable(&quotmatrix&quot, initializer=initializer)
+      self.b = None
+      if self.use_bias:
+        b_init = tf.constant_initializer(self.bias_initializer)
+        self.b = tf.get_variable(&quotbias&quot, shape=self.output_dim,
+                                 initializer=b_init)
+   </a> self.trainable_weights = list(self.matrix.tt_cores)
+    if self.b is not None:
+      self.trainable_weights.append(self.b)
+</code></pre>

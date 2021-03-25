@@ -1,0 +1,58 @@
+<html><h3>4c1296c88b87e1a166545d1315afb664fad9ffbe,foolbox/attacks/ddn.py,DDNAttack,run,#DDNAttack#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        delta = ep.zeros_like(x)
+
+        epsilon = self.init_epsilon * ep.ones(x, len(x))
+        worst_norm = <a id="change">flatten</a>(ep.maximum(x, 1 - x)).square().sum(axis=-1).sqrt()
+
+        best_l2 = worst_norm
+        best_delta = delta
+        adv_found = ep.zeros(x, len(x)).bool()
+
+        for i in range(self.steps):
+            x_adv = x + delta
+
+            _, is_adversarial, gradients = grad_and_is_adversarial(x_adv, classes)
+            gradients = normalize_l2_norms(gradients)
+
+            l2 = ep.norms.l2(flatten(delta), axis=-1)
+            is_smaller = l2 &lt; best_l2
+
+            is_both = ep.logical_and(is_adversarial, is_smaller)
+            adv_found = ep.logical_or(adv_found, is_adversarial)
+            best_l2 = ep.where(is_both, l2, best_l2)
+
+            best_delta = ep.where(atleast_kd(is_both, x.ndim), delta, best_delta)
+
+            &#47&#47 perform cosine annealing of LR starting from 1.0 to 0.01
+            delta = delta + atleast_kd(stepsize, x.ndim) * gradients
+            stepsize = (
+                0.01 + (stepsize - 0.01) * (1 + math.cos(math.pi * i / self.steps)) / 2
+            )
+
+            epsilon = epsilon * ep.where(is_adversarial, 1 - self.gamma, 1 + self.gamma)
+            epsilon = ep.minimum(epsilon, worst_norm)
+
+            &#47&#47 do step
+            delta = delta + atleast_kd(stepsize, x.ndim) * gradients
+
+            &#47&#47 clip to valid bounds
+            delta = <a id="change">(
+                delta
+                * atleast_kd(epsilon, x.ndim)
+                / delta.square().sum(axis=(1, 2, 3), keepdims=True).sqrt()
+            )</a>
+            delta = ep.clip(x + delta, *model.bounds) - x
+
+        x_adv = x + delta
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        delta = ep.zeros_like(x)
+
+        epsilon = self.init_epsilon * ep.ones(x, len(x))
+        worst_norm = ep.norms.l2(<a id="change">flatten(ep.maximum(x, 1 - x))</a>, -1)
+
+        best_l2 = worst_norm
+        best_delta = delta</code></pre><img src="1048287.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bethgelab/foolbox/commit/4c1296c88b87e1a166545d1315afb664fad9ffbe#diff-7c4a4d35f0036f7bcbd6dd2267fa73f241fe01461483d2b06e4920e652cab485L70' target='_blank'>Link</a></div><div id='project'> Project Name: bethgelab/foolbox</div><div id='commit'> Commit Name: 4c1296c88b87e1a166545d1315afb664fad9ffbe</div><div id='time'> Time: 2020-02-13</div><div id='author'> Author: rzrolandzimmermann@gmail.com</div><div id='file'> File Name: foolbox/attacks/ddn.py</div><div id='class'> Class Name: DDNAttack</div><div id='method'> Method Name: run</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/project-template/commit/b25babd44bbf1dafb7f0fe7bd633c3814770aa62#diff-2a725738ca01850ffb4ee7492c37ae791309d3f3e6576fd5d36885066b8753b3L12' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/project-template</div><div id='commit'> Commit Name: b25babd44bbf1dafb7f0fe7bd633c3814770aa62</div><div id='time'> Time: 2016-05-10</div><div id='author'> Author: vighneshbirodkar@nyu.edu</div><div id='file'> File Name: examples/plot_transformer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/GPflow/GPflowOpt/commit/02cf73fdb1a31c2f6e779470d87343897064305c#diff-f1c349e608d4c53f941c85a820e4a4a41a048adbfa66ead1b966d2c7f4b2e4ffL76' target='_blank'>Link</a></div><div id='project'> Project Name: GPflow/GPflowOpt</div><div id='commit'> Commit Name: 02cf73fdb1a31c2f6e779470d87343897064305c</div><div id='time'> Time: 2017-09-27</div><div id='author'> Author: Pxidbpb4Lq</div><div id='file'> File Name: gpflowopt/acquisition/mes.py</div><div id='class'> Class Name: MinValueEntropySearch</div><div id='method'> Method Name: _setup</div><BR>

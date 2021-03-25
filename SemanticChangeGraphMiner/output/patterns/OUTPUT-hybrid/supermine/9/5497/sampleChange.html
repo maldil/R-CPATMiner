@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return tmpdir_relative
+
+    def test_completed_log_output(self) -&gt; None:
+        <a id="change">build_root = get_buildroot()</a>
+        <a id="change">with temporary_dir(root_dir=build_root) as tmpdir:
+            tmpdir_relative = self._prepare_sources(tmpdir, build_root)
+
+            test_run_result = self.run_pants(
+                [
+                    "--no-dynamic-ui",
+                    "--backend-packages=[&quotpants.backend.python&quot, &quotpants.backend.python.typecheck.mypy&quot]",
+                    "-ldebug",
+                    "typecheck",
+                    f"{tmpdir_relative}/src/python/project",
+                ]
+            )
+
+            assert "[DEBUG] Starting: Run MyPy on" in test_run_result.stderr
+            assert "[DEBUG] Completed: Run MyPy on" in test_run_result.stderr</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            ),
+            "src/python/project/BUILD": "python_library()",
+        }
+        <a id="change">with self.setup_tmpdir(sources) as tmpdir:
+            result = self.run_pants(
+                [
+                    "--no-dynamic-ui",
+                    "--backend-packages=[&quotpants.backend.python&quot, &quotpants.backend.python.typecheck.mypy&quot]",
+                    "-ldebug",
+                    "typecheck",
+                    f"{tmpdir}/src/python/project",
+                ]
+            )
+
+       </a> assert "[DEBUG] Starting: Run MyPy on" in result.stderr
+        assert "[DEBUG] Completed: Run MyPy on" in result.stderr
+</code></pre>

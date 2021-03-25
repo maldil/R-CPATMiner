@@ -1,0 +1,25 @@
+<html><h3>c3a2b85b98dc441f97703c426d5bd75568b0ce10,keras_rcnn/layers/losses/_rcnn.py,RCNNClassificationLoss,call,#RCNNClassificationLoss#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        def calculate_loss():
+            return self.compute_classification_loss(output, target)
+        
+        loss = <a id="change">tensorflow.cond(keras.backend.not_equal(keras.backend.shape(output)[1], keras.backend.shape(target)[1]), no_loss, calculate_loss)</a>
+
+        self.add_loss(loss, inputs)
+
+        return output</code></pre><h3>After Change</h3><pre><code class='java'>
+            return self.compute_classification_loss(output, target)
+
+        x = keras.backend.shape(output)[1]
+        <a id="change">y = keras.backend.shape(target)[1]</a>
+
+        predicate = keras.backend.not_equal(x, y)
+
+        loss = <a id="change">tensorflow.cond(predicate, no_loss, calculate_loss)</a>
+
+        self.add_loss(loss, inputs)
+
+        return output</code></pre><img src="18445401.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/broadinstitute/keras-rcnn/commit/c3a2b85b98dc441f97703c426d5bd75568b0ce10#diff-f8204673c8c47486ee4c90ca21f1d077faf5f76713356cfa7dc78e79542863a5L23' target='_blank'>Link</a></div><div id='project'> Project Name: broadinstitute/keras-rcnn</div><div id='commit'> Commit Name: c3a2b85b98dc441f97703c426d5bd75568b0ce10</div><div id='time'> Time: 2017-11-14</div><div id='author'> Author: allen.goodman@icloud.com</div><div id='file'> File Name: keras_rcnn/layers/losses/_rcnn.py</div><div id='class'> Class Name: RCNNClassificationLoss</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/broadinstitute/keras-rcnn/commit/c3a2b85b98dc441f97703c426d5bd75568b0ce10#diff-f8204673c8c47486ee4c90ca21f1d077faf5f76713356cfa7dc78e79542863a5L57' target='_blank'>Link</a></div><div id='project'> Project Name: broadinstitute/keras-rcnn</div><div id='commit'> Commit Name: c3a2b85b98dc441f97703c426d5bd75568b0ce10</div><div id='time'> Time: 2017-11-14</div><div id='author'> Author: allen.goodman@icloud.com</div><div id='file'> File Name: keras_rcnn/layers/losses/_rcnn.py</div><div id='class'> Class Name: RCNNRegressionLoss</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/5cee7220217599ceccb191adf430eb914d148f87#diff-db705aefa4360fd5c758547b6b9a7309d1bf1cbd7c971f7772efc5639cddf038L149' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 5cee7220217599ceccb191adf430eb914d148f87</div><div id='time'> Time: 2020-09-17</div><div id='author'> Author: tanzheny@google.com</div><div id='file'> File Name: official/vision/keras_cv/ops/box_matcher.py</div><div id='class'> Class Name: BoxMatcher</div><div id='method'> Method Name: __call__</div><BR>

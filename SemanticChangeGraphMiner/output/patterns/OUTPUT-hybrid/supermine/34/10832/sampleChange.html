@@ -1,0 +1,165 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+
+    <a id="change">res = OptimizeResult()</a>
+    <a id="change">best = np.argmin(yi)</a>
+    <a id="change">res.x = Xi[best]</a>
+    <a id="change">res.fun = yi[best]</a>
+    <a id="change">res.func_vals = np.array(yi)</a>
+    <a id="change">res.x_iters = Xi</a>
+    <a id="change">res.models = models</a>
+    <a id="change">res.space = space</a>
+    <a id="change">res.random_state = rng</a>
+
+    <a id="change">return res</a>
+
+
+def gbrt_minimize(func, dimensions, base_estimator=None, n_calls=100,
+                  n_points=1000, n_random_starts=10, x0=None, y0=None,</code></pre><h3>After Change</h3><pre><code class='java'>
+                   n_points, n_random_starts, x0=None, y0=None,
+                   random_state=None, acq="EI", xi=0.01, kappa=1.96,
+                   verbose=False, specs=None, callback=None):
+    <a id="change">rng</a> = check_random_state(random_state)
+    space = Space(dimensions)
+
+    &#47&#47 Initialize with provided points (x0 and y0) and/or random points
+    if n_calls &lt;= 0:
+        raise ValueError(
+            "Expected `n_calls` &gt; 0, got %d" % n_random_starts)
+
+    if x0 is None:
+        x0 = []
+    elif not isinstance(x0[0], list):
+        x0 = [x0]
+
+    if not isinstance(x0, list):
+        raise ValueError("`x0` should be a list, but got %s" % type(x0))
+
+    n_init_func_calls = len(x0) if y0 is None else 0
+    n_total_init_calls = n_random_starts + n_init_func_calls
+
+    if n_total_init_calls &lt;= 0:
+        &#47&#47 if x0 is not provided and n_random_starts is 0 then
+        &#47&#47 it will ask for n_random_starts to be &gt; 0.
+        raise ValueError(
+            "Expected `n_random_starts` &gt; 0, got %d" % n_random_starts)
+
+    if n_calls &lt; n_total_init_calls:
+        raise ValueError(
+            "Expected `n_calls` &gt;= %d, got %d" % (n_total_init_calls, n_calls))
+
+    func_call_no = 0
+    if y0 is None and x0:
+        y0 = []
+        for i, x in enumerate(x0):
+
+            if verbose:
+                func_call_no += 1
+                print("Function evaluation No: %d at provided "
+                      "point started." % func_call_no)
+                t = time()
+
+            curr_y = func(x)
+            y0.append(curr_y)
+
+            if verbose:
+                print("Function evaluation No: %d at provided "
+                      "point ended." % func_call_no)
+                print("Time taken: %0.4f" % (time() - t))
+                print("Function value obtained: %0.4f" % curr_y)
+                print("Current minimum: %0.4f" % np.min(y0))
+            if callback is not None:
+                callback(<a id="change">pack_optimize_result(x0, y0, space, rng, specs)</a>)
+    elif x0:
+        if isinstance(y0, Iterable):
+            y0 = list(y0)
+        elif isinstance(y0, numbers.Number):
+            y0 = [y0]
+        else:
+            raise ValueError(
+                "`y0` should be an iterable or a scalar, got %s" % type(y0))
+        if len(x0) != len(y0):
+            raise ValueError("`x0` and `y0` should have the same length")
+        if not all(map(np.isscalar, y0)):
+            raise ValueError("`y0` elements should be scalars")
+    else:
+        y0 = []
+
+    &#47&#47 Random function evaluations.
+    X_rand = space.rvs(n_samples=n_random_starts, random_state=rng)
+    Xi = x0 + X_rand
+    yi = y0
+
+    for i, x in enumerate(X_rand):
+        if verbose:
+            func_call_no += 1
+            print("Function evaluation no: %d at a "
+                  "random point started" % func_call_no)
+            t = time()
+
+        curr_y = func(x)
+        yi.append(curr_y)
+
+        if verbose:
+            print("Function evaluation no: %d at a "
+                  "random point ended" % func_call_no)
+            print("Time taken: %0.4f" % (time() - t))
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+        if callback is not None:
+            callback(pack_optimize_result(
+                x0 + X_rand[:i + 1], yi, space, rng, specs))
+
+    if np.ndim(yi) != 1:
+        raise ValueError("`func` should return a scalar")
+
+    &#47&#47 Tree-based optimization loop
+    models = []
+    n_model_iter = n_calls - n_total_init_calls
+    for i in range(n_model_iter):
+
+        if verbose:
+            print("Fitting model no: %d" % (i + 1))
+
+        rgr = clone(base_estimator)
+        rgr.fit(space.transform(Xi), yi)
+        models.append(rgr)
+
+        &#47&#47 `rgr` predicts constants for each leaf which means that the EI
+        &#47&#47 has zero gradient over large distances. As a result we can not
+        &#47&#47 use gradient based optimizers like BFGS, so using random sampling
+        &#47&#47 for the moment.
+        X = space.transform(space.rvs(n_samples=n_points,
+                                      random_state=rng))
+        values = _gaussian_acquisition(
+            X=X, model=rgr, y_opt=np.min(yi), method=acq,
+            xi=xi, kappa=kappa)
+        next_x = X[np.argmin(values)]
+        next_x = space.inverse_transform(next_x.reshape((1, -1)))[0]
+
+        if verbose:
+            func_call_no += 1
+            print("Function evaluation no: %d started" % func_call_no)
+            t = time()
+
+        curr_y = func(next_x)
+        Xi.append(next_x)
+        yi.append(curr_y)
+
+        if verbose:
+            print("Function evaluation no: %d ended" % func_call_no)
+            print("Time taken: %0.4f" % (time() - t))
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+
+        <a id="change">if callback is not None:
+            callback(pack_optimize_result(Xi, yi, space, rng, specs))
+
+   </a> return pack_optimize_result(Xi, yi, space, rng, specs, models)
+
+
+def gbrt_minimize(func, dimensions, base_estimator=None, n_calls=100,</code></pre>

@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    network = SE3Net().cuda()
+    train(network, trainset, N_epochs=N_epochs)
+    <a id="change">se3_test_accs = []</a>
+    for _ in range(N_test):
+        testset = get_volumes(rotate=True)
+        acc = test(network, testset)
+        se3_test_accs.append(acc)
+
+    &#47&#47 network = CNN().cuda()
+    &#47&#47 train(network, trainset, N_epochs=N_epochs)
+    &#47&#47 cnn_test_accs = []
+    &#47&#47 for _ in range(N_test):
+    &#47&#47     testset = get_volumes(rotate90=True)
+    &#47&#47     acc = test(network, testset)
+    &#47&#47     cnn_test_accs.append(acc)
+
+    print(&quotavg test acc SE3: {}&quot.format(<a id="change">np.mean(se3_test_accs)</a>))
+    &#47&#47 print(&quotavg test acc CNN: {}&quot.format(np.mean(cnn_test_accs)))
+    &#47&#47 N_classes = len(testset[1])
+    &#47&#47 print(&quotrandom guessing accuracy: {}&quot.format(1 / N_classes))</code></pre><h3>After Change</h3><pre><code class='java'>
+def main():
+    torch.backends.cudnn.benchmark = True
+
+    <a id="change">for smooth_stride in [True, False]:
+        for Model in [SE3Net, CNN]:
+            for _rep in range(5):
+                network = Model(smooth_stride).cuda()
+                acc = experiment(network)
+                print("smooth_stride={} model={} acc= {}".format(smooth_stride, Model, acc))
+
+
+</a>main()
+</code></pre>

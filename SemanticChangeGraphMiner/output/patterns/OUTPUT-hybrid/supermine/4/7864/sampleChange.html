@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            univ_pos = "verb"
+        elif univ_pos in (ADJ, "ADJ", "adj"):
+            univ_pos = "adj"
+        elif <a id="change">univ_pos in (PUNCT, "PUNCT", "punct")</a>:
+            univ_pos = "punct"
+        elif univ_pos in (PROPN, "PROPN"):
+            return [string]</code></pre><h3>After Change</h3><pre><code class='java'>
+        lookup_table = self.lookups.get_table("lemma_lookup", {})
+        if "lemma_rules" not in self.lookups:
+            return [lookup_table.get(string, string)]
+        <a id="change">if isinstance(univ_pos, int):
+            univ_pos = UPOS_NAMES.get(univ_pos, "X")
+       </a> univ_pos = univ_pos.lower()
+
+        if univ_pos in ("", "eol", "space"):
+            return [string.lower()]</code></pre>

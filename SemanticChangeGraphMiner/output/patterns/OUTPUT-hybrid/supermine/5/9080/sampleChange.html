@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                           dtype=self.dtype_tmp,
+                                           **self.state_init[1])
+
+                <a id="change">if mem_kwargs.get(&quottime_sep&quot, False):
+                    mem_kwargs[&quottime_suffix&quot] = curr_time_suffix &#47&#47 used for scoping in the op
+
+               </a> state = self.memory[0](output, state, **mem_kwargs)
+                self.state = tf.identity(state, name=&quotstate&quot)
+
+                self.state_shape = self.state.shape</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                mem_kwargs = copy.deepcopy(self.memory[1])
+                mem_kwargs.pop(&quotno_state&quot, None)
+                <a id="change">mem_kwargs.pop(&quotmax_internal_time&quot, None)</a>
+
+                if state is None:
+                    state = self.state_init[0](shape=output.shape,
+                                           dtype=self.dtype_tmp,</code></pre>

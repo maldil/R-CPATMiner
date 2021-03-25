@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if on_grid and accept_step:
+            &#47&#47 We&quotve just passed a grid point, which is typically used to indicate a discontinuity in f; we should
+            &#47&#47 update f to match the side of the discontinuity we&quotre now on.
+            <a id="change">f1 = self.func(t_next, y_next)</a>
+            if self.next_grid_index != len(self.grid_points) - 1:
+                self.next_grid_index += 1
+        f_next = f1 if accept_step else f0
+        dt_next = _optimal_step_size(dt, mean_error_ratio, self.safety, self.ifactor, self.dfactor, order=5)</code></pre><h3>After Change</h3><pre><code class='java'>
+        t_next = t0 + dt + 2 * eps if accept_step else t0
+        y_next = y1 if accept_step else y0
+        if on_grid and accept_step:
+            <a id="change">if eps != 0:
+                &#47&#47 We&quotve just passed a discontinuity in f; we should update f1 to match the side of the discontinuity
+                &#47&#47 we&quotre now on.
+                f1 = self.func(t_next.type_as(y_next[0]), y_next)
+           </a> if self.next_grid_index != len(self.grid_points) - 1:
+                self.next_grid_index += 1
+        f_next = f1 if accept_step else f0
+        dt_next = _optimal_step_size(dt, mean_error_ratio, self.safety, self.ifactor, self.dfactor)</code></pre>

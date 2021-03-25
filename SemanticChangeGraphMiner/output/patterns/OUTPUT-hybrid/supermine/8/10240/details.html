@@ -1,0 +1,24 @@
+<html><h3>738c8758e30c6f8bdf9155529aeb431547af65d6,python/caffe/pycaffe.py,,_Net_set_mean,#,184
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise Exception(&quotInput not in {}&quot.format(self.inputs))
+    mean = np.load(mean_f)
+    if mode == &quotelementwise&quot:
+        <a id="change">if mean.shape != self.input.data.shape[1:]:
+            raise Exception(&quotThe mean shape does not match the input shape.&quot)
+       </a> self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = mean.mean(1).mean(1)
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    in_shape = self.blobs[input_].data.shape
+    mean = np.load(mean_f)
+    if mode == &quotelementwise&quot:
+        <a id="change">if mean.shape != in_shape[1:]:
+            mean = caffe.io.resize_image(mean.transpose((1,2,0)),
+                    in_shape[2:]).transpose((2,0,1))
+       </a> self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = mean.mean(1).mean(1).reshape((in_shape[1], 1, 1))
+    else:</code></pre><img src="38412619.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/738c8758e30c6f8bdf9155529aeb431547af65d6#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L196' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 738c8758e30c6f8bdf9155529aeb431547af65d6</div><div id='time'> Time: 2014-05-19</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_set_mean</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/80df9d12f27654b5d21d9833dfe2f9636aa37863#diff-0e4135cb1d95a5c7db5f0c86f21da5b047bdaf0b946fe240418cfafe4393517fL101' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 80df9d12f27654b5d21d9833dfe2f9636aa37863</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/tensor_transforms.py</div><div id='class'> Class Name: TypeCast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/2079a72d90e527149e527b5cb376b37ddc9e25bd#diff-cf613f975bcb4a7b0136f6885f8fdabbbcc6cd73028ee9559c95bb761cf43bedL25' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 2079a72d90e527149e527b5cb376b37ddc9e25bd</div><div id='time'> Time: 2017-05-09</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/affine_transforms.py</div><div id='class'> Class Name: Affine</div><div id='method'> Method Name: __init__</div><BR>

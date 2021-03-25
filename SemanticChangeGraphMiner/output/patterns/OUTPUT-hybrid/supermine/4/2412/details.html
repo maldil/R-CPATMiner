@@ -1,0 +1,22 @@
+<html><h3>b9927f30cb9c92040c30d0fe8c735d8baea167b2,tensornets/layers.py,,gconvbn,#,59
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        f = x.shape[-1].value // c
+        g = f // c
+        x = tf.reshape(x, tf.concat([tf.shape(x)[:-1],
+                                     tf.constant(<a id="change">[g, c, c]</a>)], axis=0))
+        x = tf.reduce_sum(x, axis=-2)
+        x = reshape(x, <a id="change">tf.concat([tf.shape(x)[:-2],
+                                  tf.constant([f])], axis=0)</a>, name=&quotgconv&quot)
+        return batch_norm(x)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            start = (i // c) * c * c + i % c
+            end = start + c * c
+            kernel[:, :, start:end:c, i] = 1.
+        x = conv2d_primitive(x, tf.constant(kernel), strides=<a id="change">[1, 1, 1, 1]</a>,
+                             padding=&quotVALID&quot, name=&quotgconv&quot)
+        return batch_norm(x)
+</code></pre><img src="11362061.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/b9927f30cb9c92040c30d0fe8c735d8baea167b2#diff-d9d023afb253a6e42aecdf8460b7c8fb54104e41717b2703805d7b94457677a9L62' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: b9927f30cb9c92040c30d0fe8c735d8baea167b2</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gconvbn</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/43d778ae0adfc4348cd0d173628e3a945b6a0f7e#diff-ede743a710e4aa76e1b885075a8330acffdd55b1b59f01d4abffa19d85bf6439L2705' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: 43d778ae0adfc4348cd0d173628e3a945b6a0f7e</div><div id='time'> Time: 2020-04-13</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/__init__.py</div><div id='class'> Class Name: ParametericAFTRegressionFitter</div><div id='method'> Method Name: fit_interval_censoring</div><BR><BR><div id='link'><a href='https://github.com/google/tf_mesh_renderer/commit/8aaabd6dfcd2f4ae5618ef08657bbba82e8bd69f#diff-e3cc529c7fbe8a91d7438479da642457aea30a56ce5b2d295bf09296c08026d1L106' target='_blank'>Link</a></div><div id='project'> Project Name: google/tf_mesh_renderer</div><div id='commit'> Commit Name: 8aaabd6dfcd2f4ae5618ef08657bbba82e8bd69f</div><div id='time'> Time: 2019-05-28</div><div id='author'> Author: david.erler@gmail.com</div><div id='file'> File Name: mesh_renderer/rasterize_triangles.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rasterize_clip_space</div><BR>

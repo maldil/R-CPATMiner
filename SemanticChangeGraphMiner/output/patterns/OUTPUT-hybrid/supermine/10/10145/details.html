@@ -1,0 +1,33 @@
+<html><h3>9b31677971ef20cb033e787cdaac6f639a728e05,imblearn/under_sampling/_prototype_selection/_instance_hardness_threshold.py,InstanceHardnessThreshold,_fit_resample,#InstanceHardnessThreshold#,133
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        target_stats = Counter(y)
+        skf = StratifiedKFold(n_splits=self.cv, shuffle=False).split(X, y)
+        <a id="change">probabilities = np.zeros(y.shape[0], dtype=float)</a>
+
+        <a id="change">for train_index, test_index in skf:
+            X_train = _safe_indexing(X, train_index)
+            X_test = _safe_indexing(X, test_index)
+            y_train = _safe_indexing(y, train_index)
+            y_test = _safe_indexing(y, test_index)
+
+            self.estimator_.fit(X_train, y_train)
+
+            probs = self.estimator_.predict_proba(X_test)
+            probabilities[test_index] = probs[range(len(y_test)), y_test]
+
+       </a> idx_under = np.empty((0,), dtype=int)
+
+        for target_class in np.unique(y):
+            if target_class in self.sampling_strategy_.keys():</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.estimator_, X, y, cv=skf, n_jobs=self.n_jobs,
+            method=&quotpredict_proba&quot
+        )
+        <a id="change">probabilities = probabilities[range(len(y)), y]</a>
+
+        idx_under = np.empty((0,), dtype=int)
+
+        for target_class in np.unique(y):</code></pre><img src="38121425.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/imbalanced-learn/commit/9b31677971ef20cb033e787cdaac6f639a728e05#diff-5a8642cdcdc04e9111d1ce34d2bbaf0b0e962b16fc0903162b3fe4258317dc69L133' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/imbalanced-learn</div><div id='commit'> Commit Name: 9b31677971ef20cb033e787cdaac6f639a728e05</div><div id='time'> Time: 2019-11-17</div><div id='author'> Author: redoykhan555@gmail.com</div><div id='file'> File Name: imblearn/under_sampling/_prototype_selection/_instance_hardness_threshold.py</div><div id='class'> Class Name: InstanceHardnessThreshold</div><div id='method'> Method Name: _fit_resample</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/44bdf9be3b913a1a0e90115e45edbee192d01b90#diff-5f145097b3c169665a4c5d428644b451215257f8a1696f5227500aaa04f4bcfaL113' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 44bdf9be3b913a1a0e90115e45edbee192d01b90</div><div id='time'> Time: 2018-03-31</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/probabilistic.py</div><div id='class'> Class Name: Probabilistic</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1e6e979fd9de47c38e2bda2189008a3bae1faaf4#diff-e0eb45f952193a41d4d0dde9a421a5bde0013d3ef9e26fde757147c6778e41b9L58' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1e6e979fd9de47c38e2bda2189008a3bae1faaf4</div><div id='time'> Time: 2018-08-24</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_mi.py</div><div id='class'> Class Name: DESMI</div><div id='method'> Method Name: estimate_competence</div><BR>

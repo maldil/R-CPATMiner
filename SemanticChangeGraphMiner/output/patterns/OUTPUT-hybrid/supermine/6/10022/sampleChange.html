@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            iou = bbox_iou(gt_box, pred_box, x1y1x2y2=False)
+            pred_label = torch.argmax(pred_cls[b, best_n, gj, gi])
+            score = pred_conf[b, best_n, gj, gi]
+            <a id="change">if iou &gt; 0.5 and pred_label == target_label and score &gt; 0.5:
+                num_correct += 1
+
+   </a> return num_targets, num_correct, obj_mask, noobj_mask, tx, ty, tw, th, tconf, tcls
+
+
+def to_categorical(y, num_classes):</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Get the shape of the gt box (centered at (100, 100))
+            gt_shape = torch.FloatTensor(np.array([100, 100, gw, gh])).unsqueeze(0)
+            &#47&#47 Get shape of anchor box
+            anchor_shapes = <a id="change">torch.ones((len(anchors), 4)).float() * 100</a>
+            anchor_shapes[:, 2:] = anchors
+            &#47&#47 Compute iou between gt and anchor shapes
+            anch_ious = bbox_iou(gt_shape, anchor_shapes, x1y1x2y2=False)
+            &#47&#47 Where the overlap is larger than threshold set mask to zero (ignore)</code></pre>

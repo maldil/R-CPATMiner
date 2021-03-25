@@ -1,0 +1,47 @@
+<html><h3>900b9a7f2884aaf419e62508be7497b0ad3e1f62,pytext/metric_reporters/squad_metric_reporter.py,SquadMetricReporter,_unnumberize,#SquadMetricReporter#,358
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idx, end_idx = self.tensorizer._lookup_tokens(doc_str)
+        <a id="change">doc_tokens = list(doc_tokens)</a>
+        num_ans_tokens = len(ans_tokens)
+        start_char_idx = 0
+        end_char_idx = 0
+        answer_str = ""
+        <a id="change">for doc_token_idx in range(len(doc_tokens) - num_ans_tokens):
+            if doc_tokens[doc_token_idx : doc_token_idx + num_ans_tokens] == ans_tokens:
+                start_char_idx = start_idx[doc_token_idx]
+                end_char_idx = end_idx[doc_token_idx + num_ans_tokens - 1]
+                answer_str = doc_str[start_char_idx:end_char_idx]
+                break
+       </a> return answer_str, start_char_idx, end_char_idx
+
+    &#47&#47 The following three functions are copied from Squad&quots evaluation script.
+    &#47&#47 https://worksheets.codalab.org/rest/bundles/0x6b567e1cf2e041ec80d7098f031c5c9e/contents/blob/</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idxs, end_idxs = self.tensorizer._lookup_tokens(doc_str)
+        &#47&#47 find the offset of doc_tokens in tokens
+        <a id="change">offset = list(
+            map(
+                lambda x: tokens[x : x + len(doc_tokens)] == doc_tokens,
+                range(len(tokens) - len(doc_tokens) + 1),
+            )
+        ).index(True)</a>
+        assert offset &gt; -1
+
+        &#47&#47 find the answer char idxs
+        start_char_idx = 0
+        end_char_idx = end_idxs[-1]
+        <a id="change">try:
+            start_char_idx = start_idxs[ans_token_start - offset]
+            end_char_idx = end_idxs[ans_token_end - offset]
+        except IndexError:
+            &#47&#47 if token indices fall outside the bounds due to a model misprediction.
+            pass
+       </a> ans_str = doc_str[start_char_idx:end_char_idx]
+        return ans_str, start_char_idx, end_char_idx
+
+    &#47&#47 The following three functions are copied from Squad&quots evaluation script.</code></pre><img src="12859205.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/900b9a7f2884aaf419e62508be7497b0ad3e1f62#diff-1516e23205a74c8bcb7f842f8260f7c9118246fc6a6b12bd5b7fb16810cefa04L368' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 900b9a7f2884aaf419e62508be7497b0ad3e1f62</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: debo@fb.com</div><div id='file'> File Name: pytext/metric_reporters/squad_metric_reporter.py</div><div id='class'> Class Name: SquadMetricReporter</div><div id='method'> Method Name: _unnumberize</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/a5505747ac8b1f3891a63363a9b86af480452f77#diff-25ee6a30d674d627b7d9e5808b4e89c21eab33da06218734c1d39e17edf1bf3aL115' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: a5505747ac8b1f3891a63363a9b86af480452f77</div><div id='time'> Time: 2018-05-29</div><div id='author'> Author: itsayellow+dev@gmail.com</div><div id='file'> File Name: PyInstaller/building/osx.py</div><div id='class'> Class Name: BUNDLE</div><div id='method'> Method Name: assemble</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/31832e8e8d05da9aaad1d608f7543579a2f166e6#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL50' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 31832e8e8d05da9aaad1d608f7543579a2f166e6</div><div id='time'> Time: 2015-03-02</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: Phi</div><BR>

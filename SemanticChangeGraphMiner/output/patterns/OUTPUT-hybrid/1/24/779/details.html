@@ -1,0 +1,83 @@
+<html><h3>e2f021a5e4444befdb9e5926b96bc96c408faa85,examples/acp_classification_tree.py,,,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 Define models
+&#47&#47 -----------------------------------------------------------------------------
+
+<a id="change">models</a> = {  &quotACP-RandomSubSampler&quot  : AggregatedCp(
+                                        IcpClassifier(
+                                            ProbEstClassifierNc(
+                                                DecisionTreeClassifier())),
+                                        RandomSubSampler()),
+            &quotACP-CrossSampler&quot      : AggregatedCp(
+                                        IcpClassifier(
+                                            ProbEstClassifierNc(
+                                                DecisionTreeClassifier())),
+                                        CrossSampler()),
+            &quotACP-BootstrapSampler&quot  : AggregatedCp(
+                                        IcpClassifier(
+                                            ProbEstClassifierNc(
+                                                DecisionTreeClassifier())),
+                                        BootstrapSampler()),
+            &quotCCP&quot                   : CrossConformalClassifier(
+                                        IcpClassifier(
+                                            ProbEstClassifierNc(
+                                                DecisionTreeClassifier()))),
+            &quotBCP&quot                   : BootstrapConformalClassifier(
+                                        IcpClassifier(
+                                            <a id="change">ProbEstClassifierNc(
+                                                DecisionTreeClassifier())</a>))
+          }
+
+&#47&#47 -----------------------------------------------------------------------------
+&#47&#47 Train, predict and evaluate
+&#47&#47 -----------------------------------------------------------------------------
+for name, model in models.iteritems():
+    model.fit(data.data[train, :], data.target[train])
+    <a id="change">prediction</a> = model.predict(data.data[test, :], significance=significance)
+    <a id="change">table</a> = np.hstack((prediction, truth))
+    <a id="change">df</a> = pd.DataFrame(table, columns=columns)
+    print(&quot\n{}&quot.format(name))
+    print(&quotError rate: {}&quot.format(class_mean_errors(prediction,
+                                                    truth,</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Define models
+&#47&#47 -----------------------------------------------------------------------------
+
+<a id="change">models</a> = {  &quotACP-RandomSubSampler&quot  : AggregatedCp(
+                                        IcpClassifier(
+                                            ClassifierNc(
+                                                ClassifierAdapter(DecisionTreeClassifier()))),
+                                        RandomSubSampler()),
+            &quotACP-CrossSampler&quot      : AggregatedCp(
+                                        IcpClassifier(
+                                            ClassifierNc(
+                                                ClassifierAdapter(DecisionTreeClassifier()))),
+                                        CrossSampler()),
+            &quotACP-BootstrapSampler&quot  : AggregatedCp(
+                                        IcpClassifier(
+                                            ClassifierNc(
+                                                ClassifierAdapter(DecisionTreeClassifier()))),
+                                        BootstrapSampler()),
+            &quotCCP&quot                   : CrossConformalClassifier(
+                                        IcpClassifier(
+                                            ClassifierNc(
+                                                ClassifierAdapter(DecisionTreeClassifier())))),
+            &quotBCP&quot                   : BootstrapConformalClassifier(
+                                        IcpClassifier(
+                                            <a id="change">ClassifierNc(
+                                                ClassifierAdapter(DecisionTreeClassifier()))</a>))
+          }
+
+&#47&#47 -----------------------------------------------------------------------------
+&#47&#47 Train, predict and evaluate
+&#47&#47 -----------------------------------------------------------------------------
+for name, model in models.iteritems():
+    model.fit(data.data[train, :], data.target[train])
+    <a id="change">prediction</a> = model.predict(data.data[test, :], significance=significance)
+    <a id="change">table</a> = np.hstack((prediction, truth))
+    <a id="change">df</a> = pd.DataFrame(table, columns=columns)
+    print(&quot\n{}&quot.format(name))
+    print(&quotError rate: {}&quot.format(class_mean_errors(prediction,
+                                                    truth,</code></pre><img src="3788857.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/donlnz/nonconformist/commit/e2f021a5e4444befdb9e5926b96bc96c408faa85#diff-6dab94c69293658442e0125cd9e9f65dba466815c73c0d6442a76505fe741216L40' target='_blank'>Link</a></div><div id='project'> Project Name: donlnz/nonconformist</div><div id='commit'> Commit Name: e2f021a5e4444befdb9e5926b96bc96c408faa85</div><div id='time'> Time: 2016-09-09</div><div id='author'> Author: henrik.linusson@gmail.com</div><div id='file'> File Name: examples/acp_classification_tree.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

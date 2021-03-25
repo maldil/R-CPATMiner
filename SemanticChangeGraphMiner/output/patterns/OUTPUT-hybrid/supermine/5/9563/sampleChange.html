@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    tf_tiles_info.append(y)
+    &#47&#47train_len = 0.8
+    split_index = int(len(tf_tiles_info) *0.8 )
+    column_name = <a id="change">[&quotfilename&quot, &quotwidth&quot, &quotheight&quot, &quotclass&quot, &quotxmin&quot, &quotymin&quot, &quotxmax&quot, &quotymax&quot]</a>
+    <a id="change">df = pd.DataFrame(tf_tiles_info, columns=column_name)</a>
+    &#47&#47shuffle the dataframe
+    df = df.sample(frac=1)
+    train_df = df[:split_index]
+    test_df = df[split_index:]
+    print("You have {} training tiles and {} test tiles ready".format(
+    len(set(<a id="change">train_df[&quotfilename&quot]</a>)), len(set(test_df[&quotfilename&quot]))))
+    &#47&#47 train_df.to_csv("train_df.csv")
+    &#47&#47 test_df.to_csv("test_df.csv")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    tf_array = np.array(tf_tiles_info)
+    split_index = int(len(tf_tiles_info) *0.8 )
+    tf_train = tf_array[0: split_index]
+    tf_test = <a id="change">tf_array[split_index, :]</a>
+    print("You have {} training tiles and {} test tiles ready".format(
+    len(set(list(tf_train[:,1]))), len(set(list(tf_test[:,1])))))
+    tiles_dir = op.join(os.getcwd(), &quottiles&quot)
+    train_dir = op.join(os.getcwd(), &quotimages&quot, &quottrain&quot)</code></pre>

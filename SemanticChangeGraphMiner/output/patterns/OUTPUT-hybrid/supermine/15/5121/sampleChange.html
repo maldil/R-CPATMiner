@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @classmethod
+    def odot(cls, p, **kwargs):
+        SE(3) \odot operator as defined by Barfoot.
+        if <a id="change">len(p)</a> == cls.dim - 1:
+            result = np.zeros([3, 6])
+
+            &#47&#47 Assume scale parameter is 1 unless otherwise p is a direction
+            &#47&#47 vector, in which case the scale is 0
+            scale_is_zero = kwargs.get(&quotdirectional&quot, False)
+            if not scale_is_zero:
+                result[0:3, 0:3] = np.eye(3)
+
+            result[0:3, 3:6] = -SO3.wedge(p)
+
+            return result
+
+        elif len(p) == cls.dim:
+            result = np.zeros(<a id="change">[4, 6]</a>)
+            result[0:3, 0:3] = p[3] * np.eye(3)
+            result[0:3, 3:6] = -SO3.wedge(p[0:3])
+
+            <a id="change">return result</a>
+
+        else:
+            <a id="change">raise ValueError("p must have dimension 3 or 4")</a>
+
+    @classmethod
+    def vee(cls, Xi):
+        SE(3) vee operator as defined by Barfoot.</code></pre><h3>After Change</h3><pre><code class='java'>
+    @classmethod
+    def odot(cls, p, **kwargs):
+        SE(3) \odot operator as defined by Barfoot.
+        <a id="change">p = np.atleast_2d(p)</a>
+        result = np.zeros([<a id="change">p.shape[0]</a>, p.shape[1], cls.dof])
+
+        if <a id="change">p.shape[1]</a> == cls.dim - 1:
+            &#47&#47 Assume scale parameter is 1 unless otherwise p is a direction
+            &#47&#47 vector, in which case the scale is 0
+            scale_is_zero = kwargs.get(&quotdirectional&quot, False)
+            if not scale_is_zero:
+                result[:, 0:3, 0:3] = np.eye(3)
+
+            result[:, 0:3, 3:6] = -SO3.wedge(p)
+
+        elif p.shape[1] == cls.dim:
+            result[:, 0:3, 0:3] = p[:, 3] * np.eye(3)
+            result[:, 0:3, 3:6] = -SO3.wedge(p[:, 0:3])
+
+        else:
+            raise ValueError("p must have shape ({},), ({},), (N,{}) or (N,{})".format(
+                cls.dim - 1, cls.dim, cls.dim - 1, cls.dim))
+
+        <a id="change">return np.squeeze(result)</a>
+
+    @classmethod
+    def exp(cls, xi):
+        Exponential map for SE(3).</code></pre>

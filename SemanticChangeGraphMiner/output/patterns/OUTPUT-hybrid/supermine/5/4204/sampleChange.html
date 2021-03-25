@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                          bbox,
+                                          points,
+                                          image_size=&quot112,112&quot)
+        nimg = <a id="change">cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)</a>
+        <a id="change">aligned = np.transpose(nimg, (2, 0, 1))</a>
+        return aligned
+
+    def get_feature(self, aligned):
+        input_blob = np.expand_dims(aligned, axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.image_size = image_size
+
+    def get_input(self, face_img):
+        <a id="change">bbox</a>, pts5 = self.detector.detect(face_img, threshold=0.8)
+        if bbox.shape[0]==0:
+            return None
+        bbox = bbox[0, 0:4]</code></pre>

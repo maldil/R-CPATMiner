@@ -1,0 +1,21 @@
+<html><h3>21fa4e7e38567e083f98c559f8f2ae0c5573ba0f,ch15/lib/model.py,AgentA2C,__call__,#AgentA2C#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        mu_v, var_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        sigma = torch.sqrt(var_v).data.cpu().numpy()
+        actions = <a id="change">np.random.normal(mu, sigma)</a>
+        <a id="change">actions</a> = np.clip(actions, -1, 1)
+        return actions, agent_states
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        mu_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        logstd = self.net.logstd.data.cpu().numpy()
+        actions = <a id="change">mu + np.exp(logstd) * np.random.normal(size=logstd.shape)</a>
+        <a id="change">actions</a> = np.clip(actions, -1, 1)
+        return actions, agent_states
+
+</code></pre><img src="3880091.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/21fa4e7e38567e083f98c559f8f2ae0c5573ba0f#diff-5b11d8d5e38eb7500f28786a7683124ada1c5505b7e16322c43110e29d5ca488L56' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 21fa4e7e38567e083f98c559f8f2ae0c5573ba0f</div><div id='time'> Time: 2018-02-11</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/lib/model.py</div><div id='class'> Class Name: AgentA2C</div><div id='method'> Method Name: __call__</div><BR>

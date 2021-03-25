@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if i % 100 is 0:
+            print(&quot[(%d %d%%) %.4f]&quot %
+                  (epoch, epoch / N_EPOCH * 100, train_loss))
+            <a id="change">print(translate(srcs[0]), &quot\n&quot)</a>
+            print(translate(), &quot\n&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            train_loss = train(srcs[0], targets[0])
+
+            if i % 1000 is 0:
+                <a id="change">print(&quot[(%d/%d %d%%) %.4f]&quot %
+                      (epoch, N_EPOCH, i * len(srcs) * 100 / len(train_loader), train_loss))</a>
+                output, _ = translate(srcs[0])
+                print(srcs[0], output, &quot\n&quot)
+
+                output, attentions = translate()</code></pre>

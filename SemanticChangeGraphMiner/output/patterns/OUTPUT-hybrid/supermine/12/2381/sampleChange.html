@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+for filename in CONFIG_FILENAMES:
+    with open(filename, &quotr&quot) as f:
+        <a id="change">config = yaml.load(f.read())</a>
+
+    org = <a id="change">config</a>[&quotorg&quot]
+    repository = config[&quotrepository&quot]
+    requires = <a id="change">config</a>.get(&quotrequires&quot, [])
+    samples = <a id="change">config</a>[&quotsamples&quot]
+
+    with temp_clone(org, repository) as repo:
+        <a id="change">for sample_dict in samples:
+            sample_dict[&quotorg&quot] = org
+            sample_dict[&quotrepository&quot] = repository
+
+            &#47&#47 inherit from repo wide requirements
+            sample_dict.setdefault(&quotrequires&quot, []).extend(requires)
+
+            cmle_package = CMLEPackage(sample_dict, repo)
+
+            cmle_package.generate()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+if __name__ == &quot__main__&quot:
+    parser = argparse.ArgumentParser()
+    <a id="change">parser.add_argument(&quot--filter&quot, type=str, default=&quot&quot, help=&quotprocess only samples whose script_name contains the filter string&quot)</a>
+
+    args = parser.parse_args()
+
+    main(args)</code></pre>

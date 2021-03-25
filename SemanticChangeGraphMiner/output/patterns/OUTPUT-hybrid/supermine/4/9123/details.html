@@ -1,0 +1,23 @@
+<html><h3>f7b4c6de2037ebedf6bc8ea5979e81666d54534f,research/object_detection/meta_architectures/center_net_meta_arch.py,,convert_strided_predictions_to_normalized_boxes,#,992
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  true_heights_list = tf.unstack(true_heights, axis=0)
+  true_widths_list = tf.unstack(true_widths, axis=0)
+
+  box_lists = list(<a id="change">map(_normalize_boxlist,
+                       zip(box_lists, true_heights_list, true_widths_list))</a>)
+  boxes = tf.stack([box_list_instance.get() <a id="change">for</a>
+                    box_list_instance in box_lists], axis=0)
+
+  return boxes
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Note: We use tf ops instead of functions in box_list_ops to make this
+  &#47&#47 function compatible with dynamic batch size.
+  boxes = boxes * stride
+  <a id="change">true_image_shapes = tf.tile(true_image_shapes[:, tf.newaxis, :2], [1, 1, 2])</a>
+  boxes = boxes / tf.cast(true_image_shapes, tf.float32)
+  boxes = tf.clip_by_value(boxes, 0.0, 1.0)
+  return boxes
+</code></pre><img src="35528350.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/f7b4c6de2037ebedf6bc8ea5979e81666d54534f#diff-ee421de3daf8a640c16b7f6f5a5d3399d28ded3a5c073b9ee10e5e2a88b7e94fL1012' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: f7b4c6de2037ebedf6bc8ea5979e81666d54534f</div><div id='time'> Time: 2020-12-01</div><div id='author'> Author: rathodv@google.com</div><div id='file'> File Name: research/object_detection/meta_architectures/center_net_meta_arch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_strided_predictions_to_normalized_boxes</div><BR><BR><div id='link'><a href='https://github.com/NVIDIA/sentiment-discovery/commit/83d80c5a19326a516b4ab54339c27f8cac349693#diff-6fc3374fcee26481b869b10321daa5f595daab615a8d88db1e972df655748bc8L32' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/sentiment-discovery</div><div id='commit'> Commit Name: 83d80c5a19326a516b4ab54339c27f8cac349693</div><div id='time'> Time: 2018-06-14</div><div id='author'> Author: raulpuric@berkeley.edu</div><div id='file'> File Name: data_utils/lazy_loader.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: make_lazy</div><BR><BR><div id='link'><a href='https://github.com/baldassarreFe/deep-koalarization/commit/6a00feac200b4f3d0fd5fb5641e38de4a06710d6#diff-d987c388c88bf7d82b5f40226d85e309e16ff1afbbe973579a56aeb80c3ec461L27' target='_blank'>Link</a></div><div id='project'> Project Name: baldassarreFe/deep-koalarization</div><div id='commit'> Commit Name: 6a00feac200b4f3d0fd5fb5641e38de4a06710d6</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: baldassarre.fe@gmail.com</div><div id='file'> File Name: dataset/batch.py</div><div id='class'> Class Name: ImagenetBatcher</div><div id='method'> Method Name: batch_all</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/b5034279b48ae96ffdd4714f96e0f62b0f4807fc#diff-ec89fc16a024e906dde0693b4d8cbc46e946c810a1e9e45c4d8f214b87ba6af9L246' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: b5034279b48ae96ffdd4714f96e0f62b0f4807fc</div><div id='time'> Time: 2018-10-26</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/ordinal.py</div><div id='class'> Class Name: OrdinalEncoder</div><div id='method'> Method Name: ordinal_encoding</div><BR>

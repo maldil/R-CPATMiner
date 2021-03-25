@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 cross-validation strategy
+            kfold.shuffle = self.shuffle
+
+        <a id="change">meta_features = np.zeros((X.shape[0], len(self.regressors)))</a>
+
+        &#47&#47
+        &#47&#47 The outer loop iterates over the base-regressors. Each regressor
+        &#47&#47 is trained cv times and makes predictions, after which we train
+        &#47&#47 the meta-regressor on their combined results.
+        &#47&#47
+        for i, regr in enumerate(self.regressors):
+            &#47&#47
+            &#47&#47 In the inner loop, each model is trained cv times on the
+            &#47&#47 training-part of this fold of data; and the holdout-part of data
+            &#47&#47 is used for predictions. This is repeated cv times, so in
+            &#47&#47 the end we have predictions for each data point.
+            &#47&#47
+            &#47&#47 Advantage of this complex approach is that data points we&quotre
+            &#47&#47 predicting have not been trained on by the algorithm, so it&quots
+            &#47&#47 less susceptible to overfitting.
+            &#47&#47
+            for train_idx, holdout_idx in kfold.split(X, y, groups):
+                <a id="change">instance = clone(regr)</a>
+                if sample_weight is None:
+                    instance.fit(X[train_idx], y[train_idx])
+                else:
+                    instance.fit(X[train_idx], y[train_idx],
+                                 sample_weight=sample_weight[train_idx])
+                y_pred = instance.predict(X[holdout_idx])
+                <a id="change">meta_features[holdout_idx, i]</a> = y_pred
+
+        &#47&#47 save meta-features for training data
+        if self.store_train_meta_features:</code></pre><h3>After Change</h3><pre><code class='java'>
+            fit_params = None
+        else:
+            fit_params = dict(sample_weight=sample_weight)
+        <a id="change">meta_features = np.column_stack([cross_val_predict(
+                regr, X, y, groups=groups, cv=kfold,
+                n_jobs=self.n_jobs, fit_params=fit_params,
+                pre_dispatch=self.pre_dispatch)
+                    for regr in self.regr_])</a>
+
+        &#47&#47 save meta-features for training data
+        if self.store_train_meta_features:
+            self.train_meta_features_ = meta_features</code></pre>

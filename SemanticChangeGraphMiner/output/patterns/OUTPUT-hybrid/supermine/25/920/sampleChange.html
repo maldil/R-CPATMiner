@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_label_image(capsys, annotation_spec_set, instruction, dataset):
+
+    &#47&#47 Start labeling.
+    <a id="change">response = label_image.label_image(
+        dataset.name,
+        instruction.name,
+        annotation_spec_set.name
+    )</a>
+    out, _ = capsys.readouterr()
+    assert &quotLabel_image operation name: &quot in out
+    <a id="change">operation_name = response.operation.name</a>
+
+    &#47&#47 Cancels the labeling operation.
+    response.cancel()
+    assert response.cancelled() is True
+
+    <a id="change">client = datalabeling.DataLabelingServiceClient()</a>
+
+    &#47&#47 If provided, use a provided test endpoint - this will prevent tests on
+    &#47&#47 this snippet from triggering any action by a real human
+    <a id="change">if &quotDATALABELING_ENDPOINT&quot in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv(&quotDATALABELING_ENDPOINT&quot))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
+   </a> <a id="change">client.transport._operations_client.cancel_operation(
+            operation_name)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return label_image.label_image(
+            dataset.name, instruction.name, annotation_spec_set.name)
+
+    <a id="change">response = run_sample()</a>
+    <a id="change">cleaner.append(response.operation.name)</a>
+
+    out, _ = capsys.readouterr()
+    assert &quotLabel_image operation name: &quot in out
+</code></pre>

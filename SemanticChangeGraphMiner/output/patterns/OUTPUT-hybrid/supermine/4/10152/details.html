@@ -1,0 +1,28 @@
+<html><h3>f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff,se3cnn/SO3.py,,irr_repr,#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    from lie_learn.representations.SO3.wigner_d import wigner_D_matrix
+    if torch.is_tensor(alpha):
+        <a id="change">alpha = alpha.item()</a>
+    if torch.is_tensor(beta):
+        beta = beta.item()
+    if torch.is_tensor(gamma):
+        gamma = gamma.item()</code></pre><h3>After Change</h3><pre><code class='java'>
+    - compatible with compose and spherical_harmonics
+    
+    from lie_learn.representations.SO3.wigner_d import wigner_D_matrix
+    <a id="change">abc = [alpha, beta, gamma]</a>
+    <a id="change">for i, x in enumerate(abc):
+        if torch.is_tensor(x):
+            abc[i] = x.item()
+            if dtype is None:
+                dtype = x.dtype
+            if device is None:
+                device = x.device
+   </a> if dtype is None:
+        dtype = torch.get_default_dtype()
+    return torch.tensor(wigner_D_matrix(order, *abc), dtype=dtype, device=device)
+</code></pre><img src="38126871.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff#diff-aea3495328514bc68256872a4bcf515b46f9ca204264d5875abd8053e5c4800eL87' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/SO3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: irr_repr</div><BR><BR><div id='link'><a href='https://github.com/tensorpack/tensorpack/commit/ffd9eaeb68fff978af23156236df661981017941#diff-464767d068192191b0a6732137396e0e6494a54aeded521791d27dc84cbaa80bL147' target='_blank'>Link</a></div><div id='project'> Project Name: tensorpack/tensorpack</div><div id='commit'> Commit Name: ffd9eaeb68fff978af23156236df661981017941</div><div id='time'> Time: 2020-01-09</div><div id='author'> Author: ppwwyyxx@users.noreply.github.com</div><div id='file'> File Name: tensorpack/dataflow/format.py</div><div id='class'> Class Name: LMDBData</div><div id='method'> Method Name: __iter__</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7c228ae83c93215fd116bb4586c2da57c7a62773728754ee6b11426e56a2c6d1L97' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/avg_precision.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_avg_precision</div><BR>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if eval_outputs:
+      eval_outputs = tf.nest.map_structure(utils.get_value, eval_outputs)
+
+    info = <a id="change">"step: {}        evaluation metric: {}".format(
+        current_step, eval_outputs)</a>
+    _log_info(info)
+
+    self.eval_summary_manager.write_summaries(eval_outputs)
+    self.eval_summary_manager.flush()</code></pre><h3>After Change</h3><pre><code class='java'>
+    eval_output = tf.nest.map_structure(utils.get_value, eval_output or {})
+    elapsed = time.time() - start
+
+    <a id="change">_log(f" eval | step: {current_step: 6d} | "
+         f"eval time: {elapsed: 6.1f} | "
+         f"output: {_format_output(eval_output)}")</a>
+
+    self.eval_summary_manager.write_summaries(eval_output)
+    self.eval_summary_manager.flush()
+</code></pre>

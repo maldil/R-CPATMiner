@@ -1,0 +1,28 @@
+<html><h3>99abcc6e9b57f441999ce10dbc31ca1bed79c356,ch15/04_train_ppo.py,,,#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                surr_obj_v = adv_v * torch.exp(logprob_pi_v - logprob_old_pi_v)
+                clipped_surr_v = torch.clamp(surr_obj_v, 1.0 - PPO_EPS, 1.0 + PPO_EPS)
+                loss_policy_v = -torch.min(surr_obj_v, clipped_surr_v).mean()
+                <a id="change">entropy_loss_v = ENTROPY_BETA * (-(torch.log(2*math.pi*var_v) + 1)/2).mean()</a>
+
+                <a id="change">loss_v = loss_policy_v + entropy_loss_v + loss_value_v</a>
+                loss_v.backward()
+                optimizer.step()
+
+                tb_tracker.track("advantage", adv_v, step_idx)
+                tb_tracker.track("values", value_v, step_idx)
+                tb_tracker.track("batch_rewards", vals_ref_v, step_idx)
+                tb_tracker.track("loss_entropy", <a id="change">entropy_loss_v</a>, step_idx)
+                tb_tracker.track("loss_policy", loss_policy_v, step_idx)
+                tb_tracker.track("loss_value", loss_value_v, step_idx)
+                tb_tracker.track("loss_total", loss_v, step_idx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_env = gym.make(ENV_ID)
+
+    net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    net_crt = model.ModelCritic(<a id="change">envs[0].observation_space.shape[0]</a>)
+    if args.cuda:
+        net_act.cuda()
+        net_crt.cuda()</code></pre><img src="35527804.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/99abcc6e9b57f441999ce10dbc31ca1bed79c356#diff-873b69a7f89c68ea9c0d52d89625377325892ce836ebab6a614f27a0a3a9021fL65' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 99abcc6e9b57f441999ce10dbc31ca1bed79c356</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/04_train_ppo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/4296a765125fff6491892a1bb70fb32ac516dae6#diff-6121a23c8673ba40b82f4d680f1af65e316feb8d0c88e68ecf77cfc1129d5d3fL64' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 4296a765125fff6491892a1bb70fb32ac516dae6</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/01_train_a2c.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/4ef8f94ea8f6fc3cc1f35743e7c7af0b92ffb76b#diff-9b8cbb53bee22560b1b5592696f674df0dd7bf06fa92720414d352a6583f7ad1L53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 4ef8f94ea8f6fc3cc1f35743e7c7af0b92ffb76b</div><div id='time'> Time: 2018-11-29</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep_separation.py</div><div id='class'> Class Name: DeepSeparation</div><div id='method'> Method Name: _compute_spectrograms</div><BR>

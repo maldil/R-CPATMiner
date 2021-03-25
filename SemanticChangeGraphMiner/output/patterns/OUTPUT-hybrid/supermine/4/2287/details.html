@@ -1,0 +1,23 @@
+<html><h3>e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f,cesium/featurize.py,,save_featureset,#,346
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    features, channels = zip(*fset.columns)
+    for v in [fset.values, features, channels] + list(kwargs.values()):
+        if <a id="change">np</a>.array(v).dtype == np.object:
+            raise ValueError("Cannot save objects in .npz format.")
+    np.savez(path, values=fset.values, index=fset.index.values.astype(str),
+             features=features, channels=channels, **kwargs)</code></pre><h3>After Change</h3><pre><code class='java'>
+            arr = v.to_records()
+            dt_list = arr.dtype.descr
+            &#47&#47 Change type of indices from object to str
+            <a id="change">for i, (name, dt) in enumerate(dt_list):
+                if dt.endswith(&quotO&quot):
+                    size = max(len(x) for x in arr[&quotindex&quot])
+                    dt_list[i] = (name, &quotU&quot + str(size))
+           </a> kwargs[k] = arr.astype(dt_list)
+
+    &#47&#47 Bypass savez to allow for `allow_pickle` keyword
+    &#47&#47 See https://github.com/numpy/numpy/pull/5770</code></pre><img src="10581216.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/aa5d761c03ea31df01ff51ec3634dd89cd73bec1#diff-e57039a45bbd8fe0725b1f6771a73623b3174b99f11ba2df477177a4679bb45eL178' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: aa5d761c03ea31df01ff51ec3634dd89cd73bec1</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/toolkits/extras/rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: UFFConstrainedOptimize</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/b384268df66742de0bc92a13db162b8409dda730#diff-275fa07697600701154b4fce695411141aaf97ee9132d17b03a29f722091478cL218' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: b384268df66742de0bc92a13db162b8409dda730</div><div id='time'> Time: 2019-04-19</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/readwrite/BIF.py</div><div id='class'> Class Name: BIFReader</div><div id='method'> Method Name: get_values</div><BR>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	for line in allLines:
+	    tempStr = line.replace(&quot\n&quot,&quot &quot).lower()
+	    myStr += re.sub(&quot[.!?]&quot,&quot&quot, tempStr)
+	return myStr, <a id="change">Counter(myStr.split())</a>
+
+def createTrainingMatrices(dictionary, corpus):
+	allUniqueWords = dictionary.keys()	
+	allWords = corpus.split()</code></pre><h3>After Change</h3><pre><code class='java'>
+	for line in allLines:
+	    tempStr = line.replace(&quot\n&quot,&quot &quot).lower()
+	    myStr += re.sub(&quot[.!?]&quot,&quot&quot, tempStr)
+	intermediateDict = <a id="change">Counter(myStr.split())</a>
+	<a id="change">for word in intermediateDict:
+		numOccurences = intermediateDict[word]
+		if numOccurences &lt;= unknownCutoff:
+			intermediateDict[&quot&lt;unk&gt;&quot] += numOccurences
+			myStr.replace(word, &quot&lt;unk&gt;&quot)
+			del intermediateDict[word]
+</a>	return myStr, intermediateDict
+
+def createTrainingMatrices(dictionary, corpus):
+	allUniqueWords = dictionary.keys()	</code></pre>

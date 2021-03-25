@@ -1,0 +1,37 @@
+<html><h3>23d2d656652274809edbaf89979ab66ba168f12c,examples/facerec_from_webcam_faster.py,,,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            name = "Unknown"
+
+            &#47&#47 If a match was found in known_face_encodings, just use the first one.
+            <a id="change">if True in matches:
+                first_match_index = matches.index(True)
+                name = known_face_names[first_match_index]
+
+           </a> face_names.append(name)
+
+    process_this_frame = not process_this_frame
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        face_names = []
+        for face_encoding in face_encodings:
+            &#47&#47 See if the face is a match for the known face(s)
+            <a id="change">matches</a> = face_recognition.compare_faces(known_face_encodings, face_encoding)
+            name = "Unknown"
+
+            &#47&#47 &#47&#47 If a match was found in known_face_encodings, just use the first one.
+            &#47&#47 if True in matches:
+            &#47&#47     first_match_index = matches.index(True)
+            &#47&#47     name = known_face_names[first_match_index]
+
+            &#47&#47 Or instead, use the known face with the smallest distance to the new face
+            <a id="change">face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)</a>
+            <a id="change">best_match_index = np.argmin(face_distances)</a>
+            <a id="change">if matches[best_match_index]:
+                name = known_face_names[best_match_index]
+
+           </a> face_names.append(name)
+
+    process_this_frame = not process_this_frame
+</code></pre><img src="80586.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ageitgey/face_recognition/commit/23d2d656652274809edbaf89979ab66ba168f12c#diff-a42bd95acd1e54a5e14991f937dc3414d0ed596efdb72c0535fb4a81f2b203a3L26' target='_blank'>Link</a></div><div id='project'> Project Name: ageitgey/face_recognition</div><div id='commit'> Commit Name: 23d2d656652274809edbaf89979ab66ba168f12c</div><div id='time'> Time: 2019-04-15</div><div id='author'> Author: peiqial@outlook.com</div><div id='file'> File Name: examples/facerec_from_webcam_faster.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/ageitgey/face_recognition/commit/23d2d656652274809edbaf89979ab66ba168f12c#diff-615a516102416ca0988f84ff5bac89d37ae8d31a7584d206fc7eebddf3182dc1L17' target='_blank'>Link</a></div><div id='project'> Project Name: ageitgey/face_recognition</div><div id='commit'> Commit Name: 23d2d656652274809edbaf89979ab66ba168f12c</div><div id='time'> Time: 2019-04-15</div><div id='author'> Author: peiqial@outlook.com</div><div id='file'> File Name: examples/identify_and_draw_boxes_on_faces.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/ageitgey/face_recognition/commit/23d2d656652274809edbaf89979ab66ba168f12c#diff-35e97fd489b9d3f48fc86030cd5e3b61d4e553b9f81a48fa044e3f1f514ee781L24' target='_blank'>Link</a></div><div id='project'> Project Name: ageitgey/face_recognition</div><div id='commit'> Commit Name: 23d2d656652274809edbaf89979ab66ba168f12c</div><div id='time'> Time: 2019-04-15</div><div id='author'> Author: peiqial@outlook.com</div><div id='file'> File Name: examples/facerec_from_webcam.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

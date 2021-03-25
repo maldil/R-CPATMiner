@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dists, idx_neighbors = self._get_region_competence(query)
+        competences = np.zeros(self.n_classifiers)
+
+        <a id="change">for clf_index in range(self.n_classifiers):
+
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                &#47&#47 count the number of correctly classified samples in the
+                &#47&#47 neighborhood.
+                for counter, index in enumerate(idx_neighbors):
+                    if self.processed_dsel[index][clf_index]:
+                        continue
+                    else:
+                        competences[clf_index] = counter
+                        break
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        <a id="change">results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)</a>
+        <a id="change">competences = np.argmax(results_neighbors == 0, axis=1)</a>
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47
+        &#47&#47 for clf_index in range(self.n_classifiers):</code></pre>

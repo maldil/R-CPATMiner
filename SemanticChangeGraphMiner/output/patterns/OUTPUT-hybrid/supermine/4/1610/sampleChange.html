@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with capture_stdout() as (f, final_out):
+            print("captured stdout")
+            print("captured stderr")
+            <a id="change">f.seek(0)</a>
+            output = f.read()
+
+        print(&quotafter (stdout)&quot)
+        print(&quotafter (stderr)&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        with capture_stdout() as out:
+            print("captured stdout")
+            print("captured stderr")
+        <a id="change">output = out.get()</a>
+
+        print(&quotafter (stdout)&quot)
+        print(&quotafter (stderr)&quot)
+</code></pre>

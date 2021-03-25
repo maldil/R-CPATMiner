@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                save_training_state(args.state_path)
+
+    print("Stopping because %d epochs was reached." % args.max_epochs)
+    <a id="change">validation_cost</a> = <a id="change">scorer.negative_log_probability(validation_iter)</a>
+    trainer.append_validation_cost(validation_cost)
+    if trainer.validations_since_min_cost() == 0:
+        best_params = rnnlm.get_state()
+    return best_params</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if (args.validation_interval &gt;= 1) and \
+               (trainer.total_updates % args.validation_interval == 0):
+                validation_cost = <a id="change">-scorer.score_text(validation_iter)</a>
+                if numpy.isnan(validation_cost):
+                    print("Stopping because an invalid floating point operation was performed while computing validation set cost. (Gradients exploded or vanished?)")
+                    return best_params
+                if numpy.isinf(validation_cost):
+                    print("Stopping because validation set cost exploded to infinity.")
+                    return best_params
+
+                trainer.append_validation_cost(validation_cost)
+                trainer.print_cost_history()
+                sys.stdout.flush()
+                validations_since_best = trainer.validations_since_min_cost()
+                if validations_since_best == 0:
+                    best_params = rnnlm.get_state()
+                elif (args.wait_improvement &gt;= 0) and \
+                     (validations_since_best &gt; args.wait_improvement):
+                    if validation_cost &gt;= initial_cost:
+                        args.learning_rate /= 2
+                    rnnlm.set_state(best_params)
+                    trainer.next_epoch()
+                    break
+
+            if (args.save_interval &gt;= 1) and \
+               (trainer.total_updates % args.save_interval == 0):
+                &#47&#47 Save the best parameters and the current state.
+                if not best_params is None:
+                    save_model(args.model_path, best_params)
+                save_training_state(args.state_path)
+
+    print("Stopping because %d epochs was reached." % args.max_epochs)
+    <a id="change">validation_cost</a> = <a id="change">-scorer.score_text(validation_iter)</a>
+    trainer.append_validation_cost(validation_cost)
+    if trainer.validations_since_min_cost() == 0:
+        best_params = rnnlm.get_state()
+    return best_params</code></pre>

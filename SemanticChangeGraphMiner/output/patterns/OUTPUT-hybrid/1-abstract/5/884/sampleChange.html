@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        try:
+            invalid_name = next(iter(filter(
+                lambda n: n not in self.layer_names, pick)))
+            <a id="change">raise ValueError(&quotInvalid layer name ({:s})&quot.format(invalid_name))</a>
+        except StopIteration:
+            pass
+
+        self._return_tuple = return_tuple</code></pre><h3>After Change</h3><pre><code class='java'>
+            return_tuple = False
+            pick = (pick,)
+        for name in pick:
+            <a id="change">if name not in self.layer_names:
+                raise ValueError(&quotInvalid layer name ({:s})&quot.format(name))
+
+       </a> self._return_tuple = return_tuple
+        self._pick = tuple(pick)
+
+    def remove_unused(self):</code></pre>

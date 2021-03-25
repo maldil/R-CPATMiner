@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for entry in f_entries:
+                hash_ = self._hash_entry(entry, frozenset([&quotfilename&quot,&quotlineno&quot]))
+                &#47&#47 skip the existing entries from other statements
+                <a id="change">if hash_ in entries: continue
+</a>                &#47&#47 If the entry exists in the journal, skip
+                if self._is_existing(journal, entry): continue
+                &#47&#47 add importer name as sorce description to source postings
+                self._add_description(entry)
+                &#47&#47 balance amount
+                self.balance_amounts(entry)
+                <a id="change">hashed_entries[hash_] = entry</a>
+            entries = {**entries, **hashed_entries}
+
+        results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def prepare(self, journal: &quotJournalEditor&quot, results: SourceResults) -&gt; None:
+        results.add_account(self.account)
+        entries = <a id="change">defaultdict(list)</a>
+        for f in self.files:
+            f_entries = self.importer.extract(f)
+            &#47&#47 collect  all entries in current statement, grouped by hash
+            hashed_entries = defaultdict(list)
+            for entry in f_entries:
+                hash_ = self._hash_entry(entry, frozenset([&quotfilename&quot,&quotlineno&quot]))
+                hashed_entries[hash_].append(entry)
+            &#47&#47 deduplicate across statements
+            for hash_ in hashed_entries:
+                &#47&#47 skip the existing entries from other statements. add remaining
+                <a id="change">n = len(entries[hash_])</a>
+                entries[hash_].extend(hashed_entries[hash_][n:])
+
+        uncleared_entries = defaultdict(list)
+        for hash_ in entries:</code></pre>

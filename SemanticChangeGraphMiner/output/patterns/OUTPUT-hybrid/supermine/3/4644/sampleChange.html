@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                if util.is_category(X[col].dtype):
+                    categories = X[col].cat.categories.tolist()
+                    if <a id="change">X[col].isna().any()</a>:
+                        categories += [np.nan]
+                else:
+                    categories = X[col].unique()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                &#47&#47 Avoid using pandas category dtype meta-data, see &#47&#47235
+                categories = X[col].unique().tolist()
+                if <a id="change">util.is_category(X[col].dtype) and X[col].isna().any()</a>:
+                    categories += [np.nan]
+
+                index = pd.Series(categories).fillna(nan_identity).unique()</code></pre>

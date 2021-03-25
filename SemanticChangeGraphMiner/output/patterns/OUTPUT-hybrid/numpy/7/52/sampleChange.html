@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if max==&quotsoft&quot: &#47&#47use softmax function (makes it differentiable)
+        
+        min_mass=np.minimum(energy_mass, power_mass)
+        mass=<a id="change">mass+np.log(1.+np.exp(min_mass-mass))</a>  &#47&#47write it this way to prevent overflow
+            
+    battery.mass_properties.mass=mass
+    battery.max_energy=battery.specific_energy*mass</code></pre><h3>After Change</h3><pre><code class='java'>
+    power_mass=power/battery.specific_power
+    mass=np.maximum(energy_mass, power_mass)
+    if max==&quotsoft&quot: &#47&#47use softmax function (makes it differentiable)
+        <a id="change">scaling=10.**(np.floor(np.log10(mass))-1)</a> &#47&#47make it so the exponentials are taking ~10 (closer numerically, while still differentiable)
+        <a id="change">mass=scaling*np.log(np.exp(energy_mass/scaling)+np.exp(power_mass/scaling))</a>  &#47&#47write it this way to prevent overflow
+
+    battery.mass_properties.mass=mass
+    battery.max_energy=battery.specific_energy*mass</code></pre>

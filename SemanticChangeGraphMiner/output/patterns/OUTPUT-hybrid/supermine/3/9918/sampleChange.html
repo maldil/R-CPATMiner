@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            k = (2, k+1)
+
+        &#47&#47 Expand k in to the values we will use, capturing exceptions
+        <a id="change">try:
+            k = tuple(k)
+            self.k_values_ = list(range(*k))
+        except:
+            raise YellowbrickValueError((
+                "Specify a range or maximal K value, the value &quot{}&quot "
+                "is not a valid argument for K.".format(k)
+            ))
+
+
+        &#47&#47 Holds the values of the silhoutte scores
+       </a> self.k_scores_ = None
+
+    def fit(self, X, y=None, **kwargs):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            self.k_values_ = list(range(*k))
+        elif isinstance(k, collections.Iterable) and \
+                all(isinstance(x, (int, np.integer)) for x in k):
+            self.k_values_ = <a id="change">list(k)</a>
+        else:
+            raise YellowbrickValueError((
+                "Specify an iterable of integers, a range, or maximal K value,"
+                " the value &quot{}&quot is not a valid argument for K.".format(k)</code></pre>

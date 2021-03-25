@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if d == 1:  &#47&#47 scalars
+                if self.training:
+                    field_mean = <a id="change">field</a>.mean(0).mean(-1).view(-1).detach()  &#47&#47 [feature]
+                    new_means.append(self._roll_avg(self.running_mean[irm:irm+m], field_mean))
+                else:
+                    field_mean = self.running_mean[irm: irm + m]
+                irm += m
+                <a id="change">field</a> = field - field_mean.view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.training:
+                field_norm = torch.sum(field ** 2, dim=2)  &#47&#47 [batch, feature, x * y * z]
+                if self.reduce == &quotmean&quot:
+                    <a id="change">field_norm</a> = field_norm.mean(-1)  &#47&#47 [batch, feature]
+                elif self.reduce == &quotmax&quot:
+                    <a id="change">field_norm</a> = field_norm.max(-1)[0]  &#47&#47 [batch, feature]
+                else:
+                    raise ValueError("Invalid reduce option")
+                <a id="change">field_norm</a> = field_norm.mean(0).detach()  &#47&#47 [feature]
+                new_vars.append(self._roll_avg(self.running_var[irv: irv+m], field_norm))
+            else:
+                field_norm = self.running_var[irv: irv + m]
+            irv += m
+
+            field_norm = (field_norm + self.eps).pow(-0.5).view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine:
+                weight = self.weight[iw: iw + m]  &#47&#47 [feature]
+                iw += m
+                <a id="change">field_norm</a> = field_norm * weight.view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            <a id="change">field</a> = field * field_norm  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine and d == 1:  &#47&#47 scalars
+                bias = self.bias[ib: ib + m]  &#47&#47 [feature]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if d == 1:  &#47&#47 scalars
+                if self.training:
+                    field_mean = <a id="change">field.mean(0).mean(-1).view(-1)</a>  &#47&#47 [feature]
+                    new_means.append(
+                        self._roll_avg(self.running_mean[irm:irm+m], field_mean)
+                    )
+                else:
+                    field_mean = self.running_mean[irm: irm + m]
+                irm += m
+
+                &#47&#47 [batch, feature, repr, x * y * z]
+                <a id="change">field</a> = field - field_mean.view(1, m, 1, 1)
+
+            if self.training:
+                field_norm = torch.sum(field ** 2, dim=2)  &#47&#47 [batch, feature, x * y * z]
+                if self.reduce == &quotmean&quot:
+                    <a id="change">field_norm</a> = field_norm.mean(-1)  &#47&#47 [batch, feature]
+                elif self.reduce == &quotmax&quot:
+                    <a id="change">field_norm</a> = field_norm.max(-1)[0]  &#47&#47 [batch, feature]
+                else:
+                    raise ValueError("Invalid reduce option {}".format(self.reduce))
+
+                <a id="change">field_norm</a> = field_norm.mean(0)  &#47&#47 [feature]
+                new_vars.append(self._roll_avg(self.running_var[irv: irv+m], field_norm))
+            else:
+                field_norm = self.running_var[irv: irv + m]
+            irv += m
+
+            &#47&#47 [batch, feature, repr, x * y * z]
+            field_norm = (field_norm + self.eps).pow(-0.5).view(1, m, 1, 1)
+
+            if self.affine:
+                weight = self.weight[iw: iw + m]  &#47&#47 [feature]
+                iw += m
+
+                &#47&#47 [batch, feature, repr, x * y * z]
+                <a id="change">field_norm</a> = field_norm * weight.view(1, m, 1, 1)
+
+            <a id="change">field</a> = field * field_norm  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine and d == 1:  &#47&#47 scalars
+                bias = self.bias[ib: ib + m]  &#47&#47 [feature]</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    nn.LeakyReLU(0.2, inplace=True) ]
+
+        if normalize:
+            <a id="change">model += [nn.BatchNorm2d(out_size, 0.8)]</a>
+
+        if dropout:
+            model += [nn.Dropout(dropout)]
+
+        <a id="change">self.model</a> = nn.Sequential(*model)
+
+    def forward(self, x):
+        return self.model(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(UNetDown, self).__init__()
+        model = [nn.Conv2d(in_size, out_size, 4, stride=2, padding=1, bias=False)]
+        if normalize:
+            model.append(<a id="change">nn.BatchNorm2d(out_size, 0.8)</a>)
+        model.append(nn.LeakyReLU(0.2))
+        if dropout:
+            model.append(nn.Dropout(dropout))</code></pre>

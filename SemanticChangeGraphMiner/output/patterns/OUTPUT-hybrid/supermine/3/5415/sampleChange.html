@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    plt.plot(generated_observations)
+    plt.show()
+
+    observations = <a id="change">[]</a>
+    for i in range(generated_observations.shape[1]):
+        observations.append(nussl.AudioSignal(audio_data_array=generated_observations[:, i], sample_rate = 44100))
+
+    observations = nussl.ICA.transform_observations_to_audio_signal(observations)</code></pre><h3>After Change</h3><pre><code class='java'>
+    full_signal /= full_signal.std(axis=0)  &#47&#47 Standardize data
+
+    plt.plot(full_signal)
+    <a id="change">plt.show()</a>
+
+    &#47&#47 Mix data
+    mixing_matrix = np.array([[1, 1, 1], [0.5, 2, 1.0], [1.5, 1.0, 2.0]])  &#47&#47 Mixing matrix
+    generated_observations = np.dot(full_signal, mixing_matrix.T)  &#47&#47 Generate observations</code></pre>

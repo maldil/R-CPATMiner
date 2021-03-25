@@ -1,0 +1,31 @@
+<html><h3>ef29cd9bde8695645d63ae7f568fb298809e7b19,tpot/builtins/dataset_selector.py,DatasetSelector,fit,#DatasetSelector#,43
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        features_i_df = pd.read_csv(self.subset_i, sep=&quot\t&quot, header=0)
+        if isinstance(X, pd.DataFrame): &#47&#47 use columns&quot names
+            self.feature_names = list(X.columns.values)
+            feature_i = [str(val) <a id="change">for</a> val in features_i_df.values.flatten()]
+        elif isinstance(X, np.ndarray): &#47&#47 use index
+            self.feature_names = list(range(X.shape[1]))
+            feature_i = [int(val) for val in features_i_df.values.flatten()]</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        subset_df = pd.read_csv(self.subset_list, header=0, index_col=0)
+
+        <a id="change">if isinstance(self.sel_subset, int):
+            self.sel_subset_name = subset_df.index[self.sel_subset]
+        elif isinstance(self.sel_subset, list):
+            self.sel_subset_name = []
+            for s in self.sel_subset:
+                if isinstance(s, int):
+                    self.sel_subset_name.append(subset_df.index[s])
+                else:
+                    self.sel_subset_name.append(s)
+        else: &#47&#47 self.sel_subset is a string
+            self.sel_subset_name = self.sel_subset
+
+       </a> sel_features = subset_df.loc[self.sel_subset_name, &quotFeatures&quot]
+        if not isinstance(sel_features, str):
+            sel_features = ";".join(sel_features.tolist())
+</code></pre><img src="15862192.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EpistasisLab/tpot/commit/ef29cd9bde8695645d63ae7f568fb298809e7b19#diff-af09f9926e900caa780b0103b6e5fe571db2074aa4eb6c98ddac9a74465e7ac8L43' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/tpot</div><div id='commit'> Commit Name: ef29cd9bde8695645d63ae7f568fb298809e7b19</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: weixuanf@pennmedicine.upenn.edu</div><div id='file'> File Name: tpot/builtins/dataset_selector.py</div><div id='class'> Class Name: DatasetSelector</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/IDSIA/sacred/commit/82d573a8775982e3c601d690bdf934c54cc07d54#diff-25110275d10e4d1a2f08953597ffba10adcb9ffb4ad64a926c06836443c45e87L476' target='_blank'>Link</a></div><div id='project'> Project Name: IDSIA/sacred</div><div id='commit'> Commit Name: 82d573a8775982e3c601d690bdf934c54cc07d54</div><div id='time'> Time: 2019-10-10</div><div id='author'> Author: gabrieldemarmiesse@gmail.com</div><div id='file'> File Name: sacred/experiment.py</div><div id='class'> Class Name: Experiment</div><div id='method'> Method Name: get_default_options</div><BR><BR><div id='link'><a href='https://github.com/ContextLab/hypertools/commit/551eb84e755b4cd969e975c9de4604568c162504#diff-11e19ca5db29e4657e5d235ab6e18e2bf43fb71a6b6df7c2a25eac11e30bf5c5L189' target='_blank'>Link</a></div><div id='project'> Project Name: ContextLab/hypertools</div><div id='commit'> Commit Name: 551eb84e755b4cd969e975c9de4604568c162504</div><div id='time'> Time: 2018-01-15</div><div id='author'> Author: andrew.heusser@gmail.com</div><div id='file'> File Name: hypertools/_shared/helpers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: format_data</div><BR>

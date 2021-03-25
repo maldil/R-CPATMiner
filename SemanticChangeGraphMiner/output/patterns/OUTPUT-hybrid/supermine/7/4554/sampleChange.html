@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Check if the frame is l2 normalized
+    lengths = np.sqrt(np.sum(np.power(shrank, 2), axis=&quotcolumns&quot))
+    <a id="change">ok_(all(isclose(length, 1.0, rel_tol=1e-04) for length in lengths))</a>
+
+    &#47&#47 Check if the index is sorted
+    ok_(shrank.index.is_monotonic_increasing)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Check if the frame is l2 normalized
+    lengths = np.sqrt(np.sum(np.power(shrank, 2), axis=&quotcolumns&quot))
+    <a id="change">for length in lengths:
+        assert_almost_equal(length, 1.0, places=4)
+
+    &#47&#47 Check if the index is sorted
+   </a> ok_(shrank.index.is_monotonic_increasing)
+
+
+@click.command()</code></pre>

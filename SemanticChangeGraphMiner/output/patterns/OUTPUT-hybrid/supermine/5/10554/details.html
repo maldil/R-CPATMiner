@@ -1,0 +1,46 @@
+<html><h3>f8d9a6c144ef84bad2478a4ba4eedb1c559274e0,skimage/_shared/coord.py,,ensure_spacing,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        tree = cKDTree(coord)
+
+        indices = tree.query_ball_point(coord, r=spacing, p=p_norm)
+        <a id="change">rejected_peaks_indices = set()</a>
+        for idx, candidates in enumerate(indices):
+            if idx not in rejected_peaks_indices:
+                &#47&#47 keep current point and the points at exactly spacing from it
+                candidates.remove(idx)
+                dist = distance.cdist([coord[idx]],
+                                      coord[candidates],
+                                      distance.minkowski,
+                                      p=p_norm).reshape(-1)
+                candidates = [c for c, d in zip(candidates, dist)
+                              if d &lt; spacing]
+
+                &#47&#47 candidates.remove(keep)
+                rejected_peaks_indices.update(candidates)
+
+        &#47&#47 Remove the peaks that are too close to each other
+        <a id="change">output = np.delete(coord, tuple(rejected_peaks_indices), axis=0)</a>
+
+    return output
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    output = coords
+    <a id="change">if len(coords):
+
+        coords = np.atleast_2d(coords)
+        if batch_size is None:
+            batch_list = [coords]
+        else:
+            batch_list = np.array_split(coords, batch_size)
+
+        output = np.zeros((0, coords.shape[1]))
+        for batch in batch_list:
+            output = _ensure_spacing(np.vstack([output, batch]),
+                                     spacing, p_norm)
+
+   </a> return output
+</code></pre><img src="39062997.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa#diff-e9d887c7e23b65b06d2bcd24b5dc0636d14bcdd5a84297d1c7909dd2dc71214dL23' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/lda.py</div><div id='class'> Class Name: SHOGUN_LDA</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/86698c801848975de9a21fb17093e045b6271ea3#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L109' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 86698c801848975de9a21fb17093e045b6271ea3</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR>

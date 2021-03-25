@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        coordinates[0][i] += dy
+        coordinates[1][i] += dx
+    data = map_coordinates(image, coordinates.reshape((2,-1)), order=1).reshape((image.size, -1))
+    codes = (data.T &gt; <a id="change">image.ravel()</a>).sum(0)
+    mahotas._lbp.map(codes.astype(np.uint32), points)
+    final = fullhistogram(codes.astype(np.uint32))
+
+    codes = np.arange(2**points, dtype=np.uint32)
+    iters = codes.copy()
+    mahotas._lbp.map(codes.astype(np.uint32), points)
+    pivots = (codes == iters)
+    npivots = np.sum(pivots)
+    <a id="change">compressed</a> = final[pivots[:len(final)]]
+    compressed = np.concatenate((compressed, [0]*(npivots - len(compressed))))
+    return compressed
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        pixels = image[Y,X].ravel()
+    else:
+        Y,X = np.indices(image.shape)
+        pixels = <a id="change">image.ravel()</a>
+    angles = np.linspace(0, 2*np.pi, points+1)[:-1]
+    coordinates = np.empty((2, points, Y.size), float)
+    for i,(dy,dx) in enumerate(zip(radius * np.sin(angles), radius * np.cos(angles))):
+        coordinates[0][i] = Y.ravel()
+        coordinates[1][i] = X.ravel()
+        coordinates[0][i] += dy
+        coordinates[1][i] += dx
+    data = map_coordinates(image, coordinates.reshape((2,-1)), order=1).reshape((Y.size, -1))
+    codes = (data.T &gt; pixels).sum(0)
+    codes = mahotas._lbp.map(codes.astype(np.uint32), points)
+    final = fullhistogram(codes.astype(np.uint32))
+
+    codes = np.arange(2**points, dtype=np.uint32)
+    iters = codes.copy()
+    codes = mahotas._lbp.map(codes.astype(np.uint32), points)
+    pivots = (codes == iters)
+    npivots = np.sum(pivots)
+    <a id="change">compressed</a> = final[pivots[:len(final)]]
+    compressed = np.concatenate((compressed, [0]*(npivots - len(compressed))))
+    return compressed
+</code></pre>

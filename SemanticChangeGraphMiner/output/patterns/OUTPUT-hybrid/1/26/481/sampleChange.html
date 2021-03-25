@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rx_data.real[s1r] = (M - 1)*np.ones(len(s1r))
+    rx_data.real[s2r] = np.zeros(len(s2r))
+    &#47&#47 Fix-up edge points imag part
+    <a id="change">s1i</a> = <a id="change">mlab.find(rx_data.imag &gt; M - 1)</a>
+    <a id="change">s2i</a> = <a id="change">mlab.find(rx_data.imag &lt; 0)</a>
+    <a id="change">rx_data.imag[s1i]</a> = (M - 1)*np.ones(len(s1i))
+    <a id="change">rx_data.imag[s2i]</a> = np.zeros(len(s2i))
+    rx_data = 2*rx_data - (M - 1)*(1 + 1j)
+    &#47&#47Correlate the first Ncorr symbols at four possible phase rotations
+    R0,lags = xcorr(rx_data,tx_data,Ncorr)</code></pre><h3>After Change</h3><pre><code class='java'>
+    rx_data.real[s1r] = (M - 1)*np.ones(len(s1r))
+    rx_data.real[s2r] = np.zeros(len(s2r))
+    &#47&#47 Fix-up edge points imag part
+    <a id="change">s1i</a> = <a id="change">np.nonzero(np.ravel(rx_data.imag &gt; M - 1))[0]</a>
+    <a id="change">s2i</a> = <a id="change">np.nonzero(np.ravel(rx_data.imag &lt; 0))[0]</a>
+    <a id="change">rx_data.imag[s1i]</a> = (M - 1)*np.ones(len(s1i))
+    <a id="change">rx_data.imag[s2i]</a> = np.zeros(len(s2i))
+    rx_data = 2*rx_data - (M - 1)*(1 + 1j)
+    &#47&#47Correlate the first Ncorr symbols at four possible phase rotations
+    R0,lags = xcorr(rx_data,tx_data,Ncorr)</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def learn(self):
+        if self.learn_step_counter % self.replace_target_iter == 0:
+            <a id="change">self._replace_target_params()</a>
+            print(&quot\ntarget_params_replaced\n&quot)
+
+        if self.prioritized:
+            tree_idx, batch_memory, ISWeights = self.memory.sample(self.batch_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+            action = np.random.randint(0, self.n_actions)
+        return action
+
+    def learn(<a id="change">self</a>):
+        if self.learn_step_counter % self.replace_target_iter == 0:
+            <a id="change">self.sess.run(self.replace_target_op)</a>
+            print(&quot\ntarget_params_replaced\n&quot)
+
+        if self.prioritized:
+            tree_idx, batch_memory, ISWeights = self.memory.sample(self.batch_size)</code></pre>

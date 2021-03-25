@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    clf = GridSearchCV(rew, params, cv=5)
+    &#47&#47 TODO: &quotgroups&quot name clashes with CV splitter
+    fit_params = {&quotpa_groups&quot: X.index.get_level_values(&quotsex&quot),
+                  &quotsample_weight&quot: <a id="change">np.random.random(y.shape)</a>}
+    clf.fit(X, y, **fit_params)
+    &#47&#47 print(clf.score(X, y))
+    assert len(clf.best_estimator_.reweigher_.groups_) == 2</code></pre><h3>After Change</h3><pre><code class='java'>
+        return accuracy_score(y_true, y_pred, sample_weight=sample_weight[idx])
+    scoring = make_scorer(score_func, **{&quotsample_weight&quot: sample_weight})
+
+    params = {&quotestimator__C&quot: [1, 10], &quotreweigher__prot_attr&quot: <a id="change">[&quotsex&quot]</a>}
+
+    clf = GridSearchCV(rew, params, scoring=scoring, cv=5, iid=False)
+    clf.fit(X, y, **{&quotsample_weight&quot: sample_weight})</code></pre>

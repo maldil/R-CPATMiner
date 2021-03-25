@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                            matched = True
+                            d[true_annotation[&quotlabel&quot]][&quottrue_positives&quot].append(true_annotation)
+                    else:
+                        <a id="change">d</a>[pred_annotation[&quotlabel&quot]][&quotfalse_positives&quot].append(pred_annotation)
+            if not matched:
+                d[true_annotation[&quotlabel&quot]][&quotfalse_negatives&quot].append(true_annotation)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                annotation[&quotdoc_idx&quot] = i
+
+        for true_annotation in true_annotations: 
+            <a id="change">for pred_annotation in predicted_annotations:
+                if equality_fn(true_annotation, pred_annotation):
+                    if pred_annotation[&quotlabel&quot] == true_annotation[&quotlabel&quot]:
+                            d[true_annotation[&quotlabel&quot]][&quottrue_positives&quot].append(true_annotation)
+                            break
+            else:
+                d[true_annotation[&quotlabel&quot]][&quotfalse_negatives&quot].append(true_annotation)
+
+       </a> for pred_annotation in predicted_annotations: 
+            for true_annotation in true_annotations:
+                if (
+                    equality_fn(</code></pre>

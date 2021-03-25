@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for clf_index in range(self.n_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if <a id="change">self.DFP_mask[clf_index]</a>:
+                temp_competence = np.multiply(self.C_src[:, clf_index], potential_dists)
+                competences[clf_index] = np.sum(temp_competence)/sum_potential
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        potential_dists = self.potential_func(dists_organized)
+        sum_potential = np.sum(potential_dists, axis=1)
+
+        competences = np.einsum(&quotijk,ij-&gt;ik&quot, self.C_src[<a id="change">np.newaxis, :, :</a>], potential_dists)
+        <a id="change">competences = competences/sum_potential.reshape(-1, 1)</a>
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47 for clf_index in range(self.n_classifiers):
+        &#47&#47     &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used</code></pre>

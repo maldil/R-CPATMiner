@@ -1,0 +1,27 @@
+<html><h3>aab2ef03ff533c1160742fafd2bf12133e227ddb,nonconformist/ensemble.py,AggregatedCp,predict,#AggregatedCp#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+				if p_values is None:
+					p_values = predictor.predict(x)
+				else:
+					p_values = <a id="change">np.dstack([p_values, predictor.predict(x)])</a>
+
+			p_values = self.p_agg_func(p_values)
+
+			if significance:</code></pre><h3>After Change</h3><pre><code class='java'>
+	def predict(self, x, significance=None):
+		is_regression = self.cp_class.problem_type == &quotregression&quot
+
+		<a id="change">if is_regression:
+			predictions = np.dstack([predictor.predict(x, significance) for
+			                         predictor in self.predictors])
+		else:
+			predictions = np.dstack([predictor.predict(x) for
+			                         predictor in self.predictors])
+
+	</a>	predictions = self.p_agg_func(predictions)
+
+		if significance and not is_regression:
+			return predictions &gt;= significance</code></pre><img src="23485174.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/donlnz/nonconformist/commit/aab2ef03ff533c1160742fafd2bf12133e227ddb#diff-e9629ca90043ca8f4af5b86a2d4200709f9f3b964f320fcfb74b8fbe42d6ce05L41' target='_blank'>Link</a></div><div id='project'> Project Name: donlnz/nonconformist</div><div id='commit'> Commit Name: aab2ef03ff533c1160742fafd2bf12133e227ddb</div><div id='time'> Time: 2015-03-19</div><div id='author'> Author: henrik.linusson@gmail.com</div><div id='file'> File Name: nonconformist/ensemble.py</div><div id='class'> Class Name: AggregatedCp</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/7f5d55e309efbd0eee135ff5af520e3ddea310fb#diff-ce2c6e3489423952935ee3acd7277f34e234394eb728dcbba9e9b5d569c397bfL324' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 7f5d55e309efbd0eee135ff5af520e3ddea310fb</div><div id='time'> Time: 2010-11-12</div><div id='author'> Author: lpc@cmu.edu</div><div id='file'> File Name: mahotas/freeimage.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _array_from_bitmap</div><BR><BR><div id='link'><a href='https://github.com/ANTsX/ANTsPy/commit/1ea4d793f13defcc2401259ac14dfb118fc4bd58#diff-113c3fa7880d02d96322c797beb306d7ed7020064379116084153a98375ba205L38' target='_blank'>Link</a></div><div id='project'> Project Name: ANTsX/ANTsPy</div><div id='commit'> Commit Name: 1ea4d793f13defcc2401259ac14dfb118fc4bd58</div><div id='time'> Time: 2018-11-23</div><div id='author'> Author: stnava@gmail.com</div><div id='file'> File Name: ants/utils/ndimage_to_list.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: list_to_ndimage</div><BR>

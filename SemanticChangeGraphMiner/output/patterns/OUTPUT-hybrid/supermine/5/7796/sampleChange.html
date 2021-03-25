@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                factors[mode] = tl.transpose(
+                    hals_nnls_exact(tl.transpose(mttkrp), pseude_inverse, tl.transpose(factors[mode]),
+                                     maxiter=5000)[0])
+            factors_norm = <a id="change">tl.sum(tl.sum(pseude_inverse * tl.dot(tl.conj(tl.transpose(factors[mode])), factors[mode])))</a>
+            rec_error = norm_tensor ** 2 + factors_norm - 2 * tl.dot(tl.tensor_to_vec(factors[mode]),
+                                                                     tl.tensor_to_vec(mttkrp))
+            <a id="change">rec_error = rec_error ** (1 / 2) / norm_tensor</a>
+
+        if tol:
+            rec_errors.append(rec_error)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if tol:
+            factors_norm = cp_norm((weights, factors))
+            iprod = tl.sum(tl.sum(mttkrp*factor, axis=0)*weights)
+            rec_error = tl.sqrt(<a id="change">tl.abs(norm_tensor**2 + factors_norm**2 - 2*iprod)</a>) / norm_tensor
+            rec_errors.append(rec_error)
+
+            if iteration &gt; 1:</code></pre>

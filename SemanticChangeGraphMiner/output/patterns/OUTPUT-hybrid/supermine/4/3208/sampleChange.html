@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def make_augmentation_docs_link(module, cls):
+    return <a id="change">(
+        "[{cls_name}]" "(https://albumentations.ai/docs/api_reference/{module}/transforms/&#47&#47{cls_fullname})"
+    ).format(cls_name=cls.__name__, module=module, cls_fullname=cls.__module__ + "." + cls.__name__)</a>
+
+
+class Targets(Enum):
+    IMAGE = "Image"</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def make_augmentation_docs_link(cls):
+    module_parts = <a id="change">cls.__module__.split(".")</a>
+    <a id="change">module_page = "/".join(module_parts[1:])</a>
+    return (
+        "[{cls.__name__}](https://albumentations.ai/docs/api_reference/{module_page}/&#47&#47{cls.__module__}.{cls.__name__})"
+    ).format(module_page=module_page, cls=cls)
+</code></pre>

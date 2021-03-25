@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Generate injection codes.
+        lst_scripts = self.train(df_genes, df_sigs)
+        <a id="change">self.util.print_message(NOTE, &quotGenerated injection codes: {}&quot.format(lst_scripts))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        df_sigs = pd.read_csv(sig_path, encoding=&quotutf-8&quot).fillna(&quot&quot)
+        df_selected_sigs = df_sigs[(df_sigs[0] == eval_place)]
+
+        <a id="change">if len(df_selected_sigs) != 0:
+            df_genes = pd.read_csv(self.genes_path, encoding=&quotutf-8&quot).fillna(&quot&quot)
+
+            &#47&#47 Generate injection codes.
+            lst_scripts = self.train(df_genes, df_sigs)
+            self.util.print_message(NOTE, &quotGenerated injection codes: {}&quot.format(lst_scripts))
+        else:
+            self.util.print_message(WARNING, &quotSignature of {} do not include in {}.&quot.format(eval_place, sig_path))
+            self.util.print_message(WARNING, &quotSkip process of Generative Adversarial Networks&quot)</a>
+</code></pre>

@@ -1,0 +1,45 @@
+<html><h3>172e1c71ff73c351b195c47ea6a89a24cc83e259,dragonn/interpret/ism.py,,in_silico_mutagenesis,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mutants_expanded=np.zeros(output_dim)
+    empty_onehot=np.zeros(output_dim[3])
+    if start_pos is None:
+        <a id="change">start_pos=0</a>
+    if end_pos is None:
+        end_pos=output_dim[2] 
+
+    &#47&#473. Iterate through all tasks, positions
+    for sample_index in range(output_dim[0]):
+        print("ISM: task:"+str(task_index)+" sample:"+str(sample_index))
+        &#47&#47fill in wild type logit values into an array of dim (task,sequence_length,num_bases)
+        wt_logit_for_task_sample=wild_type_logits[sample_index]
+        wt_expanded[sample_index]=np.tile(wt_logit_for_task_sample,(output_dim[2],output_dim[3]))
+        &#47&#47mutagenize each position
+        temp_batch = []
+        <a id="change">tempbatch_baseposandletter = []</a>
+        for base_pos in range(start_pos,end_pos):
+            &#47&#47for each position, iterate through the 4 bases
+            for base_letter in range(output_dim[3]):
+                cur_base=np.array(empty_onehot)
+                cur_base[base_letter]=1
+                Xtmp=np.array(X[sample_index])
+                Xtmp[0][base_pos]=cur_base
+                temp_batch.append(Xtmp)
+                <a id="change">tempbatch_baseposandletter.append((base_pos, base_letter))</a>
+        &#47&#47get the logits of the batch
+        batch_logits = preact_function([temp_batch]) 
+        for logit,(base_pos, base_letter) in zip(batch_logits, tempbatch_baseposandletter):
+            mutants_expanded[sample_index][0][base_pos][base_letter]=logit</code></pre><h3>After Change</h3><pre><code class='java'>
+            for base_letter in range(output_dim[3]):
+                cur_base=np.array(empty_onehot)
+                cur_base[base_letter]=1
+                Xtmp=np.array(<a id="change">np.expand_dims(X[sample_index],axis=0)</a>)
+                Xtmp[0][0][base_pos]=cur_base
+                &#47&#47get the logit of Xtmp
+                <a id="change">Xtmp_logit=np.squeeze(preact_function(Xtmp),axis=0)</a>
+                mutants_expanded[sample_index][0][base_pos][base_letter]=Xtmp_logit[task_index]
+    &#47&#47subtract wt_expanded from mutants_expanded
+    ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values</code></pre><img src="27467139.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kundajelab/dragonn/commit/172e1c71ff73c351b195c47ea6a89a24cc83e259#diff-685d3e89c8b313cbde1f81adbcf2a54a7faa9d6dc034e1006e50d07f4b2a1caeL31' target='_blank'>Link</a></div><div id='project'> Project Name: kundajelab/dragonn</div><div id='commit'> Commit Name: 172e1c71ff73c351b195c47ea6a89a24cc83e259</div><div id='time'> Time: 2019-07-10</div><div id='author'> Author: annashcherbina@gmail.com</div><div id='file'> File Name: dragonn/interpret/ism.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: in_silico_mutagenesis</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR>

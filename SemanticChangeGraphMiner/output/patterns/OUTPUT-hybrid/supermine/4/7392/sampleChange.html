@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def equal(x,y):
+    <a id="change">return torch.le(torch.dist(x, y), 1e-6)</a>
+
+@pytest.mark.parametrize(&quotmodel_name, pretrained&quot, pm_args)
+def test_pm_imagenet(model_name, pretrained):
+    print(&quottest_pm_imagenet("{}")&quot.format(model_name))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def equal(x,y):
+    <a id="change">return torch.all(torch.lt(torch.abs(torch.add(x, -y)), 1e-12))</a>
+
+@pytest.mark.parametrize(&quotmodel_name, pretrained&quot, pm_args)
+def test_pm_imagenet(model_name, pretrained):
+    print(&quottest_pm_imagenet("{}")&quot.format(model_name))</code></pre>

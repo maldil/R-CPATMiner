@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                               for k in range(0, self._nmanifolds)])
+
+    def egrad2rgrad(self, X, U):
+        return _TangentVector([<a id="change">self</a>._manifolds[k].egrad2rgrad(X[k], U[k])
+                              for k in <a id="change">range(0, self._nmanifolds)</a>])
+
+    def ehess2rhess(self, X, egrad, ehess, H):
+        return _TangentVector([self._manifolds[k].ehess2rhess(X[k], egrad[k],</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def egrad2rgrad(self, X, U):
+        return _TangentVector([man.egrad2rgrad(X[k], U[k])
+                               for k, man in <a id="change">enumerate(self._manifolds)</a>])
+
+    def ehess2rhess(self, X, egrad, ehess, H):
+        return _TangentVector([man.ehess2rhess(X[k], egrad[k], ehess[k], H[k])</code></pre>

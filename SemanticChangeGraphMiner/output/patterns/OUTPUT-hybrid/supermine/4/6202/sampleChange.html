@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    sft_net = sft_net.cuda()
+    seg = torch.load(&quot../../../data/samples_segprob/OST_013_bic.pth&quot)
+    seg = seg.cuda()
+    <a id="change">shared_cond = cond_net(Variable(seg, volatile=True))</a>
+
+    img = cv2.imread(&quot../../../data/samples/OST_013.png&quot, cv2.IMREAD_UNCHANGED)
+    img = img * 1.0 / 255
+    img = torch.from_numpy(np.transpose(img[:, :, [2, 1, 0]], (2, 0, 1))).float()</code></pre><h3>After Change</h3><pre><code class='java'>
+    img_LR = img_LR.cuda()
+
+    seg = torch.load(&quot/mnt/SSD/xtwang/BasicSR_datasets/OST/test/bicseg/OST300/OST_013.pth&quot)
+    seg = <a id="change">seg</a>.unsqueeze(<a id="change">0</a>).cuda()
+
+    output = sft_net((Variable(img_LR, volatile=True), Variable(seg))).data.float().cpu()
+    output.squeeze_()</code></pre>

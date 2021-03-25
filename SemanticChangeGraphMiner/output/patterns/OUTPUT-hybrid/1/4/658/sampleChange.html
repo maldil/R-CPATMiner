@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        avg_gradients[i] = (avg_gradients[i] * (1.0 - (1.0 / (step+1)))) + (gradients[i] / (step+1))
+                        
+                    norm_gradients = [np.linalg.norm(gradient) for gradient in avg_gradients]
+                    <a id="change">self.norm_gradients_node.assign(norm_gradients).eval()</a>
+                    
+                    if step % display_step == 0:
+                        self.output_minibatch_stats(sess, summary_writer, step, batch_x, util.crop_to_shape(batch_y, pred_shape))
+                        </code></pre><h3>After Change</h3><pre><code class='java'>
+                                                                 self.net.y: util.crop_to_shape(batch_y, pred_shape),
+                                                                 self.net.keep_prob: dropout})
+
+                    <a id="change">if self.net.summaries and self.norm_grads:
+                        avg_gradients = _update_avg_gradients(avg_gradients, gradients, step)
+                        norm_gradients = [np.linalg.norm(gradient) for gradient in avg_gradients]
+                        self.norm_gradients_node.assign(norm_gradients).eval()
+                    
+                   </a> if step % display_step == 0:
+                        self.output_minibatch_stats(sess, summary_writer, step, batch_x, util.crop_to_shape(batch_y, pred_shape))
+                        
+                    total_loss += loss</code></pre>

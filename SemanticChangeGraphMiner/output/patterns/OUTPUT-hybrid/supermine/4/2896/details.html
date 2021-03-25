@@ -1,0 +1,30 @@
+<html><h3>ef29cd9bde8695645d63ae7f568fb298809e7b19,tpot/builtins/dataset_selector.py,DatasetSelector,fit,#DatasetSelector#,43
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self: object
+            Returns a copy of the estimator
+        
+        <a id="change">subset_files = os.listdir(self.subset_dir)</a>
+        self.subset_i = self.subset_dir + "/" + self.sel_subset_fname
+        features_i_df = pd.read_csv(self.subset_i, sep=&quot\t&quot, header=0)
+        if isinstance(X, pd.DataFrame): &#47&#47 use columns&quot names
+            self.feature_names = list(X.columns.values)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if isinstance(self.sel_subset, int):
+            self.sel_subset_name = subset_df.index[self.sel_subset]
+        elif isinstance(self.sel_subset, list):
+            self.sel_subset_name = <a id="change">[]</a>
+            for s in self.sel_subset:
+                if isinstance(s, int):
+                    self.sel_subset_name.append(subset_df.index[s])
+                else:
+                    self.sel_subset_name.append(s)
+        else: &#47&#47 self.sel_subset is a string
+            self.sel_subset_name = self.sel_subset
+
+        <a id="change">sel_features = subset_df.loc[self.sel_subset_name, &quotFeatures&quot]</a>
+        if not isinstance(sel_features, str):
+            sel_features = ";".join(sel_features.tolist())
+
+        sel_uniq_features = set(sel_features.split(&quot;&quot))</code></pre><img src="12772994.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EpistasisLab/tpot/commit/ef29cd9bde8695645d63ae7f568fb298809e7b19#diff-af09f9926e900caa780b0103b6e5fe571db2074aa4eb6c98ddac9a74465e7ac8L43' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/tpot</div><div id='commit'> Commit Name: ef29cd9bde8695645d63ae7f568fb298809e7b19</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: weixuanf@pennmedicine.upenn.edu</div><div id='file'> File Name: tpot/builtins/dataset_selector.py</div><div id='class'> Class Name: DatasetSelector</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/tgsmith61591/pmdarima/commit/942f284052b22214d830c1bc2c8de03bffaa8d07#diff-9f6a8435b16df28c747f5f7b7b70f0ad0859f4c3ae02afce3754717fe3f5e346L9' target='_blank'>Link</a></div><div id='project'> Project Name: tgsmith61591/pmdarima</div><div id='commit'> Commit Name: 942f284052b22214d830c1bc2c8de03bffaa8d07</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: aaronreidsmith@gmail.com</div><div id='file'> File Name: build_tools/azure/render_meta.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/coala/coala-bears/commit/b9f710538abab20f120d3d3e23c123ba7a6f7536#diff-766153bec18bb30eea4436c82f5788c08aa63f195291df1e7ad1e1547d74cc18L53' target='_blank'>Link</a></div><div id='project'> Project Name: coala/coala-bears</div><div id='commit'> Commit Name: b9f710538abab20f120d3d3e23c123ba7a6f7536</div><div id='time'> Time: 2018-07-10</div><div id='author'> Author: rafidteam@gmail.com</div><div id='file'> File Name: tests/c_languages/codeclone_detection/ClangCloneDetectionBearTest.py</div><div id='class'> Class Name: ClangCloneDetectionBearTest</div><div id='method'> Method Name: test_clones</div><BR><BR><div id='link'><a href='https://github.com/batra-mlp-lab/visdial-challenge-starter-pytorch/commit/81a5691526015b88f252e22a42c123720ee30c97#diff-ff59b15b4a83a2d7b223576f279c2d429f671811f5728dbc65705ea6dcc7cc5fL172' target='_blank'>Link</a></div><div id='project'> Project Name: batra-mlp-lab/visdial-challenge-starter-pytorch</div><div id='commit'> Commit Name: 81a5691526015b88f252e22a42c123720ee30c97</div><div id='time'> Time: 2018-12-25</div><div id='author'> Author: karandesai281196@gmail.com</div><div id='file'> File Name: data/extract_bottomup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

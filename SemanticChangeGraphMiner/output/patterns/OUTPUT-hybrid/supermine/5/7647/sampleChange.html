@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 use REAL dimension size rather than what is presented in the
+                &#47&#47 axes manager
+        dim_list.append(usid.Dimension(dim_name, dim_units,
+                                       <a id="change">np.arange(dim.offset,
+                                                 dim.offset + dim_size *
+                                                 dim.scale,
+                                                 dim.scale)</a>))
+    if len(dim_list) == 0:
+        return usid.Dimension(&quotArb&quot, &quota. u.&quot, 1)
+    return dim_list[::-1]</code></pre><h3>After Change</h3><pre><code class='java'>
+                dim_units = temp
+                &#47&#47 use REAL dimension size rather than what is presented in the
+                &#47&#47 axes manager
+        ar = <a id="change">np.arange(dim.size)</a> * dim.scale + dim.offset
+        dim_list.append(usid.Dimension(dim_name, dim_units, ar))
+    if len(dim_list) == 0:
+        return usid.Dimension(&quotArb&quot, &quota. u.&quot, 1)</code></pre>

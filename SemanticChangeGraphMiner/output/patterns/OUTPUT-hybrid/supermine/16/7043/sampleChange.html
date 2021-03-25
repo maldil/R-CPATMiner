@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                yield batch
+
+    def __init__(self):
+        <a id="change">path = os.path.basename(self._URL)</a>
+        if not os.path.exists(path):
+            print("Downloading MNIST dataset...", file=sys.stderr)
+            urllib.request.urlretrieve(<a id="change">self._URL</a>, filename=path)
+
+        mnist = np.load(path)
+        for dataset in ["train", "dev", "test"]:</code></pre><h3>After Change</h3><pre><code class='java'>
+                yield batch
+
+    def __init__(self, dataset="mnist"):
+        <a id="change">path = "{}.npz".format(dataset)</a>
+        if not os.path.exists(path):
+            print(<a id="change">"Downloading dataset {}...".format(dataset)</a>, file=sys.stderr)
+            urllib.request.urlretrieve(<a id="change">"{}/{}".format(self._URL, path)</a>, filename=path)
+
+        mnist = np.load(path)
+        for dataset in ["train", "dev", "test"]:</code></pre>

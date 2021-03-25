@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.isTrain:
+            self.fake_AB_pool = ImagePool(opt.pool_size)
+            &#47&#47 define loss functions
+            self.criterionGAN = <a id="change">networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)</a>
+            self.criterionL1 = torch.nn.L1Loss()
+
+            &#47&#47 initialize optimizers
+            self.schedulers = []</code></pre><h3>After Change</h3><pre><code class='java'>
+    def name(self):
+        return &quotPix2PixModel&quot
+
+    def initialize(<a id="change">self</a>, opt):
+        BaseModel.initialize(self, opt)
+        self.isTrain = opt.isTrain
+        &#47&#47 specify the training losses you want to print out. The program will call base_model.get_current_losses
+        self.loss_names = [&quotG_GAN&quot, &quotG_L1&quot, &quotD_real&quot, &quotD_fake&quot]
+        &#47&#47 specify the images you want to save/display. The program will call base_model.get_current_visuals
+        self.visual_names = [&quotreal_A&quot, &quotfake_B&quot, &quotreal_B&quot]
+        &#47&#47 specify the models you want to save to the disk. The program will call base_model.save_networks and base_model.load_networks
+        if self.isTrain:
+            self.model_names = [&quotG&quot, &quotD&quot]
+        else:  &#47&#47 during test time, only load Gs
+            self.model_names = [&quotG&quot]
+        &#47&#47 load/define networks
+        self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf,
+                                      opt.which_model_netG, opt.norm, not opt.no_dropout, opt.init_type, self.gpu_ids)
+
+        if self.isTrain:
+            use_sigmoid = opt.no_lsgan
+            self.netD = networks.define_D(opt.input_nc + opt.output_nc, opt.ndf,
+                                          opt.which_model_netD,
+                                          opt.n_layers_D, opt.norm, use_sigmoid, opt.init_type, self.gpu_ids)
+
+        if self.isTrain:
+            self.fake_AB_pool = ImagePool(opt.pool_size)
+            &#47&#47 define loss functions
+            self.criterionGAN = <a id="change">networks.GANLoss(use_lsgan=not opt.no_lsgan).to(self.device)</a>
+            self.criterionL1 = torch.nn.L1Loss()
+
+            &#47&#47 initialize optimizers
+            self.schedulers = []</code></pre>

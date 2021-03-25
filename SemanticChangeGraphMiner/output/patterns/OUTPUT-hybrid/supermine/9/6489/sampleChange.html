@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+        
+    cmdclass = {&quotbuild_ext&quot: build_ext},
+    ext_modules = <a id="change">[Extension("wordbatch",
+                             sources=["wordbatch.pyx", "MurmurHash3.cpp"],
+                             include_dirs=[numpy.get_include()],
+                             extra_compile_args = ["-ffast-math"], 
+    )
+    ]</a>
+    
+)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+        
+    cmdclass = {&quotbuild_ext&quot: build_ext},
+    ext_modules = <a id="change">[Extension("wordbatch.wordbatch",
+                             ["wordbatch/wordbatch.pyx", "wordbatch/MurmurHash3.cpp"],
+                             libraries= [],
+                             include_dirs=[numpy.get_include(), &quot.&quot],
+                             extra_compile_args = ["-O3", "-ffast-math"]),
+                   Extension("wordbatch.models.ftrl",
+                             ["wordbatch/models/ftrl.pyx"],
+                             libraries= [],
+                             include_dirs=[numpy.get_include(), &quot.&quot],
+                             extra_compile_args = ["-O3", "-fopenmp", "-ffast-math"],
+                             extra_link_args=[&quot-fopenmp&quot])
+    ]</a>
+)
+</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        item_A = self.transform(Image.open(self.files_A[index % len(self.files_A)]))
+
+        if self.unaligned:
+            <a id="change">item_B = self.transform(Image.open(self.files_B[random.randint(0, len(self.files_B) - 1)]))</a>
+        else:
+            item_B = self.transform(Image.open(self.files_B[index % len(self.files_B)]))
+
+        return {&quotA&quot: item_A, &quotB&quot: item_B}</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __getitem__(self, index):
+
+        img_pair = self.transform(Image.open(self.files[index % len(self.files)]))
+        <a id="change">_</a>, h, w = img_pair.shape
+        half_w = int(w/2)
+
+        item_A = img_pair[:, :, :half_w]</code></pre>

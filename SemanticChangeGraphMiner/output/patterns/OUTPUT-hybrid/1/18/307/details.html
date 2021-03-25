@@ -1,0 +1,24 @@
+<html><h3>402dc6f3e837a6bd84a081a6f1533b19341dd453,se3cnn/point/operations.py,PairConvolution,forward,#PairConvolution#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        k1, k2, k3, k4, k5, k6 = k.split(k.size(3) // 6, 3)
+        out = torch.einsum("zabij,zcdj-&gt;zabi", (k1, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zacij,zcdj-&gt;zabi", (k2, features))  &#47&#47 [batch, a, b, channel]
+        <a id="change">out</a> += <a id="change">torch.einsum("zadij,zcdj-&gt;zabi", (k3, features))</a>  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zbcij,zcdj-&gt;zabi", (k4, features))  &#47&#47 [batch, a, b, channel]
+        <a id="change">out</a> += torch.einsum("zbdij,zcdj-&gt;zabi", (k5, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zcdij,zcdj-&gt;zabi", (k6, features))  &#47&#47 [batch, a, b, channel]
+        return out
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        k = self.kernel(rb - ra)  &#47&#47 [batch, a, b, 6 * i, j]
+        k1, k2, k3, k4, k5, k6 = k.split(k.size(3) // 6, 3)
+        out = torch.einsum("zabij,zcdj-&gt;zabi", (k1, features))  &#47&#47 [batch, a, b, channel]
+        out += <a id="change">torch.einsum("zacij,zcdj-&gt;zai", (k2, features)).unsqueeze(2)</a>  &#47&#47 [batch, a, b, channel]
+        <a id="change">out</a> += <a id="change">torch</a>.einsum(<a id="change">"zadij,zcdj-&gt;zai"</a>, (k3, features)).unsqueeze(2)  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zbcij,zcdj-&gt;zbi", (k4, features)).unsqueeze(1)  &#47&#47 [batch, a, b, channel]
+        <a id="change">out</a> += <a id="change">torch.einsum("zbdij,zcdj-&gt;zbi", (k5, features)).unsqueeze(1)</a>  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zcdij,zcdj-&gt;zi", (k6, features)).unsqueeze(1).unsqueeze(2)  &#47&#47 [batch, a, b, channel]
+        return out
+</code></pre><img src="1788539.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/402dc6f3e837a6bd84a081a6f1533b19341dd453#diff-b6ee0bc9930df0f6c28cdc93cfffcac1683df6b36c19c1e91a1d3d6e8e2afcd5L40' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 402dc6f3e837a6bd84a081a6f1533b19341dd453</div><div id='time'> Time: 2019-08-23</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/point/operations.py</div><div id='class'> Class Name: PairConvolution</div><div id='method'> Method Name: forward</div><BR>

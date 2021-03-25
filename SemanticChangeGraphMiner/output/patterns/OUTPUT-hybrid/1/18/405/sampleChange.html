@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            mapper = self.component.value_mapper
+            self._zoom_in_mapper(mapper, factor)
+            <a id="change">self._value_factor</a> *= factor
+
+        <a id="change">self._append_state((self._index_factor, self._value_factor))</a>
+
+    def zoom_out_x(self, factor=0):
+        if factor == 0:
+            factor = self.zoom_factor</code></pre><h3>After Change</h3><pre><code class='java'>
+                
+    def zoom_in_x(self, factor=0):
+        if factor == 0:
+            <a id="change">factor</a> = self.zoom_factor
+            
+        <a id="change">new_index_factor</a> = <a id="change">self._index_factor * factor</a>
+        <a id="change">zoom_state</a> = <a id="change">ZoomState((self._index_factor, self._value_factor),
+                               (new_index_factor, self._value_factor))</a>
+        
+        <a id="change">zoom_state.apply(self)</a>            
+        <a id="change">self._append_state(zoom_state)</a>        
+
+    def zoom_out_x(self, factor=0):
+        if factor == 0:</code></pre>

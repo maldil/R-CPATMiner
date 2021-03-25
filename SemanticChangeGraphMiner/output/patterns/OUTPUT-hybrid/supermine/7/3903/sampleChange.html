@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _annotation_iterator(self, relabel, options, shuffle=True):
+
+        <a id="change">for i, row in self._data_iterator(self.features, shuffle=shuffle):
+            if relabel[i]:
+
+                new_val = yield self._compose(row, options)
+
+                self.progressbar.value += 1
+                if isinstance(self.new_labels, (pd.Series, pd.DataFrame)):
+                    self.new_labels.loc[i] = new_val
+                else:
+                    try:
+                        self.new_labels[i] = float(new_val)
+                    except ValueError:
+                        &#47&#47 catching assignment of string to number array
+                        self.new_labels = self.new_labels.astype(np.object)
+                        self.new_labels[i] = new_val
+            if new_val not in self.input_widget.options:
+                self.input_widget.options = self.input_widget.options + [
+                    new_val
+                ]
+
+       </a> if self.event_manager is not None:
+            self.event_manager.close()
+        yield self._render_finished()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _annotation_iterator(self):
+        Relabel should be integer indices
+
+        while <a id="change">len(self._label_queue) &gt; 0:
+    </a>        idx = <a id="change">self._label_queue.pop()</a>
+            self._already_labelled.append(idx)
+            row = get_values(self.features, [idx])
+
+            new_val = yield self._compose(row)</code></pre>

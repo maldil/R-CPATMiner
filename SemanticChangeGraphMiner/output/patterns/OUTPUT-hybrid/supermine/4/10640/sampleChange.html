@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+model.apply(weights_init_normal)
+
+if cuda:
+    <a id="change">model = model.cuda()</a>
+
+model.train()
+
+&#47&#47 Get dataloader</code></pre><h3>After Change</h3><pre><code class='java'>
+        batches_done = len(dataloader) * epoch + batch_i
+
+        &#47&#47 Tensorboard logging
+        <a id="change">for loss_name, loss in model.losses.items():
+            logger.scalar_summary(loss_name, loss, batches_done)
+
+       </a> model.seen += imgs.size(0)
+
+        torch.cuda.empty_cache()
+</code></pre>

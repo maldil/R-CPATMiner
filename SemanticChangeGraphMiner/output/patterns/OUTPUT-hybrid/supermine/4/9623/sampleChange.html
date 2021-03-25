@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    model: Model[RNNState, RNNState], prevstate_inputs: RNNState, is_train: bool
+) -&gt; Tuple[RNNState, Callable]:
+    (cell_tm1, hidden_tm1), inputs = prevstate_inputs
+    weights = <a id="change">model.layers[0]</a>
+    W = weights.get_param("W")
+    b = weights.get_param("b")
+    nI = inputs.shape[1]
+    hiddens, cells, gates = model.ops.lstm(W, b, cell_tm1, hidden_tm1, inputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    hiddens += h
+    cells += c
+    Y, cells, gates = model.ops.recurrent_lstm(W, b, hiddens, cells, X)
+    Yp = <a id="change">Padded(Y, Xp.size_at_t, Xp.lengths, Xp.indices)</a>
+
+    def backprop(dYp: Padded) -&gt; Padded:
+        raise NotImplementedError
+</code></pre>

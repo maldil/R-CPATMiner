@@ -1,0 +1,91 @@
+<html><h3>fd723d719ddb49b66a5084215343de763a40083d,trainer.py,Trainer,validate,#Trainer#,247
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 print to screen
+            if i % self.print_freq == 0:
+                <a id="change">print(
+                    &quotValid: [{0}/{1}]\t&quot
+                    &quotTime: {batch_time.val:.3f} ({batch_time.avg:.3f})\t&quot
+                    &quotValid Loss: {loss.val:.4f} ({loss.avg:.4f})\t&quot
+                    &quotValid Acc: {acc.val:.3f} ({acc.avg:.3f})&quot.format(
+                        i, len(self.valid_loader),
+                        batch_time=batch_time, loss=losses, acc=accs)
+                )</a>
+
+        print(&quot[*] Valid Acc: {acc.avg:.3f}&quot.format(acc=accs))
+
+        &#47&#47 log to tensorboard</code></pre><h3>After Change</h3><pre><code class='java'>
+        accs = AverageMeter()
+
+        tic = time.time()
+        with <a id="change">tqdm(total=self.num_valid)</a> as pbar:
+            <a id="change">for i, (x, y) in enumerate(self.valid_loader):
+                x = Variable(x, volatile=True)
+                y = Variable(y, volatile=True)
+
+                self.batch_size = x.shape[0]
+                self.reset()
+
+                &#47&#47 initialize location vector
+                l_t = torch.Tensor(self.batch_size, 2).uniform_(-1, 1)
+                l_t = Variable(l_t)
+
+                &#47&#47 extract the glimpses
+                log_pi = 0.
+                for t in range(self.num_glimpses - 1):
+
+                    &#47&#47 forward pass through model
+                    self.h_t, mu, l_t, p = self.model(x, l_t, self.h_t)
+
+                    &#47&#47 accumulate log of policy
+                    log_pi += p
+
+                &#47&#47 last iteration
+                self.h_t, mu, l_t, p, b_t, log_probas = self.model(
+                    x, l_t, self.h_t, last=True
+                )
+                log_pi += p
+
+                &#47&#47 calculate reward
+                predicted = torch.max(log_probas, 1)[1]
+                R = (predicted == y).float()
+
+                &#47&#47 compute losses for differentiable modules
+                loss_action = F.nll_loss(log_probas, y)
+                loss_baseline = F.mse_loss(b_t, R)
+
+                &#47&#47 compute reinforce loss
+                adjusted_reward = R - b_t
+                log_pi = log_pi / self.num_glimpses
+                loss_reinforce = torch.mean(-log_pi*adjusted_reward)
+
+                &#47&#47 sum up into a hybrid loss
+                loss = loss_action + loss_baseline + loss_reinforce
+
+                &#47&#47 compute accuracy
+                acc = 100 * (R.sum() / len(y))
+
+                &#47&#47 store
+                losses.update(loss.data[0], x.size()[0])
+                accs.update(acc.data[0], x.size()[0])
+
+                &#47&#47 measure elapsed time
+                toc = time.time()
+                batch_time.update(toc-tic)
+
+                pbar.set_description(
+                    (
+                        "{:.1f}s - valid loss: {:.3f} - valid acc: {:.3f}".format(
+                            (toc-tic), loss.data[0], acc.data[0])
+                    )
+                )
+                pbar.update(self.batch_size)
+
+        &#47&#47 log to tensorboard
+       </a> if self.use_tensorboard:
+            log_value(&quotval_loss&quot, losses.avg, epoch)
+            log_value(&quotval_acc&quot, accs.avg, epoch)
+</code></pre><img src="14594397.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/fd723d719ddb49b66a5084215343de763a40083d#diff-9f1d8e92cd6ea2024cda543185e6c91bbc5cd7377d0eb7d5b071abee5e466410L247' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: fd723d719ddb49b66a5084215343de763a40083d</div><div id='time'> Time: 2018-01-23</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: trainer.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/fd723d719ddb49b66a5084215343de763a40083d#diff-9f1d8e92cd6ea2024cda543185e6c91bbc5cd7377d0eb7d5b071abee5e466410L154' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: fd723d719ddb49b66a5084215343de763a40083d</div><div id='time'> Time: 2018-01-23</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: trainer.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: train_one_epoch</div><BR><BR><div id='link'><a href='https://github.com/zo7/deconvfaces/commit/41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c#diff-93945a688e62274699c4f9f6fb1380052c78cebb78d4b0f6f226902745d45eceL426' target='_blank'>Link</a></div><div id='project'> Project Name: zo7/deconvfaces</div><div id='commit'> Commit Name: 41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c</div><div id='time'> Time: 2016-09-04</div><div id='author'> Author: zo7.flynn@gmail.com</div><div id='file'> File Name: facegen/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_from_yaml</div><BR>

@@ -1,0 +1,49 @@
+<html><h3>eeee14a254adc199d5ee7baf002db3d73843fc8b,tools/datasets/imagenet_to_gcs.py,,main,#,441
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def main(argv):  &#47&#47 pylint: disable=unused-argument
+  logging.set_verbosity(logging.INFO)
+
+  <a id="change">if FLAGS.gcs_upload and FLAGS.project is None:
+    raise ValueError(&quotGCS Project must be provided.&quot)
+
+ </a> if FLAGS.gcs_upload and FLAGS.gcs_output_path is None:
+    raise ValueError(&quotGCS output path must be provided.&quot)
+  elif FLAGS.gcs_upload and not FLAGS.gcs_output_path.startswith(&quotgs://&quot):
+    raise ValueError(&quotGCS output path must start with gs://&quot)
+
+  if FLAGS.local_scratch_dir is None:
+    raise ValueError(&quotScratch directory path must be provided.&quot)
+
+  &#47&#47 Download the dataset if it is not present locally
+  raw_data_dir = FLAGS.raw_data_dir
+  if raw_data_dir is None:
+    raise AssertionError(
+        &quotThe ImageNet download path is no longer supported. Please download &quot
+        &quotthe .tar files manually and provide the `raw_data_dir`.&quot)
+
+  &#47&#47 Convert the raw data into tf-records
+  <a id="change">training_records, validation_records = convert_to_tf_records(raw_data_dir)</a>
+
+  &#47&#47 Upload to GCS
+  <a id="change">if FLAGS.gcs_upload:
+    upload_to_gcs(training_records, validation_records)
+
+
+</a>if __name__ == &quot__main__&quot:
+  app.run(main)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def main(_):
+  <a id="change">run(raw_data_dir=FLAGS.raw_data_dir,
+      gcs_upload=FLAGS.gcs_upload,
+      gcs_project=FLAGS.project,
+      gcs_output_path=FLAGS.gcs_output_path,
+      local_scratch_dir=FLAGS.local_scratch_dir)</a>
+
+
+if __name__ == &quot__main__&quot:
+  logging.set_verbosity(logging.INFO)</code></pre><img src="35556316.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/tpu/commit/eeee14a254adc199d5ee7baf002db3d73843fc8b#diff-2ff9319e1e309f4a5deea799427ed35c5fd88cce77d09af286971a2cb9485c26L442' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/tpu</div><div id='commit'> Commit Name: eeee14a254adc199d5ee7baf002db3d73843fc8b</div><div id='time'> Time: 2020-07-20</div><div id='author'> Author: allencwang@google.com</div><div id='file'> File Name: tools/datasets/imagenet_to_gcs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/fastMRI/commit/05b2b1c02a8ce5f471877243ebebe5df876ccc37#diff-9ce6b071ff16ab07828a6cab53f53efead5d8e55f1ef330c7eb59271fcb0446bL195' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/fastMRI</div><div id='commit'> Commit Name: 05b2b1c02a8ce5f471877243ebebe5df876ccc37</div><div id='time'> Time: 2020-04-15</div><div id='author'> Author: tulliemurrell@gmail.com</div><div id='file'> File Name: models/unet/train_unet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/1a292afa66250814e3fa3fab26e4f7e5140baf31#diff-b95bec85d7f391cc72b54deb2fdaefe11a67fdc9337ad847a713aa804ab6d4eaL80' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: 1a292afa66250814e3fa3fab26e4f7e5140baf31</div><div id='time'> Time: 2017-08-10</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/12_Proximal_Policy_Optimization/simply_PPO.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/ml-on-gcp/commit/b0207dc0cac04995271f030608d0f6ff8e8039d3#diff-da5279b31211a42dbb5307d2df4baea9d2ff561e1c3233aaabf22413cc4a8484L271' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/ml-on-gcp</div><div id='commit'> Commit Name: b0207dc0cac04995271f030608d0f6ff8e8039d3</div><div id='time'> Time: 2019-08-08</div><div id='author'> Author: yuhanliu@google.com</div><div id='file'> File Name: example_zoo/tools/cmle_package.py</div><div id='class'> Class Name: CMLEPackage</div><div id='method'> Method Name: generate</div><BR>

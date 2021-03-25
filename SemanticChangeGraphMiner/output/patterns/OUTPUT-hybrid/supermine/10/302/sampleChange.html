@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._default_smiles_args = {"isomericSmiles":True, "kekuleSmiles":False, "rootedAtAtom":-1, "canonical":True, "allBondsExplicit":False,
+                "allHsExplicit":False} &#47&#47"doRandom":False
+        self._smiles_args = update_default_kwargs(self._default_smiles_args, kwargs,
+                                                 <a id="change">self._to_smiles_core_names[0]</a>, self._to_smiles_core_docs[0])
+
+    def to_smarts(self, **kwargs):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+
+        
+        &#47&#47 molecule must exist
+        <a id="change">engine = self._check_original_molecule()</a>
+        <a id="change">if engine == &quotpybel&quot:
+            smiles = self.pybel_molecule.write(&quotsmi&quot).strip().split(&quot\t&quot)[0]
+            self._load_rdkit(smiles, &quotsmiles&quot, from_load=False)
+            self.to_smiles()
+        else:
+            self._to_smiles_rdkit(**kwargs)
+
+   </a> def _to_smiles_rdkit(self, **kwargs):
+        
+        This internal function creates and stores the SMILES string for rdkit molecule.
+        </code></pre>

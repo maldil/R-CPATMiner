@@ -1,0 +1,30 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)
+    n_thresh = recall_point * n_match
+    <a id="change">tp = 0</a>
+    <a id="change">count = 0</a>
+    for label, score in sorted_scores:
+        count += 1
+        if label == 1:
+            <a id="change">tp += 1</a>
+        if tp &gt;= n_thresh:
+            break
+
+    <a id="change">return float(count - tp) / count</a>
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    <a id="change">FP = np.sum(labels[:threshold_index] == 0)</a> &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    <a id="change">TN = np.sum(labels[threshold_index:] == 0)</a> &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    <a id="change">return float(FP) / float(FP + TN)</a>
+&quot&quot&quotimport operator
+
+
+def ErrorRateAt95Recall(labels, scores):</code></pre><img src="36123045.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/acoular/acoular/commit/97a346493ac31f120102d4cb3cf8586333d1a1ec#diff-ab8b56f42ab2a88f15f2f21ea80f5a50862377240a23f05e7276cb4013e6de64L1044' target='_blank'>Link</a></div><div id='project'> Project Name: acoular/acoular</div><div id='commit'> Commit Name: 97a346493ac31f120102d4cb3cf8586333d1a1ec</div><div id='time'> Time: 2010-09-16</div><div id='author'> Author: sarradj@tu-cottbus.de</div><div id='file'> File Name: beamfpy/beamfpy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: synthetic</div><BR><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/db9d883aecb6cdfba6c6bbc76b83d85397fef28d#diff-65d4e02cf452cdf99b8a56170df4922f2bce43c618b2a9596f1e6a6974867ec8L6' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: db9d883aecb6cdfba6c6bbc76b83d85397fef28d</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: tristan.deleu@gmail.com</div><div id='file'> File Name: maml_rl/utils/torch_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: weighted_mean</div><BR>

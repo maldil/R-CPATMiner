@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        train_bar = tqdm(train_loader)
+        for data in train_bar:
+            hr_imgs, _ = data
+            <a id="change">lr_imgs = Variable(torch.stack([train_lr_transform(img) for img in hr_imgs], 0)).cuda()</a>
+            hr_imgs = Variable(hr_imgs).cuda()
+            gen_hr_imgs = g(lr_imgs)
+
+            &#47&#47 update d</code></pre><h3>After Change</h3><pre><code class='java'>
+        train_bar = tqdm(train_loader)
+        for hr_imgs, lr_imgs in train_bar:
+            hr_imgs = Variable(hr_imgs).cuda()
+            <a id="change">lr_imgs = Variable(lr_imgs).cuda()</a>
+            gen_hr_imgs = g(lr_imgs)
+
+            &#47&#47 update d
+            d.zero_grad()</code></pre>

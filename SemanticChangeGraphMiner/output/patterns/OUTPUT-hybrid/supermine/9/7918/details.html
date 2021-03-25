@@ -1,0 +1,27 @@
+<html><h3>b45f35862afbca09ff1c70be1cc4d1d6ca6c9617,pyriemann/classification.py,MDM,_predict_distances,#MDM#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for m in range(Nc):
+            for k in range(Nt):
+                <a id="change">dist[k, m] = distance(covtest[k, :, :], self.covmeans[m],
+                                      metric=self.metric_dist)</a>
+        return dist
+
+    def predict(self, covtest):
+        dist = self._predict_distances(covtest)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _predict_distances(self, covtest):
+        Nc = len(self.covmeans)
+
+        <a id="change">if self.n_jobs == 1:
+            dist = [distance(covtest, self.covmeans[m], self.metric_dist)
+                    for m in range(Nc)]
+        else:
+            dist = Parallel(n_jobs=self.n_jobs)(delayed(distance)(covtest, self.covmeans[m], self.metric_dist) for m in range(Nc))
+
+       </a> dist = numpy.concatenate(dist, axis=1)
+        return dist
+
+</code></pre><img src="30730496.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/b45f35862afbca09ff1c70be1cc4d1d6ca6c9617#diff-73b613902d1c35be5ff198082c22011ed69d2361ea1639a200f2e7a3cb5e9e9bL47' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: b45f35862afbca09ff1c70be1cc4d1d6ca6c9617</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/classification.py</div><div id='class'> Class Name: MDM</div><div id='method'> Method Name: _predict_distances</div><BR><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-1ce4b6309bc5eacc0914bdafff9c0aeecefbe346c9963006c00ae848dd8ea4e2L120' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/adjoint.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: odeint_adjoint</div><BR><BR><div id='link'><a href='https://github.com/aquaskyline/Clairvoyante/commit/f5fe2bf2204d2223a6dcb9bd2a0b16c358ca2826#diff-0fe9ba0cb10562ff4e974967f77d63523f7b4a7b926fb57e23515ccd2a3aae23L18' target='_blank'>Link</a></div><div id='project'> Project Name: aquaskyline/Clairvoyante</div><div id='commit'> Commit Name: f5fe2bf2204d2223a6dcb9bd2a0b16c358ca2826</div><div id='time'> Time: 2018-03-23</div><div id='author'> Author: aquaskyline@gmail.com</div><div id='file'> File Name: dataPrepScripts/CreateTensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: GenerateTensor</div><BR>

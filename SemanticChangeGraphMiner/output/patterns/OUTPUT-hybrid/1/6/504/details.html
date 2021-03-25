@@ -1,0 +1,83 @@
+<html><h3>ac6a9dd09a70a41188fd5791a6e69c509c0d3d27,nilmtk/stats/goodsections.py,,get_good_sections,#,89
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        `end=None`.  If this df starts with an open-ended good section
+        then the first TimeFrame will have `start=None`.
+    
+    index = <a id="change">df</a>.dropna().index
+    timedeltas_sec = timedelta64_to_secs(diff(index.values))
+    timedeltas_check = timedeltas_sec &lt;= max_sample_period
+    timedeltas_check = concatenate(
+        [[previous_chunk_ended_with_open_ended_good_section], 
+         timedeltas_check])
+    transitions = diff(timedeltas_check.astype(np.int))
+    good_sect_starts = index[:-1][transitions ==  1]
+    good_sect_ends   = index[:-1][transitions == -1]
+    good_sect_ends = list(good_sect_ends)
+    good_sect_starts = list(good_sect_starts)
+
+    &#47&#47 Use look_ahead to see if we need to append a 
+    &#47&#47 good sect start or good sect end.
+    look_ahead_valid = look_ahead is not None and not df.look_ahead.empty
+    if look_ahead_valid:
+        look_ahead_timedelta = df.look_ahead.dropna().index[0] - index[-1]
+        look_ahead_gap = look_ahead_timedelta.total_seconds()
+    if timedeltas_check[-1]: &#47&#47 current chunk ends with a good section
+        if not look_ahead_valid or look_ahead_gap &gt; max_sample_period:
+            &#47&#47 current chunk ends with a good section which needs to 
+            &#47&#47 be closed because next chunk either does not exist
+            &#47&#47 or starts with a sample which is more than max_sample_period
+            &#47&#47 away from df.index[-1]
+            good_sect_ends += [index[-1]]
+    elif look_ahead_valid and look_ahead_gap &lt;= max_sample_period:
+        &#47&#47 Current chunk appears to end with a bad section
+        &#47&#47 but last sample is the start of a good section
+        good_sect_starts += [index[-1]]
+
+    &#47&#47 Work out if this chunk ends with an open ended good section
+    if len(good_sect_ends) == 0:
+        <a id="change">ends_with_open_ended_good_section</a> = (
+            len(good_sect_starts) &gt; 0 or 
+            previous_chunk_ended_with_open_ended_good_section)
+    elif len(good_sect_starts) &gt; 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+        `end=None`.  If this df starts with an open-ended good section
+        then the first TimeFrame will have `start=None`.
+    
+    index = <a id="change">df</a>.dropna().sort_index().index
+    timedeltas_sec = timedelta64_to_secs(diff(index.values))
+    timedeltas_check = timedeltas_sec &lt;= max_sample_period
+    timedeltas_check = concatenate(
+        [[previous_chunk_ended_with_open_ended_good_section], 
+         timedeltas_check])
+    transitions = diff(timedeltas_check.astype(np.int))
+    good_sect_starts = index[:-1][transitions ==  1]
+    good_sect_ends   = index[:-1][transitions == -1]
+    good_sect_ends = list(good_sect_ends)
+    good_sect_starts = list(good_sect_starts)
+
+    &#47&#47 Use look_ahead to see if we need to append a 
+    &#47&#47 good sect start or good sect end.
+    look_ahead_valid = look_ahead is not None and not df.look_ahead.empty
+    if look_ahead_valid:
+        look_ahead_timedelta = df.look_ahead.dropna().index[0] - index[-1]
+        look_ahead_gap = look_ahead_timedelta.total_seconds()
+    if timedeltas_check[-1]: &#47&#47 current chunk ends with a good section
+        if not look_ahead_valid or look_ahead_gap &gt; max_sample_period:
+            &#47&#47 current chunk ends with a good section which needs to 
+            &#47&#47 be closed because next chunk either does not exist
+            &#47&#47 or starts with a sample which is more than max_sample_period
+            &#47&#47 away from df.index[-1]
+            good_sect_ends += [index[-1]]
+    elif look_ahead_valid and look_ahead_gap &lt;= max_sample_period:
+        &#47&#47 Current chunk appears to end with a bad section
+        &#47&#47 but last sample is the start of a good section
+        good_sect_starts += [index[-1]]
+
+    &#47&#47 Work out if this chunk ends with an open ended good section
+    if len(good_sect_ends) == 0:
+        <a id="change">ends_with_open_ended_good_section</a> = (
+            len(good_sect_starts) &gt; 0 or 
+            previous_chunk_ended_with_open_ended_good_section)
+    elif len(good_sect_starts) &gt; 0:</code></pre><img src="2695520.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/ac6a9dd09a70a41188fd5791a6e69c509c0d3d27#diff-2a2e640bacadae11b442376d826a5cf03b9e1351fcbc5125db3b15189f120c42L107' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: ac6a9dd09a70a41188fd5791a6e69c509c0d3d27</div><div id='time'> Time: 2014-11-04</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/stats/goodsections.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_good_sections</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/62f1dbe2546626f9150ec96e4b238f566627b6ef#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL413' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 62f1dbe2546626f9150ec96e4b238f566627b6ef</div><div id='time'> Time: 2014-07-10</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: power_series</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/90fadd7f6269bbde2f7b712137f97820a49c6b00#diff-44a1d3a051d8e7bf77b14a5ce3ee0e3a90c98fcc1084fe02cca9dd91472d93f8L260' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 90fadd7f6269bbde2f7b712137f97820a49c6b00</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/leave_one_out.py</div><div id='class'> Class Name: LeaveOneOutEncoder</div><div id='method'> Method Name: transform_leave_one_out</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/3b1517e09c60dd0268c534328b9b3a6e00ca14b0#diff-44a1d3a051d8e7bf77b14a5ce3ee0e3a90c98fcc1084fe02cca9dd91472d93f8L260' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 3b1517e09c60dd0268c534328b9b3a6e00ca14b0</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/leave_one_out.py</div><div id='class'> Class Name: LeaveOneOutEncoder</div><div id='method'> Method Name: transform_leave_one_out</div><BR>

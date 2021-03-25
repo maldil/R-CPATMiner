@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def get_axes_names(composite_axis_name: str):
+    &#47&#47 TODO add spaces and long names
+    elementary_axes = []
+    <a id="change">composite_axis_name = list(composite_axis_name)</a>
+    while len(composite_axis_name) &gt; 0:
+        letter = composite_axis_name.pop()
+        if &quota&quot &lt;= letter &lt;= &quotz&quot or letter == &quot_&quot:
+            elementary_axes.append(letter)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def get_axes_names(composite_axis_name: str):
+    axes_names = [axis <a id="change">for</a> axis in composite_axis_name.split(&quot &quot) if len(axis) &gt; 0]
+    for axis in axes_names:
+        if axis == &quot_&quot:
+            continue
+        <a id="change">assert &quota&quot &lt;= axis[0] &lt;= &quotz&quot</a>
+        for letter in axis:
+            assert str.isdigit(letter) or &quota&quot &lt;= letter &lt;= &quotz&quot
+    return axes_names
+</code></pre>

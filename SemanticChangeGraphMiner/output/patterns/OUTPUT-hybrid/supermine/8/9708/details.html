@@ -1,0 +1,22 @@
+<html><h3>50c88091cbb82591db49f5328de8069d6d464bc7,base/base_trainer.py,BaseTrainer,__init__,#BaseTrainer#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if config[&quotcuda&quot] and not torch.cuda.is_available():
+            self.logger.warning(&quotWarning: There\&quots no GPU available on this machine, &quot
+                                &quottraining will be performed on CPU.&quot)
+        self.device = torch.device(<a id="change">&quotcuda:&quot + str(config[&quotgpu&quot]) if self.with_cuda else &quotcpu&quot</a>)
+        self.model = model.to(self.device)
+
+        self.loss = loss</code></pre><h3>After Change</h3><pre><code class='java'>
+            n_gpu_use = n_gpu
+        self.device = torch.device(&quotcuda:0&quot if n_gpu_use &gt; 0 else &quotcpu&quot)
+        self.model = model.to(self.device)
+        <a id="change">if n_gpu_use &gt; 1:
+            self.model = torch.nn.DataParallel(model, device_ids=list(range(n_gpu_use)))
+
+       </a> self.loss = loss
+        self.metrics = metrics
+        self.optimizer = optimizer
+</code></pre><img src="37361974.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/victoresque/pytorch-template/commit/50c88091cbb82591db49f5328de8069d6d464bc7#diff-b65070fe5615e6c711e5732e8d41ee0fe95d456876c19f58e739b7f357fa7d93L15' target='_blank'>Link</a></div><div id='project'> Project Name: victoresque/pytorch-template</div><div id='commit'> Commit Name: 50c88091cbb82591db49f5328de8069d6d464bc7</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: sunq0313@gmail.com</div><div id='file'> File Name: base/base_trainer.py</div><div id='class'> Class Name: BaseTrainer</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/commit/212abd8f1113e9eabf5248078acc54021d02268e#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L127' target='_blank'>Link</a></div><div id='project'> Project Name: junyanz/pytorch-CycleGAN-and-pix2pix</div><div id='commit'> Commit Name: 212abd8f1113e9eabf5248078acc54021d02268e</div><div id='time'> Time: 2018-04-18</div><div id='author'> Author: junyanzhu89@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: define_D</div><BR>

@@ -1,0 +1,34 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Event" a="32" s="4406" l="7" shape="box"];
+3 [label="PrefixExpression:!" a="38" s="5923" l="1" shape="box"];
+4 [label="wait" a="32" s="5900,5912" l="5,1" shape="box"];
+6 [label="FieldAccess" a="22" s="5905" l="7" shape="box"];
+8 [label="IfStatement" a="25" s="5919,5932" l="4,2" shape="diamond"];
+10 [label="Assignment:=" a="7" s="4395" l="1" shape="box"];
+12 [label="Assignment:=" a="7" s="5890" l="1" shape="box"];
+13 [label="Assignment:=" a="7" s="3534" l="9" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="result" a="32" s="5315,5329" l="7,1" shape="box"];
+5 [label="TryStatement" a="54" s="5290" l="4" shape="diamond"];
+7 [label="FieldAccess" a="22" s="5322" l="7" shape="box"];
+9 [label="CatchClause" a="12" s="5339,5374" l="11,2" shape="diamond"];
+11 [label="close" a="32" s="5533" l="7" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 10 [label="_para_"];
+3 -> 8 [label="_cond_"];
+4 -> 12 [label="_para_"];
+5 -> 2 [label="_control_"];
+5 -> 9 [label="_control_"];
+6 -> 4 [label="_para_"];
+7 -> 2 [label="_para_"];
+9 -> 11 [label="_control_"];
+10 -> 4 [label="_recv_"];
+12 -> 3 [label="_para_"];
+13 -> 1 [label="_recv_"];
+}

@@ -1,0 +1,29 @@
+<html><h3>2999e509688a82f8be65600727a5922b5739822b,conceptnet5/vectors/evaluation/wordsim.py,,compute_semeval_score,#,309
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    coefficient.
+    
+    if any(np.isnan(x) or x &lt;=0 for x in [spearman_score[&quotlow&quot], pearson_score[&quotlow&quot]]):
+        acc_harmonic_mean = <a id="change">float(&quotNaN&quot)</a>
+        low_harmonic_mean = float(&quotNaN&quot)
+        high_harmonic_mean = float(&quotNaN&quot)
+    else:
+        acc_harmonic_mean = hmean([spearman_score[&quotacc&quot], pearson_score[&quotacc&quot]])</code></pre><h3>After Change</h3><pre><code class='java'>
+    and a Spearman correlation coefficient.
+    
+    intervals = [&quotacc&quot, &quotlow&quot, &quothigh&quot]
+    <a id="change">scores = []</a>
+    <a id="change">for interval in intervals:
+        if any(np.isnan(x) for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(float(&quotNaN&quot))
+        elif any(x &lt;= 0 for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(0)
+        else:
+            scores.append(hmean([spearman_score[interval], pearson_score[interval]]))
+
+   </a> return pd.Series(
+        scores,
+        index=intervals
+    )</code></pre><img src="38932994.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/2999e509688a82f8be65600727a5922b5739822b#diff-253b7b1370893f9dae749cbbb879fcd47ad5744716c706119d4cad41054156f8L314' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 2999e509688a82f8be65600727a5922b5739822b</div><div id='time'> Time: 2017-03-08</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/wordsim.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compute_semeval_score</div><BR><BR><div id='link'><a href='https://github.com/danforthcenter/plantcv/commit/21e6d8d6a5452ca96cecb00f8a9083de14a947c4#diff-f7723329f0e23f82cec01663ce21f7a0c02e64d5d5b52db5bd9f9786b340f26eL37' target='_blank'>Link</a></div><div id='project'> Project Name: danforthcenter/plantcv</div><div id='commit'> Commit Name: 21e6d8d6a5452ca96cecb00f8a9083de14a947c4</div><div id='time'> Time: 2019-10-23</div><div id='author'> Author: haleyschuhl@gmail.com</div><div id='file'> File Name: plantcv/plantcv/hyperspectral/analyze_spectral.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_spectral</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/cec517350d259a4f49a58a769db784c248cfffa8#diff-3186d94ca92c068c84a3d8440e9803a47d3856f400f492272dacd39837f65e97L49' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: cec517350d259a4f49a58a769db784c248cfffa8</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/evaluate/accuracy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: accuracy_score</div><BR>

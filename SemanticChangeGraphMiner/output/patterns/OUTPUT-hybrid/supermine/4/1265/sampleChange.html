@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    torch.manual_seed(args.seed)
+
+    model = <a id="change">Net()</a>
+    model.share_memory() &#47&#47 gradients are allocated lazily, so they are not shared here
+
+    processes = []
+    for rank in range(args.num_processes):</code></pre><h3>After Change</h3><pre><code class='java'>
+    torch.manual_seed(args.seed)
+    mp.set_start_method(&quotspawn&quot)
+
+    model = <a id="change">Net().to(device)</a>
+    model.share_memory() &#47&#47 gradients are allocated lazily, so they are not shared here
+
+    processes = []
+    for rank in range(args.num_processes):</code></pre>

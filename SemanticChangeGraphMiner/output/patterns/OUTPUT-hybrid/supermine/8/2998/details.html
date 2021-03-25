@@ -1,0 +1,30 @@
+<html><h3>d477e70d888d8501cc0834c47f399a4f65a439d9,senteval/tools/relatedness.py,RelatednessPytorch,predict_proba,#RelatednessPytorch#,124
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def predict_proba(self, devX):
+        self.model.eval()
+        probas = []
+        <a id="change">for i in range(0, len(devX), self.batch_size):
+            Xbatch = Variable(devX[i:i + self.batch_size], volatile=True)
+            if len(probas) == 0:
+                probas = self.model(Xbatch).data.cpu().numpy()
+            else:
+                probas = np.concatenate((probas,
+                    self.model(Xbatch).data.cpu().numpy()), axis=0)
+       </a> return probas
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def predict_proba(self, devX):
+        self.model.eval()
+        probas = []
+        <a id="change">with torch.no_grad():
+            for i in range(0, len(devX), self.batch_size):
+                Xbatch = devX[i:i + self.batch_size]
+                if len(probas) == 0:
+                    probas = self.model(Xbatch).data.cpu().numpy()
+                else:
+                    probas = np.concatenate((probas,
+                        self.model(Xbatch).data.cpu().numpy()), axis=0)
+       </a> return probas
+</code></pre><img src="13281406.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/SentEval/commit/d477e70d888d8501cc0834c47f399a4f65a439d9#diff-f7bfe61a1b96a49d5883ad5fcebf53c6981dacebc8cc1ef67dcc6d1ead479436L127' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/SentEval</div><div id='commit'> Commit Name: d477e70d888d8501cc0834c47f399a4f65a439d9</div><div id='time'> Time: 2018-07-13</div><div id='author'> Author: asabran@fb.com</div><div id='file'> File Name: senteval/tools/relatedness.py</div><div id='class'> Class Name: RelatednessPytorch</div><div id='method'> Method Name: predict_proba</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L80' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_epoch</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/9c7e9288e31c947aa54aec1217fedfbce2f85bc6#diff-5e25746102683d5dc0fa74531c47856e3fc334a7831ebaec0fa098dd553517e3L22' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 9c7e9288e31c947aa54aec1217fedfbce2f85bc6</div><div id='time'> Time: 2019-05-27</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/trainers/classification.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/2321f8789713a086978f6e37d088bd00aa60e5f0#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L27' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: 2321f8789713a086978f6e37d088bd00aa60e5f0</div><div id='time'> Time: 2020-03-07</div><div id='author'> Author: amitmoryossef@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR>

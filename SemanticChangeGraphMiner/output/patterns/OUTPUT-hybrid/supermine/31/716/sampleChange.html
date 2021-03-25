@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 Internal states
+&#47&#47
+<a id="change">h = tf.zeros([batch_size, num_cells])</a>
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+
+&#47&#47 Define model
+&#47&#47
+error = tf.zeros([batch_size])
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	g = tf.matmul(xh_join, W_g)+b_g
+	<a id="change">u = tf.matmul(x_step, W_u)+b_u</a>
+	q = tf.matmul(xh_join, W_a)+b_a
+
+	<a id="change">q_greater</a> = tf.maximum(q, 0.0)	&#47&#47 Greater of the exponent term or zero
+	scale = tf.exp(<a id="change">-q_greater</a>)
+	<a id="change">a_scale = tf.exp(q-q_greater)</a>
+
+	<a id="change">n = tf.mul(n, scale)+tf.mul(tf.mul(u, tf.nn.tanh(g)), a_scale)</a>	&#47&#47 Numerically stable update of numerator
+	d = tf.mul(d, scale)+a_scale	&#47&#47 Numerically stable update of denominator
+	h = activation(tf.div(n, d))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+<a id="change">h = tf.zeros([batch_size, num_cells])</a>
+<a id="change">a_max = tf.fill([batch_size, num_cells], -1E38)</a>	&#47&#47 Start off with lowest number possible
+
+&#47&#47 Define model
+&#47&#47
+error = tf.zeros([batch_size])
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	<a id="change">u = tf.matmul(x_step, W_u)+b_u</a>
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = tf.matmul(xh_join, W_a)+b_a
+
+	<a id="change">z = tf.mul(u, tf.nn.tanh(g))</a>
+
+	<a id="change">a_newmax</a> = tf.maximum(a_max, a)
+	<a id="change">exp_diff = tf.exp(a_max-a_newmax)</a>
+	exp_scaled = tf.exp(<a id="change">a-a_newmax</a>)
+
+	<a id="change">n = tf.mul(n, exp_diff)+tf.mul(z, exp_scaled)</a>	&#47&#47 Numerically stable update of numerator
+	d = tf.mul(d, exp_diff)+exp_scaled	&#47&#47 Numerically stable update of denominator
+	h = activation(tf.div(n, d))
+	<a id="change">a_max = a_newmax</a>
+
+	ly = tf.matmul(h, W_o)+b_o
+
+	error_step = tf.nn.softmax_cross_entropy_with_logits(ly, y[:,i,:])	&#47&#47 Cross-entropy cost function</code></pre>

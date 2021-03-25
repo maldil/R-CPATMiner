@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_single_gaussian(N=100, sigma=0.1):
+    <a id="change">for D in (1, 2, 3):
+        yield (check_single_gaussian, N, D, sigma)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    X += np.random.normal(0, sigma, X.shape)
+
+    <a id="change">xdgmm = XDGMM(1)</a>
+    <a id="change">xdgmm.fit(X, Xerr)</a>
+
+    &#47&#47 because of sample variance, results will be similar
+    &#47&#47 but not identical.  We&quotll use a fudge factor of 0.1
+    assert_allclose(mu, xdgmm.mu[0], atol=0.1)</code></pre>

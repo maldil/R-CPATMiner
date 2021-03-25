@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    netF = arch.VGGFeatureExtractor(feature_layer=feature_layer, use_bn=use_bn, \
+        use_input_norm=True, device=device)
+    if gpu_ids:
+        netF = <a id="change">nn.DataParallel(netF).cuda()</a>
+    netF.eval()  &#47&#47 No need to train
+    return netF
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    netF = arch.VGGFeatureExtractor(feature_layer=feature_layer, use_bn=use_bn, \
+        use_input_norm=True, device=device)
+    if gpu_ids:
+        netF = <a id="change">nn.DataParallel(netF)</a>
+    netF.eval()  &#47&#47 No need to train
+    return netF
+</code></pre>

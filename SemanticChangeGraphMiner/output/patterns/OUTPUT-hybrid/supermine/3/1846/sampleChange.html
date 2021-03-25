@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def test_call(self):
+        classes = 3
+
+        scores = <a id="change">numpy.random.choice(range(classes), (2,))</a>
+
+        target_deltas = keras.backend.ones((1, 2, 4 * classes))
+        target_scores = keras.utils.to_categorical(scores)
+        target_scores = keras.backend.expand_dims(target_scores, 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        target_scores = keras.backend.cast(target_scores, keras.backend.floatx())
+
+        output_deltas = keras.backend.ones((1, 2, 4 * classes))
+        <a id="change">output_scores = keras.backend.variable([[0, 0, 1], [0, 0, 1]])</a>
+        output_scores = keras.backend.expand_dims(output_scores, 0)
+        output_scores = keras.backend.cast(output_scores, keras.backend.floatx())
+
+        layer = keras_rcnn.layers.RCNN()</code></pre>

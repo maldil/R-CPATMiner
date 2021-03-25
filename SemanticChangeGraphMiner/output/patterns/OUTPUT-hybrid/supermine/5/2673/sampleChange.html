@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if y.ndim == 1:
+            y = __envelope(y, hop_length)
+        else:
+            y = np.vstack(<a id="change">[__envelope(_, hop_length) for _ in y]</a>)
+
+    if y.ndim &gt; 1:
+        y_top = y[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Pad an extra channel dimension, if necessary
+    if y.ndim == 1:
+        <a id="change">y = util.stack(y, axis=0)</a>
+
+    if max_points is not None:
+        if max_points &lt;= 0:
+            raise ParameterError(&quotmax_points must be strictly positive&quot)</code></pre>

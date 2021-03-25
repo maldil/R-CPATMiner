@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      new_input = self.model.get_input_at(0)
+
+      &#47&#47 Make a new model that returns each of the layers as output
+      outnodes_last = <a id="change">[x_layer.get_output_at(-1) for x_layer in self.model.layers]</a>
+      outnodes_first = [x_layer.get_output_at(0) for x_layer in self.model.layers]
+      if outnodes_last != outnodes_first:
+        warnings.warn("Mutiple output nodes detected, picking last ones as default."
+                      "This could happen due to using of stacked model.")</code></pre><h3>After Change</h3><pre><code class='java'>
+        warnings.warn("Abstract layer detected, picking last ouput node as default."
+                      "This could happen due to using of stacked model.")
+    
+      <a id="change">layer_outputs = []</a>
+      &#47&#47 For those abstract model layers, return their last output node as default.
+      <a id="change">for x_layer in self.model.layers:
+        if x_layer.name not in abstract_layers:
+          layer_outputs.append(x_layer.output)
+        else:
+          layer_outputs.append(x_layer.get_output_at(-1))
+          
+     </a> self.keras_model = KerasModel(new_input, layer_outputs)
+
+    &#47&#47 and get the outputs for that model on the input x
+    outputs = self.keras_model(x)</code></pre>

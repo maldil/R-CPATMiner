@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if method == &quotscaled&quot:
+            &#47&#47 constrained output pixels
+            self.applyScaling = True
+            outStats = <a id="change">{&quotminimum&quot: 0, &quotmaximum&quot: 1.0, &quotskipFactorX&quot: 10, &quotskipFactorY&quot: 10}</a>
+        else:
+            self.applyScaling = False
+            &#47&#47 rough estimation of output stats
+            outStats = {&quotminimum&quot: -10.0, &quotmaximum&quot: 10.0, &quotskipFactorX&quot: 10, &quotskipFactorY&quot: 10}
+        &#47&#47 repeat stats for all output raster bands
+        <a id="change">outStats = tuple(outStats for i in xrange(bandCount))</a>
+
+        kwargs[&quotoutput_info&quot][&quotbandCount&quot] = bandCount
+        kwargs[&quotoutput_info&quot][&quotstatistics&quot] = outStats
+        kwargs[&quotoutput_info&quot][&quothistogram&quot] = ()</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 ... and then transpose signature axes to into arrays of each band&quots endmembers
+        &#47&#47 [[vegB, shadowB, npvB, ...], [vegG, shadowG, npvG, ...], [...]]
+        &#47&#47 assign to coefficients member var to use in np.linalg.lstsq()
+        self.coefficients = <a id="change">np</a>.array(list(self.signatures.values())).T
+
+        &#47&#47 output bandCount is number of endmembers + 1 residuals raster
+        if self.coefficients.shape[0] != kwargs[&quotraster_info&quot][&quotbandCount&quot]:</code></pre>

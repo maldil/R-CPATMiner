@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        items = [data[&quotsql&quot], data[&quotparams&quot]]
+        &#47&#47 Replace lines endings with spaces to preserve the hash value
+        &#47&#47 even when the browser normalizes \r\n to \n in inputs.
+        <a id="change">items = [&quot &quot.join(force_text(item).splitlines()) for item in items]</a>
+        return hmac.new(settings.SECRET_KEY.encode(&quotutf-8&quot),
+                        &quot&quot.join(items).encode(&quotutf-8&quot), hashlib.sha1).hexdigest()
+
+    @property</code></pre><h3>After Change</h3><pre><code class='java'>
+        return reformat_sql(self.cleaned_data[&quotsql&quot])
+
+    def make_hash(self, data):
+        <a id="change">m = hmac.new(key=force_bytes(settings.SECRET_KEY), digestmod=hashlib.sha1)</a>
+        for item in [data[&quotsql&quot], data[&quotparams&quot]]:
+            <a id="change">m.update(force_bytes(item))</a>
+        return m.hexdigest()
+
+    @property
+    def connection(self):</code></pre>

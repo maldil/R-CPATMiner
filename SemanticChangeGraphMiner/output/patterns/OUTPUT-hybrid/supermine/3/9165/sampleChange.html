@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        try:
+            img = self.transform(file_path)
+        except:
+            <a id="change">print(file_path)</a>
+            raise
+        np.save(npy_path.format(exists.index(False)), img)
+
+        return img</code></pre><h3>After Change</h3><pre><code class='java'>
+                img = np.load(npy_path.format(i))
+            except (OSError, FileNotFoundError):
+                img = self.check_trans(file_path)
+                <a id="change">np.save(npy_path.format(i), img)</a>
+            output.append(img)
+
+        return output
+</code></pre>

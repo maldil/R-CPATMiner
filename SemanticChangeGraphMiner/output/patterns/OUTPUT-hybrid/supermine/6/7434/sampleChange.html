@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		xx1_un = np.minimum(x1[i], x1[idxs[:last]])
+		yy1_un = np.minimum(y1[i], y1[idxs[:last]])
+		xx2_un = np.maximum(x2[i], x2[idxs[:last]])
+		yy2_un = <a id="change">np.maximum(y2[i], y2[idxs[:last]])</a>
+
+		&#47&#47 compute the width and height of the bounding box
+		ww_int = np.maximum(0, xx2_int - xx1_int)
+		hh_int = np.maximum(0, yy2_int - yy1_int)
+
+		ww_un = np.maximum(0, xx2_un - xx1_un)
+		<a id="change">hh_un = np.maximum(0, yy2_un - yy1_un)</a>
+
+		&#47&#47 compute the ratio of overlap
+		<a id="change">overlap = (ww_int*hh_int)/(ww_un*hh_un + 1e-9)</a>
+
+		&#47&#47 delete all indexes from the index list that have
+		idxs = np.delete(idxs, np.concatenate(([last],
+			np.where(overlap &gt; overlap_thresh)[0])))</code></pre><h3>After Change</h3><pre><code class='java'>
+		area_int = ww_int * hh_int
+
+		&#47&#47 find the union
+		area_union = <a id="change">area[i]</a> + area[idxs[:last]] - area_int
+
+		&#47&#47 compute the ratio of overlap
+		overlap = area_int/(area_union + 1e-6)</code></pre>

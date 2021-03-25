@@ -1,0 +1,23 @@
+<html><h3>48ff898685826a5c37e1914d05ad59408b267528,debug_toolbar/panels/sql/forms.py,SQLSelectForm,make_hash,#SQLSelectForm#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        items = [data[&quotsql&quot], data[&quotparams&quot]]
+        &#47&#47 Replace lines endings with spaces to preserve the hash value
+        &#47&#47 even when the browser normalizes \r\n to \n in inputs.
+        <a id="change">items = [&quot &quot.join(force_text(item).splitlines()) for item in items]</a>
+        return hmac.new(settings.SECRET_KEY.encode(&quotutf-8&quot),
+                        &quot&quot.join(items).encode(&quotutf-8&quot), hashlib.sha1).hexdigest()
+
+    @property</code></pre><h3>After Change</h3><pre><code class='java'>
+        return reformat_sql(self.cleaned_data[&quotsql&quot])
+
+    def make_hash(self, data):
+        <a id="change">m = hmac.new(key=force_bytes(settings.SECRET_KEY), digestmod=hashlib.sha1)</a>
+        for item in [data[&quotsql&quot], data[&quotparams&quot]]:
+            <a id="change">m.update(force_bytes(item))</a>
+        return m.hexdigest()
+
+    @property
+    def connection(self):</code></pre><img src="17744189.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/48ff898685826a5c37e1914d05ad59408b267528#diff-238f2cf06c4fdd0bece4e9963438d49c4f0b5cc3109e3a2ef9a4aef194bb12ebL82' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 48ff898685826a5c37e1914d05ad59408b267528</div><div id='time'> Time: 2016-11-07</div><div id='author'> Author: mejiaa@amazon.com</div><div id='file'> File Name: debug_toolbar/panels/sql/forms.py</div><div id='class'> Class Name: SQLSelectForm</div><div id='method'> Method Name: make_hash</div><BR><BR><div id='link'><a href='https://github.com/masa-su/pixyz/commit/30028c6256de0cef715095e3994e396025c068d4#diff-0c3bd5aa6ba5a572903c9bdee177fe744c621e4e4cf1462fe7124cbf2083f7c1L756' target='_blank'>Link</a></div><div id='project'> Project Name: masa-su/pixyz</div><div id='commit'> Commit Name: 30028c6256de0cef715095e3994e396025c068d4</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: kaneko@weblab.t.u-tokyo.ac.jp</div><div id='file'> File Name: pixyz/losses/losses.py</div><div id='class'> Class Name: Expectation</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/8c18cecf15a8935d8bf712edcc91ac05daf2176e#diff-57be8c014d50b33efd9c989cd22f0fd803d3237d19e9af4faf6a176f814cd565L26' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 8c18cecf15a8935d8bf712edcc91ac05daf2176e</div><div id='time'> Time: 2020-06-16</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: appengine/standard/noxfile-template.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

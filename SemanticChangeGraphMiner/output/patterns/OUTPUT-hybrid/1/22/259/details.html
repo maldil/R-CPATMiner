@@ -1,0 +1,50 @@
+<html><h3>8801fc8b91c1dd6ad559cd020ff37e80bff2de3d,tgen/rank.py,PerceptronRanker,train,#PerceptronRanker#,185
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for ttree_no, da in enumerate(das):
+                &#47&#47 get some random &quotother&quot candidates and score them along with the right one
+                &#47&#47 -- always use current DA but change trees when computing features
+                <a id="change">other_trees</a> = [self.vectorizer.transform(self.features.get_features(ttrees[num], {&quotda&quot: da}))
+                         for num in <a id="change">np.random.choice(len(ttrees), self.train_cands)</a>]
+                &#47&#47 -- add in some candidates generated using the random planner
+                &#47&#47 (use the current DA)
+                if self.random_candgen:
+                    random_doc = self.random_candgen.generate_tree(da)
+                    for _ in xrange(self.train_cands - 1):
+                        self.random_candgen.generate_tree(da, random_doc)
+                    other_trees.extend([self.vectorizer.transform(self.features.get_features(rand_ttree, {&quotda&quot: da}))
+                                        for rand_ttree in ttrees_from_doc(random_doc, self.language,
+                                                                          self.selector)])
+                <a id="change">cands</a> = [X[ttree_no]] + [cand for <a id="change">cand</a> in other_trees
+                                         if not np.array_equal(cand.toarray(),
+                                                               X[ttree_no].toarray())]
+                <a id="change">scores</a> = [self._score(cand) for cand in cands]
+                <a id="change">top_cand_idx</a> = scores.index(max(scores))
+                if self.debug_out:
+                    print &gt;&gt; self.debug_out, (&quotTTREE-NO: %04d, SEL_CAND: %04d, LEN: %02d&quot % (ttree_no, top_cand_idx, len(cands)))
+                &#47&#47 update weights if the system doesn&quott give the highest score to the right one</code></pre><h3>After Change</h3><pre><code class='java'>
+            for ttree_no, da in enumerate(das):
+                &#47&#47 get some random &quotother&quot candidates and score them along with the right one
+                &#47&#47 -- always use current DA but change trees when computing features
+                other_idxs = <a id="change">np.random.choice(len(ttrees), self.train_cands)</a>
+                <a id="change">other_trees</a> = [self.vectorizer.transform(self.features.get_features(ttrees[num], {&quotda&quot: da}))
+                         for num in other_idxs]
+                &#47&#47 -- add in some candidates generated using the random planner
+                &#47&#47 (use the current DA)
+                if self.random_candgen:
+                    random_doc = self.random_candgen.generate_tree(da)
+                    for _ in xrange(self.train_cands - 1):
+                        self.random_candgen.generate_tree(da, random_doc)
+                    other_trees.extend([self.vectorizer.transform(self.features.get_features(rand_ttree, {&quotda&quot: da}))
+                                        for rand_ttree in ttrees_from_doc(random_doc, self.language,
+                                                                          self.selector)])
+                <a id="change">cands</a> = [X[ttree_no]] + [cand for <a id="change">cand</a> in other_trees
+                                         if not np.array_equal(cand.toarray(),
+                                                               X[ttree_no].toarray())]
+                <a id="change">scores</a> = [self._score(cand) for cand in cands]
+                <a id="change">top_cand_idx</a> = scores.index(max(scores))
+                &#47&#47 import ipdb
+                &#47&#47 ipdb.set_trace()
+                if self.debug_out:</code></pre><img src="1492294.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/8801fc8b91c1dd6ad559cd020ff37e80bff2de3d#diff-8a38dc0f58c29d4066f37a4649bddd620f2139bc7272bb5e2b07fd502edb75a3L185' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: 8801fc8b91c1dd6ad559cd020ff37e80bff2de3d</div><div id='time'> Time: 2014-07-01</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank.py</div><div id='class'> Class Name: PerceptronRanker</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/bdf72524a2417daa00524ec9327d125eebbe349f#diff-9045ab3f49e345203ebc1812e65cc3867d926f776571bdd38e542fa192fcaa29L57' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: bdf72524a2417daa00524ec9327d125eebbe349f</div><div id='time'> Time: 2019-06-19</div><div id='author'> Author: damien.lancry@gmail.com</div><div id='file'> File Name: examples/deep_bayesian_active_learning.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: max_entropy</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/d308384077725dfe26034ccb43bc3299a2813f8b#diff-8a38dc0f58c29d4066f37a4649bddd620f2139bc7272bb5e2b07fd502edb75a3L184' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: d308384077725dfe26034ccb43bc3299a2813f8b</div><div id='time'> Time: 2014-06-03</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank.py</div><div id='class'> Class Name: PerceptronRanker</div><div id='method'> Method Name: train</div><BR>

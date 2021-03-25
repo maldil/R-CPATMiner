@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        indices = []
+        for tmpo, tmpb in zip(offsets[:3], b):
+            <a id="change">indices.append()</a>
+        slices=1
+        &#47&#47 for each dimension:
+        &#47&#47     Save index as translation + offset
+        &#47&#47       (if not flipped: offset before, else: offset after)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 TODO: add check that off.stop + b  &lt;= shape ; place image in location
+        &#47&#47 but throw warning that the affine may be wrong because the image is
+        &#47&#47 being put outside the FOV and is non recoverable.
+        <a id="change">indices = tuple(slice(off.start + dim_b, off.stop + dim_b)
+                        for off, dim_b in zip(offsets[:3], b[:3]))</a>
+        resampled_data[indices] = cropped_img.get_data()
+
+    else:
+        &#47&#47 Iterate over a set of 3D volumes, as the interpolation problem is</code></pre>

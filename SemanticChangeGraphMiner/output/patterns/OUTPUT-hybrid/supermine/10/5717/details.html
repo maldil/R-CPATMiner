@@ -1,0 +1,43 @@
+<html><h3>1127ff5fdcdfbe89efee98614cf4d4e2c29da4a8,deploy/utils/utils.py,,resolve_env_vars,#,296
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def resolve_env_vars(config):
+  Recursively resolves environment variables in config values.
+  <a id="change">if isinstance(config, str):
+    return string.Template(config).substitute(os.environ)
+  elif isinstance(config, dict):
+    return {k: resolve_env_vars(v) for k, v in config.items()}
+  elif isinstance(config, list):
+    return [resolve_env_vars(i) for i in config]
+  else:
+    return config
+
+
+</a>def merge_dicts(*dicts):
+  Merge dicts (list of dicts) into a new dictionary.
+
+  Args:</code></pre><h3>After Change</h3><pre><code class='java'>
+  if isinstance(config, dict):
+    keys = config.keys()
+  elif isinstance(config, list):
+    keys = <a id="change">range(len(config))</a>
+  else:
+    return
+
+  <a id="change">for k in keys:
+    &#47&#47 Only do substitutions on strings.
+    v = config[k]
+    if isinstance(v, str):
+      config[k] = string.Template(v).substitute(os.environ)
+    else:
+      &#47&#47 Recursively handle lists and dictionaries.
+      resolve_env_vars(v)
+
+
+</a>def merge_config_dicts(root_config, included_configs):
+  Merge config dicts (list of dicts) into a root config dictionary.
+
+  Top-level lists with the same key (e.g. &quotprojects&quot) are concatenated, other</code></pre><img src="24046189.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/healthcare/commit/1127ff5fdcdfbe89efee98614cf4d4e2c29da4a8#diff-bdf69eff5cf74e9c2462787916e644049dfa948de41a26fcd9cac8eeeaa031e6L298' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/healthcare</div><div id='commit'> Commit Name: 1127ff5fdcdfbe89efee98614cf4d4e2c29da4a8</div><div id='time'> Time: 2019-02-11</div><div id='author'> Author: noreply@google.com</div><div id='file'> File Name: deploy/utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: resolve_env_vars</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/a1be7bf2f0926707e25b02570c17ba373878f768#diff-e2ce30a6cea77b54ac3893a93f1ac1fef924342a2681ba0b49b17729748de32cL110' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: a1be7bf2f0926707e25b02570c17ba373878f768</div><div id='time'> Time: 2016-03-14</div><div id='author'> Author: jamiehntownsend@gmail.com</div><div id='file'> File Name: pymanopt/manifolds/psd.py</div><div id='class'> Class Name: PositiveDefinite</div><div id='method'> Method Name: exp</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR>

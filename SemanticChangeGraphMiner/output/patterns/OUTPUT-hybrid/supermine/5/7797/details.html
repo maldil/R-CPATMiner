@@ -1,0 +1,26 @@
+<html><h3>49dc427e2c196a334dc7b173ff317e05f04813e7,tests/concat_many.py,TestConcatMany,forward,#TestConcatMany#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            [nn.Conv2d(inp, out, kernel_size=kernel_size, bias=bias) for i in range(k)]
+
+    def forward(self, x):
+        conv2ds_results = <a id="change">[c(x) for c in self.conv2ds]</a>
+        <a id="change">x = torch.cat(conv2ds_results, dim=1)</a>
+        return x
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.conv2_3 = nn.Conv2d(inp, out, kernel_size=kernel_size, bias=bias)
+
+    def forward(self, x):
+        x = <a id="change">torch.cat([
+            self.conv2_1(x),
+            self.conv2_2(x),
+            self.conv2_3(x)
+        ], dim=1)</a>
+        return x
+
+
+if __name__ == &quot__main__&quot:</code></pre><img src="30045614.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nerox8664/pytorch2keras/commit/49dc427e2c196a334dc7b173ff317e05f04813e7#diff-f49cc8a965603bed0078aac5975c6b6fb9f81d5873ceb0a763687f13d7243dbbL23' target='_blank'>Link</a></div><div id='project'> Project Name: nerox8664/pytorch2keras</div><div id='commit'> Commit Name: 49dc427e2c196a334dc7b173ff317e05f04813e7</div><div id='time'> Time: 2018-01-29</div><div id='author'> Author: nerox8664@gmail.com</div><div id='file'> File Name: tests/concat_many.py</div><div id='class'> Class Name: TestConcatMany</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/6cf0bdf28d4a814ed54b05badeaa332144a99a4d#diff-f5ca5dc705525a508daa6aa7480c357f147db00fda2055b399fa56c4faa56e62L196' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 6cf0bdf28d4a814ed54b05badeaa332144a99a4d</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: cs.shenli@gmail.com</div><div id='file'> File Name: distributed/rpc/pipeline/main.py</div><div id='class'> Class Name: DistResNet50</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL250' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67</div><div id='time'> Time: 2019-04-26</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR>

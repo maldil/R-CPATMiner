@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rotate_matrix = rotate_matrix_x.dot(rotate_matrix_y).dot(rotate_matrix_z)[:3,:]
+
+        if self.lazy:
+            <a id="change">return rotate_matrix</a>
+        else:
+            <a id="change">self.tx.set_parameters(rotate_matrix)</a>
+            return self.tx.apply_to_image(X, reference=self.reference)
+
+
+class RandomRotate3D(object):</code></pre><h3>After Change</h3><pre><code class='java'>
+                                    [0,0,0,1]])
+        rotate_matrix = rotate_matrix_x.dot(rotate_matrix_y).dot(rotate_matrix_z)[:3,:]
+
+        <a id="change">self.tx.set_parameters(rotate_matrix)</a>
+        if self.lazy or X is None:
+            return self.tx
+        else:
+            return self.tx.apply_to_image(X, reference=self.reference)</code></pre>

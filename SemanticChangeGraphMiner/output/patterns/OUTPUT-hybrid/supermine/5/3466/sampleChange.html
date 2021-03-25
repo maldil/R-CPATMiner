@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    q_group = sorted(q_group.items(), key=lambda x: x[0])
+    word_positions, guesses = list(map(list, zip(*q_group)))
+    &#47&#47 each entry is a list of (guess, logit, prob) sorted by logit
+    <a id="change">labels = np.array([int(g[0][0] == answer) for g in guesses], dtype=np.int32)</a>
+    vectors = vector_converter(guesses)
+    return qid, vectors, labels, word_positions
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 labels = np.array([int(g[0][0] == answer) for g in guesses], dtype=np.int32)
+    &#47&#47 vectors = vector_converter(guesses)
+    q_rows = q_rows.groupby(&quotchar_index&quot)
+    q_rows = <a id="change">q_rows.apply(lambda x: x.sort_values(&quotscore&quot))</a>
+    return qid, vectors, labels, word_positions
+
+
+def read_data(</code></pre>

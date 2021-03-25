@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if Xi.shape != (cls.dim, cls.dim):
+            raise ValueError("Xi must have shape (4,4)")
+
+        <a id="change">return np.hstack([Xi[0:3, 3], SO3.vee(Xi[0:3, 0:3])])</a>
+
+    @classmethod
+    def exp(cls, xi):
+        Exponential map for SE(3).</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError("Xi must have shape ({},{}) or (N,{},{})".format(
+                cls.dim, cls.dim, cls.dim, cls.dim))
+
+        xi = np.empty(<a id="change">[Xi.shape[0], cls.dof]</a>)
+        xi[:, 0:3] = Xi[:, 0:3, 3]
+        xi[:, 3:6] = SO3.vee(Xi[:, 0:3, 0:3])
+        return np.squeeze(xi)</code></pre>

@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return mask
+        else:
+            &#47&#47 The sample is located in a safe region. All base classifiers can predict the label
+            <a id="change">mask = np.ones(self.n_classifiers)</a>
+        return mask
+
+    def _get_classifier_ensemble(self, indices):
+        This function receive the indices of the selected classifiers and returns an ensemble with the selected</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples, n_neighbors = self.neighbors.shape
+        mask = np.zeros((n_samples, self.n_classifiers))
+
+        <a id="change">for sample_idx in enumerate(n_samples):
+            &#47&#47 Check if query is in a indecision region
+            neighbors_y = self.DSEL_target[self.neighbors[sample_idx, :self.safe_k]]
+
+            if len(set(neighbors_y)) &gt; 1:
+                &#47&#47 There are more than on class in the region of competence (So it is an indecision region).
+                &#47&#47mask = np.zeros(self.n_classifiers)
+
+                &#47&#47 Check if the base classifier predict the correct label for a sample belonging to each class.
+                for clf_index in range(self.n_classifiers):
+                    predictions = self.processed_dsel[self.neighbors[sample_idx, :self.safe_k], clf_index]
+                    correct_class_pred = [self.DSEL_target[index] for count, index in
+                                          enumerate(self.neighbors[sample_idx, :self.safe_k])
+                                          if predictions[count] == 1]
+                    
+                    &#47&#47 If that is true, it means that it correctly classified at least one neighbor for each class in 
+                    the region of competence
+                    
+                    if np.unique(correct_class_pred).size &gt; 1:
+                        mask[sample_idx, clf_index] = 1
+                &#47&#47 Check if all classifiers were pruned
+                if not np.count_nonzero(mask):
+                    &#47&#47 Do not apply the pruning mechanism.
+                    mask[sample_idx, clf_index, :] = 1
+                    &#47&#47mask = np.ones(self.n_classifiers)
+                return mask
+            else:
+                &#47&#47 The sample is located in a safe region. All base classifiers can predict the label
+                mask[sample_idx, :] = 1
+                &#47&#47 mask = np.ones(self.n_classifiers)
+       </a> return mask
+
+    def _get_classifier_ensemble(self, indices):
+        This function receive the indices of the selected classifiers and returns an ensemble with the selected</code></pre>

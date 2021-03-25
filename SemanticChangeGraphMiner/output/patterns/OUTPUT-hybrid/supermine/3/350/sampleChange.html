@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 output bandCount is number of endmembers + 1 residuals raster
+        if self.coefficients.shape[0] != kwargs[&quotraster_info&quot][&quotbandCount&quot]:
+            raise Exception(<a id="change">"Incoming raster has {0} bands; endmember signatures "
+                            "indicate {1} input bands.".format(
+                                kwargs[&quotraster_info&quot][&quotbandCount&quot], self.coefficients.shape[0])</a>)
+
+        &#47&#47 determine output pixel value method
+        self.applyScaling = kwargs[&quotmethod&quot].lower() == &quotscaled&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.coefficients = np.array(list(self.signatures.values())).T
+        P = self.coefficients.shape
+        outBandCount = 1 + P[1]             &#47&#47 endmembers + residuals
+        <a id="change">self.trace.log(str(kwargs[&quotraster_info&quot]))</a>
+        inBandCount = kwargs[&quotraster_info&quot][&quotbandCount&quot]
+        if P[0] != inBandCount:
+            raise Exception(("Incoming raster has {0} bands; endmember signatures "</code></pre>

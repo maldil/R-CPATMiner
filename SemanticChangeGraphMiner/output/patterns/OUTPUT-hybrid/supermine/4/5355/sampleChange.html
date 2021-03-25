@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        label_emb = nn.Embedding(opt.n_classes, opt.img_size**2)(labels)
+        label_emb = label_emb.view(label_emb.shape[0], 1, opt.img_size, opt.img_size)
+        &#47&#47 Concatenate label embedding and image by channels
+        d_input = <a id="change">torch.cat((label_emb, img), 1)</a>
+        feature_repr = self.model(d_input)
+        feature_repr = feature_repr.view(feature_repr.shape[0], -1)
+        validity = self.adv_layer(feature_repr)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, img, labels):
+        &#47&#47 Concatenate label embedding and image by channels
+        <a id="change">d_input = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</a>
+        validity = self.model(d_input)
+
+        return validity
+</code></pre>

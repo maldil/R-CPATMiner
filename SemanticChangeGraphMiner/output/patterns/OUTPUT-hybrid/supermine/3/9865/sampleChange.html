@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x_mask = torch.unsqueeze(sequence_mask(x_lengths, x.size(2)),
+                                 1).to(x.dtype)
+        &#47&#47 pre-conv layers
+        if <a id="change">self.encoder_type in [&quottransformer&quot, &quottime-depth-separable&quot]</a>:
+            if self.use_prenet:
+                x = self.pre(x, x_mask)
+        &#47&#47 encoder</code></pre><h3>After Change</h3><pre><code class='java'>
+        x_mask = torch.unsqueeze(sequence_mask(x_lengths, x.size(2)),
+                                 1).to(x.dtype)
+        &#47&#47 pre-conv layers
+        if <a id="change">hasattr(self, &quotpre&quot)</a> and self.use_prenet:
+            x = self.pre(x, x_mask)
+        &#47&#47 encoder
+        x = self.encoder(x, x_mask)</code></pre>

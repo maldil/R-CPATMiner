@@ -1,0 +1,28 @@
+<html><h3>3ddc9b49dceed22c8559c0231a1c081dcb875ede,capsulelayers.py,CapsuleLayer,call,#CapsuleLayer#,105
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 last iteration needs not compute bias which will not be passed to the graph any more anyway.
+            if i != self.num_routing - 1:
+                &#47&#47 self.bias = K.update_add(self.bias, K.sum(inputs_hat * outputs, [0, -1], keepdims=True))
+                <a id="change">self.bias += K.sum(inputs_hat * outputs, -1, keepdims=True)</a>
+            &#47&#47 tf.summary.histogram(&quotBigBee&quot, self.bias)  &#47&#47 for debugging
+        &#47&#47 End: routing algorithm V2, static ------------------------------------------------------------&#47&#47
+
+        return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 outputs.shape=[None, num_capsule, dim_capsule]
+                outputs = squash(K.batch_dot(c, inputs_hat, [2, 2]))  &#47&#47 [None, 10, 16]
+            else:  &#47&#47 Otherwise, use `inputs_hat_stopped` to update `b`. No gradients flow on this path.
+                <a id="change">outputs = squash(K.batch_dot(c, inputs_hat_stopped, [2, 2]))</a>
+
+                &#47&#47 outputs.shape =  [None, num_capsule, dim_capsule]
+                &#47&#47 inputs_hat.shape=[None, num_capsule, input_num_capsule, dim_capsule]
+                &#47&#47 The first two dimensions as `batch` dimension,
+                &#47&#47 then matmal: [dim_capsule] x [input_num_capsule, dim_capsule]^T -&gt; [input_num_capsule].
+                &#47&#47 b.shape=[batch_size, num_capsule, input_num_capsule]
+                <a id="change">b += K.batch_dot(outputs, inputs_hat_stopped, [2, 3])</a>
+        &#47&#47 End: Routing algorithm -----------------------------------------------------------------------&#47&#47
+
+        return outputs
+</code></pre><img src="15851411.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/3ddc9b49dceed22c8559c0231a1c081dcb875ede#diff-70158145f8c3017473e154d3e9318cd7ebab5469186eddb6bcbe943621b770a0L105' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 3ddc9b49dceed22c8559c0231a1c081dcb875ede</div><div id='time'> Time: 2017-11-18</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulelayers.py</div><div id='class'> Class Name: CapsuleLayer</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/626173412d4281b693244e0705a787c4e7c08031#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L92' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 626173412d4281b693244e0705a787c4e7c08031</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fraction_energy_assigned_correctly</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/ca907342507c1139696f542de0a3351d7a382eee#diff-5a9b3c72d798ab16737a14c4e24fee71dd6b5dff1d075679591993b742acc0b8L68' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: ca907342507c1139696f542de0a3351d7a382eee</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: sgross@fb.com</div><div id='file'> File Name: reinforcement_learning/actor_critic.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR>

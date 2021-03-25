@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  
+  project_configs, global_config = load_all_project_configs(config_path)
+
+  <a id="change">for generator in SCANNER_RULE_GENERATORS:
+    rules = generator.generate_rules(project_configs, global_config)
+    write_yaml_config(rules, output_dir, generator.config_file_name())
+
+
+</a>def read_yaml_config(path):
+  Reads a YAML file and return a dictionary of its contents.
+  with open(path) as input_file:
+    data = input_file.read()</code></pre><h3>After Change</h3><pre><code class='java'>
+    ValueError: If no output_path given AND no forseti config in the
+      deployment_config.
+  
+  <a id="change">if not output_path:
+    output_path = deployment_config.get(
+        &quotoverall&quot).get(&quotgenerated_fields&quot).get(&quotforseti_server_bucket&quot)
+    if not output_path:
+      raise ValueError(
+          (&quotMust provide an output path or set the "forseti_server_bucket" &quot
+           &quotfield in the overall generated_fields&quot))
+
+ </a> if output_path.startswith(&quotgs://&quot):
+    &#47&#47 output path is a GCS bucket
+    with tempfile.TemporaryDirectory() as tmp_dir:
+      _write_rules(deployment_config, tmp_dir)</code></pre>

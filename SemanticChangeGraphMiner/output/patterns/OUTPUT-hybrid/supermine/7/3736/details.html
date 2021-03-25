@@ -1,0 +1,100 @@
+<html><h3>6edc4e4cf3c2ed91ef5d2f57759f53645644628c,setup.py,,,#,7
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    else:
+        &#47&#47 assume linux otherwise, unless we support Windows in the future...
+        print("Platform Detection: Linux. Link to liblapacke...")
+        extra_link_args = <a id="change">[&quot-llapacke -llapack -lblas&quot]</a>
+        include_dirs = (numpy.distutils.misc_util.get_numpy_include_dirs() +
+                        [&quot/usr/include/lapacke&quot])
+
+    <a id="change">extensions = cythonize([
+        Extension(
+            "libact.query_strategies._variance_reduction",
+            ["libact/query_strategies/src/variance_reduction/variance_reduction.c"],
+            extra_link_args=extra_link_args,
+            extra_compile_args=[&quot-std=c11&quot],
+            include_dirs=include_dirs,
+        ),
+        Extension(
+            "libact.query_strategies._hintsvm",
+            sources=["libact/query_strategies/_hintsvm.pyx",
+                     "libact/query_strategies/src/hintsvm/libsvm_helper.c",
+                     "libact/query_strategies/src/hintsvm/svm.cpp"],
+            include_dirs=[numpy.get_include(),
+                          "libact/query_strategies/src/hintsvm/"],
+            extra_compile_args=[&quot-lstdc++&quot],
+        ),
+    ])</a>
+    cmdclasses = {&quotbuild_ext&quot: build_ext}
+    setup_requires = [
+    ]
+    install_requires = [</code></pre><h3>After Change</h3><pre><code class='java'>
+from setuptools import setup, Extension
+import sys
+
+<a id="change">BUILD_HINTSVM = int(os.environ.get("LIBACT_BUILD_HINTSVM", 1))</a>
+BUILD_VARIANCE_REDUCTION = int(os.environ.get("LIBACT_BUILD_VARIANCE_REDUCTION", 1))
+
+
+on_rtd = os.environ.get(&quotREADTHEDOCS&quot, None) == &quotTrue&quot
+&#47&#47 read the docs could not compile numpy and c extensions
+if on_rtd:
+    extensions = []
+    cmdclasses = {}
+    setup_requires = []
+    install_requires = []
+    tests_require = []
+else:
+    from Cython.Build import cythonize
+    from Cython.Distutils import build_ext
+    import numpy
+    import numpy.distutils
+    if sys.platform == &quotdarwin&quot:
+        print("Platform Detection: Mac OS X. Link to openblas...")
+        extra_link_args = [&quot-L/opt/local/lib -lopenblas&quot]
+        include_dirs = (numpy.distutils.misc_util.get_numpy_include_dirs() +
+                        [&quot/opt/local/include&quot])
+    else:
+        &#47&#47 assume linux otherwise, unless we support Windows in the future...
+        print("Platform Detection: Linux. Link to liblapacke...")
+        extra_link_args = []
+        include_dirs = (numpy.distutils.misc_util.get_numpy_include_dirs() +
+                        [&quot/usr/include/&quot])
+        libraries = [&quotlapacke&quot, &quotlapack&quot, &quotblas&quot]
+        library_dirs = [&quot/usr/lib&quot]
+
+    extensions = []
+    if BUILD_VARIANCE_REDUCTION:
+        print("Build VarianceReduction...")
+        extensions.append(
+            Extension(
+                "libact.query_strategies._variance_reduction",
+                ["libact/query_strategies/src/variance_reduction/variance_reduction.c"],
+                extra_link_args=extra_link_args,
+                extra_compile_args=[&quot-std=c11&quot],
+                include_dirs=include_dirs,
+                libraries=libraries,
+                library_dirs=library_dirs,
+            )
+        )
+    <a id="change">if BUILD_HINTSVM:
+        print("Build HintSVM...")
+        extensions.append(
+            Extension(
+                "libact.query_strategies._hintsvm",
+                sources=["libact/query_strategies/_hintsvm.pyx",
+                         "libact/query_strategies/src/hintsvm/libsvm_helper.c",
+                         "libact/query_strategies/src/hintsvm/svm.cpp"],
+                include_dirs=[numpy.get_include(),
+                              "libact/query_strategies/src/hintsvm/"],
+                extra_compile_args=[&quot-lstdc++&quot],
+            )
+        )
+
+   </a> extensions = cythonize(extensions)
+    cmdclasses = {&quotbuild_ext&quot: build_ext}
+    setup_requires = [
+    ]</code></pre><img src="16473243.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/6edc4e4cf3c2ed91ef5d2f57759f53645644628c#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L7' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 6edc4e4cf3c2ed91ef5d2f57759f53645644628c</div><div id='time'> Time: 2019-05-05</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/TheAlgorithms/Python/commit/f754c0d31ffe9a6be990fecbc32c55fa97271d9c#diff-30abeaca7c598c4733b70d91a85f90f49354b5f6a7aceb1d211c7a838aef7545L24' target='_blank'>Link</a></div><div id='project'> Project Name: TheAlgorithms/Python</div><div id='commit'> Commit Name: f754c0d31ffe9a6be990fecbc32c55fa97271d9c</div><div id='time'> Time: 2020-09-11</div><div id='author'> Author: 33205665+BriseBalloches@users.noreply.github.com</div><div id='file'> File Name: searches/jump_search.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/9a88eac5a23150345337d62e83621316cf2d986f#diff-f53b66970297523edfa0f986397c95d0daf96037f2670bbb5f0e998a158aa430L23' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: 9a88eac5a23150345337d62e83621316cf2d986f</div><div id='time'> Time: 2019-09-21</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: censusdata.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: codesFromZipFile</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/6edc4e4cf3c2ed91ef5d2f57759f53645644628c#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L7' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 6edc4e4cf3c2ed91ef5d2f57759f53645644628c</div><div id='time'> Time: 2019-05-05</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

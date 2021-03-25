@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                adv_v = vals_ref_v.unsqueeze(dim=-1) - value_v.detach()
+                log_prob_v = adv_v * calc_logprob(mu_v, var_v, actions_v)
+                loss_policy_v = -log_prob_v.mean()
+                <a id="change">entropy_loss_v = ENTROPY_BETA * (-(torch.log(2*math.pi*var_v) + 1)/2).mean()</a>
+
+                <a id="change">loss_v</a> = loss_policy_v + entropy_loss_v + loss_value_v
+                <a id="change">loss_v</a>.backward()
+                optimizer.step()
+
+                tb_tracker.track("advantage", adv_v, step_idx)
+                tb_tracker.track("values", value_v, step_idx)
+                tb_tracker.track("batch_rewards", vals_ref_v, step_idx)
+                tb_tracker.track("loss_entropy", entropy_loss_v, step_idx)
+                tb_tracker.track("loss_policy", loss_policy_v, step_idx)
+                tb_tracker.track("loss_value", loss_value_v, step_idx)
+                <a id="change">tb_tracker.track("loss_total", loss_v, step_idx)</a>
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_env = gym.make(ENV_ID)
+
+    net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    <a id="change">net_crt = model.ModelCritic(envs[0].observation_space.shape[0])</a>
+    if args.cuda:
+        net_act.cuda()
+        <a id="change">net_crt.cuda()</a>
+    print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-a2c_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=args.cuda)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)
+
+    opt_act = optim.Adam(net_act.parameters(), lr=LEARNING_RATE_ACTOR)
+    opt_crt = optim.Adam(<a id="change">net_crt</a>.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    batch = []
+    best_reward = None</code></pre>

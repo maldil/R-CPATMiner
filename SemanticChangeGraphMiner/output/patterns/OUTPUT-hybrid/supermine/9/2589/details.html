@@ -1,0 +1,29 @@
+<html><h3>3ba5bc45ad3ceaafdade9378483388a2d2f49f28,kornia/augmentation/base.py,_AugmentationBase,forward,#_AugmentationBase#,214
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if return_transform is None:
+            return_transform = self.return_transform
+        if params is None:
+            params = <a id="change">self.__forward_parameters__(batch_shape, self.p, self.p_batch, self.same_on_batch)</a>
+        if &quotbatch_prob&quot not in params:
+            params[&quotbatch_prob&quot] = torch.tensor([True] * batch_shape[0])
+            warnings.warn("`batch_prob` is not found in params. Will assume applying on all data.")
+
+        <a id="change">self._params</a> = params
+        output = self.apply_func(in_tensor, in_transform, self._params, return_transform)
+        return _transform_output_shape(output, ori_shape) if self.keepdim else output
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if return_transform is None:
+            return_transform = self.return_transform
+        if params is None:
+            params = <a id="change">self.forward_parameters(batch_shape)</a>
+        if &quotbatch_prob&quot not in params:
+            params[&quotbatch_prob&quot] = torch.tensor([True] * batch_shape[0])
+            warnings.warn("`batch_prob` is not found in params. Will assume applying on all data.")
+
+        <a id="change">self._params</a> = params
+        output = self.apply_func(in_tensor, in_transform, self._params, return_transform)
+        return _transform_output_shape(output, ori_shape) if self.keepdim else output
+</code></pre><img src="11577872.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/3ba5bc45ad3ceaafdade9378483388a2d2f49f28#diff-a262524c7911e9ef137e41ee09afcdd9b754d444b37dfd959f31d129e92c53bfL213' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 3ba5bc45ad3ceaafdade9378483388a2d2f49f28</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: sj8716643@126.com</div><div id='file'> File Name: kornia/augmentation/base.py</div><div id='class'> Class Name: _AugmentationBase</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/3ba5bc45ad3ceaafdade9378483388a2d2f49f28#diff-a262524c7911e9ef137e41ee09afcdd9b754d444b37dfd959f31d129e92c53bfL214' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 3ba5bc45ad3ceaafdade9378483388a2d2f49f28</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: sj8716643@126.com</div><div id='file'> File Name: kornia/augmentation/base.py</div><div id='class'> Class Name: _AugmentationBase</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/3ba5bc45ad3ceaafdade9378483388a2d2f49f28#diff-a262524c7911e9ef137e41ee09afcdd9b754d444b37dfd959f31d129e92c53bfL120' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 3ba5bc45ad3ceaafdade9378483388a2d2f49f28</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: sj8716643@126.com</div><div id='file'> File Name: kornia/augmentation/base.py</div><div id='class'> Class Name: _BasicAugmentationBase</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/3ba5bc45ad3ceaafdade9378483388a2d2f49f28#diff-a262524c7911e9ef137e41ee09afcdd9b754d444b37dfd959f31d129e92c53bfL382' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 3ba5bc45ad3ceaafdade9378483388a2d2f49f28</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: sj8716643@126.com</div><div id='file'> File Name: kornia/augmentation/base.py</div><div id='class'> Class Name: MixAugmentationBase</div><div id='method'> Method Name: forward</div><BR>

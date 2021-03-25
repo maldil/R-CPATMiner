@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __call__(self, x, y=None):
+        np.save(os.path.join(self.root,&quotx_img-%i.npy&quot%self.counter), x.numpy())
+        if y is not None:
+            np.save(os.path.join(self.root,&quoty_img-%i.npy&quot%self.counter), <a id="change">y.numpy()</a>)
+            self.counter += 1
+            return x, y
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.counter = 0
+
+    def __call__(self, *inputs):
+        <a id="change">for idx, _input in inputs:
+            fpath = os.path.join(self.root, &quotimg_%i_%i&quot%(self.counter, idx))
+            np.save(fpath, _input.numpy())
+       </a> self.counter += 1
+        return inputs
+
+</code></pre>

@@ -1,0 +1,29 @@
+<html><h3>a81db6daadd1304e96916c34a894d83dd4dc75bd,skopt/wrappers/scikit_learn.py,SkoptSearchCV,step,#SkoptSearchCV#,248
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cv = skms.check_cv(self.cv, y, classifier=skms.is_classifier(self.estimator))
+        self.scorer_ = skms.check_scoring(self.estimator, scoring=self.scoring)
+
+        <a id="change">pd = self.param_distributions</a>
+
+        if self.optimizer is None:
+            dimensions = <a id="change">[pd[k] for k in sorted(pd.keys())]</a>
+            self.optimizer = Optimizer(dimensions, GaussianProcessRegressor())
+
+        params = self.optimizer.ask()
+        params_dict = {k: v <a id="change">for</a> k,v in zip(sorted(pd.keys()), params)}
+
+        cv_iter = list(cv.split(X, y, groups))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        key = str(param_space)
+
+        <a id="change">if key not in self.optimizer:
+            self.optimizer[key] =  self._make_optimizer(param_space)
+
+       </a> optimizer = self.optimizer[key]
+
+        params = optimizer.ask()
+        params_dict = self._skopt_to_dict(param_space, params)</code></pre><img src="10799557.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/a81db6daadd1304e96916c34a894d83dd4dc75bd#diff-e30d05af267fcba64311305c2241bcd4145c104c9cce44d7753bba6e949f1c71L248' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: a81db6daadd1304e96916c34a894d83dd4dc75bd</div><div id='time'> Time: 2017-06-28</div><div id='author'> Author: iaroslav.email@gmail.com</div><div id='file'> File Name: skopt/wrappers/scikit_learn.py</div><div id='class'> Class Name: SkoptSearchCV</div><div id='method'> Method Name: step</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/f522e894852f28da0d6b9441ce8e49f486dfbc5f#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL156' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: f522e894852f28da0d6b9441ce8e49f486dfbc5f</div><div id='time'> Time: 2017-06-16</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: choose_small_vocabulary</div><BR><BR><div id='link'><a href='https://github.com/ufal/npfl114/commit/c343409098b4f4b8396119d9f26e040e479a0e2b#diff-94d40439703e58f8185b11815ecf2316af953fb40679a728e28f388b7e618db8L18' target='_blank'>Link</a></div><div id='project'> Project Name: ufal/npfl114</div><div id='commit'> Commit Name: c343409098b4f4b8396119d9f26e040e479a0e2b</div><div id='time'> Time: 2020-04-20</div><div id='author'> Author: milan@strakovi.com</div><div id='file'> File Name: labs/08/speech_recognition_eval.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/tensorflow/cleverhans/commit/03f07734648aa9843393f0ebf19c61c2a34c728e#diff-0673ce828ee444296b16d579f1b635a7d357326c8362c1792e9d372f1fb80d6cL182' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/cleverhans</div><div id='commit'> Commit Name: 03f07734648aa9843393f0ebf19c61c2a34c728e</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: haojie.d.yuan@gmail.com</div><div id='file'> File Name: cleverhans/utils_keras.py</div><div id='class'> Class Name: KerasModelWrapper</div><div id='method'> Method Name: fprop</div><BR>

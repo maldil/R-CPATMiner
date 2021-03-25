@@ -1,0 +1,22 @@
+<html><h3>0110937ab04f4298f98963bed1de08962d776b24,src/fonduer/utils/data_model_utils/structural.py,,lowest_common_ancestor_depth,#,187
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    span1 = _to_span(c[0])
+    span2 = _to_span(c[1])
+    ancestor1 = np.array(span1.sentence.xpath.split("/"))
+    ancestor2 = <a id="change">np.array(span2.sentence.xpath.split("/"))</a>
+    min_len = min(ancestor1.size, ancestor2.size)
+    <a id="change">return min_len - np.argmin(ancestor1[:min_len] == ancestor2[:min_len])</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    :param c: The multinary-Mention Candidate to evaluate
+    
+    spans = [_to_span(i) for i in c]
+    ancestors = [<a id="change">np.array(span.sentence.xpath.split("/"))</a> for span in spans]
+    <a id="change">min_len = min([a.size for a in ancestors])</a>
+    arrays = np.array([a[:min_len] for a in ancestors])
+    arg_min = np.argmin(arrays[:-1] == arrays[1:], axis=1)
+    val = np.min(arg_min[np.nonzero(arg_min)])
+    <a id="change">return min_len - val</a>
+</code></pre><img src="11550899.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L208' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/8c75fd91577f0853b427f8f295badfefade31822#diff-bec5653b962a2825b7e9b823c58a2ef79a81ce03e79f323e41df4595750d4360L182' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 8c75fd91577f0853b427f8f295badfefade31822</div><div id='time'> Time: 2015-02-15</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: mahotas/features/texture.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: haralick_features</div><BR><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/eb9216ceb28aa2f96877c908ad6b2fc7b8c552f7#diff-6dda8aba3ea5a9c179631bc7052d029cc34bfbbbecaf23bd594e5bd178910921L52' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: eb9216ceb28aa2f96877c908ad6b2fc7b8c552f7</div><div id='time'> Time: 2018-01-23</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/agent.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: float32_preprocessor</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/047b145b473f4406cd99d5f04e454af6213bbcc3#diff-d232ef6b50c91de9bd935d8615a6a1b658d0ba682bd96145608834ad377542ccL393' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 047b145b473f4406cd99d5f04e454af6213bbcc3</div><div id='time'> Time: 2017-04-21</div><div id='author'> Author: salmabougacha@hotmail.com</div><div id='file'> File Name: nilearn/connectome/connectivity_matrices.py</div><div id='class'> Class Name: ConnectivityMeasure</div><div id='method'> Method Name: transform</div><BR>

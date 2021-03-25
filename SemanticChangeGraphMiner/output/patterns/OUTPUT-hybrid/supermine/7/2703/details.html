@@ -1,0 +1,71 @@
+<html><h3>b7990885d8b26b9404fd9ce952b0b2f005019594,california_housing/feature_engineering.py,,,#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+
+<a id="change">train_set.plot(kind=&quotscatter&quot, x=&quotlongitude&quot, y=&quotlatitude&quot, alpha=0.4,
+				s=train_set[&quotpopulation&quot]/100, label=&quotpopulation&quot, figsize=(10,7),
+				c=&quotmedian_house_value&quot, cmap=plt.get_cmap(&quotjet&quot), colorbar=True)</a>
+plt.legend() 
+plt.show()
+
+attributes = [&quotmedian_house_value&quot, &quotmedian_income&quot, &quottotal_rooms&quot, &quothousing_median_age&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 passing data in for imputation and one hot encoding
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+<a id="change">city_lat_long = pd.read_csv(&quotcal_cities_lat_long.csv&quot)</a>
+city_pop_data = pd.read_csv(&quotcal_populations_city.csv&quot)
+county_pop_data = pd.read_csv(&quotcal_populations_county.csv&quot)
+
+
+
+original, had to change because we only want to deal with cities we have
+both location and population data on.
+
+city_coords = {}
+for dat in city_lat_long.iterrows():
+    row = dat[1]
+    city_coords[row[&quotName&quot]] = (float(row[&quotLatitude&quot]), float(row[&quotLongitude&quot]))
+
+&#47&#47how we deiscovered the need for the change
+present = []
+absent = []
+for city in city_coords.keys():
+    if city in city_pop_data[&quotCity&quot].values:
+        present.append(city)
+    else:
+        absent.append(city)
+len(present)
+len(absent)
+absent
+
+
+city_coords = {}
+
+<a id="change">for dat in city_lat_long.iterrows():
+    row = dat[1]
+    if row[&quotName&quot] not in city_pop_data[&quotCity&quot].values:   
+        continue           
+    else: 
+        city_coords[row[&quotName&quot]] = (float(row[&quotLatitude&quot]), float(row[&quotLongitude&quot]))
+
+
+&#47&#47clean pop
+&#47&#47fill in the missing 1980s values with avg rate of change
+&#47&#47make a dictonary of cities lat/long pass in a tuple of lat/longs
+&#47&#47for a given point and do the comparison
+
+&#47&#47two functions
+&#47&#471. take two lat long tuples as input
+	&#47&#47return the distance between the two
+    &#47&#47vincenty(tuple1, tuple2)
+
+
+&#47&#47example below
+</a>newport_ri = (41.49008, -71.312796)
+cleveland_oh = (41.499498, -81.695391)
+x = vincenty(newport_ri, cleveland_oh)
+x &#47&#47distance stored in km, see units on printing</code></pre><img src="11990583.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/CNuge/kaggle-code/commit/b7990885d8b26b9404fd9ce952b0b2f005019594#diff-98e1d888948d2fb9ceba7250296619639269b2d8c5bec5737f959d9d670bfd88L23' target='_blank'>Link</a></div><div id='project'> Project Name: CNuge/kaggle-code</div><div id='commit'> Commit Name: b7990885d8b26b9404fd9ce952b0b2f005019594</div><div id='time'> Time: 2018-01-12</div><div id='author'> Author: nugentc@uoguelph.ca</div><div id='file'> File Name: california_housing/feature_engineering.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/b0ddb103fd66542b0232718b1833ea7551c56f5e#diff-0c577a28583f5420e28f144b5818c2812b81111d43a328ba7e586e9e1bf697b0L36' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: b0ddb103fd66542b0232718b1833ea7551c56f5e</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: rzhang88@gmail.com</div><div id='file'> File Name: test_sweep.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/1215d2390c0ef900337366e7a89e8d21e4bfd592#diff-0c577a28583f5420e28f144b5818c2812b81111d43a328ba7e586e9e1bf697b0L28' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 1215d2390c0ef900337366e7a89e8d21e4bfd592</div><div id='time'> Time: 2018-08-25</div><div id='author'> Author: rzhang88@gmail.com</div><div id='file'> File Name: test_sweep.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

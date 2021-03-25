@@ -1,0 +1,36 @@
+<html><h3>283ecdfd495c8d5256c5ab07b470f36270d7f4a8,snorkel/learning/gen_learning.py,GenerativeModel,train,#GenerativeModel#,70
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.cardinalities = self.cardinality * np.ones(m, dtype=np.int64)
+        self.candidate_ranges = candidate_ranges
+        if candidate_ranges is not None:
+            <a id="change">for i in range(m):
+                c_range = candidate_ranges[i]
+
+                &#47&#47 Confirm that the candidate range has only unique values
+                assert len(c_range) == len(set(c_range))
+                self.cardinalities[i] = len(c_range)
+
+                &#47&#47 Re-map the values of L[i, :]
+                &#47&#47 Assumes L is csr_sparse format at this point
+                for j in range(L[i].data.shape[0]):
+                    val = L[i].data[j]
+                    if val not in c_range:
+                        raise ValueError(Value {0} is not in supplied range 
+                            for candidate at index {1}.format(val, i))
+                    L[i, L[i].indices[j]] = c_range.index(val) + 1
+
+        &#47&#47 Shuffle the data points, cardinalities, and candidate_ranges
+       </a> idxs = range(m)
+        np.random.shuffle(idxs)
+        L = L[idxs, :]
+        if candidate_ranges is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.cardinalities = self.cardinality * np.ones(m, dtype=np.int64)
+        self.candidate_ranges = candidate_ranges
+        if self.candidate_ranges is not None:
+            <a id="change">L</a>, self.cardinalities, _ = self._remap_scoped_categoricals(L, 
+                self.candidate_ranges)
+
+        &#47&#47 Shuffle the data points, cardinalities, and candidate_ranges</code></pre><img src="20196788.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/283ecdfd495c8d5256c5ab07b470f36270d7f4a8#diff-888808a70a99ab07add31f4de4262725219330b6bffb9ac42ee174498a4ae7e0L70' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 283ecdfd495c8d5256c5ab07b470f36270d7f4a8</div><div id='time'> Time: 2017-07-22</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/gen_learning.py</div><div id='class'> Class Name: GenerativeModel</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/6e6c12425a787d8c954ce5c31ceed59cdd531001#diff-3896ce7d43d89b990c72bafaf6d1ee3dcea25d3ff78eb238ad6423daf5cd74feL67' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 6e6c12425a787d8c954ce5c31ceed59cdd531001</div><div id='time'> Time: 2018-05-20</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/ctc_decoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: greedy_decoder</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/283ecdfd495c8d5256c5ab07b470f36270d7f4a8#diff-888808a70a99ab07add31f4de4262725219330b6bffb9ac42ee174498a4ae7e0L70' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 283ecdfd495c8d5256c5ab07b470f36270d7f4a8</div><div id='time'> Time: 2017-07-22</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/gen_learning.py</div><div id='class'> Class Name: GenerativeModel</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e81142f0869321cd8792e13bfc4f6fb85d9f1efc#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L62' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e81142f0869321cd8792e13bfc4f6fb85d9f1efc</div><div id='time'> Time: 2015-12-22</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR>

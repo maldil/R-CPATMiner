@@ -1,0 +1,24 @@
+<html><h3>33573192e348ad5e1dfe188df6f3fa2a7a892372,pixyz/distributions/distributions.py,DistributionBase,get_params,#DistributionBase#,774
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    @lru_cache_for_sample_dict()
+    def get_params(self, params_dict={}, **kwargs):
+        <a id="change">params_dict</a>, vars_dict = replace_dict_keys_split(params_dict, self.replace_params_dict)
+        output_dict = self.forward(**vars_dict)
+
+        output_dict.update(params_dict)</code></pre><h3>After Change</h3><pre><code class='java'>
+    @lru_cache_for_sample_dict()
+    def get_params(self, params_dict={}, **kwargs):
+        replaced_params_dict = {}
+        <a id="change">for key, value in params_dict.items():
+            if key in self.replace_params_dict:
+                for replaced_key in self.replace_params_dict[key]:
+                    replaced_params_dict[replaced_key] = value
+
+       </a> vars_dict = {key: value for key, value in params_dict.items() if key not in self.replace_params_dict}
+
+        output_dict = self.forward(**vars_dict)
+</code></pre><img src="37930562.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/masa-su/pixyz/commit/33573192e348ad5e1dfe188df6f3fa2a7a892372#diff-fb1a7df06324129121b04d57ec1ae4914e4039e28a6b3d8e756997cb02753700L775' target='_blank'>Link</a></div><div id='project'> Project Name: masa-su/pixyz</div><div id='commit'> Commit Name: 33573192e348ad5e1dfe188df6f3fa2a7a892372</div><div id='time'> Time: 2020-10-05</div><div id='author'> Author: kaneko@weblab.t.u-tokyo.ac.jp</div><div id='file'> File Name: pixyz/distributions/distributions.py</div><div id='class'> Class Name: DistributionBase</div><div id='method'> Method Name: get_params</div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/b0848e1af4b1cf9c4898d549de19e81b167043b2#diff-771037fdeab3e63530757e85ec4d30179dcdd23b7fed819d1533836923911843L344' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: b0848e1af4b1cf9c4898d549de19e81b167043b2</div><div id='time'> Time: 2018-07-17</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/evaluator.py</div><div id='class'> Class Name: Evaluator</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/2bafab6880ec76889bd6cab6233a1ea9431f6b8e#diff-8e62dfe10267f74641022fceb457a8176006523e44815d1627836dbadb2be26eL18' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: 2bafab6880ec76889bd6cab6233a1ea9431f6b8e</div><div id='time'> Time: 2019-04-03</div><div id='author'> Author: tdonoghue@ucsd.edu</div><div id='file'> File Name: neurodsp/tests/test_filt_fir.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_design_fir_filter</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/aa1a4d85f30db26a7ef9d3c7dc7692bb00f7a5e5#diff-244776d1f689a31c3f2cb61361d55a3a6b9c416c0bdcd93c06eb541ed120324eL53' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: aa1a4d85f30db26a7ef9d3c7dc7692bb00f7a5e5</div><div id='time'> Time: 2016-10-13</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: examples/download.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: download_all</div><BR>

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Pad batches to max data size (bucketing it all into the same bucket)
+        dataset = dataset.apply(tf.contrib.data.bucket_by_sequence_length
+                                (element_length_func=_element_length_fn,
+                                 bucket_batch_sizes=<a id="change">[batch_size, batch_size]</a>,
+                                 bucket_boundaries=[0]))
+
+        dataset = dataset.map(lambda image, 
+                              width, label, 
+                              length, text, filename: 
+                              (image, width, 
+                               tf.cast(tf.deserialize_many_sparse(label, tf.int64), 
+                                       tf.int32),
+                               length, text, filename))
+        num_epochs = None
+        &#47&#47 Repeat for num_epochs
+        <a id="change">dataset = dataset.repeat(num_epochs)</a>
+
+    return dataset
+
+def _element_length_fn(image, width, label, length, text, filename):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Hack -- probably a better way to do this! Just want dynamic padding!
+        &#47&#47 Pad batches to max data size (bucketing it all into the same bucket)
+        <a id="change">dataset = dataset.apply(tf.contrib.data.bucket_by_sequence_length
+                                (element_length_func=_element_length_fn,
+                                 bucket_batch_sizes=[0, 10],
+                                 bucket_boundaries=[0]))</a>
+
+        dataset = dataset.map(lambda image, 
+                              width, label, 
+                              length, text, filename: </code></pre>

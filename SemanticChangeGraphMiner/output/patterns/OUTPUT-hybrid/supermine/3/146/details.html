@@ -1,0 +1,20 @@
+<html><h3>5f229ae1c23263175c8b089c481b80229adc64e0,qucumber/nn_states/neural_state.py,NeuralStateBase,gradient,#NeuralStateBase#,275
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    samp = samples[indices == i, :]
+                    sample_grad = self.rotated_gradient(basis, samp)
+                    grad[0] += sample_grad[0]  &#47&#47 Accumulate amplitude RBM gradient
+                    grad[1] += <a id="change">sample_grad[1]</a>  &#47&#47 Accumulate phase RBM gradient
+                else:
+                    sample_grad = [
+                        self.rbm_am.effective_energy_gradient(samples[indices == i, :]),</code></pre><h3>After Change</h3><pre><code class='java'>
+                bases = np.array(list(bases)).reshape(1, -1)
+
+            unique_bases, indices = np.unique(bases, axis=0, return_inverse=True)
+            <a id="change">indices = torch.Tensor(indices).to(samples)</a>
+
+            for i in range(unique_bases.shape[0]):
+                basis = unique_bases[i, :]
+                rot_sites = np.where(basis != "Z")[0]</code></pre><img src="959807.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/5f229ae1c23263175c8b089c481b80229adc64e0#diff-8606bb6d44e0d8ac79bf18a2ff8b47222526a4c02ff68ccbfecb2a9b3194693dL275' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 5f229ae1c23263175c8b089c481b80229adc64e0</div><div id='time'> Time: 2019-12-23</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/neural_state.py</div><div id='class'> Class Name: NeuralStateBase</div><div id='method'> Method Name: gradient</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4#diff-d3e1c4411b6f580293411b1726cd987c27fcb1ea04379afb16679af9a663983bL112' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4</div><div id='time'> Time: 2019-04-02</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/bicyclegan/bicyclegan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_images</div><BR><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/551436a8106f3292db2f7d1a6da3462f2aa8bb6b#diff-c2b58997be8f1e6a6437abb3c3a66c03cde54bce88719d32e6f4cc240523243bL10' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: 551436a8106f3292db2f7d1a6da3462f2aa8bb6b</div><div id='time'> Time: 2018-06-14</div><div id='author'> Author: tristan.deleu@gmail.com</div><div id='file'> File Name: maml_rl/policies/normal_mlp.py</div><div id='class'> Class Name: NormalMLPPolicy</div><div id='method'> Method Name: __init__</div><BR>

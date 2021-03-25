@@ -1,0 +1,24 @@
+<html><h3>e81142f0869321cd8792e13bfc4f6fb85d9f1efc,libact/query_strategies/uncertainty_sampling.py,UncertaintySampling,make_query,#UncertaintySampling#,62
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            prob = self.model.predict_real(X_pool)
+            min_margin = np.inf
+            for j in range(len(prob)):
+                m1_id = <a id="change">np.argmax(prob[j])</a>
+                m2_id = np.argmax(np.delete(prob[j], m1_id))
+                margin = prob[j][m1_id] - prob[j][m2_id]
+                if margin &lt; min_margin:
+                    min_margin = margin</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif self.method == &quotsm&quot:  &#47&#47 smallest margin
+            dvalue = self.model.predict_real(X_pool)
+            if np.shape(dvalue)[1] == 2:
+                <a id="change">ind = [0, 1]</a>
+            else:
+                &#47&#47 Find 2 largest decision values
+                ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]
+            margin = np.abs(np.abs(dvalue[:, <a id="change">ind[0]</a>]) - np.abs(dvalue[:, <a id="change">ind[1]</a>]))
+            ask_id = np.argmin(margin)
+
+        return unlabeled_entry_ids[ask_id]</code></pre><img src="12811842.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e81142f0869321cd8792e13bfc4f6fb85d9f1efc#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L59' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e81142f0869321cd8792e13bfc4f6fb85d9f1efc</div><div id='time'> Time: 2015-12-22</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/3a3dc678e50e60f9cf05e95e992ab873046c1b8f#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 3a3dc678e50e60f9cf05e95e992ab873046c1b8f</div><div id='time'> Time: 2016-12-05</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e81142f0869321cd8792e13bfc4f6fb85d9f1efc#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L62' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e81142f0869321cd8792e13bfc4f6fb85d9f1efc</div><div id='time'> Time: 2015-12-22</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR>

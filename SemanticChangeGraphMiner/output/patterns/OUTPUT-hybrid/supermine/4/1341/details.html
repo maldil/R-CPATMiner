@@ -1,0 +1,21 @@
+<html><h3>cc53003029d11839c394a9544a1394b62721869d,thinc/extra/wrappers.py,PyTorchWrapper,use_params,#PyTorchWrapper#,207
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.from_bytes(params[self.id])
+        else:
+            backup = None
+        <a id="change">yield</a>
+        if backup is not None:
+            self.from_bytes(backup)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if hasattr(k, "startswith") and k.startswith(key_prefix):
+                state_dict[k.replace(key_prefix, "")] = xp2torch(v)
+        if state_dict:
+            <a id="change">backup = {k: v.clone() for k, v in self._model.state_dict().items()}</a>
+            self._model.load_state_dict(state_dict)
+            yield
+            self._model.load_state_dict(backup)
+        else:</code></pre><img src="7486179.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/cc53003029d11839c394a9544a1394b62721869d#diff-4e54e777f8c0af0ae0f5584dcefb2e1aab7abf33c5766acd78d1801f9d9b805cL100' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: cc53003029d11839c394a9544a1394b62721869d</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/extra/wrappers.py</div><div id='class'> Class Name: PyTorchWrapper</div><div id='method'> Method Name: use_params</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/59a4736028fea991396643e361d0488c7c96736d#diff-a971749d15e3650612d931071655e1aaa68f3744097600135ec5c2b5fe3f0732L313' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 59a4736028fea991396643e361d0488c7c96736d</div><div id='time'> Time: 2014-12-02</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/elecmeter.py</div><div id='class'> Class Name: ElecMeter</div><div id='method'> Method Name: power_series</div><BR><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-d990b775bef0165c6a1d51f35d1a6e2b2a721ef0521b384f742dc55d986bac60L50' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: app/datasets/wsj0.py</div><div id='class'> Class Name: Wsj0Dataset</div><div id='method'> Method Name: epoch</div><BR>

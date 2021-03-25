@@ -1,0 +1,29 @@
+<html><h3>be6f19a2b6d5a8a36ab97d6f56ad8c30e180fb6e,tensorflowTUT/tf18_CNN3/for_you_to_practice.py,,,#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 important step
+&#47&#47 tf.initialize_all_variables() no long valid from
+&#47&#47 2017-03-02 if using tensorflow &gt;= 0.12
+<a id="change">sess.run(tf.global_variables_initializer())</a>
+
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})</code></pre><h3>After Change</h3><pre><code class='java'>
+                                              reduction_indices=[1]))       &#47&#47 loss
+train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+
+<a id="change">sess</a> = tf.Session()
+&#47&#47 important step
+&#47&#47 tf.initialize_all_variables() no long valid from
+&#47&#47 2017-03-02 if using tensorflow &gt;= 0.12
+<a id="change">if int((tf.__version__).split(&quot.&quot)[1]) &lt; 12:
+    init = tf.initialize_all_variables()
+else:
+    init = tf.global_variables_initializer()
+sess.run(init)</a>
+
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})</code></pre><img src="3880355.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 21</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/MorvanZhou/tutorials/commit/be6f19a2b6d5a8a36ab97d6f56ad8c30e180fb6e#diff-0bdd97fb761571aadf47b3c435dba55f60ceddb79705ac0d81ef13fa0e42cb0bL59' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/tutorials</div><div id='commit'> Commit Name: be6f19a2b6d5a8a36ab97d6f56ad8c30e180fb6e</div><div id='time'> Time: 2017-01-09</div><div id='author'> Author: morvanzhou@hotmail.com</div><div id='file'> File Name: tensorflowTUT/tf18_CNN3/for_you_to_practice.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

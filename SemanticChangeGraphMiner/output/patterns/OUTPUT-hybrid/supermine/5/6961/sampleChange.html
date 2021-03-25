@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot
+
+    N, K = np.shape(S)
+    freq = <a id="change">np.transpose(np.linspace(0, sr/2, N))</a>
+
+    slope = np.zeros((1, K))
+    intercept = np.zeros((1, K))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 If we don&quott have a spectrogram, build one
+    if S is None:
+        &#47&#47 By default, use a magnitude spectrogram
+        <a id="change">S = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))</a>
+    else:
+        &#47&#47 Infer n_fft from spectrogram shape
+        n_fft = (S.shape[0] - 1) * 2
+
+    &#47&#47 Compute the center frequencies of each bin
+    if freq is None:
+        freq = librosa.core.fft_frequencies(sr=sr, n_fft=n_fft)
+
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        coefficients = np.concatenate(<a id="change">[[np.polyfit(freq_t, S_t, order)]
+                                       for (freq_t, S_t) in zip(freq.T, S.T)]</a>,
+                                      axis=0).T
+
+    return coefficients</code></pre>

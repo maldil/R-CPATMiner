@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def reparametrize(self, mu, logvar):
+        std = logvar.mul(0.5).exp_()
+        if args.cuda:
+            eps = torch.cuda.FloatTensor(<a id="change">std.size()</a>).normal_()
+        else:
+            eps = torch.FloatTensor(std.size()).normal_()
+        <a id="change">eps = Variable(eps)</a>
+        return eps.mul(std).add_(mu)
+
+    def decode(self, z):
+        h3 = self.relu(self.fc3(z))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def reparametrize(self, mu, logvar):
+        std = logvar.mul(0.5).exp_()
+        eps = <a id="change">Variable(std.data.new(std.size()).normal_())</a>
+        return eps.mul(std).add_(mu)
+
+    def decode(self, z):
+        h3 = self.relu(self.fc3(z))</code></pre>

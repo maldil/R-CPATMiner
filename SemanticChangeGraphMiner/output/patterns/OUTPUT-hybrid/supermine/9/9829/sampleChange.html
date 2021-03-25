@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return &quot&quot
+
+    def content(self):
+        <a id="change">templates = [
+            (t.name, t.origin and t.origin.name or &quotNo origin&quot)
+            for t in self.templates_used
+        ]</a>
+        context = {
+            &quottemplates&quot: templates,
+            &quottemplate_dirs&quot: settings.TEMPLATE_DIRS,
+        }</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def content(self):
+        template_context = []
+        <a id="change">for i, d in enumerate(self.templates):
+            info = {}
+            &#47&#47 Clean up some info about templates
+            t = d.get(&quottemplate&quot, None)
+            if t.origin and t.origin.name:
+                t.origin_name = t.origin.name
+            else:
+                t.origin_name = &quotNo origin&quot
+            info[&quottemplate&quot] = t
+            &#47&#47 Clean up context for better readability
+            c = d.get(&quotcontext&quot, None)
+            info[&quotcontext&quot] = &quot\n&quot.join([_d.__repr__() for _d in c.dicts])
+            template_context.append(info)
+       </a> context = {
+            &quottemplates&quot: template_context,
+            &quottemplate_dirs&quot: settings.TEMPLATE_DIRS,
+        }</code></pre>

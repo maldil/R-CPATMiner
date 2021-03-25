@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.fixture
+def bucket():
+    bucket_name = <a id="change">"test-iam-" + str(int(time.time()))</a>
+    bucket = storage.Client().create_bucket(bucket_name)
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.patch()
+    yield bucket</code></pre><h3>After Change</h3><pre><code class='java'>
+def bucket():
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = <a id="change">"test-iam-{}".format(uuid.uuid4())</a>
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.patch()</code></pre>

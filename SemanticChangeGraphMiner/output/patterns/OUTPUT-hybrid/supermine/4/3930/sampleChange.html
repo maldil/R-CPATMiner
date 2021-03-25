@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    data = np.pad(data, [(0, 0), padding], **kwargs)
+
+    history = np.vstack([<a id="change">np.roll(data, -i * delay, axis=1)</a> for i in range(n_steps)[::-1]])
+
+    &#47&#47 Trim to original width
+    if delay &gt; 0:
+        <a id="change">history = history[:, :t]</a>
+    else:
+        history = history[:, -t:]
+
+    &#47&#47 Make contiguous</code></pre><h3>After Change</h3><pre><code class='java'>
+    data = np.pad(data, [(0, 0), padding], **kwargs)
+
+    &#47&#47 Construct the shape of the target array
+    <a id="change">shape = list(data.shape)</a>
+    shape[0] = shape[0] * n_steps
+    <a id="change">shape[1]</a> = t
+    shape = tuple(shape)
+
+    &#47&#47 Construct the output array to match layout and dtype of input</code></pre>

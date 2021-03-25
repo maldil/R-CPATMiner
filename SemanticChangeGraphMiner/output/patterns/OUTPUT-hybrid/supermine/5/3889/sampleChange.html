@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    from pybind11 import get_include as pybind_get_include
+    from numpy import get_include as np_get_include
+    from mdtraj import capi as mdtraj_capi
+    pybind_inc = <a id="change">str(get_pybind_include())</a>
+    mdtraj_inc = mdtraj_capi()[&quotinclude_dir&quot]
+    mdtraj_lib = mdtraj_capi()[&quotlib_dir&quot]
+    lib_prefix = &quotlib&quot if sys.platform.startswith(&quotwin&quot) else &quot&quot
+    common_cflags = [&quot-O3&quot, ]</code></pre><h3>After Change</h3><pre><code class='java'>
+def extensions():
+    from Cython.Build import cythonize
+    from numpy import get_include as np_get_include
+    pybind_inc = os.path.join(<a id="change">os.path.dirname(os.path.abspath(__file__))</a>, &quotext&quot, &quotpybind11&quot, &quotinclude&quot)
+    assert os.path.exists(pybind_inc), &quotpybind11 headers not found at %s&quot % pybind_inc
+
+    from mdtraj import capi as mdtraj_capi</code></pre>

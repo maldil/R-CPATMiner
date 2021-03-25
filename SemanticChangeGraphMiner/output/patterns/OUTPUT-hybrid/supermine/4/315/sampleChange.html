@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                block.append(nn.BatchNorm2d(out_filters, 0.8))
+            return block
+
+        <a id="change">layers = []</a>
+        in_filters = opt.channels + 1
+        for out_filters, bn in [(16, False), (32, True), (64, True), (128, False)]:
+            layers.extend(discriminator_block(in_filters, out_filters, bn))
+            in_filters = out_filters</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.label_embedding = nn.Embedding(opt.n_classes, opt.n_classes)
+
+        <a id="change">self.model = nn.Sequential(
+            nn.Linear(opt.n_classes + opt.img_size**2, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 512),
+            nn.Dropout(0.4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 512),
+            nn.Dropout(0.4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 1),
+            nn.Sigmoid()
+        )</a>
+
+    def forward(self, img, labels):
+        &#47&#47 Concatenate label embedding and image by channels
+        d_input = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</code></pre>

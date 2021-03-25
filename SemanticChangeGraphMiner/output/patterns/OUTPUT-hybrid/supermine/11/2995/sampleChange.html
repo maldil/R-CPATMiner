@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def run(self, nEpochs, epochLength):
+        for c in self._controllers: c.OnStart(self)
+        <a id="change">for _ in range(nEpochs):
+            if self._mode != -1:
+                while self._modeEpochsLength &gt; 0:
+                    self._modeEpochsLength = self._runEpisode(self._modeEpochsLength)
+            else:
+                length = epochLength
+                while length &gt; 0:
+                    length = self._runEpisode(length)
+
+            for c in self._controllers: c.OnEpochEnd(self)
+            
+       </a> for c in self._controllers: c.OnEnd(self)
+
+    def _runEpisode(self, maxSteps):
+        self._inEpisode = True</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def run(self, nEpochs, epochLength):
+        for c in self._controllers: c.OnStart(self)
+        <a id="change">i = 0</a>
+        <a id="change">while i &lt; nEpochs:
+            if self._mode != -1:
+                while self._modeEpochsLength &gt; 0:
+                    self._modeEpochsLength = self._runEpisode(self._modeEpochsLength)
+            else:
+                length = epochLength
+                while length &gt; 0:
+                    length = self._runEpisode(length)
+                i += 1
+
+            for c in self._controllers: c.OnEpochEnd(self)
+            
+       </a> for c in self._controllers: c.OnEnd(self)
+
+    def _runEpisode(self, maxSteps):
+        self._inEpisode = True</code></pre>

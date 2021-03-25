@@ -1,0 +1,30 @@
+<html><h3>62587f78baec2bf5d5e862909c845cfba75d2730,liegroups/so3.py,SO3,from_matrix,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not SO3.is_valid_matrix(mat):
+            raise ValueError("Invalid rotation matrix")
+
+        <a id="change">return cls(mat)</a>
+
+    @classmethod
+    def is_valid_matrix(cls, mat):
+        Check if a matrix is a valid rotation matrix.</code></pre><h3>After Change</h3><pre><code class='java'>
+    def from_matrix(cls, mat, normalize=False):
+        Create a SO3 object from a 3x3 rotation matrix (safe, but slower).
+        mat_is_valid = cls.is_valid_matrix(mat)
+        <a id="change">if mat_is_valid:
+            result = cls(mat)
+        elif not mat_is_valid and normalize:
+            result = cls(mat)
+            result.normalize()
+        else:
+            raise ValueError(
+                "Invalid rotation matrix. Use normalize=True to handle rounding errors.")
+
+       </a> <a id="change">return result</a>
+
+    @classmethod
+    def is_valid_matrix(cls, mat):
+        Check if a matrix is a valid rotation matrix.</code></pre><img src="3055772.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/62587f78baec2bf5d5e862909c845cfba75d2730#diff-3accf5b124fbceeb3c3291321de2714fb45e270c153414e48a68c61b2b6260faL24' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 62587f78baec2bf5d5e862909c845cfba75d2730</div><div id='time'> Time: 2017-08-28</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/so3.py</div><div id='class'> Class Name: SO3</div><div id='method'> Method Name: from_matrix</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/62587f78baec2bf5d5e862909c845cfba75d2730#diff-ccc16ee38df5a402e0629acb9b8a425cf4a23d88ce6964decfdffae6ecbbe688L33' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 62587f78baec2bf5d5e862909c845cfba75d2730</div><div id='time'> Time: 2017-08-28</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se2.py</div><div id='class'> Class Name: SE2</div><div id='method'> Method Name: from_matrix</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/62587f78baec2bf5d5e862909c845cfba75d2730#diff-5dfdf9ce647cb4af1e694c363a20c9b3825066680fe0d56198a401735ed9a425L24' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 62587f78baec2bf5d5e862909c845cfba75d2730</div><div id='time'> Time: 2017-08-28</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: from_matrix</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/62587f78baec2bf5d5e862909c845cfba75d2730#diff-daeb16847a4515f22b7440cee4b42272a8506db0f24cbac5ab9ee347919454bdL33' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 62587f78baec2bf5d5e862909c845cfba75d2730</div><div id='time'> Time: 2017-08-28</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se3.py</div><div id='class'> Class Name: SE3</div><div id='method'> Method Name: from_matrix</div><BR>

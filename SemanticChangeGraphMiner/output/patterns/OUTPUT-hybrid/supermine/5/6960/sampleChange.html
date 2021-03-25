@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        shape = data.shape
+        data = data.transpose(self.dim_to_embed, -1)
+        data = self.linear(data)
+        data = <a id="change">data.transpose(-1, self.dim_to_embed)</a>
+
+        shape = shape[:-1] + (
+            self.num_features, self.num_audio_channels, self.embedding_size,)
+        data = data.reshape(shape)</code></pre><h3>After Change</h3><pre><code class='java'>
+            data = data.transpose(_dim, -1)
+
+        &#47&#47 the new shape doesn&quott have the embedded dimensions
+        shape = <a id="change">[
+            v for i, v in enumerate(shape) 
+            if i not in self.dim_to_embed
+        ]</a>
+        
+        <a id="change">shape = tuple(shape)</a>
+        data = data.reshape(shape + (-1,))
+        data = self.linear(data)
+
+        shape = shape + (</code></pre>

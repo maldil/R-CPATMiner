@@ -1,0 +1,25 @@
+<html><h3>b34f36f02fe135e9d9a65bce4c300cf617273f3d,labs/06/3d_recognition.py,Network,evaluate,#Network#,101
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.session.run([self.training, self.summaries["train"]], {self.voxels: voxels, self.labels: labels, self.is_training: True})
+
+    def evaluate(self, dataset, voxels, labels):
+        <a id="change">accuracy</a>, _ = self.session.run([self.accuracy, self.summaries[dataset]], {self.voxels: voxels, self.labels: labels, self.is_training: False})
+        return accuracy
+
+    def predict(self, voxels):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def evaluate(self, dataset_name, dataset, batch_size):
+        loss, accuracy = 0, 0
+
+        <a id="change">while not dataset.epoch_finished():
+            batch_voxels, batch_labels = dataset.next_batch(batch_size)
+            batch_loss, batch_accuracy = self.session.run(
+                [self.loss, self.accuracy], {self.voxels: batch_voxels, self.labels: batch_labels, self.is_training: False})
+            loss += batch_loss * len(batch_labels) / len(dataset.voxels)
+            accuracy += batch_accuracy * len(batch_labels) / len(dataset.voxels)
+       </a> self.session.run(self.summaries[dataset_name], {self.given_loss: loss, self.given_accuracy: accuracy})
+
+        return accuracy
+</code></pre><img src="30504163.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ufal/npfl114/commit/b34f36f02fe135e9d9a65bce4c300cf617273f3d#diff-6ea6bff457c1dc0483b4f8bc14e7a4f39a8e39bb976209d4c33654368f17035cL102' target='_blank'>Link</a></div><div id='project'> Project Name: ufal/npfl114</div><div id='commit'> Commit Name: b34f36f02fe135e9d9a65bce4c300cf617273f3d</div><div id='time'> Time: 2018-04-09</div><div id='author'> Author: houskape@gmail.com</div><div id='file'> File Name: labs/06/3d_recognition.py</div><div id='class'> Class Name: Network</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/122c24b4aeb11ecba5f77c3bf5ef8f20f2167c77#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L57' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 122c24b4aeb11ecba5f77c3bf5ef8f20f2167c77</div><div id='time'> Time: 2018-06-07</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: ListDataset</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/mtobeiyf/audio-classification/commit/2f8b3e30e3deb3702ae79b5ef0c3bd84496dcfc5#diff-46f807351583225b138b66b6ca55fbce8c22f94a771568cd31eb205cb92f8dcaL18' target='_blank'>Link</a></div><div id='project'> Project Name: mtobeiyf/audio-classification</div><div id='commit'> Commit Name: 2f8b3e30e3deb3702ae79b5ef0c3bd84496dcfc5</div><div id='time'> Time: 2018-11-24</div><div id='author'> Author: mvrozanti@hotmail.com</div><div id='file'> File Name: feat_extract.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_feature</div><BR>

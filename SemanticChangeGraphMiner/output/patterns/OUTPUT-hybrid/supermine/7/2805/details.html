@@ -1,0 +1,31 @@
+<html><h3>7247571ab448f9ccf6b392a26df0b8b40b1085eb,2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py,,,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+zip_files = ["%s/%s" % (zip_dir, fn) for fn in zip_files]
+assert all([os.path])
+
+<a id="change">for fn in sorted(glob("train-*/*/*/*.trans.txt")):
+    for l in open(fn).read().splitlines():
+        seq_name, txt = l.split(" ", 1)
+        print(txt)
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+assert all([os.path.exists(fn) for fn in zip_files])
+zip_files = [ZipFile(fn) for fn in zip_files]
+
+<a id="change">for zip_file in zip_files:
+  assert zip_file.filelist
+  assert zip_file.filelist[0].filename.startswith("LibriSpeech/")
+  for info in zip_file.filelist:
+    assert isinstance(info, ZipInfo)
+    path = info.filename.split("/")
+    assert path[0] == "LibriSpeech", "does not expect %r (%r)" % (info, info.filename)
+    if path[1].startswith("train-"):
+      subdir = path[1]  &#47&#47 e.g. "train-clean-100"
+      if path[-1].endswith(".trans.txt"):
+      </a>  for l in zip_file.read(info).decode("utf8").splitlines():
+          seq_name, txt = l.split(" ", 1)
+          print(txt)
+</code></pre><img src="12426209.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rwth-i6/returnn-experiments/commit/7247571ab448f9ccf6b392a26df0b8b40b1085eb#diff-d401bc87316c813350aef3f067c31d4a6851f27ec3d48a39d239b54f4fbaab97L10' target='_blank'>Link</a></div><div id='project'> Project Name: rwth-i6/returnn-experiments</div><div id='commit'> Commit Name: 7247571ab448f9ccf6b392a26df0b8b40b1085eb</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: zeyer@i6.informatik.rwth-aachen.de</div><div id='file'> File Name: 2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/b8732f422d71819a250bd33e958766c4a709fbff#diff-a6d869978abc92f5dd1bc4554d9c0234b65e11fc394f787a1ff0b57eb7a6459dL382' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: b8732f422d71819a250bd33e958766c4a709fbff</div><div id='time'> Time: 2018-02-24</div><div id='author'> Author: maau@itu.dk</div><div id='file'> File Name: create_website.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_index</div><BR><BR><div id='link'><a href='https://github.com/ylongqi/openrec/commit/93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db#diff-0f3db2fab558ccd2f6e7e61206dc20feccc2e48f7f2bf46069ec79ea66e8c2cdL463' target='_blank'>Link</a></div><div id='project'> Project Name: ylongqi/openrec</div><div id='commit'> Commit Name: 93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db</div><div id='time'> Time: 2018-09-26</div><div id='author'> Author: ylongqi@gmail.com</div><div id='file'> File Name: openrec/recommenders/recommender.py</div><div id='class'> Class Name: Recommender</div><div id='method'> Method Name: _optimistic_restore</div><BR>

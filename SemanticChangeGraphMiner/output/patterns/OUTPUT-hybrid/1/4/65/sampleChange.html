@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.draw.assert_called_once_with()
+
+        <a id="change">pipeline.poof()</a>
+        for name, step in pipeline.named_steps.items():
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.poof.assert_called_once_with()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        Test calling fit, transform, and poof on the pipeline
+        
+
+        <a id="change">pipeline</a> = VisualPipeline([
+            (&quota&quot, mock.MagicMock(MockTransformer())),
+            (&quotb&quot, mock.MagicMock(MockVisualTransformer())),
+            (&quotc&quot, mock.MagicMock(MockTransformer())),
+            (&quotd&quot, mock.MagicMock(MockVisualTransformer())),
+            (&quote&quot, mock.MagicMock(MockEstimator()),)
+        ])
+
+        X = [[1, 1, 1, 1, 1],
+             [2, 2, 2, 2, 2],
+             [3, 3, 3, 3, 3]]
+
+        y =  [1, 2, 3, 4, 5]
+
+        pipeline.fit(X, y)
+        for name, step in pipeline.named_steps.items():
+            step.fit.assert_called_once_with(X, y)
+
+        pipeline.transform(X)
+        for name, step in pipeline.named_steps.items():
+            if name == &quote&quot: continue
+            step.transform.assert_called_once_with(X)
+
+        <a id="change">pipeline.poof()</a>
+        for name, step in pipeline.named_steps.items():
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.poof.assert_called_once_with(outpath=None)
+</code></pre>

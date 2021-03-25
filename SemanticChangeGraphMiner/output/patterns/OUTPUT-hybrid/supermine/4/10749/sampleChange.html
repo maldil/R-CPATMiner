@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.use_gpu:
+            self.model.cuda()
+
+        <a id="change">print(&quot[*] Number of model parameters: {:,}&quot.format(
+            sum([p.data.nelement() for p in self.model.parameters()])))</a>
+
+        &#47&#47 &#47&#47 initialize optimizer and scheduler
+        &#47&#47 self.optimizer = optim.SGD(
+        &#47&#47     self.model.parameters(), lr=self.lr, momentum=self.momentum,</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        self.config = config
+
+        <a id="change">if config.use_gpu and torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        else:
+            self.device = torch.device("cpu")
+
+        &#47&#47 glimpse network params
+       </a> self.patch_size = config.patch_size
+        self.glimpse_scale = config.glimpse_scale
+        self.num_patches = config.num_patches
+        self.loc_hidden = config.loc_hidden</code></pre>

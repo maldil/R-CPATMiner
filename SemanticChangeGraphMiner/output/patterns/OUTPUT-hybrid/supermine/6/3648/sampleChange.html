@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if "\t" in row[&quotname&quot]:
+                raise FeatureDefException("Feature name field cannot contain tabs: &quot%s&quot" % row[&quotname&quot])
+
+            <a id="change">if &quot &quot in row[&quotid&quot] or "\t" in row[&quotid&quot]:
+                raise FeatureDefException("Feature id field cannot contain whitespace: &quot%s&quot" % row[&quotid&quot])
+
+            &#47&#47 Additional columns become key-value pairs
+            &#47&#47 Maintain input order
+           </a> tag_cols = [c for c in reader.fieldnames if c not in BASE_FEATURE_FIELDS and c in row]
+
+            tags = OrderedDict()
+            for key in tag_cols:</code></pre><h3>After Change</h3><pre><code class='java'>
+            if "\t" in row[&quotname&quot]:
+                raise FeatureDefException("Feature name field cannot contain tabs: &quot%s&quot" % row[&quotname&quot])
+
+            <a id="change">allowed_id_chars = set(string.printable) - set(string.whitespace) - set(&quot/,\&quot"\\`&quot)</a>
+
+            for (idx, c) in enumerate(row[&quotid&quot]):
+                if not c in allowed_id_chars:
+                    if c in string.whitespace:</code></pre>

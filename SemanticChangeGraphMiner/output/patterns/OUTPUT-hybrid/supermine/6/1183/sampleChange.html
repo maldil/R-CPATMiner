@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    guided_model = modify_backprop(model, &quotGuidedBackProp&quot)
+    get_saliency = compile_saliency_function(guided_model)
+    saliency = get_saliency([preprocessed_input, 0])
+    gradCAM = saliency[0] * <a id="change">heatmap[..., np.newaxis]</a>
+    cv2.imwrite(&quotguided_gradcam.jpg&quot, deprocess_image(gradCAM))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+if __name__ == &quot__main__&quot:
+    import pickle
+    <a id="change">faces = pickle.load(open(&quotfaces.pkl&quot,&quotrb&quot))</a>
+    face = <a id="change">faces</a>[0]
+    model_filename = &quot../../trained_models/emotion_models/mini_XCEPTION.523-0.65.hdf5&quot
+    &#47&#47reset_optimizer_weights(model_filename)
+    model = load_model(model_filename)</code></pre>

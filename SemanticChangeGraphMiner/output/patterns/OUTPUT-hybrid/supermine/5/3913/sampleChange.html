@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._get_array(X)
+        &#47&#47 centering
+        for i in range(self.ary.shape[0]):
+            <a id="change">self.ary[i]</a> -= self.col_means
+        return self.ary
+
+    def fit(self, X):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.col_means = None
+
+    def transform(self, X):
+        <a id="change">X_tr = np.copy(self._get_array(X))</a>
+        <a id="change">X_tr = np.apply_along_axis(func1d=lambda x: x - self.col_means, axis=1, arr=X_tr)</a>
+        return X_tr
+
+    def fit(self, X):
+        self.col_means = self._get_array(X).mean(axis=0)</code></pre>

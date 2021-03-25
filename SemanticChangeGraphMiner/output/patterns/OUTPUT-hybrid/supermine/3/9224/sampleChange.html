@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            gen_cost, gen_aux_output = aD(fake_data)
+
+            &#47&#47aux_label = Variable(torch.LongTensor(BATCH_SIZE), requires_grad=True).data.resize_(BATCH_SIZE).copy_(torch.from_numpy(f_label))
+            aux_label = autograd.Variable(<a id="change">torch</a>.from_numpy(f_label).long().cuda())
+            aux_errG = aux_criterion(gen_aux_output, aux_label).mean()
+            gen_cost = -gen_cost.mean()
+            g_cost = ACGAN_SCALE_G*aux_errG + gen_cost</code></pre><h3>After Change</h3><pre><code class='java'>
+            fake_data = aG(noise)
+            gen_cost, gen_aux_output = aD(fake_data)
+
+            aux_label = <a id="change">torch.from_numpy(f_label).long()</a>
+            if cuda_available:
+                aux_label = <a id="change">aux_label.cuda()</a>
+            aux_errG = aux_criterion(gen_aux_output, aux_label).mean()
+            gen_cost = -gen_cost.mean()
+            g_cost = ACGAN_SCALE_G*aux_errG + gen_cost</code></pre>

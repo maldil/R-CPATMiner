@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 rank individual words
+    &#47&#47 then rank candidates by aggregating constituent word scores
+    word_scores = graph_base.rank_nodes_by_pagerank(graph, weight=None)
+    <a id="change">candidate_scores</a> = {
+        " ".join(candidate): compat.mean_(<a id="change">word_scores.get(word, 0.0)</a> for word in candidate)
+        for candidate in candidates
+    }
+    return sorted(</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 then rank candidates by aggregating constituent word scores
+    word_scores = graph_base.rank_nodes_by_pagerank(graph, weight=None)
+    &#47&#47 TODO: PY3 doesn&quott need to make a list when computing the mean
+    <a id="change">candidate_scores</a> = {
+        " ".join(candidate): compat.mean_([<a id="change">word_scores.get(word, 0.0)</a> for word in candidate])
+        for candidate in candidates
+    }
+    return sorted(</code></pre>

@@ -1,0 +1,91 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    class_attribs[&quot__table_args__&quot] = (
+        UniqueConstraint(*unique_args),
+        &#47&#47 Note: This still doesn&quott fix issue...
+        <a id="change">{&quotkeep_existing&quot : True}</a>
+    )
+
+    &#47&#47 Create class
+    C = type(class_name, (Candidate,), class_attribs)</code></pre><h3>After Change</h3><pre><code class='java'>
+        values = range(cardinality)
+
+    class_spec = (args, table_name, cardinality, values)
+    <a id="change">if class_name in candidate_subclasses:
+        if class_spec == candidate_subclasses[class_name][1]:
+            return candidate_subclasses[class_name][0]
+        else:
+            raise ValueError(&quotCandidate subclass &quot + class_name + &quot already exists in memory with incompatible &quot +
+                             &quotspecification: &quot + str(candidate_subclasses[class_name][1]))
+    else:
+        &#47&#47 Set the class attributes == the columns in the database
+        class_attribs = {
+
+            &#47&#47 Declares name for storage table
+            &quot__tablename__&quot : table_name,
+
+            &#47&#47 Connects candidate_subclass records to generic Candidate records
+            &quotid&quot : Column(
+                Integer,
+                ForeignKey(&quotcandidate.id&quot, ondelete=&quotCASCADE&quot),
+                primary_key=True
+            ),
+
+            &#47&#47 Store values & cardinality information in the class only
+            &quotvalues&quot : values,
+            &quotcardinality&quot : cardinality,
+
+            &#47&#47 Polymorphism information for SQLAlchemy
+            &quot__mapper_args__&quot : {&quotpolymorphic_identity&quot: table_name},
+
+            &#47&#47 Helper method to get argument names
+            &quot__argnames__&quot : args,
+        }
+
+        &#47&#47 Create named arguments, i.e. the entity mentions comprising the relation
+        &#47&#47 mention
+        &#47&#47 For each entity mention: id, cid ("canonical id"), and pointer to Context
+        unique_args = []
+        for arg in args:
+
+            &#47&#47 Primary arguments are constituent Contexts, and their ids
+            class_attribs[arg + &quot_id&quot] = Column(
+                Integer, ForeignKey(&quotcontext.id&quot, ondelete=&quotCASCADE&quot))
+            class_attribs[arg] = relationship(
+                &quotContext&quot,
+                backref=backref(
+                    table_name + &quot_&quot + arg + &quots&quot,
+                    cascade_backrefs=False,
+                    cascade=&quotall, delete-orphan&quot
+                ),
+                cascade_backrefs=False,
+                foreign_keys=class_attribs[arg + &quot_id&quot]
+            )
+            unique_args.append(class_attribs[arg + &quot_id&quot])
+
+            &#47&#47 Canonical ids, to be set post-entity normalization stage
+            class_attribs[arg + &quot_cid&quot] = Column(String)
+
+        &#47&#47 Add unique constraints to the arguments
+        class_attribs[&quot__table_args__&quot] = (
+            UniqueConstraint(*unique_args),
+        )
+
+        &#47&#47 Create class
+        C = type(class_name, (Candidate,), class_attribs)
+
+        &#47&#47 Create table in DB
+        if not snorkel_engine.dialect.has_table(snorkel_engine, table_name):
+            C.__table__.create(bind=snorkel_engine)
+
+        candidate_subclasses[class_name] = C, class_spec
+
+        return C
+
+
+</a>class Marginal(SnorkelBase):
+    
+    A marginal probability corresponding to a (Candidate, value) pair.
+</code></pre>

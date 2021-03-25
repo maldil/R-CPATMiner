@@ -1,0 +1,31 @@
+<html><h3>e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f,cesium/featurize.py,,save_featureset,#,346
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Path to store feature data.
+    
+    features, channels = zip(*fset.columns)
+    for v in [fset.values, features, channels] + <a id="change">list(kwargs.values())</a>:
+        if np.array(v).dtype == np.object:
+            raise ValueError("Cannot save objects in .npz format.")
+    np.savez(path, values=fset.values, index=fset.index.values.astype(str),</code></pre><h3>After Change</h3><pre><code class='java'>
+    kwargs[&quotfeatures&quot] = fset.T
+
+    for k, v in kwargs.items():
+        <a id="change">if isinstance(v, pd.DataFrame):
+            arr = v.to_records()
+            dt_list = arr.dtype.descr
+            &#47&#47 Change type of indices from object to str
+            for i, (name, dt) in enumerate(dt_list):
+                if dt.endswith(&quotO&quot):
+                    size = max(len(x) for x in arr[&quotindex&quot])
+                    dt_list[i] = (name, &quotU&quot + str(size))
+            kwargs[k] = arr.astype(dt_list)
+
+    &#47&#47 Bypass savez to allow for `allow_pickle` keyword
+    &#47&#47 See https://github.com/numpy/numpy/pull/5770
+   </a> np.lib.npyio._savez(path, [], kwargs, compress=True, allow_pickle=False)
+
+
+def load_featureset(path):</code></pre><img src="35665792.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR><BR><div id='link'><a href='https://github.com/kwgoodman/numerox/commit/1bd41127c7c83f3151b6f47b5fe3f5b317dd5430#diff-700e9e40b3de82d26145b14c7c492d6a99beef6797755f06f9e118729e3f5d51L53' target='_blank'>Link</a></div><div id='project'> Project Name: kwgoodman/numerox</div><div id='commit'> Commit Name: 1bd41127c7c83f3151b6f47b5fe3f5b317dd5430</div><div id='time'> Time: 2018-09-14</div><div id='author'> Author: kwgoodman@gmail.com</div><div id='file'> File Name: numerox/run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: run</div><BR><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/e235e0ac2568feabc44f9bf37ec8c7ebbb96cf88#diff-e79e81bbbed5b72130d0055389ec4cf0f2261929b91f59c4328ecc80e4c547d9L68' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: e235e0ac2568feabc44f9bf37ec8c7ebbb96cf88</div><div id='time'> Time: 2017-11-17</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: unet3d/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unet_model_3d</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/84df7bb20d76e38f44e0891b5e6040688756c4f9#diff-67be3808e19ca55cb8936dde9a8ac0e5ee9d8d253b85e8f252a2935107160f15L103' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 84df7bb20d76e38f44e0891b5e6040688756c4f9</div><div id='time'> Time: 2017-06-15</div><div id='author'> Author: squarious@gmail.com</div><div id='file'> File Name: mlxtend/classifier/stacking_cv_classification.py</div><div id='class'> Class Name: StackingCVClassifier</div><div id='method'> Method Name: fit</div><BR>

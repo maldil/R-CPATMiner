@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 transfer some attributes from dataset to model args
+for key in {"vocab_size", "max_ques_count"}:
+    config["model"][key] = <a id="change">getattr(dataset, key)</a>
+
+
+&#47&#47 ----------------------------------------------------------------------------
+&#47&#47 setup the model and optimizer</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 ----------------------------------------------------------------------------
+
+&#47&#47 let the model know vocabulary size, to declare embedding layer
+config["model"]["vocab_size"] = <a id="change">len(dataset.vocabulary)</a>
+
+encoder = Encoder(config["model"])
+decoder = Decoder(config["model"])
+</code></pre>

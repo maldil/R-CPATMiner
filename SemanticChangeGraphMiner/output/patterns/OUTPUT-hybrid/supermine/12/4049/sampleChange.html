@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        output_node = input_node
+
+        kernel_size = utils.add_to_hp(self.kernel_size, hp)
+        <a id="change">num_blocks = self.num_blocks or hp.Choice("num_blocks", [1, 2, 3], default=2)</a>
+        num_layers = self.num_layers or hp.Choice("num_layers", [1, 2], default=2)
+        separable = self.separable
+        if separable is None:
+            separable = hp.Boolean("separable", default=False)</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            dropout = hp.Choice("dropout", [0.0, 0.25, 0.5], default=0)
+
+        for i in range(<a id="change">utils.add_to_hp(self.num_blocks, hp)</a>):
+            for j in range(num_layers):
+                output_node = conv(
+                    hp.Choice(</code></pre>

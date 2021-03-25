@@ -1,0 +1,39 @@
+<html><h3>981e4266d4ea816b08a762193bd52f40cd1a3242,examples/mnist/keras/mnist_inference.py,,inference,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  output_file = tf.gfile.GFile("{}/part-{:05d}".format(args.output, worker_num), mode=&quotw&quot)
+
+  while True:
+    <a id="change">try:
+      &#47&#47 get images and labels from tf.data.Dataset
+      img, lbl = sess.run([&quotinf_image:0&quot, &quotinf_image:1&quot])
+
+      &#47&#47 inference by feeding these images and labels into the input tensors
+      &#47&#47 you can view the exported model signatures via:
+      &#47&#47     saved_model_cli show --dir &lt;export_dir&gt; --all
+
+      &#47&#47 note that we feed directly into the graph tensors (bypassing the exported signatures)
+      &#47&#47 these tensors will be shown in the "name" field of the signature definitions
+
+      outputs = sess.run([&quotdense_2/Softmax:0&quot], feed_dict={&quotPlaceholder:0&quot: img})
+      for p in outputs[0]:
+        output_file.write("{}\n".format(np.argmax(p)))
+    except tf.errors.OutOfRangeError:
+      break
+
+ </a> output_file.close()
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+    predictions = predict(conv2d_input=batch[0])
+    labels = np.reshape(batch[1], -1).astype(np.int)
+    preds = np.argmax(predictions[&quotdense_1&quot], axis=1)
+    <a id="change">for x in zip(labels, preds):
+      output_file.write("{} {}\n".format(x[0], x[1]))
+
+ </a> output_file.close()
+
+
+if __name__ == &quot__main__&quot:</code></pre><img src="1294289.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/9b9095f877f603d91495c72f91e4fddf61f1724e#diff-96d9374c6f906ff5f99fe32e0006bdccea81e04ac7ee5e1d64eb719fb746e091L16' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 9b9095f877f603d91495c72f91e4fddf61f1724e</div><div id='time'> Time: 2019-07-22</div><div id='author'> Author: jerome@dockes.org</div><div id='file'> File Name: examples/02_decoding/plot_haxby_stimuli.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/dd7096573ce182331bddeef3e5168e886d8ffe68#diff-364eb1d017527b5ae3b77dc6ea57be1d04b3624fb1f7e3dbcae3377720b4e1f3L338' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: dd7096573ce182331bddeef3e5168e886d8ffe68</div><div id='time'> Time: 2019-12-03</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: pb_bss/evaluation/wrapper.py</div><div id='class'> Class Name: OutputMetrics</div><div id='method'> Method Name: pesq</div><BR><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/dd7096573ce182331bddeef3e5168e886d8ffe68#diff-364eb1d017527b5ae3b77dc6ea57be1d04b3624fb1f7e3dbcae3377720b4e1f3L95' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: dd7096573ce182331bddeef3e5168e886d8ffe68</div><div id='time'> Time: 2019-12-03</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: pb_bss/evaluation/wrapper.py</div><div id='class'> Class Name: InputMetrics</div><div id='method'> Method Name: pesq</div><BR>

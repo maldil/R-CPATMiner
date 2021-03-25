@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 sampling bg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * bg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * bg_num_rois)
+                <a id="change">rand_num</a> = <a id="change">torch.from_numpy(rand_num).long().cuda()</a>
+
+                <a id="change">bg_inds</a> = bg_inds[rand_num]
+                bg_rois_per_this_image = rois_per_image
+                fg_rois_per_this_image = 0
+            else:
+                print("bg_num_rois = 0 and fg_num_rois = 0, this should not happen!")
+                pdb.set_trace()
+
+            &#47&#47 The indices that we&quotre selecting (both fg and bg)
+            <a id="change">keep_inds</a> = torch.cat([fg_inds, bg_inds], 0)
+
+            &#47&#47 Select sampled values from various arrays:
+            labels_batch[i].copy_(labels[i][keep_inds])</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 sampling fg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * fg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * fg_num_rois)
+                rand_num = <a id="change">torch</a>.from_numpy(rand_num).type_as(<a id="change">gt_boxes</a>).long()
+                fg_inds = fg_inds[rand_num]
+                fg_rois_per_this_image = rois_per_image
+                bg_rois_per_this_image = 0
+            elif bg_num_rois &gt; 0 and fg_num_rois == 0:
+                &#47&#47 sampling bg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * bg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * bg_num_rois)
+                <a id="change">rand_num</a> = <a id="change">torch.from_numpy(rand_num).type_as(gt_boxes).long()</a>
+
+                <a id="change">bg_inds</a> = bg_inds[rand_num]
+                bg_rois_per_this_image = rois_per_image
+                fg_rois_per_this_image = 0
+            else:
+                error("bg_num_rois = 0 and fg_num_rois = 0, this should not happen!")
+                
+            &#47&#47 The indices that we&quotre selecting (both fg and bg)
+            <a id="change">keep_inds</a> = torch.cat([fg_inds, bg_inds], 0)
+
+            &#47&#47 Select sampled values from various arrays:
+            labels_batch[i].copy_(labels[i][keep_inds])</code></pre>

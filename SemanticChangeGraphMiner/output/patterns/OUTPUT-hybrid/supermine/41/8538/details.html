@@ -1,0 +1,69 @@
+<html><h3>ddca7f56ce7a154c2284d6464cf872a1f4992f3d,examples/sampler/sampling_comparison.py,,,#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+sobol_res = run_measure(sobol, n_initial_points)
+halton_res = run_measure("halton", n_initial_points)
+hammersly_res = run_measure("hammersly", n_initial_points)
+<a id="change">grid_res = run_measure("grid", n_initial_points)</a>
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Note that this can take a few minutes.
+
+plot = plot_convergence([("random", dummy_res),
+                        ("lhs", lhs_res),
+                        ("lhs_maximin", lhs2_res),
+                        ("sobol", sobol_res),
+                        ("halton", halton_res),
+                        ("hammersly", hammersly_res),
+                        <a id="change">("grid", grid_res)</a>],
+                        true_minimum=true_minimum,
+                        yscale=yscale,
+                        title=title)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 Random search
+dummy_res = run_measure( "random", n_random_starts)
+<a id="change">lhs_res</a> = run_measure("lhs", n_random_starts,
+                      <a id="change">{"lhs_type": "classic",
+                       "criterion": None}</a>)
+<a id="change">lhs2_res = run_measure("lhs", n_random_starts,
+                       {"criterion": "maximin"})</a>
+<a id="change">sobol_res</a> = <a id="change">run_measure("sobol", n_random_starts,
+                        {"randomize": False,
+                         "min_skip": 1, "max_skip": 100})</a>
+halton_res = run_measure("halton", n_random_starts)
+hammersly_res = run_measure("hammersly", n_random_starts)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Note that this can take a few minutes.
+
+plot = plot_convergence([("random", dummy_res),
+                        ("lhs", lhs_res),
+                        ("lhs_maximin", lhs2_res),
+                        ("sobol", sobol_res),
+                        ("halton", halton_res),
+                        ("hammersly", hammersly_res)],
+                        true_minimum=true_minimum,
+                        yscale=yscale,
+                        title=title)
+
+plt.show()
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 This plot shows the value of the minimum found (y axis) as a function
+&#47&#47 of the number of iterations performed so far (x axis). The dashed red line
+&#47&#47 indicates the true value of the minimum of the :class:`benchmarks.hart6`
+&#47&#47 function.
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Test with different n_random_starts values
+lhs2_15_res = run_measure("lhs", 12,
+                          <a id="change">{"criterion": "maximin"}</a>)
+lhs2_20_res = run_measure("lhs", 14,
+                          <a id="change">{"criterion": "maximin"}</a>)
+lhs2_25_res = run_measure("lhs", 16,
+                          <a id="change">{"criterion": "maximin"}</a>)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 n_random_starts = 10 produces the best results</code></pre><img src="33366461.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 21</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/ddca7f56ce7a154c2284d6464cf872a1f4992f3d#diff-135e89abb27aef2557e66f549d1957ea879361f5a39bca457f5bb697087e65dfL121' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: ddca7f56ce7a154c2284d6464cf872a1f4992f3d</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: examples/sampler/sampling_comparison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/ddca7f56ce7a154c2284d6464cf872a1f4992f3d#diff-135e89abb27aef2557e66f549d1957ea879361f5a39bca457f5bb697087e65dfL121' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: ddca7f56ce7a154c2284d6464cf872a1f4992f3d</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: examples/sampler/sampling_comparison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/24b57d44d27fc6a9a9c4dff4cac5c7c7d8025e67#diff-135e89abb27aef2557e66f549d1957ea879361f5a39bca457f5bb697087e65dfL121' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 24b57d44d27fc6a9a9c4dff4cac5c7c7d8025e67</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: examples/sampler/sampling_comparison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/3c956a6c512724ca3f75062ffcae40dfc0568427#diff-135e89abb27aef2557e66f549d1957ea879361f5a39bca457f5bb697087e65dfL121' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 3c956a6c512724ca3f75062ffcae40dfc0568427</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: examples/sampler/sampling_comparison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,20 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    sorted_scores = zip(labels, scores)
+    <a id="change">sorted_scores.sort(key=operator.itemgetter(1), reverse=False)</a>
+
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)
+    n_thresh = recall_point * n_match</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    <a id="change">threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels))</a> 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative</code></pre><img src="8470992.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7a8383a84dc1ce059b7395fab2e50c85cdfa42ef4fb635e1a1cf4b4905f4c682L39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/hitrate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hitrate</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/f74a4a251d395b3e175f99845b01ece0e50a79c3#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL834' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: f74a4a251d395b3e175f99845b01ece0e50a79c3</div><div id='time'> Time: 2014-08-24</div><div id='author'> Author: nipunreddevil@gmail.com</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: select_top_k</div><BR>

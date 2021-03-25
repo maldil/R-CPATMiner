@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        acq_optimizer=&quotsampling&quot
+    )
+
+    <a id="change">n_points</a>, n_steps, Y = 2, 13, []
+
+    for i in range(n_steps):
+        <a id="change">strategy = optimizer.par_strats[i % len(optimizer.par_strats)]</a>
+        x = optimizer.ask(n_points, strategy)
+        optimizer.tell(x, [branin(v) for v in x])
+
+def test_all_points_different():</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 test arguments check
+    assert_raises(ValueError, optimizer.ask, {"strategy": "cl_maen"})
+    <a id="change">assert_raises(ValueError, optimizer.ask, {"n_points": "0"})</a>
+    assert_raises(ValueError, optimizer.ask, {"n_points": 0})
+
+    for i in range(n_steps):
+        x = optimizer.ask(n_points=n_points, strategy=strategy)</code></pre>

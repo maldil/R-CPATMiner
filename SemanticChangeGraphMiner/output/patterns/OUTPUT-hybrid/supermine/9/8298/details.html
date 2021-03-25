@@ -1,0 +1,32 @@
+<html><h3>285dc85691241532cd976e04a089f409e44d7493,src/detection/tensor/detector.py,Detector,detect_multiple,#Detector#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with tf.device("/gpu:0"):
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            answers = []
+            <a id="change">for image in image_array_list:
+                predictions = self.sess.run(softmax_tensor, {&quotDecodeJpeg:0&quot: image})
+                predictions = np.squeeze(predictions)
+                answer = {}
+                for node_id in range(len(predictions)):
+                    answer[self.labels[node_id]] = predictions[node_id]
+                answers.append(answer)
+           </a> return answers
+
+    @staticmethod
+    def _pil_to_tf(image):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with tf.device("/gpu:0"):
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            threads = [pool.apply_async(operation, args=(self.sess, softmax_tensor, <a id="change">image_array_list[i]</a>,)) <a id="change">for</a> i in
+                       <a id="change">range(10)</a>]
+            results = []
+            <a id="change">for x in threads:
+                results.append(x.get())
+
+           </a> return results
+
+    @staticmethod
+    def _pil_to_tf(image):</code></pre><img src="32125516.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/geometalab/OSMDeepOD/commit/285dc85691241532cd976e04a089f409e44d7493#diff-4659640477888188b13cd750fdad422ee222076e276edffc439f35faebe1f5d0L40' target='_blank'>Link</a></div><div id='project'> Project Name: geometalab/OSMDeepOD</div><div id='commit'> Commit Name: 285dc85691241532cd976e04a089f409e44d7493</div><div id='time'> Time: 2016-08-12</div><div id='author'> Author: samuel.kurath@gmail.com</div><div id='file'> File Name: src/detection/tensor/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect_multiple</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL123' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR>

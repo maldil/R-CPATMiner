@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert self.network is not None, \
+            "Network should have been constructed but was found to be None"
+        if not self.n_training_epochs:
+            n_updates_per_epoch = <a id="change">int(np.ceil(n_samples / self.batch_size))</a>
+            &#47&#47 heuristic of ~1M updates for each model
+            <a id="change">epochs = min(2000, int(np.ceil(10 ** 5 / n_updates_per_epoch)))</a>
+        else:
+            epochs = self.n_training_epochs
+        X_with_observed_mask = np.hstack([X, missing_mask])
+        self.network.fit(</code></pre><h3>After Change</h3><pre><code class='java'>
+            "Network should have been constructed but was found to be None"
+        if not self.n_training_epochs:
+            actual_batch_size = min(self.batch_size, n_samples)
+            <a id="change">n_updates_per_epoch = int(np.ceil(n_samples / actual_batch_size))</a>
+            &#47&#47 heuristic of ~1M updates for each model
+            <a id="change">epochs = int(np.ceil(0.5 * 10 ** 6 / n_updates_per_epoch))</a>
+            print("Epochs: %d" % epochs)
+        else:
+            epochs = self.n_training_epochs
+        X_with_observed_mask = np.hstack([X, missing_mask])</code></pre>

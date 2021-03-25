@@ -1,0 +1,20 @@
+<html><h3>bea9126302e1d40f40f986d407f045147b2c621c,thinc/layers/bidirectional.py,,forward,#,12
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def forward(model, Xs, is_train):
+    l2r, r2l = model.layers
+    nO = model.get_dim("nO")
+    <a id="change">reverse_Xs = [l2r.ops.xp.ascontiguousarray(X[::-1]) for X in Xs]</a>
+    l2r_Zs, bp_l2r_Zs = l2r(Xs, is_train)
+    r2l_Zs, bp_r2l_Zs = r2l(reverse_Xs, is_train)
+
+    def backprop(dZs, sgd=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+    Xs_rev = _reverse(model.ops, Xs)
+    l2r_Zs, bp_l2r_Zs = l2r(Xs, is_train)
+    r2l_Zs, bp_r2l_Zs = r2l(Xs_rev, is_train)
+    <a id="change">Zs</a>, split = _concatenate(l2r_Zs, r2l_Zs)
+
+    def backprop(dZs, sgd=None):
+        d_l2r_Zs, d_r2l_Zs = split(dZs)</code></pre><img src="37378238.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/bea9126302e1d40f40f986d407f045147b2c621c#diff-f56bc6a32f701bab5f64ddcb67064a58b653f8d0b348deacb66921e0c60e7daaL15' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: bea9126302e1d40f40f986d407f045147b2c621c</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/bidirectional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/utkuozbulak/pytorch-cnn-visualizations/commit/ada2c33261b3273822557a7aff8bbf11d309fac1#diff-f3c7c28a77fc893fcb1450dda7cbffa449c1e0a0e36a530d3de393851b21f497L94' target='_blank'>Link</a></div><div id='project'> Project Name: utkuozbulak/pytorch-cnn-visualizations</div><div id='commit'> Commit Name: ada2c33261b3273822557a7aff8bbf11d309fac1</div><div id='time'> Time: 2018-11-17</div><div id='author'> Author: utku.ozbulak@gmail.com</div><div id='file'> File Name: src/misc_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: preprocess_image</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/240e2a65feccf477b6a0b1d30dda10178b9c84f7#diff-75d6bb36535060b573439e7847c7ce21c7cfd13bc9c1f1eac80d3ee7ecb4cea4L32' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 240e2a65feccf477b6a0b1d30dda10178b9c84f7</div><div id='time'> Time: 2020-01-13</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/uniqued.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR>

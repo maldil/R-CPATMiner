@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    reference = scale * reference
+    error = estimate - reference
+
+    reference_pow = <a id="change">reference</a>.pow(2).mean(axis=2)
+    error_pow = error.pow(2).mean(axis=2)
+
+    return 10 * torch.log10(reference_pow) - 10 * torch.log10(error_pow)</code></pre><h3>After Change</h3><pre><code class='java'>
+    reference = scale * reference
+    error = estimate - reference
+
+    reference_pow = <a id="change">reference.pow(2)</a>
+    error_pow = error.pow(2)
+
+    if mask is None:
+        reference_pow = reference_pow.mean(axis=2)
+        error_pow = error_pow.mean(axis=2)
+    else:
+        denom = mask.sum(axis=2)
+        reference_pow = <a id="change">(mask * reference_pow).sum(axis=2) / denom</a>
+        error_pow = (mask * error_pow).sum(axis=2) / denom
+
+    return 10 * torch.log10(reference_pow) - 10 * torch.log10(error_pow)
+</code></pre>

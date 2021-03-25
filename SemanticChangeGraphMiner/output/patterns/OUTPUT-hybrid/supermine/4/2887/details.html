@@ -1,0 +1,21 @@
+<html><h3>e843dc7c9b240266f411f30d90d05b9e7c81215d,librosa/util.py,,match_intervals,#,508
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ends = np.minimum.outer(intervals_from[:, 1], intervals_to[:, 1])
+    score = np.maximum(0, ends - starts)
+
+    return <a id="change">np.argmax(score, axis=1)</a>
+
+
+@cache
+def match_events(events_from, events_to):</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_rows = int(librosa.core._MAX_MEM_BLOCK / (len(intervals_to)
+                                                * intervals_to.itemsize))
+
+    n_rows = <a id="change">max(1, n_rows)</a>
+
+    for bl_s in range(0, len(intervals_from), n_rows):
+        bl_t = min(bl_s + n_rows, len(intervals_from))
+        tmp_from = intervals_from[bl_s:bl_t]</code></pre><img src="12771728.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/e843dc7c9b240266f411f30d90d05b9e7c81215d#diff-c6e00487ad0a850f4a0201a0c8723dcbccd3d6c0cdcc367bd7012dd245dece9aL538' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: e843dc7c9b240266f411f30d90d05b9e7c81215d</div><div id='time'> Time: 2015-01-06</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: match_intervals</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/5d2affa2bf09c53a6d34e288878fe1965fbc91e4#diff-7c9f3cce237a2bf2a8df7909a2197c7c512c987233cf8fd7eacf14e69dcc1043L486' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 5d2affa2bf09c53a6d34e288878fe1965fbc91e4</div><div id='time'> Time: 2020-11-24</div><div id='author'> Author: sj8716643@126.com</div><div id='file'> File Name: kornia/augmentation/random_generator/random_generator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: random_crop_size_generator</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/96ae969993c6f476314c2bfc639a67f83fe97239#diff-9653b8c2ce917a6134298b00c8b3f7d4b7c4dc473a752303f37a870392742127L132' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 96ae969993c6f476314c2bfc639a67f83fe97239</div><div id='time'> Time: 2019-04-26</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_batch_statistics</div><BR>

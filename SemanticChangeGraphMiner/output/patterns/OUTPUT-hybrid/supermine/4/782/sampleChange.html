@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    w = tf.constant(tf.random.uniform([512,256])).numpy()
+    b = tf.constant(tf.random.uniform([512,1])).numpy()
+    &#47&#47 Combine ops to behave like final kernel
+    out_1 = <a id="change">tf</a>.math.add(tf.linalg.matmul(w, tf.reshape(in1, (-1,1))), b).numpy()
+
+    in_ref_name = "s_ref_in_%d" % test_number
+    w_ref_name = "s_ref_w_%d" % test_number</code></pre><h3>After Change</h3><pre><code class='java'>
+    in0 = tf.constant(tf.random.uniform([1,2,2,64])).numpy()
+    w = tf.constant(tf.random.uniform([512,256])).numpy()
+    if test_number == 0:
+        <a id="change">b = np.zeros([1,512], dtype=np.float32).flatten()</a>
+    else:
+        b = tf.constant(tf.random.uniform([1,512])).numpy().flatten()
+    &#47&#47 Combine ops to behave like final kernel
+    in1 = tf.reshape(in0, (1,-1)).numpy()
+    <a id="change">m = tf.linalg.matmul(in1, w, transpose_b=True)</a>
+    print(m.shape)
+    out_1 = <a id="change">tf</a>.math.add(m, b).numpy()
+    w = np.transpose(w)
+
+    in_ref_name = "s_ref_in_%d" % test_number</code></pre>

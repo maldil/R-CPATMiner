@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            response = &quot&quot
+            try:
+                with urlopen(target_url) as furl:
+                    <a id="change">response = str(furl.info()).rstrip()</a>
+                    response += &quot\n\n&quot + furl.read().decode(&quotutf-8&quot)
+                    with codecs.open(os.path.join(full_path + &quot/gyoithon/&quot, log_file), &quota&quot, &quotutf-8&quot) as fout:
+                        fout.write(response)</code></pre><h3>After Change</h3><pre><code class='java'>
+            try:
+                &#47&#47 Get HTTP headers and body.
+                res = con.request(&quotGET&quot, target_url)
+                headers = <a id="change">dict(res.headers)</a>
+                for header in headers.keys():
+                    response += header + &quot: &quot + headers[header].replace(&quot"&quot, &quot&quot) + &quot\n&quot
+                response += &quot\n&quot + res.data.decode(&quotutf-8&quot) + &quot\n&quot</code></pre>

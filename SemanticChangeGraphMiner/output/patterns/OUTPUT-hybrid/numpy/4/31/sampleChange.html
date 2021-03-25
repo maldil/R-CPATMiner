@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 construct 5 seconds of stereo silence
+    &#47&#47 Stick a sine wave in the middle three seconds
+    sr = float(22050)
+    y = <a id="change">np.zeros((2, int(5 * sr)))</a>
+    y[0, sr:4*sr] = np.sin(2 * np.pi * 440 * np.arange(0, 3 * sr) / sr)
+
+    for top_db in [60, 40, 20]:
+        for index in [False, True]:</code></pre><h3>After Change</h3><pre><code class='java'>
+    trim_duration = 3.0
+    y = np.sin(2 * np.pi * 440. * np.arange(0, trim_duration * sr) / sr)
+    y = librosa.util.pad_center(y, 5 * sr)
+    <a id="change">y = np.vstack([y, np.zeros_like(y)])</a>
+
+    for top_db in [60, 40, 20]:
+        for ref_power in [1, np.max]:
+            &#47&#47 Test stereo</code></pre>

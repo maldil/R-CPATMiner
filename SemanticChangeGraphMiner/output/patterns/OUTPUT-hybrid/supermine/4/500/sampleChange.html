@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if step % self.D_update_ratio == 0 and step &gt; self.D_init_iters:
+            &#47&#47 G
+            if self.cri_pix:
+                self.log_dict[&quotl_g_pix&quot] = <a id="change">l_g_pix.data[0]</a>
+            if self.cri_fea:
+                self.log_dict[&quotl_g_fea&quot] = l_g_fea.data[0]
+            self.log_dict[&quotl_g_gan&quot] = l_g_gan.data[0]
+        &#47&#47 D</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.opt[&quottrain&quot][&quotgan_type&quot] == &quotwgan-gp&quot:
+            self.log_dict[&quotl_d_gp&quot] = l_d_gp.item()
+        &#47&#47 D outputs
+        self.log_dict[&quotD_real&quot] = torch.mean(<a id="change">pred_d_real.detach()</a>)
+        self.log_dict[&quotD_fake&quot] = torch.mean(pred_d_fake.detach())
+
+    def test(self):</code></pre>

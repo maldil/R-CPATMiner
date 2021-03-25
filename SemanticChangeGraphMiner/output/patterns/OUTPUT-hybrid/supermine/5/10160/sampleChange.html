@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def transpose(a, axes):
+    <a id="change">backend = _CURRENT_BACKEND[0]</a>
+    cache = _SHARING_STACK[-1]
+    cache[&quottensor&quot, id(a)] = a
+
+    axes = tuple(axes)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def transpose(a, axes):
+    <a id="change">_save_tensors(a)</a>
+
+    &#47&#47 hash by axes
+    axes = tuple(axes)
+    key = &quottranspose&quot, _CURRENT_BACKEND, id(a), axes</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ]
+
+    sphinx_apidoc_args = []
+    <a id="change">if StrictVersion(sphinx.__version__) &lt; StrictVersion("1.7.0"):
+        sphinx_apidoc_args.append(sphinx.apidoc.__file__)
+
+   </a> sphinx_apidoc_args.extend(
+        [
+            "-f",
+            "-T",</code></pre><h3>After Change</h3><pre><code class='java'>
+        ".."
+    ] + ignore_paths
+
+    <a id="change">try:
+        &#47&#47 Sphinx-1.7+
+        from sphinx.ext import apidoc
+        apidoc.main(argv)
+    except ImportError:
+        from sphinx import apidoc
+        argv.insert(0, apidoc.__file__)
+        apidoc.main(argv)
+
+
+</a>def setup(app):
+    app.connect(&quotbuilder-inited&quot, run_apidoc)
+</code></pre>

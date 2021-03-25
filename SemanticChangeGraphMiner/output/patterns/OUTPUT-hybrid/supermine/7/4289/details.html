@@ -1,0 +1,45 @@
+<html><h3>28b8b9d39f53d8327dbf658048a81b7046ae398f,magpie/nn/models.py,,rnn,#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     Create and return a keras model of a RNN 
+    HIDDEN_LAYER_SIZE = 256
+
+    model = <a id="change">Sequential()</a>
+
+    model.add(GRU(
+        HIDDEN_LAYER_SIZE,
+        input_dim=embedding_size,
+        input_length=SAMPLE_LENGTH,
+        init=&quotglorot_uniform&quot,
+        inner_init=&quotnormal&quot,
+        activation=&quotrelu&quot,
+    ))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.1))
+
+    <a id="change">model.add(Dense(output_length, activation=&quotsigmoid&quot))</a>
+
+    model.compile(
+        loss=&quotbinary_crossentropy&quot,
+        optimizer=&quotadam&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+     Create and return a keras model of a RNN 
+    HIDDEN_LAYER_SIZE = 256
+
+    <a id="change">inputs = Input(shape=(SAMPLE_LENGTH, embedding_size))</a>
+
+    gru = GRU(
+        HIDDEN_LAYER_SIZE,
+        input_shape=(SAMPLE_LENGTH, embedding_size),
+        kernel_initializer="glorot_uniform",
+        recurrent_initializer=&quotnormal&quot,
+        activation=&quotrelu&quot,
+    )(inputs)
+
+    <a id="change">batch_normalization = BatchNormalization()(gru)</a>
+    <a id="change">dropout = Dropout(0.1)(batch_normalization)</a>
+    outputs = Dense(output_length, activation=&quotsigmoid&quot)(dropout)
+
+    model = Model(inputs=inputs, outputs=outputs)
+</code></pre><img src="18769182.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L58' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnn</div><BR><BR><div id='link'><a href='https://github.com/danielegrattarola/keras-gat/commit/9d56361641a64ff73ac630812ecd4964eedbc7aa#diff-fe6ab220dc73cc950cd30e2dae9df435bd7e7b9b61c58e368567967668a0e2f6L4' target='_blank'>Link</a></div><div id='project'> Project Name: danielegrattarola/keras-gat</div><div id='commit'> Commit Name: 9d56361641a64ff73ac630812ecd4964eedbc7aa</div><div id='time'> Time: 2017-11-09</div><div id='author'> Author: daniele.grattarola@gmail.com</div><div id='file'> File Name: gat/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR>

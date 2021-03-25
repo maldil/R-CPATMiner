@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.shuffle:
+            random.shuffle(batches)
+        if self.last_batch_first:
+            <a id="change">batches.insert(0, last_batch)</a>
+        return iter(batches)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                    yield batch
+
+        <a id="change">if not self.biggest_batches_first:
+            return get_batches()
+        else:
+            batches = list(get_batches())
+            indices = heapq.nlargest(
+                5,
+                range(len(batches)),
+                key=lambda i: len(pickle.dumps([self.data[j] for j in batches[i]])))
+            front = [batches[i] for i in indices]
+            for i in sorted(indices, reverse=True):
+                batches.pop(i)
+            batches[0:0] = front
+            return iter(batches)</a>
+</code></pre>

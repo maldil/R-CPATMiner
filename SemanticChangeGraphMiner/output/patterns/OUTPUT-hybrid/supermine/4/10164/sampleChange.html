@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    parsed_args, workflow_cmdline_args = ilastik_main.parse_known_args()
+    
+    &#47&#47 allow to start-up by double-clicking an &quot.ilp&quot file
+    <a id="change">if len(workflow_cmdline_args) == 1 and \
+       workflow_cmdline_args[0].endswith(&quot.ilp&quot) and \
+       parsed_args.project is None:
+            parsed_args.project = workflow_cmdline_args[0]
+            workflow_cmdline_args = []
+
+   </a> hShell = ilastik_main.main(parsed_args, workflow_cmdline_args)
+    &#47&#47 in headless mode the headless shell is returned and its project manager still has an open project file
+    hShell.closeCurrentProject()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Allow to start-up by double-clicking a project file.
+    if len(sys.argv) == 2 and sys.argv[1].endswith(&quot.ilp&quot):
+        <a id="change">sys.argv.insert(1, &quot--project&quot)</a>
+
+    import ilastik_main
+    parsed_args, workflow_cmdline_args = ilastik_main.parse_known_args()
+</code></pre>

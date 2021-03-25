@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  def _build_ann(self):
+    hidden_neurons = 2 * (len(self.inputs) + len(self.languages)) / 3
+
+    <a id="change">self._net = theanets.Classifier([len(self.inputs),
+                                     {&quotsize&quot: int(hidden_neurons), &quotactivation&quot: &quottanh&quot},
+                                     len(self.languages)])</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _build_ann(self):
+        hidden_neurons = 2 * (len(self.inputs) + len(self.languages)) / 3
+
+        <a id="change">self._net = Sequential()</a>
+        <a id="change">self._net.add(Input(len(self.inputs)))</a>
+        self._net.add(Dense(int(hidden_neurons), activation="tanh"))
+        self._net.add(Dense(len(self.languages), activation="softmax"))
+        self._net.compile(
+            loss="categorical_crossentropy", optimizer=Adam(learning_rate=0.01)</code></pre>

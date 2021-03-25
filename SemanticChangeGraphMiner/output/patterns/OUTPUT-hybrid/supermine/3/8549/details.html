@@ -1,0 +1,23 @@
+<html><h3>677467e2ae6a25911428540620b5e992cd64f482,src/predict/predict.py,Predictor,forward_pass,#Predictor#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                imwrite(output_path, sr_img)
+
+    def forward_pass(self, file_path):
+        lr_img = <a id="change">imread(str(file_path))</a> / 255.0
+        lr_img = np.expand_dims(lr_img, axis=0)
+        sr_img = self.model.rdn.predict(lr_img)
+        return np.clip(sr_img, 0, 1) * 255</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward_pass(self, file_path):
+        lr_img = imread(file_path)
+        <a id="change">if lr_img.shape[2] == 3:
+            lr_img = lr_img / 255.0
+            lr_img = np.expand_dims(lr_img, axis=0)
+            sr_img = self.model.rdn.predict(lr_img)
+            return np.clip(sr_img, 0, 1) * 255
+        else:
+            error(&quot {} is not an image with 3-dim.&quot.format(file_path))</a>
+</code></pre><img src="33384069.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/idealo/image-super-resolution/commit/677467e2ae6a25911428540620b5e992cd64f482#diff-99d81c38154fea36a1d05d33a93521f9a03d7d9c924517ce25621467dadf3658L55' target='_blank'>Link</a></div><div id='project'> Project Name: idealo/image-super-resolution</div><div id='commit'> Commit Name: 677467e2ae6a25911428540620b5e992cd64f482</div><div id='time'> Time: 2018-12-20</div><div id='author'> Author: testadicardi@gmail.com</div><div id='file'> File Name: src/predict/predict.py</div><div id='class'> Class Name: Predictor</div><div id='method'> Method Name: forward_pass</div><BR><BR><div id='link'><a href='https://github.com/DenisTome/Lifting-from-the-Deep-release/commit/70f229dde624412adb0bc466b4eee4929fcc1d91#diff-27419e27638ba26c3b055e9daca00840a52779aa0e76b06c6a2a68d128abffb0L31' target='_blank'>Link</a></div><div id='project'> Project Name: DenisTome/Lifting-from-the-Deep-release</div><div id='commit'> Commit Name: 70f229dde624412adb0bc466b4eee4929fcc1d91</div><div id='time'> Time: 2017-07-13</div><div id='author'> Author: dario.turchi@ocado.com</div><div id='file'> File Name: demo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/9b9095f877f603d91495c72f91e4fddf61f1724e#diff-96d9374c6f906ff5f99fe32e0006bdccea81e04ac7ee5e1d64eb719fb746e091L16' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 9b9095f877f603d91495c72f91e4fddf61f1724e</div><div id='time'> Time: 2019-07-22</div><div id='author'> Author: jerome@dockes.org</div><div id='file'> File Name: examples/02_decoding/plot_haxby_stimuli.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

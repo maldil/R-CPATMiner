@@ -1,0 +1,39 @@
+<html><h3>15b19130a9162feb9153a2f38c5c8b0af02c6a1d,train.py,,eval_epoch,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n_words = gold.data.ne(Constants.PAD).sum()
+        n_total_words += n_words
+        n_total_correct += n_correct
+        total_loss += <a id="change">loss.data[0]</a>
+
+    return total_loss/n_total_words, n_total_correct/n_total_words
+
+def train(model, training_data, validation_data, crit, optimizer, opt):</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_total_words = 0
+    n_total_correct = 0
+
+    <a id="change">with torch.no_grad():
+        for batch in tqdm(
+                validation_data, mininterval=2,
+                desc=&quot  - (Validation) &quot, leave=False):
+
+            &#47&#47 prepare data
+            src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(device), batch)
+            gold = tgt_seq[:, 1:]
+
+            &#47&#47 forward
+            pred = model(src_seq, src_pos, tgt_seq, tgt_pos)
+            loss, n_correct = get_performance(crit, pred, gold)
+
+            &#47&#47 note keeping
+            n_words = gold.data.ne(Constants.PAD).sum()
+            n_total_words += n_words
+            n_total_correct += n_correct
+            total_loss += loss.item()
+
+   </a> loss_per_word = total_loss/n_total_words
+    accuracy = n_total_correct/n_total_words
+    return loss_per_word, accuracy
+</code></pre><img src="24253890.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L80' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_epoch</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/b0a156d87b736d90c3e27933e8e4d0114bd5ef36#diff-27419e27638ba26c3b055e9daca00840a52779aa0e76b06c6a2a68d128abffb0L88' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: b0a156d87b736d90c3e27933e8e4d0114bd5ef36</div><div id='time'> Time: 2019-01-27</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: demo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_epoch</div><BR><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/585303417c3f4641f61ac5a916a51505a67cc507#diff-d8621a5ced85ff347f1c279fe9e8b62fb7b355bcc592692c5c203565df1e8b31L215' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 585303417c3f4641f61ac5a916a51505a67cc507</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mscoco.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR>

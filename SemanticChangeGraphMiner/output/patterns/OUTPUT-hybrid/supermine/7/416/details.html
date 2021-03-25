@@ -1,0 +1,25 @@
+<html><h3>504166f623fee9ac5004369489c39838c875eab9,thinc/layers/bidirectional.py,,_split,#,47
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def _split(ops, X_size_at_t):
+    <a id="change">X</a>, size_at_t = X_size_at_t
+    half = X.shape[-1] // 2
+    X_l2r = X[..., :half]
+    X_r2l = X[..., half:]
+    <a id="change">return ((X_l2r, size_at_t), (X_r2l, size_at_t))</a>
+
+
+def _sum(ops, X_size_at_t, Y_size_at_t):
+    X, size_at_t = X_size_at_t</code></pre><h3>After Change</h3><pre><code class='java'>
+    half = Xp.data.shape[-1] // 2
+    X_l2r = Xp.data[..., :half]
+    X_r2l = Xp.data[..., half:]
+    <a id="change">return (Padded(X_l2r, Xp.size_at_t), Padded(X_r2l, Xp.size_at_t))</a>
+
+
+def _sum(ops: Ops, Xp: Padded, Yp: Padded) -&gt; Padded:
+    return Padded(Xp.data + Yp.data, Xp.size_at_t)</code></pre><img src="2004923.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/504166f623fee9ac5004369489c39838c875eab9#diff-f56bc6a32f701bab5f64ddcb67064a58b653f8d0b348deacb66921e0c60e7daaL42' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 504166f623fee9ac5004369489c39838c875eab9</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/bidirectional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _split</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/504166f623fee9ac5004369489c39838c875eab9#diff-f56bc6a32f701bab5f64ddcb67064a58b653f8d0b348deacb66921e0c60e7daaL55' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 504166f623fee9ac5004369489c39838c875eab9</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/bidirectional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _sum</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/504166f623fee9ac5004369489c39838c875eab9#diff-f56bc6a32f701bab5f64ddcb67064a58b653f8d0b348deacb66921e0c60e7daaL34' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 504166f623fee9ac5004369489c39838c875eab9</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/bidirectional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _reverse</div><BR>

@@ -1,0 +1,29 @@
+<html><h3>80dd4096ed186e706775adbe3663b46d719efdb0,capsulelayers.py,CapsuleLayer,call,#CapsuleLayer#,94
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return [i-1, b, outputs]
+
+        cond = lambda i, b, inputs_hat: i &gt; 0
+        loop_vars = <a id="change">[K.constant(self.num_routing), self.bias, K.sum(inputs_hat, 1, keepdims=True)]</a>
+        <a id="change">_, self.bias, outputs = tf.while_loop(cond, body, loop_vars)</a>
+
+        
+        &#47&#47 Routing algorithm V2. Seems not right. This may duplicate tensors by self.num_routing times.
+        for _ in range(self.num_routing):</code></pre><h3>After Change</h3><pre><code class='java'>
+            c = K.softmax(self.bias)
+            c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)
+            outputs = K.sum(c_expand * inputs_hat, 1, keepdims=True)
+            <a id="change">outputs = squash(outputs)</a>
+            self.bias = K.update(self.bias, self.bias + K.sum(inputs_hat * outputs, [0, -2, -1]))
+
+        &#47&#47 Handling with no routing scenario. Prior bias will always be zero.
+        if self.num_routing == 0:
+            <a id="change">c = K.softmax(self.bias)</a>
+            <a id="change">c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)</a>
+            <a id="change">outputs = squash(K.sum(c_expand * inputs_hat, 1, keepdims=True))</a>
+
+        return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])
+
+    def compute_output_shape(self, input_shape):</code></pre><img src="38878801.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/80dd4096ed186e706775adbe3663b46d719efdb0#diff-70158145f8c3017473e154d3e9318cd7ebab5469186eddb6bcbe943621b770a0L94' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 80dd4096ed186e706775adbe3663b46d719efdb0</div><div id='time'> Time: 2017-10-31</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulelayers.py</div><div id='class'> Class Name: CapsuleLayer</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/deeppomf/DeepCreamPy/commit/a1e55d9cc2cc4efa7ef2f5245e866d8645d66c77#diff-a5d2da433cebd01859f6e8cf19e93ef70749cdf087a0a0a958e1bc80566ae3f3L130' target='_blank'>Link</a></div><div id='project'> Project Name: deeppomf/DeepCreamPy</div><div id='commit'> Commit Name: a1e55d9cc2cc4efa7ef2f5245e866d8645d66c77</div><div id='time'> Time: 2019-06-17</div><div id='author'> Author: donald.carlsson@paranta.se</div><div id='file'> File Name: libs/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR>

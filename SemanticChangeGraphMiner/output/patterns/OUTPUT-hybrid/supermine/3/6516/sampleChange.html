@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 it&quots a 2D Tensor and shape == [N+1, N+1]. 
+        &#47&#47   [dense with N=1, which is the only one that could have a transform shape of 2, would be of size Mx1]
+        self.is_affine = len(trf_shape) == 1 or \
+                         (len(trf_shape) == 2 and <a id="change">all([trf_shape[0] == self.ndims, trf_shape[1] == self.ndims+1])</a>)
+
+        &#47&#47 check sizes
+        if self.is_affine and len(trf_shape) == 1:</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 it&quots a 2D Tensor and shape == [N+1, N+1] or [N, N+1]
+        &#47&#47   [dense with N=1, which is the only one that could have a transform shape of 2, would be of size Mx1]
+        self.is_affine = len(trf_shape) == 1 or (len(trf_shape) == 2 and \
+            <a id="change">trf_shape[0] in (self.ndims, self.ndims+1)</a> and trf_shape[1] == self.ndims+1)
+
+        &#47&#47 check sizes
+        if self.is_affine and len(trf_shape) == 1:</code></pre>

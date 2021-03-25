@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            stored in ``idata__i``.
+        
+        ndraws = idata__i.posterior.dims["draw"]
+        nchains = <a id="change">idata__i.posterior.dims["chain"]</a>
+        log_like_idx = _wrap_xarray_ufunc(
+            lambda pars: self.point_log_likelihood(excluded_obs, pars),
+            idata__i.posterior.to_array(),
+            func_kwargs={"out": np.empty((nchains, ndraws))},</code></pre><h3>After Change</h3><pre><code class='java'>
+            Log likelihood of ``excluded_obs`` evaluated at each of the posterior samples
+            stored in ``idata__i``.
+        
+        <a id="change">if self.log_lik_fun is None:
+            raise NotImplementedError(
+                "When `log_like_fun` is not set during class initialization "
+                "log_likelihood__i method must be overwritten"
+            )
+       </a> posterior = idata__i.posterior
+        <a id="change">arys = (*excluded_obs, *[posterior[var_name] for var_name in self.posterior_vars])</a>
+        if self.is_ufunc:
+            <a id="change">ufunc_applier = apply_ufunc</a>
+        else:
+            <a id="change">ufunc_applier = _wrap_xarray_ufunc</a>
+        log_lik_idx = ufunc_applier(
+            self.log_lik_fun,
+            *arys,
+            kwargs=<a id="change">self.log_lik_kwargs</a>,
+            **self.apply_ufunc_kwargs,
+        )
+        return log_lik_idx</code></pre>

@@ -1,0 +1,60 @@
+<html><h3>6f32626effedfaeba3c51debb39d556302922728,Python/phate/phate.py,,calculate_kernel,#,35
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      random_state=random_state)
+            data = pca.fit_transform(data)
+            if verbose:
+                <a id="change">print("PCA complete in {:.2f} seconds".format(
+                    time.time() - start))</a>
+    if verbose:
+        <a id="change">start = time.time()</a>
+        print("Calculating KNN...")
+    &#47&#47 kernel includes self as connection but not in k
+    &#47&#47 actually search for k+1 neighbors including self
+    k = k + 1
+    if alpha_decay and a is not None:
+        try:
+            if knn_dist == &quotprecomputed&quot:
+                pdx = data
+            else:
+                pdx = squareform(pdist(data, metric=knn_dist))
+            knn_dist = np.partition(pdx, k, axis=1)[:, :k]
+            &#47&#47 bandwidth(x) = distance to k-th neighbor of x
+            epsilon = np.max(knn_dist, axis=1)
+            pdx = (pdx / epsilon).T  &#47&#47 autotuning d(x,:) using epsilon(x).
+        except RuntimeWarning:
+            raise ValueError(
+                &quotIt looks like you have at least k identical data points. &quot
+                &quotTry removing duplicates.&quot)
+        kernel = np.exp(-1 * (pdx ** a))  &#47&#47 not really Gaussian kernel
+    else:
+        if knn_dist == &quotprecomputed&quot:
+            &#47&#47 we already have pairwise distances
+            pdx = knn_dist
+            knn_idx = np.argpartition(pdx, k, axis=1)[:, :k]
+            ind_ptr = np.arange(knn_idx.shape[0] + 1) * knn_idx.shape[1]
+            col_ind = knn_idx.reshape(-1)
+            ones = np.repeat(1., len(col_ind))
+            kernel = sparse.csr_matrix((ones, col_ind, ind_ptr),
+                                       shape=[data.shape[0], data.shape[0]])
+        else:
+            knn = NearestNeighbors(n_neighbors=k,
+                                   n_jobs=n_jobs).fit(data)
+            kernel = knn.kneighbors_graph(data, mode=&quotconnectivity&quot)
+
+    <a id="change">if verbose:
+        print("KNN complete in {:.2f} seconds".format(time.time() - start))
+   </a> kernel = kernel + kernel.T  &#47&#47 symmetrization
+    return kernel
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        kernel matrix built from the input data
+    
+    if knn_dist != &quotprecomputed&quot and ndim &lt; data.shape[1]:
+        <a id="change">log_start("PCA")</a>
+        if sparse.issparse(data):
+            _, _, VT = randomized_svd(data, ndim,
+                                      random_state=random_state)
+            data = data.dot(VT.T)</code></pre><img src="38496851.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L84' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_kernel</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L84' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_kernel</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L171' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_landmark_operator</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L370' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: embed_mds</div><BR>

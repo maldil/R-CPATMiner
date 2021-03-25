@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        m.set_params(pairs="nearest")
+        m.fit(x, y)
+
+        <a id="change">p = m.predict(numpy.array([[3, 4], [41, 29]]))</a>
+        assert_array_almost_equal(numpy.array([-0.3416230366, -5.3743455497]), p)
+
+
+def has_cvxopt():</code></pre><h3>After Change</h3><pre><code class='java'>
+        x, y = toy_data
+        m = self.svm_model
+        m.set_params(pairs="nearest")
+        <a id="change">sd = numpy.std(x, axis=0)</a>
+        m.fit(<a id="change">x / sd</a>, y)
+
+        <a id="change">p = m.predict(toy_test_data / sd)</a>
+        <a id="change">expected = numpy.array([-0.090550891252, -4.213744335308, -5.252123739017])</a>
+        assert_array_almost_equal(expected, p, decimal=5)
+
+
+def has_cvxopt():</code></pre>

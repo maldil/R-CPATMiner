@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            hw_tuple = (target_size[1], target_size[0])
+        if img.shape[1::-1] != hw_tuple:
+            img = cv2.resize(img, hw_tuple, interpolation=interp)
+    img = np.array(<a id="change">[img[:, :, ::-1]]</a>, dtype=np.float32)
+    if len(img.shape) == 3:
+        img = np.expand_dims(img, -1)
+    if crop_size is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        interp = cv2.INTER_CUBIC
+    if not isinstance(paths, list):
+        paths = [paths]
+    <a id="change">if len(paths) &gt; 1 and (target_size is None or
+                           isinstance(target_size, int)):
+        raise ValueError(&quotA tuple `target_size` should be provided &quot
+                         &quotwhen loading multiple images.&quot)
+
+   </a> def _load_img(path):
+        img = cv2.imread(path)
+        if target_size:
+            if isinstance(target_size, int):
+                hw_tuple = tuple([x * target_size // min(img.shape[:2])
+                                  for x in img.shape[1::-1]])
+            else:
+                hw_tuple = (target_size[1], target_size[0])
+            if img.shape[1::-1] != hw_tuple:
+                img = cv2.resize(img, hw_tuple, interpolation=interp)
+        img = img[:, :, ::-1]
+        if len(img.shape) == 2:
+            img = np.expand_dims(img, -1)
+        return img
+
+    <a id="change">if len(paths) &gt; 1:
+        imgs = np.zeros((len(paths),) + target_size + (3,), dtype=np.float32)
+        for (i, path) in enumerate(paths):
+            imgs[i] = _load_img(path)
+    else:
+        imgs = np.array([_load_img(paths[0])], dtype=np.float32)
+
+   </a> if crop_size is not None:
+        imgs = crop(imgs, crop_size)
+
+    return imgs</code></pre>

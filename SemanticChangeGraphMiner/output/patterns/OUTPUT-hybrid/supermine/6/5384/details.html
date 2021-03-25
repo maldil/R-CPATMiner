@@ -1,0 +1,27 @@
+<html><h3>3f196bcdd1e0310208e8978cf4f1fb590614568b,utils.py,,load_model,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return os.path.join(storage_dir(), &quotmodels&quot, model_name+".pt")
+
+def load_model(observation_space, action_space, from_path):
+    <a id="change">if from_path == None or not(os.path.exists(from_path)):
+        policy_net = Policy(observation_space, action_space)
+        value_net = Value(observation_space)
+    else:
+        policy_net, value_net = pickle.load(open(from_path, "rb"))
+
+   </a> if ac_rl.use_gpu:
+        policy_net = policy_net.cuda()
+        value_net = value_net.cuda()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def load_model(observation_space, action_space, from_path):
+    acmodel = ACModel(observation_space, action_space)
+    <a id="change">if from_path != None and os.path.exists(from_path):
+        acmodel.load_state_dict(torch.load(from_path))
+   </a> return acmodel
+
+def save_model(acmodel, to_path):
+    dirname = os.path.dirname(to_path)</code></pre><img src="23176977.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/lcswillems/torch-rl/commit/3f196bcdd1e0310208e8978cf4f1fb590614568b#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL13' target='_blank'>Link</a></div><div id='project'> Project Name: lcswillems/torch-rl</div><div id='commit'> Commit Name: 3f196bcdd1e0310208e8978cf4f1fb590614568b</div><div id='time'> Time: 2018-04-15</div><div id='author'> Author: lcswillems@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_model</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/cc53003029d11839c394a9544a1394b62721869d#diff-4e54e777f8c0af0ae0f5584dcefb2e1aab7abf33c5766acd78d1801f9d9b805cL207' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: cc53003029d11839c394a9544a1394b62721869d</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/extra/wrappers.py</div><div id='class'> Class Name: PyTorchWrapper</div><div id='method'> Method Name: use_params</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/9a936c946174094bef05ed2fc9a4c44adb841c05#diff-ac2e0605a6e95a06d67a0b579305e34211d5f4d29321b546a705600f654d25e1L11' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 9a936c946174094bef05ed2fc9a4c44adb841c05</div><div id='time'> Time: 2018-01-15</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

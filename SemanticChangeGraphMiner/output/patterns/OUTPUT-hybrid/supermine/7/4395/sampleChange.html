@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Ok, it&quots not in it but maybe something similar
+        &#47&#47 Let&quots set up something we can compare
+        <a id="change">if self._sent_info_comp is None:
+            data_encoding = self._post_data.encoding
+            post_data = str(self.get_data())
+            dec_post_data = unquote(post_data).decode(data_encoding)
+
+            data = u&quot%s%s%s&quot % (unicode(self.get_uri()), data, dec_post_data)
+
+            self._sent_info_comp = make_comp(data + unquote(data))
+
+       </a> min_len = 3
+        &#47&#47 make the smth_instng comparable
+        smth_instng_comps = (make_comp(smth_instng),
+                             make_comp(unquote(smth_instng)))</code></pre><h3>After Change</h3><pre><code class='java'>
+        data = self.get_data()
+        if data:
+            if smth_instng in data:
+                <a id="change">return True</a>
+
+            if smth_instng in unquote(data):
+                return True
+</code></pre>

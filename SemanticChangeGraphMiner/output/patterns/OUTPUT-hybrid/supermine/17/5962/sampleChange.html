@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    parser.add_argument("--recodex", default=False, action="store_true", help="Evaluation in ReCodEx.")
+    parser.add_argument("--rnn_dim", default=64, type=int, help="RNN cell dimension.")
+    parser.add_argument("--threads", default=1, type=int, help="Maximum number of threads to use.")
+    <a id="change">args = parser.parse_args()</a>
+
+    &#47&#47 Fix random seeds and number of threads
+    np.random.seed(42)
+    tf.random.set_seed(42)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+if __name__ == "__main__":
+    &#47&#47 Parse arguments
+    <a id="change">parser</a> = argparse.ArgumentParser()
+    parser.add_argument("--batch_size", default=10, type=int, help="Batch size.")
+    parser.add_argument("--cle_dim", default=64, type=int, help="CLE embedding dimension.")
+    parser.add_argument("--epochs", default=10, type=int, help="Number of epochs.")
+    parser.add_argument("--max_sentences", default=5000, type=int, help="Maximum number of sentences to load.")
+    parser.add_argument("--recodex", default=False, action="store_true", help="Evaluation in ReCodEx.")
+    parser.add_argument("--rnn_dim", default=64, type=int, help="RNN cell dimension.")
+    parser.add_argument("--seed", default=42, type=int, help="Random seed.")
+    parser.add_argument("--threads", default=1, type=int, help="Maximum number of threads to use.")
+    parser.add_argument("--verbose", default=False, action="store_true", help="Verbose TF logging.")
+    <a id="change">args = parser.parse_args([] if "__file__" not in globals() else None)</a>
+
+    &#47&#47 Fix random seeds and threads
+    np.random.seed(args.seed)
+    tf.random.set_seed(args.seed)
+    tf.config.threading.set_inter_op_parallelism_threads(args.threads)
+    tf.config.threading.set_intra_op_parallelism_threads(args.threads)
+    if args.recodex:
+        tf.keras.utils.get_custom_objects()["glorot_uniform"] = tf.initializers.GlorotUniform(seed=args.seed)
+        tf.keras.utils.get_custom_objects()["orthogonal"] = tf.initializers.Orthogonal(seed=<a id="change">args</a>.seed)
+        tf.keras.utils.get_custom_objects()["uniform"] = tf.initializers.RandomUniform(seed=args.seed)
+
+    &#47&#47 Report only errors by default</code></pre>

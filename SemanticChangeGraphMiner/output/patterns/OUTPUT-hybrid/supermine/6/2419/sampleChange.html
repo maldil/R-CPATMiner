@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if eta is None:
+            eta = self.get_eta()
+
+        spent_time = <a id="change">float(current_time - scan_start_time)</a>
+        estimated_end_time = spent_time + eta
+
+        progress = <a id="change">int(spent_time / estimated_end_time)</a> * 100
+
+        om.out.debug(&quotThe scan will finish in %s (%s%% done)&quot % (eta, progress))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        eta = self.get_eta() if eta is None else eta
+
+        <a id="change">run_time = self.get_run_time_seconds()</a>
+        estimated_end_time = run_time + eta
+
+        progress = <a id="change">int(run_time / estimated_end_time * 100)</a>
+
+        om.out.debug(&quotThe scan will finish in %.2f seconds (%s%% done)&quot % (eta, progress))
+
+        return progress</code></pre>

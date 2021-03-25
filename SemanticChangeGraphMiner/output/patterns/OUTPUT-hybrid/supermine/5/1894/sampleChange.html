@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+        solution_set = list()
+        solution_set.append(remaining_points.pop(
+            <a id="change">random.randint(0, len(remaining_points) - 1)</a>))
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, solution_set[0]) for p in remaining_points]
+            for i, p in enumerate(remaining_points):</code></pre><h3>After Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+
+        &#47&#47 the sampled points set as the return
+        select_idx = <a id="change">np.random.randint(low=0, high=len(self.points))</a>
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        solution_set = remaining_points[select_idx: select_idx+1]
+        remaining_points = np.delete(remaining_points, select_idx)
+
+        for _ in range(self.n - 1):
+            <a id="change">distance_sum = self.cal_distance(remaining_points, solution_set)</a>
+            select_idx = np.argmax(distance_sum)
+            solution_set = np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)
+            remaining_points = np.delete(remaining_points, select_idx)
+</code></pre>

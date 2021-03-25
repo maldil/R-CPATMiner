@@ -1,0 +1,37 @@
+<html><h3>d491a8c498fa1555fbc581b9f3d27245404830ea,mystic/abstract_ensemble_solver.py,AbstractEnsembleSolver,__update_allSolvers,#AbstractEnsembleSolver#,353
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            em._x,em._y,em._id,em._info = _evalmon
+            _solver._evalmon[le:] = em[le:]
+            del em
+            <a id="change">self._allSolvers[len(results)]</a> = _solver &#47&#47XXX: update not replace?
+        return
+
+    def __update_bestSolver(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quotreplace allSolvers with solvers found in results&quot
+        &#47&#47NOTE: apparently, monitors internal to the solver don&quott work as well
+        &#47&#47 reconnect monitors; save all solvers
+        fcalls = [<a id="change">getattr</a>(s, <a id="change">&quot_fcalls&quot</a>, [0])[0] for s in self._allSolvers]
+        from mystic.monitors import Monitor
+        while results: &#47&#47XXX: option to not save allSolvers? skip this and _copy
+            _solver, _stepmon, _evalmon = results.pop()
+            lr = len(results)
+            sm, em = Monitor(), Monitor()
+            s = self._allSolvers[lr]
+            ls, le = len(s._stepmon), len(s._evalmon)
+            &#47&#47 gather old and new results in monitors
+            _solver._stepmon[:] = s._stepmon
+            sm._x,sm._y,sm._id,sm._info = _stepmon
+            _solver._stepmon[ls:] = sm[ls:]
+            del sm
+            _solver._evalmon[:] = s._evalmon
+            em._x,em._y,em._id,em._info = _evalmon
+            _solver._evalmon[le:] = em[le:]
+            del em
+            if not _solver._fcalls[0]: <a id="change">_solver._fcalls[0] = fcalls[lr]</a>
+            self._allSolvers[lr] = _solver &#47&#47XXX: update not replace?
+        return
+
+    def __update_bestSolver(self):</code></pre><img src="38078565.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/uqfoundation/mystic/commit/d491a8c498fa1555fbc581b9f3d27245404830ea#diff-bbc0525ed2a33cc12acf1540042262e6d35255f4306450764f56f0a734a87dfaL353' target='_blank'>Link</a></div><div id='project'> Project Name: uqfoundation/mystic</div><div id='commit'> Commit Name: d491a8c498fa1555fbc581b9f3d27245404830ea</div><div id='time'> Time: 2019-02-20</div><div id='author'> Author: mmckerns@968178ea-60bd-409e-af13-df8a517b6005</div><div id='file'> File Name: mystic/abstract_ensemble_solver.py</div><div id='class'> Class Name: AbstractEnsembleSolver</div><div id='method'> Method Name: __update_allSolvers</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/3d12c536e66ff4414860b8de1467fe56ede54063#diff-4005a4077d2600a6633851c51eec6886e61cfcaf1d77b4b7f671bb4ed08902feL50' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 3d12c536e66ff4414860b8de1467fe56ede54063</div><div id='time'> Time: 2019-11-28</div><div id='author'> Author: adrianeboyd@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: define_operators</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/d5509e098911605cd0dc974827e18ff54f48812e#diff-9b9d50c7dbdb206ff5cac18b777d37fe5e00a91a33d580c48cfb721d61a7448bL18' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: d5509e098911605cd0dc974827e18ff54f48812e</div><div id='time'> Time: 2019-10-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: spacy/ml/tok2vec.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Tok2Vec</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/c4eeef24faa81e7bc64ebfbd72c046f25c7b3381#diff-aabde31582a88154bf585495c46aa90aca2e37acbf5efa1eceb8cdeae5bdfb9cL61' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: c4eeef24faa81e7bc64ebfbd72c046f25c7b3381</div><div id='time'> Time: 2012-01-12</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/signals.py</div><div id='class'> Class Name: SignalDebugPanel</div><div id='method'> Method Name: process_response</div><BR>

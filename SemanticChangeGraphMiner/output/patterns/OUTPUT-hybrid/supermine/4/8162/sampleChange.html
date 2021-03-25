@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if name == &quotkmodes&quot:
+            for check in _yield_all_checks(name, Estimator):
+                &#47&#47 Skip these
+                <a id="change">if hasattr(check, &quot__name__&quot):
+                    if check.__name__ not in (&quotcheck_clustering&quot,
+                                              &quotcheck_dtype_object&quot):
+                        yield _named_check(check, name), name, estimator
+                else:
+                    yield check, name, estimator
+       </a> elif name == &quotkprototypes&quot:
+            for check in _yield_all_checks(name, Estimator):
+                &#47&#47 Only do these
+                if hasattr(check, &quot__name__&quot) and check.__name__ in (</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            raise NotImplementedError
+        estimator = Estimator()
+        <a id="change">for check in _yield_all_checks(name, estimator):
+            if hasattr(check, &quot__name__&quot) and check.__name__ in relevant_checks:
+                yield _named_check(check, name), name, estimator</a>
+</code></pre>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    va2 = wrap.get_vector(a2)
+    vb2 = wrap.get_vector(b2)
+
+    <a id="change">value</a> = <a id="change">(
+        weight_direct * (vb2 - va2).dot(vb1 - va1)
+        + weight_transpose * (vb2 - vb1).dot(va2 - va1)
+        + vb2.dot(vb1) + va2.dot(va1)
+    )</a>
+    return value
+
+
+def eval_pairwise_analogies(frame, eval_filename, subset=&quotall&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+    va2 = wrap.get_vector(a2)
+    vb2 = wrap.get_vector(b2)
+
+    <a id="change">value</a> = <a id="change">(
+        weights[0] * (va1.dot(vb1) + va2.dot(vb2)) +
+        weights[1] * (va1.dot(va2) + vb1.dot(vb2)) -
+        weights[2] * (vb1.dot(va2) + va1.dot(vb2))
+    )</a>
+    return value
+
+
+def eval_pairwise_analogies(frame, eval_filename, subset=&quotall&quot,</code></pre>

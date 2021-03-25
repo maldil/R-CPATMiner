@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Execute calculate_ranks manually
+    calculate_ranks(challenge_pk=challenge.pk)
+
+    <a id="change">for q, exp in zip(queryset, expected_ranks):
+        r = Result.objects.get(pk=q.pk)
+        assert r.rank == exp</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    for r in queryset:
+        r.refresh_from_db()
+
+    <a id="change">assert [r.rank for r in queryset] == expected_ranks</a>
+</code></pre>

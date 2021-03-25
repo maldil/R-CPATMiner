@@ -1,0 +1,20 @@
+<html><h3>8e12624641eab7a7e73497ea96124bb39aca1c01,memcnn/models/revop.py,InvertibleCheckpointFunction,forward,#,13
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ctx.num_bwd_passes = num_bwd_passes
+
+        with torch.no_grad():
+            x = <a id="change">input_t.detach()</a>  &#47&#47 Makes a detached copy which shares the storage
+            output = ctx.fn(x)
+
+        detached_output = output.detach_()  &#47&#47 Detaches y in-place (inbetween computations can now be discarded)</code></pre><h3>After Change</h3><pre><code class='java'>
+        ctx.num_bwd_passes = num_bwd_passes
+        ctx.num_inputs = num_inputs
+
+        <a id="change">input_t = inputs_and_weights[:num_inputs]</a>
+        ctx.input_requires_grad = [element.requires_grad for element in input_t]
+
+        with torch.no_grad():
+            &#47&#47 Makes a detached copy which shares the storage</code></pre><img src="38469003.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/8e12624641eab7a7e73497ea96124bb39aca1c01#diff-e1f25583db6ccc8e4ce2a4f9a7a4cd0af82a5f4a3119aaa72c2b23f26e9e84c7L18' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 8e12624641eab7a7e73497ea96124bb39aca1c01</div><div id='time'> Time: 2020-03-04</div><div id='author'> Author: ce377@orthosie.damtp.cam.ac.uk</div><div id='file'> File Name: memcnn/models/revop.py</div><div id='class'> Class Name: InvertibleCheckpointFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/a3645eada1fd6b0dc2f262033a93b81a6ca84b55#diff-31e053da5c3b0af75839a741740dedd9337ca6b9f92e9cd8c7751f80f29124faL200' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: a3645eada1fd6b0dc2f262033a93b81a6ca84b55</div><div id='time'> Time: 2019-12-23</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/unitaries.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rotate_psi_inner_prod</div><BR><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/7bcdb7ac3540da3a9377ff8a47ff227041a06963#diff-44ef5e27027c0acdbc370fec9b077b138914e7d694e7d3322b458df1f5616f3dL88' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: 7bcdb7ac3540da3a9377ff8a47ff227041a06963</div><div id='time'> Time: 2020-10-29</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/bin/train_wavegrad.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

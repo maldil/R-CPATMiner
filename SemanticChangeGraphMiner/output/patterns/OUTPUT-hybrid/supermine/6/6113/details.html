@@ -1,0 +1,20 @@
+<html><h3>943753c968fe7c0cbafc6e44d60f1b28b42e997b,torchsample/utils.py,,th_nearest_interp2d,#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 take clamp of coords so they&quotre in the image bounds
+    coords[:,0] = torch.clamp(coords[:,0], 0, input.size(1)-1).round()
+    coords[<a id="change">:,1</a>] = torch.clamp(coords[:,1], 0, input.size(2)-1).round()
+
+    stride = torch.LongTensor(input.stride())[1:].float()
+    idx = coords.mv(stride).long()</code></pre><h3>After Change</h3><pre><code class='java'>
+    x_ix = x.mul(stride[1]).long()
+    y_ix = y.mul(stride[2]).long()
+
+    <a id="change">input_flat = input.view(input.size(0),-1).contiguous()</a>
+
+    mapped_vals = input_flat.gather(1, x_ix.add(y_ix))
+
+    return mapped_vals.view_as(input)</code></pre><img src="25045084.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/943753c968fe7c0cbafc6e44d60f1b28b42e997b#diff-80a11d6c58dfefa22cb7fe542b1dddb91ab537422b26c834f3c0ae182d0d8cadL119' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 943753c968fe7c0cbafc6e44d60f1b28b42e997b</div><div id='time'> Time: 2017-05-03</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: th_nearest_interp2d</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/a4697d7e45e66a3264eb56dcf489d67d4df40d23#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L98' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: a4697d7e45e66a3264eb56dcf489d67d4df40d23</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/7263cde9026f78a71917b8b1d5f8e43bbc6c8458#diff-27c6290e4997e32b11c5bdc98a32bc9018832fdde4b9e65dcc0482c8d719ec6dL108' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 7263cde9026f78a71917b8b1d5f8e43bbc6c8458</div><div id='time'> Time: 2019-06-05</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/rbm/binary_rbm.py</div><div id='class'> Class Name: BinaryRBM</div><div id='method'> Method Name: effective_energy_gradient</div><BR>

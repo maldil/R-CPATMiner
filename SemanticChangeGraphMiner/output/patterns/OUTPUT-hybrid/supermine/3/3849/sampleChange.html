@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        CL  = np.zeros_like(AoA)
+        wing_CLs = Data() 
+        for wing in geometry.wings.values():
+            wing_CLs[wing.tag] = <a id="change">np.zeros_like(AoA)</a>
+
+        &#47&#47 condition input, local, do not keep
+        konditions              = Data()
+        konditions.aerodynamics = Data()</code></pre><h3>After Change</h3><pre><code class='java'>
+        AoA = training.angle_of_attack
+        CL  = np.zeros_like(AoA)
+        
+        <a id="change">wing_CLs = Data.fromkeys(geometry.wings.keys(), np.zeros_like(AoA))</a>
+        &#47&#47 The above performs the function of:
+        &#47&#47wing_CLs = Data() 
+        &#47&#47for wing in geometry.wings.values():
+        &#47&#47    wing_CLs[wing.tag] = np.zeros_like(AoA)</code></pre>

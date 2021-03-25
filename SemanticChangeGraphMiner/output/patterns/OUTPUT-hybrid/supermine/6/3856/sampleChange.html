@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._build(**kwargs)
+        saver = tf.train.Saver()
+        saver.restore(self.session, &quot{0}.meta&quot.format(model_name))
+        if <a id="change">kwargs.get(&quotverbose&quot, False)</a>:
+            print("[{0}] Loaded model &lt;{1}&gt;".format(self.name, model_name))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        load_dict = self._build()
+        saver = tf.train.Saver(load_dict)
+        ckpt = tf.train.get_checkpoint_state(&quot./&quot)
+        <a id="change">if ckpt and ckpt.model_checkpoint_path:
+            saver.restore(self.session, ckpt.model_checkpoint_path)
+            if verbose:
+                print("[{0}] Loaded model &lt;{1}&gt;".format(self.name, model_name))
+        else:
+            raise Exception("[{0}] No model found at &lt;{1}&gt;".format(
+                self.name, model_name
+            ))
+
+
+</a>def get_train_idxs(marginals, rebalance=False, split_lo=0.5, split_hi=0.5):
+    pos = np.where(marginals &lt; (split_lo - 1e-6))[0]
+    neg = np.where(marginals &gt; (split_hi + 1e-6))[0]
+    if rebalance:</code></pre>

@@ -1,0 +1,24 @@
+<html><h3>971719830d589eba66434ddabfc62c1a689be677,skrebate/relieff.py,ReliefF,_run_algorithm,#ReliefF#,420
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nan_entries = np.isnan(self._X)
+
+        if self.n_jobs != 1:
+            <a id="change">scores = np.sum(Parallel(n_jobs=self.n_jobs)(delayed(
+                self._compute_scores)(instance_num, attr, nan_entries) for instance_num in range(self._datalen)), axis=0)</a>
+        else:
+            scores = np.sum([self._compute_scores(instance_num, attr, nan_entries) for instance_num in range(self._datalen)], axis=0)
+
+        return np.array(scores)</code></pre><h3>After Change</h3><pre><code class='java'>
+            scores = np.sum([self._compute_scores(instance_num, attr, nan_entries) for instance_num in range(self._datalen)], axis=0)
+        
+        NNlist = map(self._find_neighbors, range(self._datalen))
+        scores = np.sum(Parallel(n_jobs=self.n_jobs)(<a id="change">delayed</a>(
+            compute_scores)(instance_num, attr, nan_entries, self._num_attributes,
+            NN, self._headers, self._class_type, self._X, self._y, self._labels_std)
+             <a id="change">for</a> instance_num, NN in zip(range(self._datalen), NNlist)), axis=0)
+
+        return np.array(scores)
+</code></pre><img src="36053830.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/971719830d589eba66434ddabfc62c1a689be677#diff-941c1cb20593c08ec2c17714f1eac34b3ab078e9caa1d0c971a3c6d487be80e3L420' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 971719830d589eba66434ddabfc62c1a689be677</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: weixuanf@upenn.edu</div><div id='file'> File Name: skrebate/relieff.py</div><div id='class'> Class Name: ReliefF</div><div id='method'> Method Name: _run_algorithm</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/06777db554db441e1ec2aa2fb8c5d40565a1ba0f#diff-2b5fc4fe03ee71c09a4c105b0d7398f3d04ab769f6ac535b05fe9d12619b1805L92' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 06777db554db441e1ec2aa2fb8c5d40565a1ba0f</div><div id='time'> Time: 2019-07-07</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/point_kernel.py</div><div id='class'> Class Name: SE3PointKernel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/d738388c3ac14684d384b05d7e03417a0edffdd1#diff-97b5f3abd291119471208a30d4c983d65f9ac434d51fb85750138559606e6228L52' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: d738388c3ac14684d384b05d7e03417a0edffdd1</div><div id='time'> Time: 2016-05-11</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/multivariate/dilworth.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dilworth</div><BR>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ParameterError(&quotSynchronized data has ndim={:d},&quot
+                         &quot must be 1 or 2.&quot.format(data.ndim))
+
+    <a id="change">data = np.atleast_2d(data)</a>
+
+    if aggregate is None:
+        aggregate = np.mean
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    data_agg = np.empty(agg_shape, order=&quotF&quot)
+
+    idx_in = [slice(None)] * data.ndim
+    <a id="change">idx_agg = [slice(None)] * data_agg.ndim</a>
+
+    for (i, segment) in enumerate(slices):
+        idx_in[axis] = segment
+        <a id="change">idx_agg[axis]</a> = i
+        data_agg[idx_agg] = aggregate(data[idx_in], axis=axis)
+
+    return data_agg</code></pre>

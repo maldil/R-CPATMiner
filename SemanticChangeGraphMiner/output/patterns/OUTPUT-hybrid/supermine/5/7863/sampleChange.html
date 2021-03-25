@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        features_target = self.loss_network(target_images)
+        content_loss = self.mse_loss(features_input, features_target)
+        image_loss = self.mse_loss(out_images, target_images)
+        g_tv_loss = (((<a id="change">out_images[:, :, :-1, :]</a> - out_images[:, :, 1:, :]) ** 2 + (
+        out_images[:, :, :, :-1] - out_images[:, :, :, 1:]) ** 2) ** 1.25).mean()
+        if self.using_l1:
+            &#47&#47 L1 Loss</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, out_labels, out_images, target_images):
+        &#47&#47 Adversarial Loss
+        adversarial_loss = torch.mean(<a id="change">torch.log(1 - out_labels)</a>)
+        &#47&#47 Content Loss
+        features_input = self.loss_network(out_images)
+        features_target = self.loss_network(target_images)</code></pre>

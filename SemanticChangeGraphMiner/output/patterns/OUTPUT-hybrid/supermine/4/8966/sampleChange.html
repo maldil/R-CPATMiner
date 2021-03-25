@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    entries = []
+    count = 0
+    for i, data_pre in enumerate(dataset):
+        entry = <a id="change">{}</a>
+        data = [torch.unsqueeze(d, 0) for d in data_pre]  &#47&#47 make batch of size 1
+        signal = data[0]
+        target = data[1] if (len(data) &gt; 1) else None
+        prediction = model.predict(signal)</code></pre><h3>After Change</h3><pre><code class='java'>
+    entries = []
+    count = 0
+    for i, data_pre in enumerate(dataset):
+        <a id="change">info_data = dataset.get_information(i)</a>
+        entry = <a id="change">{&quotinformation&quot: info_data} if isinstance(info_data, str) else info_data</a>
+        data = [torch.unsqueeze(d, 0) for d in data_pre]  &#47&#47 make batch of size 1
+        signal = data[0]
+        target = data[1] if (len(data) &gt; 1) else None
+        prediction = model.predict(signal)</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        @torch.jit.script
+        def op_script(input):
+            return kornia.filters.spatial_gradient(input)
+        <a id="change">img</a> = <a id="change">torch.rand(2, 3, 4, 5).to(device)</a>
+        <a id="change">actual</a> = op_script(img)
+        expected = <a id="change">kornia</a>.filters.spatial_gradient(img)
+        assert_allclose(actual, expected)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                         raise_exception=True)
+
+    def test_jit(self, device, dtype):
+        <a id="change">img</a> = <a id="change">torch.rand(2, 3, 4, 5, device=device, dtype=dtype)</a>
+        <a id="change">op</a> = <a id="change">kornia.filters.spatial_gradient</a>
+        op_script = <a id="change">torch.jit.script(op)</a>
+        <a id="change">actual</a> = op_script(img)
+        expected = <a id="change">op(img)</a>
+        assert_allclose(actual, expected)
+
+    def test_module(self, device, dtype):
+        img = torch.rand(2, 3, 4, 5, device=device, dtype=dtype)</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     - are not in ConceptNet
+    
+    concepts = set(line.strip() for line in open(concepts_filename))
+    <a id="change">small_vocab = [term for term in big_frame.index if term.count(&quot_&quot) &lt; 1 and term in concepts]</a>
+    return small_vocab
+
+
+def make_big_frame(frame, language):</code></pre><h3>After Change</h3><pre><code class='java'>
+     - are not frequent
+    
+    concepts = set(line.strip() for line in open(concepts_filename))
+    <a id="change">vocab = []</a>
+    <a id="change">for term in big_frame.index:
+        if &quot_&quot not in term and term in concepts:
+            frequency = word_frequency(uri_to_label(term), language, wordlist=&quotlarge&quot)
+            vocab.append((term, frequency))
+   </a> <a id="change">small_vocab = [term for term, frequency in sorted(vocab, key=lambda x: x[1], reverse=True)[
+                                               :50000]]</a>
+    return small_vocab
+
+
+def make_big_frame(frame, language):</code></pre>

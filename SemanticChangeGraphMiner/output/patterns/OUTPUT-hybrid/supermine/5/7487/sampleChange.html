@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+&#47&#47 Initializing the variables
+<a id="change">init = tf.initialize_all_variables()</a>
+
+&#47&#47 Launch the graph
+with tf.Session() as sess:
+    sess.run(<a id="change">init</a>)
+    total_batch = int(mnist.train.num_examples/batch_size)
+    &#47&#47 Training cycle
+    for epoch in range(training_epochs):</code></pre><h3>After Change</h3><pre><code class='java'>
+with tf.Session() as sess:
+    &#47&#47 tf.initialize_all_variables() no long valid from
+    &#47&#47 2017-03-02 if using tensorflow &gt;= 0.12
+    sess.run(<a id="change">tf.global_variables_initializer()</a>)
+    total_batch = int(mnist.train.num_examples/batch_size)
+    &#47&#47 Training cycle
+    for epoch in range(training_epochs):</code></pre>

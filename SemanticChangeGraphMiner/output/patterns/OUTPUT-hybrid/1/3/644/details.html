@@ -1,0 +1,33 @@
+<html><h3>aa4c67a9c9d786e49dea564a703e6828b9cba411,librosa/core/constantq.py,,cqt,#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                             .format(n_octaves - 1, n_octaves))
+
+    &#47&#47 Now do the recursive bit
+    fft_basis, n_fft, filter_lengths = <a id="change">__fft_filters(sr, fmin_t,
+                                                     n_filters,
+                                                     bins_per_octave,
+                                                     tuning,
+                                                     resolution,
+                                                     norm,
+                                                     sparsity)</a>
+
+    min_filter_length = np.min(filter_lengths)
+
+    my_y, my_sr, my_hop = y, sr, hop_length</code></pre><h3>After Change</h3><pre><code class='java'>
+    if res_type != &quotsinc_fastest&quot and audio._HAS_SAMPLERATE:
+
+        &#47&#47 Do two octaves before resampling to allow for usage of sinc_fastest
+        fft_basis, n_fft, filter_lengths = <a id="change">__fft_filters(sr, fmin_t,
+                                                         n_filters,
+                                                         bins_per_octave,
+                                                         tuning,
+                                                         filter_scale,
+                                                         norm,
+                                                         sparsity)</a>
+        min_filter_length = np.min(filter_lengths)
+
+        &#47&#47 Compute a dynamic hop based on n_fft
+        my_cqt = __variable_hop_response(y, n_fft,</code></pre><img src="3119391.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/aa4c67a9c9d786e49dea564a703e6828b9cba411#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL145' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: aa4c67a9c9d786e49dea564a703e6828b9cba411</div><div id='time'> Time: 2016-02-04</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cqt</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9f5665cdbcafb5eb0c3c357081eb1766800c1e75#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL174' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9f5665cdbcafb5eb0c3c357081eb1766800c1e75</div><div id='time'> Time: 2015-05-13</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cqt</div><BR>

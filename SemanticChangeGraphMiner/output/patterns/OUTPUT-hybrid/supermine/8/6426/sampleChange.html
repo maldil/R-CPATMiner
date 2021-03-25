@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    device = input.device
+    index = []
+    for i, l in enumerate(lengths):
+        <a id="change">index.extend(range(i * max_len, i * max_len + l))</a>
+    index = th.tensor(index).to(device)
+    return gather_row(input.view(batch_size * max_len, -1), index)
+
+def boolean_mask(input, mask):</code></pre><h3>After Change</h3><pre><code class='java'>
+    max_len = input.shape[1]
+    device = input.device
+    if not is_tensor(lengths):
+        <a id="change">lengths = th.tensor(lengths, dtype=th.int64, device=device)</a>
+    else:
+        lengths = lengths.to(device)
+    input = input.view(-1, *input.shape[2:])
+    out_len = lengths.sum().item()
+    index = th.ones(out_len, dtype=th.int64, device=device)
+    <a id="change">cum_lengths</a> = th.cumsum(lengths, 0)
+    index[<a id="change">cum_lengths[:-1]</a>] += (max_len - lengths[:-1])
+    index = th.cumsum(index, 0) - 1
+    return input[index]
+</code></pre>

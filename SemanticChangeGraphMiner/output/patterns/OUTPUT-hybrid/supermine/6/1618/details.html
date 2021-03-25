@@ -1,0 +1,37 @@
+<html><h3>7be56405f2af0f700763249da3c368976582d792,examples/tgn.py,GraphAttentionEmbedding,forward,#GraphAttentionEmbedding#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.time_enc = time_enc
+
+    def forward(self, x, adj_t, t):
+        <a id="change">if adj_t.nnz() &gt; 0:
+            _, _, value = adj_t.coo()
+            
+            edge_t = value[:, 0].squeeze()
+            rel_t = edge_t - t
+            rel_t_enc = self.time_enc(rel_t.float())
+            
+            edge_feat = value[:, 1:]
+            
+            edge_attr = torch.cat([rel_t_enc, edge_feat], dim=1)
+            adj_t.set_value_(edge_attr, layout=&quotcoo&quot)
+            x = self.conv((x, x[:adj_t.size(0)]), adj_t)
+        else:
+            x = self.conv.lin_skip(x) 
+       </a> <a id="change">return x</a>
+
+
+class LinkPredictor(torch.nn.Module):
+    def __init__(self, in_channels):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, x, last_update, edge_index, t, msg):
+        rel_t = last_update[edge_index[0]] - t
+        rel_t_enc = self.time_enc(<a id="change">rel_t.to(x.dtype)</a>)
+        edge_attr = torch.cat([rel_t_enc, msg], dim=-1)
+        <a id="change">return self.conv(x, edge_index, edge_attr)</a>
+
+
+class LinkPredictor(torch.nn.Module):
+    def __init__(self, in_channels):</code></pre><img src="8294444.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/7be56405f2af0f700763249da3c368976582d792#diff-d326fb9d1b950eb547922e26b05058b90847ee3ca26a5ab52bb76be089376d52L41' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: 7be56405f2af0f700763249da3c368976582d792</div><div id='time'> Time: 2020-12-07</div><div id='author'> Author: matthias.fey@tu-dortmund.de</div><div id='file'> File Name: examples/tgn.py</div><div id='class'> Class Name: GraphAttentionEmbedding</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/373ae159f7ae1cabaf87228d1ae0fb6acd1c6363#diff-077b2765340b93d1e3aee125f5d00492ee6c49b7e72cb8a6164ef1bd5de4144fL87' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 373ae159f7ae1cabaf87228d1ae0fb6acd1c6363</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch14/06_train_d4pg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: distr_projection</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/84e2cf87e0fe23fe3432b74ab484b1b71cd729b3#diff-9b5246fd7025c792195487f5f37ec5e8ce2cd5826504223e636145b51c91ad7bL131' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 84e2cf87e0fe23fe3432b74ab484b1b71cd729b3</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch18/lib/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: state_lists_to_batch</div><BR>

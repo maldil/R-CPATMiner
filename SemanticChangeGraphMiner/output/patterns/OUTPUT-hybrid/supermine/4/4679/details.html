@@ -1,0 +1,41 @@
+<html><h3>3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a,python/caffe/pycaffe.py,,_Net_backward,#,73
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self._backward()
+
+    &#47&#47 Unpack diffs to extract
+    outs = <a id="change">{out: self.blobs[out].diff for out in set(self.inputs + diffs)}</a>
+    return outs
+
+
+def _Net_forward_all(self, blobs=None, **kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if end is not None:
+        end_ind = [lr.name for lr in self.layers].index(end)
+        <a id="change">outputs = set([end] + diffs)</a>
+    else:
+        end_ind = 0
+        <a id="change">outputs = set(self.inputs + diffs)</a>
+
+    if kwargs:
+        if set(kwargs.keys()) != set(self.outputs):
+            raise Exception(&quotTop diff arguments do not match net outputs.&quot)
+        &#47&#47 Set top diffs according to defined shapes and make arrays single and
+        &#47&#47 C-contiguous as Caffe expects.
+        for top, diff in kwargs.iteritems():
+            if diff.shape[0] != self.blobs[top].num:
+                raise Exception(&quotDiff is not batch sized&quot)
+            if diff.ndim != 4:
+                raise Exception(&quot{} diff is not 4-d&quot.format(top))
+            self.blobs[top].diff[...] = diff
+
+    self._backward(start_ind, end_ind)
+
+    &#47&#47 Unpack diffs to extract
+    return <a id="change">{out: self.blobs[out].diff for out in outputs}</a>
+
+
+def _Net_forward_all(self, blobs=None, **kwargs):
+    </code></pre><img src="19964816.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L100' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_backward</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L53' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_forward</div><BR><BR><div id='link'><a href='https://github.com/pysb/pysb/commit/abf185095154a29c5cb4591512085f8e3c5920da#diff-c6ebf23d1041da88842c6d60c50b667a74cd364657bc519a2bb1bc11d79a8f9fL30' target='_blank'>Link</a></div><div id='project'> Project Name: pysb/pysb</div><div id='commit'> Commit Name: abf185095154a29c5cb4591512085f8e3c5920da</div><div id='time'> Time: 2013-06-12</div><div id='author'> Author: shawn@garbett.org</div><div id='file'> File Name: pysb/examples/run_tyson_oscillator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: find_slaves</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/925a852bb6450e16a23346e97a1813fc0fcb22a0#diff-abd839b42c933d1c787f466b78195f04d5bec0cf3c8af9895c2ba65c9e23d4d3L136' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: 925a852bb6450e16a23346e97a1813fc0fcb22a0</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: adrianeboyd@gmail.com</div><div id='file'> File Name: spacy/scorer.py</div><div id='class'> Class Name: Scorer</div><div id='method'> Method Name: score</div><BR>

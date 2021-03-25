@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+       (via `tf.keras.backend.set_floatx(float_dtype)`).
+      **kwargs: Additional keyword arguments.
+    
+    <a id="change">return super(RandomUniform, self).__call__(
+        shape, dtype=_get_dtype(dtype), **kwargs)</a>
+
+
+@keras_export(&quotkeras.initializers.RandomNormal&quot,
+              &quotkeras.initializers.random_normal&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+       (via `tf.keras.backend.set_floatx(float_dtype)`).
+      **kwargs: Additional keyword arguments.
+    
+    <a id="change">_validate_kwargs(self.__class__.__name__, kwargs)</a>
+    dtype = _get_dtype(dtype)
+    if not dtype.is_floating and not dtype.is_integer:
+      raise ValueError(&quotExpected float or integer dtype, got %s.&quot % dtype)
+    if _PARTITION_SHAPE in kwargs:</code></pre>

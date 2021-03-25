@@ -1,0 +1,27 @@
+<html><h3>77550cc1f3ccf9537265d127b0f25aa790d2b4b5,skopt/acquisition.py,,gaussian_pi,#,149
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            mu, std = model.predict(X, return_std=True)
+
+    &#47&#47 make sure mu and std have the same shape so we can divide them below
+    <a id="change">std = std.reshape(mu.shape)</a>
+
+    values = np.zeros_like(mu)
+    mask = std &gt; 0
+    improve = y_opt - xi - mu[mask]</code></pre><h3>After Change</h3><pre><code class='java'>
+            mu, std = model.predict(X, return_std=True)
+
+    &#47&#47 check dimensionality of mu, std so we can divide them below
+    <a id="change">if (mu.ndim != 1) or (std.ndim != 1):
+        raise ValueError("mu and std are {}-dimensional and {}-dimensional, "
+                         "however both must be 1-dimensional. Did you train "
+                         "your model with an (N, 1) vector instead of an "
+                         "(N,) vector?"
+                         .format(mu.ndim, std.ndim))
+
+   </a> values = np.zeros_like(mu)
+    mask = std &gt; 0
+    improve = y_opt - xi - mu[mask]
+    scaled = improve / std[mask]</code></pre><img src="35218297.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/77550cc1f3ccf9537265d127b0f25aa790d2b4b5#diff-0442ead41f6b2bbadd858068dd2df21641124914ee822e55ad2336a0699c365aL205' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 77550cc1f3ccf9537265d127b0f25aa790d2b4b5</div><div id='time'> Time: 2018-11-07</div><div id='author'> Author: hinnefe2@illinois.edu</div><div id='file'> File Name: skopt/acquisition.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gaussian_pi</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/77550cc1f3ccf9537265d127b0f25aa790d2b4b5#diff-0442ead41f6b2bbadd858068dd2df21641124914ee822e55ad2336a0699c365aL283' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 77550cc1f3ccf9537265d127b0f25aa790d2b4b5</div><div id='time'> Time: 2018-11-07</div><div id='author'> Author: hinnefe2@illinois.edu</div><div id='file'> File Name: skopt/acquisition.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gaussian_ei</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/19985b2eadb39a85e1787298c5e8e9d670bd55f3#diff-a5b07a8cb349991542500760aea2cb49617edfb228d44567b346a2c9fda8f59aL230' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: 19985b2eadb39a85e1787298c5e8e9d670bd55f3</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: zhaoy@cmu.edu</div><div id='file'> File Name: pyod/models/combination.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: average</div><BR>

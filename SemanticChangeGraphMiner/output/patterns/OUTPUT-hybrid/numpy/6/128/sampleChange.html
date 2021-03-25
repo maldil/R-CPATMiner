@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        peak_mask = np.ones(S_harm.shape)
+        peak_mask[:, S_peaks[0], S_peaks[1]] = 0
+    else:
+        <a id="change">peak_mask = np.zeros(S_harm.shape)</a>
+
+    S_mask = np.ma.masked_array(S_harm, mask=peak_mask)
+
+    if aggregate is np.ma.average:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if filter_peaks:
+        S_peaks = scipy.signal.argrelmax(S, axis=0)
+        <a id="change">S_out = np.empty(S.shape)</a>
+        <a id="change">S_out.fill(fill_value)</a>
+        S_out[S_peaks[0], S_peaks[1]] = S_sal[S_peaks[0], S_peaks[1]]
+
+        S_sal = S_out
+</code></pre>

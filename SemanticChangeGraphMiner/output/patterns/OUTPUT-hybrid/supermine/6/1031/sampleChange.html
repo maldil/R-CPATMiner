@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    writer = SummaryWriter(comment="-a3c-data_" + NAME + "_" + args.name)
+
+    env = make_env()
+    net = <a id="change">common.AtariA2C(env.observation_space.shape, env.action_space.n)</a>
+    <a id="change">if args.cuda:
+        net.cuda()
+   </a> net.share_memory()
+
+    optimizer = optim.Adam(net.parameters(), lr=LEARNING_RATE, eps=1e-3)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    writer = SummaryWriter(comment="-a3c-data_" + NAME + "_" + args.name)
+
+    env = make_env()
+    net = <a id="change">common.AtariA2C(env.observation_space.shape, env.action_space.n).to(device)</a>
+    net.share_memory()
+
+    optimizer = optim.Adam(net.parameters(), lr=LEARNING_RATE, eps=1e-3)
+</code></pre>

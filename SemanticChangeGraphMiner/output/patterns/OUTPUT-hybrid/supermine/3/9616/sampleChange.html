@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                     (dilation - 1))
+
+            x = F.pad(x, (0, 0, receptive_field_width - 1, 0))
+            x = <a id="change">F.tanh(cnn_layer(x))</a>
+
+        x = x.squeeze(3)
+
+        return x[:, :, :-1], x[:, :, -1]</code></pre><h3>After Change</h3><pre><code class='java'>
+                         (0, 0, 1, 0))
+        x = F.pad(sequence_embeddings,
+                  (0, 0, receptive_field_width, 0))
+        x = <a id="change">F.tanh(self.cnn_layers[0](x)) + residual</a>
+
+        for (cnn_layer, kernel_width, dilation) in zip(self.cnn_layers[1:],
+                                                       self.kernel_width[1:],
+                                                       self.dilation[1:]):
+            receptive_field_width = (kernel_width +
+                                     (kernel_width - 1) *
+                                     (dilation - 1))
+            residual = x
+            x = F.pad(x, (0, 0, receptive_field_width - 1, 0))
+            x = <a id="change">F.tanh(cnn_layer(x))</a> + residual
+
+        x = x.squeeze(3)
+</code></pre>

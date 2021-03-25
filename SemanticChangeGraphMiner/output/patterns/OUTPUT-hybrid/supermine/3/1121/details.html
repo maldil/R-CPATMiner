@@ -1,0 +1,27 @@
+<html><h3>c65712426aa8fe18a6b40b71a9a6b2c9681e9ec2,TTS/bin/tune_wavegrad.py,,,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+best_schedule = None
+total_search_iter = len(base_values)**args.num_iter
+for base in tqdm(cartesian_product(base_values, repeat=args.num_iter), total=total_search_iter):
+    <a id="change">model.compute_noise_level(num_steps=args.num_iter, min_val=1e-6, max_val=1e-1, base_vals=base)</a>
+    for data in loader:
+        mel, audio = data
+        y_hat = model.inference(mel.cuda() if args.use_cuda else mel)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 setup optimization parameters
+base_values = sorted(np.random.uniform(high=10, size=args.search_depth))
+<a id="change">exponents = 10 ** np.linspace(-6, -2, num=args.num_iter)</a>
+best_error = float(&quotinf&quot)
+best_schedule = None
+total_search_iter = len(base_values)**args.num_iter
+for base in tqdm(cartesian_product(base_values, repeat=args.num_iter), total=total_search_iter):
+    beta = exponents * base
+    <a id="change">model.compute_noise_level(beta)</a>
+    for data in loader:
+        mel, audio = data
+        y_hat = model.inference(mel.cuda() if args.use_cuda else mel)
+</code></pre><img src="4877898.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/c65712426aa8fe18a6b40b71a9a6b2c9681e9ec2#diff-6cd0882f91c4281379fb70f4fd6648a3a0563e77229d12914b7c5a6ddd2dc2e0L26' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: c65712426aa8fe18a6b40b71a9a6b2c9681e9ec2</div><div id='time'> Time: 2020-11-14</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/bin/tune_wavegrad.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/5a59467f34ea1b33a10ea8cc205c6b2bbb1bc158#diff-c166e2038ea0c21a73f1e177aa7edf7d1850ecf81c0f9117a448c0aacef1fc8eL96' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: 5a59467f34ea1b33a10ea8cc205c6b2bbb1bc158</div><div id='time'> Time: 2020-11-14</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/bin/train_vocoder_wavegrad.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/5a59467f34ea1b33a10ea8cc205c6b2bbb1bc158#diff-c166e2038ea0c21a73f1e177aa7edf7d1850ecf81c0f9117a448c0aacef1fc8eL288' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: 5a59467f34ea1b33a10ea8cc205c6b2bbb1bc158</div><div id='time'> Time: 2020-11-14</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/bin/train_vocoder_wavegrad.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR>

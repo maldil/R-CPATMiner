@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 Define models
+&#47&#47 -----------------------------------------------------------------------------
+
+<a id="change">models</a> = {  &quotACP-RandomSubSampler&quot  : AggregatedCp(
+                                    IcpRegressor(
+                                        RegressorNc(
+                                            DecisionTreeRegressor())),
+                                    RandomSubSampler()),
+            &quotACP-CrossSampler&quot      : AggregatedCp(
+                                        IcpRegressor(
+                                            RegressorNc(
+                                                DecisionTreeRegressor())),
+                                        CrossSampler()),
+            &quotACP-BootstrapSampler&quot  : AggregatedCp(
+                                        IcpRegressor(
+                                            RegressorNc(
+                                                <a id="change">DecisionTreeRegressor()</a>)),
+                                        BootstrapSampler())
+      }
+
+&#47&#47 -----------------------------------------------------------------------------
+&#47&#47 Train, predict and evaluate
+&#47&#47 -----------------------------------------------------------------------------
+for name, model in models.iteritems():
+    model.fit(data.data[train, :], data.target[train])
+    <a id="change">prediction</a> = model.predict(data.data[test, :])
+    <a id="change">prediction_sign</a> = model.predict(data.data[test, :],
+                                    significance=significance)
+    <a id="change">table</a> = np.vstack((prediction_sign.T, truth)).T
+    <a id="change">df</a> = pd.DataFrame(table, columns=columns)
+    print(&quot\n{}&quot.format(name))
+    print(&quotError rate: {}&quot.format(reg_mean_errors(prediction,
+                                                  truth,</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Define models
+&#47&#47 -----------------------------------------------------------------------------
+
+<a id="change">models</a> = {  &quotACP-RandomSubSampler&quot  : AggregatedCp(
+                                    IcpRegressor(
+                                        RegressorNc(
+                                            RegressorAdapter(DecisionTreeRegressor()))),
+                                    RandomSubSampler()),
+            &quotACP-CrossSampler&quot      : AggregatedCp(
+                                        IcpRegressor(
+                                            RegressorNc(
+                                                RegressorAdapter(DecisionTreeRegressor()))),
+                                        CrossSampler()),
+            &quotACP-BootstrapSampler&quot  : AggregatedCp(
+                                        IcpRegressor(
+                                            RegressorNc(
+                                                <a id="change">RegressorAdapter(DecisionTreeRegressor())</a>)),
+                                        BootstrapSampler())
+      }
+
+&#47&#47 -----------------------------------------------------------------------------
+&#47&#47 Train, predict and evaluate
+&#47&#47 -----------------------------------------------------------------------------
+for name, model in models.iteritems():
+    model.fit(data.data[train, :], data.target[train])
+    <a id="change">prediction</a> = model.predict(data.data[test, :])
+    <a id="change">prediction_sign</a> = model.predict(data.data[test, :],
+                                    significance=significance)
+    <a id="change">table</a> = np.vstack((prediction_sign.T, truth)).T
+    <a id="change">df</a> = pd.DataFrame(table, columns=columns)
+    print(&quot\n{}&quot.format(name))
+    print(&quotError rate: {}&quot.format(reg_mean_errors(prediction,
+                                                  truth,</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if transformer is not None:
+                fea = transformer.transform(self._get_col_subset(X, columns))
+            else:
+                fea = <a id="change">self._get_col_subset(X, columns)</a>
+
+            if hasattr(fea, &quottoarray&quot):
+                &#47&#47 sparse arrays should be converted to regular arrays
+                &#47&#47 for hstack.</code></pre><h3>After Change</h3><pre><code class='java'>
+                    for transformer in transformers:
+                        extracted.append(self._handle_feature(transformer.transform(self._get_col_subset(X, columns))))
+                else:
+                    extracted.append(self._handle_feature(transformers.transform(<a id="change">self._get_col_subset(X, columns)</a>)))
+            else:
+                extracted.append(self._handle_feature(self._get_col_subset(X, columns)))
+</code></pre>

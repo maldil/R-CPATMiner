@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ngram_layer.add(MaxPooling1D(pool_length=pool_length))
+        conv_layers.append(ngram_layer)
+
+    model = <a id="change">Sequential()</a>
+    <a id="change">model.add(Merge(conv_layers, mode=&quotconcat&quot))</a>
+
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        pooling = MaxPooling1D(pool_size=pool_size)(convolution)
+        conv_layers.append(pooling)
+
+    <a id="change">merged = Concatenate()(conv_layers)</a>
+    <a id="change">dropout = Dropout(0.5)(merged)</a>
+    flattened = Flatten()(dropout)
+    <a id="change">outputs = Dense(output_length, activation=&quotsigmoid&quot)(flattened)</a>
+
+    model = <a id="change">Model(inputs=inputs, outputs=outputs)</a>
+
+    model.compile(
+        loss=&quotbinary_crossentropy&quot,
+        optimizer=&quotadam&quot,</code></pre>

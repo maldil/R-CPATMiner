@@ -1,0 +1,25 @@
+<html><h3>7d8f3f66495979f1bbd27205d422d673991709f2,GANs/stylegan2/ops.py,,convert_images_to_uint8,#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if isinstance(images, nn.Variable):
+        images = images.d
+
+    <a id="change">if images.ndim == 4:
+        images = images[0]
+
+   </a> scale = 255 / (drange[1] - drange[0])
+    images = images * scale + (0.5 - drange[0] * scale)
+    return np.uint8(np.clip(images, 0, 255))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if isinstance(images, nn.Variable):
+        images = images.d
+    <a id="change">if isinstance(images, nn.NdArray):
+        images = images.data
+
+   </a> scale = 255 / (drange[1] - drange[0])
+    images = images * scale + (0.5 - drange[0] * scale)
+    return np.uint8(np.clip(images, 0, 255))
+</code></pre><img src="1285523.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/7d8f3f66495979f1bbd27205d422d673991709f2#diff-c93d7f055a0e84660e54a85803ece2d39d5302c281188eaa7df7f106e69b78acL128' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 7d8f3f66495979f1bbd27205d422d673991709f2</div><div id='time'> Time: 2021-01-26</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_images_to_uint8</div><BR><BR><div id='link'><a href='https://github.com/prody/ProDy/commit/63d8db941c87501296c0e8c73c7871541455571a#diff-7f1b480ad6e486d65e293cc78c0dcb6bd1051d049fe4fe7201099b95f13d9faaL435' target='_blank'>Link</a></div><div id='project'> Project Name: prody/ProDy</div><div id='commit'> Commit Name: 63d8db941c87501296c0e8c73c7871541455571a</div><div id='time'> Time: 2020-06-09</div><div id='author'> Author: shz66@pitt.edu</div><div id='file'> File Name: prody/dynamics/functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calcENM</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e#diff-c93d7f055a0e84660e54a85803ece2d39d5302c281188eaa7df7f106e69b78acL128' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_images_to_uint8</div><BR>

@@ -1,0 +1,21 @@
+<html><h3>abfd430f17c08d1b8829a7e58e3d873bda95c39c,examples/mnist/tf/mnist_dist_dataset.py,,map_fun,#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      file_pattern = os.path.join(image_dir, &quotpart-*&quot)
+      files = tf.gfile.Glob(file_pattern)
+
+      parse_fn = <a id="change">_parse_tfr if args.format == &quottfr&quot else _parse_csv</a>
+      ds = tf.data.TextLineDataset(files).map(parse_fn).batch(args.batch_size)
+      iterator = ds.make_initializable_iterator()
+      x, y_, y_val = iterator.get_next()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        ds = tf.data.TFRecordDataset(files)
+        parse_fn = _parse_tfr
+
+      <a id="change">ds = ds.shard(num_workers, task_index).repeat(args.epochs).shuffle(args.shuffle_size)</a>
+      ds = ds.map(parse_fn).batch(args.batch_size)
+      iterator = ds.make_initializable_iterator()
+      x, y_ = iterator.get_next()
+</code></pre><img src="25627430.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/abfd430f17c08d1b8829a7e58e3d873bda95c39c#diff-ef058841994ee62ef07594c69d06f60e66cedf25cb6d66e31bdbc570d89685b8L25' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: abfd430f17c08d1b8829a7e58e3d873bda95c39c</div><div id='time'> Time: 2018-03-26</div><div id='author'> Author: leewyang@gmail.com</div><div id='file'> File Name: examples/mnist/tf/mnist_dist_dataset.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: map_fun</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/9dfafadcea9f709132bce12341a32ff5e27ec33a#diff-1a25c34669bbfa03b9238d7cbb6f22fbb4896e1fa7779271848902ebd250df44L162' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 9dfafadcea9f709132bce12341a32ff5e27ec33a</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/infogan/infogan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/9be64784de6d7d5ed1e85ca4bb380d40cf95b14a#diff-ec46dc2b0c8059d5660cc2ec87cb6af4cf6da219069f974eaed78ead69623ec9L162' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 9be64784de6d7d5ed1e85ca4bb380d40cf95b14a</div><div id='time'> Time: 2016-02-04</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: mltsp/featurize_tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: parse_ts_data</div><BR>

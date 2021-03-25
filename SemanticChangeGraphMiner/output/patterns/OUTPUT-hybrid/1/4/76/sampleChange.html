@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Raw pitch = the number of voiced frames in the reference for which the
+    &#47&#47 estimate provides a correct frequency value (within 50 cents).
+    &#47&#47 NB: voicing estimation is ignored in this measure
+    cent_diff = <a id="change">np.abs(ref_cent - est_cent)</a>
+    raw_pitch = (cent_diff[ref_voicing] &lt; 50).sum()/float(ref_voicing.sum())
+
+    return raw_pitch
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Raw pitch = the number of voiced frames in the reference for which the
+    &#47&#47 estimate provides a correct frequency value (within cent_tolerance cents)
+    &#47&#47 NB: voicing estimation is ignored in this measure
+    frame_correct = (<a id="change">np.abs(ref_cent - est_cent)[ref_voicing]</a> &lt; cent_tolerance)
+    raw_pitch = (frame_correct).sum()/float(ref_voicing.sum())
+
+    return raw_pitch</code></pre>

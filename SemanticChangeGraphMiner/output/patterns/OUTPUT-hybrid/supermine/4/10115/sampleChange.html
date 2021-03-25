@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    fake_B = G_AB(real_A)
+    real_B = Variable(imgs["B"].type(Tensor))
+    fake_A = G_BA(real_B)
+    img_sample = torch.cat(<a id="change">(real_A.data, fake_B.data, real_B.data, fake_A.data)</a>, 0)
+    save_image(img_sample, "images/%s/%s.png" % (opt.dataset_name, batches_done), nrow=5, normalize=True)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Saves a generated sample from the test set
+    imgs = next(iter(val_dataloader))
+    G_AB.eval()
+    <a id="change">G_BA.eval()</a>
+    real_A = Variable(imgs["A"].type(Tensor))
+    fake_B = G_AB(real_A)
+    real_B = Variable(imgs["B"].type(Tensor))
+    fake_A = G_BA(real_B)</code></pre>

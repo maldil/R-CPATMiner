@@ -1,0 +1,30 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    <a id="change">sorted_scores = zip(labels, scores)</a>
+    sorted_scores.sort(key=operator.itemgetter(1), reverse=False)
+
+    &#47&#47 Compute error rate
+    n_match = <a id="change">sum(1 for x in sorted_scores if x[0] == 1)</a>
+    <a id="change">n_thresh = recall_point * n_match</a>
+    tp = 0
+    count = 0
+    for label, score in sorted_scores:
+        count += 1</code></pre><h3>After Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    distances = 1.0 / (scores + 1e-8)
+    recall_point = 0.95
+    <a id="change">labels = labels[np.argsort(distances)]</a>
+    &#47&#47 Sliding threshold: get first index where recall &gt;= recall_point. 
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    <a id="change">threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels))</a> 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative</code></pre><img src="25281921.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7a8383a84dc1ce059b7395fab2e50c85cdfa42ef4fb635e1a1cf4b4905f4c682L39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/hitrate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hitrate</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/4abda80dd12518e6bfdc44d067566a3e6947e906#diff-7ec846826f19cc399c1f1ee129f86583e676738a5502b98070a826b80871201eL91' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 4abda80dd12518e6bfdc44d067566a3e6947e906</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/a_priori.py</div><div id='class'> Class Name: APriori</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/916cda3dad76d51ed63803abe26a16a0cd677f56#diff-509093795f285d5520586a0d078f2d19cad5bd09ee55d0e755972181b76afb4bL37' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 916cda3dad76d51ed63803abe26a16a0cd677f56</div><div id='time'> Time: 2013-10-02</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/algorithms/total_correlation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: total_correlation</div><BR>

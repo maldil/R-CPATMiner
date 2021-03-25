@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def forward(self, bn_weight, bn_bias, *inputs):
+        &#47&#47 Save the current BN statistics for later
+        prev_running_mean = self.running_mean.clone()
+        <a id="change">prev_running_var</a> = self.running_var.clone()
+
+        &#47&#47 Create tensors that use shared allocations
+        &#47&#47 One for the concatenation output (bn_input)
+        &#47&#47 One for the ReLU output (relu_output)
+        all_num_channels = [input.size(1) for input in inputs]
+        size = list(inputs[0].size())
+        for num_channels in all_num_channels[1:]:
+            size[1] += num_channels
+        storage = self.shared_allocation_1.storage_for(inputs[0])
+        bn_input_var = Variable(type(inputs[0])(storage).resize_(size), volatile=True)
+        relu_output = type(inputs[0])(storage).resize_(size)
+
+        &#47&#47 Create variable, using existing storage
+        torch.cat(inputs, dim=1, out=bn_input_var.data)
+
+        &#47&#47 Do batch norm
+        bn_weight_var = Variable(bn_weight, volatile=True)
+        bn_bias_var = Variable(bn_bias, volatile=True)
+        bn_output_var = F.batch_norm(bn_input_var, self.running_mean, self.running_var,
+                                     bn_weight_var, bn_bias_var, training=self.training,
+                                     momentum=self.momentum, eps=self.eps)
+
+        &#47&#47 Do ReLU - and have the output be in the intermediate storage
+        torch.clamp(bn_output_var.data, 0, 1e100, out=relu_output)
+
+        self.save_for_backward(bn_weight, bn_bias, *inputs)
+        
+        &#47&#47 restore the BN statistics for later
+        self.running_mean.copy_(prev_running_mean)
+        <a id="change">self.running_var.copy_(prev_running_var)</a>
+        return relu_output
+
+    def prepare_backward(self):
+        bn_weight, bn_bias = self.saved_tensors[:2]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.training:
+            &#47&#47 Save the current BN statistics for later
+            prev_running_mean = self.running_mean.clone()
+            <a id="change">prev_running_var</a> = self.running_var.clone()
+
+        &#47&#47 Create tensors that use shared allocations
+        &#47&#47 One for the concatenation output (bn_input)
+        &#47&#47 One for the ReLU output (relu_output)
+        all_num_channels = [input.size(1) for input in inputs]
+        size = list(inputs[0].size())
+        for num_channels in all_num_channels[1:]:
+            size[1] += num_channels
+        storage = self.shared_allocation_1.storage_for(inputs[0])
+        bn_input_var = Variable(type(inputs[0])(storage).resize_(size), volatile=True)
+        relu_output = type(inputs[0])(storage).resize_(size)
+
+        &#47&#47 Create variable, using existing storage
+        torch.cat(inputs, dim=1, out=bn_input_var.data)
+
+        &#47&#47 Do batch norm
+        bn_weight_var = Variable(bn_weight, volatile=True)
+        bn_bias_var = Variable(bn_bias, volatile=True)
+        bn_output_var = F.batch_norm(bn_input_var, self.running_mean, self.running_var,
+                                     bn_weight_var, bn_bias_var, training=self.training,
+                                     momentum=self.momentum, eps=self.eps)
+
+        &#47&#47 Do ReLU - and have the output be in the intermediate storage
+        torch.clamp(bn_output_var.data, 0, 1e100, out=relu_output)
+
+        self.save_for_backward(bn_weight, bn_bias, *inputs)
+        <a id="change">if self.training:
+            &#47&#47 restore the BN statistics for later
+            self.running_mean.copy_(prev_running_mean)
+            self.running_var.copy_(prev_running_var)
+       </a> return relu_output
+
+    def prepare_backward(self):
+        bn_weight, bn_bias = self.saved_tensors[:2]</code></pre>

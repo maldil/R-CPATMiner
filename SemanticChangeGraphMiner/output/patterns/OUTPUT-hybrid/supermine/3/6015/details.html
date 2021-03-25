@@ -1,0 +1,24 @@
+<html><h3>7391aec984c1e9e0899d51e6b0538483c37ec8fb,torchdiffeq/_impl/tsit5.py,Tsit5Solver,_adaptive_tsit5_step,#Tsit5Solver#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if on_grid and accept_step:
+            &#47&#47 We&quotve just passed a grid point, which is typically used to indicate a discontinuity in f; we should
+            &#47&#47 update f to match the side of the discontinuity we&quotre now on.
+            <a id="change">f1 = self.func(t_next, y_next)</a>
+            if self.next_grid_index != len(self.grid_points) - 1:
+                self.next_grid_index += 1
+        f_next = f1 if accept_step else f0
+        dt_next = _optimal_step_size(dt, mean_error_ratio, self.safety, self.ifactor, self.dfactor, order=5)</code></pre><h3>After Change</h3><pre><code class='java'>
+        t_next = t0 + dt + 2 * eps if accept_step else t0
+        y_next = y1 if accept_step else y0
+        if on_grid and accept_step:
+            <a id="change">if eps != 0:
+                &#47&#47 We&quotve just passed a discontinuity in f; we should update f1 to match the side of the discontinuity
+                &#47&#47 we&quotre now on.
+                f1 = self.func(t_next.type_as(y_next[0]), y_next)
+           </a> if self.next_grid_index != len(self.grid_points) - 1:
+                self.next_grid_index += 1
+        f_next = f1 if accept_step else f0
+        dt_next = _optimal_step_size(dt, mean_error_ratio, self.safety, self.ifactor, self.dfactor)</code></pre><img src="24803194.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-e73a72505e7255a60f3cfdb582d0d0c572a73333002fa288e04858bca19f2cffL110' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/tsit5.py</div><div id='class'> Class Name: Tsit5Solver</div><div id='method'> Method Name: _adaptive_tsit5_step</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/98c3d1f65f075ff960b219afe017cd4cf55bfba7#diff-6ff0979d222b062a3c7534e3f38f057b1fd540d5ba8007def05ef75cf7aaab5eL114' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 98c3d1f65f075ff960b219afe017cd4cf55bfba7</div><div id='time'> Time: 2016-04-19</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/gbrt_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gbrt_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/544875dd8a7fea49a86e5623d37274159b4ba7b5#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL159' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 544875dd8a7fea49a86e5623d37274159b4ba7b5</div><div id='time'> Time: 2017-01-10</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR><BR><div id='link'><a href='https://github.com/sympy/sympy/commit/ef99c69f2edf35c7846f9d0c81ddfe0a126d73fe#diff-500498fb8c13a23d099bac93665453cd757898d898d70860b4b5a0c3b04c7e77L447' target='_blank'>Link</a></div><div id='project'> Project Name: sympy/sympy</div><div id='commit'> Commit Name: ef99c69f2edf35c7846f9d0c81ddfe0a126d73fe</div><div id='time'> Time: 2020-12-16</div><div id='author'> Author: sylee957@gmail.com</div><div id='file'> File Name: sympy/functions/elementary/exponential.py</div><div id='class'> Class Name: exp</div><div id='method'> Method Name: _eval_is_algebraic</div><BR>

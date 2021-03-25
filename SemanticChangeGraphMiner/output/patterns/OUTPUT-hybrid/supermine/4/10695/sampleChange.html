@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                             "the following error while writing file:"
+                                             "\n\n %s" % ffmpeg_error))
+                        pipe_out.stdin.close()
+                        <a id="change">pipe_in.stdout.close()</a>
+                        pipe_out.terminate()
+                        pipe_in.terminate()
+                        del pipe_in
+                        del pipe_out</code></pre><h3>After Change</h3><pre><code class='java'>
+                    read_input = False
+                _preds = sess.run(preds, feed_dict={img_placeholder: X})
+
+                for i in range(0, <a id="change">batch_shape[0]</a>):
+                    img = np.clip(_preds[i], 0, 255).astype(np.uint8)
+                    try:
+                        pipe_out.stdin.write(img)</code></pre>

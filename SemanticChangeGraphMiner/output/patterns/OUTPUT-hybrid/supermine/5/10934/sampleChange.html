@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+from PyInstaller.utils.hooks import collect_submodules
+
+
+<a id="change">hiddenimports</a> = <a id="change">list(settings.INSTALLED_APPS)</a> + \
+                 list(settings.TEMPLATE_CONTEXT_PROCESSORS) + \
+                 list(settings.TEMPLATE_LOADERS) + \
+                 [settings.ROOT_URLCONF]</code></pre><h3>After Change</h3><pre><code class='java'>
+from PyInstaller.utils.hooks import collect_submodules
+
+
+hiddenimports = <a id="change">list(settings.INSTALLED_APPS)</a>
+
+&#47&#47 do not fail script when settings does not have such attributes
+if hasattr(settings, &quotTEMPLATE_CONTEXT_PROCESSORS&quot):
+    hiddenimports += list(settings.TEMPLATE_CONTEXT_PROCESSORS)
+
+if hasattr(settings, &quotTEMPLATE_LOADERS&quot):
+    <a id="change">hiddenimports += list(settings.TEMPLATE_LOADERS)</a>
+
+<a id="change">hiddenimports</a> += [settings.ROOT_URLCONF]
+
+
+def _remove_class(class_name):</code></pre>

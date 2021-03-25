@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for p in processes:
+        p.join()
+
+    <a id="change">print("Script took {} seconds".format(time.time() - start))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+if __name__ == &quot__main__&quot:
+    <a id="change">parser = argparse.ArgumentParser(description="Parameter-Server RPC based training")</a>
+    parser.add_argument("--world_size", type=int, default=4, help="Total number of participating processes. Should be the sum of master node and all training nodes, add 1 if creating training node on master.")
+    parser.add_argument("--rank", type=int, default=None, help="Global rank of this process. Pass in 0 for master. Note that ranks should be unique across all nodes participating in training.")
+    <a id="change">parser.add_argument("--master_addr", type=str, default="localhost", help="Address of master, will default to localhost if not provided. Master must be able to accept network traffic on the address + port.")</a>
+    <a id="change">parser.add_argument("--master_port", type=str, default="29500", help="Port that master is listening on, will default to 29500 if not provided. Master must be able to accept network traffic on the host and port.")</a>
+    <a id="change">args = parser.parse_args()</a>
+    assert args.rank is not None, "must provide rank argument."
+    os.environ[&quotMASTER_ADDR&quot] = args.master_addr
+    os.environ["MASTER_PORT"] = args.master_port
+    &#47&#47 Get data to train on
+    train_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(&quot../data&quot, train=True, download=True,
+                       transform=transforms.Compose([
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.1307,), (0.3081,))
+                       ])),
+        batch_size=32, shuffle=True,)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(&quot../data&quot, train=False, transform=transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,))
+        ])),
+        batch_size=32, shuffle=True, )
+    processes = []
+    <a id="change">world_size = args.world_size</a>
+    if args.rank == 0:
+        p = mp.Process(target=run_parameter_server, args=(0, world_size))
+        p.start()
+        processes.append(p)</code></pre>

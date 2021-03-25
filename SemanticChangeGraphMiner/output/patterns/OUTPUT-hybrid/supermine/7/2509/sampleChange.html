@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Returns a numpy array of the values without their frequencies
+    
+    uniques, counts = np.unique(prototypes, return_counts=True)
+    frequencies = <a id="change">list(zip(uniques, counts))</a>
+    frequencies, _ = sorted(frequencies, key=lambda elt: elt[1], reverse=True)
+    <a id="change">return np.array([f for f in frequencies])</a>
+
+
+_VECTORIZED_EDIT_DISTANCES = {
+    &quotlevenshtein-ratio&quot: np.vectorize(string_distances.levenshtein_ratio),</code></pre><h3>After Change</h3><pre><code class='java'>
+    Returns a numpy array of the values without their frequencies
+    
+    uniques, counts = np.unique(prototypes, return_counts=True)
+    <a id="change">sorted_indexes = np.argsort(counts)[::-1]</a>
+    <a id="change">return uniques[sorted_indexes], counts[sorted_indexes]</a>
+
+
+_VECTORIZED_EDIT_DISTANCES = {
+    &quotlevenshtein-ratio&quot: np.vectorize(string_distances.levenshtein_ratio),</code></pre>

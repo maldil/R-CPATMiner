@@ -1,0 +1,95 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.max_features &lt; self.min_features:
+            raise AttributeError(&quotmin_features must be &lt;= max_features&quot)
+
+        candidates = list(<a id="change">chain(*((combinations(range(X.shape[1]), r=i))
+                          for i in range(self.min_features,
+                                         self.max_features + 1)))</a>)
+
+        self.subsets_ = {}
+        all_comb = len(candidates)
+        n_jobs = min(self.n_jobs, all_comb)
+        parallel = Parallel(n_jobs=n_jobs, pre_dispatch=self.pre_dispatch)
+        work = enumerate(parallel(delayed(_calc_score)(self, X, y, c)
+                                  for c in candidates))
+
+        for iteration, (c, cv_scores) in work:
+
+            self.subsets_[iteration] = {&quotfeature_idx&quot: c,
+                                        &quotcv_scores&quot: cv_scores,
+                                        &quotavg_score&quot: np.mean(cv_scores)}
+
+            if self.print_progress:
+                sys.stderr.write(&quot\rFeatures: %d/%d&quot % (
+                    iteration + 1, all_comb))
+                sys.stderr.flush()
+
+        max_score = float(&quot-inf&quot)
+        for c in self.subsets_:
+            if self.subsets_[c][&quotavg_score&quot] &gt; max_score:
+                <a id="change">max_score</a> = self.subsets_[c][&quotavg_score&quot]
+                best_subset = c
+        score = max_score
+        idx = self.subsets_[best_subset][&quotfeature_idx&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.max_features &lt; self.min_features:
+            raise AttributeError(&quotmin_features must be &lt;= max_features&quot)
+
+        candidates = <a id="change">chain(*((combinations(range(X.shape[1]), r=i))
+                          for i in range(self.min_features,
+                                         self.max_features + 1)))</a>
+
+        self.subsets_ = {}
+        
+        def ncr(n, r):
+            Return the number of combinations of length r from n items.
+            
+            Parameters
+            ----------
+            n : {integer}
+            Total number of items
+            r : {integer}
+            Number of items to select from n
+            
+            Returns
+            -------
+            Number of combinations, integer
+            
+            
+            
+            r = min(r, n-r)
+            if r == 0:
+                return 1
+            numer = reduce(op.mul, range(n, n-r, -1))
+            denom = reduce(op.mul, range(1, r+1))
+            return numer//denom
+        
+        all_comb = np.sum([ncr(n=X.shape[1], r=i)
+                           for i in range(self.min_features,
+                                          self.max_features + 1)])
+        
+        n_jobs = min(self.n_jobs, all_comb)
+        parallel = Parallel(n_jobs=n_jobs, pre_dispatch=self.pre_dispatch)
+        work = enumerate(parallel(delayed(_calc_score)(self, X, y, c)
+                                  for c in candidates))
+
+        for iteration, (c, cv_scores) in work:
+
+            self.subsets_[iteration] = {&quotfeature_idx&quot: c,
+                                        &quotcv_scores&quot: cv_scores,
+                                        &quotavg_score&quot: np.mean(cv_scores)}
+
+            if self.print_progress:
+                sys.stderr.write(&quot\rFeatures: %d/%d&quot % (
+                    iteration + 1, all_comb))
+                sys.stderr.flush()
+
+        max_score = float(&quot-inf&quot)
+        for c in self.subsets_:
+            if self.subsets_[c][&quotavg_score&quot] &gt; max_score:
+                <a id="change">max_score</a> = self.subsets_[c][&quotavg_score&quot]
+                best_subset = c
+        score = max_score
+        idx = self.subsets_[best_subset][&quotfeature_idx&quot]</code></pre>

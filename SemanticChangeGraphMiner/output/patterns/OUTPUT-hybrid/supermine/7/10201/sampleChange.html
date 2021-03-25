@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Output shape:
+      [N, M]
+    
+    <a id="change">with tf.name_scope(&quotIOU&quot):
+      return iou(groundtruth_boxes, anchors)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    groundtruth_rank = len(groundtruth_boxes.shape)
+    anchor_rank = len(anchors.shape)
+    <a id="change">if groundtruth_rank &lt; 2 or groundtruth_rank &gt; 3:
+      raise ValueError(&quot`groudtruth_boxes` must be rank 2 or 3, got {}&quot.format(
+          groundtruth_rank))
+   </a> <a id="change">if anchor_rank &lt; 2 or anchor_rank &gt; 3:
+      raise ValueError(&quot`anchors` must be rank 2 or 3, got {}&quot.format(
+          anchor_rank))
+   </a> if groundtruth_rank &lt; anchor_rank:
+      raise ValueError(<a id="change">&quot`groundtruth_boxes` is unbatched while `anchors` is &quot
+                       &quotbatched is not a valid use case, got groundtruth_box &quot
+                       &quotrank {}, and anchors rank {}&quot.format(
+                           groundtruth_rank, anchor_rank)</a>)
+
+    return iou(groundtruth_boxes, anchors)
+</code></pre>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        A binary image of size `sl1`.shape() extend by `nslices`+2 along the new
+        dimension `dim`. The border slices are the original slices `sl1` and `sl2`.
+    
+    dt1 = distance_transform_edt(~<a id="change">sl1.astype(numpy.bool)</a>)
+    dt2 = distance_transform_edt(~sl2.astype(numpy.bool))
+    <a id="change">slicer</a> = [slice(None)] * dt1.ndim
+    <a id="change">slicer</a> = slicer[:dim] + [numpy.newaxis] + slicer[dim:]
+    <a id="change">out</a> = numpy.concatenate((dt1[slicer], dt2[slicer]), axis=dim)
+    <a id="change">zoom_factors</a> = [1] * dt1.ndim
+    <a id="change">zoom_factors</a> = zoom_factors[:dim] + [(nslices + 2)/2.] + zoom_factors[dim:]
+    out = zoom(out, zoom_factors, order=order)
+    return out &lt;= .5
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        A binary image of size `sl1`.shape() extend by `nslices`+2 along the new
+        dimension `dim`. The border slices are the original slices `sl1` and `sl2`.
+    
+    sl1 = <a id="change">sl1.astype(numpy.bool)</a>
+    sl2 = sl2.astype(numpy.bool)
+    dt1 = distance_transform_edt(~sl1) - distance_transform_edt(sl1)
+    dt2 = distance_transform_edt(~sl2) - distance_transform_edt(sl2)
+    
+    <a id="change">slicer</a> = [slice(None)] * dt1.ndim
+    <a id="change">slicer</a> = slicer[:dim] + [numpy.newaxis] + slicer[dim:]
+    <a id="change">out</a> = numpy.concatenate((dt1[slicer], dt2[slicer]), axis=dim)
+    <a id="change">zoom_factors</a> = [1] * dt1.ndim
+    <a id="change">zoom_factors</a> = zoom_factors[:dim] + [(nslices + 2)/2.] + zoom_factors[dim:]
+    out = zoom(out, zoom_factors, order=order)
+    return out &lt;= 0
+    </code></pre>

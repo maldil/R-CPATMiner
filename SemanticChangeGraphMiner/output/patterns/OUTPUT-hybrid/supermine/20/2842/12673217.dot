@@ -1,0 +1,56 @@
+digraph G {
+subgraph cluster0 {
+1 [label="{}" a="4" s="2443,2642" l="1,1" shape="box"];
+3 [label="Assignment:=" a="7" s="2659" l="1" shape="box"];
+5 [label="FieldAccess" a="22" s="2649" l="10" shape="box"];
+6 [label="Sequential" a="32" s="2669,2686" l="11,1" shape="box"];
+8 [label="FieldAccess" a="22" s="2660" l="8" shape="box"];
+9 [label="LeakyReLU" a="32" s="2569,2587" l="10,1" shape="box"];
+11 [label="Linear" a="32" s="2598,2625" l="7,1" shape="box"];
+13 [label="LeakyReLU" a="32" s="2489,2507" l="10,1" shape="box"];
+16 [label="Linear" a="32" s="2518,2532" l="7,1" shape="box"];
+17 [label="BatchNorm1d" a="32" s="2543,2558" l="12,1" shape="box"];
+19 [label="Linear" a="32" s="2453,2478" l="7,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Sequential" a="32" s="2381,2590" l="11,1" shape="box"];
+4 [label="FieldAccess" a="22" s="2361" l="10" shape="box"];
+7 [label="FieldAccess" a="22" s="2372" l="8" shape="box"];
+10 [label="LeakyReLU" a="32" s="2517,2535" l="10,1" shape="box"];
+12 [label="Linear" a="32" s="2546,2573" l="7,1" shape="box"];
+14 [label="LeakyReLU" a="32" s="2437,2455" l="10,1" shape="box"];
+15 [label="Linear" a="32" s="2466,2480" l="7,1" shape="box"];
+18 [label="BatchNorm1d" a="32" s="2491,2506" l="12,1" shape="box"];
+20 [label="Linear" a="32" s="2401,2426" l="7,1" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 6 [label="_para_"];
+2 -> 4 [label="_def_"];
+3 -> 5 [label="_def_"];
+5 -> 4 [label="_map_"];
+6 -> 3 [label="_para_"];
+7 -> 2 [label="_recv_"];
+8 -> 7 [label="_map_"];
+8 -> 6 [label="_recv_"];
+9 -> 10 [label="_map_"];
+9 -> 1 [label="_para_"];
+10 -> 2 [label="_para_"];
+11 -> 12 [label="_map_"];
+11 -> 1 [label="_para_"];
+12 -> 2 [label="_para_"];
+13 -> 1 [label="_para_"];
+13 -> 14 [label="_map_"];
+14 -> 2 [label="_para_"];
+15 -> 2 [label="_para_"];
+16 -> 1 [label="_para_"];
+16 -> 15 [label="_map_"];
+17 -> 1 [label="_para_"];
+17 -> 18 [label="_map_"];
+18 -> 2 [label="_para_"];
+19 -> 1 [label="_para_"];
+19 -> 20 [label="_map_"];
+20 -> 2 [label="_para_"];
+}

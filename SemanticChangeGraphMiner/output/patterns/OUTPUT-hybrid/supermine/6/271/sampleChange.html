@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                               weights=sample_weight)
+    if isinstance(multioutput, str):
+        if multioutput == &quotraw_values&quot:
+            return <a id="change">output_errors if squared else np.sqrt(output_errors)</a>
+        elif multioutput == &quotuniform_average&quot:
+            &#47&#47 pass None as weights to np.average: uniform mean
+            multioutput = None
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    output_errors = np.average((y_true - y_pred) ** 2, axis=0,
+                               weights=sample_weight)
+
+    <a id="change">if not squared:
+        output_errors = np.sqrt(output_errors)
+
+   </a> if isinstance(multioutput, str):
+        if multioutput == &quotraw_values&quot:
+            return output_errors
+        elif multioutput == &quotuniform_average&quot:</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quottyp&quot, [set, list, tuple, iter])
+@pytest.mark.parametrize(&quotid_column&quot, [&quotid&quot, &quotblah&quot])
+def test_from_contents_vs_memberships(data, typ, id_column):
+    contents = <a id="change">{&quotcat1&quot: typ([&quotaa&quot, &quotbb&quot, &quotcc&quot]),
+                &quotcat2&quot: typ([&quotcc&quot, &quotdd&quot]),
+                &quotcat3&quot: typ([&quotee&quot]),
+                }</a>
+    &#47&#47 Note that ff is not present in contents
+    data_df = pd.DataFrame(data,
+                           index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot])
+    baseline = from_contents(OrderedDict(contents), data=data_df,</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quottyp&quot, [set, list, tuple, iter])
+@pytest.mark.parametrize(&quotid_column&quot, [&quotid&quot, &quotblah&quot])
+def test_from_contents_vs_memberships(data, typ, id_column):
+    contents = <a id="change">OrderedDict([(&quotcat1&quot, typ([&quotaa&quot, &quotbb&quot, &quotcc&quot])),
+                            (&quotcat2&quot, typ([&quotcc&quot, &quotdd&quot])),
+                            (&quotcat3&quot, typ([&quotee&quot]))])</a>
+    &#47&#47 Note that ff is not present in contents
+    data_df = pd.DataFrame(data,
+                           index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot])
+    baseline = from_contents(contents, data=data_df,</code></pre>

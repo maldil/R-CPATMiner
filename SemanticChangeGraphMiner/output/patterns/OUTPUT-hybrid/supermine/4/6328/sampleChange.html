@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            out_S_2.append(S_2_r)
+
+    out_S = []
+    <a id="change">out_S.extend(out_S_0)</a>
+    out_S.extend(out_S_1)
+    out_S.extend(out_S_2)
+
+    out_S = concatenate(out_S)</code></pre><h3>After Change</h3><pre><code class='java'>
+    concatenate = backend.concatenate
+
+    &#47&#47 S is simply a dictionary if we do not perform the averaging...
+    S = <a id="change">{}</a>
+
+    U_r = pad(x)
+
+    U_0_c = fft(U_r, &quotC2C&quot)
+
+    &#47&#47 First low pass filter
+    U_1_c = cdgmm(U_0_c, phi[0])
+    U_1_c = subsample_fourier(U_1_c, k=2 ** J)
+
+    S_0 = fft(U_1_c, &quotC2R&quot, inverse=True)
+    S_0 = unpad(S_0)
+
+    S[()] = S_0
+
+    for n1 in range(len(psi)):
+        j1 = psi[n1][&quotj&quot]
+        U_1_c = cdgmm(U_0_c, psi[n1][0])
+        if j1 &gt; 0:
+            U_1_c = subsample_fourier(U_1_c, k=2 ** j1)
+        U_1_c = fft(U_1_c, &quotC2C&quot, inverse=True)
+        U_1_c = modulus(U_1_c)
+        U_1_c = fft(U_1_c, &quotC2C&quot)
+
+        &#47&#47 Second low pass filter
+        S_1_c = cdgmm(U_1_c, phi[j1])
+        S_1_c = subsample_fourier(S_1_c, k=2 ** (J - j1))
+
+        S_1_r = fft(S_1_c, &quotC2R&quot, inverse=True)
+        S_1_r = unpad(S_1_r)
+
+
+        S[(n1,)] = S_1_r
+
+        if max_order &lt; 2:
+            continue
+        for n2 in range(len(psi)):
+            j2 = psi[n2][&quotj&quot]
+            if j2 &lt;= j1:
+                continue
+            U_2_c = cdgmm(U_1_c, psi[n2][j1])
+            U_2_c = subsample_fourier(U_2_c, k=2 ** (j2 - j1))
+            U_2_c = fft(U_2_c, &quotC2C&quot, inverse=True)
+            U_2_c = modulus(U_2_c)
+            U_2_c = fft(U_2_c, &quotC2C&quot)
+
+            &#47&#47 Third low pass filter
+            S_2_c = cdgmm(U_2_c, phi[j2])
+            S_2_c = subsample_fourier(S_2_c, k=2 ** (J - j2))
+
+            S_2_r = fft(S_2_c, &quotC2R&quot, inverse=True)
+            S_2_r = unpad(S_2_r)
+
+            <a id="change">S[(n1, n2)] = S_2_r</a>
+
+    if vectorize:
+        sorted_keys = sorted(S.keys(), key=lambda x: (len(x),) + x)
+</code></pre>

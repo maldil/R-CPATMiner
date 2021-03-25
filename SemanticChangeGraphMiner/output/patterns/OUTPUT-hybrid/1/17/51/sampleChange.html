@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 additional compatible upper pin
+        nlp.meta["spacy_version"] = "&gt;=2.3.0,&lt;2.4.0"
+        nlp.to_disk(d)
+        nlp2 = <a id="change">util.load_model(d)</a>
+
+        &#47&#47 incompatible older version
+        nlp.meta["spacy_version"] = "&gt;=2.2.5"
+        <a id="change">nlp.to_disk(d)</a>
+        with pytest.warns(UserWarning):
+            nlp_reloaded = util.load_model(d)
+
+        &#47&#47 invalid version specification</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 no change: compatible
+        nlp.to_disk(d)
+        meta_path = Path(d / "meta.json")
+        <a id="change">util.get_model_meta(d)</a>
+
+        &#47&#47 additional compatible upper pin
+        nlp.meta["spacy_version"] = "&gt;=2.3.0,&lt;2.4.0"
+        <a id="change">srsly.write_json(Path(d / "meta.json"), nlp.meta)</a>
+        util.get_model_meta(d)
+
+        &#47&#47 incompatible older version
+        nlp.meta["spacy_version"] = "&gt;=2.2.5"</code></pre>

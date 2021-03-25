@@ -1,0 +1,48 @@
+<html><h3>164b392ce45a1baa7523212c451fa3d20cb06450,setup.py,,main,#,64
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            log("Installing Microsoft Visual C++ Compiler")
+            vcSetupPath = os.path.join(setupHome, "VCForPython.msi")
+            locateFile(vcURL, vcSetupPath)
+            c = <a id="change">"msiexec /i {0} /qb".format(vcSetupPath)</a>
+            log("Executing: {0}".format(c))
+            subprocess.call(["msiexec", "/i", vcSetupPath, "/qb"])
+            log("C++ Compiler for Python installed successfully")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    pipExePath = os.path.join(os.path.dirname(sys.executable), r"Scripts\pip.exe")
+    setupHome = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scripts")
+    distHome = os.path.join(os.path.abspath(<a id="change">os.path.dirname(__file__)</a>), "dist")
+
+    try:
+        arcpy = __import__(&quotarcpy&quot)
+        info = arcpy.GetInstallInfo()
+        if tuple(map(int, (info[&quotVersion&quot].split(".")))) &lt; tuple(map(int, ("10.3.1".split(".")))):
+            raise Exception("No ArcGIS")
+    except:
+        die("Unable to find ArcGIS 10.3.1 or above. Cannot proceed.", 99)
+
+    try:
+        log("Installing PIP")
+        pipPyPath = os.path.join(setupHome, "get-pip.py")
+        locateFile(pipURL, pipPyPath)
+        subprocess.call([sys.executable, pipPyPath])
+
+        if os.path.isfile(pipExePath):
+            log("PIP installed successfully")
+        else:
+            raise Exception("PIP failed")
+
+        subprocess.call([pipExePath, "install", "--upgrade", "pip"])
+        subprocess.call([pipExePath, "install", "--upgrade", "wheel"])
+    except:
+        die("PIP installation failed!", 1)
+    
+    try:           
+        if sys.version_info[0] == 2:
+            log("Installing Microsoft Visual C++ Compiler")
+            vcSetupPath = <a id="change">os</a>.path.join(distHome, "VCForPython27.msi")
+            locateFile(vcURL, vcSetupPath)
+            c = ["msiexec", "/i", vcSetupPath, "/qb-"]
+            log("Executing: {0}".format(" ".join(c)))</code></pre><img src="26230656.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/164b392ce45a1baa7523212c451fa3d20cb06450#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L69' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 164b392ce45a1baa7523212c451fa3d20cb06450</div><div id='time'> Time: 2015-05-21</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/164b392ce45a1baa7523212c451fa3d20cb06450#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L69' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 164b392ce45a1baa7523212c451fa3d20cb06450</div><div id='time'> Time: 2015-05-21</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/23a45d5eb839c763c94c0e413ad599d9f9b5e184#diff-d2691473f83132384f88c38a877aabbc39884b6140ea81c6e09130c0286da7f2L8' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 23a45d5eb839c763c94c0e413ad599d9f9b5e184</div><div id='time'> Time: 2018-09-06</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/scripts/create_lmdb.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/b1004960919dd1671da86dad6c465d4b6ad69d62#diff-8c85a68e45e78879c83bcbaf423e0c3ae901f03a7699f184961b5a8597e1c8eaL137' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: b1004960919dd1671da86dad6c465d4b6ad69d62</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/plot/points.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_points</div><BR>

@@ -1,0 +1,107 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 unpack avl_inputs
+    files_path = self.settings.filenames.run_folder
+    <a id="change">batch_path = os.path.abspath(os.path.join(files_path,self.settings.filenames.batches[-1]))</a>
+    aircraft   = self.features
+
+    base_case_text = \
+&quot&quot&quot
+
+ ---------------------------------------------
+ Run case  {0}:   {1}
+
+ alpha        -&gt;  alpha       =   {2}
+ beta         -&gt;  beta        =   {3}
+ pb/2V        -&gt;  pb/2V       =   0.00000
+ qc/2V        -&gt;  qc/2V       =   0.00000
+ rb/2V        -&gt;  rb/2V       =   0.00000
+{4}
+
+ alpha     =   0.00000     deg
+ beta      =   0.00000     deg
+ pb/2V     =   0.00000
+ qc/2V     =   0.00000
+ rb/2V     =   0.00000
+ CL        =  0.000000
+ CDo       =  {5}
+ bank      =   0.00000     deg
+ elevation =   0.00000     deg
+ heading   =   0.00000     deg
+ Mach      =   {6}
+ velocity  =   {7}     m/s
+ density   =   {8}     kg/m^3
+ grav.acc. =   {9}     m/s^2
+ turn_rad. =   0.00000     m
+ load_fac. =   0.00000
+ X_cg      =   {10}     m
+ Y_cg      =   {11}     m
+ Z_cg      =   {12}     m
+ mass      =   {13}     kg
+ Ixx       =   {14}     kg-m^2
+ Iyy       =   {15}     kg-m^2
+ Izz       =   {16}     kg-m^2
+ Ixy       =   {17}     kg-m^2
+ Iyz       =   {18}     kg-m^2
+ Izx       =   {19}     kg-m^2
+ visc CL_a =   0.00000
+ visc CL_u =   0.00000
+ visc CM_a =   0.00000
+ visc CM_u =   0.00000
+
+&quot&quot&quot&#47&#47{4} is a set of control surface inputs that will vary depending on the control surface configuration
+
+
+    &#47&#47 Open the geometry file after purging if it already exists
+    purge_files([batch_path])
+    <a id="change">runcases = open(batch_path,&quotw&quot)</a>
+
+    try:
+        x_cg = self.features.mass_properties.center_of_gravity[0]
+        y_cg = self.features.mass_properties.center_of_gravity[1]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Open the geometry file after purging if it already exists
+    purge_files([batch_filename])
+    <a id="change">with open(batch_filename,&quotw&quot) as runcases:
+
+        x_cg = self.features.mass_properties.center_of_gravity[0]
+        y_cg = self.features.mass_properties.center_of_gravity[1]
+        z_cg = self.features.mass_properties.center_of_gravity[2]
+        mass = 0 &#47&#47self.default_case.mass TODO: FIGURE OUT WHAT TO DEFAULT MASS TO, AND WHERE TO STORE IT BEFORE ANALYSIS.
+        moments_of_inertia = aircraft.mass_properties.moments_of_inertia.tensor
+        Ixx  = moments_of_inertia[0][0]
+        Iyy  = moments_of_inertia[1][1]
+        Izz  = moments_of_inertia[2][2]
+        Ixy  = moments_of_inertia[0][1]
+        Iyz  = moments_of_inertia[1][2]
+        Izx  = moments_of_inertia[2][0]
+
+        for case in self.analysis_temps.current_cases:
+            index = case.index
+            name  = case.tag
+            alpha = case.conditions.aerodynamics.angle_of_attack
+            beta  = case.conditions.aerodynamics.side_slip_angle
+            CD0   = case.conditions.aerodynamics.parasite_drag
+            mach  = case.conditions.freestream.mach
+            v     = case.conditions.freestream.velocity
+            rho   = case.conditions.freestream.density
+            g     = case.conditions.freestream.gravitational_acceleration
+
+            &#47&#47 form controls text
+            controls = []
+            for cs in case.stability_and_control.control_deflections:
+                cs_text = make_controls_case_text(cs)
+                controls.append(cs_text)
+            controls_text = &quot&quot.join(controls)
+            case_text = base_case_text.format(index,name,alpha,beta,controls_text,
+                                              CD0,mach,v,rho,g,x_cg,y_cg,z_cg,mass,
+                                              Ixx,Iyy,Izz,Ixy,Iyz,Izx)
+            runcases.write(case_text)
+
+   </a> return
+
+
+def write_input_deck(self):</code></pre>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        onset = np.zeros(num_comments, float)
+        duration = np.zeros(num_comments, float)
+        description = [&quot&quot] * num_comments
+        <a id="change">for t_idx, (_description, (_onset, _duration)) in \
+                enumerate(comments_dict.items()):
+            &#47&#47 extract the onset, duration, description to
+            &#47&#47 create an Annotations object
+            onset[t_idx] = _onset
+            duration[t_idx] = _duration
+            description[t_idx] = _description
+       </a> annot = Annotations(onset, duration, description)
+        self.set_annotations(annot)
+
+    def _read_segment_file(self, data, idx, fi, start, stop, cals, mult):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 loop through comments dictionary, which may contain
+        &#47&#47 multiple events for the same "text" annotation
+        t_idx = 0
+        <a id="change">for _description, event_tuples in comments_dict.items():
+            for (_onset, _duration) in event_tuples:
+                &#47&#47 extract the onset, duration, description to
+                &#47&#47 create an Annotations object
+                onset[t_idx] = _onset
+                duration[t_idx] = _duration
+                description[t_idx] = _description
+                t_idx += 1
+       </a> annot = Annotations(onset, duration, description)
+        self.set_annotations(annot)
+
+    def _read_segment_file(self, data, idx, fi, start, stop, cals, mult):</code></pre>

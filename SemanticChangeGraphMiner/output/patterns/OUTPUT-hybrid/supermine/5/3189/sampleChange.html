@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 These bvecs are saved as one long array:
+        new_bvecs2 = np.ravel(bvecs)
+        with open(&quottest_bv_file2.npy&quot, &quotw&quot) as bv_file2:
+            <a id="change">print(&quotFILENAME:&quot, bv_file2.name)</a>
+            np.save(bv_file2.name, new_bvecs2)
+        npt.assert_raises(IOError, read_bvals_bvecs, fbvals, &quottest_bv_file2.npy&quot)
+
+        &#47&#47 There are less bvecs than bvals:</code></pre><h3>After Change</h3><pre><code class='java'>
+        with open(bv_two_volume, &quotw&quot) as f:
+            f.write("0 0 0\n0 0 0\n")
+        bval_two_volume = &quotbval_two_volume.txt&quot
+        <a id="change">with open(bval_two_volume, &quotw&quot) as f:
+            f.write("0\n0\n")
+       </a> bval_5, bvecs_5 = read_bvals_bvecs(bval_two_volume,
+                                           bv_two_volume)
+        npt.assert_array_equal(bvecs_5, np.zeros((2, 3)))
+        npt.assert_array_equal(bval_5, np.zeros(2))</code></pre>

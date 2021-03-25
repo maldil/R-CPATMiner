@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot
+    if f.dtype != weights.dtype:
+        weights = weights.astype(f.dtype)
+    <a id="change">if output is not None:
+        if output.dtype != f.dtype: raise ValueError(&quotmahotas.convolve: `output` has wrong type&quot)
+        if output.shape != f.shape: raise ValueError(&quotmahotas.convolve: `output` has wrong shape&quot)
+        if not output.flags[&quotCONTIGUOUS&quot]: raise ValueError(&quotmahotas.convolve: `output` is not c-array&quot)
+   </a> if mode not in modes:
+        raise ValueError(&quotmahotas.convolve: `mode` not in %s&quot % modes)
+    if mode == &quotconstant&quot and cval != 0.:
+        raise NotImplementedError(&quotPlease email mahotas developers to get this implemented.&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if f.dtype != weights.dtype:
+        weights = weights.astype(f.dtype)
+    output = _get_output(f, output, &quotconvolve&quot)
+    <a id="change">_check_mode(mode, cval, &quotconvolve&quot)</a>
+    return _convolve.convolve(f, weights, output, mode2int[mode])
+
+def median_filter(f, Bc=None, mode=&quotreflect&quot, cval=0.0, output=None):
+    &quot&quot&quot</code></pre>

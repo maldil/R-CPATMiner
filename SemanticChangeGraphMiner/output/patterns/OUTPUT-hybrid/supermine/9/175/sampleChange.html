@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 As CircuitOperation is immutable, this can safely return the original.
+            return self
+        repetitions = int(repetitions)
+        <a id="change">if protocols.is_measurement(self.circuit):
+            raise NotImplementedError(&quotLoops over measurements are not supported.&quot)
+       </a> return self.replace(repetitions=self.repetitions * repetitions)
+
+    def __pow__(self, power: int) -&gt; &quotCircuitOperation&quot:
+        return self.repeat(power)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 The eventual number of repetitions of the returned CircuitOperation.
+        final_repetitions = self.repetitions * repetitions
+
+        <a id="change">if repetition_ids is None:
+            repetition_ids = default_repetition_ids(expected_repetition_id_length)
+        elif len(repetition_ids) != expected_repetition_id_length:
+            raise ValueError(
+                f&quotExpected repetition_ids={repetition_ids} length to be &quot
+                f&quot{expected_repetition_id_length}&quot
+            )
+
+        &#47&#47 If `self.repetition_ids` is None, this will just return `repetition_ids`.
+       </a> repetition_ids = cartesian_product_of_string_lists(repetition_ids, self.repetition_ids)
+
+        return self.replace(repetitions=final_repetitions, repetition_ids=repetition_ids)
+</code></pre>

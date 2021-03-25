@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_trans = n_2d.T
+        
+    &#47&#47 Right hand side matrix
+    <a id="change">RHS</a> = ((<a id="change">np</a>.sin(n_trans*thetan).T)*(np.sin(np.atleast_2d(thetan).T)+(n_trans*k).T))
+
+    &#47&#47 Left hand side vector    
+    LHS = (k*np.sin(thetan)*(alpha+ageo-azl)).T
+    
+    &#47&#47 Expand out for all the angles of attack
+    <a id="change">RHS2</a> = np.tile(RHS.T, (repeats,1,1))    
+    LHS2 = np.tile(LHS,(repeats,1,1))
+        
+    &#47&#47 The Fourier Coefficientsk
+    A = np.linalg.solve(RHS2,LHS2)
+    
+    &#47&#47 The 3-D Coefficient of lift
+    CL = A[:,0]*np.pi*AR
+    
+    &#47&#47 Find the sectional coefficients of lift
+    <a id="change">Cl</a> = b*np.sum(4*A*(np.sin(n*thetan)),axis=1)/c
+    
+    &#47&#47 induced alpha
+    alpha_i = np.sum(n_trans*A*np.sin(n*thetan)/np.sin(thetan),axis=1)
+    
+    &#47&#47 Sectional vortex drag
+    Cdv = Cl*alpha_i
+    
+    &#47&#47 Total vortex drag
+    <a id="change">CDv</a> = np.sum(Cdv*AR*etam,axis=1)
+    CDv = np.dot(n,A**2)*np.pi*AR
+    
+    &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_trans = np.atleast_2d(n).T
+        
+    &#47&#47 Right hand side matrix
+    <a id="change">RHS</a> = (<a id="change">np.sin(n_trans*thetan)</a>*(np.sin(thetan)+n_trans*k))
+    
+    &#47&#47 Expand out for all the angles of attack
+    <a id="change">RHS2</a> = np.tile(RHS.T, (repeats,1,1))
+
+    &#47&#47 Left hand side vector    
+    LHS = k*np.sin(thetan)*(alpha+ageo-azl)
+        
+    &#47&#47 The Fourier Coefficients
+    A = np.linalg.solve(RHS2,LHS)
+    
+    &#47&#47 The 3-D Coefficient of lift
+    CL = A[:,0]*np.pi*AR
+    
+    &#47&#47 Find the sectional coefficients of lift
+    <a id="change">Cl</a> = b*np.cumsum(4*A*np.sin(n*thetan),axis=1)/c
+    
+    &#47&#47 induced alpha
+    alpha_i = np.cumsum(n*A*np.sin(n*A)/np.sin(thetan),axis=1)
+    
+    &#47&#47 Sectional vortex drag
+    Cdv = Cl*alpha_i
+    
+    &#47&#47 Total vortex drag
+    <a id="change">CDv</a> = np.sum(Cdv*AR*etam,axis=1)
+    
+    &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+    &#47&#47 Profile drag of a 2-D section</code></pre>

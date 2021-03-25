@@ -1,0 +1,24 @@
+<html><h3>bed0a0ae26451c9897cf1ee0f7302e42eba9b42c,transformer/Models.py,,get_attn_subsequent_mask,#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    attn_shape = (seq.size(0), seq.size(1), seq.size(1))
+    subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype(&quotuint8&quot)
+    subsequent_mask = torch.from_numpy(subsequent_mask)
+    <a id="change">if seq.is_cuda:
+        subsequent_mask = subsequent_mask.cuda()
+   </a> return subsequent_mask
+
+class Encoder(nn.Module):
+    &quot&quot&quot A encoder model with self attention mechanism. &quot&quot&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    sz_b, len_s = seq.size()
+
+    subsequent_mask = <a id="change">torch.ones((len_s, len_s), device=seq.device, dtype=torch.uint8)</a>
+    subsequent_mask = torch.triu(subsequent_mask, diagonal=1)
+    <a id="change">subsequent_mask = subsequent_mask.unsqueeze(0).expand(sz_b, len_s, len_s)</a>
+    return subsequent_mask
+
+class Encoder(nn.Module):
+    &quot&quot&quot A encoder model with self attention mechanism. &quot&quot&quot</code></pre><img src="11395372.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/bed0a0ae26451c9897cf1ee0f7302e42eba9b42c#diff-a6a596f1b879b5a9b6619ca2e20a4a5ec1725229f46a2e80291aa2a89ef6dc5cL34' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: bed0a0ae26451c9897cf1ee0f7302e42eba9b42c</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_attn_subsequent_mask</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/deeppomf/DeepCreamPy/commit/08d8e8cfc963c6f345556e84b485a9870b503b2d#diff-b993ef21760b88fe80f7ebfb596f360c609c726f7987598440a12c13caf8367aL60' target='_blank'>Link</a></div><div id='project'> Project Name: deeppomf/DeepCreamPy</div><div id='commit'> Commit Name: 08d8e8cfc963c6f345556e84b485a9870b503b2d</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: deeppomf@gmail.com</div><div id='file'> File Name: decensor.py</div><div id='class'> Class Name: Decensor</div><div id='method'> Method Name: decensor_image</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/bed0a0ae26451c9897cf1ee0f7302e42eba9b42c#diff-a6a596f1b879b5a9b6619ca2e20a4a5ec1725229f46a2e80291aa2a89ef6dc5cL34' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: bed0a0ae26451c9897cf1ee0f7302e42eba9b42c</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_attn_subsequent_mask</div><BR>

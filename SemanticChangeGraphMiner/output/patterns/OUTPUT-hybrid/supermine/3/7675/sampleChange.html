@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+except: &#47&#47 used in pypi pkg
+    import pkgutil
+    data = pkgutil.get_data(&quotpmlb&quot, &quotall_summary_stats.tsv&quot)
+    <a id="change">df_summary = pandas.read_csv(data , sep=&quot\t&quot)</a>
+regression_dataset_names = df_summary.query(&quottask=="regression"&quot)[&quotdataset&quot].tolist()
+classification_dataset_names = df_summary.query(&quottask=="classification"&quot)[&quotdataset&quot].tolist()
+dataset_names = regression_dataset_names + classification_dataset_names
+</code></pre><h3>After Change</h3><pre><code class='java'>
+from io import StringIO
+import pkgutil
+data = pkgutil.get_data(&quotpmlb&quot, &quotall_summary_stats.tsv&quot)
+df_summary = <a id="change">pandas.read_csv(StringIO(data.decode("utf-8")) , sep=&quot\t&quot)</a>
+regression_dataset_names = df_summary.query(&quottask=="regression"&quot)[&quotdataset&quot].tolist()
+classification_dataset_names = df_summary.query(&quottask=="classification"&quot)[&quotdataset&quot].tolist()
+dataset_names = regression_dataset_names + classification_dataset_names
+</code></pre>

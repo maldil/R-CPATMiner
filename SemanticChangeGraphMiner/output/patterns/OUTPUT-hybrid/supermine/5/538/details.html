@@ -1,0 +1,43 @@
+<html><h3>74c80d4f994c380f1baccd9d6651c233a22abf43,nilmtk/disaggregate/combinatorial_optimisation.py,CombinatorialOptimisation,train,#CombinatorialOptimisation#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i, meter in enumerate(metergroup.submeters().meters):
+            print("Training model for submeter &quot{}&quot".format(meter))
+            <a id="change">for chunk in meter.power_series(**load_kwargs):
+                num_total_states = num_states_dict.get(meter)
+                if num_total_states is not None:
+                    num_on_states = num_total_states - 1
+                else:
+                    num_on_states = None
+                self.train_on_chunk(
+                    chunk, meter, max_num_clusters, num_on_states)
+                break  &#47&#47 TODO handle multiple chunks per appliance
+
+        &#47&#47 Get centroids
+        &#47&#47 If we import sklearn at the top of the file then auto doc fails.
+       </a> from sklearn.utils.extmath import cartesian
+        centroids = [model[&quotstates&quot] for model in self.model]
+        self.state_combinations = cartesian(centroids)
+        &#47&#47 self.state_combinations is a 2D array</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 Check to see if there are any more chunks.
+            &#47&#47 TODO handle multiple chunks per appliance.
+            <a id="change">try:
+                power_series.next()
+            except StopIteration:
+                pass
+            else:
+                warn("The current implementation of CombinatorialOptimisation"
+                     " can only handle a single chunk.  But there are multiple"
+                     " chunks available.  So have only trained on the"
+                     " first chunk!")
+
+        &#47&#47 Get centroids
+        &#47&#47 If we import sklearn at the top of the file then auto doc fails.
+       </a> from sklearn.utils.extmath import cartesian
+        centroids = [model[&quotstates&quot] for model in self.model]
+        self.state_combinations = cartesian(centroids)
+        &#47&#47 self.state_combinations is a 2D array</code></pre><img src="2269666.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/74c80d4f994c380f1baccd9d6651c233a22abf43#diff-81e6c14a2f5144024793a8d3d409b23e96c3da29b49dcff631afd5086955a7ccL65' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 74c80d4f994c380f1baccd9d6651c233a22abf43</div><div id='time'> Time: 2015-11-25</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/disaggregate/combinatorial_optimisation.py</div><div id='class'> Class Name: CombinatorialOptimisation</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/900b9a7f2884aaf419e62508be7497b0ad3e1f62#diff-1516e23205a74c8bcb7f842f8260f7c9118246fc6a6b12bd5b7fb16810cefa04L368' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 900b9a7f2884aaf419e62508be7497b0ad3e1f62</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: debo@fb.com</div><div id='file'> File Name: pytext/metric_reporters/squad_metric_reporter.py</div><div id='class'> Class Name: SquadMetricReporter</div><div id='method'> Method Name: _unnumberize</div><BR><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/bef7dd92cbdd2c81a7d89786b9a76b011f1bc086#diff-fc3a3622c61d3c41d8015a7ee0b2f835c8b0eb8cdc43044fd1b48c0ce5228a85L29' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: bef7dd92cbdd2c81a7d89786b9a76b011f1bc086</div><div id='time'> Time: 2018-06-19</div><div id='author'> Author: tristan.deleu@gmail.com</div><div id='file'> File Name: maml_rl/baseline.py</div><div id='class'> Class Name: LinearFeatureBaseline</div><div id='method'> Method Name: fit</div><BR>

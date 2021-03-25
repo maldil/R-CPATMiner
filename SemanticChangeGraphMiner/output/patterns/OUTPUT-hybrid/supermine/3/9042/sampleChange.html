@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sens_index = dataset.feature_names.index(self.sensitive_attr)
+
+        x_train = dataset.features
+        y_train = np.array([1 if y == <a id="change">[dataset.favorable_label]</a> else
+                           -1 for y in dataset.labels])
+        x_control_train = x_train[:, sens_index].copy()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        x_train = dataset.features
+        y_train = np.where(dataset.labels.flatten() == dataset.favorable_label,
+                           1, -1)
+        <a id="change">x_control_train = np.where(
+                np.isin(dataset.protected_attributes[:, sens_idx],
+                        dataset.privileged_protected_attributes[sens_idx]),
+                1, 0)</a>
+
+        self.model = self.obj.getModel(self.tau, x_train, y_train,
+            x_control_train, self.seed)
+</code></pre>

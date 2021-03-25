@@ -1,0 +1,22 @@
+<html><h3>b0699b34e2b16cb3abbd22c397077cc6c21ef279,skopt/optimizer/base.py,,base_minimize,#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    <a id="change">x</a>, a, _ = fmin_l_bfgs_b(
+                        gaussian_acquisition_1D, x0,
+                        args=(gp, np.min(yi), acq_func, xi, kappa),
+                        bounds=space.transformed_bounds,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            cand_xs = np.array([r[0] for r in results])
+            cand_acqs = np.array([r[1] for r in results])
+            <a id="change">best_ind = np.argmin(cand_acqs)</a>
+            a = <a id="change">cand_acqs[best_ind]</a>
+            if a &lt; best:
+                next_x, best = <a id="change">cand_xs[best_ind]</a>, a
+
+        &#47&#47 lbfg should handle this but just in case there are precision errors.
+        next_x = np.clip(</code></pre><img src="34938629.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b0699b34e2b16cb3abbd22c397077cc6c21ef279#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL265' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b0699b34e2b16cb3abbd22c397077cc6c21ef279</div><div id='time'> Time: 2016-11-30</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR><BR><div id='link'><a href='https://github.com/GPflow/GPflowOpt/commit/b96598a16031c8b940e991f7c1bf80d702fea07f#diff-f1c349e608d4c53f941c85a820e4a4a41a048adbfa66ead1b966d2c7f4b2e4ffL64' target='_blank'>Link</a></div><div id='project'> Project Name: GPflow/GPflowOpt</div><div id='commit'> Commit Name: b96598a16031c8b940e991f7c1bf80d702fea07f</div><div id='time'> Time: 2017-09-27</div><div id='author'> Author: Pxidbpb4Lq</div><div id='file'> File Name: gpflowopt/acquisition/mes.py</div><div id='class'> Class Name: MinValueEntropySearch</div><div id='method'> Method Name: _setup</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/dcde2348aed207dbd12959aa2ee2096d016feb64#diff-6ff0979d222b062a3c7534e3f38f057b1fd540d5ba8007def05ef75cf7aaab5eL103' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: dcde2348aed207dbd12959aa2ee2096d016feb64</div><div id='time'> Time: 2016-04-19</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/gbrt_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gbrt_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b0699b34e2b16cb3abbd22c397077cc6c21ef279#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL265' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b0699b34e2b16cb3abbd22c397077cc6c21ef279</div><div id='time'> Time: 2016-11-30</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR>

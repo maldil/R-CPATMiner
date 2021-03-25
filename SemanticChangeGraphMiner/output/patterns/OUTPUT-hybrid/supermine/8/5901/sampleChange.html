@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      - 
+    &quot&quot&quot
+
+    <a id="change">N</a>, K = np.shape(S)
+    freq = np.transpose(np.linspace(0, sr/2, N))
+
+    <a id="change">slope = np.zeros((1, K))</a>
+    <a id="change">intercept = np.zeros((1, K))</a>
+
+    for k in range(0, K):
+        p = np.polyfit(freq, S[:, k], order)
+        slope[:, k] = <a id="change">p[0]</a>
+        intercept[:, k] = p[1]
+
+    return (slope, intercept)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 If we don&quott have a spectrogram, build one
+    if S is None:
+        &#47&#47 By default, use a magnitude spectrogram
+        S = <a id="change">np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))</a>
+    else:
+        &#47&#47 Infer n_fft from spectrogram shape
+        n_fft = (S.shape[0] - 1) * 2
+
+    &#47&#47 Compute the center frequencies of each bin
+    if freq is None:
+        freq = librosa.core.fft_frequencies(sr=sr, n_fft=n_fft)
+
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        coefficients = np.concatenate([[np.polyfit(freq_t, S_t, order)]
+                                       <a id="change">for</a> (freq_t, S_t) in zip(freq.T, S.T)],
+                                      axis=0).T
+
+    return coefficients</code></pre>

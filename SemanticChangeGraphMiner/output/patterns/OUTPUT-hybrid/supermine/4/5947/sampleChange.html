@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    embedding = pca_.fit_transform(X)
+
+    &#47&#47 The PCA embedding may have high variance, which leads to poor convergence
+    <a id="change">normalization = np.std(embedding[:, 0])</a>
+    normalization /= 0.0001
+    embedding /= normalization
+
+    timer.__exit__()</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_components=n_components, svd_solver=svd_solver, random_state=random_state
+    )
+    embedding = pca_.fit_transform(X)
+    <a id="change">rescale(embedding, inplace=True)</a>
+
+    timer.__exit__()
+
+    return np.ascontiguousarray(embedding)</code></pre>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if isinstance(last_item, StartItem):
+            &#47&#47 update the pushlog for the start step
+            <a id="change">last_item.update_pushlogurl(bisection)</a>
+            self.update_item(last_item)
+
+            &#47&#47 and add the new step with build_infos
+            item = StepItem()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if isinstance(last_item, StartItem):
+            &#47&#47 update the pushlog for the start step
+            <a id="change">if hasattr(bisection, &quothandler&quot):
+                last_item.update_pushlogurl(bisection)
+                self.update_item(last_item)
+            else:
+                &#47&#47 single runner case
+                &#47&#47 TODO: rework report.py implementation...
+                self.finished(None, None)  &#47&#47 remove last item
+
+            &#47&#47 and add the new step with build_infos
+           </a> item = StepItem()
+            item.data.update(build_infos.to_dict())
+            self.append_item(item)
+        else:</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.get_feature_vector()
+
+    def build(self):
+        <a id="change">structure = np.zeros((len(self.points), 4), dtype=int)</a>
+        <a id="change">structure[:,0] = np.searchsorted(self.segments[0], self.points[:,0]) - 1</a>
+        structure[:,1] = np.searchsorted(self.segments[1], self.points[:,1]) - 1
+        structure[:,2] = np.searchsorted(self.segments[2], self.points[:,2]) - 1
+        &#47&#47 i = ((y * n_x) + x) + (z * (n_x * n_y))
+        structure[:,3] = ((structure[:,1] * self.n_x) + structure[:,0]) + (structure[:,2] * (self.n_x * self.n_y)) 
+        <a id="change">self.structure = structure</a>
+
+    def get_feature_vector(self):
+        vector = np.zeros(self.n_voxels)
+        count = np.bincount(self.structure[:,3])</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.voxel_n = np.ravel_multi_index([x,y,z], [self.n_x, self.n_y, self.n_z])
+
+        &#47&#47 compute center of each voxel
+        midsegments = [(segments[i][1:] + segments[i][:-1]) / 2 <a id="change">for</a> i in <a id="change">range(3)</a>]
+        self.voxel_centers = cartesian(midsegments)
+
+    def get_feature_vector(self, mode="binary"):</code></pre>

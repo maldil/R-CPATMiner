@@ -1,0 +1,43 @@
+<html><h3>406574ef659338accb6a926a097099c1691ef8f3,create_website.py,,create_plot,#,136
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def create_plot(all_data, xn, yn, linestyle, j2_env, additional_label = "", plottype = "line"):
+    xm, ym = (metrics[xn], metrics[yn])
+    render_all_points = plottype == "bubble"
+    <a id="change">return {"xlabel" :  xm["description"],
+            "ylabel" : ym["description"],
+            "plottype" : plottype,
+            "plotlabel" : get_plot_label(xm, ym),
+            "label": additional_label,
+            "datapoints" : create_data_points(all_data, xn, yn,
+                linestyle, render_all_points),
+            "buttonlabel" : hashlib.sha224((get_plot_label(xm, ym) +
+                additional_label).encode("utf-8")).hexdigest(),
+            "latexcode" :  get_latex_plot(all_data, xn, yn, xm, ym, render_all_points, j2_env)}</a>
+
+def build_detail_site(data, label_func, j2_env):
+    for (name, runs) in data.items():
+        print("Building &quot%s&quot" % name)</code></pre><h3>After Change</h3><pre><code class='java'>
+def create_plot(all_data, xn, yn, linestyle, j2_env, additional_label = "", plottype = "line"):
+    xm, ym = (metrics[xn], metrics[yn])
+    render_all_points = plottype == "bubble"
+    <a id="change">plot_data = get_lines(all_data, xn, yn, render_all_points)</a>
+    latex_code = <a id="change">j2_env.get_template("latex.template").\
+                    render(plot_data = plot_data, caption = get_plot_label(xm, ym),
+                    xlabel = xm["description"], ylabel = ym["description"])</a>
+    plot_data = get_lines(all_data, xn, yn, render_all_points)
+    <a id="change">button_label = hashlib.sha224((get_plot_label(xm, ym) +
+                additional_label).encode("utf-8")).hexdigest()</a>
+    <a id="change">return j2_env.get_template("chartjs.template").\
+            render(args = args, latex_code = latex_code, button_label = button_label,
+                    data_points = plot_data,
+                    xlabel = xm["description"], ylabel = ym["description"],
+                    plottype = plottype, plot_label = get_plot_label(xm, ym),
+                    label = additional_label, linestyle = linestyle,
+                    render_all_points = render_all_points)</a>
+
+def build_detail_site(data, label_func, j2_env):
+    for (name, runs) in data.items():
+        print("Building &quot%s&quot" % name)</code></pre><img src="34893300.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/406574ef659338accb6a926a097099c1691ef8f3#diff-a6d869978abc92f5dd1bc4554d9c0234b65e11fc394f787a1ff0b57eb7a6459dL113' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: 406574ef659338accb6a926a097099c1691ef8f3</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: maau@itu.dk</div><div id='file'> File Name: create_website.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_plot</div><BR><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/c6418175813007be62406bfb35b42441202b017a#diff-a6d869978abc92f5dd1bc4554d9c0234b65e11fc394f787a1ff0b57eb7a6459dL189' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: c6418175813007be62406bfb35b42441202b017a</div><div id='time'> Time: 2018-03-03</div><div id='author'> Author: maau@itu.dk</div><div id='file'> File Name: create_website.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_latex_plot</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/d85509edab8290666d056ba5f0a9423feceb64d5#diff-45e4db0cb3122ad265d50801af51bbb1aa9714bed31d715c580c3c831e7787ffL15' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: d85509edab8290666d056ba5f0a9423feceb64d5</div><div id='time'> Time: 2008-09-07</div><div id='author'> Author: rob@cogit8.org</div><div id='file'> File Name: debug_toolbar/panels/sql.py</div><div id='class'> Class Name: SQLDebugPanel</div><div id='method'> Method Name: content</div><BR>

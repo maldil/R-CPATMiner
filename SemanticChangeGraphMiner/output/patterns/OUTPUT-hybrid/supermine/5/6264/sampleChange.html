@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    clf1 = linear_model.LogisticRegressionCV(solver=&quotlbfgs&quot,
+                                            multi_class=&quotmultinomial&quot)
+
+    <a id="change">clf2 = grid_search.GridSearchCV(mord.LogisticIT(), {&quotalpha&quot: np.logspace(
+        -3, 3, 10)})</a>
+    cv = cross_validation.StratifiedShuffleSplit(y, test_size=0.3)
+    print(cross_validation.cross_val_score(clf1, X, y, cv=cv).mean())
+    print(cross_validation.cross_val_score(clf2, X, y, cv=cv).mean())
+    print()</code></pre><h3>After Change</h3><pre><code class='java'>
+import numpy as np
+
+boston = datasets.load_boston()
+<a id="change">X, y = boston.data, np.round(boston.target).astype(np.int)</a>
+y -= y.min()
+
+clf1 = linear_model.LogisticRegression(
+    solver=&quotlbfgs&quot, multi_class=&quotmultinomial&quot)</code></pre>

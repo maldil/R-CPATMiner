@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                 labels=q_labels, duplicates=&quotdrop&quot, precision=precision)
+
+            &#47&#47 Drop the column which has been discretized
+            new_X = <a id="change">new_X.drop([column_name], axis=1)</a>
+            &#47&#47 explicitly convert the labels column to &quotstr&quot type
+            new_X = new_X.astype(dtype={&quot{}_q_label&quot.format(column_name): "str"})
+        return new_X
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                                 labels=q_labels, duplicates=&quotdrop&quot, precision=precision)
+
+            &#47&#47 Drop the continuous feature column which has been discritized
+            new_X = <a id="change">new_X.drop([column_name], axis=1)</a> if self.__drop_features else new_X
+            &#47&#47 explicitly convert the labels column to &quotstr&quot type
+            new_X = new_X.astype(dtype={&quot{}_q_label&quot.format(column_name): "str"})
+        return new_X</code></pre>

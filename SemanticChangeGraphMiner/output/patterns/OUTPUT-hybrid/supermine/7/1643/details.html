@@ -1,0 +1,23 @@
+<html><h3>24d96c7ec2d80322ceb7a084199b891c9ebf88b9,pyod/models/sod.py,SOD,_snn,#SOD#,118
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 it has the max possible value: 65535 (max unsigned int16)
+            &#47&#47 so it&quotll be always as first index
+            _count[i:, range(i+1)] = list(_count[range(i), i]) + [np.iinfo(np.uint16).max]
+            <a id="change">for j in range(i+1, n):
+                _count[i, j] = _dist(ind[i], ind[j])
+
+       </a> return np.flip(np.argsort(_count), axis=1)[:, range(1, self.ref_set+1)]
+
+    def _sod(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 but we need it temporarily to maintain indices order,
+            &#47&#47 it has the max possible value: 65535 (max unsigned int16)
+            &#47&#47 so it&quotll be always as first index
+            <a id="change">temp = np.sum(np.isin(ind, ind[i]), axis=1).ravel()</a>
+            temp[i] = np.iinfo(np.uint16).max
+            _count[i] = temp
+
+        return np.flip(np.argsort(_count), axis=1)[:, range(1, self.ref_set + 1)]</code></pre><img src="8415760.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/24d96c7ec2d80322ceb7a084199b891c9ebf88b9#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L132' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: 24d96c7ec2d80322ceb7a084199b891c9ebf88b9</div><div id='time'> Time: 2019-03-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _snn</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/24d96c7ec2d80322ceb7a084199b891c9ebf88b9#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L132' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: 24d96c7ec2d80322ceb7a084199b891c9ebf88b9</div><div id='time'> Time: 2019-03-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _snn</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/9b9095f877f603d91495c72f91e4fddf61f1724e#diff-96d9374c6f906ff5f99fe32e0006bdccea81e04ac7ee5e1d64eb719fb746e091L16' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 9b9095f877f603d91495c72f91e4fddf61f1724e</div><div id='time'> Time: 2019-07-22</div><div id='author'> Author: jerome@dockes.org</div><div id='file'> File Name: examples/02_decoding/plot_haxby_stimuli.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR>

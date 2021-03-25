@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        output = model(input_var)
+        flow2_EPE = args.div_flow*realEPE(output, target_var, sparse=args.sparse)
+        &#47&#47 record EPE
+        flow2_EPEs.update(<a id="change">flow2_EPE.data[0]</a>, target.size(0))
+
+        &#47&#47 measure elapsed time
+        batch_time.update(time.time() - end)</code></pre><h3>After Change</h3><pre><code class='java'>
+            if epoch == 0:
+                mean_values = torch.tensor([0.411,0.432,0.45], dtype=input.dtype).view(3,1,1)
+                output_writers[i].add_image(&quotGroundTruth&quot, flow2rgb(args.div_flow * target[0], max_value=10), 0)
+                output_writers[i].add_image(&quotInputs&quot, (<a id="change">input[0,:3].cpu()</a> + mean_values).clamp(0,1), 0)
+                output_writers[i].add_image(&quotInputs&quot, (input[0,3:].cpu() + mean_values).clamp(0,1), 1)
+            output_writers[i].add_image(&quotFlowNet Outputs&quot, flow2rgb(args.div_flow * output[0], max_value=10), epoch)
+</code></pre>

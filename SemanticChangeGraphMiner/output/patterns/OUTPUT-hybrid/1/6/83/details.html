@@ -1,0 +1,26 @@
+<html><h3>4fead3fb508efeff7f4a5329627cfbe73ade7142,db_mgmt_cpe_dictionary.py,,,#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     name = x[&quotname&quot]
+     title = x[&quottitle&quot][0]
+     if x[&quotreferences&quot]:
+        cpeelement = <a id="change">{&quotid&quot: name,&quottitle&quot: title, &quotreferences&quot: x[&quotreferences&quot]}</a>
+     else:
+        cpeelement = {&quotid&quot: name,&quottitle&quot: title}
+     entry = cpe.find(({&quotid&quot: name}))
+     if entry.count() &gt; 0:
+        if x[&quotreferences&quot]:
+            cpe.update({&quotid&quot: name}, {"$set":{&quottitle&quot: title, &quotreferences&quot: x[&quotreferences&quot]}})
+        else:
+            cpe.update(<a id="change">{&quotid&quot: name}</a>, {"$set":{&quottitle&quot: title}})
+     else:
+        cpe.insert(cpeelement)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+     if x[&quotreferences&quot]:
+         bulk.find({&quotid&quot: name}).upsert().update({"$set":{&quottitle&quot: title, &quotreferences&quot: x[&quotreferences&quot]}})
+     else:
+         bulk.find(<a id="change">{&quotid&quot: name}</a>).upsert().update({"$set":{&quottitle&quot: title}})
+bulk.execute()
+</code></pre><img src="119777.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/4fead3fb508efeff7f4a5329627cfbe73ade7142#diff-50375a7fe7a781a45689da7dea5b3bb65c1e3a859c93a87cbdf9c9e4dea07c7cL71' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: 4fead3fb508efeff7f4a5329627cfbe73ade7142</div><div id='time'> Time: 2015-02-19</div><div id='author'> Author: pieterjan.moreels@gmail.com</div><div id='file'> File Name: db_mgmt_cpe_dictionary.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/9ca3f533cb6d467a1ebffda880137d3cc0ef9561#diff-197388b1c3dbf88ff1eebab551502dc6d8a2e12f92d5e7ad0a788bf4230288c3L432' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 9ca3f533cb6d467a1ebffda880137d3cc0ef9561</div><div id='time'> Time: 2015-05-13</div><div id='author'> Author: a.crellinquick@gmail.com</div><div id='file'> File Name: mltsp/custom_feature_tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_feats_in_docker_container</div><BR>

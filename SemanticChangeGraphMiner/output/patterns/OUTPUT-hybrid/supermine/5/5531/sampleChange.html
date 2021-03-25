@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.model = self.learn_model_surprise()
+
+        <a id="change">self.sim_matrix = self.model.compute_similarities()</a>
+
+        <a id="change">self.avg_s = np.mean(self.sim_matrix)</a>
+
+    def learn_model_surprise(self):
+
+        file_path = os.path.expanduser(self.train)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.dataset = dataset
+
+        <a id="change">data = tc.SFrame.read_csv(&quotdatasets/&quot+&quot%s/FM/&quot %self.dataset
+                                  +&quottrain.dat&quot, delimiter=&quot &quot)</a>
+
+        if implicit:
+
+            self.model = tc.item_similarity_recommender.create(data,
+                        user_id=&quotuser_id&quot, item_id=&quotitem_id&quot)
+
+        else:
+
+            self.model = tc.item_similarity_recommender.create(data,
+                        user_id=&quotuser_id&quot, item_id=&quotitem_id&quot, target=&quotrating&quot)
+        
+        similarities = self.model.get_similar_items()
+        
+        self.sim_matrix = {}
+
+        <a id="change">for s in similarities:
+
+            self.sim_matrix[s[&quotitem_id&quot], s[&quotsimilar&quot]] = s[&quotscore&quot]
+
+   </a> def collab_similarities(self, item_1, item_2):
+
+        try:
+</code></pre>

@@ -1,0 +1,25 @@
+<html><h3>1783757d1d5f62d2398d1f8df2cd71b4c3113b6f,entity2rec/evaluator.py,Evaluator,features,#Evaluator#,207
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            user_item_features = Parallel(n_jobs=3, backend=&quotthreading&quot)(delayed(self._compute_features)
+                                  (data, recommender, negative_candidates, n_users, val_set)
+                                  <a id="change">for</a> data, recommender, negative_candidates, val_set in [(training, recommender, False, False),
+                                                                              (test, recommender, True, False),
+                                                                              (validation, recommender, True, True)])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        else:  &#47&#47 select all users
+
+            <a id="change">users_list = list(self.items_rated_by_user_train.keys())</a>
+
+        if validation:
+
+            user_item_features = Parallel(n_jobs=3, backend=&quotthreading&quot)(<a id="change">delayed(self._compute_features)
+                                  (data, recommender, users_list)</a>
+                                  <a id="change">for</a> data in [&quottrain&quot, &quottest&quot, &quotval&quot])
+
+            x_train, y_train, qids_train = user_item_features[0]
+</code></pre><img src="38133525.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/1783757d1d5f62d2398d1f8df2cd71b4c3113b6f#diff-771037fdeab3e63530757e85ec4d30179dcdd23b7fed819d1533836923911843L162' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: 1783757d1d5f62d2398d1f8df2cd71b4c3113b6f</div><div id='time'> Time: 2018-01-22</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/evaluator.py</div><div id='class'> Class Name: Evaluator</div><div id='method'> Method Name: features</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/971719830d589eba66434ddabfc62c1a689be677#diff-941c1cb20593c08ec2c17714f1eac34b3ab078e9caa1d0c971a3c6d487be80e3L420' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 971719830d589eba66434ddabfc62c1a689be677</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: weixuanf@upenn.edu</div><div id='file'> File Name: skrebate/relieff.py</div><div id='class'> Class Name: ReliefF</div><div id='method'> Method Name: _run_algorithm</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/96a364e27fe2d4cb55328150a2c4b2d97acc8f3f#diff-9c906e0569935543542ea4bf9376685cff7a69575e556325dc34557d6714d20fL185' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 96a364e27fe2d4cb55328150a2c4b2d97acc8f3f</div><div id='time'> Time: 2020-07-26</div><div id='author'> Author: git@jjerphan.xyz</div><div id='file'> File Name: sklearn/calibration.py</div><div id='class'> Class Name: CalibratedClassifierCV</div><div id='method'> Method Name: fit</div><BR>

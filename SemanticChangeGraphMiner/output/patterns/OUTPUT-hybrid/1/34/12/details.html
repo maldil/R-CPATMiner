@@ -1,0 +1,146 @@
+<html><h3>91e5f8b63dc9f1ba3eed123ce462b1000569e8b1,TTS/vocoder/models/wavernn.py,WaveRNN,generate,#WaveRNN#,259
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        with torch.no_grad():
+
+            mels = <a id="change">torch.FloatTensor(mels).cuda().unsqueeze(0)</a>
+            wave_len = (mels.size(-1) - 1) * self.hop_length
+            mels = self.pad_tensor(mels.transpose(1, 2), pad=self.pad, side="both")
+            mels, aux = self.upsample(mels.transpose(1, 2))
+
+            if batched:
+                mels = self.fold_with_overlap(mels, target, overlap)
+                if aux is not None:
+                    aux = self.fold_with_overlap(aux, target, overlap)
+
+            b_size, seq_len, _ = mels.size()
+
+            h1 = torch.zeros(b_size, self.rnn_dims).cuda()
+            h2 = torch.zeros(b_size, self.rnn_dims).cuda()
+            x = torch.zeros(b_size, 1).cuda()
+
+            if self.use_aux_net:
+                d = self.aux_dims
+                aux_split = [aux[:, :, d * i : d * (i + 1)] for i in range(4)]
+
+            for i in range(seq_len):
+
+                <a id="change">m_t</a> = mels[:, i, :]
+
+                if self.use_aux_net:
+                    a1_t, a2_t, a3_t, a4_t = (a[:, i, :] for a in aux_split)
+
+                x = (
+                    torch.cat([x, m_t, a1_t], dim=1)
+                    if self.use_aux_net
+                    else torch.cat([x, m_t], dim=1)
+                )
+                x = self.I(x)
+                <a id="change">h1</a> = rnn1(x, h1)
+
+                <a id="change">x</a> = x + h1
+                inp = torch.cat([x, a2_t], dim=1) if self.use_aux_net else x
+                <a id="change">h2</a> = rnn2(inp, h2)
+
+                x = x + h2
+                x = torch.cat([x, a3_t], dim=1) if self.use_aux_net else x
+                <a id="change">x</a> = F.relu(self.fc1(x))
+
+                x = torch.cat([x, a4_t], dim=1) if self.use_aux_net else x
+                x = F.relu(self.fc2(x))
+
+                logits = self.fc3(x)
+
+                if self.mode == "mold":
+                    sample = sample_from_discretized_mix_logistic(
+                        logits.unsqueeze(0).transpose(1, 2)
+                    )
+                    output.append(sample.view(-1))
+                    x = sample.transpose(0, 1).cuda()
+                elif self.mode == "gauss":
+                    <a id="change">sample</a> = sample_from_gaussian(logits.unsqueeze(0).transpose(1, 2))
+                    output.append(sample.view(-1))
+                    x = sample.transpose(0, 1).cuda()
+                elif isinstance(self.mode, int):
+                    posterior = F.softmax(logits, dim=1)
+                    <a id="change">distrib</a> = torch.distributions.Categorical(posterior)
+
+                    <a id="change">sample</a> = 2 * distrib.sample().float() / (self.n_classes - 1.0) - 1.0
+                    output.append(sample)
+                    x = sample.unsqueeze(-1)
+                else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        rnn2 = self.get_gru_cell(self.rnn2)
+
+        with torch.no_grad():
+            mels = <a id="change">torch</a>.FloatTensor(mels).unsqueeze(0).to(device)
+            &#47&#47mels = torch.FloatTensor(mels).cuda().unsqueeze(0)
+            wave_len = (mels.size(-1) - 1) * self.hop_length
+            mels = self.pad_tensor(mels.transpose(
+                1, 2), pad=self.pad, side="both")
+            mels, aux = self.upsample(mels.transpose(1, 2))
+
+            if batched:
+                mels = self.fold_with_overlap(mels, target, overlap)
+                if aux is not None:
+                    aux = self.fold_with_overlap(aux, target, overlap)
+
+            b_size, seq_len, _ = mels.size()
+
+            h1 = torch.zeros(b_size, self.rnn_dims).to(device)
+            h2 = torch.zeros(b_size, self.rnn_dims).to(device)
+            x = torch.zeros(b_size, 1).to(device)
+
+            if self.use_aux_net:
+                d = self.aux_dims
+                aux_split = [aux[:, :, d * i: d * (i + 1)] for i in range(4)]
+
+            for i in range(seq_len):
+
+                <a id="change">m_t</a> = mels[:, i, :]
+
+                if self.use_aux_net:
+                    a1_t, a2_t, a3_t, a4_t = (a[:, i, :] for a in aux_split)
+
+                x = (
+                    torch.cat([x, m_t, a1_t], dim=1)
+                    if self.use_aux_net
+                    else torch.cat([x, m_t], dim=1)
+                )
+                x = self.I(x)
+                <a id="change">h1</a> = rnn1(x, h1)
+
+                <a id="change">x</a> = x + h1
+                inp = torch.cat([x, a2_t], dim=1) if self.use_aux_net else x
+                <a id="change">h2</a> = rnn2(inp, h2)
+
+                x = x + h2
+                x = torch.cat([x, a3_t], dim=1) if self.use_aux_net else x
+                <a id="change">x</a> = F.relu(self.fc1(x))
+
+                x = torch.cat([x, a4_t], dim=1) if self.use_aux_net else x
+                x = F.relu(self.fc2(x))
+
+                logits = self.fc3(x)
+
+                if self.mode == "mold":
+                    sample = sample_from_discretized_mix_logistic(
+                        logits.unsqueeze(0).transpose(1, 2)
+                    )
+                    output.append(sample.view(-1))
+                    x = sample.transpose(0, 1).to(device)
+                elif self.mode == "gauss":
+                    <a id="change">sample</a> = sample_from_gaussian(
+                        logits.unsqueeze(0).transpose(1, 2))
+                    output.append(sample.view(-1))
+                    x = sample.transpose(0, 1).to(device)
+                elif isinstance(self.mode, int):
+                    posterior = F.softmax(logits, dim=1)
+                    <a id="change">distrib</a> = torch.distributions.Categorical(posterior)
+
+                    <a id="change">sample</a> = 2 * distrib.sample().float() / (self.n_classes - 1.0) - 1.0
+                    output.append(sample)
+                    x = sample.unsqueeze(-1)
+                else:</code></pre><img src="57348.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/91e5f8b63dc9f1ba3eed123ce462b1000569e8b1#diff-e862ddf8e203a1cf51b728a779ab3506b494ac6df1552847de72fccf24336a5aL266' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: 91e5f8b63dc9f1ba3eed123ce462b1000569e8b1</div><div id='time'> Time: 2020-10-27</div><div id='author'> Author: alexx.korolev@gmail.com</div><div id='file'> File Name: TTS/vocoder/models/wavernn.py</div><div id='class'> Class Name: WaveRNN</div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/cdce42d3be74f8621e2919e26a9572f2a696930f#diff-bcb495a7b272b03762c6f0c88b9f77501b3b08ef624999e86d7be1ea163a4fc1L20' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: cdce42d3be74f8621e2919e26a9572f2a696930f</div><div id='time'> Time: 2019-07-15</div><div id='author'> Author: benmiller1315@gmail.com</div><div id='file'> File Name: se3cnn/point_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convolve</div><BR><BR><div id='link'><a href='https://github.com/batra-mlp-lab/visdial-challenge-starter-pytorch/commit/921d73e924361db9ec0319c459b913e69bb9aaff#diff-6e1beed73304546a3e214cf2cd6d2b5a235020e3b703e38d6e0c20f8f11addc7L54' target='_blank'>Link</a></div><div id='project'> Project Name: batra-mlp-lab/visdial-challenge-starter-pytorch</div><div id='commit'> Commit Name: 921d73e924361db9ec0319c459b913e69bb9aaff</div><div id='time'> Time: 2019-02-11</div><div id='author'> Author: das.abhshk@gmail.com</div><div id='file'> File Name: visdialch/encoders/lf.py</div><div id='class'> Class Name: LateFusionEncoder</div><div id='method'> Method Name: forward</div><BR>

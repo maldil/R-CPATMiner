@@ -1,0 +1,20 @@
+<html><h3>45e1418d553f26de3bf0d58c62bb954d17268c7e,torchsample/functions/affine.py,,F_bilinear_interp2d,#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    y0 = y.floor()
+    y1 = y0 + 1
+
+    stride = torch.LongTensor(<a id="change">input.stride()[1:]</a>)
+    x0_ix = x0.mul(stride[0]).long()
+    x1_ix = x1.mul(stride[0]).long()
+    y0_ix = y0.mul(stride[1]).long()</code></pre><h3>After Change</h3><pre><code class='java'>
+    y0_ix = y0.mul(stride[2]).long()
+    y1_ix = y1.mul(stride[2]).long()
+
+    <a id="change">input_flat = input.view(input.size(0),-1).contiguous()</a>
+
+    vals_00 = input_flat.gather(1, x0_ix.add(y0_ix).detach())
+    vals_10 = input_flat.gather(1, x1_ix.add(y0_ix).detach())
+    vals_01 = input_flat.gather(1, x0_ix.add(y1_ix).detach())</code></pre><img src="27011220.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/45e1418d553f26de3bf0d58c62bb954d17268c7e#diff-6de539848608132f3b77ce3c68029be92cd43a0255a8eca68818c71604b3823bL45' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 45e1418d553f26de3bf0d58c62bb954d17268c7e</div><div id='time'> Time: 2017-05-03</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/functions/affine.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: F_bilinear_interp2d</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/943753c968fe7c0cbafc6e44d60f1b28b42e997b#diff-80a11d6c58dfefa22cb7fe542b1dddb91ab537422b26c834f3c0ae182d0d8cadL119' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 943753c968fe7c0cbafc6e44d60f1b28b42e997b</div><div id='time'> Time: 2017-05-03</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: th_nearest_interp2d</div><BR><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/9ea14875825b2ab63a43ad2f0f5159d99df86d02#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L122' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: 9ea14875825b2ab63a43ad2f0f5159d99df86d02</div><div id='time'> Time: 2019-07-29</div><div id='author'> Author: rasmus.arpe@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Lookahead</div><div id='method'> Method Name: forward</div><BR>

@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return np.random.choice(np.arange(256), p=scaled_prediction)
+
+    def synthesize(self, mgc, batch_size, sample=True, temperature=1.0):
+        <a id="change">synth = []</a>
+        dy.renew_cg()
+        history = dy.inputVector([127 for x in range(self.HISTORY)])
+        last_proc = 0
+        for mgc_index in range(len(mgc)):
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+            pred_probs = self._predict_one(mgc[mgc_index], history, runtime=True)
+            for output in pred_probs:
+                synth.append(self._pick_sample(output.npvalue(), temperature=temperature))
+
+            hist = <a id="change">synth[-self.HISTORY:]</a>
+            dy.renew_cg()
+            history = (dy.inputVector(hist) - 127.0) / 128.0
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def synthesize(self, mgc, batch_size, sample=True, temperature=1.0):
+        last_fft = None
+        <a id="change">predicted = np.zeros((len(mgc), 513), dtype=np.complex)</a>
+        last_proc = 0
+        for mgc_index in range(len(mgc)):
+            dy.renew_cg()
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+            [output_real, output_imag] = self._predict_one(mgc[mgc_index], last_fft=last_fft, runtime=True)
+
+            last_fft = np.zeros(self.FFT_SIZE, dtype=np.complex)
+            out_real = output_real.value()
+            out_imag = output_imag.value()
+            for ii in range(self.FFT_SIZE):
+                last_fft[ii] = np.complex(out_real[ii], out_imag[ii])
+                <a id="change">predicted[mgc_index, ii] = np.complex(out_real[ii], out_imag[ii])</a>
+
+        synth = self.vocoder.ifft(predicted, sample_rate=self.params.target_sample_rate)
+        &#47&#47 print(synth)
+        synth = np.array((synth + 1) * 32767, dtype=np.int16)</code></pre>

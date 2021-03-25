@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     Create and return a keras model of a RNN 
+    HIDDEN_LAYER_SIZE = 256
+
+    model = <a id="change">Sequential()</a>
+
+    model.add(GRU(
+        HIDDEN_LAYER_SIZE,
+        input_dim=embedding_size,
+        input_length=SAMPLE_LENGTH,
+        init=&quotglorot_uniform&quot,
+        inner_init=&quotnormal&quot,
+        activation=&quotrelu&quot,
+    ))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.1))
+
+    <a id="change">model.add(Dense(output_length, activation=&quotsigmoid&quot))</a>
+
+    model.compile(
+        loss=&quotbinary_crossentropy&quot,
+        optimizer=&quotadam&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+     Create and return a keras model of a RNN 
+    HIDDEN_LAYER_SIZE = 256
+
+    <a id="change">inputs = Input(shape=(SAMPLE_LENGTH, embedding_size))</a>
+
+    gru = GRU(
+        HIDDEN_LAYER_SIZE,
+        input_shape=(SAMPLE_LENGTH, embedding_size),
+        kernel_initializer="glorot_uniform",
+        recurrent_initializer=&quotnormal&quot,
+        activation=&quotrelu&quot,
+    )(inputs)
+
+    <a id="change">batch_normalization = BatchNormalization()(gru)</a>
+    <a id="change">dropout = Dropout(0.1)(batch_normalization)</a>
+    outputs = Dense(output_length, activation=&quotsigmoid&quot)(dropout)
+
+    model = Model(inputs=inputs, outputs=outputs)
+</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>f171796995d17e3db4b4752a116e532d499dc91f,src/caffe/pyutil/convert.py,,array_to_datum,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def array_to_datum(arr):
+  if arr.ndim != 3:
+    raise ValueError(&quotIncorrect array shape.&quot)
+  <a id="change">if arr.dtype != np.uint8:
+    raise TypeError(&quotInput array has to be of type uint8.&quot)
+ </a> datum = caffe_pb2.Datum()
+  datum.channels, datum.height, datum.width = arr.shape
+  datum.data = arr.tostring()
+  return datum</code></pre><h3>After Change</h3><pre><code class='java'>
+  if arr.dtype == np.uint8:
+    datum.data = arr.tostring()
+  else:
+    <a id="change">datum.float_data.extend(arr.flat)</a>
+  return datum
+</code></pre><img src="38896875.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/f171796995d17e3db4b4752a116e532d499dc91f#diff-85b1829ae74572c10b14bec98d0ebc2a2d4676b484990e493a1bd33b3af5e9e6L23' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: f171796995d17e3db4b4752a116e532d499dc91f</div><div id='time'> Time: 2013-09-30</div><div id='author'> Author: jiayq84@gmail.com</div><div id='file'> File Name: src/caffe/pyutil/convert.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: array_to_datum</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/670b85c9e9cec05210e8596bc1fb9ca66787162f#diff-fea489154c629a45ec01030d191f20465e809124a24260ac35fb884bc855140fL345' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 670b85c9e9cec05210e8596bc1fb9ca66787162f</div><div id='time'> Time: 2020-04-19</div><div id='author'> Author: 50599110+lrjball@users.noreply.github.com</div><div id='file'> File Name: sklearn/compose/_column_transformer.py</div><div id='class'> Class Name: ColumnTransformer</div><div id='method'> Method Name: get_feature_names</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/c65ba61bdf273604c3edcd24ba7a80cc3835441a#diff-528bd29352c7471d35a4f6d90b05bbef21ab1a9dba3ec3a812e42bf9071dd7feL34' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: c65ba61bdf273604c3edcd24ba7a80cc3835441a</div><div id='time'> Time: 2015-10-08</div><div id='author'> Author: sh1r0@users.noreply.github.com</div><div id='file'> File Name: python/caffe/io.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: array_to_blobproto</div><BR>

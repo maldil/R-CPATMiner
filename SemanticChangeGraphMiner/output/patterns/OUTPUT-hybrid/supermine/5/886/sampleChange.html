@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    attrs: Dict[str, Any] = {"column": column}
+    if dropout is not None:
+        attrs["dropout_rate"] = dropout
+    <a id="change">return Model(
+        "embed",
+        forward,
+        init=partial(init, initializer),
+        attrs=attrs,
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )</a>
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    nV = model.get_dim("nV")</code></pre><h3>After Change</h3><pre><code class='java'>
+    attrs: Dict[str, Union[None, int, float]] = {}
+    if dropout is not None:
+        attrs["dropout_rate"] = dropout
+    <a id="change">model = Model( &#47&#47 type: ignore
+        "embed",
+        forward,
+        init=partial(init, initializer),
+        attrs=attrs,
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )</a>
+    model = model if column is None else chain(ints_getitem(column), model)
+    model.attrs["column"] = column
+    <a id="change">return cast(Model[InT, OutT], model)</a>
+
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:</code></pre>

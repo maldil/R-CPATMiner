@@ -1,0 +1,30 @@
+<html><h3>9ba91fa13cbb1e7bc4069e46469b34abb5ca4869,models/base_model.py,BaseModel,load_networks,#BaseModel#,78
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if len(self.gpu_ids) &gt; 0 and torch.cuda.is_available():
+                    net.module.load_state_dict(torch.load(save_path))
+                else:
+                    <a id="change">net.load_state_dict(torch.load(save_path))</a>
+
+    &#47&#47 print network information
+    def print_networks(self, verbose):
+        print(&quot---------- Networks initialized -------------&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+            if isinstance(name, str):
+                save_filename = &quot%s_net_%s.pth&quot % (which_epoch, name)
+                save_path = os.path.join(self.save_dir, save_filename)
+                <a id="change">net</a> = getattr(self, &quotnet&quot + name)
+                if <a id="change">isinstance(net, torch.nn.DataParallel)</a>:
+                    net = net.module
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                <a id="change">state_dict = torch.load(save_path, map_location=str(self.device))</a>
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+                for key in state_dict:
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))
+                <a id="change">net.load_state_dict(state_dict)</a>
+
+    &#47&#47 print network information
+    def print_networks(self, verbose):
+        print(&quot---------- Networks initialized -------------&quot)</code></pre><img src="25580678.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-7c1ece53a18959b293126dd93f3cf0f768220f50d2c1201e1601681873e6f6e4L78' target='_blank'>Link</a></div><div id='project'> Project Name: junyanz/pytorch-CycleGAN-and-pix2pix</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_networks</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/bc9a9ebb8bba8a6b2865fc7eed4c00e6f6b1693e#diff-072795c13e7ba1b347e654c0e5752aea83c719d7c2cbaaf71f0f29d508388d54L61' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: bc9a9ebb8bba8a6b2865fc7eed4c00e6f6b1693e</div><div id='time'> Time: 2019-06-01</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_network</div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-7c1ece53a18959b293126dd93f3cf0f768220f50d2c1201e1601681873e6f6e4L78' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_networks</div><BR>

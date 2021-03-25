@@ -1,0 +1,45 @@
+<html><h3>b0a116e3fe579f1bbded4ac75382588b6d3fd381,imagenet/main.py,,main,#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+
+    train_loader = <a id="change">torch.utils.data.DataLoader(
+        datasets.ImageFolder(traindir, transforms.Compose([
+            transforms.RandomSizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])),
+        batch_size=args.batch_size, shuffle=True,
+        num_workers=args.workers, pin_memory=True)</a>
+
+    val_loader = torch.utils.data.DataLoader(
+        datasets.ImageFolder(valdir, transforms.Compose([
+            transforms.Scale(256),</code></pre><h3>After Change</h3><pre><code class='java'>
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+
+    train_dataset = <a id="change">datasets.ImageFolder(
+        traindir,
+        transforms.Compose([
+            transforms.RandomSizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ]))</a>
+
+    if args.distributed:
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+    else:
+        train_sampler = None
+
+    <a id="change">train_loader = torch.utils.data.DataLoader(
+        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
+        num_workers=args.workers, pin_memory=True, sampler=train_sampler)</a>
+
+    val_loader = torch.utils.data.DataLoader(
+        datasets.ImageFolder(valdir, transforms.Compose([
+            transforms.Scale(256),</code></pre><img src="21163818.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/b0a116e3fe579f1bbded4ac75382588b6d3fd381#diff-51e54fa2edf92734ba1c452ae8ba36f0526eba62a804b6908faeb0378308a387L66' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: b0a116e3fe579f1bbded4ac75382588b6d3fd381</div><div id='time'> Time: 2017-07-28</div><div id='author'> Author: adam.paszke@gmail.com</div><div id='file'> File Name: imagenet/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/398485ce7bb30487e500247ced67d491542328eb#diff-0ec603961e856e1d739728f3c087a61743eae99df65b020be944e64785ca1b68L72' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: 398485ce7bb30487e500247ced67d491542328eb</div><div id='time'> Time: 2018-12-03</div><div id='author'> Author: researcher@mapillary.com</div><div id='file'> File Name: train_imagenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/398485ce7bb30487e500247ced67d491542328eb#diff-da60e8ade9599a15b323c80fc6bed3fa60a2c6c6dc32f0a62839dae0cdbdf82cL84' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: 398485ce7bb30487e500247ced67d491542328eb</div><div id='time'> Time: 2018-12-03</div><div id='author'> Author: researcher@mapillary.com</div><div id='file'> File Name: test_imagenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

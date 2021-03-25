@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return coords_df
+
+    refined = {}
+    <a id="change">for i, coords in coords_df.iterrows():
+        positions = coords[pos_columns]
+        result = refine_brightfield_ring(image, radius, positions,
+                                         pos_columns=pos_columns, **kwargs)
+        if result is None:
+            if has_user_input:
+                warnings.warn(("Lost particle {:d} (x={:.0f}, y={:.0f})" +
+                               " after refinement.").format(i, coords[&quotx&quot],
+                                                            coords[&quoty&quot]))
+            continue
+
+        &#47&#47 Make a copy of old coords and overwrite with result
+        &#47&#47 In this way any extra columns from previous_coords are preserved
+        new_coords = coords.copy()
+        for column in result.index.tolist():
+            &#47&#47 make a new column if necessary, otherwise overwrite
+            new_coords[column] = result.get(column)
+        refined[i] = new_coords
+
+   </a> columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:
+        warnings.warn("No particles found in the image after refinement.")
+        return DataFrame(columns=columns)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return coords_df
+
+    if not pool:
+        refined = <a id="change">map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])</a>
+    else:
+        refined = pool.map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+
+    <a id="change">refined = [ref for ref in refined if ref is not None]</a>
+
+    columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:
+        warnings.warn("No particles found in the image after refinement.")</code></pre>

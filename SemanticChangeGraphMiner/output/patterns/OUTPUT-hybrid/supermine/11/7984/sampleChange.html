@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                          &quotset download_if_missing=True to download&quot)
+
+        fitsdata = download_with_progress_bar(DATA_URL)
+        <a id="change">open</a>(<a id="change">archive_file</a>, <a id="change">&quotwb&quot</a>).write(fitsdata)
+
+    <a id="change">hdulist = fits.open(archive_file)</a>
+
+    data = np.asarray(<a id="change">hdulist[1].data</a>)
+
+    if cleaned:
+        &#47&#47 -1.1 &lt; FeH &lt; 0.1</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    data_home = get_data_home(data_home)
+
+    <a id="change">archive_file</a> = os.path.join(data_home, os.path.basename(DATA_URL))
+
+    if not os.path.exists(archive_file):
+        if not download_if_missing:
+            raise IOError(&quotdata not present on disk. &quot
+                          &quotset download_if_missing=True to download&quot)
+
+        data = Table.read(DATA_URL)
+        data.write(archive_file)
+    else:
+        <a id="change">data = Table.read(archive_file)</a>
+
+    if cleaned:
+        &#47&#47 -1.1 &lt; FeH &lt; 0.1
+        data = data[(data[&quotFeH&quot] &gt; -1.1) & (data[&quotFeH&quot] &lt; 0.1)]</code></pre>

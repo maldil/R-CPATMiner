@@ -1,0 +1,21 @@
+<html><h3>e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f,cesium/featurize.py,,load_featureset,#,367
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    channels = [int(c) if c != &quot&quot else &quot&quot for c in data.pop(&quotchannels&quot)]
+    columns = pd.MultiIndex.from_tuples(list(zip(features, channels)),
+                                        names=[&quotfeature&quot, &quotchannel&quot])
+    <a id="change">fset = pd.DataFrame(data.pop(&quotvalues&quot), index=data.pop(&quotindex&quot),
+                        columns=columns)</a>
+    return fset, data
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    fset.columns = pd.MultiIndex.from_tuples(list(zip(features, channels)),
+                                             names=[&quotfeature&quot, &quotchannel&quot])
+
+    <a id="change">for k, v in data.items():
+        if len(v.dtype) &gt; 0:
+            data[k] = pd.DataFrame.from_records(v, index=&quotindex&quot)
+
+   </a> return fset, data
+</code></pre><img src="28427952.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL387' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_featureset</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/69ba1cbf23b39f6511ebeb2c22eec0e44068d1cb#diff-cef1b4ebb3280803c39dd0051f44c2e6367968bf2da588bda116e30e27745e30L46' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 69ba1cbf23b39f6511ebeb2c22eec0e44068d1cb</div><div id='time'> Time: 2014-12-15</div><div id='author'> Author: nipunreddevil@gmail.com</div><div id='file'> File Name: nilmtk/dataset_converters/combed/convert_combed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_combed</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/64624fb2b46a228fef1141e1ded84e52acccaf6e#diff-ef020b7bd15cfff74c994f512b150fca388fb00f959dd4137f939bce7c3ecf1fL78' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 64624fb2b46a228fef1141e1ded84e52acccaf6e</div><div id='time'> Time: 2015-06-09</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: bin/mahotas-features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

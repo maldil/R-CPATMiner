@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self._is_sparse:
+            self._raw_date = sparse_vstack([self._raw_data, X])
+        else:
+            self._raw_data = <a id="change">np.vstack([self._raw_data, X])</a>
+
+        if self._is_sparse:
+            raise NotImplementedError("Sparse update not complete yet")
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+            self._raw_data = sparse_vstack([self._raw_data, X])
+        else:
+            self._raw_data = np.ascontiguousarray(
+                <a id="change">np.vstack([self._raw_data[original_order, :], X])</a>
+            )
+
+        if self._is_sparse:
+            raise NotImplementedError("Sparse update not complete yet")</code></pre>

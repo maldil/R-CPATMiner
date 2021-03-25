@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        reader.WorkingDirectory.setValue(os.getcwd())
+        reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)
+
+        <a id="change">info = DatasetInfo()</a>
+        &#47&#47 Will be read from the filesystem since the data won&quott be found in the project file.
+        <a id="change">info.location = DatasetInfo.Location.ProjectInternal</a>
+        <a id="change">info.filePath = self.testRawDataFileName</a>
+        <a id="change">info.invertColors = False</a>
+        info.convertToGrayscale = False
+        &#47&#47Use real data source
+        <a id="change">info.realDataSource = True</a>
+
+        reader.Dataset.setValues(<a id="change">[info]</a>)
+
+        &#47&#47 Read the test file using the data selection operator and verify the contents
+        imgData = reader.Image[0][...].wait()</code></pre><h3>After Change</h3><pre><code class='java'>
+            print(&quotException caught while deleting temporary files: {}&quot.format(e))
+
+    def test_real_data_source(self):
+        reader = OperatorWrapper(OpDataSelection, graph=<a id="change">Graph()</a>,
+                                 operator_kwargs={&quotforceAxisOrder&quot: False})
+        reader.WorkingDirectory.setValue(os.getcwd())
+</code></pre>

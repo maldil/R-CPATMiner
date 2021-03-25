@@ -1,0 +1,31 @@
+<html><h3>91f834a5329d7f4c440811441095c9d574764dfe,thinc/neural/_classes/multiheaded_attention.py,MultiHeadedAttention,begin_update,#MultiHeadedAttention#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            masks = [None for _ in Qs]
+        assert len(Qs) == len(Ks) == len(Vs)
+        Ys, get_dQs_dKs_dVs = self._attend_seqs(Qs, Ks, Vs, masks)
+        <a id="change">lengths = self.ops.asarray([len(y) for y in Ys], dtype=&quoti&quot)</a>
+        assert sum(lengths) == sum([len(q) for q in Qs])
+        Y = <a id="change">self.ops.flatten(Ys)</a>
+        
+        def finish_update(dY, sgd=None):
+            dYs = self.ops.unflatten(dY, lengths)
+            return get_dQs_dKs_dVs(dYs, sgd=sgd)
+        
+        assert sum(lengths) == Y.shape[0], (sum(lengths, Y.shape[0]))
+        assert sum([len(q) for q in Qs]) == sum(lengths)
+        <a id="change">return (Y, lengths), finish_update</a>
+
+    def _attend_seqs(self, Qs, Ks, Vs, masks):
+        outputs = []
+        backprops = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        if masks is None:
+            masks = [None for _ in Qs]
+        assert len(Qs) == len(Ks) == len(Vs)
+        <a id="change">return self._attend_seqs(Qs, Ks, Vs, masks)</a>
+        
+    def _attend_seqs(self, Qs, Ks, Vs, masks):
+        outputs = []
+        backprops = []</code></pre><img src="22914685.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/91f834a5329d7f4c440811441095c9d574764dfe#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L87' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 91f834a5329d7f4c440811441095c9d574764dfe</div><div id='time'> Time: 2019-06-11</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: begin_update</div><BR><BR><div id='link'><a href='https://github.com/hmmlearn/hmmlearn/commit/934f26003a1b794a3a03ca824817fb1252dff270#diff-8d808ca467b022712fa56520d9a7604edbb74b948a536318d7086ed1915fc0fdL578' target='_blank'>Link</a></div><div id='project'> Project Name: hmmlearn/hmmlearn</div><div id='commit'> Commit Name: 934f26003a1b794a3a03ca824817fb1252dff270</div><div id='time'> Time: 2016-07-09</div><div id='author'> Author: yanenkoalexandr@gmail.com</div><div id='file'> File Name: hmmlearn/hmm.py</div><div id='class'> Class Name: GMMHMM</div><div id='method'> Method Name: _generate_sample_from_state</div><BR><BR><div id='link'><a href='https://github.com/tyiannak/pyAudioAnalysis/commit/bdf9307e91354ed415c9e3493a37c326941bec7b#diff-8ca8a82cedc0f8cc2db5253c217203758e59af7431a77df59497873df643bc51L146' target='_blank'>Link</a></div><div id='project'> Project Name: tyiannak/pyAudioAnalysis</div><div id='commit'> Commit Name: bdf9307e91354ed415c9e3493a37c326941bec7b</div><div id='time'> Time: 2019-11-13</div><div id='author'> Author: dsgou@hotmail.gr</div><div id='file'> File Name: pyAudioAnalysis/audioBasicIO.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stereo2mono</div><BR>

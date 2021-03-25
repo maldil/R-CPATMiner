@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                weights = []
+                <a id="change">for i in range(size):
+                    evid = [sampled[var][i] for var in cpd.evidence]
+                    weights.append(cpd.reduce(evid, inplace=False).values)
+               </a> sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                &#47&#47 can generate the column at once
+                weights = cpd.values</code></pre><h3>After Change</h3><pre><code class='java'>
+        for index, node in enumerate(self.topological_order):
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                <a id="change">evidence = sampled.values[:, :index].tolist()</a>
+                weights = np.apply_along_axis(lambda t: cpd.reduce(t, inplace=False).values, 1, evidence)
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], cpd.values, size)</code></pre>

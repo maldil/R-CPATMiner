@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                inputs_rank = inputs_shape.ndims
+                dtype = vgg_conv4_3.dtype.base_dtype
+                norm_dim = tf.range(inputs_rank - 1, inputs_rank)
+                params_shape = <a id="change">inputs_shape[-1:]</a>
+
+                &#47&#47 Normalize.
+                vgg_conv4_3_norm = tf.nn.l2_normalize(
+                    vgg_conv4_3, norm_dim, epsilon=1e-12</code></pre><h3>After Change</h3><pre><code class='java'>
+                    initializer=scale_initializer
+                )
+                vgg_conv4_3_norm = tf.multiply(vgg_conv4_3_norm, scale)
+                <a id="change">tf.summary.histogram(&quotconv4_3_normalized_hist&quot, vgg_conv4_3)</a>
+            tf.add_to_collection(&quotFEATURE_MAPS&quot, vgg_conv4_3_norm)
+
+            &#47&#47 The original SSD paper uses a modified version of the vgg16
+            &#47&#47 network, which we&quotll modify here</code></pre>

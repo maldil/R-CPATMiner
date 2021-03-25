@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    tforms.update(ToTensor_setup())
+    tforms.update(ToVariable_setup())
+    tforms.update(ToCuda_setup())
+    <a id="change">tforms.update(ToFile_setup())</a>
+    tforms.update(ChannelsLast_setup())
+    tforms.update(ChannelsFirst_setup())
+    tforms.update(TypeCast_setup())
+    tforms.update(AddChannel_setup())</code></pre><h3>After Change</h3><pre><code class='java'>
+    images.update(color2d_setup())
+    images.update(multi_color2d_setup())
+
+    <a id="change">successes =[]</a>
+    failures = []
+    for im_key, im_val in images.items():
+        for tf_key, tf_val in tforms.items():
+            try:
+                if isinstance(im_val, (tuple,list)):
+                    tf_val(*im_val)
+                else:
+                    tf_val(im_val)
+                <a id="change">successes.append((im_key, tf_key))</a>
+            except:
+                failures.append((im_key, tf_key))
+
+    if verbose &gt; 0:</code></pre>

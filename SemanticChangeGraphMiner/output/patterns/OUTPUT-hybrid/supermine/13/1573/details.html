@@ -1,0 +1,23 @@
+<html><h3>922d15e8775a6dcd30725498cd45754ea49a59a0,ptan/agent.py,DQNAgent,__call__,#DQNAgent#,66
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if agent_states is None:
+            agent_states = [None] * len(states)
+        if self.preprocessor is not None:
+            <a id="change">states = self.preprocessor(states).to(self.device)</a>
+        q_v = self.dqn_model(states)
+        q = q_v.data.cpu().numpy()
+        actions = self.action_selector(q)
+        return actions, agent_states</code></pre><h3>After Change</h3><pre><code class='java'>
+        if agent_states is None:
+            agent_states = [None] * len(states)
+        if self.preprocessor is not None:
+            <a id="change">states = self.preprocessor(states)</a>
+            <a id="change">if torch.is_tensor(states):
+                states = states.to(self.device)
+       </a> q_v = self.dqn_model(states)
+        q = q_v.data.cpu().numpy()
+        actions = self.action_selector(q)
+        return actions, agent_states</code></pre><img src="8055754.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/922d15e8775a6dcd30725498cd45754ea49a59a0#diff-6dda8aba3ea5a9c179631bc7052d029cc34bfbbbecaf23bd594e5bd178910921L70' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: 922d15e8775a6dcd30725498cd45754ea49a59a0</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/agent.py</div><div id='class'> Class Name: DQNAgent</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/922d15e8775a6dcd30725498cd45754ea49a59a0#diff-6dda8aba3ea5a9c179631bc7052d029cc34bfbbbecaf23bd594e5bd178910921L124' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: 922d15e8775a6dcd30725498cd45754ea49a59a0</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/agent.py</div><div id='class'> Class Name: PolicyAgent</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/922d15e8775a6dcd30725498cd45754ea49a59a0#diff-6dda8aba3ea5a9c179631bc7052d029cc34bfbbbecaf23bd594e5bd178910921L153' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: 922d15e8775a6dcd30725498cd45754ea49a59a0</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/agent.py</div><div id='class'> Class Name: ActorCriticAgent</div><div id='method'> Method Name: __call__</div><BR>

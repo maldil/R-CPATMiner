@@ -1,0 +1,26 @@
+<html><h3>b171c97f2974ef3f884ad9674de137eda7023875,functions/LinearSpectralUnmixing.py,LinearSpectralUnmixing,updateRasterInfo,#LinearSpectralUnmixing#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if method == &quotscaled&quot:
+            &#47&#47 constrained output pixels
+            self.applyScaling = True
+            outStats = <a id="change">{&quotminimum&quot: 0, &quotmaximum&quot: 1.0, &quotskipFactorX&quot: 10, &quotskipFactorY&quot: 10}</a>
+        else:
+            self.applyScaling = False
+            &#47&#47 rough estimation of output stats
+            outStats = {&quotminimum&quot: -10.0, &quotmaximum&quot: 10.0, &quotskipFactorX&quot: 10, &quotskipFactorY&quot: 10}
+        &#47&#47 repeat stats for all output raster bands
+        <a id="change">outStats = tuple(outStats for i in xrange(bandCount))</a>
+
+        kwargs[&quotoutput_info&quot][&quotbandCount&quot] = bandCount
+        kwargs[&quotoutput_info&quot][&quotstatistics&quot] = outStats
+        kwargs[&quotoutput_info&quot][&quothistogram&quot] = ()</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 ... and then transpose signature axes to into arrays of each band&quots endmembers
+        &#47&#47 [[vegB, shadowB, npvB, ...], [vegG, shadowG, npvG, ...], [...]]
+        &#47&#47 assign to coefficients member var to use in np.linalg.lstsq()
+        self.coefficients = <a id="change">np</a>.array(list(self.signatures.values())).T
+
+        &#47&#47 output bandCount is number of endmembers + 1 residuals raster
+        if self.coefficients.shape[0] != kwargs[&quotraster_info&quot][&quotbandCount&quot]:</code></pre><img src="22911773.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/b171c97f2974ef3f884ad9674de137eda7023875#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L55' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: b171c97f2974ef3f884ad9674de137eda7023875</div><div id='time'> Time: 2015-03-01</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updateRasterInfo</div><BR><BR><div id='link'><a href='https://github.com/hanxiao/bert-as-service/commit/2bfe5bfcec7759ae022b1a479411aa7d1b8401f1#diff-1952d8eaead7f712e29f5645e63c4a4f431806db0ce05a06c187bbc81f72b592L26' target='_blank'>Link</a></div><div id='project'> Project Name: hanxiao/bert-as-service</div><div id='commit'> Commit Name: 2bfe5bfcec7759ae022b1a479411aa7d1b8401f1</div><div id='time'> Time: 2019-05-06</div><div id='author'> Author: zyn2122@gmail.com</div><div id='file'> File Name: example/example7.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/734defa2723e5da33a7523924b2d36c2b19cad76#diff-d0f321a38478450b3abd4ebc9a73813efa67e6a0a3bfd18e63c680da03207751L18' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 734defa2723e5da33a7523924b2d36c2b19cad76</div><div id='time'> Time: 2017-08-01</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: test/unit_test/test_utility_topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

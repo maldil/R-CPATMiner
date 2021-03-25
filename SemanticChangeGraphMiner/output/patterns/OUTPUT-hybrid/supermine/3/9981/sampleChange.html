@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    sys.stdout.flush()
+    sampler = TextSampler(network)
+
+    <a id="change">for i in range(args.num_sentences):
+        words = sampler.generate()
+        args.output_file.write(&quot{}: {}\n&quot.format(
+            i, &quot &quot.join(words)))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    sys.stdout.flush()
+    sampler = TextSampler(network)
+
+    sequences = <a id="change">sampler.generate(30, args.num_sentences)</a>
+    for sequence in sequences:
+        try:
+            eos_pos = sequence.index(&quot&lt;/s&gt;&quot)
+            sequence = sequence[:eos_pos+1]</code></pre>

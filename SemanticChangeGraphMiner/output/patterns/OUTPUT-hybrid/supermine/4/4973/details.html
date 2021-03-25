@@ -1,0 +1,22 @@
+<html><h3>699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046,skgenome/tabio/gff.py,,read_gff,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return (dframe
+            .assign(start=dframe.start - 1,
+                    score=dframe.score.replace(&quot.&quot, &quotnan&quot).astype(&quotfloat&quot),
+                    gene=<a id="change">dframe.attribute.apply(_parse_name)</a>)
+            .sort_values([&quotchromosome&quot, &quotstart&quot, &quotend&quot])
+            .reset_index(drop=True))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            &#47&#47 Default to a set of likely relevant tags
+            rx = re.compile(r&quot(Name|gene_id|gene_name|gene)[= ]"?(\S+?)"?(;|$)&quot)
+            <a id="change">matches = dframe[&quotattribute&quot].str.extractall(rx)</a>
+            if len(matches):
+                dframe[&quotgene&quot] = <a id="change">matches.xs(0, level=1)[1]</a>
+    if &quotgene&quot in dframe.columns:
+        dframe[&quotgene&quot] = dframe[&quotgene&quot].fillna(&quot-&quot).astype(&quotstr&quot)
+    else:
+        dframe[&quotgene&quot] = [&quot-&quot] * len(dframe)</code></pre><img src="21484807.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046#diff-eeb862d955b4c5988d3a131dd121169465d90f5ddaf5ec62f9ccd57cc882a4e9L32' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: 699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: eric.talevich@gmail.com</div><div id='file'> File Name: skgenome/tabio/gff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_gff</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e#diff-006be648ca04cea91a1d8a53fb6f6d1355e73c72738686ba1261e0b61fc96bd1L104' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/7d8f3f66495979f1bbd27205d422d673991709f2#diff-006be648ca04cea91a1d8a53fb6f6d1355e73c72738686ba1261e0b61fc96bd1L104' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 7d8f3f66495979f1bbd27205d422d673991709f2</div><div id='time'> Time: 2021-01-26</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

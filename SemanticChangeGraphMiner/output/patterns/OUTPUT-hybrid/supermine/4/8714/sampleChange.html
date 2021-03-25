@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            torch.arange(true_sorted_by_preds.shape[1], dtype=torch.float)
+            + 2.0
+        )
+        discounted_gains = (gains * discounts)[<a id="change">:, :</a>k]
+
+    elif gain_function == "rank":
+        discounts = torch.tensor(1) / torch.log2(</code></pre><h3>After Change</h3><pre><code class='java'>
+    Raises:
+        ValueError: gain function can be either `pow_rank` or `rank`
+    
+    targets_sort_by_outputs = <a id="change">process_recsys_components(outputs, targets)</a>
+    <a id="change">target_device = targets_sort_by_outputs.device</a>
+
+    if gain_function == "exp_rank":
+        gain_function = lambda x: torch.pow(2, x) - 1
+        gains = gain_function(targets_sort_by_outputs)</code></pre>

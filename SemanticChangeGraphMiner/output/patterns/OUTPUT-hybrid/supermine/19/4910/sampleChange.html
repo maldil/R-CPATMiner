@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Test ROCAUC without per-class curves
+        
+        &#47&#47 Load the Data
+        <a id="change">X_train, X_test, y_train, y_test = self.load_binary_data()</a>
+
+        &#47&#47 Create and fit the visualizer
+        visualizer = ROCAUC(LogisticRegression(), per_class=False)
+        visualizer.fit(X_train, y_train)</code></pre><h3>After Change</h3><pre><code class='java'>
+        visualizer.poof()
+        self.assert_images_similar(visualizer, tol=TOL)
+
+    def test_rocauc_no_classes(<a id="change">self</a>):
+        
+        Test ROCAUC without per-class curves
+        
+        &#47&#47 Create and fit the visualizer
+        visualizer = ROCAUC(LogisticRegression(), per_class=False)
+        <a id="change">visualizer.fit(self.binary.X.train, self.binary.y.train)</a>
+
+        &#47&#47 Score the visualizer (should be the micro average)
+        <a id="change">s = visualizer.score(self.binary.X.test, self.binary.y.test)</a>
+        self.assertAlmostEqual(s, 0.8)
+
+        &#47&#47 Assert that there still are per-class scores
+        for c in (0, 1):</code></pre>

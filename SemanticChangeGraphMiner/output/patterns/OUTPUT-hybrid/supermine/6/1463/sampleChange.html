@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for w, b, hid in zip(self.softmax_w, self.softmax_b, output_hidden):
+            logits = w.expr(update=True) * hid + b.expr(update=True)
+            if runtime:
+                logits = <a id="change">dy.softmax(logits)</a>
+            output.append(logits)
+        return output
+
+    def learn(self, wave, mgc, batch_size):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, last_fft=None, runtime=True):
+        <a id="change">if last_fft is None:
+            last_fft_real = np.zeros(self.FFT_SIZE)
+            last_fft_imag = np.zeros(self.FFT_SIZE)
+        else:
+            last_fft_real = np.real(last_fft)
+            last_fft_imag = np.imag(last_fft)
+
+       </a> hidden = dy.concatenate([dy.inputVector(mgc), dy.inputVector(last_fft_real), dy.inputVector(last_fft_imag)])
+
+        for w, b in zip(self.hidden_w, self.hidden_b):
+            hidden = dy.tanh(w.expr(update=True) * hidden + b.expr(update=True))</code></pre>

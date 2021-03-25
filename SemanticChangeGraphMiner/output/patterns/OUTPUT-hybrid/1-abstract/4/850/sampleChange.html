@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _predict_pytorch(self, model, x_numpy):
+        import torch
+        x = torch.from_numpy(x_numpy).float()
+        return <a id="change">model</a>(x).softmax(dim=1).detach().numpy()
+
+    def predict(self, model, X):
+        &#47&#47 e.g. model(torch.fromnumpy(X)).detach().numpy()</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _predict_pytorch(self, model, x_numpy):
+        import torch
+        x = torch.from_numpy(x_numpy).to(self.torch_device).float()
+        return <a id="change">model</a>(x).softmax(dim=1).detach().cpu().numpy()
+
+    def predict(self, model, X):
+        &#47&#47 e.g. model(torch.fromnumpy(X)).detach().numpy()</code></pre>

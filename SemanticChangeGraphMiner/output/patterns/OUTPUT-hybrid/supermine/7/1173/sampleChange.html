@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 
+    &#47&#47 The batch is (nL, nB, ...)
+    &#47&#47
+    nB, nO = <a id="change">Yt1.shape[0]</a>
+    &#47&#47 Variables:
+    &#47&#47 
+    &#47&#47 At: Activations for this timestep, i.e. output of hstack(Xt, Yt1)@W+b
+    &#47&#47 Yt1: Previous hidden-layer output (i.e. Y_{t-1}</code></pre><h3>After Change</h3><pre><code class='java'>
+    ho = sigmoid(At3_ho) &#47&#47 1c
+    hc = xp.tanh(At3_hc) &#47&#47 1d
+
+    <a id="change">Ct3 = hf * Ct2</a> &#47&#47 2a
+    Ct3 += hi * hc &#47&#47 2b
+    <a id="change">tanhCt3 = tanh(Ct3)</a> &#47&#47 3a
+    Yt3 = tanhCt3 * ho &#47&#47 3b
+    &#47&#47 We don&quott need the gradient for this, it&quots just for backprop calculation.
+    Gt3 = xp.concatenate((hf, hi, ho, hc), axis=-1)
+    <a id="change">return (Yt3, Ct3), Gt3</a>
+
+
+@jax_jit()
+def backprop_lstm_gates(</code></pre>

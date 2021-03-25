@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    num_hidden_units = 256
+    batch_size = 100
+    learning_rate = schedules.power_law_decay(initial=0.1, coefficient=0.1)
+    <a id="change">num_terms = 2</a>
+
+    (_, _, shuffled_filepath) = \
+            util.default_paths(paysage_path)
+
+    &#47&#47 set up the reader to get minibatches
+    data = batch.HDFBatch(shuffled_filepath,
+                         &quottrain/images&quot,
+                          batch_size,
+                          transform=batch.binarize_color,
+                          train_fraction=0.95)
+
+    &#47&#47 set up the model and initialize the parameters
+    vis_layer = layers.BernoulliLayer(data.ncols)
+    hid_layer = layers.BernoulliLayer(num_hidden_units)
+
+    rbm = model.Model([vis_layer, hid_layer])
+    rbm.initialize(data, &quotglorot_normal&quot)
+
+    perf  = fit.ProgressMonitor(data,
+                                metrics=[&quotReconstructionError&quot,
+                                         &quotEnergyDistance&quot,
+                                         &quotHeatCapacity&quot])
+
+    opt = optimizers.Gradient(stepsize=learning_rate,
+                              tolerance=1e-4,
+                              ascent=True)
+
+    sampler = fit.DrivenSequentialMC.from_batch(rbm, data)
+
+    sgd = fit.SGD(rbm, data, opt, num_epochs, sampler=sampler, method=fit.tap, monitor=perf)
+
+    &#47&#47 fit the model
+    <a id="change">print(&quotTraining with stochastic gradient ascent using TAP expansion to &quot + str(num_terms) + &quot terms.&quot)</a>
+    sgd.train()
+
+    util.show_metrics(rbm, perf)
+    valid = data.get(&quotvalidate&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    sgd = fit.SGD(rbm, data, opt, num_epochs, sampler=sampler, method=fit.tap, monitor=perf)
+
+    &#47&#47 fit the model
+    <a id="change">print(&quotTraining with stochastic gradient ascent using TAP expansion&quot)</a>
+    sgd.train()
+
+    util.show_metrics(rbm, perf)
+    valid = data.get(&quotvalidate&quot)</code></pre>

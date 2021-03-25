@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def zeros(*sizes, **kwargs):
+    return <a id="change">torch.zeros(*sizes, **kwargs).to(device)</a>
+
+
+def ones(*sizes, **kwargs):
+    return torch.ones(*sizes, **kwargs).to(device)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def zeros(*sizes, torch_device=None, **kwargs):
+    <a id="change">if torch_device is None:
+        torch_device = device
+   </a> return torch.zeros(*sizes, **kwargs, device=torch_device)
+
+
+def zeros_like(*args, torch_device=None, **kwargs):</code></pre>

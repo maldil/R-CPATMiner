@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    padded_sent = [S] * N + sent + [S] * N
+
+    &#47&#47 Step through the sentence
+    <a id="change">total_loss = 0</a>
+    for i in range(N, len(sent) + N):
+        &#47&#47 c is the context vector
+        c = torch.tensor(padded_sent[i - N:i] + padded_sent[i + 1:i + N + 1]).type(type)
+        t = torch.tensor([padded_sent[i]]).type(type) &#47&#47 This is the target vector
+        log_prob = model(c)
+        loss = criterion(log_prob, t)   &#47&#47 loss for predicting target from context vector
+        if not inference:
+            &#47&#47 Back prop while training only
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        <a id="change">total_loss += loss.data.cpu().item()</a>
+    <a id="change">return total_loss</a>
+
+
+MAX_LEN = 100
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        logits = model(c)
+        loss = criterion(logits, t)   &#47&#47 loss for predicting target from context vector
+        losses.append(loss)
+    <a id="change">return torch.stack(losses).sum()</a>
+
+
+MAX_LEN = 100
+</code></pre>

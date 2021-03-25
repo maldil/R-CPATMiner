@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                ]
+                p = p.numpy()
+                p = np.pad(p, pad_dims, mode=&quotconstant&quot)
+                <a id="change">p = torch.from_numpy(p)</a>
+
+                &#47&#47 add correction factor
+                from_x += (size//2+1)
+                from_y += (size//2+1)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 cast to ints
+            from_x, to_x = from_x.data[0], to_x.data[0]
+            <a id="change">from_y</a>, to_y = from_y.data[0], to_y.data[0]
+
+            &#47&#47 pad tensor in case exceeds
+            if self.exceeds(from_x, to_x, from_y, to_y, T):</code></pre>

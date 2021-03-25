@@ -1,0 +1,99 @@
+<html><h3>97a8df33c3dd671cd09d8499dcc5d55ecad6b666,softlearning/algorithms/sql.py,SQL,_create_svgd_update,#SQL#,257
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                     [None, n_updated_actions, *self._action_shape])
+
+        Q_log_targets = tuple(
+            Q([<a id="change">tf.tile(self._observations_ph, (n_fixed_actions, 1))</a>,
+               tf.reshape(fixed_actions, (-1, *self._action_shape))])
+            for Q in self._Qs)
+        <a id="change">min_Q_log_target</a> = tf.reduce_min(Q_log_targets, axis=0)
+        svgd_target_values = tf.reshape(
+            min_Q_log_target,
+            (-1, n_fixed_actions, 1))
+
+        &#47&#47 Target log-density. Q_soft in Equation 13:
+        assert self._policy._squash
+        squash_correction = tf.reduce_sum(
+            tf.log(1 - fixed_actions ** 2 + EPS), axis=-1, keepdims=True)
+        log_probs = svgd_target_values + squash_correction
+
+        grad_log_probs = tf.gradients(log_probs, fixed_actions)[0]
+        grad_log_probs = tf.expand_dims(grad_log_probs, axis=2)
+        grad_log_probs = tf.stop_gradient(grad_log_probs)
+        assert_shape(grad_log_probs,
+                     [None, n_fixed_actions, 1, *self._action_shape])
+
+        kernel_dict = self._kernel_fn(xs=fixed_actions, ys=updated_actions)
+
+        &#47&#47 Kernel function in Equation 13:
+        kappa = kernel_dict["output"][..., tf.newaxis]
+        assert_shape(kappa, [None, n_fixed_actions, n_updated_actions, 1])
+
+        &#47&#47 Stein Variational Gradient in Equation 13:
+        action_gradients = tf.reduce_mean(
+            kappa * grad_log_probs + kernel_dict["gradient"], axis=1)
+        assert_shape(action_gradients,
+                     [None, n_updated_actions, *self._action_shape])
+
+        &#47&#47 Propagate the gradient through the policy network (Equation 14).
+        gradients = tf.gradients(
+            updated_actions,
+            self._policy.trainable_variables,
+            grad_ys=action_gradients)
+
+        <a id="change">surrogate_loss</a> = tf.reduce_sum([
+            tf.reduce_sum(w * tf.stop_gradient(g))
+            for w, g in zip(self._policy.trainable_variables, gradients)
+        ])</code></pre><h3>After Change</h3><pre><code class='java'>
+        Q_log_targets = tuple(
+            Q([
+                tf.reshape(
+                    <a id="change">tf.tile(
+                        self._observations_ph[:, None, :],
+                        (1, n_fixed_actions, 1))</a>,
+                    (-1, *self._observation_shape)),
+                tf.reshape(fixed_actions, (-1, *self._action_shape))
+            ])
+            for Q in self._Qs)
+        <a id="change">min_Q_log_target</a> = tf.reduce_min(Q_log_targets, axis=0)
+        svgd_target_values = tf.reshape(
+            min_Q_log_target,
+            (-1, n_fixed_actions, 1))
+
+        &#47&#47 Target log-density. Q_soft in Equation 13:
+        assert self._policy._squash
+        squash_correction = tf.reduce_sum(
+            tf.log(1 - fixed_actions ** 2 + EPS), axis=-1, keepdims=True)
+        log_probs = svgd_target_values + squash_correction
+
+        grad_log_probs = tf.gradients(log_probs, fixed_actions)[0]
+        grad_log_probs = tf.expand_dims(grad_log_probs, axis=2)
+        grad_log_probs = tf.stop_gradient(grad_log_probs)
+        assert_shape(grad_log_probs,
+                     [None, n_fixed_actions, 1, *self._action_shape])
+
+        kernel_dict = self._kernel_fn(xs=fixed_actions, ys=updated_actions)
+
+        &#47&#47 Kernel function in Equation 13:
+        kappa = kernel_dict["output"][..., tf.newaxis]
+        assert_shape(kappa, [None, n_fixed_actions, n_updated_actions, 1])
+
+        &#47&#47 Stein Variational Gradient in Equation 13:
+        action_gradients = tf.reduce_mean(
+            kappa * grad_log_probs + kernel_dict["gradient"], axis=1)
+        assert_shape(action_gradients,
+                     [None, n_updated_actions, *self._action_shape])
+
+        &#47&#47 Propagate the gradient through the policy network (Equation 14).
+        gradients = tf.gradients(
+            updated_actions,
+            self._policy.trainable_variables,
+            grad_ys=action_gradients)
+
+        <a id="change">surrogate_loss</a> = tf.reduce_sum([
+            tf.reduce_sum(w * tf.stop_gradient(g))
+            for w, g in zip(self._policy.trainable_variables, gradients)
+        ])</code></pre><img src="135942.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/97a8df33c3dd671cd09d8499dcc5d55ecad6b666#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L257' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: 97a8df33c3dd671cd09d8499dcc5d55ecad6b666</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/df5db9f008e979fd1c54c31654f2c4757c747d4c#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L251' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: df5db9f008e979fd1c54c31654f2c4757c747d4c</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/48c1c96ac4cfec5580a5feb7eb7ef7c25c6db234#diff-8d37272f22c146505301f9d7f2a729d60681f649b77fea252346332e7ac31327L4284' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 48c1c96ac4cfec5580a5feb7eb7ef7c25c6db234</div><div id='time'> Time: 2018-10-29</div><div id='author'> Author: gabrieldemarmiesse@gmail.com</div><div id='file'> File Name: keras/backend/tensorflow_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ctc_label_dense_to_sparse</div><BR>

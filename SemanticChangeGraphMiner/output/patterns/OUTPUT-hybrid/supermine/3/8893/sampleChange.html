@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	            batch_size      = batch_size,
+	            data_shape      = (3,1000,1000),
+	            mean_r          = pixel_mean[2],
+	            mean_g          = <a id="change">pixel_mean[1]</a>,
+	            mean_b          = pixel_mean[0],
+	            preprocess_threads = threads,
+	            resize_mode     = &quotforce&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.batch_size = batch_size
+        self.pixel_mean = pixel_mean
+
+        <a id="change">self.thread_pool = ThreadPool(threads)</a>
+        self.data_name = [&quotdata&quot, &quotrois&quot]
+        self.label_name = [&quotlabel&quot, &quotbbox_target&quot, &quotbbox_weight&quot]
+        self.n_per_gpu = batch_size / nGPUs
+        self.batch = None</code></pre>

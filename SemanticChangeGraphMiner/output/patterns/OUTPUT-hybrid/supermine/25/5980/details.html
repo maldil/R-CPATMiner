@@ -1,0 +1,59 @@
+<html><h3>e4f051b6cce414997a97b896276563c4e361d0b8,ch09/04_cartpole_pg.py,,,#,35
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(batch_states) &lt; BATCH_SIZE:
+            continue
+
+        states_v = <a id="change">Variable(torch.from_numpy(np.array(batch_states, dtype=np.float32)))</a>
+        batch_actions_t = torch.LongTensor(batch_actions)
+        <a id="change">batch_scale_v</a> = <a id="change">Variable(torch.FloatTensor(batch_scales))</a>
+
+        optimizer.zero_grad()
+        <a id="change">logits_v</a> = net(states_v)
+        <a id="change">log_prob_v</a> = F.log_softmax(logits_v, dim=1)
+        log_prob_actions_v = batch_scale_v * log_prob_v[range(BATCH_SIZE), batch_actions_t]
+        <a id="change">loss_policy_v</a> = -log_prob_actions_v.mean()
+
+        prob_v = F.softmax(logits_v, dim=1)
+        entropy_v = -(prob_v * log_prob_v).sum(dim=1).mean()
+        entropy_loss_v = -ENTROPY_BETA * entropy_v
+        <a id="change">loss_v</a> = loss_policy_v + entropy_loss_v
+
+        loss_v.backward()
+        optimizer.step()
+
+        &#47&#47 calc KL-div
+        new_logits_v = net(states_v)
+        <a id="change">new_prob_v</a> = F.softmax(new_logits_v, dim=1)
+        kl_div_v = -((new_prob_v / prob_v).log() * prob_v).sum(dim=1).mean()
+        writer.add_scalar("kl", kl_div_v.data.cpu().numpy()[0], step_idx)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(batch_states) &lt; BATCH_SIZE:
+            continue
+
+        states_v = <a id="change">torch.FloatTensor(batch_states)</a>
+        batch_actions_t = torch.LongTensor(batch_actions)
+        <a id="change">batch_scale_v</a> = <a id="change">torch.FloatTensor(batch_scales)</a>
+
+        optimizer.zero_grad()
+        <a id="change">logits_v</a> = net(states_v)
+        <a id="change">log_prob_v</a> = F.log_softmax(logits_v, dim=1)
+        log_prob_actions_v = batch_scale_v * log_prob_v[range(BATCH_SIZE), batch_actions_t]
+        <a id="change">loss_policy_v</a> = -log_prob_actions_v.mean()
+
+        prob_v = F.softmax(logits_v, dim=1)
+        entropy_v = -(prob_v * log_prob_v).sum(dim=1).mean()
+        entropy_loss_v = -ENTROPY_BETA * entropy_v
+        <a id="change">loss_v</a> = loss_policy_v + entropy_loss_v
+
+        loss_v.backward()
+        optimizer.step()
+
+        &#47&#47 calc KL-div
+        new_logits_v = net(states_v)
+        <a id="change">new_prob_v</a> = F.softmax(new_logits_v, dim=1)
+        kl_div_v = -((new_prob_v / prob_v).log() * prob_v).sum(dim=1).mean()
+        writer.add_scalar("kl", kl_div_v.item(), step_idx)
+</code></pre><img src="24576375.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 22</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/e4f051b6cce414997a97b896276563c4e361d0b8#diff-5c9837e94ac1efc536eca2ec789d3a95f62b777cbcd0c76c44108af4f7b5e715L82' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: e4f051b6cce414997a97b896276563c4e361d0b8</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch09/04_cartpole_pg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/e4f051b6cce414997a97b896276563c4e361d0b8#diff-089ec68abd56de7943f378a279c7d698a3567ae222f8d84a5fdd1b6369fcccd3L97' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: e4f051b6cce414997a97b896276563c4e361d0b8</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch09/03_cartpole_reinforce_baseline.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/e4f051b6cce414997a97b896276563c4e361d0b8#diff-ae884c06d52771cdf09ac45b369ba07f6da62dec02c19f0a303efb399901f3f8L92' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: e4f051b6cce414997a97b896276563c4e361d0b8</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch09/02_cartpole_reinforce.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

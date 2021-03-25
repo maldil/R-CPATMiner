@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            masks = [None for _ in Qs]
+        assert len(Qs) == len(Ks) == len(Vs)
+        Ys, get_dQs_dKs_dVs = self._attend_seqs(Qs, Ks, Vs, masks)
+        <a id="change">lengths = self.ops.asarray([len(y) for y in Ys], dtype=&quoti&quot)</a>
+        assert sum(lengths) == sum([len(q) for q in Qs])
+        Y = <a id="change">self.ops.flatten(Ys)</a>
+        
+        def finish_update(dY, sgd=None):
+            dYs = self.ops.unflatten(dY, lengths)
+            return get_dQs_dKs_dVs(dYs, sgd=sgd)
+        
+        assert sum(lengths) == Y.shape[0], (sum(lengths, Y.shape[0]))
+        assert sum([len(q) for q in Qs]) == sum(lengths)
+        <a id="change">return (Y, lengths), finish_update</a>
+
+    def _attend_seqs(self, Qs, Ks, Vs, masks):
+        outputs = []
+        backprops = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        if masks is None:
+            masks = [None for _ in Qs]
+        assert len(Qs) == len(Ks) == len(Vs)
+        <a id="change">return self._attend_seqs(Qs, Ks, Vs, masks)</a>
+        
+    def _attend_seqs(self, Qs, Ks, Vs, masks):
+        outputs = []
+        backprops = []</code></pre>

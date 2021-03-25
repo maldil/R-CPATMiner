@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_compute_gray_matter_mask():
+    <a id="change">assert_true(1)</a>
+
+
+def test_apply_mask():
+     Test smoothing of timeseries extraction</code></pre><h3>After Change</h3><pre><code class='java'>
+    image = Nifti1Image(np.ones((9, 9, 9)), np.eye(4))
+
+    mask = compute_gray_matter_mask(image, threshold=0)
+    <a id="change">mask1 = np.zeros((9, 9, 9))</a>
+    mask1[2:-2, 2:-2, 2:-2] = 1
+
+    np.testing.assert_array_equal(mask1, mask.get_data())
+</code></pre>

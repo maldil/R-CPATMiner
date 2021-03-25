@@ -1,0 +1,31 @@
+<html><h3>490e5785e68a143271beb4197f8fe6be75ff1b05,functions/FocalStatistics.py,FocalStatistics,updatePixels,#FocalStatistics#,53
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        m = pixelBlocks[&quotraster_mask&quot]
+
+        pixelBlocks[&quotoutput_pixels&quot] = p[s, s].astype(props[&quotpixelType&quot])
+        pixelBlocks[&quotoutput_mask&quot] = <a id="change">m[s, s].astype(&quotu1&quot)</a>
+
+        self.emit("Trace|Request Raster|{0}\n".format(props))
+        self.emit("Trace|Request Size|{0}\n".format(shape))</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+    def updatePixels(self, tlc, shape, props, **pixelBlocks):
+        s = slice(None, None, <a id="change">max(1, self.factor)</a>)
+        p = pixelBlocks[&quotraster_pixels&quot]
+        m = pixelBlocks[&quotraster_mask&quot]
+
+        if len(p.shape) &lt;= 2 or p.shape[0] == 1:
+            outP = p[s, s]
+            outM = m[s, s]
+        else:
+            outP = p[:, s, s]
+            outM = m[<a id="change">:, s, s</a>]
+
+        pixelBlocks[&quotoutput_pixels&quot] = outP.astype(props[&quotpixelType&quot])
+        <a id="change">pixelBlocks[&quotoutput_mask&quot] = outM.astype(&quotu1&quot)</a>
+
+        self.emit("Trace|FocalStatistics.updatePixels|Request Raster|{0}\n".format(props))
+        self.emit("Trace|FocalStatistics.updatePixels|Request Size|{0}\n".format(shape))</code></pre><img src="12690448.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/490e5785e68a143271beb4197f8fe6be75ff1b05#diff-52363f715354a2f347079432d0c02b623fcb176b8ff3e6f1896505e59b72d30fL54' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 490e5785e68a143271beb4197f8fe6be75ff1b05</div><div id='time'> Time: 2014-10-30</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/FocalStatistics.py</div><div id='class'> Class Name: FocalStatistics</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/0873b10d3058c2da26a57d23caed70cbacaac699#diff-52363f715354a2f347079432d0c02b623fcb176b8ff3e6f1896505e59b72d30fL54' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 0873b10d3058c2da26a57d23caed70cbacaac699</div><div id='time'> Time: 2014-10-30</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/FocalStatistics.py</div><div id='class'> Class Name: FocalStatistics</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR>

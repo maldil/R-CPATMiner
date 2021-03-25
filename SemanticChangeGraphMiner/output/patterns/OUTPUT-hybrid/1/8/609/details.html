@@ -1,0 +1,37 @@
+<html><h3>e78b409a087ed1208f07ef05513eeac9b37f042f,memcnn/models/revop.py,ReversibleBlockFunction,forward,#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            del x2
+            output = torch.cat([y1, y2], dim=1)
+            y1.set_()
+            <a id="change">y2.set_()</a>
+            <a id="change">del y1, y2</a>
+
+        &#47&#47 save the (empty) input and (non-empty) output variables
+        ctx.save_for_backward(x, output)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        with set_grad_enabled(False):
+            &#47&#47 partition in two equally sized set of channels
+            y1, y2 = torch.chunk(y, 2, dim=1)
+            <a id="change">y1</a>, <a id="change">y2</a> = y1.contiguous(), y2.contiguous()
+
+            &#47&#47 compute outputs
+            with warnings.catch_warnings():
+                y1var = Variable(y1, requires_grad=False, volatile=True)
+            gmr = Gm.forward(y1var).data
+
+            x2 = y2 - gmr
+            <a id="change">y2.set_()</a>
+            del y2
+            with warnings.catch_warnings():
+                x2var = Variable(x2, requires_grad=False, volatile=True)
+            fmr = Fm.forward(x2var).data
+            x1 = y1 - fmr
+            y1.set_()
+            <a id="change">del y1</a>
+            output = torch.cat([x1, x2], dim=1)
+            x1.set_()
+            x2.set_()
+            del x1, x2</code></pre><img src="3024334.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/e78b409a087ed1208f07ef05513eeac9b37f042f#diff-e1f25583db6ccc8e4ce2a4f9a7a4cd0af82a5f4a3119aaa72c2b23f26e9e84c7L153' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: e78b409a087ed1208f07ef05513eeac9b37f042f</div><div id='time'> Time: 2018-10-14</div><div id='author'> Author: tychovdo@gmail.com</div><div id='file'> File Name: memcnn/models/revop.py</div><div id='class'> Class Name: ReversibleBlockFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/e78b409a087ed1208f07ef05513eeac9b37f042f#diff-e1f25583db6ccc8e4ce2a4f9a7a4cd0af82a5f4a3119aaa72c2b23f26e9e84c7L503' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: e78b409a087ed1208f07ef05513eeac9b37f042f</div><div id='time'> Time: 2018-10-14</div><div id='author'> Author: tychovdo@gmail.com</div><div id='file'> File Name: memcnn/models/revop.py</div><div id='class'> Class Name: ReversibleBlockInverseFunction2</div><div id='method'> Method Name: forward</div><BR>

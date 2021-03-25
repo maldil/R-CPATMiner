@@ -1,0 +1,21 @@
+<html><h3>fbec92e2363493126b4927a167039fbd037f17bc,code/deep/DAN/DAN.py,,test,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            data, target = data.cuda(), target.cuda()
+        data, target = Variable(data, volatile=True), Variable(target)
+        s_output, t_output = model(data, data)
+        test_loss += <a id="change">F.nll_loss(F.log_softmax(s_output, dim = 1), target, size_average=False).data[0]</a> &#47&#47 sum up batch loss
+        pred = s_output.data.max(1)[1] &#47&#47 get the index of the max log-probability
+        correct += pred.eq(target.data.view_as(pred)).cpu().sum()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for tgt_test_data, tgt_test_label in tgt_test_loader:
+            if cuda:
+                tgt_test_data, tgt_test_label = tgt_test_data.cuda(), tgt_test_label.cuda()
+            <a id="change">tgt_test_data</a>, tgt_test_label = Variable(tgt_test_data), Variable(tgt_test_label)
+            tgt_pred, mmd_loss = <a id="change">model(tgt_test_data, tgt_test_data)</a>
+            test_loss += F.nll_loss(F.log_softmax(tgt_pred, dim = 1), tgt_test_label, reduction=&quotsum&quot).item() &#47&#47 sum up batch loss
+            pred = tgt_pred.data.max(1)[1] &#47&#47 get the index of the max log-probability
+            correct += pred.eq(tgt_test_label.data.view_as(pred)).cpu().sum()
+</code></pre><img src="12839763.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/fbec92e2363493126b4927a167039fbd037f17bc#diff-60a5b36a7867a0d177899c75f4ed9876a0f468ed71674455659c3db4fe0fa752L95' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: fbec92e2363493126b4927a167039fbd037f17bc</div><div id='time'> Time: 2019-10-21</div><div id='author'> Author: 1299192934@qq.com</div><div id='file'> File Name: code/deep/DAN/DAN.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/fbec92e2363493126b4927a167039fbd037f17bc#diff-60a5b36a7867a0d177899c75f4ed9876a0f468ed71674455659c3db4fe0fa752L95' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: fbec92e2363493126b4927a167039fbd037f17bc</div><div id='time'> Time: 2019-10-21</div><div id='author'> Author: 1299192934@qq.com</div><div id='file'> File Name: code/deep/DAN/DAN.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L43' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_epoch</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L80' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_epoch</div><BR>

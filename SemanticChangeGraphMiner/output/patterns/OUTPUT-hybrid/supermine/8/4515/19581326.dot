@@ -1,0 +1,26 @@
+digraph G {
+subgraph cluster0 {
+1 [label="cuda" a="32" s="5734" l="6" shape="box"];
+4 [label="Assignment:=" a="7" s="5718" l="9" shape="box"];
+7 [label="SimpleName" a="42" s="5644" l="7" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="no_grad" a="32" s="5673" l="9" shape="box"];
+3 [label="PyWithStatement" a="104" s="5657,5682" l="10,2" shape="diamond"];
+5 [label="SimpleName" a="42" s="" l="" shape="ellipse"];
+6 [label="item" a="32" s="6762" l="6" shape="box"];
+8 [label="SimpleName" a="42" s="5808" l="7" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 4 [label="_para_"];
+2 -> 5 [label="_def_"];
+3 -> 6 [label="_control_"];
+5 -> 3 [label="_cond_"];
+7 -> 4 [label="_control_"];
+7 -> 8 [label="_map_"];
+7 -> 1 [label="_control_"];
+8 -> 6 [label="_control_"];
+}

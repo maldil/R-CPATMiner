@@ -1,0 +1,39 @@
+<html><h3>44bdf9be3b913a1a0e90115e45edbee192d01b90,deslib/des/probabilistic.py,Probabilistic,estimate_competence,#Probabilistic#,113
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 TODO: Adapt this function to batch processing
+        dists, idx_neighbors = self._get_region_competence(query)
+        <a id="change">dists_organized = np.array([dists[index] for index in np.argsort(idx_neighbors)])</a>
+
+        potential_dists = self.potential_func(dists_organized)
+        sum_potential = np.sum(potential_dists)
+        competences = np.zeros(self.n_classifiers)
+
+        for clf_index in range(self.n_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                temp_competence = np.multiply(self.C_src[:, clf_index], potential_dists)
+                <a id="change">competences[clf_index] = np.sum(temp_competence)/sum_potential</a>
+
+        return competences
+
+    def select(self, competences):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 TODO: Adapt this function to batch processing
+        dists, idx_neighbors = self._get_region_competence(query)
+        idx_neighbors = np.atleast_2d(idx_neighbors)
+        <a id="change">dists = np.atleast_2d(dists)</a>
+        dists_organized = np.take(dists, idx_neighbors)
+
+        &#47&#47dists_organized = np.array([dists[index] for index in np.argsort(idx_neighbors)])
+        potential_dists = self.potential_func(dists_organized)
+        sum_potential = np.sum(potential_dists, axis=1)
+
+        competences = np.einsum(&quotijk,ij-&gt;ik&quot, self.C_src[<a id="change">np.newaxis, :, :</a>], potential_dists)
+        <a id="change">competences = competences/sum_potential.reshape(-1, 1)</a>
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47 for clf_index in range(self.n_classifiers):
+        &#47&#47     &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used</code></pre><img src="14993846.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/44bdf9be3b913a1a0e90115e45edbee192d01b90#diff-5f145097b3c169665a4c5d428644b451215257f8a1696f5227500aaa04f4bcfaL113' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 44bdf9be3b913a1a0e90115e45edbee192d01b90</div><div id='time'> Time: 2018-03-31</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/probabilistic.py</div><div id='class'> Class Name: Probabilistic</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b470898504d2a077433a84e12a7c8078b2494760#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L53' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b470898504d2a077433a84e12a7c8078b2494760</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/9dfafadcea9f709132bce12341a32ff5e27ec33a#diff-1a25c34669bbfa03b9238d7cbb6f22fbb4896e1fa7779271848902ebd250df44L162' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 9dfafadcea9f709132bce12341a32ff5e27ec33a</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/infogan/infogan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR>

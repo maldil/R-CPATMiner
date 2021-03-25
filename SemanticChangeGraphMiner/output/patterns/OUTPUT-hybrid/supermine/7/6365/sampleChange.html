@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    if pad:
+        padding         = [(0, 0)]  * data.ndim
+        padding[axis]   = <a id="change">(order, 0)</a>
+        delta_x              = np.pad(delta_x, padding, mode=&quotconstant&quot)
+
+    return delta_x
+</code></pre><h3>After Change</h3><pre><code class='java'>
+          delta matrix of ``data``.
+    &quot&quot&quot
+
+    <a id="change">half_length     = 1 + int(np.floor(width / 2))</a>
+    window          = np.arange(half_length - 1, -half_length, -1)
+    
+    &#47&#47 Pad out the data by repeating the border values (delta=0)
+    padding         = [(0, 0)]  * data.ndim
+    padding[axis]   = <a id="change">(half_length, half_length)</a>
+    delta_x         = np.pad(data, padding, mode=&quotedge&quot)
+
+    for _ in range(order):
+        delta_x     = scipy.signal.lfilter(window, 1, delta_x, axis=axis)</code></pre>

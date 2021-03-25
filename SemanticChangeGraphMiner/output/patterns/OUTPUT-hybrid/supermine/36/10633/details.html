@@ -1,0 +1,35 @@
+<html><h3>889a295c5c4e0c1cf344e49f2020917a410f64d1,nussl/core/augmentation.py,,pitch_shift,#,104
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    sample_rate = signal.sample_rate
+    shifted_source = []
+    <a id="change">audio_data</a> = signal.audio_data
+
+    <a id="change">for row in range(audio_data.shape[0]):
+        audio_row = audio_data[row, :]
+        if librosa.__version__ &gt; "0.6.2":
+            audio_row = np.asfortranarray(audio_row)
+        shifted_source.append(librosa.effects.pitch_shift(audio_row, sample_rate, shift))
+   </a> shifted_signal = <a id="change">AudioSignal(audio_data_array=np.array(shifted_source), sample_rate=sample_rate)</a>
+    return shifted_signal
+
+def loudness_scale(item, factor_range):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError("shift must be an integer.")
+
+    sample_rate = audio_signal.sample_rate
+    <a id="change">shifted_audio_data</a> = []
+    audio_data = audio_signal.audio_data
+
+    <a id="change">for audio_row in audio_signal.get_channels():
+        shifted_audio_data.append(librosa.effects.pitch_shift(audio_row, sample_rate, shift))
+   </a> shifted_audio_data = <a id="change">np.array(shifted_audio_data)</a>
+    <a id="change">shifted_signal = audio_signal.make_copy_with_audio_data(shifted_audio_data)</a>
+    <a id="change">shifted_signal.stft()</a>
+
+    return shifted_signal
+
+def low_pass(audio_signal, highest_freq):</code></pre><img src="39106039.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 25</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/889a295c5c4e0c1cf344e49f2020917a410f64d1#diff-a20e961fb1e85200e29834c2840c419fbf0507a4213420afaddc9cddf87739e3L47' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 889a295c5c4e0c1cf344e49f2020917a410f64d1</div><div id='time'> Time: 2020-05-03</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/core/augmentation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pitch_shift</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/889a295c5c4e0c1cf344e49f2020917a410f64d1#diff-a20e961fb1e85200e29834c2840c419fbf0507a4213420afaddc9cddf87739e3L80' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 889a295c5c4e0c1cf344e49f2020917a410f64d1</div><div id='time'> Time: 2020-05-03</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/core/augmentation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: time_stretch</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/ceb4e40c074d2f0d0bde8e97c7b4493971281a9b#diff-a20e961fb1e85200e29834c2840c419fbf0507a4213420afaddc9cddf87739e3L80' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: ceb4e40c074d2f0d0bde8e97c7b4493971281a9b</div><div id='time'> Time: 2020-05-14</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/core/augmentation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: time_stretch</div><BR>

@@ -1,0 +1,29 @@
+<html><h3>618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d,pymanopt/core/problem.py,Problem,backend,#Problem#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                  self._arg):
+                    self._backend = backend_autograd
+            if self._backend is None:
+                <a id="change">raise ValueError(
+                    "Cannot identify an autodiff backend from cost "
+                    "function that also was successfully imported. "
+                    "TheanoBackend was%s successfully imported. " %
+                    ("" if backend_theano.is_available() else " not") +
+                    "AutogradBackend was%s successfully imported. " %
+                    ("" if backend_autograd.is_available() else " not")
+                    )</a>
+        return self._backend
+
+    @property
+    def cost(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+            for backend in self._backends:
+                if backend.is_compatible(self._original_cost, self._arg):
+                    self._backend = backend
+                    <a id="change">break</a>
+            else:
+                backend_names = [backend.name <a id="change">for</a> backend in self._backends]
+                raise ValueError(
+                    "Cannot determine autodiff backend from cost function. "
+                    "Available backends are: {:s}".format(</code></pre><img src="17150693.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d#diff-10bc586d29b8b9c65fb4096cb073f599dd8e9bde81918e6753ac3f861ac91a7fL75' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d</div><div id='time'> Time: 2016-02-19</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/core/problem.py</div><div id='class'> Class Name: Problem</div><div id='method'> Method Name: backend</div><BR><BR><div id='link'><a href='https://github.com/lengstrom/fast-style-transfer/commit/31bfc7c1ce9dac771dbd5e2edf2d5e789d8b1aaa#diff-24edcdcba3747a424b769b374189e8346f6c2f7bdb1e16d2d9ffbe9b926d45a7L26' target='_blank'>Link</a></div><div id='project'> Project Name: lengstrom/fast-style-transfer</div><div id='commit'> Commit Name: 31bfc7c1ce9dac771dbd5e2edf2d5e789d8b1aaa</div><div id='time'> Time: 2016-12-23</div><div id='author'> Author: jonathan.e.m.bocker@gmail.com</div><div id='file'> File Name: evaluate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: from_pipe</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/a1890b56835ef626b1a32edcaf28c1e2b10baa48#diff-5913d75d4eab96cbc660dfc90ca14061f7cb87009154c9c3510226fae1c2b4f0L122' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: a1890b56835ef626b1a32edcaf28c1e2b10baa48</div><div id='time'> Time: 2015-03-19</div><div id='author'> Author: chebee7i@gmail.com</div><div id='file'> File Name: dit/algorithms/maxentropyfw.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: initial_point</div><BR>

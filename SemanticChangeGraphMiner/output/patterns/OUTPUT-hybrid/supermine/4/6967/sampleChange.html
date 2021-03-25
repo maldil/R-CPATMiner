@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            combination_slices = tf.unstack(K.reshape(combinations, (B, -1, 2 * self.F_)))
+            output_features = []
+            for slice in combination_slices:
+                <a id="change">dense = Dense(1)(slice)</a>  &#47&#47 N x 1 (basically "a(Wh_i, Wh_j)" in the paper)
+                &#47&#47 TODO: masking
+                <a id="change">e_i = K.reshape(dense, (1, -1))</a>  &#47&#47 1 x N (e_i in the paper)
+                softmax = K.squeeze(K.softmax(e_i))  &#47&#47 N (alpha_i in the paper)
+                softmax_broadcast = K.transpose(K.reshape(K.tile(softmax, [self.F_]), [self.F_, -1]))
+                node_features = K.sum(softmax_broadcast * linear_transf, axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        X = inputs[0]  &#47&#47 input graph (B x F)
+        G = inputs[1]  &#47&#47 full graph (N x F) (this is necessary in code, but not in theory. Check section 2.2 of the paper)
+        B = K.shape(X)[0]  &#47&#47 Get batch size at runtime
+        N = <a id="change">K.shape(G)[0]</a>  &#47&#47 Get number of nodes in the graph at runtime
+
+        outputs = []  &#47&#47 Will store the outputs of each attention head (B x F&quot or B x KF&quot)
+        for head in range(self.attention_heads):</code></pre>

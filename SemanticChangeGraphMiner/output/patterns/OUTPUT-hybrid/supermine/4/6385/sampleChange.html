@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        X_transformed = np.copy(X)
+        &#47&#47 add class probabilities as a synthetic feature
+        if issubclass(self.estimator.__class__, ClassifierMixin) and hasattr(self.estimator, &quotpredict_proba&quot):
+            X_transformed = <a id="change">np.hstack((self.estimator.predict_proba(X), X))</a>
+
+        &#47&#47 add class prodiction as a synthetic feature
+        X_transformed = np.hstack((np.reshape(self.estimator.predict(X), (-1, 1)), X_transformed))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if issubclass(self.estimator.__class__, ClassifierMixin) and hasattr(self.estimator, &quotpredict_proba&quot):
+            y_pred_proba = self.estimator.predict_proba(X)
+            &#47&#47 check all values that should be not infinity or not NAN
+            <a id="change">if np.all(np.isfinite(y_pred_proba)):
+                X_transformed = np.hstack((y_pred_proba, X))
+
+        &#47&#47 add class prodiction as a synthetic feature
+       </a> X_transformed = np.hstack((np.reshape(self.estimator.predict(X), (-1, 1)), X_transformed))
+
+        return X_transformed
+</code></pre>

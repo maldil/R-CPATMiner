@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Js = Js.reshape(-1, *[1] * alpha.dim())
+    Ms = Ms.reshape(-1, *[1] * alpha.dim())
+    alpha = alpha.view(1, *alpha.size())
+    beta = <a id="change">beta.view(1, *beta.size())</a>
+    Y = sh(Js, Ms, math.pi - beta.cpu().numpy(), alpha.cpu().numpy())
+    return torch.tensor(Y, dtype=dtype, device=device)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Ms = np.concatenate([np.arange(-J, J + 1, 1) for J in order], 0)
+    Js = Js.reshape(-1, *[1] * alpha.dim())
+    Ms = Ms.reshape(-1, *[1] * alpha.dim())
+    alpha = <a id="change">alpha.unsqueeze(0)</a>
+    beta = beta.unsqueeze(0)
+    Y = sh(Js, Ms, math.pi - beta.cpu().numpy(), alpha.cpu().numpy())
+    return torch.tensor(Y, dtype=dtype, device=device)
+</code></pre>

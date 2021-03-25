@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def _sample_locations(mesh, affine, radius, kind=&quotline&quot, n_points=None):
+    Get either ball or line sample locations.
+    projector = <a id="change">{
+        &quotline&quot: _line_sample_locations,
+        &quotball&quot: _ball_sample_locations
+    }[kind]</a>
+    &#47&#47 let the projector choose the default for n_points
+    &#47&#47 (for example a ball probably needs more than a line)
+    loc_kwargs = ({} if n_points is None else {&quotn_points&quot: n_points})
+    sample_locations = projector(</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quotline&quot: _line_sample_locations,
+        &quotball&quot: _ball_sample_locations
+    }
+    <a id="change">if kind not in projectors:
+        raise ValueError(
+            &quot"kind" must be one of {}&quot.format(tuple(projectors.keys())))
+   </a> <a id="change">projector = projectors[kind]</a>
+    &#47&#47 let the projector choose the default for n_points
+    &#47&#47 (for example a ball probably needs more than a line)
+    loc_kwargs = ({} if n_points is None else {&quotn_points&quot: n_points})
+    sample_locations = projector(</code></pre>

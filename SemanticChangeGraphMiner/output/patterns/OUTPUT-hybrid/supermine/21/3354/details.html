@@ -1,0 +1,41 @@
+<html><h3>9e80c11073af48db2876fc943df9264a7ab0488e,ch11/lib/common.py,,unpack_batch,#,82
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if exp.last_state is not None:
+            not_done_idx.append(idx)
+            last_states.append(np.array(exp.last_state, copy=False))
+    states_v = <a id="change">Variable(torch.from_numpy(np.array(states, copy=False)))</a>
+    actions_t = torch.LongTensor(actions)
+    <a id="change">if cuda:
+        states_v = states_v.cuda()
+        actions_t = actions_t.cuda()
+
+    &#47&#47 handle rewards
+   </a> rewards_np = np.array(rewards, dtype=np.float32)
+    if not_done_idx:
+        last_states_v = Variable(torch.from_numpy(np.array(last_states, copy=False)), volatile=True)
+        if cuda:
+            last_states_v = last_states_v.cuda()
+        last_vals_v = net(last_states_v)[1]
+        last_vals_np = last_vals_v.data.cpu().numpy()[:, 0]
+        rewards_np[not_done_idx] += last_val_gamma * last_vals_np
+
+    ref_vals_v = <a id="change">Variable(torch.from_numpy(rewards_np))</a>
+    <a id="change">if cuda:
+        ref_vals_v = ref_vals_v.cuda()
+
+   </a> return states_v, actions_t, ref_vals_v
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 handle rewards
+    rewards_np = np.array(rewards, dtype=np.float32)
+    if not_done_idx:
+        last_states_v = <a id="change">torch.FloatTensor(last_states).to(device)</a>
+        last_vals_v = net(last_states_v)[1]
+        last_vals_np = last_vals_v.data.cpu().numpy()[:, 0]
+        rewards_np[not_done_idx] += last_val_gamma * last_vals_np
+
+    ref_vals_v = <a id="change">torch.FloatTensor(rewards_np).to(device)</a>
+    return states_v, actions_t, ref_vals_v
+</code></pre><img src="14633613.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 19</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/9e80c11073af48db2876fc943df9264a7ab0488e#diff-afde50616596c29b2a4612aa70b1a851c4dd5f3de29e30fdbff94cc840bb4408L88' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 9e80c11073af48db2876fc943df9264a7ab0488e</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch11/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unpack_batch</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/9e80c11073af48db2876fc943df9264a7ab0488e#diff-afde50616596c29b2a4612aa70b1a851c4dd5f3de29e30fdbff94cc840bb4408L88' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 9e80c11073af48db2876fc943df9264a7ab0488e</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch11/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unpack_batch</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/373ae159f7ae1cabaf87228d1ae0fb6acd1c6363#diff-c5d918bb33d801b4aee123e59cb4a91de521aa76e4e66fe8d6c2fe1f2c768d19L16' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 373ae159f7ae1cabaf87228d1ae0fb6acd1c6363</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch14/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unpack_batch_a2c</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-c38544b96dbc5cb64f8759dd10868180b10e1a0f1662f00f5fdae6ecc63ed58bL15' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unpack_batch_a2c</div><BR>

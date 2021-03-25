@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        open(archive_file, &quotwb&quot).write(fitsdata)
+
+    hdulist = fits.open(archive_file)
+    return np.asarray(<a id="change">hdulist</a>[1].data)
+
+
+def fetch_great_wall(data_home=None, download_if_missing=True,</code></pre><h3>After Change</h3><pre><code class='java'>
+    archive_file1 = os.path.join(data_home, os.path.basename(DATA_URL1))
+    archive_file2 = os.path.join(data_home, os.path.basename(DATA_URL2))
+
+    <a id="change">if not (os.path.exists(archive_file1) and os.path.exists(archive_file2)):
+        if not download_if_missing:
+            raise IOError(&quotdata not present on disk. &quot
+                          &quotset download_if_missing=True to download&quot)
+
+        for url, name in zip([DATA_URL1, DATA_URL2],
+                             [archive_file1, archive_file2]):
+            data = Table.read(url)
+            data.write(name)
+
+   </a> data1 = Table.read(archive_file1)
+    data2 = Table.read(archive_file2)
+
+    data = vstack([data1, data2])</code></pre>

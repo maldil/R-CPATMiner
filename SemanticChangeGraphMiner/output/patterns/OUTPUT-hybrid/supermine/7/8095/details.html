@@ -1,0 +1,22 @@
+<html><h3>9a8d91022cfde0a380d8700be76d6ddbd716a2af,robosat/tools/train.py,,validate,#,156
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for mask, output in zip(masks, outputs):
+            mask = mask.data.cpu().numpy()
+            prediction = <a id="change">output</a>.data.max(<a id="change">0</a>)[<a id="change">1</a>].cpu().numpy()
+            <a id="change">iou.add(mask.ravel(), prediction.ravel())</a>
+
+    assert num_samples &gt; 0, "dataset contains validation images and labels"
+
+    return {"loss": running_loss / num_samples, "iou": iou.get()}</code></pre><h3>After Change</h3><pre><code class='java'>
+        running_loss += loss.item()
+
+        for mask, output in zip(masks, outputs):
+            <a id="change">iou.add(mask.float(), output.max(0)[1].float())</a>
+
+    assert num_samples &gt; 0, "dataset contains validation images and labels"
+
+    return {"loss": running_loss / num_samples, "iou": iou.get()}</code></pre><img src="31307789.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL160' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/4a486c33d7faa7938355658abca7e936022389b0#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL163' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 4a486c33d7faa7938355658abca7e936022389b0</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/4a486c33d7faa7938355658abca7e936022389b0#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL124' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 4a486c33d7faa7938355658abca7e936022389b0</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL120' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

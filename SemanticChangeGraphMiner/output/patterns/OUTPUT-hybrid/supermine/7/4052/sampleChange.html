@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            name = os.path.split(fp)[1]
+            name = re.sub(r&quot [LR]\d*\.txt&quot, &quot&quot, name).replace(&quot.txt&quot, &quot&quot)
+            name = re.sub(r&quot &#47&#47\d$&quot, &quot&quot, name)
+            name = <a id="change">name.replace(&quot.mdat&quot, &quot&quot)</a>
+            if name not in file_paths:
+                file_paths[name] = []
+            file_paths[name].append(fp)
+        return file_paths</code></pre><h3>After Change</h3><pre><code class='java'>
+        for fp in gras_source_paths:
+            add_to(fp, &quotgras&quot)
+
+        <a id="change">for name, rigs_and_file_paths in file_paths.items():
+            if (
+                    &quotiem&quot in rigs_and_file_paths and
+                    (&quotlegacy&quot in rigs_and_file_paths or &quotgras&quot in rigs_and_file_paths)
+            ):
+                &#47&#47 Remove IEM rig measurements if Ears-711 or GRAS measurements exist
+                &#47&#47 This means the headphone is onear model and the files found in IEM folder are duplicates
+                del rigs_and_file_paths[&quotiem&quot]
+
+       </a> return file_paths
+
+    def process(self, item, file_paths, target_dir=None):
+        if target_dir is None:</code></pre>

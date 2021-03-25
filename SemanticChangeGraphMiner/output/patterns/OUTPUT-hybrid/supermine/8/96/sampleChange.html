@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def logm(x):
+    <a id="change">return np.vectorize(
+        asp.logm, signature=&quot(n,m)-&gt;(n,m)&quot)(x)</a>
+
+
+def solve_sylvester(a, b, q):
+    if a.shape == b.shape:</code></pre><h3>After Change</h3><pre><code class='java'>
+    new_x = to_ndarray(x, to_ndim=3)
+    if _is_symmetric(new_x):
+        eigvals, eigvecs = np.linalg.eigh(new_x)
+        <a id="change">if (eigvals &gt; 0).all():
+            eigvals = np.log(eigvals)
+            eigvals = np.vectorize(np.diag, signature=&quot(n)-&gt;(n,n)&quot)(eigvals)
+            transp_eigvecs = np.transpose(eigvecs, axes=(0, 2, 1))
+            result = np.matmul(eigvecs, eigvals)
+            result = np.matmul(result, transp_eigvecs)
+        else:
+            result = np.vectorize(scipy.linalg.logm,
+                                  signature=&quot(n,m)-&gt;(n,m)&quot)(new_x)
+   </a> else:
+        result = np.vectorize(scipy.linalg.logm,
+                              signature=&quot(n,m)-&gt;(n,m)&quot)(new_x)
+
+    if ndim == 2:
+        return result[0]
+    <a id="change">return result</a>
+
+
+def solve_sylvester(a, b, q):
+    if a.shape == b.shape:</code></pre>

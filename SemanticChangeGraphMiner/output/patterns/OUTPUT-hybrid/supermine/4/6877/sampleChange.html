@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    y0 = y.floor()
+    y1 = y0 + 1
+
+    stride = torch.LongTensor(<a id="change">input.stride()[1:]</a>)
+    x0_ix = x0.mul(stride[0]).long()
+    x1_ix = x1.mul(stride[0]).long()
+    y0_ix = y0.mul(stride[1]).long()</code></pre><h3>After Change</h3><pre><code class='java'>
+    y0_ix = y0.mul(stride[2]).long()
+    y1_ix = y1.mul(stride[2]).long()
+
+    <a id="change">input_flat = input.view(input.size(0),-1).contiguous()</a>
+
+    vals_00 = input_flat.gather(1, x0_ix.add(y0_ix).detach())
+    vals_10 = input_flat.gather(1, x1_ix.add(y0_ix).detach())
+    vals_01 = input_flat.gather(1, x0_ix.add(y1_ix).detach())</code></pre>

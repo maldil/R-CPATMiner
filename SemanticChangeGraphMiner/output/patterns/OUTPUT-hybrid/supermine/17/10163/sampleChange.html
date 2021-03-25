@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Returns:
+            (:obj:`np.array`): the stft data in the n-th channel of the signal, 1D
+        
+        <a id="change">if n &gt; self.num_channels:
+            raise Exception(
+                &quotCannot get channel {0} when this object only has {1} channels!&quot.format(n, self.num_channels))
+
+       </a> if n &lt;= 0:
+            raise Exception(&quotCannot get channel {}. This will cause unexpected results&quot.format(n))
+
+        return self._get_axis(self.stft_data, self._STFT_CHAN, <a id="change">n - 1</a>)
+
+    def get_power_spectrogram_channel(self, n):
+         Returns the n-th channel from ``self.power_spectrogram_data``. **1-based.**</code></pre><h3>After Change</h3><pre><code class='java'>
+        for i in range(self.num_channels):
+            yield self.get_channel(i)
+
+    def get_stft_channel(<a id="change">self</a>, n):
+         Returns the n-th channel from ``self.stft_data``.
+
+        Raises:
+            Exception: If not ``0 &lt;= n &lt; self.num_channels``.
+
+        Args:
+            n: (int) index of stft channel to get. **0-based**
+
+        Returns:
+            (:obj:`np.array`): the stft data in the n-th channel of the signal, 1D
+        
+        <a id="change">self._verify_get_channel(n)</a>
+
+        return self._get_axis(self.stft_data, self._STFT_CHAN, n)
+</code></pre>

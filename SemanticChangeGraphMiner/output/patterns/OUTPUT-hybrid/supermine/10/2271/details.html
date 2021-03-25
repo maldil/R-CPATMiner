@@ -1,0 +1,31 @@
+<html><h3>b470898504d2a077433a84e12a7c8078b2494760,dask_image/ndmeasure/__init__.py,,minimum_position,#,515
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    )
+
+    if not min_1dpos_lbl.ndim:
+        min_1dpos_lbl = <a id="change">min_1dpos_lbl[None]</a>
+
+    min_pos_lbl = _utils._unravel_index(min_1dpos_lbl, input.shape)
+
+    if index.shape == tuple():</code></pre><h3>After Change</h3><pre><code class='java'>
+    if index.shape:
+        index = index.flatten()
+
+    <a id="change">out_dtype = numpy.dtype([("pos", int, (input.ndim,))])</a>
+    <a id="change">default_1d = numpy.zeros((1,), dtype=out_dtype)</a>
+
+    func = functools.partial(
+        _utils._argmin, shape=input.shape, dtype=out_dtype
+    )
+    min_pos_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+    min_pos_lbl = <a id="change">min_pos_lbl["pos"]</a>
+
+    if index.shape == tuple():
+        min_pos_lbl = dask.array.squeeze(min_pos_lbl)
+</code></pre><img src="10566768.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b470898504d2a077433a84e12a7c8078b2494760#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L539' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b470898504d2a077433a84e12a7c8078b2494760</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: minimum_position</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b470898504d2a077433a84e12a7c8078b2494760#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L390' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b470898504d2a077433a84e12a7c8078b2494760</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: maximum_position</div><BR>

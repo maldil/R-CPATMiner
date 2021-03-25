@@ -1,0 +1,25 @@
+<html><h3>cc410f68b6c1d1417322ec02e22ea7713ca0bc48,trackpy/locate_functions/brightfield_ring.py,,locate_brightfield_ring,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Make a copy of old coords and overwrite with result
+        &#47&#47 In this way any extra columns from previous_coords are preserved
+        <a id="change">new_coords = coords.copy()</a>
+        for column in result.index.tolist():
+            &#47&#47 make a new column if necessary, otherwise overwrite
+            new_coords[column] = result.get(column)
+        refined[i] = new_coords</code></pre><h3>After Change</h3><pre><code class='java'>
+        warnings.warn("No particles found in the image before refinement.")
+        return coords_df
+
+    <a id="change">if not pool:
+        refined = map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+    else:
+        refined = pool.map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+
+   </a> refined = [ref for ref in refined if ref is not None]
+
+    columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:</code></pre><img src="1735378.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/cc410f68b6c1d1417322ec02e22ea7713ca0bc48#diff-72b79f834898dc54a80021688b0be6135a4eed760bcf17437e9f6da223e6726dL77' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: cc410f68b6c1d1417322ec02e22ea7713ca0bc48</div><div id='time'> Time: 2020-03-18</div><div id='author'> Author: ruben@lighthacking.nl</div><div id='file'> File Name: trackpy/locate_functions/brightfield_ring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: locate_brightfield_ring</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/c50597926f69286fce5c416d23271a302b2da962#diff-ac82383e08114b4df7a0c64955838b1fb3e09c31dcd55b4514d12640352c4f97L625' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: c50597926f69286fce5c416d23271a302b2da962</div><div id='time'> Time: 2020-08-31</div><div id='author'> Author: devilincarcerated020@yahoo.com</div><div id='file'> File Name: sklearn/impute/_base.py</div><div id='class'> Class Name: MissingIndicator</div><div id='method'> Method Name: _get_missing_features_info</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/22fececf3d3d75a6607b889f972663a1473bc37b#diff-4ef98290a75ea2e110a6012be5055b62e5bea91cf43f6fc5ff20fc6a98c5f016L49' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 22fececf3d3d75a6607b889f972663a1473bc37b</div><div id='time'> Time: 2010-08-24</div><div id='author'> Author: lpc@cmu.edu</div><div id='file'> File Name: mahotas/stretch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stretch</div><BR>

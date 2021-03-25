@@ -1,0 +1,20 @@
+<html><h3>266090580c44c480d559a15ce2df012eb401adb6,deepctr/layers/interaction.py,BilinearInteraction,call,#BilinearInteraction#,1019
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                "Unexpected inputs dimensions %d, expect to be 3 dimensions" % (K.ndim(inputs)))
+
+        if self.bilinear_type == "all":
+            p = [<a id="change">tf.multiply(tf.tensordot(v_i, self.W, axes=(-1, 0)), v_j)</a>
+                 for v_i, v_j in itertools.combinations(inputs, 2)]
+        elif self.bilinear_type == "each":
+            p = [tf.multiply(tf.tensordot(inputs[i], self.W_list[i], axes=(-1, 0)), inputs[j])
+                 for i, j in itertools.combinations(range(len(inputs)), 2)]</code></pre><h3>After Change</h3><pre><code class='java'>
+            p = [tf.multiply(vidots[i], inputs[j]) for i, j in itertools.combinations(range(n), 2)]
+        elif self.bilinear_type == "each":
+            vidots = [tf.tensordot(inputs[i], self.W_list[i], axes=(-1, 0)) for i in range(n - 1)]
+            p = [tf.multiply(vidots[i], <a id="change">inputs[j]</a>) for i, j in itertools.combinations(range(n), 2)]
+        elif self.bilinear_type == "interaction":
+            p = [tf.multiply(tf.tensordot(v[0], w, axes=(-1, 0)), v[1])
+                 for v, w in zip(itertools.combinations(inputs, 2), self.W_list)]</code></pre><img src="39651853.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/266090580c44c480d559a15ce2df012eb401adb6#diff-cf4a64b1c1efe08096b1af015a14ab1518c3eba091e6e1fe13c10a872c26fb9dL1025' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 266090580c44c480d559a15ce2df012eb401adb6</div><div id='time'> Time: 2020-07-18</div><div id='author'> Author: iofficium@163.com</div><div id='file'> File Name: deepctr/layers/interaction.py</div><div id='class'> Class Name: BilinearInteraction</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/d40ecc90c80ded43a98d23e0e46b5f5e849f02c5#diff-8113a89b84251a49b2ddbecf452f467b8da1b8acdd1b34e98c71a3ad4e16e958L111' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: d40ecc90c80ded43a98d23e0e46b5f5e849f02c5</div><div id='time'> Time: 2014-08-26</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: ReferenceTemplate.py</div><div id='class'> Class Name: ReferenceFunction</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/a0055917b6f6a35cd114c49bf0c75b07d7c9bb10#diff-2b3579f127a8eaf5061bd8518182aaabd00e8885b37d12a4f8bd9c58ada3ccb7L108' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: a0055917b6f6a35cd114c49bf0c75b07d7c9bb10</div><div id='time'> Time: 2018-05-26</div><div id='author'> Author: eric.bezzam@epfl.ch</div><div id='file'> File Name: pyroomacoustics/realtime/dft.py</div><div id='class'> Class Name: DFT</div><div id='method'> Method Name: analysis</div><BR>

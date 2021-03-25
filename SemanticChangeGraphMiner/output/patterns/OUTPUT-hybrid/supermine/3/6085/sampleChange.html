@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                torch.randperm(self.num_local, out=self.perm)
+                start = self.num_local - self.num_sample
+                index = torch.cat((positive, self.perm[start:]))
+                <a id="change">index = torch.unique(index, sorted=False)</a>
+                start = index.size()[0] - self.num_sample
+                index = index[start:]
+            else:
+                index = positive
+
+            index = <a id="change">torch.sort(index)[0].long()</a>
+            self.index = index
+            total_label[P] = torch.searchsorted(index, total_label[P])
+            self.sub_weight = Parameter(self.weight[index])</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.num_sample - positive.size(0) &gt;= 0:
+                perm = torch.rand(self.num_local,device=cfg.local_rank)
+                perm[positive] = 2.0
+                index = <a id="change">torch.topk(perm,k=self.num_sample)[1]</a>
+                index = index.sort()[0]
+            else:
+                index = positive</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.hiddenimports.extend(CONF[&quothiddenimports&quot])
+
+        &#47&#47 Add hook directories from PyInstaller entry points.
+        <a id="change">hookspath = hookspath or []</a>
+        for entry_point in pkg_resources.iter_entry_points(
+                &quotpyinstaller40&quot, &quothook-dirs&quot):
+            hookspath += list(entry_point.load()())
+        self.hookspath = hookspath</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.hiddenimports.extend(CONF[&quothiddenimports&quot])
+
+        &#47&#47 Add hook directories from PyInstaller entry points.
+        self.hookspath = <a id="change">[]</a>
+        for entry_point in pkg_resources.iter_entry_points(
+                &quotpyinstaller40&quot, &quothook-dirs&quot):
+            self.hookspath += list(entry_point.load()())
+        &#47&#47 Append directories in `hookspath` (`--additional-hooks-dir`) to
+        &#47&#47 take precedence over those from the entry points.
+        <a id="change">if hookspath:
+            self.hookspath.extend(hookspath)
+
+        &#47&#47 Custom runtime hook files that should be included and started before
+        &#47&#47 any existing PyInstaller runtime hooks.
+       </a> self.custom_runtime_hooks = runtime_hooks or []
+
+        if cipher:
+            logger.info(&quotWill encrypt Python bytecode with key: %s&quot, cipher.key)</code></pre>

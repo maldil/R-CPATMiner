@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        train_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  &quot../data/raw/adult/adult.data&quot)
+        test_path = <a id="change">os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  &quot../data/raw/adult/adult.test&quot)</a>
+        &#47&#47 as given by adult.names
+        column_names = [&quotage&quot, &quotworkclass&quot, &quotfnlwgt&quot, &quoteducation&quot,
+            &quoteducation-num&quot, &quotmarital-status&quot, &quotoccupation&quot, &quotrelationship&quot,
+            &quotrace&quot, &quotsex&quot, &quotcapital-gain&quot, &quotcapital-loss&quot, &quothours-per-week&quot,
+            &quotnative-country&quot, &quotincome-per-year&quot]
+        train = pd.read_csv(train_path, header=None, names=column_names,
+            skipinitialspace=True, na_values=na_values)
+        <a id="change">test = pd.read_csv(test_path, header=0, names=column_names,
+            skipinitialspace=True, na_values=na_values)</a>
+
+        df = pd.concat([train, test], ignore_index=True)
+
+        super(AdultDataset, self).__init__(df=df, label_name=label_name,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        train_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  &quot..&quot, &quotdata&quot, &quotraw&quot, &quotadult&quot, &quotadult.data&quot)
+        test_path = <a id="change">os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  &quot..&quot, &quotdata&quot, &quotraw&quot, &quotadult&quot, &quotadult.test&quot)</a>
+        &#47&#47 as given by adult.names
+        column_names = [&quotage&quot, &quotworkclass&quot, &quotfnlwgt&quot, &quoteducation&quot,
+            &quoteducation-num&quot, &quotmarital-status&quot, &quotoccupation&quot, &quotrelationship&quot,
+            &quotrace&quot, &quotsex&quot, &quotcapital-gain&quot, &quotcapital-loss&quot, &quothours-per-week&quot,
+            &quotnative-country&quot, &quotincome-per-year&quot]
+        <a id="change">try:
+            train = pd.read_csv(train_path, header=None, names=column_names,
+                skipinitialspace=True, na_values=na_values)
+            test = pd.read_csv(test_path, header=0, names=column_names,
+                skipinitialspace=True, na_values=na_values)
+        except IOError as err:
+            print("IOError: {}".format(err))
+            print("To use this class, please download the following files:")
+            print("\n\thttps://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data")
+            print("\thttps://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test")
+            print("\thttps://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.names")
+            print("\nand place them, as-is, in the folder:")
+            print("\n\t{}\n".format(os.path.abspath(os.path.join(
+               os.path.abspath(__file__), &quot..&quot, &quot..&quot, &quotdata&quot, &quotraw&quot, &quotadult&quot))))
+            import sys
+            sys.exit(1)
+
+       </a> df = pd.concat([train, test], ignore_index=True)
+
+        super(AdultDataset, self).__init__(df=df, label_name=label_name,
+            favorable_classes=favorable_classes,</code></pre>

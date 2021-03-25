@@ -1,0 +1,27 @@
+<html><h3>e2f20ebdaba08c35fc335d453b1eb9d5990fb53b,test/densenet_efficient_test.py,,test_forward_training_true_computes_forward_pass,#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    input_2_var = Variable(input_2)
+    out_var = layer(torch.cat([input_1_var, input_2_var], dim=1))
+
+    storage_1 = <a id="change">torch.Storage(4 * 8 * 3 * 3)</a>
+    <a id="change">storage_2 = torch.Storage(4 * 8 * 3 * 3)</a>
+    <a id="change">layer_efficient = _EfficientDensenetBottleneck(
+        _SharedAllocation(storage_1), _SharedAllocation(storage_2), 8, 4
+    )</a>
+    layer_efficient.norm_weight.data.copy_(bn_weight)
+    layer_efficient.norm_bias.data.copy_(bn_bias)
+    layer_efficient.norm_running_mean.copy_(bn_running_mean)
+    layer_efficient.norm_running_var.copy_(bn_running_var)</code></pre><h3>After Change</h3><pre><code class='java'>
+    input_2_var = Variable(input_2)
+    out_var = layer(torch.cat([input_1_var, input_2_var], dim=1))
+
+    layer_efficient = <a id="change">_EfficientDensenetBottleneck(
+        _SharedAllocation(4 * 8 * 3 * 3), _SharedAllocation(4 * 8 * 3 * 3), 8, 4
+    )</a>
+    layer_efficient.norm_weight.data.copy_(bn_weight)
+    layer_efficient.norm_bias.data.copy_(bn_bias)
+    layer_efficient.norm_running_mean.copy_(bn_running_mean)
+    layer_efficient.norm_running_var.copy_(bn_running_var)</code></pre><img src="8045290.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/e2f20ebdaba08c35fc335d453b1eb9d5990fb53b#diff-a8a31921b9b4c92ea05027f9f3e01a4ad49133a1ce77401e50088c01cbee1a05L79' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: e2f20ebdaba08c35fc335d453b1eb9d5990fb53b</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: test/densenet_efficient_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_forward_training_true_computes_forward_pass</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/e2f20ebdaba08c35fc335d453b1eb9d5990fb53b#diff-a8a31921b9b4c92ea05027f9f3e01a4ad49133a1ce77401e50088c01cbee1a05L79' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: e2f20ebdaba08c35fc335d453b1eb9d5990fb53b</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: test/densenet_efficient_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_forward_training_true_computes_forward_pass</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/e2f20ebdaba08c35fc335d453b1eb9d5990fb53b#diff-a8a31921b9b4c92ea05027f9f3e01a4ad49133a1ce77401e50088c01cbee1a05L124' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: e2f20ebdaba08c35fc335d453b1eb9d5990fb53b</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: test/densenet_efficient_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_backward_computes_backward_pass</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/e2f20ebdaba08c35fc335d453b1eb9d5990fb53b#diff-a8a31921b9b4c92ea05027f9f3e01a4ad49133a1ce77401e50088c01cbee1a05L37' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: e2f20ebdaba08c35fc335d453b1eb9d5990fb53b</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: test/densenet_efficient_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_forward_training_false_computes_forward_pass</div><BR>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self._imgfield:
+            &#47&#47 TODO: Should we error here or something if the image doesn&quott exist?
+            if self._exists():
+                <a id="change">return</a>
+            &#47&#47 process the original image file
+            try:
+                fp = self._imgfield.storage.open(self._imgfield.name)
+            except IOError:</code></pre><h3>After Change</h3><pre><code class='java'>
+        img = None
+        if lazy:
+            img = self._img
+            <a id="change">if not img and self.storage.exists(self.name):
+                img = Image.open(self.file)
+       </a> if not img and self.source_file:
+            &#47&#47 process the original image file
+            try:
+                fp = self.source_file.storage.open(self.source_file.name)</code></pre>

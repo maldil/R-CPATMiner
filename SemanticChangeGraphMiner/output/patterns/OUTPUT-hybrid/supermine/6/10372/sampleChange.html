@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+      if configs[&quotsummarize_matching_sigmoid_vars&quot]:
+        &#47&#47 Summarize variables used in matching sigmoid.
+        <a id="change">with tf.variable_scope(&quotMatchingSigmoid&quot, reuse=True):
+          summaries[&quottrain/MatchingSigmoid/a&quot] = tf.get_variable(&quota&quot)
+          summaries[&quottrain/MatchingSigmoid/a_plus&quot] = (
+              tf.nn.elu(tf.get_variable(&quota&quot)) + 1.0)
+          summaries[&quottrain/MatchingSigmoid/b&quot] = tf.get_variable(&quotb&quot)
+
+     </a> if FLAGS.use_moving_average:
+        pipeline_utils.add_moving_average(FLAGS.moving_average_decay)
+
+      learning_rate = FLAGS.learning_rate</code></pre><h3>After Change</h3><pre><code class='java'>
+        raw_a, a, b = distance_utils.get_sigmoid_parameters(
+            name=&quotMatchingSigmoid&quot,
+            reuse=True,
+            a_range=<a id="change">(None, FLAGS.sigmoid_a_max)</a>)
+        &#47&#47 TODO(liuti): Currently the variable for `raw_a` is named `a` in
+        &#47&#47 checkpoints, and true `a` may be referred to as `a_plus` for historic
+        &#47&#47 reasons. Consolidate the naming.</code></pre>

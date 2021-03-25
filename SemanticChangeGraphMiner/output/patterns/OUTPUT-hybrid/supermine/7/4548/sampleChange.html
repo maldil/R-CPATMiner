@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not len(X.shape) == 2:
+            raise ValueError(&quotX must be a 2D array. Try X[:,np.newaxis]&quot)
+
+        <a id="change">if not (np.unique(y) == np.array([-1,  1])).all():
+            raise ValueError(&quotSupports only binary class labels -1 and 1&quot)
+
+       </a> if not isinstance(init_weights, np.ndarray):
+            self.w_ = np.random.random(1 + X.shape[1])
+        else:
+            self.w_ = init_weights</code></pre><h3>After Change</h3><pre><code class='java'>
+                or not self.classes_[0] in (-1, 0) \
+                or not self.classes_[1] == 1:
+            raise ValueError(&quotOnly supports binary class labels {0, 1} or {-1, 1}.&quot)
+        <a id="change">if self.classes_[0] == -1:
+            self.thres_ = 0
+        else:
+            self.thres_ = 0.5
+
+        &#47&#47 initialize weights
+       </a> if not isinstance(init_weights, np.ndarray):
+            self.w_ = np.random.random(1 + X.shape[1])
+        else:
+            self.w_ = init_weights</code></pre>

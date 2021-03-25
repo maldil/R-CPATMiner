@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            xs, ys, ls, axs, ays, als = create_pointset(prepare_data(all_data[algo], xn, yn), xn, yn)
+            latex_str += 
+        \\addplot %s coordinates { % only_marks
+            <a id="change">for i in range(len(xs)):
+                latex_str += "(%s, %s)" % (str(xs[i]), str(ys[i]))
+           </a> latex_str += " };"
+            latex_str += 
+        \\addlegendentry{%s};
+             % (algo)</code></pre><h3>After Change</h3><pre><code class='java'>
+args = parser.parse_args()
+
+def get_latex_plot(all_data, xn, yn, xm, ym, plottype, j2_env):
+    <a id="change">plot_data = []</a>
+    for algo in sorted(all_data.keys(), key=lambda x: x.lower()):
+            xs, ys, ls, axs, ays, als = \
+                    create_pointset(prepare_data(all_data[algo], xn, yn), xn, yn)
+            plot_data.append({ "name": algo, "coords" : zip(xs, ys),
+                "scatter" : plottype == "bubble" })
+    return <a id="change">j2_env.get_template("latex.template").\
+            render(plot_data = plot_data, caption = get_plot_label(xm, ym),
+                    xlabel = xm["description"], ylabel = ym["description"])</a>
+
+def create_data_points(all_data, xn, yn, linestyle, render_all_points):
+    color_index = 0
+    output_str = ""</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def load_net(data_path):
+    data = scipy.io.loadmat(data_path)
+    if not all(<a id="change">i</a> in data <a id="change">for</a> i in (&quotlayers&quot, &quotclasses&quot, &quotnormalization&quot)):
+        raise ValueError("You&quotre using the wrong VGG19 data. Please follow the instructions in the README to download the correct data.")
+    mean = data[&quotnormalization&quot][0][0][0]
+    mean_pixel = np.mean(mean, axis=(0, 1))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def load_net(data_path):
+    data = scipy.io.loadmat(data_path)
+    <a id="change">if &quotnormalization&quot in data:
+        &#47&#47 old format, for data where
+        &#47&#47 MD5(imagenet-vgg-verydeep-19.mat) = 8ee3263992981a1d26e73b3ca028a123
+        mean_pixel = np.mean(data[&quotnormalization&quot][0][0][0], axis=(0, 1))
+    else:
+        &#47&#47 new format, for data where
+        &#47&#47 MD5(imagenet-vgg-verydeep-19.mat) = 106118b7cf60435e6d8e04f6a6dc3657
+        mean_pixel = data[&quotmeta&quot][&quotnormalization&quot][0][0][0][0][2][0][0]
+   </a> weights = data[&quotlayers&quot][0]
+    return weights, mean_pixel
+
+def net_preloaded(weights, input_image, pooling):</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _check_contiguous(x, mean, var, weight, bias)
+        _check(_ext.bn_forward_cuda,
+               x, mean, var,
+               <a id="change">weight if weight is not None else x.new()</a>,
+               bias if bias is not None else x.new(),
+               x, x, ctx.eps)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Mark in-place modified tensors
+            ctx.mark_dirty(x, running_mean, running_var)
+        else:
+            <a id="change">mean, var = running_mean.contiguous(), running_var.contiguous()</a>
+            ctx.mark_dirty(x)
+
+        &#47&#47 BN forward + activation
+        backend.forward(x, mean, var, weight, bias, ctx.affine, ctx.eps)</code></pre>

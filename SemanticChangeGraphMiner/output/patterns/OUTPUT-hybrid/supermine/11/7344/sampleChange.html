@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if is_nonzero_const.any():
+        if has_constant == &quotskip&quot:
+            return x
+        elif <a id="change">has_constant == &quotraise</a>&quot:
+            raise ValueError("data already contains a constant")
+
+    x = [np.ones(x.shape[0]), x]</code></pre><h3>After Change</h3><pre><code class='java'>
+    if is_nonzero_const.any():
+        if has_constant == &quotskip&quot:
+            return x
+        elif <a id="change">has_constant == &quotraise</a>&quot:
+            if ndim == 1:
+                raise ValueError("data is constant.")
+            else:
+                <a id="change">columns = np.arange(x.shape[1])</a>
+                <a id="change">cols = ",".join([str(c) for c in columns[is_nonzero_const]])</a>
+                raise ValueError(f"Column(s) {cols} are constant.")
+
+    x = [np.ones(x.shape[0]), x]
+    x = x if prepend else x[::-1]</code></pre>

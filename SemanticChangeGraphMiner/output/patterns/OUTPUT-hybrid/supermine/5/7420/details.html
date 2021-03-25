@@ -1,0 +1,22 @@
+<html><h3>a94f7b93251013d51d9918c27ab2569eb526a494,examples/timedelay_conv_model.py,,,#,2
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+print(&quotProcessing data...&quot)
+imageProcessor = ImageProcessor(image_data, target_dimensions=target_dimensions, time_series=True)
+image_array = imageProcessor.process_training_data()
+image_data = <a id="change">np.array([np.array([image]).reshape([time_delay]+list(target_dimensions)+[channels]) for image in image_array])</a>
+if verbose:
+    print (&quotprocessed image data shape: &quot + str(image_data.shape))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+print(&quotCreating training/testing data...&quot)
+validation_split = 0.25
+<a id="change">X_train, X_test, y_train, y_test = train_test_split(image_data, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)</a>
+train_gen = DataGenerator(time_delay=time_delay).fit(X_train, y_train)
+test_gen = DataGenerator(time_delay=time_delay).fit(X_test, y_test)
+
+print(&quotTraining net...&quot)</code></pre><img src="28574144.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/a94f7b93251013d51d9918c27ab2569eb526a494#diff-d6e61b85eb714ffb73e54ff49fb8cab0bf43187c535ba0922e243c15c405924eL12' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: a94f7b93251013d51d9918c27ab2569eb526a494</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/timedelay_conv_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/3692109a392c5f90829bae24133b58d113b0eab2#diff-cb3809abb78287fa8597abd877d4c0f541c64570a7e9ce62fc4887d0ab99eb61L24' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: 3692109a392c5f90829bae24133b58d113b0eab2</div><div id='time'> Time: 2018-01-27</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/convolutional_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/a94f7b93251013d51d9918c27ab2569eb526a494#diff-cb3809abb78287fa8597abd877d4c0f541c64570a7e9ce62fc4887d0ab99eb61L9' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: a94f7b93251013d51d9918c27ab2569eb526a494</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/convolutional_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

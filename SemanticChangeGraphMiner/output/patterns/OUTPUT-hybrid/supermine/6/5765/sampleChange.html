@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47   cross-request batches and client side
+        &#47&#47   batches into a cross-request list of
+        &#47&#47   client-side batch tensors
+        <a id="change">start = 0</a>
+        for elems in client_batch:
+            end = start + elems
+            <a id="change">res_list.append(flat_result.narrow(0, start, elems))</a>
+            start = end
+
+        return res_list
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise RuntimeError("Parameter type unsupported")
+
+        &#47&#47 if torch.jit.isinstance(flat_result, torch.Tensor):
+        <a id="change">if isinstance(flat_result, torch.Tensor):
+            &#47&#47 destructure flat result tensor combining
+            &#47&#47   cross-request batches and client side
+            &#47&#47   batches into a cross-request list of
+            &#47&#47   client-side batch tensors
+            return destructure_tensor(client_batch, flat_result)
+        else:
+            &#47&#47 destructure result list of any result type combining
+            &#47&#47   cross-request batches and client side
+            &#47&#47   batches into a cross-request list of
+            &#47&#47   client-side result lists
+            result_texts_any_list: List[Any] = torch.jit.annotate(List[Any], [])
+            for v in flat_result:
+                result_texts_any_list.append(v)
+
+            return destructure_any_list(client_batch, result_texts_any_list)
+
+   </a> @torch.jit.script_method
+    def make_batch(
+        self,
+        mega_batch: List[</code></pre>

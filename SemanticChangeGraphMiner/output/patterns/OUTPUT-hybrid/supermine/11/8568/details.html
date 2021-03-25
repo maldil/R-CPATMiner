@@ -1,0 +1,35 @@
+<html><h3>d95f630a7b7f88621bc4abb4ac92692647f03781,main.py,,train,#,213
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 measure data loading time
+        data_time.update(time.time() - end)
+        target = target.cuda(async=True)
+        <a id="change">input = [j.cuda() for j in input]</a>
+        input_var = <a id="change">torch</a>.autograd.Variable(torch.cat(input,1))
+        <a id="change">target_var = torch.autograd.Variable(target)</a>
+
+        &#47&#47 compute output
+        output = model(input_var)
+        if args.sparse:
+            &#47&#47 Since Target pooling is not very precise when sparse,
+            &#47&#47 take the highest resolution prediction and upsample it instead of downsampling target
+            h, w = target_var.size()[-2:]
+            output = [torch.nn.functional.upsample(output[0], (h,w)), *output[1:]]
+
+        loss = multiscaleEPE(output, target_var, weights=args.multiscale_weights, sparse=args.sparse)
+        flow2_EPE = args.div_flow * realEPE(output[0], target_var, sparse=args.sparse)
+        &#47&#47 record loss and EPE
+        losses.update(loss.data[0], target.size(0))
+        train_writer.add_scalar(&quottrain_loss&quot, <a id="change">loss.data[0]</a>, n_iter)
+        flow2_EPEs.update(flow2_EPE.data[0], target.size(0))
+
+        &#47&#47 compute gradient and do optimization step</code></pre><h3>After Change</h3><pre><code class='java'>
+        flow2_EPE = args.div_flow * realEPE(output[0], target, sparse=args.sparse)
+        &#47&#47 record loss and EPE
+        losses.update(loss.item(), target.size(0))
+        train_writer.add_scalar(&quottrain_loss&quot, <a id="change">loss.item()</a>, n_iter)
+        flow2_EPEs.update(flow2_EPE.item(), target.size(0))
+
+        &#47&#47 compute gradient and do optimization step</code></pre><img src="33562384.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L230' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L230' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/585303417c3f4641f61ac5a916a51505a67cc507#diff-d8621a5ced85ff347f1c279fe9e8b62fb7b355bcc592692c5c203565df1e8b31L142' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 585303417c3f4641f61ac5a916a51505a67cc507</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mscoco.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/7ce6642f777e9da6249bd5b05330d57fa09ea37a#diff-6da4f16e5d214b553c1e56ae7a915dfde240f02def5e33970b302775f3eb314aL148' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 7ce6642f777e9da6249bd5b05330d57fa09ea37a</div><div id='time'> Time: 2019-01-07</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mpii.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

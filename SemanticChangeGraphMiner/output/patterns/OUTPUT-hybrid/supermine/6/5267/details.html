@@ -1,0 +1,45 @@
+<html><h3>38512d92a8682a62e73c5b9e86366888be374532,dragonn/interpret/ism.py,,in_silico_mutagenesis,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    functor=get_logit_function(model,target_layer_idx)
+    &#47&#471. get the wildtype predictions (n,1)                                                                                                                                                         
+    wild_type_logits=np.asarray(get_logit(functor,X))
+    wild_type_logits=<a id="change">np.squeeze(wild_type_logits,axis=2)</a>
+    &#47&#472. expand the wt array to dimensions: (num_samples,1,sequence_length)                                                                                                                         
+    &#47&#47Initialize mutants array to the same shape                                                                                                                                                              
+    output_dim=wild_type_logits.shape+X.shape[2:4]
+    wt_expanded=np.empty(output_dim)
+    mutants_expanded=np.empty(output_dim)
+    empty_onehot=np.zeros(output_dim[3])
+    &#47&#473. Iterate through all tasks, positions                                                                                                                                                                 
+    <a id="change">for task_index in range(output_dim[0]):
+        for sample_index in range(output_dim[1]):
+            print("task:"+str(task_index)+" sample:"+str(sample_index))
+            &#47&#47fill in wild type logit values into an array of dim (task,sequence_length,num_bases)                                                                                                                    
+            wt_logit_for_task_sample=wild_type_logits[task_index][sample_index]
+            wt_expanded[task_index][sample_index]=np.tile(wt_logit_for_task_sample,(output_dim[2],output_dim[3]))
+            &#47&#47mutagenize each position                                                                                                                                                                            
+            for base_pos in range(output_dim[2]):
+                &#47&#47for each position, iterate through the 4 bases                                                                                                                                                  
+                for base_letter in range(output_dim[3]):
+                    cur_base=np.copy(empty_onehot)
+                    cur_base[base_letter]=1
+                    Xtmp=np.copy(np.expand_dims(X[sample_index],axis=0))
+                    Xtmp[0][0][base_pos]=cur_base
+                    &#47&#47get the logit of Xtmp                                                                                                                                                                              
+                    mutants_expanded[task_index][sample_index][base_pos][base_letter]=np.squeeze(get_logit(functor,Xtmp)[task_index])
+    &#47&#47subtract wt_expanded from mutants_expanded
+   </a> ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values
+    ism_vals_mean=np.expand_dims(np.mean(ism_vals,axis=3),axis=3)
+    ism_vals_normed=ism_vals-ism_vals_mean</code></pre><h3>After Change</h3><pre><code class='java'>
+                Xtmp=np.array(np.expand_dims(X[sample_index],axis=0))
+                Xtmp[0][0][base_pos]=cur_base
+                &#47&#47get the logit of Xtmp
+                <a id="change">Xtmp_logit=np.squeeze(preact_function(Xtmp),axis=0)</a>
+                mutants_expanded[sample_index][0][base_pos][base_letter]=Xtmp_logit[task_index]
+    &#47&#47subtract wt_expanded from mutants_expanded
+    ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values</code></pre><img src="22952767.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kundajelab/dragonn/commit/38512d92a8682a62e73c5b9e86366888be374532#diff-685d3e89c8b313cbde1f81adbcf2a54a7faa9d6dc034e1006e50d07f4b2a1caeL21' target='_blank'>Link</a></div><div id='project'> Project Name: kundajelab/dragonn</div><div id='commit'> Commit Name: 38512d92a8682a62e73c5b9e86366888be374532</div><div id='time'> Time: 2019-05-29</div><div id='author'> Author: annashcherbina@gmail.com</div><div id='file'> File Name: dragonn/interpret/ism.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: in_silico_mutagenesis</div><BR><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/68dab2a79a136a1b90181d44300c22b8b6145f52#diff-5f3ed6fe068ca9f008edbe209dd0ccb725f61046cc7c7a45b48cd394360d9049L24' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 68dab2a79a136a1b90181d44300c22b8b6145f52</div><div id='time'> Time: 2019-04-28</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: samples/demo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_image</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: extract_features</div><BR>

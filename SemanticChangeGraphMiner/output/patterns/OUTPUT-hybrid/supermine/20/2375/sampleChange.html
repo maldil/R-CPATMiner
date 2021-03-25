@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    m, k = 100, 10
+    A = np.array(np.random.randn(m, k), np.float64)
+    A = A.dot(A.T)
+    <a id="change">A = A[:,0:50]</a>
+
+    &#47&#47 index_set = False
+    C, U, R = cur(A, k=k+2, index_set=False)
+    <a id="change">relative_error = (np.linalg.norm(A - C.dot(U).dot(R)) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+    &#47&#47 index_set = True
+    C, U, R = cur(A, k=k+2, index_set=True)
+    relative_error = <a id="change">(np.linalg.norm(A - A[:,C].dot(U).dot(A[R,:])) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+
+&#47&#47 =============================================================================</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 index_set = False
+    C, U, R = cur(A, rank=k+2, index_set=False)
+    A_cur = C.dot(U).dot(R)
+    <a id="change">assert relative_error(A, A_cur) &lt; atol_float32</a>
+
+    &#47&#47 index_set = True
+    C, U, R = cur(A, rank=k+2, index_set=True)
+    A_cur = A[:, C].dot(U).dot(A[R])</code></pre>

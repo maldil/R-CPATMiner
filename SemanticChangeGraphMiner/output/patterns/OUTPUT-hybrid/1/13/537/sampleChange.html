@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                phi = phi[:, None]
+            return tdot(phi)
+        else:
+            <a id="change">phi1</a> = <a id="change">self.phi(X)</a>
+            phi2 = self.phi(X2)
+            if phi1.ndim != 2:
+                <a id="change">phi1</a> = phi1[:, None]
+                phi2 = phi2[:, None]
+            return phi1.dot(phi2.T)
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+                phi = phi[:, None]
+            return tdot(phi)
+        else:
+            <a id="change">phi1</a> = <a id="change">self.phi(X) * self.alpha</a>
+            phi2 = self.phi(X2) * self.alpha
+            if phi1.ndim != 2:
+                <a id="change">phi1</a> = phi1[:, None]
+                phi2 = phi2[:, None]
+            return phi1.dot(phi2.T)
+        </code></pre>

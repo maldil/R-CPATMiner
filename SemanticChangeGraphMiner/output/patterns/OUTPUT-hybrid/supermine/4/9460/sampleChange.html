@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out_cols = X.columns.values
+
+        for col in cols:
+            col_list = [col0 <a id="change">for</a> col0 in out_cols if str(col0).startswith(str(col))]
+            prefix_length = len(str(col))+1 &#47&#47 original column name plus underscore
+            if self.use_cat_names:
+                X[col] = 0
+                for tran_col in col_list:
+                    val = tran_col[prefix_length:]
+                    X.loc[X[tran_col] == 1, col] = val
+            else:
+                value_array = np.array([<a id="change">int(col0[prefix_length:])</a> for col0 in col_list])
+                <a id="change">X[col] = np.dot(X[col_list].values, value_array.T)</a>
+            out_cols = [col0 for col0 in out_cols if col0 not in col_list]
+
+        X = X.reindex(columns=out_cols + cols)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                existing_col = column_mapping.get(&quotnew_col_name&quot)
+                val = column_mapping.get(&quotval&quot)
+                X.loc[X[existing_col] == 1, col] = val
+                <a id="change">mapped_columns.append(existing_col)</a>
+
+        out_cols = [col0 for col0 in out_cols if col0 not in mapped_columns]
+
+        return X.reindex(columns=out_cols + cols)</code></pre>

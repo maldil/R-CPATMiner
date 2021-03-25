@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if isinstance(batch, collections.Mapping):
+            out = {}
+            for key, value in batch.items():
+                if <a id="change">key not in self.avoid_keys</a>:
+                    out[key] = self.pad_tensors(value)
+                else:
+                    out[key] = value</code></pre><h3>After Change</h3><pre><code class='java'>
+        if isinstance(batch, collections.Mapping):
+            out = {}
+            for key, value in batch.items():
+                if <a id="change">(key in self.use_keys) or \
+                   (len(self.use_keys) == 0 and key not in self.avoid_keys)</a>:
+                    out[key] = self.pad_tensors(value)
+                else:
+                    out[key] = value</code></pre>

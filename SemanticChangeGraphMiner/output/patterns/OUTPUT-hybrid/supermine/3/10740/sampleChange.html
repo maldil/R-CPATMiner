@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x = _blend(x, x_gs, alpha)
+
+        if y is not None:
+            <a id="change">y_gs = Grayscale(keep_channels=True)(y)</a>
+            y_gs.fill_(y_gs[1].mean())
+            y = _blend(y, y_gs, alpha)
+            <a id="change">return x, y</a>
+        return x
+
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        x = (x - channel_means) * self.var + channel_means
+        if y is not None:
+            channel_means = <a id="change">x.mean(1).mean(2).expand_as(x)</a>
+            x = (x - channel_means) * self.var + channel_means          
+
+
+class Gamma(object):</code></pre>

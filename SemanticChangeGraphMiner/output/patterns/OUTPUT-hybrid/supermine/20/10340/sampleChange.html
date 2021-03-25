@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.data = load_dataset(method_param["datasets"], ["csv"])
+    self.data_split = split_dataset(self.data[0])
+
+    <a id="change">self.build_opts = {}</a>
+    if "algorithm" in method_param:
+      self.build_opts["solver"] = str(method_param["algorithm"])
+    if "epsilon" in method_param:
+      self.build_opts["epsilon"] = float(method_param["epsilon"])
+    if "max_iterations" in method_param:
+      <a id="change">self.build_opts["max_iter"] = int(method_param["max_iterations"])</a>
+
+    <a id="change">self.train_feat = RealFeatures(self.data_split[0].T)</a>
+    self.train_labels = MulticlassLabels(self.data_split[1])
+
+    if len(self.data) &gt;= 2:
+      self.test_feat = RealFeatures(self.data[1].T)</code></pre><h3>After Change</h3><pre><code class='java'>
+    self.data = load_dataset(method_param["datasets"], ["csv"])
+    self.data_split = split_dataset(self.data[0])
+
+    <a id="change">self.train_feat = RealFeatures(self.data_split[0].T)</a>
+
+    &#47&#47 Encode the labels into {0,1,2,3,......,num_classes-1}
+    <a id="change">self</a>.train_labels, <a id="change">self.label_map</a> = label_encoder(self.data_split[1])
+    self.train_labels = <a id="change">MulticlassLabels(self.train_labels)</a>
+
+    if len(self.data) &gt;= 2:
+      self.test_feat = RealFeatures(self.data[1].T)
+
+    <a id="change">self.solver = "auto"</a>
+    if "solver" in method_param:
+      <a id="change">self.solver</a> = str(method_param["solver"])
+
+    if "tolerance" in method_param:
+      <a id="change">self.tolerance</a> = float(method_param["tolerance"])
+
+  &quot&quot&quot
+  Return information about the benchmarking instance.</code></pre>

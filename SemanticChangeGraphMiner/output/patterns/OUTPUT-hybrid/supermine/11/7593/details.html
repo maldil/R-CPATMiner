@@ -1,0 +1,28 @@
+<html><h3>a21b67aed967b3932019c8b0d266bf4098a55d2a,brian2/codegen/generators/GSL_generator.py,GSLCythonCodeGenerator,write_dataholder,#GSLCythonCodeGenerator#,267
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def write_dataholder(self, var_obj):
+        dtype = self.c_data_type(var_obj.dtype)
+        <a id="change">if isinstance(var_obj, ArrayVariable):
+            array_name = self.generator.get_array_name(var_obj)
+            return &quot{dtype}* {var}&quot.format(dtype=dtype, var=array_name)
+        else:
+            return &quot{dtype} {var}&quot.format(dtype=dtype, var=var_obj.name)
+
+   </a> def get_replacer(self, var_obj, to_replace):
+        if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj)
+            to_replace[pointer_name] = &quotp.&quot + pointer_name</code></pre><h3>After Change</h3><pre><code class='java'>
+    def write_dataholder(self, variables_in_vector):
+        code = [&quot\ncdef struct dataholder:\n\tint _idx&quot]
+        for var_obj in variables_in_vector:
+            <a id="change">if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+           </a> <a id="change">code += [&quot\t&quot+self.write_dataholder_single(var_obj)]</a>
+        return (&quot\n&quot).join(code)
+
+    def to_replace_vector_vars(self, variables_in_vector, ignore=[]):
+        to_replace = {}</code></pre><img src="29131709.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/a21b67aed967b3932019c8b0d266bf4098a55d2a#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL267' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: a21b67aed967b3932019c8b0d266bf4098a55d2a</div><div id='time'> Time: 2017-07-06</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCythonCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL350' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/a2f318363a1c4dde386d7f7ac316baa706678b89#diff-d72be2f10ab539b75f97e9a9902314f1901950df8423868b598b7f08d41001c2L333' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: a2f318363a1c4dde386d7f7ac316baa706678b89</div><div id='time'> Time: 2017-03-09</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/pyntcloud.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: get_sample</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/f9b3bc145e981a05dd27abc8f2987692bf4d3b5c#diff-d72be2f10ab539b75f97e9a9902314f1901950df8423868b598b7f08d41001c2L280' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: f9b3bc145e981a05dd27abc8f2987692bf4d3b5c</div><div id='time'> Time: 2017-03-09</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/pyntcloud.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: get_filter</div><BR>

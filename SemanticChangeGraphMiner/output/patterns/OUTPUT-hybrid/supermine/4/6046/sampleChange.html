@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    roles = response[&quotroles&quot]
+
+    &#47&#47 Process the response
+    <a id="change">for role in roles:
+        print(&quotTitle: &quot + role[&quottitle&quot])
+        print(&quotName: &quot + role[&quotname&quot])
+        if &quotdescription&quot in role:
+            print(&quotDescription: &quot + role[&quotdescription&quot])
+        print(&quot&quot)
+    &#47&#47 [END iam_quickstart]
+
+
+</a>if __name__ == &quot__main__&quot:
+    quickstart()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Gets the project&quots policy and prints all members with the &quotLog Writer&quot role.
+    policy = get_policy(crm_service, project_id)
+    binding = <a id="change">next(b for b in policy["bindings"] if b["role"] == role)</a>
+    print(f&quotRole: {(binding["role"])}&quot)
+    print("Members: ")
+    <a id="change">for m in binding["members"]:
+        print(f&quot[{m}]&quot)
+
+    &#47&#47 Removes the member from the &quotLog Writer&quot role.
+   </a> modify_policy_remove_member(crm_service, project_id, role, member)
+
+
+def initialize_service():</code></pre>

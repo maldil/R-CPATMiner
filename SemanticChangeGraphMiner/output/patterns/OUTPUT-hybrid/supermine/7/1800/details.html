@@ -1,0 +1,42 @@
+<html><h3>7b20a10273955a6b33a8563a878aadd9c0dfe0a6,mvpa2/tests/test_rsa.py,,test_CDist,#,76
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ds = dataset_wizard(samples=data, targets=targets, chunks=chunks)
+    &#47&#47 Some distance metrics
+    euc = pdist(data, &quoteuclidean&quot)
+    <a id="change">pear = pdist(data, &quotcorrelation&quot)</a>
+    city = pdist(data, &quotcityblock&quot)
+    cdist_euc = CDist(pairwise_metric=&quoteuclidean&quot)
+    <a id="change">cdist_pear = CDist(pairwise_metric=&quotcorrelation&quot)</a>
+    cdist_city = CDist(pairwise_metric=&quotcityblock&quot)
+    <a id="change">for pd_, cd_ in zip([euc, pear, city], [cdist_euc, cdist_pear, cdist_city]):
+        cd_.train(ds[ds.sa.chunks == 0, ])
+        res = cd_(ds[ds.sa.chunks == 1, ])
+        &#47&#47 Check to make sure the pdist results are close to CDist results
+        assert_array_almost_equal(res.samples.ravel(), squareform(pd_)[:3, 3:].ravel())
+
+
+</a>def test_PDist():
+    targets = np.tile(xrange(3),2)
+    chunks = np.repeat(np.array((0,1)),3)
+    ds = dataset_wizard(samples=data, targets=targets, chunks=chunks)</code></pre><h3>After Change</h3><pre><code class='java'>
+    ds = dataset_wizard(samples=data, targets=targets, chunks=chunks)
+    &#47&#47 Some distance metrics
+    metrics = [&quoteuclidean&quot, &quotcorrelation&quot, &quotcityblock&quot]
+    <a id="change">for metric in metrics:
+        pd_ = pdist(data, metric)
+        cd_ = CDist(pairwise_metric=metric)
+
+        cd_.train(ds[ds.sa.chunks == 0, ])
+        res = cd_(ds[ds.sa.chunks == 1, ])
+        &#47&#47 Check to make sure the pdist results are close to CDist results
+        assert_array_almost_equal(res.samples.ravel(),
+                                  squareform(pd_)[:3, 3:].ravel())
+
+
+</a>def test_PDist():
+    targets = np.tile(xrange(3),2)
+    chunks = np.repeat(np.array((0,1)),3)
+    ds = dataset_wizard(samples=data, targets=targets, chunks=chunks)</code></pre><img src="8950792.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/7b20a10273955a6b33a8563a878aadd9c0dfe0a6#diff-bb98a17644462e8a72b15ac374b816e4939981f51f0fbc728b95f583b0abc8e6L81' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: 7b20a10273955a6b33a8563a878aadd9c0dfe0a6</div><div id='time'> Time: 2016-09-29</div><div id='author'> Author: matteo.visconti.gr@dartmouth.edu</div><div id='file'> File Name: mvpa2/tests/test_rsa.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_CDist</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/76e40262c6a7d134b6b03b71b84984bd85454a04#diff-b61552caf5751a57ad6b638f1d2f7e6eb6e64bf0b9f4ea6212980119e252a729L167' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 76e40262c6a7d134b6b03b71b84984bd85454a04</div><div id='time'> Time: 2018-07-05</div><div id='author'> Author: jerome@dockes.org</div><div id='file'> File Name: nilearn/datasets/tests/test_struct.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_fetch_surf_fsaverage</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/f816b2d21de51ea97a45d8cbece6a528848c56e4#diff-c3131765ae1ae348f9eb6e0fe5fda36c72a9c7ee663dba8da9c60d5f2eb08d72L50' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: f816b2d21de51ea97a45d8cbece6a528848c56e4</div><div id='time'> Time: 2019-04-18</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: examples/03_connectivity/plot_compare_decomposition.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

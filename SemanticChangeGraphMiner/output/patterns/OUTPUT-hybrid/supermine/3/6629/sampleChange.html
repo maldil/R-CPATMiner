@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.X_train, self.y_train, self.X_test, self.y_test = generate_data(
+            n_train=self.n_train, n_test=self.n_test,
+            contamination=self.contamination, random_state=42)
+        <a id="change">self</a>.X_train, self.X_test = standardizer(self.X_train, self.X_test)
+        self.detector_list = [LOF(), LOF()]
+        self.clf = LSCP(self.detector_list, contamination=self.contamination)
+        self.clf.fit(self.X_train)</code></pre><h3>After Change</h3><pre><code class='java'>
+            X, y = check_X_y(X, y)
+
+        self.X_train, self.X_test, self.y_train, self.y_test = \
+            <a id="change">train_test_split(X, y, test_size=0.4, random_state=42)</a>
+
+        self.detector_list = [LOF(), LOF()]
+        self.clf = LSCP(self.detector_list)
+        self.clf.fit(self.X_train)</code></pre>

@@ -1,0 +1,26 @@
+<html><h3>6799144620411f23c3a15abae1f78c5bc2a4f7c0,thinc/backends/ops.py,Ops,pad,#Ops#,115
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(set(seq.shape[1:] for seq in seqs)) != 1:
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        shapes = <a id="change">[tuple(s.shape) for s in seqs]</a>
+        <a id="change">dim_sizes = zip(*[shape for shape in shapes])</a>
+        max_dims = [<a id="change">max(sizes)</a> for sizes in dim_sizes]
+        final_shape = <a id="change">(len(seqs),) + tuple(max_dims)</a>
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            region = [i] + [slice(0, dim) for dim in arr.shape]
+            output[region] = arr</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(set(seq.shape[1:] for seq in seqs)) != 1:
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        length = max(<a id="change">len(seq)</a> for seq in seqs)
+        &#47&#47 Round the length
+        <a id="change">length = (length + (round_to-1)) // round_to * round_to</a>
+        final_shape = (len(seqs), length) + seqs[0].shape[1:]
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            output[i, :arr.shape[0]] = arr</code></pre><img src="32950998.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6799144620411f23c3a15abae1f78c5bc2a4f7c0#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L125' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6799144620411f23c3a15abae1f78c5bc2a4f7c0</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: pad</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/2eef369b7ac92e38f81819307a4af4238fd953ee#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L184' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 2eef369b7ac92e38f81819307a4af4238fd953ee</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: JaxOps</div><div id='method'> Method Name: pad</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/e1c4e6a7c7db68e123d978bfc56feb057898935f#diff-a17dc8b1db8a3f0d9d502c3c2d7d13001ca5af03ef5419bf371ac130926ce968L46' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: e1c4e6a7c7db68e123d978bfc56feb057898935f</div><div id='time'> Time: 2019-10-24</div><div id='author'> Author: kostasdedesar@penguin</div><div id='file'> File Name: Counting-sort.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

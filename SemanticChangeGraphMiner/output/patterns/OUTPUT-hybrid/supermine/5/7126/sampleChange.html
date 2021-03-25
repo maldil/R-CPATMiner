@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._optimizer.zero_grad()
+
+    def _get_lr_scale(self):
+        <a id="change">return np.min([
+            np.power(self.n_current_steps, -0.5),
+            np.power(self.n_warmup_steps, -1.5) * self.n_current_steps])</a>
+
+    def _update_learning_rate(self):
+        &quot&quot&quot Learning rate scheduling per step &quot&quot&quot
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _get_lr_scale(self):
+        n_steps, n_warmup_steps = self.n_steps, self.n_warmup_steps
+        <a id="change">return min(n_steps ** (-0.5), n_steps * n_warmup_steps ** (-1.5))</a>
+
+
+    def _update_learning_rate(self):
+        &quot&quot&quot Learning rate scheduling per step &quot&quot&quot</code></pre>

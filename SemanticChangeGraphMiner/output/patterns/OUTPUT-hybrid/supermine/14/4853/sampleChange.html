@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, W_e, n_hidd, n_tags):
+
+        &#47&#47 Dimension of the embeddings
+        <a id="change">n_emb = W_e.shape[0]</a>
+
+        &#47&#47 MODEL PARAMETERS
+        W_x = np.random.uniform(size=(4*n_hidd, n_emb))   &#47&#47 RNN Input layer
+        W_h = np.random.uniform(size=(4*n_hidd, n_hidd))  &#47&#47 RNN recurrent var 
+        W_c = np.random.uniform(size=(3*n_hidd, n_hidd))  &#47&#47 Second recurrent var 
+        W_y = np.random.uniform(size=(n_tags, n_hidd))    &#47&#47 Output layer
+        &#47&#47 Cast to theano GPU-compatible type
+        W_e = W_e.astype(theano.config.floatX)
+        W_x = W_x.astype(theano.config.floatX)
+        W_h = W_h.astype(theano.config.floatX)
+        W_c = W_c.astype(theano.config.floatX)
+        W_y = W_y.astype(theano.config.floatX)
+        &#47&#47 Store as shared parameters
+        _W_e = theano.shared(W_e, borrow=True)
+        _W_x = theano.shared(W_x, borrow=True)
+        _W_h = theano.shared(W_h, borrow=True)
+        _W_c = theano.shared(W_c, borrow=True)
+        _W_y = theano.shared(W_y, borrow=True)
+
+        &#47&#47 Class variables
+        self.n_hidd = n_hidd
+        <a id="change">self.param</a>  = [_W_e, _W_x, _W_h, _W_c, _W_y]
+
+    def _forward(self, _x, _h0=None, _c0=None):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            np.random.seed(seed)
+
+        &#47&#47 MODEL PARAMETERS
+        <a id="change">W_e = 0.01*np.random.uniform(size=(n_emb, n_words))</a>    &#47&#47 Embedding layer 
+        W_x = np.random.uniform(size=(4*n_hidd, n_emb))   &#47&#47 RNN Input layer
+        W_h = np.random.uniform(size=(4*n_hidd, n_hidd))  &#47&#47 RNN recurrent var 
+        W_c = np.random.uniform(size=(3*n_hidd, n_hidd))  &#47&#47 Second recurrent var 
+        W_y = np.random.uniform(size=(n_tags, n_hidd))    &#47&#47 Output layer
+        &#47&#47 Cast to theano GPU-compatible type
+        W_e = W_e.astype(theano.config.floatX)
+        W_x = W_x.astype(theano.config.floatX)
+        W_h = W_h.astype(theano.config.floatX)
+        W_c = W_c.astype(theano.config.floatX)
+        W_y = W_y.astype(theano.config.floatX)
+        &#47&#47 Store as shared parameters
+        _W_e = theano.shared(W_e, borrow=True)
+        _W_x = theano.shared(W_x, borrow=True)
+        _W_h = theano.shared(W_h, borrow=True)
+        _W_c = theano.shared(W_c, borrow=True)
+        _W_y = theano.shared(W_y, borrow=True)
+
+        &#47&#47 Class variables
+        self.n_hidd = n_hidd
+        <a id="change">self.param</a>  = [_W_e, _W_x, _W_h, _W_c, _W_y]
+
+    def _forward(self, _x, _h0=None, _c0=None):
+</code></pre>

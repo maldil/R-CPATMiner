@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    def __init__(self, **kwargs):
+        <a id="change">if &quotdirection&quot in kwargs:
+            allowed = (&quotvertical&quot, &quothorizontal&quot)
+            if ((not isinstance(kwargs[&quotdirection&quot], str))
+                    or (kwargs[&quotdirection&quot] not in allowed)):
+                raise ValueError("direction must be one of %s" % (allowed, ))
+       </a> self._annotation_geom = _geom_annotation_stripes(
+            **kwargs)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, fill=(&quot&#47&#47AAAAAA&quot, &quot&#47&#47CCCCCC&quot), fill_range=False,
+                 direction=&quotvertical&quot, extend=(0, 1), **kwargs):
+        allowed = (&quotvertical&quot, &quothorizontal&quot)
+        <a id="change">if direction not in allowed:
+            raise ValueError(
+                "direction must be one of {}".format(allowed))
+       </a> self._annotation_geom = _geom_stripes(
+            fill=fill, fill_range=fill_range, extend=extend,
+            direction=direction, **kwargs)
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif result &lt;= 0.0:
+        return FLOAT32_MAX
+    else:
+        <a id="change">return 0.5 * (np.log(norm_x) + np.log(norm_y)) - np.log(result)</a>
+
+
+@numba.vectorize(fastmath=True, cache=True)
+def correct_alternative_cosine(d):</code></pre><h3>After Change</h3><pre><code class='java'>
+    elif result &lt;= 0.0:
+        return FLOAT32_MAX
+    else:
+        <a id="change">result</a> = <a id="change">np.sqrt(norm_x * norm_y) / result</a>
+        <a id="change">return np.log2(result)</a>
+
+
+@numba.njit(
+    "f4(f4[::1],f4[::1])",</code></pre>

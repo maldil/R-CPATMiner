@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @property
+    def backend(self):
+        if self._backend is None:
+            <a id="change">backend_theano = TheanoBackend()</a>
+            backend_autograd = AutogradBackend()
+            if backend_theano.is_available():
+                if backend_theano.is_compatible(self._original_cost,
+                                                self._arg):
+                    self._backend = backend_theano
+            if backend_autograd.is_available():
+                if backend_autograd.is_compatible(self._original_cost,
+                                                  self._arg):
+                    self._backend = backend_autograd
+            if self._backend is None:
+                raise ValueError(
+                    "Cannot identify an autodiff backend from cost "
+                    "function that also was successfully imported. "
+                    "TheanoBackend was%s successfully imported. " %
+                    <a id="change">("" if backend_theano.is_available() else " not")</a> +
+                    "AutogradBackend was%s successfully imported. " %
+                    ("" if backend_autograd.is_available() else " not")
+                    )</code></pre><h3>After Change</h3><pre><code class='java'>
+    @property
+    def backend(self):
+        if self._backend is None:
+            <a id="change">for backend in self._backends:
+                if backend.is_compatible(self._original_cost, self._arg):
+                    self._backend = backend
+                    break
+            else:
+                backend_names = [backend.name for backend in self._backends]
+                raise ValueError(
+                    "Cannot determine autodiff backend from cost function. "
+                    "Available backends are: {:s}".format(
+                        ", ".join(backend_names)))
+       </a> return self._backend
+
+    @property
+    def cost(self):</code></pre>

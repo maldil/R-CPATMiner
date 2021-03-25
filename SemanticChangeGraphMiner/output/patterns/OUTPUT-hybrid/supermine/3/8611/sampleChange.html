@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot Get an attention mask to avoid using the subsequent info.&quot&quot&quot
+
+    assert seq.dim() == 2
+    attn_shape = <a id="change">(seq.size(0), seq.size(1), seq.size(1))</a>
+    subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype(&quotuint8&quot)
+    subsequent_mask = torch.from_numpy(subsequent_mask)
+    if seq.is_cuda:
+        subsequent_mask = subsequent_mask.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    subsequent_mask = torch.ones((len_s, len_s), device=seq.device, dtype=torch.uint8)
+    subsequent_mask = torch.triu(subsequent_mask, diagonal=1)
+    <a id="change">subsequent_mask = subsequent_mask.unsqueeze(0).expand(sz_b, len_s, len_s)</a>
+    return subsequent_mask
+
+class Encoder(nn.Module):
+    &quot&quot&quot A encoder model with self attention mechanism. &quot&quot&quot</code></pre>

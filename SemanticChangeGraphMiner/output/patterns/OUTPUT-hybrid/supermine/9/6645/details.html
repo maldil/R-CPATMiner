@@ -1,0 +1,36 @@
+<html><h3>25ca9c249fd3e11bb166b42ffeb2433036964bd1,brian2/codegen/generators/GSL_generator.py,GSLWeaveCodeGenerator,unpack_namespace,#GSLWeaveCodeGenerator#,377
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return to_replace
+
+    def unpack_namespace(self, var, in_vector, in_scalar):
+        <a id="change">try:
+            var_obj = self.variables[var]
+        except:
+            var_obj = self.other_variables[var]
+       </a> <a id="change">if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj, access_data=True)
+            array_name = self.generator.get_array_name(var_obj, access_data=False)
+            if in_vector:
+                return &quotp.{ptr} = {array};&quot.format(ptr=pointer_name, array=array_name)
+            else:
+                return &quot&quot
+        else:
+            if in_vector:
+                return &quotp.{var} = {var};&quot.format(var=var)
+            else:
+                return &quot&quot
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                return &quot&quot
+
+    def unpack_namespace(self, variables_in_vector, variables_in_scalar):
+        <a id="change">code = []</a>
+        for var_obj in self.variables.values():
+            in_vector = var_obj in variables_in_vector
+            in_scalar = var_obj in variables_in_scalar
+            code += [self.unpack_namespace_single(var_obj, in_vector, in_scalar)]
+        <a id="change">return (&quot\n&quot).join(code)</a>
+</code></pre><img src="26208782.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL377' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: unpack_namespace</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL350' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/alfredfrancis/ai-chatbot-framework/commit/d68beca6f553622b92f2709cf984023dbf284e98#diff-7451e3e880705ce7341e01a58d3961da701f5b7c469480c75d41495732649b1fL55' target='_blank'>Link</a></div><div id='project'> Project Name: alfredfrancis/ai-chatbot-framework</div><div id='commit'> Commit Name: d68beca6f553622b92f2709cf984023dbf284e98</div><div id='time'> Time: 2016-12-23</div><div id='author'> Author: alfred.francis@pearldatadirect.com</div><div id='file'> File Name: core/intentClassifier.py</div><div id='class'> Class Name: IntentClassifier</div><div id='method'> Method Name: predict</div><BR>

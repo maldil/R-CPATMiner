@@ -1,0 +1,23 @@
+<html><h3>86698c801848975de9a21fb17093e045b6271ea3,rdkit_fixer.py,,PreparePDBMol,#,94
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 check if we have all templates
+    for resname in unique_resname:
+        <a id="change">if resname not in residue_mols and resname not in [&quotHOH&quot]:
+            raise ValueError(&quotThere is no template for residue "%s"&quot % resname)
+
+    &#47&#47 reset B.O. using templates
+   </a> for resname in residue_mols.keys():
+        template = residue_mols[resname]
+        new_mol = AssignPDBResidueBondOrdersFromTemplate(template, new_mol)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    for atom in new_mol.GetAtoms():
+        if atom.GetAtomicNum() == 8 and atom.GetPDBResidueInfo().GetName().strip() == &quotOXT&quot:
+            bonds = atom.GetBonds()
+            if <a id="change">len(bonds) &gt; 0: &#47&#47 th</a>is should not happen at all
+                bonds[0].SetBondType(BondType.SINGLE)
+
+    return new_mol</code></pre><img src="19364492.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/86698c801848975de9a21fb17093e045b6271ea3#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L109' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 86698c801848975de9a21fb17093e045b6271ea3</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/73cb3ff00533b03ab64127d2287f9bdfe30c035c#diff-62393ba8a6710e37705463b5a02ea4b7ea72a7e06cfce7634358e2592a41a8d0L33' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 73cb3ff00533b03ab64127d2287f9bdfe30c035c</div><div id='time'> Time: 2021-01-16</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: kornia/losses/total_variation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: total_variation</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/dbc0f24b39c2e2725682485a68586b3f0fa6bafc#diff-2ac816889869f195143056982404d827af7fb33856e91856dcc36f7581a0ef89L369' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: dbc0f24b39c2e2725682485a68586b3f0fa6bafc</div><div id='time'> Time: 2017-07-02</div><div id='author'> Author: iaroslav.email@gmail.com</div><div id='file'> File Name: skopt/searchcv.py</div><div id='class'> Class Name: BayesSearchCV</div><div id='method'> Method Name: fit</div><BR>

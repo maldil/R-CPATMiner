@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if isinstance(onnx_model, str):
+        assert parser.parse_from_file(onnx_model), &quotparse onnx failed.&quot
+    else:
+        <a id="change">assert parser.parse(
+            onnx_model.SerializeToString()), &quotparse onnx failed.&quot</a>
+
+    &#47&#47 config builder
+    builder.max_workspace_size = max_workspace_size
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if not parser.parse(onnx_model.SerializeToString()):
+        error_msgs = &quot&quot
+        <a id="change">for error in range(parser.num_errors):
+            error_msgs += f&quot{parser.get_error(error)}\n&quot
+       </a> raise RuntimeError(f&quotparse onnx failed:\n{error_msgs}&quot)
+
+    &#47&#47 config builder
+    builder.max_workspace_size = max_workspace_size</code></pre>

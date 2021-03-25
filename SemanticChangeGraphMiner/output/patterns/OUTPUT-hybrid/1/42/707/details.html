@@ -1,0 +1,37 @@
+<html><h3>8a0565f97357dd32a3b4fc357f61ba5392f75144,code/HardNet.py,TripletPhotoTour,generate_triplets,#,194
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for x in tqdm(range(num_triplets)):
+            if len(already_idxs) &gt;= args.batch_size:
+                already_idxs = set()
+            c1 = np.random.randint(0, <a id="change">n_classes - 1</a>)
+            while c1 in already_idxs:
+                c1 = np.random.randint(0, <a id="change">n_classes - 1</a>)
+            already_idxs.add(c1)
+            c2 = np.random.randint(0, n_classes - 1)
+            while c1 == c2:
+                c2 = np.random.randint(0, <a id="change">n_classes - 1</a>)
+            if len(indices[c1]) == 2:  &#47&#47 hack to speed up process
+                n1, n2 = 0, 1
+            else:
+                <a id="change">n1</a> = np.random.randint(0, <a id="change">len(indices[c1]) - 1</a>)
+                <a id="change">n2</a> = np.random.randint(0, <a id="change">len(indices[c1]) - 1</a>)
+                while n1 == n2:
+                    <a id="change">n2</a> = np.random.randint(0, <a id="change">len(indices[c1]) - 1</a>)
+            <a id="change">n3</a> = np.random.randint(0, <a id="change">len(indices[c2]) - 1</a>)
+            triplets.append([indices[c1][n1], indices[c1][n2], indices[c2][n3]])
+        return torch.LongTensor(np.array(triplets))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if len(indices[c1]) == 2:  &#47&#47 hack to speed up process
+                n1, n2 = 0, 1
+            else:
+                <a id="change">n1</a> = np.random.randint(0, len(indices[c1]))
+                <a id="change">n2</a> = np.random.randint(0, <a id="change">len(indices[c1])</a>)
+                while n1 == n2:
+                    <a id="change">n2</a> = np.random.randint(0, len(indices[c1]))
+            <a id="change">n3</a> = np.random.randint(0, len(indices[c2]))
+            triplets.append([indices[c1][n1], indices[c1][n2], indices[c2][n3]])
+        return torch.LongTensor(np.array(triplets))
+</code></pre><img src="3609927.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/8a0565f97357dd32a3b4fc357f61ba5392f75144#diff-8328e5d23cd2e84d2111ffa995e18b732d8e2633ebcfc7de5fb1e60e87564e97L206' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 8a0565f97357dd32a3b4fc357f61ba5392f75144</div><div id='time'> Time: 2017-10-28</div><div id='author'> Author: anastasiya.mishchuk@gmail.com</div><div id='file'> File Name: code/HardNet.py</div><div id='class'> Class Name: TripletPhotoTour</div><div id='method'> Method Name: generate_triplets</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/8a0565f97357dd32a3b4fc357f61ba5392f75144#diff-8328e5d23cd2e84d2111ffa995e18b732d8e2633ebcfc7de5fb1e60e87564e97L206' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 8a0565f97357dd32a3b4fc357f61ba5392f75144</div><div id='time'> Time: 2017-10-28</div><div id='author'> Author: anastasiya.mishchuk@gmail.com</div><div id='file'> File Name: code/HardNet.py</div><div id='class'> Class Name: TripletPhotoTour</div><div id='method'> Method Name: generate_triplets</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/c446e3daad523d25b19d48b1163d54af48fa271b#diff-db2526f60a05ffdd6d7b4c2fb82d9429252f3a938a3bed0abab7592a9cf8cef3L219' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: c446e3daad523d25b19d48b1163d54af48fa271b</div><div id='time'> Time: 2017-10-28</div><div id='author'> Author: anastasiya.mishchuk@gmail.com</div><div id='file'> File Name: code/HardNetMultipleDatasets.py</div><div id='class'> Class Name: TotalDatasetsLoader</div><div id='method'> Method Name: generate_triplets</div><BR>

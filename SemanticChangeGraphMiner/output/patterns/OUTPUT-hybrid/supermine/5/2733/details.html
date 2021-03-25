@@ -1,0 +1,24 @@
+<html><h3>30567a8d317e862a72f8ad69563659d78d3c11c4,nussl/ml/train/closures.py,Closure,__init__,#Closure#,63
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.losses = []
+        for key, val in loss_dictionary.items():
+            <a id="change">if &quotclass&quot in val:
+                loss_class = getattr(loss, val[&quotclass&quot])
+            else:
+                loss_class = getattr(loss, key)
+           </a> weight = 1 if &quotweight&quot not in val else val[&quotweight&quot]
+            keys = loss_class.DEFAULT_KEYS if &quotkeys&quot not in val else val[&quotkeys&quot]
+            args = [] if &quotargs&quot not in val else val[&quotargs&quot]
+            kwargs = {} if &quotkwargs&quot not in val else val[&quotkwargs&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+            loss_class = getattr(loss, _loss_name)
+            weight = 1 if &quotweight&quot not in val else val[&quotweight&quot]
+            keys = loss_class.DEFAULT_KEYS if &quotkeys&quot not in val else val[&quotkeys&quot]
+            args = [] if &quotargs&quot not in val else <a id="change">copy.deepcopy(val[&quotargs&quot])</a>
+            kwargs = {} if &quotkwargs&quot not in val else copy.deepcopy(val[&quotkwargs&quot])
+            if _loss_name in [&quotCombinationInvariantLoss&quot, &quotPermutationInvariantLoss&quot]:
+                args[0] = getattr(loss, args[0])()
+</code></pre><img src="12049109.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/30567a8d317e862a72f8ad69563659d78d3c11c4#diff-af1c52a8c69c07fa87a8b3a02f8bad4a547701258140b228a19635b2b3dd10a1L73' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 30567a8d317e862a72f8ad69563659d78d3c11c4</div><div id='time'> Time: 2020-04-09</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/ml/train/closures.py</div><div id='class'> Class Name: Closure</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/gooofy/zamia-speech/commit/85861ea5c5320518267405bef050a0dab933e069#diff-18503b8903f2767f212ad86a33581279f1058ee8c8a5950a3f7bb521ba866068L45' target='_blank'>Link</a></div><div id='project'> Project Name: gooofy/zamia-speech</div><div id='commit'> Commit Name: 85861ea5c5320518267405bef050a0dab933e069</div><div id='time'> Time: 2018-02-17</div><div id='author'> Author: guenter@zamia.org</div><div id='file'> File Name: phone_gen.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/fcab3b11c0096803616af4956e49c59be6466d88#diff-c0012ae34802fdc9c0598515adfc975667130ec96511ea45d657a95a349d959cL420' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: fcab3b11c0096803616af4956e49c59be6466d88</div><div id='time'> Time: 2018-09-07</div><div id='author'> Author: yagneshrevar@gmail.com</div><div id='file'> File Name: simple_rl/tasks/navigation/NavigationWorldMDP.py</div><div id='class'> Class Name: NavigationWorldMDP</div><div id='method'> Method Name: sample_trajectories</div><BR>

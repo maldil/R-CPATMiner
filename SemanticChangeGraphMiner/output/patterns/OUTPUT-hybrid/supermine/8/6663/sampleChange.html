@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                train_batch[key] = train_batch[key].cuda()
+        
+        &#47&#47 forward pass to encoder
+        <a id="change">img = Variable(train_batch[&quotimg_feat&quot])</a>
+        ques = Variable(train_batch[&quotques_fwd&quot])
+        hist = <a id="change">Variable(train_batch[&quothist&quot])</a>
+        <a id="change">enc_out = encoder(img, ques, hist)</a>
+
+        &#47&#47 forward pass to decoder
+        options = Variable(train_batch[&quotopt&quot])
+        ans_ind = Variable(train_batch[&quotans_ind&quot])</code></pre><h3>After Change</h3><pre><code class='java'>
+parser.add_argument(&quot-num_epochs&quot, default=20, type=int, help=&quotEpochs&quot)
+parser.add_argument(&quot-batch_size&quot, default=4, type=int, help=&quotBatch size&quot)
+parser.add_argument(&quot-lr&quot, default=1e-3, type=float, help=&quotLearning rate&quot)
+<a id="change">parser.add_argument(&quot-lr_decay_rate&quot, default=0.9997592083, type=float, help=&quotDecay for lr&quot)</a>
+parser.add_argument(&quot-min_lr&quot, default=5e-5, type=float, help=&quotMinimum learning rate&quot)
+parser.add_argument(&quot-weight_init&quot, default=&quotxavier&quot, choices=[&quotxavier&quot, &quotkaiming&quot],
+                        help=&quotWeight initialization strategy&quot)
+parser.add_argument(&quot-gpuid&quot, default=0, type=int, help=&quotGPU id to use&quot)</code></pre>

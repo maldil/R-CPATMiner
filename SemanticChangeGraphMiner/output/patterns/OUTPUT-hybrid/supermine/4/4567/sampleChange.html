@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        with torch.no_grad():
+            pred = torch.zeros(1, args.num_class, segSize[0], segSize[1])
+            <a id="change">pred = Variable(pred).cuda()</a>
+
+            for img in img_resized_list:
+                feed_dict = batch_data.copy()
+                feed_dict[&quotimg_data&quot] = img</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                &#47&#47 forward pass
+                pred_tmp = segmentation_module(feed_dict, segSize=segSize)
+                pred = pred + <a id="change">pred_tmp.cpu()</a> / len(args.imgSize)
+
+            _, preds = torch.max(pred, dim=1)
+            preds = as_numpy(preds.squeeze(0))</code></pre>

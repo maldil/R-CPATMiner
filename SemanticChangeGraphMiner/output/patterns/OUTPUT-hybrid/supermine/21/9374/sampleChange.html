@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        X_train = (X_train.astype(np.float32) - 127.5) / 127.5
+        X_train = np.expand_dims(X_train, axis=3)
+
+        <a id="change">half_batch = int(batch_size / 2)</a>
+
+        for epoch in range(epochs):
+
+            &#47&#47 ---------------------
+            &#47&#47  Train Discriminator
+            &#47&#47 ---------------------
+
+            &#47&#47 Select a random half batch of images
+            idx = np.random.randint(0, X_train.shape[0], half_batch)
+            imgs = X_train[idx]
+
+            <a id="change">noise = np.random.normal(0, 1, (half_batch, self.latent_dim))</a>
+
+            &#47&#47 Generate a half batch of new images
+            gen_imgs = self.generator.predict(noise)
+
+            &#47&#47 Train the discriminator
+            d_loss_real = self.discriminator.train_on_batch(imgs, <a id="change">np.ones((half_batch, 1))</a>)
+            d_loss_fake = self.discriminator.train_on_batch(gen_imgs, np.zeros((half_batch, 1)))
+            d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+
+
+            &#47&#47 ---------------------
+            &#47&#47  Train Generator
+            &#47&#47 ---------------------
+
+            noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
+
+            &#47&#47 The generator wants the discriminator to label the generated samples
+            &#47&#47 as valid (ones)
+            <a id="change">valid_y = np.array([1] * batch_size)</a>
+
+            &#47&#47 Train the generator
+            g_loss = self.combined.train_on_batch(noise, valid_y)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        X_train = np.expand_dims(X_train, axis=3)
+
+        &#47&#47 Adversarial ground truths
+        <a id="change">valid = np.ones((batch_size, 1))</a>
+        fake = np.zeros((batch_size, 1))
+
+        for epoch in range(epochs):
+</code></pre>

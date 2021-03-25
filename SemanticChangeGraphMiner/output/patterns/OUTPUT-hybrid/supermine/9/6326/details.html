@@ -1,0 +1,32 @@
+<html><h3>818492efd4238bd8fedcff105bd46044a714f762,pymanopt/autodiff/backends/_pytorch.py,_PyTorchBackend,compute_gradient,#_PyTorchBackend#,71
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_gradient(self, function, arguments):
+        flattened_arguments = <a id="change">flatten_arguments(arguments)</a>
+
+        <a id="change">if len(flattened_arguments) == 1:
+            def unary_gradient(argument):
+                torch_argument = self._from_numpy(argument)
+                torch_argument.requires_grad_()
+                function(torch_argument).backward()
+                return self._sanitize_gradient(torch_argument)
+            return unary_gradient
+
+       </a> def nary_gradient(arguments):
+            torch_arguments = []
+            for argument in flatten_arguments(arguments):
+                torch_argument = self._from_numpy(argument)</code></pre><h3>After Change</h3><pre><code class='java'>
+                torch_arguments.append(torch_argument)
+            function(*torch_arguments).backward()
+            return self._sanitize_gradients(torch_arguments)
+        <a id="change">if len(arguments) == 1:
+            return unpack_singleton_iterable_return_value(gradient)
+       </a> <a id="change">return gradient</a>
+
+    @Backend._assert_backend_available
+    def compute_hessian_vector_product(self, function, arguments):
+        def hessian_vector_product(*args):</code></pre><img src="25462950.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/818492efd4238bd8fedcff105bd46044a714f762#diff-be130ac12f2de5184ddd73a180d3ec3c186dd34eae6165266d643bf26502619fL72' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 818492efd4238bd8fedcff105bd46044a714f762</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_pytorch.py</div><div id='class'> Class Name: _PyTorchBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/eac38dbe9694bdfa6c2050528d8cc6a64747e933#diff-5298663cbda4a856c80732c5982ac07b3cc2d9c4fda752bebe1fda8013450facL39' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: eac38dbe9694bdfa6c2050528d8cc6a64747e933</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_autograd.py</div><div id='class'> Class Name: _AutogradBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/4a28bbf9659d96e15f0f241bcab76381e299097c#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L69' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 4a28bbf9659d96e15f0f241bcab76381e299097c</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: compute_gradient</div><BR>

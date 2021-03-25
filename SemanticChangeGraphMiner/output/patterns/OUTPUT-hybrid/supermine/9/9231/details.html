@@ -1,0 +1,37 @@
+<html><h3>2ee8ac1546400645908b61ef015cdf5d71aa34cc,utils/datasets.py,,pad_to_square,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    h, w = image_np.shape[:2]
+    dim_diff = np.abs(h - w)
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    new_shape = <a id="change">(max([h, w]), max([h, w]), 3)</a>
+    padded_image = np.full(new_shape, constant_value, dtype=np.float32)
+    if h &lt; w:
+        padded_image[pad1 : pad1 + h, :] = image_np
+        padding = (0, pad1, 0, pad2)
+    else:
+        padded_image[:, pad1 : pad1 + w] = image_np
+        padding = (pad1, 0, pad2, 0)
+    <a id="change">return padded_image, padding</a>
+
+
+class ImageFolder(Dataset):
+    def __init__(self, folder_path, img_size=416):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def pad_to_square(img, pad_value):
+    h, w, _ = <a id="change">img.shape</a>
+    dim_diff = np.abs(h - w)
+    &#47&#47 Upper (left) and lower (right) padding
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    &#47&#47 Determine padding
+    pad = ((pad1, pad2), (0, 0), (0, 0)) if h &lt;= w else ((0, 0), (pad1, pad2), (0, 0))
+    &#47&#47 Add padding
+    img = <a id="change">np.pad(img, pad, "constant", constant_values=127.5)</a>
+    <a id="change">return img, pad</a>
+
+
+class ImageFolder(Dataset):
+    def __init__(self, folder_path, img_size=416):</code></pre><img src="35640468.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L21' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_to_square</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/489494cdbbd3bf9f75b37c58e15ffbbbc1dd0188#diff-c6e00487ad0a850f4a0201a0c8723dcbccd3d6c0cdcc367bd7012dd245dece9aL258' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 489494cdbbd3bf9f75b37c58e15ffbbbc1dd0188</div><div id='time'> Time: 2015-01-03</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fix_length</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L21' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_to_square</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/8acf04da9110e1fdb5846c4bf511c8d9f29a6565#diff-c6e00487ad0a850f4a0201a0c8723dcbccd3d6c0cdcc367bd7012dd245dece9aL112' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 8acf04da9110e1fdb5846c4bf511c8d9f29a6565</div><div id='time'> Time: 2014-11-06</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_center</div><BR>

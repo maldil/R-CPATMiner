@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Returns a tensor given by *name* using a deep lookup within this op. *None* is returned when
+        no tensor was found.
+        
+        return <a id="change">reduce(lambda t1,t2: t1 or t2.get(name), self.inputs, None)</a>
+
+    def eval(self, feed_dict, _uuid):
+         eval(feed_dict=None)
+        Returns the value of the output tensor. See :py:meth:`Tensor.eval` for more info.</code></pre><h3>After Change</h3><pre><code class='java'>
+        Returns one or more tensors given by *names* using a deep lookup within this op. *None* is
+        returned when no tensor was found.
+        
+        <a id="change">tensors = tuple(self._get(name) for name in names)</a>
+        return tensors[0] if len(names) == 1 else tensors
+
+    def _get(self, name):
+        return reduce(lambda t1,t2: t1 or t2.get(name), self.inputs, None)</code></pre>

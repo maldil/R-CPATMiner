@@ -1,0 +1,181 @@
+<html><h3>cacfc17fa3154c5cc5efb785a145b78efaada019,lxmls/parsing/dependency_decoder.py,DependencyDecoder,chu_liu_edmonds,#DependencyDecoder#,188
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                wh_cyc = cycle
+
+        cycle = wh_cyc
+        cyc_nodes = <a id="change">list(cycle.keys())</a>
+        <a id="change">rep</a> = cyc_nodes[0]
+
+        if self.verbose:
+            print("Found Cycle\n")
+            for node in cyc_nodes:
+                print("{0} ".format(node))
+            print("\n")
+
+        cyc_weight = 0.0
+        for node in cyc_nodes:
+            cyc_weight += scores[par[node], node]
+
+        for i in range(0, nw+1):
+            if 0 == curr_nodes[i] or (i in cycle):
+                continue
+
+            max1 = -np.inf
+            wh1 = -1
+            max2 = -np.inf
+            wh2 = -1
+
+            for j1 in cyc_nodes:
+                if scores[j1, i] &gt; max1:
+                    <a id="change">max1</a> = scores[j1, i]
+                    <a id="change">wh1</a> = j1
+
+                &#47&#47 cycle weight + new edge - removal of old
+                scr = cyc_weight + scores[i, j1] - scores[par[j1], j1]
+                if scr &gt; max2:
+                    max2 = scr
+                    wh2 = j1
+
+            scores[rep, i] = max1
+            old_I[rep, i] = old_I[wh1, i]
+            old_O[rep, i] = old_O[wh1, i]
+            scores[i, rep] = max2
+            old_O[i, rep] = old_O[i, wh2]
+            old_I[i, rep] = old_I[i, wh2]
+
+        rep_cons = []
+        for i in range(0, np.size(cyc_nodes)):
+            rep_con = {}
+            <a id="change">keys</a> = sorted(reps[int(cyc_nodes[i])].keys())
+            if self.verbose:
+                print("{0}: ".format(cyc_nodes[i]))
+            for key in keys:
+                rep_con[key] = 0
+                if self.verbose:
+                    print("{0} ".format(key))
+            rep_cons.append(rep_con)
+            if self.verbose:
+                print("\n")
+
+        &#47&#47 don&quott consider not representative nodes
+        &#47&#47 these nodes have been folded
+        for node in cyc_nodes[1:]:
+            curr_nodes[node] = 0
+            for key in reps[int(node)]:
+                reps[int(rep)][key] = 0
+
+        self.chu_liu_edmonds(scores, curr_nodes, old_I, old_O, final_edges, reps)
+
+        &#47&#47 check each node in cycle, if one of its representatives
+        &#47&#47 is a key in the final_edges, it is the one.
+        if self.verbose:
+            print(final_edges)
+        wh = -1
+        found = False
+        for i in range(0, np.size(rep_cons)):
+            if found:
+                break
+            for key in rep_cons[i]:
+                if found:
+                    break
+                if key in final_edges:
+                    wh = cyc_nodes[i]
+                    found = True
+        l = par[wh]
+        while l != wh:
+            <a id="change">ch</a> = old_O[par[l]][l]
+            <a id="change">pr</a> = old_I[par[l]][l]
+            final_edges[ch] = pr
+            l = par[l]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                wh_cyc = cycle
+
+        cycle = wh_cyc
+        cyc_nodes = sorted(<a id="change">list(cycle.keys())</a>)
+        <a id="change">rep</a> = cyc_nodes[0]
+
+        if self.verbose:
+            print("Found Cycle\n")
+            for node in cyc_nodes:
+                print("{0} ".format(node))
+            print("\n")
+
+        cyc_weight = 0.0
+        for node in cyc_nodes:
+            cyc_weight += scores[par[node], node]
+
+        for i in range(0, nw+1):
+            if 0 == curr_nodes[i] or (i in cycle):
+                continue
+
+            max1 = -np.inf
+            wh1 = -1
+            max2 = -np.inf
+            wh2 = -1
+
+            for j1 in cyc_nodes:
+                if scores[j1, i] &gt; max1:
+                    <a id="change">max1</a> = scores[j1, i]
+                    <a id="change">wh1</a> = j1
+
+                &#47&#47 cycle weight + new edge - removal of old
+                scr = cyc_weight + scores[i, j1] - scores[par[j1], j1]
+                if scr &gt; max2:
+                    max2 = scr
+                    wh2 = j1
+
+            scores[rep, i] = max1
+            old_I[rep, i] = old_I[wh1, i]
+            old_O[rep, i] = old_O[wh1, i]
+            scores[i, rep] = max2
+            old_O[i, rep] = old_O[i, wh2]
+            old_I[i, rep] = old_I[i, wh2]
+
+        rep_cons = []
+        for i in range(0, np.size(cyc_nodes)):
+            rep_con = {}
+            <a id="change">keys</a> = sorted(reps[int(cyc_nodes[i])].keys())
+            if self.verbose:
+                print("{0}: ".format(cyc_nodes[i]))
+            for key in keys:
+                rep_con[key] = 0
+                if self.verbose:
+                    print("{0} ".format(key))
+            rep_cons.append(rep_con)
+            if self.verbose:
+                print("\n")
+
+        &#47&#47 don&quott consider not representative nodes
+        &#47&#47 these nodes have been folded
+        for node in cyc_nodes[1:]:
+            curr_nodes[node] = 0
+            for key in reps[int(node)]:
+                reps[int(rep)][key] = 0
+
+        self.chu_liu_edmonds(scores, curr_nodes, old_I, old_O, final_edges, reps)
+
+        &#47&#47 check each node in cycle, if one of its representatives
+        &#47&#47 is a key in the final_edges, it is the one.
+        if self.verbose:
+            print(final_edges)
+        wh = -1
+        found = False
+        for i in range(0, np.size(rep_cons)):
+            if found:
+                break
+            for key in rep_cons[i]:
+                if found:
+                    break
+                if key in final_edges:
+                    wh = cyc_nodes[i]
+                    found = True
+        l = par[wh]
+        while l != wh:
+            <a id="change">ch</a> = old_O[par[l]][l]
+            <a id="change">pr</a> = old_I[par[l]][l]
+            final_edges[ch] = pr
+            l = par[l]
+</code></pre><img src="3695144.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/LxMLS/lxmls-toolkit/commit/cacfc17fa3154c5cc5efb785a145b78efaada019#diff-fe1191118cdc4df71b83c1a3fc13c2f24b791089a398d210b16e0bf5cbf9bf87L274' target='_blank'>Link</a></div><div id='project'> Project Name: LxMLS/lxmls-toolkit</div><div id='commit'> Commit Name: cacfc17fa3154c5cc5efb785a145b78efaada019</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: pedro.balage@priberam.pt</div><div id='file'> File Name: lxmls/parsing/dependency_decoder.py</div><div id='class'> Class Name: DependencyDecoder</div><div id='method'> Method Name: chu_liu_edmonds</div><BR><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/91fae0409070bea58d6095feb14f010b43a32ec4#diff-cb02e4592626f55e565147df9f0f2d0f3e0f96af69b307f243a76b14c865d819L60' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: 91fae0409070bea58d6095feb14f010b43a32ec4</div><div id='time'> Time: 2015-03-18</div><div id='author'> Author: pieterjan.moreels@gmail.com</div><div id='file'> File Name: bin/db_mgmt_cpe_other_dictionary.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/62ae607594e946f3761497af63aba898629b3409#diff-d7341b2ea15e2e8a4bc426cb1ecb65061fc83db83af5bd2e5d89cc93afa5d28fL82' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 62ae607594e946f3761497af63aba898629b3409</div><div id='time'> Time: 2017-04-26</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/scoring/functions/NNScore.py</div><div id='class'> Class Name: nnscore</div><div id='method'> Method Name: train</div><BR>

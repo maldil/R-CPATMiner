@@ -1,0 +1,29 @@
+<html><h3>2a1a6851344172e0134f3c5f4f5c1021975f2812,torchnlp/samplers/bucket_batch_sampler.py,BucketBatchSampler,__iter__,#BucketBatchSampler#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            batch_size, drop_last)
+
+    def __iter__(self):
+        <a id="change">batches = list(super().__iter__())</a>
+        if self.last_batch_first:
+            <a id="change">last_batch = batches.pop()</a>
+        if self.shuffle:
+            random.shuffle(batches)
+        if self.last_batch_first:
+            batches.insert(0, last_batch)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not self.biggest_batches_first:
+            return get_batches()
+        else:
+            <a id="change">batches = list(get_batches())</a>
+            indices = heapq.nlargest(
+                5,
+                range(len(batches)),
+                key=lambda i: len(pickle.dumps([self.data[j] for j in batches[i]])))
+            <a id="change">front = [batches[i] for i in indices]</a>
+            <a id="change">for i in sorted(indices, reverse=True):
+                batches.pop(i)
+           </a> batches[0:0] = front
+            return iter(batches)
+</code></pre><img src="20038672.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PetrochukM/PyTorch-NLP/commit/2a1a6851344172e0134f3c5f4f5c1021975f2812#diff-2c4d64f9df80f1f50179f19e91c15be51ff77a339e7e3910b48cbc032e963e68L37' target='_blank'>Link</a></div><div id='project'> Project Name: PetrochukM/PyTorch-NLP</div><div id='commit'> Commit Name: 2a1a6851344172e0134f3c5f4f5c1021975f2812</div><div id='time'> Time: 2018-03-11</div><div id='author'> Author: petrochukm@gmail.com</div><div id='file'> File Name: torchnlp/samplers/bucket_batch_sampler.py</div><div id='class'> Class Name: BucketBatchSampler</div><div id='method'> Method Name: __iter__</div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/bd1fa163ba2e3a02da40151c9ab5e498878800e9#diff-07e9c93f2cec703bf5d95545ca13f028732efcf4703c0d6df16a63f73200fdebL68' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: bd1fa163ba2e3a02da40151c9ab5e498878800e9</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: angelica.perez37@gmail.com</div><div id='file'> File Name: riot_neuralnet/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_raw_training_labels</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/cbbcea8795e8da754a5b3ffb1a08ef66afd84eef#diff-60a374c703dcf39413713f8dd108028587228bb7e3205616d19a8734f40bc05aL59' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: cbbcea8795e8da754a5b3ffb1a08ef66afd84eef</div><div id='time'> Time: 2018-09-02</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _ravel_shape_indices</div><BR>

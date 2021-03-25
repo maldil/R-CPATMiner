@@ -1,0 +1,125 @@
+<html><h3>a183550bf8fa1fdfc10bfff3df012b11a790ca0e,models/modules/shift_unet.py,PatchSoftUnetSkipConnectionShiftTriple,__init__,#PatchSoftUnetSkipConnectionShiftTriple#,407
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if input_nc is None:
+            input_nc = outer_nc
+
+        <a id="change">downconv</a> = <a id="change">nn.Conv2d(input_nc, inner_nc, kernel_size=4,
+                             stride=2, padding=1)</a>
+        downrelu = nn.LeakyReLU(0.2, True)
+        downnorm = norm_layer(inner_nc)
+        uprelu = nn.ReLU(True)
+        upnorm = norm_layer(outer_nc)
+
+        &#47&#47 As the downconv layer is outer_nc in and inner_nc out.
+        &#47&#47 So the shift define like this:
+        shift = InnerPatchSoftShiftTriple(opt.shift_sz, opt.stride, opt.mask_thred,
+                                            opt.triple_weight, opt.fuse)
+
+        shift.set_mask(mask_global, 3)
+        shift_list.append(shift)
+
+        &#47&#47 Add latent constraint
+        &#47&#47 Then add the constraint to the constrain layer list!
+        innerCos = InnerCos(strength=opt.strength, skip=opt.skip)
+        innerCos.set_mask(mask_global, 3)  &#47&#47 Here we need to set mask for innerCos layer too.
+        innerCos_list.append(innerCos)
+
+        &#47&#47 Different position only has differences in `upconv`
+        &#47&#47 for the outermost, the special is `tanh`
+        if outermost:
+            <a id="change">upconv</a> = <a id="change">nn.ConvTranspose2d(inner_nc * 2, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            <a id="change">down</a> = [downconv]
+            <a id="change">up</a> = [uprelu, upconv, nn.Tanh()]
+            <a id="change">model</a> = down + [submodule] + up
+            &#47&#47 for the innermost, the special is `inner_nc` instead of `inner_nc*2`
+        elif innermost:
+            <a id="change">upconv</a> = <a id="change">nn.ConvTranspose2d(inner_nc, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            <a id="change">down</a> = [downrelu, downconv]  &#47&#47 for the innermost, no submodule, and delete the bn
+            <a id="change">up</a> = [uprelu, upconv, upnorm]
+            <a id="change">model</a> = down + up
+            &#47&#47 else, the normal
+        else:
+            &#47&#47 shift triple differs in here. It is `*3` not `*2`.
+            <a id="change">upconv</a> = <a id="change">nn.ConvTranspose2d(inner_nc * 3, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            <a id="change">down</a> = [downrelu, downconv, downnorm]
+            &#47&#47 shift should be placed after uprelu
+            &#47&#47 NB: innerCos are placed before shift. So need to add the latent gredient to
+            &#47&#47 to former part.
+            <a id="change">up</a> = [uprelu, innerCos, shift, upconv, upnorm]
+
+            if use_dropout:
+                <a id="change">model</a> = down + [submodule] + up + [nn.Dropout(0.5)]
+            else:
+                <a id="change">model</a> = down + [submodule] + up
+
+        self.model = nn.Sequential(*model)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if input_nc is None:
+            input_nc = outer_nc
+
+        <a id="change">downconv</a> = <a id="change">spectral_norm(nn.Conv2d(input_nc, inner_nc, kernel_size=4,
+                             stride=2, padding=1), use_spectral_norm)</a>
+        downrelu = nn.LeakyReLU(0.2, True)
+        downnorm = norm_layer(inner_nc)
+        uprelu = nn.ReLU(True)
+        upnorm = norm_layer(outer_nc)
+
+        &#47&#47 As the downconv layer is outer_nc in and inner_nc out.
+        &#47&#47 So the shift define like this:
+        shift = InnerPatchSoftShiftTriple(opt.shift_sz, opt.stride, opt.mask_thred,
+                                            opt.triple_weight, opt.fuse)
+
+        shift.set_mask(mask_global, 3)
+        shift_list.append(shift)
+
+        &#47&#47 Add latent constraint
+        &#47&#47 Then add the constraint to the constrain layer list!
+        innerCos = InnerCos(strength=opt.strength, skip=opt.skip)
+        innerCos.set_mask(mask_global, 3)  &#47&#47 Here we need to set mask for innerCos layer too.
+        innerCos_list.append(innerCos)
+
+        &#47&#47 Different position only has differences in `upconv`
+        &#47&#47 for the outermost, the special is `tanh`
+        if outermost:
+            <a id="change">upconv</a> = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc * 2, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            <a id="change">down</a> = [downconv]
+            <a id="change">up</a> = [uprelu, upconv, nn.Tanh()]
+            <a id="change">model</a> = down + [submodule] + up
+            &#47&#47 for the innermost, the special is `inner_nc` instead of `inner_nc*2`
+        elif innermost:
+            <a id="change">upconv</a> = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            <a id="change">down</a> = [downrelu, downconv]  &#47&#47 for the innermost, no submodule, and delete the bn
+            <a id="change">up</a> = [uprelu, upconv, upnorm]
+            <a id="change">model</a> = down + up
+            &#47&#47 else, the normal
+        else:
+            &#47&#47 shift triple differs in here. It is `*3` not `*2`.
+            <a id="change">upconv</a> = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc * 3, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            <a id="change">down</a> = [downrelu, downconv, downnorm]
+            &#47&#47 shift should be placed after uprelu
+            &#47&#47 NB: innerCos are placed before shift. So need to add the latent gredient to
+            &#47&#47 to former part.
+            <a id="change">up</a> = [uprelu, innerCos, shift, upconv, upnorm]
+
+            if use_dropout:
+                <a id="change">model</a> = down + [submodule] + up + [nn.Dropout(0.5)]
+            else:
+                <a id="change">model</a> = down + [submodule] + up
+
+        self.model = nn.Sequential(*model)
+</code></pre><img src="3733560.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/a183550bf8fa1fdfc10bfff3df012b11a790ca0e#diff-6d68f6547077bd7d9ae7777c92100da7b783573e2f6ee5a27d4dcc0d5a9efb26L415' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: a183550bf8fa1fdfc10bfff3df012b11a790ca0e</div><div id='time'> Time: 2019-01-23</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/modules/shift_unet.py</div><div id='class'> Class Name: PatchSoftUnetSkipConnectionShiftTriple</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/a183550bf8fa1fdfc10bfff3df012b11a790ca0e#diff-6d68f6547077bd7d9ae7777c92100da7b783573e2f6ee5a27d4dcc0d5a9efb26L300' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: a183550bf8fa1fdfc10bfff3df012b11a790ca0e</div><div id='time'> Time: 2019-01-23</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/modules/shift_unet.py</div><div id='class'> Class Name: SoftUnetSkipConnectionBlock</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/a183550bf8fa1fdfc10bfff3df012b11a790ca0e#diff-6d68f6547077bd7d9ae7777c92100da7b783573e2f6ee5a27d4dcc0d5a9efb26L73' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: a183550bf8fa1fdfc10bfff3df012b11a790ca0e</div><div id='time'> Time: 2019-01-23</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/modules/shift_unet.py</div><div id='class'> Class Name: UnetSkipConnectionShiftBlock</div><div id='method'> Method Name: __init__</div><BR>

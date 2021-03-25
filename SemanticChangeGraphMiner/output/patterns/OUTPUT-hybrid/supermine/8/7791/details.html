@@ -1,0 +1,29 @@
+<html><h3>80dd4096ed186e706775adbe3663b46d719efdb0,capsulelayers.py,CapsuleLayer,call,#CapsuleLayer#,94
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return [i-1, b, outputs]
+
+        cond = lambda i, b, inputs_hat: i &gt; 0
+        <a id="change">loop_vars = [K.constant(self.num_routing), self.bias, K.sum(inputs_hat, 1, keepdims=True)]</a>
+        <a id="change">_, self.bias, outputs = tf.while_loop(cond, body, loop_vars)</a>
+
+        
+        &#47&#47 Routing algorithm V2. Seems not right. This may duplicate tensors by self.num_routing times.
+        for _ in range(self.num_routing):</code></pre><h3>After Change</h3><pre><code class='java'>
+        _, self.bias, outputs = tf.while_loop(cond, body, loop_vars)
+
+        &#47&#47 Routing algorithm V2. Use for iteration. V2 and V1 both work without much difference on performance
+        <a id="change">for _ in range(self.num_routing):
+            c = K.softmax(self.bias)
+            c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)
+            outputs = K.sum(c_expand * inputs_hat, 1, keepdims=True)
+            outputs = squash(outputs)
+            self.bias = K.update(self.bias, self.bias + K.sum(inputs_hat * outputs, [0, -2, -1]))
+
+        &#47&#47 Handling with no routing scenario. Prior bias will always be zero.
+       </a> if self.num_routing == 0:
+            c = K.softmax(self.bias)
+            c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)
+            outputs = squash(K.sum(c_expand * inputs_hat, 1, keepdims=True))</code></pre><img src="30043018.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/80dd4096ed186e706775adbe3663b46d719efdb0#diff-70158145f8c3017473e154d3e9318cd7ebab5469186eddb6bcbe943621b770a0L94' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 80dd4096ed186e706775adbe3663b46d719efdb0</div><div id='time'> Time: 2017-10-31</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulelayers.py</div><div id='class'> Class Name: CapsuleLayer</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/b9927f30cb9c92040c30d0fe8c735d8baea167b2#diff-d9d023afb253a6e42aecdf8460b7c8fb54104e41717b2703805d7b94457677a9L62' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: b9927f30cb9c92040c30d0fe8c735d8baea167b2</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gconvbn</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/a03930f6a94bb772222d00b819c3ff824e28ddcc#diff-a8825e0d76cc9f1431315c3c1d896df283b3ad3ce7dfef4ef9fbf20a6296a0cdL15' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: a03930f6a94bb772222d00b819c3ff824e28ddcc</div><div id='time'> Time: 2016-08-30</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/test_transformation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_train_test_split</div><BR>

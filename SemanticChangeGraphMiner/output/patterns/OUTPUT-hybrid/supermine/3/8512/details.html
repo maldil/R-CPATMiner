@@ -1,0 +1,23 @@
+<html><h3>61228f3243eaee39cba31a9abd2afc6ead9612a8,implementations/discogan/models.py,UNetUp,__init__,#UNetUp#,27
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        model = [   nn.Upsample(scale_factor=2),
+                    nn.Conv2d(in_size, out_size, 3, stride=1, padding=1),
+                    nn.LeakyReLU(0.2, inplace=True),
+                    <a id="change">nn.InstanceNorm2d(out_size)</a> ]
+
+        if dropout:
+            <a id="change">model += [nn.Dropout(dropout)]</a>
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, x, skip_input):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, in_size, out_size, dropout=0.0):
+        super(UNetUp, self).__init__()
+        layers = [  nn.ConvTranspose2d(in_size, out_size, 4, 2, 1),
+                    <a id="change">nn.InstanceNorm2d(out_size)</a>,
+                    nn.ReLU(inplace=True)]
+        if dropout:
+            layers.append(nn.Dropout(dropout))</code></pre><img src="33246047.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/61228f3243eaee39cba31a9abd2afc6ead9612a8#diff-e0bfef5d3f1652dbb7b4effdf1e88e499b91b97706cb0b6720c431c9aba01d05L26' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 61228f3243eaee39cba31a9abd2afc6ead9612a8</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/discogan/models.py</div><div id='class'> Class Name: UNetUp</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/ce0e5b587e7993a377029272d0e27ca970772172#diff-ffdd6394ed91df17f77e7cb4635d49da497fee944c66f6f528ef73ec872930c5L19' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: ce0e5b587e7993a377029272d0e27ca970772172</div><div id='time'> Time: 2019-03-31</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/cyclegan/models.py</div><div id='class'> Class Name: ResidualBlock</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/61228f3243eaee39cba31a9abd2afc6ead9612a8#diff-e0bfef5d3f1652dbb7b4effdf1e88e499b91b97706cb0b6720c431c9aba01d05L12' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 61228f3243eaee39cba31a9abd2afc6ead9612a8</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/discogan/models.py</div><div id='class'> Class Name: UNetDown</div><div id='method'> Method Name: __init__</div><BR>

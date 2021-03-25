@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if all(isinstance(i, int) for i in shapes):
+            shapes = [shapes]
+        arrays = tuple(np.random.rand(*shape) for shape in shapes)
+        return <a id="change">arrays[0] if len(shapes) == 1 else arrays</a>
+
+    def test_Identity(self):
+        t = tf.identity(self.random(3, 4))
+        self.check(t)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def random(self, *shapes, **kwargs):
+        if all(isinstance(i, int) for i in shapes):
+            if kwargs.get("complex", False):
+                return <a id="change">self.random(*shapes)</a> + 1j * self.random(*shapes)
+            else:
+                return np.random.rand(*shapes)
+        else:</code></pre>

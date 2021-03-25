@@ -1,0 +1,24 @@
+<html><h3>b43325e297498269be86b281a02e2ef79664f273,train_variational_autoencoder_tensorflow.py,,inference_network,#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mu: Mean parameters for the variational family Normal
+    sigma: Standard deviation parameters for the variational family Normal
+  
+  with slim.arg_scope(<a id="change">[slim.fully_connected]</a>, activation_fn=tf.nn.relu):
+    net = slim.flatten(x)
+    net = slim.fully_connected(net, hidden_size)
+    net = slim.fully_connected(net, hidden_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+    mu: Mean parameters for the variational family Normal
+    sigma: Standard deviation parameters for the variational family Normal
+  
+  inference_net = tfk.Sequential(<a id="change">[
+    tfkl.Flatten(),
+    tfkl.Dense(hidden_size, activation=tf.nn.relu),
+    tfkl.Dense(hidden_size, activation=tf.nn.relu),
+    tfkl.Dense(latent_dim * 2, activation=None)
+    ]</a>)
+  gaussian_params = inference_net(x)
+  &#47&#47 The mean parameter is unconstrained
+  mu = gaussian_params[:, :latent_dim]</code></pre><img src="7837183.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/altosaar/variational-autoencoder/commit/b43325e297498269be86b281a02e2ef79664f273#diff-c68a66eddd1fe44b337d8ddb991d570aefa97d42470238ec801a580948b5147cL1' target='_blank'>Link</a></div><div id='project'> Project Name: altosaar/variational-autoencoder</div><div id='commit'> Commit Name: b43325e297498269be86b281a02e2ef79664f273</div><div id='time'> Time: 2019-09-18</div><div id='author'> Author: altosaar@users.noreply.github.com</div><div id='file'> File Name: train_variational_autoencoder_tensorflow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference_network</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/440a1edb391d097681c6abc43d110cec2eabc9fd#diff-c56306ffc3a1214a115466e820fab05070ec95923cc31cc9981091ef196af9faL228' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: 440a1edb391d097681c6abc43d110cec2eabc9fd</div><div id='time'> Time: 2015-07-15</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank_nn.py</div><div id='class'> Class Name: EmbNNRanker</div><div id='method'> Method Name: _init_neural_network</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/40e14ec749f66b774caeea550e71dfd81ea1a313#diff-c56306ffc3a1214a115466e820fab05070ec95923cc31cc9981091ef196af9faL225' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: 40e14ec749f66b774caeea550e71dfd81ea1a313</div><div id='time'> Time: 2015-05-27</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank_nn.py</div><div id='class'> Class Name: EmbNNRanker</div><div id='method'> Method Name: _init_neural_network</div><BR>

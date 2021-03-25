@@ -1,0 +1,40 @@
+<html><h3>6f32626effedfaeba3c51debb39d556302922728,Python/phate/phate.py,,calculate_landmark_operator,#,142
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 spectral clustering
+        if verbose:
+            print("Calculating SVD...")
+            <a id="change">start = time.time()</a>
+        U, S, _ = randomized_svd(diff_op,
+                                 n_components=n_svd,
+                                 random_state=random_state)
+        if verbose:
+            print("Calculated SVD in {:.2f} seconds".format(
+                time.time() - start))
+            start = time.time()
+            print("Calculating Kmeans...")
+        kmeans = MiniBatchKMeans(n_landmark,
+                                 init_size=3 * n_landmark,
+                                 batch_size=10000,
+                                 random_state=random_state)
+        clusters = kmeans.fit_predict(np.matmul(U, np.diagflat(S)))
+        landmarks = np.unique(clusters)
+        <a id="change">if verbose:
+            print("Calculated Kmeans in {:.2f} seconds".format(
+                time.time() - start))
+
+        &#47&#47 transition matrices
+       </a> if is_sparse:
+            pmn = sparse.vstack(
+                [sparse.csr_matrix(kernel[clusters == i, :].sum(
+                    axis=0)) for i in landmarks])</code></pre><h3>After Change</h3><pre><code class='java'>
+                                 n_components=n_svd,
+                                 random_state=random_state)
+        log_complete("SVD")
+        <a id="change">log_start("KMeans")</a>
+        kmeans = MiniBatchKMeans(n_landmark,
+                                 init_size=3 * n_landmark,
+                                 batch_size=10000,
+                                 random_state=random_state)</code></pre><img src="14335514.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L171' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_landmark_operator</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L84' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_kernel</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L770' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: fit_transform</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/be95ff167e1ea0195e32beb0618228d18a4098eb#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L603' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: be95ff167e1ea0195e32beb0618228d18a4098eb</div><div id='time'> Time: 2018-05-28</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: calculate_potential</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L171' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_landmark_operator</div><BR>

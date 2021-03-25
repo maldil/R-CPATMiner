@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 For some reason vigra saves 2D+c data compressed in gifs, so skip!
+        self.compressedExtensions.append(&quot.gif&quot)
+        for fileName in self.imgFileNameGlobs2Dc:
+            <a id="change">graph = lazyflow.graph.Graph()</a>
+            reader = OperatorWrapper(OpDataSelection, graph=graph, operator_kwargs={&quotforceAxisOrder&quot: False})
+            <a id="change">reader.ProjectFile.setValue(self.projectFile)</a>
+            reader.WorkingDirectory.setValue(os.getcwd())
+            <a id="change">reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)</a>
+
+            info = DatasetInfo()
+            &#47&#47 Will be read from the filesystem since the data won&quott be found in the project file.
+            info.location = DatasetInfo.Location.ProjectInternal</code></pre><h3>After Change</h3><pre><code class='java'>
+            reader = OperatorWrapper(OpDataSelection, graph=Graph(), operator_kwargs={&quotforceAxisOrder&quot: False})
+            reader.WorkingDirectory.setValue(str(Path(empty_project_file.filename).parent))
+
+            reader.Dataset.setValues(<a id="change">[DatasetInfo(filepath=fileName, sequence_axis=&quotz&quot)]</a>)
+
+            &#47&#47 Read the test files using the data selection operator and verify the contents
+            imgData3Dc = reader.Image[0][...].wait()</code></pre>

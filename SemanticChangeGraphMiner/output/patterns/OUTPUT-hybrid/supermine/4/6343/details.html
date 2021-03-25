@@ -1,0 +1,27 @@
+<html><h3>b2afdded85cbe4560baf56c08feae93aab3bc508,deslib/dcs/rank.py,Rank,estimate_competence,#Rank#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier and test example
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        results_neighbors = self.processed_dsel[idx_neighbors, :]
+
+        &#47&#47 Get the shape of the vector in order to know the number of samples, base classifiers and neighbors considered.
+        shape = results_neighbors.shape
+
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        competences = np.argmax(results_neighbors == 0, axis=1)
+
+        <a id="change">return competences</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        competences = np.argmax(results_neighbors == 0, axis=1)
+
+        <a id="change">return competences.astype(np.float32)</a>
+</code></pre><img src="25475296.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/b2afdded85cbe4560baf56c08feae93aab3bc508#diff-f725eea8a8cfd270dc9a67e16ed52700e6bfaa5121f5ef13eea92afe7896c09aL107' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: b2afdded85cbe4560baf56c08feae93aab3bc508</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/rank.py</div><div id='class'> Class Name: Rank</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/b2afdded85cbe4560baf56c08feae93aab3bc508#diff-418b7e06c6963d234362daf596e7ecf369548db4acebef3dd2ed15c37ac1c1eeL89' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: b2afdded85cbe4560baf56c08feae93aab3bc508</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_u.py</div><div id='class'> Class Name: KNORAU</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/b2afdded85cbe4560baf56c08feae93aab3bc508#diff-a4c99e88559f2f315192602a7e9754a6a9fdc70bc862629ea4ce273e92a11a21L87' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: b2afdded85cbe4560baf56c08feae93aab3bc508</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_e.py</div><div id='class'> Class Name: KNORAE</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/b2afdded85cbe4560baf56c08feae93aab3bc508#diff-4aa9336c477916c68a0a0c1dd39a6df0343168ed578ac17b07ab57957c50d302L126' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: b2afdded85cbe4560baf56c08feae93aab3bc508</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knop.py</div><div id='class'> Class Name: KNOP</div><div id='method'> Method Name: estimate_competence</div><BR>

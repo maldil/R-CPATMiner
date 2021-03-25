@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+
+    <a id="change">Freq_pyla= phyla.value_counts()</a>
+
+    for p in reversed(<a id="change">Freq_pyla.index</a>):
+        LCA = T.get_common_ancestor(*tuple(phyla.index[phyla==p].values))
+
+        <a id="change">if not T== LCA:
+            T.set_outgroup(LCA)
+            print(f"set {p} as outgroup for Tree rooting")
+            break
+
+
+   </a> T.unroot()
+
+def layout_black_circles(node):
+    &#47&#47 If node is a leaf</code></pre><h3>After Change</h3><pre><code class='java'>
+     Root the tree next to the phylum that is as far apart as possible from the other phyla
+
+    
+    <a id="change">phylum_LCA={}</a>
+
+    for p in phyla.unique():
+        <a id="change">phylum_LCA[p]</a>=T.get_common_ancestor(*tuple(phyla.index[phyla==p].values))
+
+    Dist= pd.DataFrame()
+    <a id="change">for p1,lca1 in phylum_LCA.items():
+        for p2,lca2 in phylum_LCA.items():
+            Dist.loc[p1,p2]=T.get_distance(lca1,lca2)
+
+   </a> furthest_phylum= Dist.mean().idxmax()
+    outgroup=phylum_LCA[furthest_phylum]
+
+    if not outgroup== LCA:</code></pre>

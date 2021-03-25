@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def delta_t_hist(t, nbins=50):
+    Build histogram of all possible delta_t&quots without storing every value
+    hist = np.zeros(nbins, dtype=&quotint&quot)
+    <a id="change">bins = np.linspace(0, max(t) - min(t), nbins + 1)</a>
+    for i in range(len(t)):
+        <a id="change">hist += np.histogram(t[i] - t[:i], bins=bins)[0]</a>
+        hist += <a id="change">np</a>.histogram(t[i + 1:] - t[i], bins=bins)[0]
+    return hist / 2  &#47&#47 Double-counts since we loop over every pair twice
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    and then aggregate the result to have `nbins` total values.
+    
+    f, x = np.histogram(t, bins=conv_oversample * nbins)
+    g = <a id="change">np.convolve(f, f[::-1])[len(f) - 1:]</a>  &#47&#47 Discard negative domain
+    g[0] -= len(t)  &#47&#47 First bin is double-counted because of i=j terms
+    hist = g.reshape((-1, conv_oversample)).sum(axis=1)  &#47&#47 Combine bins
+    return hist</code></pre>

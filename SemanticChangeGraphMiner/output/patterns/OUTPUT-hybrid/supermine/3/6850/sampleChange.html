@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    save_states = {
+        &quotepoch&quot: epoch,
+        &quotarch&quot: arch,
+        &quotstate_dict&quot: <a id="change">model.state_dict()</a>,
+        &quotoptimizer&quot: optimizer.state_dict(),
+        &quotscheduler&quot: scheduler.state_dict()
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+    if hasattr(model, &quotmodule&quot):
+        model_state_dict = model.module.state_dict()
+    else:
+        <a id="change">model_state_dict = model.state_dict()</a>
+    save_states = {
+        &quotepoch&quot: epoch,
+        &quotarch&quot: arch,
+        &quotstate_dict&quot: model_state_dict,</code></pre>

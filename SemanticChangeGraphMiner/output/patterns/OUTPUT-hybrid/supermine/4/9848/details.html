@@ -1,0 +1,21 @@
+<html><h3>36eef6a9be308b137a106ea84c5553e3a6691333,se3cnn/point/operations.py,PairConvolution,forward,#PairConvolution#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rb = geometry.unsqueeze(1)  &#47&#47 [batch, 1, b, xyz]
+        ra = geometry.unsqueeze(2)  &#47&#47 [batch, a, 1, xyz]
+        k = self.kernel(rb - ra)  &#47&#47 [batch, a, b, 6 * i, j]
+        <a id="change">return torch.einsum("zabij,zacij,zadij,zbcij,zbdij,zcdij,zcdj-&gt;zabi",
+                            (*k.split(k.size(3) // 6, 3), features))</a>  &#47&#47 [batch, a, b, channel]
+
+
+class ApplyKernel(torch.nn.Module):</code></pre><h3>After Change</h3><pre><code class='java'>
+        out += torch.einsum("zbcij,zcdj-&gt;zabi", (k4, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zbdij,zcdj-&gt;zabi", (k5, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zcdij,zcdj-&gt;zabi", (k6, features))  &#47&#47 [batch, a, b, channel]
+        <a id="change">return out</a>
+
+
+class ApplyKernel(torch.nn.Module):
+    def __init__(self, Kernel, Rs_in, Rs_out):</code></pre><img src="37518824.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/36eef6a9be308b137a106ea84c5553e3a6691333#diff-b6ee0bc9930df0f6c28cdc93cfffcac1683df6b36c19c1e91a1d3d6e8e2afcd5L38' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 36eef6a9be308b137a106ea84c5553e3a6691333</div><div id='time'> Time: 2019-08-23</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/point/operations.py</div><div id='class'> Class Name: PairConvolution</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/aa0eb70303fbf5f844a9767949656c29dbac0f11#diff-ec3b594de7272ccc937f63e6f0bf885ea2721b0be35a2bb15121ca23f8a5378aL56' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: aa0eb70303fbf5f844a9767949656c29dbac0f11</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/convolution.py</div><div id='class'> Class Name: SE3PointConvolution</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/adfcd7c21f3f2fc6077eb00abf4887cd2d567880#diff-93dca2ddf223483634985a0c321206b3d75653e9106665a441ce64e31e344f00L223' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: adfcd7c21f3f2fc6077eb00abf4887cd2d567880</div><div id='time'> Time: 2018-04-06</div><div id='author'> Author: luiz.gh@gmail.com</div><div id='file'> File Name: deslib/util/aggregation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: predict_proba_ensemble_weighted</div><BR>

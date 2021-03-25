@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise RefreshError(&quotUnable to refresh access token due to connection error.&quot) from e
+        except Exception as e:
+            Log.error(f"Error trying to refresh access token: {e}")
+            <a id="change">Log.error(f"No {self.target.service} integration found.")</a>
+            print(
+                f"Please ensure you have selected a {self.target.service} account in the Kernels Settings sidebar.")
+            raise RefreshError(&quotUnable to refresh access token.&quot) from e
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        except Exception as e:
+            Log.error(f"Error trying to refresh access token: {e}")
+            if (not get_integrations().has_integration(self.target)):
+                <a id="change">Log.error(f"No {self.target.service} integration found.")</a>
+                print(
+                   f"Please ensure you have selected a {self.target.service} account in the Kernels Settings sidebar.")
+            raise RefreshError(&quotUnable to refresh access token.&quot) from e
+</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for epoch_num in range(self._n_iter):
+
+            users, items, ratings = shuffle(<a id="change">*</a>(interactions.row,
+                                              interactions.col,
+                                              interactions.data))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                  self._use_cuda)
+            item_ids_tensor = gpu(torch.from_numpy(items),
+                                  self._use_cuda)
+            <a id="change">ratings_tensor = gpu(torch.from_numpy(ratings),
+                                 self._use_cuda)</a>
+
+            epoch_loss = 0.0
+
+            for (batch_user,</code></pre>

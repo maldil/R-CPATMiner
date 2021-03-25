@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.alpha_h, self.beta_h, self.Q_h = self.min_eigen_vec(_h_vector_prod_fn,
+                                                             0,
+                                                             self.matrix_m_dimension-1,
+                                                             <a id="change">self.lzs_params[&quotmax_iter&quot]</a>)
+
+    self.alpha_h_hat, self.beta_h_hat, self.Q_h_hat = self.min_eigen_vec(_h_vector_prod_fn,
+                                                                         self.eig_max_placeholder,</code></pre><h3>After Change</h3><pre><code class='java'>
+                                                        self.lzs_params[&quotmax_iter&quot],
+                                                        dtype=self.lanczos_dtype)
+    self.h_min_eig = tf.cast(self.h_min_eig, self.nn_dtype)
+    <a id="change">self.h_min_vec = tf.cast(self.h_min_vec, self.nn_dtype)</a>
+
+  def set_differentiable_objective(self):
+    Function that constructs minimization objective from dual variables.
+    &#47&#47 Checking if graphs are already created</code></pre>

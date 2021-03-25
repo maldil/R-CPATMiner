@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                            observer.lat / ephem.degree,
+                                            observer.lon / ephem.degree,
+                                            observer.elevation)
+    <a id="change">print(observer)</a>
+    print()
+
+    alignments = find_alignments(observer, waypoints, allpoints=args.allpoints)
+    if alignments:</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        observer_point = None
+
+    <a id="change">if args.year:
+        year = args.year
+    else:
+        year = datetime.now().year
+
+
+   </a> waypoints = []
+    for filename in args.waypointfiles:
+        if filename.lower().endswith(&quotgpx&quot):
+            obs, wp = read_waypoint_file_GPX(filename)
+        elif filename.lower().endswith(&quotcsv&quot):
+            obs, wp = read_waypoint_file_CSV(filename)
+        else:
+            print("Unknown file type %s: skipping" % filename)
+            continue
+        if wp:
+            waypoints += wp
+        else:
+            print("No waypoints in", filename)
+        if obs:
+            observer_point = obs
+
+    if not waypoints:
+        parser.print_help()
+        sys.exit(1)
+
+    if not observer_point:
+        print("Using first waypoint for observer:", waypoints[0])
+        observer_point = waypoints[0]
+        if not args.allpoints:
+            waypoints = waypoints[1:]
+
+    observer = ephem.Observer()
+    &#47&#47 Observer will take degrees as a string, but if you pass it floats
+    &#47&#47 it expects radians, though that&quots undocumented.
+    observer.lat = observer_point[1] * ephem.degree
+    observer.lon = observer_point[2] * ephem.degree
+    if len(observer_point) &gt; 3:
+        observer.elevation = observer_point[3]
+    else:
+        observer.elevation = 500.0  &#47&#47 meters
+    if args.observername:
+        observer.name = args.observername
+    else:
+        observer.name = "%s %f, %f, %dm" % (observer_point[0],
+                                            observer.lat / ephem.degree,
+                                            observer.lon / ephem.degree,
+                                            observer.elevation)
+    &#47&#47 print(observer)
+
+    alignments = find_alignments(observer, waypoints,
+                                 year=year, allpoints=args.allpoints)
+    if alignments:
+        &#47&#47 pprint(alignments)
+        cur_observer = None
+        for a in alignments:
+            if a[&quotobserver&quot] != cur_observer:
+                cur_observer = a[&quotobserver&quot]
+                print("\nFrom %s:" % cur_observer)
+
+            print("%s, %s at %s (az %d +/- %.2f)"
+                  % ( a[&quotevent&quot], a[&quottarget&quot],
+                      <a id="change">a[&quottime&quot]</a>,
+                      a[&quotazimuth&quot], <a id="change">a[&quotslop&quot]</a>))
+        &#47&#47 save_alignments_as_GPX(alignments)
+
+    else:</code></pre>

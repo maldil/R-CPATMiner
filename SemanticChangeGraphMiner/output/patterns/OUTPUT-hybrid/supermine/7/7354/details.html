@@ -1,0 +1,25 @@
+<html><h3>7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec,pyntcloud/io/las.py,,read_las,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data = {}
+
+    with laspy.file.File(filename) as las:
+        data["points"] = <a id="change">pd.DataFrame(las.points["point"])</a>
+        data["points"].columns = (x.lower() for x in data["points"].columns)
+        &#47&#47 because laspy do something strange with scale
+        <a id="change">data["points"].loc[:, ["x", "y", "z"]] *= las.header.scale</a>
+        data = convert_location_to_dtype(data, xyz_dtype)
+        data = convert_color_to_dtype(data, rgb_dtype)
+        data["las_header"] = las.header
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if backend == "pylas":
+        data = read_las_with_pylas(filename)
+    elif <a id="change">backend</a> == "laspy":
+        <a id="change">data = read_las_with_laspy(filename)</a>
+    else:
+        raise ValueError(f"Unsupported backend. Expected one of [&quotpylas&quot, &quotlaspy&quot] but got {backend}")
+    data = convert_location_to_dtype(data, xyz_dtype)
+    data = convert_color_to_dtype(data, rgb_dtype)</code></pre><img src="28538866.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec#diff-ff911c1c91b963203f3c1d08913155f86610ed2c7e1749752fc192293666c778L49' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: sebastian.bullinger@iosb.fraunhofer.de</div><div id='file'> File Name: pyntcloud/io/las.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_las</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/64624fb2b46a228fef1141e1ded84e52acccaf6e#diff-ef020b7bd15cfff74c994f512b150fca388fb00f959dd4137f939bce7c3ecf1fL78' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 64624fb2b46a228fef1141e1ded84e52acccaf6e</div><div id='time'> Time: 2015-06-09</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: bin/mahotas-features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL387' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_featureset</div><BR>

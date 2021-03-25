@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+from Cython.Build import cythonize
+import numpy as np
+
+extra_compile_args = <a id="change">[&quot-fopenmp&quot]</a>
+extra_link_args    = [&quot-fopenmp&quot]
+
+ext_modules = cythonize(&quot**/*.pyx&quot)
+for e in ext_modules:</code></pre><h3>After Change</h3><pre><code class='java'>
+extra_link_args = []
+
+&#47&#47 Only compile with OpenMP if user asks for it
+<a id="change">USE_OPENMP = os.environ.get(&quotUSE_OPENMP&quot, False)</a>
+<a id="change">if USE_OPENMP:
+    extra_compile_args.append(&quot-fopenmp&quot)
+    extra_link_args.append(&quot-fopenmp&quot)
+else:
+    warnings.warn("Not using OpenMP for parallel parent updates. "
+                  "This will incur a significant performance hit. "
+                  "To compile with OpenMP support, make sure you are "
+                  "using the GNU gcc and g++ compilers and then run "
+                  "&quotexport USE_OPENMP=True&quot before installing.")
+
+</a>ext_modules = cythonize(&quot**/*.pyx&quot)
+for e in ext_modules:
+    e.extra_compile_args.extend(extra_compile_args)
+    e.extra_link_args.extend(extra_link_args)</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  @property
+  def checkpoint_items(self):
+    <a id="change">return dict(encoder=self._network)</a>
+
+  def get_config(self):
+    return self._config
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  def checkpoint_items(self):
+    items = dict(encoder=self._network)
+    if hasattr(self.classifier, &quotcheckpoint_items&quot):
+      <a id="change">for key, item in self.classifier.checkpoint_items.items():
+        items[&quot.&quot.join([self.classifier.name, key])] = item
+   </a> return items
+
+  def get_config(self):
+    return self._config</code></pre>

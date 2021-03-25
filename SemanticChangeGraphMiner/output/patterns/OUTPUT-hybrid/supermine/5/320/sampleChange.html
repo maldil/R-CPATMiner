@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            first._labels, second._labels = self._labels[:split], self._labels[split:]
+        else:
+            first._labels, second._labels = None, None
+        first._permutation, second._permutation = np.random.permutation(len(first.voxels)), <a id="change">np.random.permutation(len(second.voxels))</a>
+
+        return first, second
+
+    @property</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for dataset in [first, second]:
+            dataset._shuffle_batches = self._shuffle_batches
+            <a id="change">dataset._new_permutation()</a>
+
+        return first, second
+
+    @property</code></pre>

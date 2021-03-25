@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if config.discriminator3d:
+                    grems = grems[1:] + [rg[:,:,None,:,:]]
+                    rc = rc[:,:,None,:,:]
+                    d_fakes.append(D(<a id="change">torch.cat(grems, dim=2)</a>, context={"c":rc}))
+                else:
+                    grems = grems[1:] + [rg]
+                    d_fakes.append(D(torch.cat(grems, dim=1), context={"c":rc}))</code></pre><h3>After Change</h3><pre><code class='java'>
+            d_fake = D(d_fake_input, context={"c": c})
+            d_fakes.append(d_fake)
+            _d_loss, _g_loss = loss.forward(d_real, d_fake)
+            <a id="change">d_losses.append(_d_loss)</a>
+            g_losses.append(_g_loss)
+
+        if len(rgs) &gt; 0:
+            grems = rgs[:len(rems)]</code></pre>

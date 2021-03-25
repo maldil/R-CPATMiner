@@ -1,0 +1,48 @@
+<html><h3>799aed2e658f677225d4f796e1251f26b52399aa,examples/next-frame.py,NextFrameGAN,forward_loss,#NextFrameGAN#,306
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                self.xs = []
+                for i in range(self.frames-self.per_sample_frames+1):
+                    self.xs += [torch.cat(current_inputs[i:i+self.per_sample_frames], dim=1)]
+            <a id="change">d_loss</a>, g_loss = self.forward_pass(current_inputs, self.xs, cs, gs, gcs, rgs, rcs, loss)
+
+        if self.config.image_discriminator:
+            self.ix = self.last_x</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.zs, self.gzs = zs, gzs
+
+        d_loss = torch.tensor([0.0]).cuda()
+        g_loss = <a id="change">torch.tensor([0.0]).cuda()</a>
+
+        if self.config.vae:
+            g_loss += vae_loss
+            self.add_metric(&quotvae&quot, vae_loss)
+
+        if self.config.mse:
+            mse = nn.MSELoss()
+            mse_loss = mse(self.mse_g, self.last_x)
+            d_loss += mse_loss
+            g_loss += mse_loss
+            self.add_metric("mse", mse_loss)
+
+        if self.config.regularize_c:
+            all_cs = cs + gcs
+            c_mean = sum([c.mean() for c in all_cs])/len(all_cs)
+            self.add_metric("c_mean", c_mean)
+            g_loss += c_mean
+
+        if self.config.discriminator:
+            if self.config.discriminator3d:
+                self.x = torch.cat([x[:, :, None, :, :] for x in current_inputs], dim=2)
+            else:
+                self.x = torch.cat(current_inputs[:self.per_sample_frames], dim=1)
+                self.xs = []
+                for i in range(self.frames-self.per_sample_frames+1):
+                    self.xs += [torch.cat(current_inputs[i:i+self.per_sample_frames], dim=1)]
+            _d_loss, _g_loss = self.forward_pass(current_inputs, self.xs, cs, gs, gcs, rgs, rcs, loss)
+            <a id="change">g_loss += _g_loss</a>
+            d_loss += _d_loss
+
+        if self.config.image_discriminator:
+            self.ix = self.last_x</code></pre><img src="30731412.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HyperGAN/HyperGAN/commit/799aed2e658f677225d4f796e1251f26b52399aa#diff-6dc6d9702e9042e567a1a0e506ca63f2c0ce7f4d2f73217a7ceab357820ab00dL314' target='_blank'>Link</a></div><div id='project'> Project Name: HyperGAN/HyperGAN</div><div id='commit'> Commit Name: 799aed2e658f677225d4f796e1251f26b52399aa</div><div id='time'> Time: 2020-12-27</div><div id='author'> Author: martyn@255bits.com</div><div id='file'> File Name: examples/next-frame.py</div><div id='class'> Class Name: NextFrameGAN</div><div id='method'> Method Name: forward_loss</div><BR><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/af79a5c7760057a7dec1b68b97639cc69f40c3ea#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L33' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: af79a5c7760057a7dec1b68b97639cc69f40c3ea</div><div id='time'> Time: 2017-12-03</div><div id='author'> Author: kwk236@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/SenticNet/conv-emotion/commit/1606a75405ca47d569acdd2a64a052abcf3f2bd1#diff-574d813fe0871d8b48376bddfa68f007b75757efe2ad8c4944d97da80dcc525eL734' target='_blank'>Link</a></div><div id='project'> Project Name: SenticNet/conv-emotion</div><div id='commit'> Commit Name: 1606a75405ca47d569acdd2a64a052abcf3f2bd1</div><div id='time'> Time: 2019-12-22</div><div id='author'> Author: deepanwayedu@gmail.com</div><div id='file'> File Name: DialogueGCN/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: attentive_node_features</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/eab5e7909d647e363002b529e9d39911f4a2b028#diff-ac0e721e086e34ee6dc7102375029bbb64c0049d476e44216b4944e51f4e4e8eL36' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: eab5e7909d647e363002b529e9d39911f4a2b028</div><div id='time'> Time: 2017-12-01</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: train2.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

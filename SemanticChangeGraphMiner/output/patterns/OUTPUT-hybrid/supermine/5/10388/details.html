@@ -1,0 +1,29 @@
+<html><h3>2c16357cf3b2a5b1265caf7d89703ef253e39df3,nilmtk/stats/electricity/single.py,,missing_samples_per_period,#,239
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    missing_samples = timestamps_of_missing_samples(data, max_sample_period,
+                                                    window_start, window_end)
+
+    series = <a id="change">pd.Series(1, index=missing_samples)</a>
+    <a id="change">return series.resample(rule=rule, how=&quotsum&quot)</a>
+
+
+def hours_on(series, on_power_threshold=DEFAULT_ON_POWER_THRESHOLD,
+             max_sample_period=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    index = _get_index(data)
+    index = reframe_index(index, window_start, window_end)
+    <a id="change">n_samples_per_period = (pd.Series(1, index=index)
+                            .resample(rule=rule, how=&quotsum&quot)
+                            .fillna(0))</a>
+
+    dropout_rate_per_period = 1 - (n_samples_per_period / 
+                                   n_expected_samples_per_period)
+
+    <a id="change">return dropout_rate_per_period</a>
+
+
+def hours_on(series, on_power_threshold=DEFAULT_ON_POWER_THRESHOLD,
+             max_sample_period=None):</code></pre><img src="38863729.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/2c16357cf3b2a5b1265caf7d89703ef253e39df3#diff-91d53a3411e771b51fd7b1b0cb2fff4d4b5990c2b5cb37b9b959c655dd4db268L266' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 2c16357cf3b2a5b1265caf7d89703ef253e39df3</div><div id='time'> Time: 2014-01-07</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/stats/electricity/single.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: missing_samples_per_period</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/de83e84dd87aef0dea564de76c648c72d0f6b5a1#diff-6aa1816a051a1fd91c0947878726947436b0e70902cf9881f5df2084ac98f0b0L220' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: de83e84dd87aef0dea564de76c648c72d0f6b5a1</div><div id='time'> Time: 2017-04-05</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/analogy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_google_analogies</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/88b9add78245b61ab67289055c30082aa0a29b2e#diff-fd825d578460d9c089182e61851749dd68be9d626972f22a4772ae28358788adL129' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 88b9add78245b61ab67289055c30082aa0a29b2e</div><div id='time'> Time: 2014-11-27</div><div id='author'> Author: nipunreddevil@gmail.com</div><div id='file'> File Name: nilmtk/electric.py</div><div id='class'> Class Name: Electric</div><div id='method'> Method Name: switch_continuity_violations</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/ebe6418f1ffc94dc7661abe765482f268d4b823a#diff-6aa1816a051a1fd91c0947878726947436b0e70902cf9881f5df2084ac98f0b0L224' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: ebe6418f1ffc94dc7661abe765482f268d4b823a</div><div id='time'> Time: 2017-03-14</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/analogy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_semeval2012_analogies</div><BR>

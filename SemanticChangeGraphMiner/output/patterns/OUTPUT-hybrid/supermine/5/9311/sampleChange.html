@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for i in range(X_seq.shape[0]):
+            X_df.loc[i, :] = [0] * len(self.events)
+            event_counts = Counter(X_seq[i])
+            for event, count in <a id="change">event_counts.items()</a>:
+                if event in self.events:
+                    X_df.loc[i, event] = count
+        X = X_df.fillna(0).values</code></pre><h3>After Change</h3><pre><code class='java'>
+            X_new: The transformed data matrix
+        
+        print(&quot====== Transformed test data summary ======&quot)
+        <a id="change">X_counts = []</a>
+        <a id="change">for i in range(X_seq.shape[0]):
+            event_counts = Counter(X_seq[i])
+            X_counts.append(event_counts)
+       </a> X_df = pd.DataFrame(X_counts)
+        X_df = X_df.fillna(0)
+        empty_events = set(self.events) - set(X_df.columns)
+        for event in empty_events:</code></pre>

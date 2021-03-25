@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def write_dataholder_single(self, var_obj):
+        raise NotImplementedError
+    def write_dataholder(self, variables_in_vector):
+        <a id="change">raise NotImplementedError</a>
+    def to_replace_vector_vars(self, variables_in_vector, ignore=[]):
+        raise NotImplementedError
+    def unpack_namespace_single(self, var_obj, in_vector, in_scalar):
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def write_dataholder(self, variables_in_vector):
+        end_statement = self.get_syntax(&quotend_statement&quot)
+        open_struct = <a id="change">self.get_syntax(&quotopen_struct&quot)</a>
+        end_struct = self.get_syntax(&quotend_struct&quot)
+
+        code = [&quot\n&quot+self.declare(&quotstruct&quot, &quotdataholder&quot) + open_struct]
+        <a id="change">code += [&quot\n\t&quot+self.declare(&quotint&quot, &quot_idx&quot, in_struct=True) + end_statement]</a>
+        <a id="change">for var_obj in variables_in_vector:
+            if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+            code += [&quot\t&quot+self.write_dataholder_single(var_obj)]
+       </a> <a id="change">code += [end_struct]</a>
+        return (&quot\n&quot).join(code)
+
+    def find_undefined_variables(self, statements):
+        variables = self.variables</code></pre>

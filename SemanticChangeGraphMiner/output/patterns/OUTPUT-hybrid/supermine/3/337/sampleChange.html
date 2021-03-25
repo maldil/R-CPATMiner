@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cd_ = CDist(pairwise_metric=metric)
+
+        assert_true(not cd_.is_trained)
+        <a id="change">cd_.train(ds[ds.sa.chunks == 0, ])</a>
+        assert_true(cd_.is_trained)
+        res = cd_(ds[ds.sa.chunks == 1, ])
+        &#47&#47 Check to make sure the pdist results are close to CDist results
+        assert_array_almost_equal(res.samples.ravel(),</code></pre><h3>After Change</h3><pre><code class='java'>
+    VI_mahalanobis = np.eye(5)
+    for sattr in [[&quottargets&quot], None]:
+        for metric in metrics:
+            metric_kwargs = <a id="change">{&quotVI&quot: VI_mahalanobis}</a> if metric == &quotmahalanobis&quot \
+                else {}
+            <a id="change">scipy_cdist = cdist(train_data.samples, test_data.samples,
+                        metric, **metric_kwargs)</a>
+            pymvpa_cdist = CDist(pairwise_metric=metric,
+                        pairwise_metric_kwargs=metric_kwargs,
+                        sattr=sattr)
+</code></pre>

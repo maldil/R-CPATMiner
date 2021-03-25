@@ -1,0 +1,35 @@
+<html><h3>4e144c9f842d7415d8be5bdbb5912d88ae32cced,pycorrector/seq2seq/corpus_reader.py,CGEDReader,read_samples_by_string,#CGEDReader#,80
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def read_samples_by_string(self, path):
+        with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            <a id="change">dom_tree = minidom.parse(f)</a>
+            docs = dom_tree.documentElement.getElementsByTagName(&quotDOC&quot)
+            <a id="change">for doc in docs:
+                source_text = doc.getElementsByTagName(&quotTEXT&quot)[0]. \
+                    childNodes[0].data.strip()
+                target_text = doc.getElementsByTagName(&quotCORRECTION&quot)[0]. \
+                    childNodes[0].data.strip()
+                source = segment(source_text, cut_type=&quotchar&quot)
+                target = segment(target_text, cut_type=&quotchar&quot)
+                yield source, target
+
+   </a> def unknown_token(self):
+        return CGEDReader.UNKNOWN_TOKEN
+
+    def read_tokens(self, path, is_infer=False):</code></pre><h3>After Change</h3><pre><code class='java'>
+        with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            while True:
+                line_src = f.readline()
+                <a id="change">line_dst = f.readline()</a>
+                <a id="change">if not line_src or len(line_src) &lt; 5:
+                    break
+               </a> <a id="change">source = line_src.lower()[5:].strip().split()</a>
+                <a id="change">target = line_dst.lower()[5:].strip().split()</a>
+                yield source, target
+
+
+    def unknown_token(self):</code></pre><img src="13001862.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shibing624/pycorrector/commit/4e144c9f842d7415d8be5bdbb5912d88ae32cced#diff-cf6706871c18fb6a98247cc146e7e15cd4f902adfccfa83c3e65650b69c5d904L82' target='_blank'>Link</a></div><div id='project'> Project Name: shibing624/pycorrector</div><div id='commit'> Commit Name: 4e144c9f842d7415d8be5bdbb5912d88ae32cced</div><div id='time'> Time: 2018-04-16</div><div id='author'> Author: 507153809@qq.com</div><div id='file'> File Name: pycorrector/seq2seq/corpus_reader.py</div><div id='class'> Class Name: CGEDReader</div><div id='method'> Method Name: read_samples_by_string</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/372cc580b234724920fee6045e0151abb2b8a823#diff-9697302345a2fc79a872275ec41888db74dbe38e1684abfa69b1421a38389526L52' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 372cc580b234724920fee6045e0151abb2b8a823</div><div id='time'> Time: 2014-09-09</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: Aggregation.py</div><div id='class'> Class Name: Aggregation</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/google/language-resources/commit/45ef34b26b0ce8796fadc931770097ea5971561c#diff-0408689dc1025f8b16e4dd67c0a8ab243969f3e5140906c294eb166bcd12bf94L86' target='_blank'>Link</a></div><div id='project'> Project Name: google/language-resources</div><div id='commit'> Commit Name: 45ef34b26b0ce8796fadc931770097ea5971561c</div><div id='time'> Time: 2016-06-30</div><div id='author'> Author: mjansche@google.com</div><div id='file'> File Name: my/extract_text.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

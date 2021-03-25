@@ -1,0 +1,39 @@
+<html><h3>516c2a4c7e8f92e1ea299e966215c2ffe4c5b980,cifar10.py,,,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+generator.fit(trainX, seed=0, augment=True)
+
+<a id="change">test_generator = ImageDataGenerator(featurewise_center=True,
+                                    featurewise_std_normalization=True)</a>
+
+test_generator.fit(testX, augment=True, seed=0)
+
+&#47&#47 Load model
+model.load_weights("weights/DenseNet-40-12-CIFAR10.h5")
+print("Model loaded.")
+
+model.fit_generator(generator.flow(trainX, Y_train, batch_size=batch_size), samples_per_epoch=len(trainX), nb_epoch=nb_epoch,
+                   callbacks=[ModelCheckpoint("weights/DenseNet-40-12-CIFAR10.h5", monitor="val_acc", save_best_only=True,
+                                              save_weights_only=True)],
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),
+                   nb_val_samples=testX.shape[0], verbose=1)
+
+scores = model.evaluate_generator(test_generator.flow(testX, testY, nb_epoch), testX.shape[0])
+print("Accuracy = %f" % (100 * <a id="change">scores[1]</a>))
+print("Error = %f" % (100 - 100 * scores[1]))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47                    nb_val_samples=testX.shape[0], verbose=2)
+
+yPreds = model.predict(testX)
+yPred = <a id="change">np.argmax(yPreds, axis=1)</a>
+<a id="change">yTrue = testY</a>
+
+<a id="change">accuracy = metrics.accuracy_score(yTrue, yPred) * 100</a>
+error = 100 - accuracy
+print("Accuracy : ", accuracy)
+print("Error : ", error)
+</code></pre><img src="29561859.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/516c2a4c7e8f92e1ea299e966215c2ffe4c5b980#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 516c2a4c7e8f92e1ea299e966215c2ffe4c5b980</div><div id='time'> Time: 2016-12-07</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/chuyangliu/snake/commit/1226a2eee68336240a35fce9678320ca9430584f#diff-853a583c4cef99563451d6870b00f5a0ceea6fe4dde0758b5ef966363f54e681L185' target='_blank'>Link</a></div><div id='project'> Project Name: chuyangliu/snake</div><div id='commit'> Commit Name: 1226a2eee68336240a35fce9678320ca9430584f</div><div id='time'> Time: 2018-01-06</div><div id='author'> Author: chuyang.s.liu@gmail.com</div><div id='file'> File Name: snake/solver/dqn.py</div><div id='class'> Class Name: DQNSolver</div><div id='method'> Method Name: __choose_action</div><BR>

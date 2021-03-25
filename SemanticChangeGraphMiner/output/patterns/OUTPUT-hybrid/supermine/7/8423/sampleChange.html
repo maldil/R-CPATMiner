@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def input_file(self, file_name):
+        pos = 0
+        <a id="change">with open(file_name, &quotr&quot) as f:
+            text = f.read().replace(&quot\n&quot, &quot &quot)
+            parses = self.parser.parse(text)
+            for parse in parses:
+                main_edge = parse[&quotmain_edge&quot]
+
+                &#47&#47 add main edge
+                if main_edge:
+                    self.hg.add_to_sequence(self.sequence, pos, main_edge)
+                    self.edges += 1
+                    pos += 1
+
+                    &#47&#47 attach text to edge
+                    self.hg.set_attribute(main_edge, &quottext&quot, parse[&quottext&quot])
+
+                    &#47&#47 add extra edges
+                    for edge in parse[&quotextra_edges&quot]:
+                        self.add(edge)
+
+   </a> def report(self):
+        rep_str = (&quotedges found: {}&quot.format(self.edges))
+        return &quot{}\n\n{}&quot.format(rep_str, super().report())
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def input_file(self, file_name):
+        pos = 0
+        <a id="change">for paragraph in paragraphs(file_name):
+            parses = self.parser.parse(paragraph)
+            for parse in parses:
+                main_edge = parse[&quotmain_edge&quot]
+
+                &#47&#47 add main edge
+                if main_edge:
+                    self.hg.add_to_sequence(self.sequence, pos, main_edge)
+                    self.edges += 1
+                    pos += 1
+
+                    &#47&#47 attach text to edge
+                    self.hg.set_attribute(main_edge, &quottext&quot, parse[&quottext&quot])
+
+                    &#47&#47 add extra edges
+                    for edge in parse[&quotextra_edges&quot]:
+                        self.add(edge)
+
+   </a> def report(self):
+        rep_str = (&quotedges found: {}&quot.format(self.edges))
+        return &quot{}\n\n{}&quot.format(rep_str, super().report())
+</code></pre>

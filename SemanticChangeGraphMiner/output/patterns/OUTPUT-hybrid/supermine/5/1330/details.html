@@ -1,0 +1,30 @@
+<html><h3>f9aea094643fb3240193b0bc0f1908d5b84d82ab,dask_image/ndmeasure/__init__.py,,center_of_mass,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sl[i] = slice(None)
+        sl = tuple(sl)
+
+        input_i = <a id="change">dask.array.arange(input.shape[i], chunks=input.chunks[i])</a>
+        input_wt = input * input_i[sl]
+
+        input_wt_mtch_sum.append(sum(input_wt, labels, index))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    type_mapping = collections.OrderedDict(<a id="change">[
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ]</a>)
+    out_dtype = numpy.dtype(list(type_mapping.items()))
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    <a id="change">func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )</a>
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )</code></pre><img src="7394985.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/lmcinnes/pynndescent/commit/c1c31db36facdf8d557f4dcc69866ac86814b83f#diff-db9824f558d2d2dff121f6cf56c63a5d019a6bb2e7388f2f0089e1b2d77d50e9L900' target='_blank'>Link</a></div><div id='project'> Project Name: lmcinnes/pynndescent</div><div id='commit'> Commit Name: c1c31db36facdf8d557f4dcc69866ac86814b83f</div><div id='time'> Time: 2020-09-01</div><div id='author'> Author: leland.mcinnes@gmail.com</div><div id='file'> File Name: pynndescent/pynndescent_.py</div><div id='class'> Class Name: NNDescent</div><div id='method'> Method Name: _init_search_graph</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/d9e93765aad7a42aafc357fabcd3ef644aa6dde6#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L138' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: d9e93765aad7a42aafc357fabcd3ef644aa6dde6</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR>

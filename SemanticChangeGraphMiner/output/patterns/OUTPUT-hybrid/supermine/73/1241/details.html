@@ -1,0 +1,184 @@
+<html><h3>60a9e035838cb88e09d73091d23891fbd498c658,7_reconstruct_imagined_image.py,,,#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 Setup results directory ----------------------------------------------------
+
+<a id="change">save_dir</a> = os.path.join(results_dir, <a id="change">os.path.splitext(__file__)[0] + &quot_&quot + datetime.now().strftime(&quot%Y%m%dT%H%M%S&quot)</a>)
+<a id="change">if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+
+&#47&#47 Set reconstruction options -------------------------------------------------
+
+</a>opts = {
+    &#47&#47 The loss function type: {&quotl2&quot,&quotl1&quot,&quotinner&quot,&quotgram&quot}
+    &quotloss_type&quot: &quotl2&quot,
+
+    &#47&#47 The maximum number of iterations
+    &quotmaxiter&quot: max_iteration,
+
+    &#47&#47 The initial image for the optimization (setting to None will use random noise as initial image)
+    &quotinitial_image&quot: initial_image,
+
+    &#47&#47 Display the information on the terminal or not
+    &quotdisp&quot: True
+}
+
+&#47&#47 Save the optional parameters
+with <a id="change">open(os.path.join(save_dir, &quotoptions.pkl&quot), &quotw&quot)</a> as f:
+    pickle.dump(opts, f)
+
+&#47&#47 Reconstrucion --------------------------------------------------------------
+
+for subject, roi, image_label in product(subjects_list, rois_list, image_label_list):
+
+    print(&quot&quot)
+    print(&quotSubject:     &quot + subject)
+    print(&quotROI:         &quot + roi)
+    print(&quotImage label: &quot + image_label)
+    print(&quot&quot)
+
+    &#47&#47 Load the decoded CNN features
+    features = {}
+    for layer in layers:
+        &#47&#47 The file full name depends on the data structure for decoded CNN features
+        file_name = decode_feature_filename(network, layer, subject, roi, image_type, image_label)
+        feat = sio.loadmat(file_name)[&quotfeat&quot]
+        if &quotfc&quot in layer:
+            feat = feat.reshape(feat.size)
+
+        &#47&#47 Correct the norm of the decoded CNN features
+        feat_std = estimate_cnn_feat_std(feat)
+        feat = (feat / feat_std) * feat_std0[layer]
+
+        features.update({layer: feat})
+
+    &#47&#47 Weight of each layer in the total loss function
+
+    &#47&#47 Norm of the CNN features for each layer
+    feat_norm = np.array([np.linalg.norm(features[layer]) for layer in layers], dtype=&quotfloat32&quot)
+
+    &#47&#47 Use the inverse of the squared norm of the CNN features as the weight for each layer
+    weights = 1. / (feat_norm ** 2)
+
+    &#47&#47 Normalise the weights such that the sum of the weights = 1
+    weights = weights / weights.sum()
+    layer_weight = dict(zip(layers, weights))
+
+    opts.update({&quotlayer_weight&quot: layer_weight})
+
+    &#47&#47 Reconstruction
+    snapshots_dir = <a id="change">os.path.join(save_dir, &quotsnapshots_%s-%s&quot % (subject, roi), &quotimage-%s&quot % image_label)</a>
+    recon_img, loss_list = reconstruct_image(features, net,
+                                             save_intermediate=True,
+                                             save_intermediate_path=snapshots_dir,
+                                             **opts)
+
+    &#47&#47 Save the results
+
+    &#47&#47 Save the raw reconstructed image
+    save_name = <a id="change">&quotrecon_img&quot + &quot-&quot + subject + &quot-&quot + roi + &quot-&quot + image_label + &quot.mat&quot</a>
+    <a id="change">sio.savemat(os.path.join(save_dir, save_name), {&quotrecon_img&quot: recon_img})</a>
+
+    &#47&#47 To better display the image, clip pixels with extreme values (0.02% of
+    &#47&#47 pixels with extreme low values and 0.02% of the pixels with extreme high
+    &#47&#47 values). And then normalise the image by mapping the pixel value to be
+    &#47&#47 within [0,255].
+    <a id="change">save_name = &quotrecon_img&quot + &quot-&quot + subject + &quot-&quot + roi + &quot-&quot + image_label + &quot.jpg&quot</a>
+    PIL.Image.fromarray(normalise_img(clip_extreme_value(recon_img, pct=0.04))).save(os.path.join(save_dir, save_name))
+
+print(&quotDone&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Setup results directory ----------------------------------------------------
+
+save_dir_root = os.path.join(results_dir, os.path.splitext(__file__)[0])
+<a id="change">if not os.path.exists(save_dir_root):
+    os.makedirs(save_dir_root)
+
+&#47&#47 Set reconstruction options -------------------------------------------------
+
+</a>opts = {
+    &#47&#47 The loss function type: {&quotl2&quot,&quotl1&quot,&quotinner&quot,&quotgram&quot}
+    &quotloss_type&quot: &quotl2&quot,
+
+    &#47&#47 The maximum number of iterations
+    &quotmaxiter&quot: max_iteration,
+
+    &#47&#47 The initial image for the optimization (setting to None will use random noise as initial image)
+    &quotinitial_image&quot: initial_image,
+
+    &#47&#47 Display the information on the terminal or not
+    &quotdisp&quot: True
+}
+
+&#47&#47 Save the optional parameters
+with <a id="change">open(os.path.join(save_dir_root, &quotoptions.pkl&quot), &quotw&quot)</a> as f:
+    pickle.dump(opts, f)
+
+&#47&#47 Reconstrucion --------------------------------------------------------------
+
+for subject, roi, image_label in product(subjects_list, rois_list, image_label_list):
+
+    print(&quot&quot)
+    print(&quotSubject:     &quot + subject)
+    print(&quotROI:         &quot + roi)
+    print(&quotImage label: &quot + image_label)
+    print(&quot&quot)
+
+    <a id="change">save_dir = os.path.join(save_dir_root, subject, roi)</a>
+    <a id="change">if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    &#47&#47 Load the decoded CNN features
+   </a> features = {}
+    for layer in layers:
+        &#47&#47 The file full name depends on the data structure for decoded CNN features
+        file_name = decode_feature_filename(network, layer, subject, roi, image_type, image_label)
+        feat = sio.loadmat(file_name)[&quotfeat&quot]
+        if &quotfc&quot in layer:
+            feat = feat.reshape(feat.size)
+
+        &#47&#47 Correct the norm of the decoded CNN features
+        feat_std = estimate_cnn_feat_std(feat)
+        feat = (feat / feat_std) * feat_std0[layer]
+
+        features.update({layer: feat})
+
+    &#47&#47 Weight of each layer in the total loss function
+
+    &#47&#47 Norm of the CNN features for each layer
+    feat_norm = np.array([np.linalg.norm(features[layer]) for layer in layers], dtype=&quotfloat32&quot)
+
+    &#47&#47 Use the inverse of the squared norm of the CNN features as the weight for each layer
+    weights = 1. / (feat_norm ** 2)
+
+    &#47&#47 Normalise the weights such that the sum of the weights = 1
+    weights = weights / weights.sum()
+    layer_weight = dict(zip(layers, weights))
+
+    opts.update({&quotlayer_weight&quot: layer_weight})
+
+    &#47&#47 Reconstruction
+    snapshots_dir = <a id="change">os.path.join(save_dir, &quotsnapshots&quot, &quotimage-%s&quot % image_label)</a>
+    recon_img, loss_list = reconstruct_image(features, net,
+                                             save_intermediate=True,
+                                             save_intermediate_path=snapshots_dir,
+                                             **opts)
+
+    &#47&#47 Save the results
+
+    &#47&#47 Save the raw reconstructed image
+    <a id="change">save_name = &quotrecon_img&quot + &quot-&quot + image_label + &quot.mat&quot</a>
+    <a id="change">sio.savemat(os.path.join(save_dir, save_name), {&quotrecon_img&quot: recon_img})</a>
+
+    &#47&#47 To better display the image, clip pixels with extreme values (0.02% of
+    &#47&#47 pixels with extreme low values and 0.02% of the pixels with extreme high
+    &#47&#47 values). And then normalise the image by mapping the pixel value to be
+    &#47&#47 within [0,255].
+    save_name = <a id="change">&quotrecon_img_normalized&quot + &quot-&quot + image_label + &quot.jpg&quot</a>
+    PIL.Image.fromarray(normalise_img(clip_extreme_value(recon_img, pct=0.04))).save(os.path.join(save_dir, save_name))
+
+print(&quotDone&quot)
+</code></pre><img src="7017834.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 45</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-10f2fbc0f45b0c6005f0f201ce1c5d59cd0435657c449c40c04beacbe434964cL92' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 7_reconstruct_imagined_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-930871f6cee4a2c97172a0aeeb12367ef1ac3727b09f78465d5ad8497517986dL85' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 5_reconstruct_shape_image_different_ROI.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-1350385028e31aa867be80d4b43e503c6ff385c07dbc1b22cbd6772456f08b5cL87' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 6_reconstruct_alphabet_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-21a8e89ce2834b6b68d7c001396d539eb72f6cf8deef97f0e79e0933647b7a79L97' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 4_reconstruct_shape_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-0d5e0f65f165740eb154260af5597c048afa7216b402435bdb51f819677f4ddbL104' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 1_reconstruct_natural_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-8e06ef15d35ef8de6a17d5addc617cbe5ef3a64b4cbb50beb1409f7c4f9f0fe7L86' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 2_reconstruct_natural_image_without_DGN.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/KamitaniLab/DeepImageReconstruction/commit/60a9e035838cb88e09d73091d23891fbd498c658#diff-10f2fbc0f45b0c6005f0f201ce1c5d59cd0435657c449c40c04beacbe434964cL92' target='_blank'>Link</a></div><div id='project'> Project Name: KamitaniLab/DeepImageReconstruction</div><div id='commit'> Commit Name: 60a9e035838cb88e09d73091d23891fbd498c658</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: s_aoki@i.kyoto-u.ac.jp</div><div id='file'> File Name: 7_reconstruct_imagined_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

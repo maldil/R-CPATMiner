@@ -1,0 +1,59 @@
+<html><h3>743815e2bf5cb89ab4984f1d63a82aaa52584a6d,examples/facerec_from_webcam_faster.py,,,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        face_names = []
+        for face_encoding in face_encodings:
+            &#47&#47 See if the face is a match for the known face(s)
+            match = face_recognition.compare_faces(<a id="change">[obama_face_encoding]</a>, face_encoding)
+            name = "Unknown"
+
+            if <a id="change">match[0]</a>:
+                name = "Barack"
+
+            face_names.append(name)</code></pre><h3>After Change</h3><pre><code class='java'>
+    obama_face_encoding,
+    biden_face_encoding
+]
+<a id="change">known_face_names = [
+    "Barack Obama",
+    "Joe Biden"
+]</a>
+
+&#47&#47 Initialize some variables
+face_locations = []
+face_encodings = []
+face_names = []
+process_this_frame = True
+
+while True:
+    &#47&#47 Grab a single frame of video
+    ret, frame = video_capture.read()
+
+    &#47&#47 Resize frame of video to 1/4 size for faster face recognition processing
+    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+
+    &#47&#47 Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
+    rgb_small_frame = small_frame[:, :, ::-1]
+
+    &#47&#47 Only process every other frame of video to save time
+    if process_this_frame:
+        &#47&#47 Find all the faces and face encodings in the current frame of video
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+
+        face_names = []
+        for face_encoding in face_encodings:
+            &#47&#47 See if the face is a match for the known face(s)
+            matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+            name = "Unknown"
+
+            &#47&#47 If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                <a id="change">first_match_index = matches.index(True)</a>
+                name = <a id="change">known_face_names[first_match_index]</a>
+
+            face_names.append(name)
+
+    process_this_frame = not process_this_frame</code></pre><img src="22948234.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ageitgey/face_recognition/commit/743815e2bf5cb89ab4984f1d63a82aaa52584a6d#diff-a42bd95acd1e54a5e14991f937dc3414d0ed596efdb72c0535fb4a81f2b203a3L18' target='_blank'>Link</a></div><div id='project'> Project Name: ageitgey/face_recognition</div><div id='commit'> Commit Name: 743815e2bf5cb89ab4984f1d63a82aaa52584a6d</div><div id='time'> Time: 2018-01-26</div><div id='author'> Author: ageitgey@gmail.com</div><div id='file'> File Name: examples/facerec_from_webcam_faster.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/1b6587331ec77d295e2261de12e13974b7d1a46a#diff-c66af5dc06bf677a414d2c4868ac9ddb6e367e5a733449cc17325495742e3cd3L46' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: 1b6587331ec77d295e2261de12e13974b7d1a46a</div><div id='time'> Time: 2018-10-16</div><div id='author'> Author: shoffman@ibm.com</div><div id='file'> File Name: aif360/algorithms/inprocessing/meta_fair_classifier.py</div><div id='class'> Class Name: MetaFairClassifier</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/ageitgey/face_recognition/commit/743815e2bf5cb89ab4984f1d63a82aaa52584a6d#diff-35e97fd489b9d3f48fc86030cd5e3b61d4e553b9f81a48fa044e3f1f514ee781L16' target='_blank'>Link</a></div><div id='project'> Project Name: ageitgey/face_recognition</div><div id='commit'> Commit Name: 743815e2bf5cb89ab4984f1d63a82aaa52584a6d</div><div id='time'> Time: 2018-01-26</div><div id='author'> Author: ageitgey@gmail.com</div><div id='file'> File Name: examples/facerec_from_webcam.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

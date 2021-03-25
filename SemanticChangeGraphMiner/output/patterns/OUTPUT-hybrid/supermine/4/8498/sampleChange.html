@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        print(&quotCreating FER model...&quot)
+        self._extract_features()    &#47&#47 TODO: call _extract_features for appropriate models
+        <a id="change">return ConvolutionalLstmNN(self.target_dimensions, self.channels, emotion_map=self.emotion_map, time_delay=self.time_delay, verbose=self.verbose)</a>
+        &#47&#47 TODO: add conditionals to choose best models for all emotion subsets
+
+    def _extract_features(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        print(&quotInitializing FER model...&quot)
+
+        <a id="change">model_indices = [self.emotion_index_map[emotion] for emotion in self.target_emotions]</a>
+        <a id="change">sorted_indices = [str(idx) for idx in sorted(model_indices)]</a>
+        model_suffix = &quot&quot.join(sorted_indices)
+
+        model_file = open(&quot../models/conv_model_%s.json&quot % model_suffix,&quotr&quot)
+        weights_file = &quot../models/conv_weights_%s.h5&quot % model_suffix</code></pre>

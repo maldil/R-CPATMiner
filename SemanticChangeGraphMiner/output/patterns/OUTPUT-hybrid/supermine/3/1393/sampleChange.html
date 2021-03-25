@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if fdv.readline().strip()[:8] != extra[:8]:
+                    __version__ += &quot-&quot + extra
+        except Exception as e:
+            if "No such file" not in <a id="change">str(e)</a>:
+                raise
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+&#47&#47 auto -extra based on commit hash (if not tagged as release)
+<a id="change">try:
+    scriptdir = os.path.dirname(__file__)
+except NameError:  &#47&#47 We are in setup.py script, not a module
+    import sys
+    scriptdir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+</a>gitdir = os.path.abspath(os.path.join(scriptdir, "..", ".git"))
+if os.path.isdir(gitdir):  &#47&#47 pragma: nocover
+    extra = None
+    &#47&#47 Open config file to check if we are in loudml project</code></pre>

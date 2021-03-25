@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    assert np.size(words) &gt; 0, EMPTY_NP_ARRAY_MESSAGE
+
+    &#47&#47 initialize the value to return
+    <a id="change">all_results = {}</a>
+
+    &#47&#47 find the total word count of each group
+    group_lists = [np.sum(value, axis=0)
+                   for _, value in enumerate(group_values)]</code></pre><h3>After Change</h3><pre><code class='java'>
+    comp_map = [(i_index, j_index)
+                for (i_index, j_index) in comp_map if i_index &lt; j_index]
+
+    <a id="change">analysis_result = [_z_test_word_list_(count_list_i=group_lists[comp_index],
+                                          count_list_j=group_lists[base_index],
+                                          words=words)
+                       for comp_index, base_index in comp_map]</a>
+
+    header_list = [&quotClass "&quot + class_labels[comp_index] +
+                    &quot" compared to Class: &quot + class_labels[base_index]
+                    <a id="change">for</a> comp_index, base_index in comp_map]
+
+    &#47&#47 put two lists together as a human readable result
+    <a id="change">readable_results = list(zip(header_list, analysis_result))</a>
+
+    return readable_results
+</code></pre>

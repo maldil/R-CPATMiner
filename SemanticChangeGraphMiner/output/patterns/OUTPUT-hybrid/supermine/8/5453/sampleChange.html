@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                      coord[candidates],
+                                      distance.minkowski,
+                                      p=p_norm).reshape(-1)
+                <a id="change">candidates = [c for c, d in zip(candidates, dist)
+                              if d &lt; spacing]</a>
+
+                &#47&#47 candidates.remove(keep)
+                rejected_peaks_indices.update(candidates)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    output = coords
+    if len(coords):
+
+        <a id="change">coords = np.atleast_2d(coords)</a>
+        if batch_size is None:
+            batch_list = [coords]
+        else:
+            <a id="change">batch_list = np.array_split(coords, batch_size)</a>
+
+        output = np.zeros((0, coords.shape[1]))
+        <a id="change">for batch in batch_list:
+            output = _ensure_spacing(np.vstack([output, batch]),
+                                     spacing, p_norm)
+
+   </a> return output
+</code></pre>

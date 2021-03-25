@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if "psis" not in self.covars_prior:
+                self.covars_prior["psis"] = np.asarray(0.0)
+            if "nus" not in self.covars_prior:
+                self.covars_prior["nus"] = <a id="change">np.asarray(
+                    -(self.n_mix + self.n_features + 1.0)
+                )</a>
+        elif self.covariance_type == "diag":
+            if "alphas" not in self.covars_prior:
+                self.covars_prior["alphas"] = np.asarray(-1.5)
+            if "betas" not in self.covars_prior:
+                self.covars_prior["betas"] = <a id="change">np.asarray(0.0)</a>
+        elif self.covariance_type == "spherical":
+            if "alphas" not in self.covars_prior:
+                self.covars_prior["alphas"] = np.asarray(
+                    -(self.n_mix + 2.0) / 2.0</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif self.covariance_type == "diag":
+            if self.covars_prior is None:
+                self.covars_prior = -1.5
+            <a id="change">if self.covars_weight is None:
+                self.covars_weight = 0.0
+       </a> elif self.covariance_type == "spherical":
+            if self.covars_prior is None:
+                self.covars_prior = -(self.n_mix + 2.0) / 2.0
+            if self.covars_weight is None:</code></pre>

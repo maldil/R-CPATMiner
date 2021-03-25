@@ -1,0 +1,31 @@
+digraph G {
+subgraph cluster0 {
+1 [label="FloatTensor" a="32" s="2617,2655" l="12,1" shape="box"];
+3 [label="SimpleName" a="42" s="2596" l="5" shape="ellipse"];
+6 [label="SimpleName" a="42" s="2596" l="5" shape="ellipse"];
+7 [label="cuda" a="32" s="2719" l="6" shape="box"];
+8 [label="IfStatement" a="25" s="2663,2671" l="4,2" shape="diamond"];
+9 [label="FieldAccess" a="22" s="2667" l="4" shape="box"];
+10 [label="SimpleName" a="42" s="2713" l="5" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="FloatTensor" a="32" s="2583,2621" l="12,1" shape="box"];
+4 [label="SimpleName" a="42" s="2571" l="5" shape="ellipse"];
+5 [label="SimpleName" a="42" s="2571" l="5" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 6 [label="_def_"];
+1 -> 6 [label="_def_"];
+1 -> 2 [label="_map_"];
+2 -> 5 [label="_def_"];
+2 -> 5 [label="_def_"];
+6 -> 10 [label="_ref_"];
+6 -> 5 [label="_map_"];
+6 -> 5 [label="_map_"];
+8 -> 7 [label="_control_"];
+9 -> 8 [label="_cond_"];
+10 -> 7 [label="_recv_"];
+}

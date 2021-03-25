@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            [nn.Conv2d(inp, out, kernel_size=kernel_size, bias=bias) for i in range(k)]
+
+    def forward(self, x):
+        conv2ds_results = <a id="change">[c(x) for c in self.conv2ds]</a>
+        <a id="change">x = torch.cat(conv2ds_results, dim=1)</a>
+        return x
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.conv2_3 = nn.Conv2d(inp, out, kernel_size=kernel_size, bias=bias)
+
+    def forward(self, x):
+        x = <a id="change">torch.cat([
+            self.conv2_1(x),
+            self.conv2_2(x),
+            self.conv2_3(x)
+        ], dim=1)</a>
+        return x
+
+
+if __name__ == &quot__main__&quot:</code></pre>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        torch.Tensor
+            (B, npoint, nsample) tensor with the indicies of the features that form the query balls
+        
+        <a id="change">return _ext.ball_query(new_xyz, xyz, radius, nsample)</a>
+
+    @staticmethod
+    def backward(ctx, a=None):
+        return None, None, None, None</code></pre><h3>After Change</h3><pre><code class='java'>
+        torch.Tensor
+            (B, npoint, nsample) tensor with the indicies of the features that form the query balls
+        
+        <a id="change">output = _ext.ball_query(new_xyz, xyz, radius, nsample)</a>
+
+        <a id="change">ctx.mark_non_differentiable(output)</a>
+
+        <a id="change">return output</a>
+
+    @staticmethod
+    def backward(ctx, grad_out):
+        return ()</code></pre>

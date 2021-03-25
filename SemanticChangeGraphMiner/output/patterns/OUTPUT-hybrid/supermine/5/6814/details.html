@@ -1,0 +1,27 @@
+<html><h3>2a1a6851344172e0134f3c5f4f5c1021975f2812,torchnlp/samplers/bucket_batch_sampler.py,BucketBatchSampler,__iter__,#BucketBatchSampler#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __iter__(self):
+        batches = list(super().__iter__())
+        if self.last_batch_first:
+            <a id="change">last_batch = batches.pop()</a>
+        if self.shuffle:
+            random.shuffle(batches)
+        if self.last_batch_first:
+            batches.insert(0, last_batch)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not self.biggest_batches_first:
+            return get_batches()
+        else:
+            <a id="change">batches = list(get_batches())</a>
+            indices = heapq.nlargest(
+                5,
+                range(len(batches)),
+                key=lambda i: len(pickle.dumps([self.data[j] for j in batches[i]])))
+            front = [batches[i] for i in indices]
+            <a id="change">for i in sorted(indices, reverse=True):
+                batches.pop(i)
+           </a> batches[0:0] = front
+            return iter(batches)
+</code></pre><img src="26869898.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PetrochukM/PyTorch-NLP/commit/2a1a6851344172e0134f3c5f4f5c1021975f2812#diff-2c4d64f9df80f1f50179f19e91c15be51ff77a339e7e3910b48cbc032e963e68L37' target='_blank'>Link</a></div><div id='project'> Project Name: PetrochukM/PyTorch-NLP</div><div id='commit'> Commit Name: 2a1a6851344172e0134f3c5f4f5c1021975f2812</div><div id='time'> Time: 2018-03-11</div><div id='author'> Author: petrochukm@gmail.com</div><div id='file'> File Name: torchnlp/samplers/bucket_batch_sampler.py</div><div id='class'> Class Name: BucketBatchSampler</div><div id='method'> Method Name: __iter__</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/764b22136f964c50bcf7d30c4f1efe6bdaabd50b#diff-20e4496adfeef9d5174d69be011c32a5397592eb691f0b5c0ef6350c51d1375dL738' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 764b22136f964c50bcf7d30c4f1efe6bdaabd50b</div><div id='time'> Time: 2014-01-08</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: src/BayesianModel/BayesianModel.py</div><div id='class'> Class Name: BayesianModel</div><div id='method'> Method Name: _get_ancestors_observation</div><BR><BR><div id='link'><a href='https://github.com/arogozhnikov/einops/commit/29389772364178f76ccf565917870639cad283bb#diff-25331d16adc33b1de8749c4aea6d39ff87c43b8cdea8ebe9afcd03a518a8f0b9L126' target='_blank'>Link</a></div><div id='project'> Project Name: arogozhnikov/einops</div><div id='commit'> Commit Name: 29389772364178f76ccf565917870639cad283bb</div><div id='time'> Time: 2018-09-27</div><div id='author'> Author: iamfullofspam@gmail.com</div><div id='file'> File Name: einops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_axes_names</div><BR>

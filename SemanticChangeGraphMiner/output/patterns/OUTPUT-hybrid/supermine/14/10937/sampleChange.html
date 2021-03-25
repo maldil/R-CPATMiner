@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.grammar.variable_cpds
+        except AttributeError:
+            self.grammar = self.Get_grammar(self.network)
+        <a id="change">return self.grammar.variable_cpds</a>
+
+    def get_parents(self):
+
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+                            [0.4, 0.95]])}
+         
+        variable_cpds = {}
+        <a id="change">for block in self.probability_block:
+            name = self.probability_expr.searchString(block)[0][0]
+            cpds = self.cpd_expr.searchString(block)
+            arr = [float(j) for i in cpds for j in i]
+            arr = numpy.array(arr)
+            arr = arr.reshape((len(self.variable_states[name]),
+                              arr.size//len(self.variable_states[name])))
+            variable_cpds[name] = arr
+
+       </a> return variable_cpds
+
+    def get_edges(self):
+</code></pre>

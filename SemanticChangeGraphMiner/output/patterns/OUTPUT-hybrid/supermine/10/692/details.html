@@ -1,0 +1,42 @@
+<html><h3>b63886addf175201fe2d284c5267e232c670d3bf,app/grandchallenge/core/contextprocessors/contextprocessors.py,,comic_site,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    figure it out. Use main project. 
+    
+    
+    <a id="change">try:
+        resolution = resolve(request.path)
+    except Http404 as e:
+        &#47&#47 fail silently beacuse any exeception here will cause a 500 server
+        &#47&#47 error on page. Let views show errors but not the context processor
+        resolution = resolve("/")
+
+   </a> challenge_short_name = resolution.kwargs.get(
+        "challenge_short_name", settings.MAIN_PROJECT_NAME
+    )
+
+    try:
+        <a id="change">challenge = Challenge.objects.get(
+            short_name__iexact=challenge_short_name
+        )</a>
+        pages = challenge.page_set.all()
+    except Challenge.DoesNotExist:
+        &#47&#47 Don&quott crash the system here, if a challenge cannot be found it will
+        &#47&#47 crash in a more appropriate location</code></pre><h3>After Change</h3><pre><code class='java'>
+    except AttributeError:
+        user = get_anonymous_user()
+
+    <a id="change">if challenge is None:
+        permissions = pages = []
+        is_participant = False
+    else:
+        permissions = get_perms(user, challenge)
+        pages = challenge.page_set.all()
+        is_participant = challenge.is_participant(user)
+
+   </a> return {
+        "site": challenge,
+        "challenge_perms": permissions,
+        "user_is_participant": is_participant,</code></pre><img src="3275760.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/b63886addf175201fe2d284c5267e232c670d3bf#diff-c640c9fda849aa7ebe9ee4b1a84245b3e837d383fe25f9396ead1210aab6c80aL16' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: b63886addf175201fe2d284c5267e232c670d3bf</div><div id='time'> Time: 2018-12-03</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/grandchallenge/core/contextprocessors/contextprocessors.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: comic_site</div><BR><BR><div id='link'><a href='https://github.com/fperazzi/proSR/commit/6b7b82ff60b8ca7a26b50e50210a06a46bdc848a#diff-b42fe8ef840a4879fb7b86af4192c9bab660b2e58b18cb4046b36f56ff08ef95L131' target='_blank'>Link</a></div><div id='project'> Project Name: fperazzi/proSR</div><div id='commit'> Commit Name: 6b7b82ff60b8ca7a26b50e50210a06a46bdc848a</div><div id='time'> Time: 2018-07-09</div><div id='author'> Author: fperazzi@adobe.com</div><div id='file'> File Name: lib/prosr/models/generators.py</div><div id='class'> Class Name: ProSR</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL350' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR>

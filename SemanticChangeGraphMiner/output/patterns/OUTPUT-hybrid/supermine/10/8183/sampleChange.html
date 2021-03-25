@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      if matched:
+        STDOUT.write(&quot  Grapheme cluster: %s\n&quot % text)
+      else:
+        <a id="change">STDOUT.write(&quot  Unmatched: %s\n&quot % repr(text))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    line = line.rstrip(&quot\n&quot)
+    STDOUT.write(&quotLine\t%s\n&quot % line)
+    for matched, text in clusterer.GraphemeClusters(line):
+      <a id="change">STDOUT.write(&quot%s\t%s\t%s\n&quot %
+                   (&quotCluster&quot if matched else &quotUnmatched&quot,
+                    text,
+                    &quot &quot.join(&quot%04X&quot % ord(c) for c in text)))</a>
+</code></pre>

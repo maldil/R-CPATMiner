@@ -1,0 +1,21 @@
+<html><h3>0514d4b6de97d652e6cd99c7b557018890a6ec99,snorkel/learning/disc_learning.py,TFNoiseAwareModel,train,#TFNoiseAwareModel#,111
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            train_idxs = LabelBalancer(Y_train).get_train_idxs(rebalance)
+            X_train = [X_train[j] for j in train_idxs] if self.representation \
+                else X_train[train_idxs, :]
+            Y_train = <a id="change">np</a>.ravel(Y_train)[train_idxs]
+
+        &#47&#47 Create new graph, build network, and start session
+        self._build_new_graph_session(**kwargs)</code></pre><h3>After Change</h3><pre><code class='java'>
+            train_idxs = LabelBalancer(Y_train).get_train_idxs(rebalance)
+        else:
+            &#47&#47 In categorical setting, just remove unlabeled
+            diffs = <a id="change">Y_train.max(axis=1)</a> - Y_train.min(axis=1)
+            train_idxs = <a id="change">np.where(diffs &gt; 1e-6)[0]</a>
+        X_train = [X_train[j] for j in train_idxs] if self.representation \
+            else X_train[train_idxs, :]
+        Y_train = Y_train[train_idxs]
+</code></pre><img src="18443615.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/0514d4b6de97d652e6cd99c7b557018890a6ec99#diff-ee4b78ba1254b772fc00e785d492d8d1f56bf407d106c481ebeff9607b3aa3b9L152' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 0514d4b6de97d652e6cd99c7b557018890a6ec99</div><div id='time'> Time: 2017-06-26</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/disc_learning.py</div><div id='class'> Class Name: TFNoiseAwareModel</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL160' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL120' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

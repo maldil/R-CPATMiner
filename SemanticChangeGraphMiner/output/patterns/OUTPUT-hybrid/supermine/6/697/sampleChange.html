@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return np.nan
+
+        mode = {8000: &quotnb&quot, 16000: &quotwb&quot}[self.sample_rate]
+        <a id="change">try:
+            scores = pb.evaluation.pesq(
+                reference=rearrange(
+                    [self.speech_source] * self.channels,
+                    &quotchannels sources samples -&gt; (sources channels) samples&quot
+                ),
+                degraded=rearrange(
+                    [self.observation] * self.K_source,
+                    &quotsources channels samples -&gt; (sources channels) samples&quot
+                ),
+                rate=self.sample_rate,
+                mode=mode,
+            )
+            return np.reshape(scores, [self.K_source, self.channels])
+        except OSError:
+            return np.nan
+
+   </a> @cached_property.cached_property
+    def invasive_sxr(self):
+        from pb_bss.evaluation.sxr_module import input_sxr
+        invasive_sxr = input_sxr(</code></pre><h3>After Change</h3><pre><code class='java'>
+            )
+        mode = {8000: &quotnb&quot, 16000: &quotwb&quot}[self.sample_rate]
+
+        return np.reshape(<a id="change">[
+            pypesq.pypesq(ref=ref, deg=deg, fs=self.sample_rate, mode=mode)
+            for ref, deg in zip(
+                rearrange(
+                    [self.speech_source] * self.channels,
+                    &quotchannels sources samples -&gt; (sources channels) samples&quot
+                ),
+                rearrange(
+                    [self.observation] * self.K_source,
+                    &quotsources channels samples -&gt; (sources channels) samples&quot
+                )
+            )
+        ]</a>, [self.K_source, self.channels])
+
+    @cached_property.cached_property
+    def invasive_sxr(self):</code></pre>

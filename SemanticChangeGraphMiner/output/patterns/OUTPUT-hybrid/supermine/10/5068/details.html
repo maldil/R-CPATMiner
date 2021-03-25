@@ -1,0 +1,26 @@
+<html><h3>7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec,pyntcloud/io/las.py,,read_las,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data["points"] = pd.DataFrame(las.points["point"])
+        data["points"].columns = (x.lower() for x in data["points"].columns)
+        &#47&#47 because laspy do something strange with scale
+        <a id="change">data["points"].loc[:, ["x", "y", "z"]] *= las.header.scale</a>
+        data = convert_location_to_dtype(data, xyz_dtype)
+        data = convert_color_to_dtype(data, rgb_dtype)
+        data["las_header"] = las.header
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    data: dict
+        Elements as pandas DataFrames.
+    
+    <a id="change">if backend == "pylas":
+        data = read_las_with_pylas(filename)
+    elif backend == "laspy":
+        data = read_las_with_laspy(filename)
+    else:
+        raise ValueError(f"Unsupported backend. Expected one of [&quotpylas&quot, &quotlaspy&quot] but got {backend}")
+   </a> data = convert_location_to_dtype(data, xyz_dtype)
+    data = convert_color_to_dtype(data, rgb_dtype)
+    return data
+</code></pre><img src="22056272.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec#diff-ff911c1c91b963203f3c1d08913155f86610ed2c7e1749752fc192293666c778L49' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: sebastian.bullinger@iosb.fraunhofer.de</div><div id='file'> File Name: pyntcloud/io/las.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_las</div><BR><BR><div id='link'><a href='https://github.com/Picovoice/porcupine/commit/c2cf686f1f8e8a7f81b89010b60911648a0b77b1#diff-f2ced2d0239578936e75ecc4fe2fb18d0c31e47efe862772918483112dd2fc89L20' target='_blank'>Link</a></div><div id='project'> Project Name: Picovoice/porcupine</div><div id='commit'> Commit Name: c2cf686f1f8e8a7f81b89010b60911648a0b77b1</div><div id='time'> Time: 2021-02-26</div><div id='author'> Author: 42750891+mrrostam@users.noreply.github.com</div><div id='file'> File Name: binding/python/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _pv_linux_machine</div><BR><BR><div id='link'><a href='https://github.com/deeptools/HiCExplorer/commit/c7e151cef5f02f9a7c8e0f1d84ff316ef6ee02d4#diff-f9388cd78f3f62d0ba33de50aafd317dcd27405af80f0b7d2379f68a9ff267b3L167' target='_blank'>Link</a></div><div id='project'> Project Name: deeptools/HiCExplorer</div><div id='commit'> Commit Name: c7e151cef5f02f9a7c8e0f1d84ff316ef6ee02d4</div><div id='time'> Time: 2019-08-16</div><div id='author'> Author: wolffj@informatik.uni-freiburg.de</div><div id='file'> File Name: hicexplorer/chicPlotViewpoint.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_images</div><BR>

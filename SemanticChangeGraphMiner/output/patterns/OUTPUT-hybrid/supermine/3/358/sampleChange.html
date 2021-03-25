@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :param mutant_response: The HTTP response associated with the file upload
+        :return: None
+        
+        <a id="change">try:
+            doc_parser = parser_cache.dpc.get_document_parser_for(mutant_response)
+        except BaseFrameworkException:
+            &#47&#47 Failed to find a suitable parser for the document
+            return
+
+       </a> parsed_refs, re_refs = doc_parser.get_references()
+
+        all_references = parsed_refs
+        all_references.extend(re_refs)</code></pre><h3>After Change</h3><pre><code class='java'>
+        parser_references = self._get_references_from_parser(mutant_response)
+        re_references = self._get_references_regex(mutant, mutant_response)
+
+        all_references = <a id="change">set()</a>
+        all_references.update(parser_references)
+        all_references.update(re_references)
+
+        to_verify = set()</code></pre>

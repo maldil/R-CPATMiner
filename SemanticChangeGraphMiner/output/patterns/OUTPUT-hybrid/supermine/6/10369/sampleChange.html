@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    ll = 0
+    for observation_interval, w in zip(observation_intervals, weights):
+        min_, max_ = <a id="change">turnbull_interval_lookup[observation_interval]</a>
+        ll += w * np.log(p[min_ : max_ + 1].sum())
+    return ll
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def log_likelihood(p, turnbull_interval_lookup, weights):
+    P = cumulative_sum(p)
+    <a id="change">ix = np.array(list(turnbull_interval_lookup.values()))</a>
+    return (weights * np.log(<a id="change">P[ix[:, 1] + 1] - P[ix[:, 0]]</a>)).sum()
+
+
+def reconstruct_survival_function(probabilities, turnbull_intervals, timeline=None, label="NPMLE"):</code></pre>

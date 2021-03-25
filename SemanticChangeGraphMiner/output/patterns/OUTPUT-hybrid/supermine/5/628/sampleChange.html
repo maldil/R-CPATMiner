@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif self._num_files &gt; 1:
+      dataset = self._read_sharded_files(input_context)
+    else:
+      <a id="change">assert self._num_files == 1</a>
+      dataset = self._read_single_file(input_context)
+
+    if self._cache:
+      dataset = dataset.cache()</code></pre><h3>After Change</h3><pre><code class='java'>
+      dataset = self._read_tfds(input_context)
+    elif len(self._matched_files) &gt; 1:
+      dataset = self._read_sharded_files(input_context)
+    elif <a id="change">len(self._matched_files) == 1:
+   </a>   dataset = self._read_single_file(input_context)
+    else:
+      raise ValueError(&quotIt is unexpected that `tfds_builder` is None and &quot
+                       &quotthere is also no `matched_files`.&quot)</code></pre>

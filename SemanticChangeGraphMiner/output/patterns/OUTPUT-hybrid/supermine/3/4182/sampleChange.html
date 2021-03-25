@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 random.choice is doing
+                num_options = len(possible_future_obs_idxs)
+                next_obs_i = int(np.random.randint(0, num_options))
+                <a id="change">future_obs_idxs.append(possible_future_obs_idxs[next_obs_i])</a>
+            future_obs_idxs = np.array(future_obs_idxs)
+            resampled_goals[-num_future_goals:] = self._next_obs[
+                self.achieved_goal_key
+            ][future_obs_idxs]</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47&#47&#47 better future obs sample algorithm
+            future_indices = indices[-num_future_goals:]
+            possible_future_obs_lens = np.array([len(self._idx_to_future_obs_idx[i]) for i in future_indices])
+            <a id="change">next_obs_idxs = (np.random.random(num_future_goals) * possible_future_obs_lens).astype(np.int)</a>
+            future_obs_idxs = np.array([self._idx_to_future_obs_idx[ids][next_obs_idxs[i]] for i, ids in enumerate(future_indices)])
+
+            resampled_goals[-num_future_goals:] = self._next_obs[
+                self.achieved_goal_key</code></pre>

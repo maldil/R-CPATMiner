@@ -1,0 +1,62 @@
+<html><h3>01d70cd14b2bd9f1754b94e03c3555ec412a3845,distributed/rpc/parameter_server/rpc_param_server.py,,,#,186
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    p.start()
+    processes.append(p)
+    &#47&#47 run num_trainers workers
+    <a id="change">for i in range(num_trainers):
+        p = mp.Process(
+            target=run_worker,
+            args=(
+                i + 1,
+                num_trainers + 1,
+                train_loader,
+                test_loader))
+        p.start()
+        processes.append(p)
+
+    &#47&#47 Run to completeion.
+   </a> for p in processes:
+        p.join()
+
+    print("Script took {} seconds".format(time.time() - start))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+if __name__ == &quot__main__&quot:
+    <a id="change">parser = argparse.ArgumentParser(description="Parameter-Server RPC based training")</a>
+    parser.add_argument("--world_size", type=int, default=4, help="Total number of participating processes. Should be the sum of master node and all training nodes, add 1 if creating training node on master.")
+    parser.add_argument("--rank", type=int, default=None, help="Global rank of this process. Pass in 0 for master. Note that ranks should be unique across all nodes participating in training.")
+    parser.add_argument("--master_addr", type=str, default="localhost", help="Address of master, will default to localhost if not provided. Master must be able to accept network traffic on the address + port.")
+    <a id="change">parser.add_argument("--master_port", type=str, default="29500", help="Port that master is listening on, will default to 29500 if not provided. Master must be able to accept network traffic on the host and port.")</a>
+    <a id="change">args = parser.parse_args()</a>
+    assert args.rank is not None, "must provide rank argument."
+    os.environ[&quotMASTER_ADDR&quot] = args.master_addr
+    os.environ["MASTER_PORT"] = args.master_port
+    &#47&#47 Get data to train on
+    train_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(&quot../data&quot, train=True, download=True,
+                       transform=transforms.Compose([
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.1307,), (0.3081,))
+                       ])),
+        batch_size=32, shuffle=True,)
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST(&quot../data&quot, train=False, transform=transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,))
+        ])),
+        batch_size=32, shuffle=True, )
+    processes = []
+    world_size = args.world_size
+    if args.rank == 0:
+        p = mp.Process(target=run_parameter_server, args=(0, world_size))
+        p.start()
+        processes.append(p)
+    else:
+        &#47&#47 start training worker on this node
+        p = mp.Process(target=run_worker, args=(<a id="change">args</a>.rank, world_size, train_loader, test_loader))
+        p.start()
+        processes.append(p)
+</code></pre><img src="36529708.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 14</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/01d70cd14b2bd9f1754b94e03c3555ec412a3845#diff-86e15d062d06870991f56a3402f392648a45c47c62149f58bd3c86325485725aL187' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 01d70cd14b2bd9f1754b94e03c3555ec412a3845</div><div id='time'> Time: 2020-02-12</div><div id='author'> Author: rvarm1@fb.com</div><div id='file'> File Name: distributed/rpc/parameter_server/rpc_param_server.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/01d70cd14b2bd9f1754b94e03c3555ec412a3845#diff-86e15d062d06870991f56a3402f392648a45c47c62149f58bd3c86325485725aL187' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 01d70cd14b2bd9f1754b94e03c3555ec412a3845</div><div id='time'> Time: 2020-02-12</div><div id='author'> Author: rvarm1@fb.com</div><div id='file'> File Name: distributed/rpc/parameter_server/rpc_param_server.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/afabbad05a30ca32b6c5403c0567647a870ff24a#diff-f53b66970297523edfa0f986397c95d0daf96037f2670bbb5f0e998a158aa430L61' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: afabbad05a30ca32b6c5403c0567647a870ff24a</div><div id='time'> Time: 2019-09-21</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: censusdata.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/aa07151c476c3e51313eef6f93ee20b80fa41e11#diff-2ee6e4f838938c14cff8ec137d5f990c18bc4bc14522ed3463f5a427a25b6616L62' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: aa07151c476c3e51313eef6f93ee20b80fa41e11</div><div id='time'> Time: 2013-12-20</div><div id='author'> Author: a@foo.be</div><div id='file'> File Name: db_dump.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

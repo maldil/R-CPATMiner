@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for m in range(Nc):
+            for k in range(Nt):
+                <a id="change">dist[k, m]</a> = distance(covtest[k, :, :], self.covmeans[m],
+                                      metric=self.metric_dist)
+        return dist
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            dist = [distance(covtest, self.covmeans[m], self.metric_dist)
+                    for m in range(Nc)]
+        else:
+            <a id="change">dist = Parallel(n_jobs=self.n_jobs)(delayed(distance)(covtest, self.covmeans[m], self.metric_dist) for m in range(Nc))</a>
+
+        dist = numpy.concatenate(dist, axis=1)
+        return dist
+</code></pre>

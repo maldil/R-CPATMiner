@@ -1,0 +1,23 @@
+<html><h3>cc53003029d11839c394a9544a1394b62721869d,thinc/extra/wrappers.py,PyTorchWrapper,use_params,#PyTorchWrapper#,207
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.from_bytes(params[self.id])
+        else:
+            backup = None
+        <a id="change">yield</a>
+        if backup is not None:
+            self.from_bytes(backup)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def use_params(self, params):
+        key_prefix = f"pytorch_{self.id}_"
+        state_dict = {}
+        for k, v in <a id="change">params.items()</a>:
+            <a id="change">if hasattr(k, "startswith") and k.startswith(key_prefix):
+                state_dict[k.replace(key_prefix, "")] = xp2torch(v)
+       </a> if state_dict:
+            backup = {k: v.clone() for k, v in self._model.state_dict().items()}
+            self._model.load_state_dict(state_dict)
+            yield</code></pre><img src="25018173.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/cc53003029d11839c394a9544a1394b62721869d#diff-4e54e777f8c0af0ae0f5584dcefb2e1aab7abf33c5766acd78d1801f9d9b805cL100' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: cc53003029d11839c394a9544a1394b62721869d</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/extra/wrappers.py</div><div id='class'> Class Name: PyTorchWrapper</div><div id='method'> Method Name: use_params</div><BR><BR><div id='link'><a href='https://github.com/pandas-dev/pandas/commit/7368b2a4e8c6b32b975a62d64efb65bbd6bd1df1#diff-e75665400330b7c54c17dbc56918942acc5ed558983f3036f95eabbf7b426443L527' target='_blank'>Link</a></div><div id='project'> Project Name: pandas-dev/pandas</div><div id='commit'> Commit Name: 7368b2a4e8c6b32b975a62d64efb65bbd6bd1df1</div><div id='time'> Time: 2020-11-24</div><div id='author'> Author: 41443370+ivanovmg@users.noreply.github.com</div><div id='file'> File Name: pandas/io/formats/excel.py</div><div id='class'> Class Name: ExcelFormatter</div><div id='method'> Method Name: _format_header_mi</div><BR><BR><div id='link'><a href='https://github.com/pandas-dev/pandas/commit/7368b2a4e8c6b32b975a62d64efb65bbd6bd1df1#diff-e75665400330b7c54c17dbc56918942acc5ed558983f3036f95eabbf7b426443L681' target='_blank'>Link</a></div><div id='project'> Project Name: pandas-dev/pandas</div><div id='commit'> Commit Name: 7368b2a4e8c6b32b975a62d64efb65bbd6bd1df1</div><div id='time'> Time: 2020-11-24</div><div id='author'> Author: 41443370+ivanovmg@users.noreply.github.com</div><div id='file'> File Name: pandas/io/formats/excel.py</div><div id='class'> Class Name: ExcelFormatter</div><div id='method'> Method Name: _format_hierarchical_rows</div><BR>

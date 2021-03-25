@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                found_duplicate = True
+                if outputs[i] &gt; outputs[j]:
+                    outputs[j] = outputs[i]
+        <a id="change">if not found_duplicate:
+            new_in.append(inputs[i])
+            new_out.append(outputs[i])
+   </a> return new_in, new_out
+
+
+class StrEnum(object):</code></pre><h3>After Change</h3><pre><code class='java'>
+    data = {}
+    for inp, out in zip(inputs, outputs):
+        tup = tuple(inp)
+        <a id="change">if tup in data:
+            data[tup].append(out)
+        else:
+            data[tup] = [out]
+
+   </a> inputs, outputs = [], []
+    for inp, outs in data.items():
+        inputs.append(list(inp))
+        outputs.append(np.maximum.reduce(outs))</code></pre>

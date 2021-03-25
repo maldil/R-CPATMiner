@@ -1,0 +1,31 @@
+<html><h3>6fd1cef5797fd76e8ea6b68ee9338dce759768ad,trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/compute_induced_velocity_matrix.py,,vortex,#,172
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    R1R2Z  =  X_X1*Y_Y2 - Y_Y1*X_X2
+    SQUARE = R1R2X*R1R2X + R1R2Y*R1R2Y + R1R2Z*R1R2Z
+    SQUARE[SQUARE==0] = 1e-32
+    R1     = np.sqrt(<a id="change">X_X1*X_X1 + Y_Y1*Y_Y1 + Z_Z1*Z_Z1</a>) 
+    R2     = np.sqrt(<a id="change">X_X2*X_X2 + Y_Y2*Y_Y2 + Z_Z2*Z_Z2</a>) 
+    R0R1   = X2_X1*X_X1 + Y2_Y1*Y_Y1 + Z2_Z1*Z_Z1
+    R0R2   = X2_X1*X_X2 + Y2_Y1*Y_Y2 + Z2_Z1*Z_Z2
+    RVEC   = np.array([R1R2X,R1R2Y,R1R2Z])
+    COEF   = (1/(4*np.pi))*(RVEC/SQUARE) * (R0R1/R1 - R0R2/R2)
+
+    <a id="change">if np.isnan(COEF).any():
+        print(&quotNaN!&quot)       
+
+   </a> return COEF
+
+def vortex_leg_from_A_to_inf(X,Y,Z,X1,Y1,Z1,tw): 
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    R1R2X  = Y_Y1*Z_Z2 - Z_Z1*Y_Y2 
+    R1R2Y  = Z_Z1*X_X2 - X_X1*Z_Z2
+    R1R2Z  = X_X1*Y_Y2 - Y_Y1*X_X2
+    <a id="change">SQUARE = np.square(R1R2X) + np.square(R1R2Y) + np.square(R1R2Z)</a>
+    SQUARE[SQUARE==0] = 1e-32
+    R1     = np.sqrt(<a id="change">np.square(X_X1) + np.square(Y_Y1) + np.square(Z_Z1)</a>) 
+    R2     = np.sqrt(np.square(X_X2) + np.square(Y_Y2) + np.square(Z_Z2)) 
+    R0R1   = X2_X1*X_X1 + Y2_Y1*Y_Y1 + Z2_Z1*Z_Z1
+    R0R2   = X2_X1*X_X2 + Y2_Y1*Y_Y2 + Z2_Z1*Z_Z2</code></pre><img src="36719298.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 21</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/6fd1cef5797fd76e8ea6b68ee9338dce759768ad#diff-85c7b19c1db0b8eaf8ff7de94d3e5ec03e767f0278eba3682cd794ef5c049febL175' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 6fd1cef5797fd76e8ea6b68ee9338dce759768ad</div><div id='time'> Time: 2020-06-06</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/compute_induced_velocity_matrix.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: vortex</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/6fd1cef5797fd76e8ea6b68ee9338dce759768ad#diff-85c7b19c1db0b8eaf8ff7de94d3e5ec03e767f0278eba3682cd794ef5c049febL225' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 6fd1cef5797fd76e8ea6b68ee9338dce759768ad</div><div id='time'> Time: 2020-06-06</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/compute_induced_velocity_matrix.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: vortex_leg_from_B_to_inf</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/6fd1cef5797fd76e8ea6b68ee9338dce759768ad#diff-85c7b19c1db0b8eaf8ff7de94d3e5ec03e767f0278eba3682cd794ef5c049febL175' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 6fd1cef5797fd76e8ea6b68ee9338dce759768ad</div><div id='time'> Time: 2020-06-06</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/compute_induced_velocity_matrix.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: vortex</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/6fd1cef5797fd76e8ea6b68ee9338dce759768ad#diff-85c7b19c1db0b8eaf8ff7de94d3e5ec03e767f0278eba3682cd794ef5c049febL204' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 6fd1cef5797fd76e8ea6b68ee9338dce759768ad</div><div id='time'> Time: 2020-06-06</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/compute_induced_velocity_matrix.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: vortex_leg_from_A_to_inf</div><BR>

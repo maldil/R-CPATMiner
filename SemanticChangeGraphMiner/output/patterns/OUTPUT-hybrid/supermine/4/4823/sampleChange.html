@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data_a, data_p, label = Variable(data_a, volatile=True), \
+                                Variable(data_p, volatile=True), Variable(label)
+
+        out_a, out_p = <a id="change">model</a>(data_a), <a id="change">model(data_p)</a>
+        dists = torch.sqrt(torch.sum((out_a - out_p) ** 2, 1))  &#47&#47 euclidean distance
+        distances.append(dists.data.cpu().numpy().reshape(-1, 1))
+        ll = label.data.cpu().numpy().reshape(-1, 1)
+        labels.append(ll)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                Variable(data_p, volatile=True), Variable(label)
+
+        out_a = model(data_a)
+        <a id="change">out_p = model(data_p)</a>
+        dists = torch.sqrt(torch.sum((out_a - out_p) ** 2, 1))  &#47&#47 euclidean distance
+        distances.append(dists.data.cpu().numpy().reshape(-1, 1))
+        ll = label.data.cpu().numpy().reshape(-1, 1)
+        labels.append(ll)</code></pre>

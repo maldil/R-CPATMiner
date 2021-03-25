@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return to_replace
+
+    def unpack_namespace(self, var, in_vector, in_scalar):
+        <a id="change">try:
+            var_obj = self.variables[var]
+        except:
+            var_obj = self.other_variables[var]
+       </a> <a id="change">if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj, access_data=True)
+            array_name = self.generator.get_array_name(var_obj, access_data=False)
+            if in_vector:
+                return &quotp.{ptr} = {array};&quot.format(ptr=pointer_name, array=array_name)
+            else:
+                return &quot&quot
+        else:
+            if in_vector:
+                return &quotp.{var} = {var};&quot.format(var=var)
+            else:
+                return &quot&quot
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                return &quot&quot
+
+    def unpack_namespace(self, variables_in_vector, variables_in_scalar):
+        <a id="change">code = []</a>
+        for var_obj in self.variables.values():
+            in_vector = var_obj in variables_in_vector
+            in_scalar = var_obj in variables_in_scalar
+            code += [self.unpack_namespace_single(var_obj, in_vector, in_scalar)]
+        <a id="change">return (&quot\n&quot).join(code)</a>
+</code></pre>

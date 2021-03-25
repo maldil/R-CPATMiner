@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.util.print_message(NOTE, &quotCreating report.&quot)
+
+        &#47&#47 Gather reporting items.
+        <a id="change">csv_file_list = glob.glob(os.path.join(self.report_path, &quot*.csv&quot))</a>
+
+        &#47&#47 Create DataFrame.
+        content_list = []
+        <a id="change">for file in csv_file_list:
+            content_list.append(pd.read_csv(file, names=self.header, sep=&quot,&quot))
+       </a> df_csv = pd.concat(content_list).drop_duplicates().sort_values(by=[&quotip&quot, &quotport&quot],
+                                                                       ascending=True).reset_index(drop=True,
+                                                                                                   col_level=1)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            exit(1)
+
+        &#47&#47 Gather reporting items.
+        <a id="change">if mode == &quottrain&quot:
+            self.util.print_message(NOTE, &quotCreating training report.&quot)
+            csv_file_list = glob.glob(os.path.join(self.report_train_path, &quot*.csv&quot))
+
+            &#47&#47 Create DataFrame.
+            content_list = []
+            for file in csv_file_list:
+                content_list.append(pd.read_csv(file, names=self.header, sep=&quot,&quot))
+            df_csv = pd.concat(content_list).drop_duplicates().sort_values(by=[&quotip&quot, &quotport&quot],
+                                                                           ascending=True).reset_index(drop=True,
+                                                                                                       col_level=1)
+
+            items = []
+            for idx in range(len(df_csv)):
+                items.append({&quotip_addr&quot: df_csv.loc[idx, &quotip&quot],
+                              &quotport&quot: df_csv.loc[idx, &quotport&quot],
+                              &quotprod_name&quot: df_csv.loc[idx, &quotservice&quot],
+                              &quotvuln_name&quot: df_csv.loc[idx, &quotvuln_name&quot],
+                              &quottype&quot: df_csv.loc[idx, &quottype&quot],
+                              &quotdescription&quot: df_csv.loc[idx, &quotdescription&quot],
+                              &quotexploit&quot: df_csv.loc[idx, &quotexploit&quot],
+                              &quottarget&quot: df_csv.loc[idx, &quottarget&quot],
+                              &quotpayload&quot: df_csv.loc[idx, &quotpayload&quot],
+                              &quotref&quot: str(df_csv.loc[idx, &quotreference&quot]).replace(&quot@&quot, &quot&lt;br&gt;&quot)})
+
+            try:
+                &#47&#47 Setting template.
+                env = Environment(loader=FileSystemLoader(self.report_train_path))
+                template = env.get_template(self.template_train)
+                pd.set_option(&quotdisplay.max_colwidth&quot, -1)
+                html = template.render({&quottitle&quot: &quotDeep Exploit Scan Report&quot, &quotitems&quot: items})
+
+                &#47&#47 Write report.
+                with codecs.open(self.report_train_file, &quotw&quot, &quotutf-8&quot) as fout:
+                    fout.write(html)
+            except Exception as err:
+                self.util.print_exception(err, &quotCreating report error.&quot)
+            self.util.print_message(OK, &quotCreating training report done.&quot)
+        else:
+            self.util.print_message(NOTE, &quotCreating testing report.&quot)
+            self.util.print_message(OK, &quotCreating testing report done.&quot)
+
+
+&#47&#47 Define command option.
+</a>__doc__ = {f}
+Usage:
+    {f} (-m &lt;mode&gt; | --mode &lt;mode&gt;)
+    {f} -h | --help</code></pre>

@@ -1,0 +1,30 @@
+<html><h3>76b2432b1c1ee03c80895a5c7d49cde485323102,qucumber/nn_states/complex_wavefunction.py,ComplexWaveFunction,rotated_gradient,#ComplexWaveFunction#,163
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                  of the amplitude and phase RBMS
+        :rtype: list[torch.Tensor, torch.Tensor]
+        
+        <a id="change">rotated_grad = [
+            torch.zeros(
+                2, getattr(self, net).num_pars, dtype=torch.double, device=self.device
+            )
+            for net in self.networks
+        ]</a>
+
+        Upsi, Upsi_v, v = unitaries.rotate_psi_inner_prod(
+            self, basis, sample, include_extras=True
+        )</code></pre><h3>After Change</h3><pre><code class='java'>
+            self, basis, sample, include_extras=True
+        )
+
+        <a id="change">vr = v.reshape(-1, v.shape[-1])</a>
+        <a id="change">raw_grads = [
+            self.am_grads(vr).reshape(2, *v.shape[:-1], -1),
+            self.ph_grads(vr).reshape(2, *v.shape[:-1], -1),
+        ]</a>
+
+        rotated_grad = [cplx.einsum("s...,s...g-&gt;...g", Upsi_v, g) for g in raw_grads]
+
+        grad = [</code></pre><img src="6976.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/76b2432b1c1ee03c80895a5c7d49cde485323102#diff-a7c4852f6776d3a559654457c3fed955ad1aa9efb93ce4fbe9a274cc691d60a4L163' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 76b2432b1c1ee03c80895a5c7d49cde485323102</div><div id='time'> Time: 2019-12-22</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/complex_wavefunction.py</div><div id='class'> Class Name: ComplexWaveFunction</div><div id='method'> Method Name: rotated_gradient</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/1aff9ce62a0c9db7f02b93830fed4073fed49bd1#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L60' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 1aff9ce62a0c9db7f02b93830fed4073fed49bd1</div><div id='time'> Time: 2015-02-02</div><div id='author'> Author: jwasilkowski@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/44bdf9be3b913a1a0e90115e45edbee192d01b90#diff-5f145097b3c169665a4c5d428644b451215257f8a1696f5227500aaa04f4bcfaL113' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 44bdf9be3b913a1a0e90115e45edbee192d01b90</div><div id='time'> Time: 2018-03-31</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/probabilistic.py</div><div id='class'> Class Name: Probabilistic</div><div id='method'> Method Name: estimate_competence</div><BR>

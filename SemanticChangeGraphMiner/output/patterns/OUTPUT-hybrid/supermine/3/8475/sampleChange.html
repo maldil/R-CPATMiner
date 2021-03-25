@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 always initially ignore outer products, but save if no inners can be found
+            if input_sets[positions[0]].isdisjoint(input_sets[positions[1]]):
+                outer_positions.append(positions)
+                <a id="change">continue</a>
+
+            result = _parse_possible_contraction(positions, input_sets, output_set, idx_dict,
+                                                 memory_limit, path_cost, naive_cost)
+            if result is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Next iteration only compute contractions with the new tensor
+        input_sets = best[2]
+        new_tensor_pos = len(input_sets) - 1
+        comb_iter = ((i, new_tensor_pos) <a id="change">for</a> i in <a id="change">range(new_tensor_pos)</a>)
+
+        &#47&#47 Update path and total cost
+        path.append(best[1])</code></pre>

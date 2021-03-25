@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        perplexity = numpy.exp(cross_entropy)
+        output_file.write("Cross entropy (base e): {0}\n".format(cross_entropy))
+        if not log_base is None:
+            <a id="change">cross_entropy /= numpy.log(log_base)</a>
+            output_file.write("Cross entropy (base {1}): {0}\n".format(
+                cross_entropy, log_base))
+        output_file.write("Perplexity: {0}\n".format(perplexity))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    validation_iter = theanolm.BatchIterator(input_file, dictionary)
+    base_conversion = 1 if log_base is None else <a id="change">numpy.log(log_base)</a>
+
+    total_logprob = 0
+    num_words = 0
+    num_sentences = 0
+    for word_ids, membership_probs, mask in validation_iter:
+        logprobs = scorer.score_batch(word_ids, membership_probs, mask)
+        for seq_index, seq_logprobs in enumerate(logprobs):
+            seq_logprob = sum(seq_logprobs)
+            seq_length = len(seq_logprobs)
+            total_logprob += seq_logprob
+            num_words += seq_length
+            num_sentences += 1
+            if not word_level:
+                continue
+
+            seq_word_ids = word_ids[:, seq_index]
+            <a id="change">seq_logprobs = [x / base_conversion for x in seq_logprobs]</a>
+            seq_logprob /= base_conversion
+            seq_details = [str(word_id) + ":" + str(logprob)
+                for word_id, logprob in zip(seq_word_ids, seq_logprobs)]
+            output_file.write("&#47&#47 Sentence {0}\n".format(num_sentences))</code></pre>

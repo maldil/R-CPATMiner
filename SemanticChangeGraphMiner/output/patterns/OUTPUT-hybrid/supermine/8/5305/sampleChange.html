@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            ),
+        )
+
+        trainer.setup(algo, env, sampler_args=<a id="change">dict(n_envs=12)</a>)
+        trainer.train(n_epochs=5, batch_size=2048)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            ),
+        )
+
+        <a id="change">sampler = RaySampler(agents=policy,
+                             envs=env,
+                             max_episode_length=env.spec.max_episode_length,
+                             is_tf_worker=True)</a>
+
+        algo = PPO(
+            env_spec=<a id="change">env.spec</a>,
+            policy=policy,
+            baseline=baseline,
+            sampler=sampler,</code></pre>

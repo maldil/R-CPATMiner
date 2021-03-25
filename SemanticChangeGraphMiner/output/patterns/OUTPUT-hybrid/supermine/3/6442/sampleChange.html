@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 ExitStack lets us use several file context managers simultaneous
+        with ExitStack() as stack:
+            files = [stack.enter_context(s.get_filename()) for s in stims]
+            fps = [stack.enter_context(<a id="change">open(f, &quotrb&quot)</a>) for f in files]
+            tags = self.tagger.tag_images(fps, select_classes=self.select_classes)
+
+        extracted = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        extracted = []
+        for i, res in enumerate(tags[&quotoutputs&quot]):
+            data = res[&quotdata&quot][&quotconcepts&quot]
+            <a id="change">concepts = []</a>
+            values = []
+            for d in data:
+                <a id="change">concepts.append(d[&quotname&quot])</a>
+                values.append(d[&quotvalue&quot])
+            extracted.append(ExtractorResult([values], stims[i],
+                             self, features=concepts))
+</code></pre>

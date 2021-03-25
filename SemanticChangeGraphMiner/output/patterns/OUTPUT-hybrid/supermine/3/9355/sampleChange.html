@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            timeframe = TimeFrame(name, group[&quotend&quot].iloc[0])
+            if timeframe in sections:
+                timeframes = [TimeFrame(row[&quotsection_start&quot], row[&quotsection_end&quot])
+                              <a id="change">for</a> _, row in group.iterrows()]
+                self.append(timeframe, {&quotsections&quot: [timeframes]})
+
+    def export_to_cache(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+            if timeframe in sections:
+                timeframes = []
+                for _, row in group.iterrows():
+                    <a id="change">section_start = tz_localize_naive(row[&quotsection_start&quot], tz)</a>
+                    section_end = tz_localize_naive(row[&quotsection_end&quot], tz)
+                    timeframes.append(<a id="change">TimeFrame(section_start, section_end)</a>)
+                self.append(timeframe, {&quotsections&quot: [timeframes]})
+
+    def export_to_cache(self):</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data = Data(edge_index=edge_index)
+        data.num_nodes = edge_index.max().item() + 1
+        data.x = torch.eye(data.num_nodes, dtype=torch.float)
+        y = [0 if <a id="change">G.nodes[i][&quotclub&quot]</a> == &quotMr. Hi&quot else 1 for i in G.nodes]
+        data.y = torch.tensor(y)
+        self.data, self.slices = self.collate([data])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        edge_index = torch.stack([row, col], dim=0)
+
+        &#47&#47 Compute communities.
+        <a id="change">partition = community_louvain.best_partition(G)</a>
+        <a id="change">y = torch.tensor([partition[i] for i in range(G.number_of_nodes())])</a>
+
+        &#47&#47 Select a single training node for each community
+        &#47&#47 (we just use the first one).
+        train_mask = torch.zeros(y.size(0), dtype=torch.bool)</code></pre>

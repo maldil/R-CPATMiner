@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+            else:
+                lambda_reg = self.lambda_reg
+            regularization_matrix = <a id="change">lambda_reg * np.eye(d)</a>
+            regularization_matrix[-1, -1] = 0  &#47&#47 don&quott need to regularize the intercept
+            self.inverse_covariance = np.linalg.inv(
+               outer_product + regularization_matrix)
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47
+                &#47&#47 We&quotre trading a little more time spent in the Python
+                &#47&#47 interpreter with a savings of allocated arrays.
+                <a id="change">outer_product[i, i]</a> += lambda_reg
+
+            self.inverse_covariance = inv(outer_product)
+        else:</code></pre>

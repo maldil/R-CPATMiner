@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ) -&gt; None:
+        self.output_type = output_type
+        self.input_type = self._validate_input_type(
+            input_arg0 if input_arg1 is not None else <a id="change">type(input_arg0)</a>
+        )
+        self.input = self._validate_input(input_arg1 if input_arg1 is not None else input_arg0)
+
+        self._validate_output_type()</code></pre><h3>After Change</h3><pre><code class='java'>
+    ) -&gt; None:
+        self.output_type = self._validate_output_type(output_type)
+        if input_arg1 is None:
+            self.input_type = <a id="change">type(input_arg0)</a>
+            self.input = self._validate_input(input_arg0, shorthand_form=True)
+        else:
+            self.input_type = self._validate_explicit_input_type(input_arg0)
+            self.input = self._validate_input(input_arg1, shorthand_form=False)</code></pre>

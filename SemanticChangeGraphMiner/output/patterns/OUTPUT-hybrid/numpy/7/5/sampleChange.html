@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 TODO refactor for batch (use masked array; perfom mean)
+            indices = self.select(competences)[0]
+            classifier_ensemble = self._get_classifier_ensemble(indices)
+            <a id="change">predicted_proba = predict_proba_ensemble(classifier_ensemble, query)</a>
+
+        return predicted_proba
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            selected_classifiers = np.broadcast_to(selected_classifiers, probabilities.shape)
+            masked_proba = np.ma.MaskedArray(probabilities, ~selected_classifiers)
+
+            <a id="change">predicted_proba = np.mean(masked_proba, axis=1)</a>
+
+        return predicted_proba
+</code></pre>

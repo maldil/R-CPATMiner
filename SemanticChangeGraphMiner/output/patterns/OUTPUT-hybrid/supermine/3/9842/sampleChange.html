@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            temp += F.softplus(F.linear(v, self.weights_W, self.hidden_bias)).sum()
+            temp -= F.softplus(F.linear(vp, self.weights_W, self.hidden_bias)).sum()
+        else:
+            temp = torch.mv(v, self.visible_bias).unsqueeze_(1) - <a id="change">torch</a>.mv(
+                vp, self.visible_bias
+            ).unsqueeze_(0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                F.softplus(F.linear(v, self.weights_W, self.hidden_bias)).sum(1)
+            )
+
+            temp2 = <a id="change">torch.mv(vp, self.visible_bias)</a> + (
+                F.softplus(F.linear(vp, self.weights_W, self.hidden_bias)).sum(1)
+            )
+
+            if expand:
+                <a id="change">temp = temp1.unsqueeze_(1) - temp2.unsqueeze_(0)</a>
+            else:
+                temp = temp1 - temp2
+
+        return 0.5 * temp</code></pre>

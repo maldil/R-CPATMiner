@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def _find_all_chans(redd_path, house_id):
+    house_path = join(redd_path, &quothouse_{:d}&quot.format(house_id))
+    <a id="change">filenames</a> = <a id="change">listdir(house_path)</a>
+    chans = [int(fname.replace(&quotchannel_&quot, &quot&quot).replace(&quot.dat&quot, &quot&quot)) 
+             for fname in filenames
+             if fname.startswith(&quotchannel_&quot) and fname.endswith(&quot.dat&quot)]
+    chans.sort()</code></pre><h3>After Change</h3><pre><code class='java'>
+    list of integers (channels)
+    
+    house_path = join(redd_path, &quothouse_{:d}&quot.format(house_id))
+    <a id="change">filenames</a> = <a id="change">[p for p in listdir(house_path) if isfile(join(house_path, p))]</a>
+    return _matching_ints(filenames, &quot^channel_(\d\d?).dat$&quot)
+
+
+def _matching_ints(strings, regex):</code></pre>

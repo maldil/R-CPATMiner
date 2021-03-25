@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    hdulist = fits.open(archive_file)
+
+    <a id="change">data = np.asarray(hdulist[1].data)</a>
+
+    if cleaned:
+        &#47&#47 -1.1 &lt; FeH &lt; 0.1
+        data = data[(data[&quotFeH&quot] &gt; -1.1) & (data[&quotFeH&quot] &lt; 0.1)]
+
+        &#47&#47 -0.03 &lt; alpha/Fe &lt; 0.57
+        data = data[(data[&quotalphFe&quot] &gt; -0.03) & (data[&quotalphFe&quot] &lt; 0.57)]
+
+        &#47&#47 5000 &lt; Teff &lt; 6500
+        data = data[(data[&quotTeff&quot] &gt; 5000) & (data[&quotTeff&quot] &lt; 6500)]
+
+        &#47&#47 3.5 &lt; log(g) &lt; 5
+        data = data[(data[&quotlogg&quot] &gt; 3.5) & (data[&quotlogg&quot] &lt; 5)]
+
+        &#47&#47 0 &lt; error for FeH &lt; 0.1
+        data = data[(data[&quotFeHErr&quot] &gt; 0) & (data[&quotFeHErr&quot] &lt; 0.1)]
+
+        &#47&#47 0 &lt; error for alpha/Fe &lt; 0.05
+        data = data[(data[&quotalphFeErr&quot] &gt; 0) & (data[&quotalphFeErr&quot] &lt; 0.05)]
+
+        &#47&#47 15 &lt; g mag &lt; 18
+        data = data[(data[&quotgpsf&quot] &gt; 15) & (data[&quotgpsf&quot] &lt; 18)]
+
+        &#47&#47 abs(radVel) &lt; 100 km/s
+        data = data[(abs(data[&quotradVel&quot]) &lt; 100)]
+
+    <a id="change">return data</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        data = Table.read(DATA_URL)
+        data.write(archive_file)
+    else:
+        <a id="change">data = Table.read(archive_file)</a>
+
+    if cleaned:
+        &#47&#47 -1.1 &lt; FeH &lt; 0.1
+        data = data[(data[&quotFeH&quot] &gt; -1.1) & (data[&quotFeH&quot] &lt; 0.1)]
+
+        &#47&#47 -0.03 &lt; alpha/Fe &lt; 0.57
+        data = data[(data[&quotalphFe&quot] &gt; -0.03) & (data[&quotalphFe&quot] &lt; 0.57)]
+
+        &#47&#47 5000 &lt; Teff &lt; 6500
+        data = data[(data[&quotTeff&quot] &gt; 5000) & (data[&quotTeff&quot] &lt; 6500)]
+
+        &#47&#47 3.5 &lt; log(g) &lt; 5
+        data = data[(data[&quotlogg&quot] &gt; 3.5) & (data[&quotlogg&quot] &lt; 5)]
+
+        &#47&#47 0 &lt; error for FeH &lt; 0.1
+        data = data[(data[&quotFeHErr&quot] &gt; 0) & (data[&quotFeHErr&quot] &lt; 0.1)]
+
+        &#47&#47 0 &lt; error for alpha/Fe &lt; 0.05
+        data = data[(data[&quotalphFeErr&quot] &gt; 0) & (data[&quotalphFeErr&quot] &lt; 0.05)]
+
+        &#47&#47 15 &lt; g mag &lt; 18
+        data = data[(data[&quotgpsf&quot] &gt; 15) & (data[&quotgpsf&quot] &lt; 18)]
+
+        &#47&#47 abs(radVel) &lt; 100 km/s
+        data = data[(abs(data[&quotradVel&quot]) &lt; 100)]
+
+    <a id="change">return np.asarray(data)</a>
+</code></pre>

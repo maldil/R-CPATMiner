@@ -1,0 +1,37 @@
+<html><h3>e4dedd15f0dd909f48385867b874519e57ea0363,implementations/aae/aae.py,Decoder,__init__,#Decoder#,63
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self):
+        super(Decoder, self).__init__()
+
+        layers = <a id="change">[  nn.Linear(opt.latent_dim, 512),
+                    nn.LeakyReLU(0.2, inplace=True),
+                    nn.Linear(512, 512),
+                    nn.BatchNorm1d(512),
+                    nn.LeakyReLU(0.2, inplace=True),
+                    nn.Linear(512, opt.img_size**2),
+                    nn.Tanh()]</a>
+
+        <a id="change">self.model = nn.Sequential(*layers)</a>
+
+    def forward(self, noise):
+        img_flat = self.model(noise)
+        img = img_flat.view(img_flat.shape[0], opt.channels, opt.img_size, opt.img_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self):
+        super(Decoder, self).__init__()
+
+        <a id="change">self.model</a> = <a id="change">nn.Sequential(
+            nn.Linear(opt.latent_dim, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 512),
+            nn.BatchNorm1d(512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, opt.img_size**2),
+            nn.Tanh()
+        )</a>
+
+    def forward(self, noise):
+        img_flat = self.model(noise)
+        img = img_flat.view(img_flat.shape[0], opt.channels, opt.img_size, opt.img_size)</code></pre><img src="12673217.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 20</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/e4dedd15f0dd909f48385867b874519e57ea0363#diff-5ac802bf5ab44239f5776daa9dc7da68629693c9242505a7e24316fbc6d730d0L66' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: e4dedd15f0dd909f48385867b874519e57ea0363</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/aae/aae.py</div><div id='class'> Class Name: Decoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd#diff-5ac802bf5ab44239f5776daa9dc7da68629693c9242505a7e24316fbc6d730d0L66' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd</div><div id='time'> Time: 2018-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/aae/aae.py</div><div id='class'> Class Name: Decoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/e4dedd15f0dd909f48385867b874519e57ea0363#diff-5ac802bf5ab44239f5776daa9dc7da68629693c9242505a7e24316fbc6d730d0L48' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: e4dedd15f0dd909f48385867b874519e57ea0363</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/aae/aae.py</div><div id='class'> Class Name: Encoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd#diff-5ac802bf5ab44239f5776daa9dc7da68629693c9242505a7e24316fbc6d730d0L48' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 570cd4f66bdf9c3e4b4bb8fbc31fa24b0bd7cdbd</div><div id='time'> Time: 2018-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/aae/aae.py</div><div id='class'> Class Name: Encoder</div><div id='method'> Method Name: __init__</div><BR>

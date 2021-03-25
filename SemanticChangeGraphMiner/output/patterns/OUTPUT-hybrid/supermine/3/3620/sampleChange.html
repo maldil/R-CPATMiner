@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if transformer is None:
+        transformer = sklearn.decomposition.NMF(n_components=n_components)
+
+    activations = <a id="change">transformer.fit_transform(S.T)</a>
+
+    return (transformer.components_.T, activations.T)
+
+def hpss(S, kernel_size=31, power=2.0, mask=False):</code></pre><h3>After Change</h3><pre><code class='java'>
+    if transformer is None:
+        transformer = sklearn.decomposition.NMF(n_components=n_components)
+
+    activations = <a id="change">transformer</a>.fit_transform(S.T).T
+
+    components = transformer.components_.T
+
+    if sort:
+        components, idx = librosa.util.axis_sort(components, index=True)
+        <a id="change">activations = activations[idx]</a>
+
+    return components, activations
+
+</code></pre>

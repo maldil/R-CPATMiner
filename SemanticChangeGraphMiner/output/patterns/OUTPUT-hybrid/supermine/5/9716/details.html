@@ -1,0 +1,78 @@
+<html><h3>60c2e01bfc93bc01da21b79ebe9f222e601e1931,kymatio/scattering2d/core/scattering2d.py,,scattering2d,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    concatenate = backend.concatenate
+
+    &#47&#47 S is simply a dictionary if we do not perform the averaging...
+    <a id="change">S = {}</a>
+
+    U_r = pad(x)
+
+    U_0_c = fft(U_r, &quotC2C&quot)
+
+    &#47&#47 First low pass filter
+    U_1_c = cdgmm(U_0_c, phi[0])
+    U_1_c = subsample_fourier(U_1_c, k=2 ** J)
+
+    S_0 = fft(U_1_c, &quotC2R&quot, inverse=True)
+    S_0 = unpad(S_0)
+
+    S[()] = S_0
+
+    for n1 in range(len(psi)):
+        j1 = psi[n1][&quotj&quot]
+        U_1_c = cdgmm(U_0_c, psi[n1][0])
+        if j1 &gt; 0:
+            U_1_c = subsample_fourier(U_1_c, k=2 ** j1)
+        U_1_c = fft(U_1_c, &quotC2C&quot, inverse=True)
+        U_1_c = modulus(U_1_c)
+        U_1_c = fft(U_1_c, &quotC2C&quot)
+
+        &#47&#47 Second low pass filter
+        S_1_c = cdgmm(U_1_c, phi[j1])
+        S_1_c = subsample_fourier(S_1_c, k=2 ** (J - j1))
+
+        S_1_r = fft(S_1_c, &quotC2R&quot, inverse=True)
+        S_1_r = unpad(S_1_r)
+
+
+        S[(n1,)] = S_1_r
+
+        if max_order &lt; 2:
+            continue
+        for n2 in range(len(psi)):
+            j2 = psi[n2][&quotj&quot]
+            if j2 &lt;= j1:
+                continue
+            U_2_c = cdgmm(U_1_c, psi[n2][j1])
+            U_2_c = subsample_fourier(U_2_c, k=2 ** (j2 - j1))
+            U_2_c = fft(U_2_c, &quotC2C&quot, inverse=True)
+            U_2_c = modulus(U_2_c)
+            U_2_c = fft(U_2_c, &quotC2C&quot)
+
+            &#47&#47 Third low pass filter
+            S_2_c = cdgmm(U_2_c, phi[j2])
+            S_2_c = subsample_fourier(S_2_c, k=2 ** (J - j2))
+
+            S_2_r = fft(S_2_c, &quotC2R&quot, inverse=True)
+            S_2_r = unpad(S_2_r)
+
+            S[(n1, n2)] = S_2_r
+
+    if vectorize:
+        sorted_keys = <a id="change">sorted(S.keys(), key=lambda x: (len(x),) + x)</a>
+
+        S = [S[key] <a id="change">for</a> key in sorted_keys]
+
+        S = concatenate(S)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    concatenate = backend.concatenate
+
+    &#47&#47 Define lists for output.
+    <a id="change">out_S_0, out_S_1, out_S_2 = [], [], []</a>
+
+    U_r = pad(x)
+
+    U_0_c = fft(U_r, &quotC2C&quot)</code></pre><img src="37373912.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/60c2e01bfc93bc01da21b79ebe9f222e601e1931#diff-35c177116306959429a401a00a1fc3a638f7c1d77a19d7b93feda9ae6eb3480dL12' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 60c2e01bfc93bc01da21b79ebe9f222e601e1931</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering2d/core/scattering2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scattering2d</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b1d839cb8e521c3cf2efaebe17082f1a9680a253#diff-5b86956216e2540fe93140c9ea516d9c8e0128b81b963bf585456505e871c98dL36' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b1d839cb8e521c3cf2efaebe17082f1a9680a253</div><div id='time'> Time: 2020-05-13</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: experiments/working_npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_turnball_intervals</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/8c18cecf15a8935d8bf712edcc91ac05daf2176e#diff-57be8c014d50b33efd9c989cd22f0fd803d3237d19e9af4faf6a176f814cd565L26' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 8c18cecf15a8935d8bf712edcc91ac05daf2176e</div><div id='time'> Time: 2020-06-16</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: appengine/standard/noxfile-template.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f7274c1889e6c31ab89dc0409fa2ac92e6f01228#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L118' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f7274c1889e6c31ab89dc0409fa2ac92e6f01228</div><div id='time'> Time: 2019-03-11</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _snn</div><BR>

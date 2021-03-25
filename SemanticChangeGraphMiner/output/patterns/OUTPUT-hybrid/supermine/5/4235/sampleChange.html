@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    A_indices = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None]))</a>, 0) for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    A_indices = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None])).astype(np.int64)</a>, 0)
+        for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]</code></pre>

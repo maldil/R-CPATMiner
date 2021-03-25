@@ -1,0 +1,25 @@
+<html><h3>d3bfdfbfc4609dd786b18140b78fa84bb1d78731,snorkel/viewer.py,Viewer,save_labels,#Viewer#,159
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def save_labels(self):
+        for cid, v in self.get_labels():
+            <a id="change">existing_annotation = self.session.query(Annotation) \
+                .filter(Annotation.annotator == self.annotator) \
+                .filter(Annotation.candidate == self.candidates[cid]) \
+                .first()</a>
+            if existing_annotation is not None:
+                existing_annotation.value = v
+            else:
+                self.session.add(Annotation(annotator=self.annotator, candidate=self.candidates[cid], value=v))</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        for cid, v in self._get_labels():
+            if self.annotations[cid] is not None:
+                <a id="change">if self.annotations[cid].value != v:
+                    self.annotations[cid].value = v
+           </a> else:
+                self.annotations[cid] = Annotation(annotator=self.annotator, candidate=self.candidates[cid], value=v)
+                self.session.add(self.annotations[cid])
+        self.session.commit()</code></pre><img src="32720659.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/d3bfdfbfc4609dd786b18140b78fa84bb1d78731#diff-e5c888d97caea8a9b80a0808b3b4d4a295ebd0c7eb3ba4807b8ac1253e204820L159' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: d3bfdfbfc4609dd786b18140b78fa84bb1d78731</div><div id='time'> Time: 2016-08-22</div><div id='author'> Author: stephenhbach@gmail.com</div><div id='file'> File Name: snorkel/viewer.py</div><div id='class'> Class Name: Viewer</div><div id='method'> Method Name: save_labels</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/9cc2c91177a6456dea602a93b77864b0a7952333#diff-75143181729e67c04f541aa94879acd8db3751bf965c3459d8fb43d457ffc38eL102' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 9cc2c91177a6456dea602a93b77864b0a7952333</div><div id='time'> Time: 2019-02-24</div><div id='author'> Author: ktns.87@gmail.com</div><div id='file'> File Name: chainercv/links/model/pickable_sequential_chain.py</div><div id='class'> Class Name: PickableSequentialChain</div><div id='method'> Method Name: pick</div><BR><BR><div id='link'><a href='https://github.com/daniel-kukiela/nmt-chatbot/commit/089735850d350dbf7ded0148c67e54e9649b2206#diff-921b3f2f663accd4a59059a766310855954bc9ea68b11a52b1fef7bd38d86712L86' target='_blank'>Link</a></div><div id='project'> Project Name: daniel-kukiela/nmt-chatbot</div><div id='commit'> Commit Name: 089735850d350dbf7ded0148c67e54e9649b2206</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: daniel@kukiela.pl</div><div id='file'> File Name: prepare_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def get_training_weights(y_train, n_classes):
+    <a id="change">weights = []</a>
+    for label in range(n_classes):
+        weights.append(get_class_weights(y_train[:, label], n_classes=2))
+    <a id="change">print("Training weights: {0}".format(weights))</a>
+    return np.array(weights)
+
+
+def get_class_weights(labels_array, n_classes):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def get_training_weights(training_generator, nb_training_samples, n_classes=2):
+    counts = np.zeros((n_labels, n_classes))
+    <a id="change">i = 0</a>
+    <a id="change">while i &lt; nb_training_samples:
+        _, y_train = training_generator.next()
+        for label in range(n_labels):
+            counts[label, :] += np.bincount(np.array(y_train[:, label].ravel(), dtype=np.uint8), minlength=n_classes)
+        i += 1
+   </a> return counts_to_weights(counts)
+
+
+def counts_to_weights(array):</code></pre>

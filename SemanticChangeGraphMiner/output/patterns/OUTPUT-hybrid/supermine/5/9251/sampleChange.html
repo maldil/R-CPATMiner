@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return {param.name: val for param, val in paramMap.items()}
+
+        sc = JVMAPI._curr_sc()
+        <a id="change">paramNameMaps = list(enumerate(map(_name_value_map, paramMaps)))</a>
+        num_models = len(paramNameMaps)
+        paramNameMapsRDD = sc.parallelize(paramNameMaps, numSlices=num_models)
+
+        &#47&#47 Extract image URI from provided dataset and create features as numpy arrays</code></pre><h3>After Change</h3><pre><code class='java'>
+            return {param.name: val for param, val in param_map.items() if param in tunable}
+
+        sc = JVMAPI._curr_sc()
+        <a id="change">param_name_maps = [(i, _get_tunable_name_value_map(pm, self._tunable_params))
+                           for (i, pm) in enumerate(paramMaps)]</a>
+        num_models = len(param_name_maps)
+        paramNameMapsRDD = sc.parallelize(param_name_maps, numSlices=num_models)
+
+        &#47&#47 Extract image URI from provided dataset and create features as numpy arrays</code></pre>

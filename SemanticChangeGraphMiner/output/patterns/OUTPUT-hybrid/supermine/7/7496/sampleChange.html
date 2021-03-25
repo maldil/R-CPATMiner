@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    
+    first = zero_pad1_len // hop_length
+    <a id="change">last = stft.shape[1] - (zero_pad1_len + zero_pad2_len) // hop_length</a>
+    stft = stft[:, first: last]
+    return stft
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Returns:
+
+    
+    <a id="change">overlap = window_length - hop_length</a>
+    <a id="change">first = int(np.ceil(overlap / float(hop_length)))</a>
+    num_col = int(np.ceil((original_signal_length - window_length) / float(hop_length)))
+    stft_cut = stft[:, first:first+num_col]
+    return stft_cut
+</code></pre>

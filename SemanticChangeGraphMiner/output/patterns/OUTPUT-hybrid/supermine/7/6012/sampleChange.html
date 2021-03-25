@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+        &#47&#47 convolution
+        <a id="change">z = self.conv(x)</a>
+
+        &#47&#47 gate
+        if self.scalar_act is not None or self.gate_act is not None:
+            z = torch.utils.checkpoint.checkpoint(gate, z) if self.checkpoint else gate(z)
+
+        &#47&#47 stride
+        <a id="change">if self.stride &gt; 1:
+            z = low_pass_filter(z, self.stride, self.stride)
+
+        &#47&#47 dropout
+       </a> if self.dropout is not None:
+            z = self.dropout(z)
+
+        return z</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if self.gate_act is not None:
+            g = y[:, size_out:]
+            <a id="change">assert g.size(1) == sum(self.repr_out[1:])</a>
+            g = self.gate_act(g)
+            begin_g = 0  &#47&#47 index of first scalar gate capsule
+
+        z = y.new_empty(batch, size_out, *size)</code></pre>

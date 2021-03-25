@@ -1,0 +1,25 @@
+<html><h3>ab2853d916f4a671b900adc1fa959b3199bdad36,poem/train_base.py,,run,#,475
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+      if configs[&quotsummarize_matching_sigmoid_vars&quot]:
+        &#47&#47 Summarize variables used in matching sigmoid.
+        <a id="change">with tf.variable_scope(&quotMatchingSigmoid&quot, reuse=True):
+          summaries[&quottrain/MatchingSigmoid/a&quot] = tf.get_variable(&quota&quot)
+          summaries[&quottrain/MatchingSigmoid/a_plus&quot] = (
+              tf.nn.elu(tf.get_variable(&quota&quot)) + 1.0)
+          summaries[&quottrain/MatchingSigmoid/b&quot] = tf.get_variable(&quotb&quot)
+
+     </a> if FLAGS.use_moving_average:
+        pipeline_utils.add_moving_average(FLAGS.moving_average_decay)
+
+      learning_rate = FLAGS.learning_rate</code></pre><h3>After Change</h3><pre><code class='java'>
+        raw_a, a, b = distance_utils.get_sigmoid_parameters(
+            name=&quotMatchingSigmoid&quot,
+            reuse=True,
+            a_range=<a id="change">(None, FLAGS.sigmoid_a_max)</a>)
+        &#47&#47 TODO(liuti): Currently the variable for `raw_a` is named `a` in
+        &#47&#47 checkpoints, and true `a` may be referred to as `a_plus` for historic
+        &#47&#47 reasons. Consolidate the naming.</code></pre><img src="38859298.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/google-research/google-research/commit/ab2853d916f4a671b900adc1fa959b3199bdad36#diff-95fdc96108a685fa39ef0a5d44580e96fba7358c5f767737663688adab5a4227L1' target='_blank'>Link</a></div><div id='project'> Project Name: google-research/google-research</div><div id='commit'> Commit Name: ab2853d916f4a671b900adc1fa959b3199bdad36</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: liuti@google.com</div><div id='file'> File Name: poem/train_base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: run</div><BR><BR><div id='link'><a href='https://github.com/chuyangliu/snake/commit/be3f3039c92721bb54de1a7eda210a87f19da67d#diff-853a583c4cef99563451d6870b00f5a0ceea6fe4dde0758b5ef966363f54e681L45' target='_blank'>Link</a></div><div id='project'> Project Name: chuyangliu/snake</div><div id='commit'> Commit Name: be3f3039c92721bb54de1a7eda210a87f19da67d</div><div id='time'> Time: 2018-01-05</div><div id='author'> Author: chuyang.s.liu@gmail.com</div><div id='file'> File Name: snake/solver/dqn.py</div><div id='class'> Class Name: DQNSolver</div><div id='method'> Method Name: __build_net</div><BR><BR><div id='link'><a href='https://github.com/google-research/google-research/commit/ab2853d916f4a671b900adc1fa959b3199bdad36#diff-51704933a8989ba4d77d07e20a3ad96820db79da5dae4fcef88c807b99503664L43' target='_blank'>Link</a></div><div id='project'> Project Name: google-research/google-research</div><div id='commit'> Commit Name: ab2853d916f4a671b900adc1fa959b3199bdad36</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: liuti@google.com</div><div id='file'> File Name: poem/core/distance_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compute_sigmoid_matching_probabilities</div><BR>

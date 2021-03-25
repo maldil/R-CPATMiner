@@ -1,0 +1,24 @@
+<html><h3>ba256835a4f33d9139a70b6440c3223123132bc8,torchnet/meter/confusionmeter.py,ConfusionMeter,add,#ConfusionMeter#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &quotmulti-label setting is not supported&quot
+ 
+        pred = output.argmax(1)
+        <a id="change">for i,n in enumerate(pred):
+            pos = onehot and target[i].argmax(0) or int(target[i])
+            self.conf[pos][n] += 1
+
+   </a> def value(self):
+        if self.normalized:
+            conf = self.conf.astype(np.float32)
+            return conf / conf.sum(1).clip(min=1e-12)[:,None]</code></pre><h3>After Change</h3><pre><code class='java'>
+                &quotin one-hot encoding, target values should be 0 or 1&quot
+            assert (target.sum(1) == 1).all(), \
+                &quotmulti-label setting is not supported&quot
+            <a id="change">target = np.argmax(target, 1)</a>
+        else:
+            assert (predicted.max() &lt; self.k) and (predicted.min() &gt;= 0), \
+                &quotpredicted values are not between 1 and k&quot
+</code></pre><img src="39088500.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/tnt/commit/ba256835a4f33d9139a70b6440c3223123132bc8#diff-b0fefc107703573331e0796b347c2dd79a8b764065b45683dce317a53d0ea0f1L28' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tnt</div><div id='commit'> Commit Name: ba256835a4f33d9139a70b6440c3223123132bc8</div><div id='time'> Time: 2017-08-24</div><div id='author'> Author: swetha.tanamala@gmail.com</div><div id='file'> File Name: torchnet/meter/confusionmeter.py</div><div id='class'> Class Name: ConfusionMeter</div><div id='method'> Method Name: add</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-f725eea8a8cfd270dc9a67e16ed52700e6bfaa5121f5ef13eea92afe7896c09aL87' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/rank.py</div><div id='class'> Class Name: Rank</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/chuyangliu/snake/commit/1226a2eee68336240a35fce9678320ca9430584f#diff-853a583c4cef99563451d6870b00f5a0ceea6fe4dde0758b5ef966363f54e681L185' target='_blank'>Link</a></div><div id='project'> Project Name: chuyangliu/snake</div><div id='commit'> Commit Name: 1226a2eee68336240a35fce9678320ca9430584f</div><div id='time'> Time: 2018-01-06</div><div id='author'> Author: chuyang.s.liu@gmail.com</div><div id='file'> File Name: snake/solver/dqn.py</div><div id='class'> Class Name: DQNSolver</div><div id='method'> Method Name: __choose_action</div><BR>

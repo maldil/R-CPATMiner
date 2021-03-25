@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if max_sample_period is not None:
+        timedelta = np.where(timedelta &gt; max_sample_period,
+                             max_sample_period, timedelta)
+    timedelta_secs = <a id="change">timedelta / np.timedelta64(1, &quots&quot)</a>  &#47&#47 convert to seconds
+    joules = (timedelta_secs * series.values[:-1]).sum()
+
+    if unit == &quotkwh&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        series = series.icol(0)
+
+    timedelta = np.diff(series.index.values)
+    timedelta_secs = <a id="change">timedelta64_to_secs(timedelta)</a>
+    joules = (timedelta_secs * series.values[:-1]).sum()
+
+    if unit == &quotkwh&quot:
+        JOULES_PER_KWH = 3600000</code></pre>

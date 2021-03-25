@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    print(XY_completed)
+    print(missing_mask)
+    diff = XY - XY_completed
+    <a id="change">missing_mse = np.mean(diff[missing_mask] ** 2)</a>
+    missing_mae = np.mean(np.abs(diff[missing_mask]))
+    print("MSE: %0.4f, MAE: %0.4f" % <a id="change">(missing_mse, missing_mae)</a>)
+    assert missing_mae &lt; 0.1, "Error too high!"
+
+if __name__ == "__main__":</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_auto_encoder_with_low_rank_random_matrix():
+    XY_completed = AutoEncoder().complete(XY_incomplete)
+    <a id="change">_</a>, missing_mae = reconstruction_error(XY, XY_completed, missing_mask)
+    assert missing_mae &lt; 0.1, "Error too high!"
+
+if __name__ == "__main__":</code></pre>

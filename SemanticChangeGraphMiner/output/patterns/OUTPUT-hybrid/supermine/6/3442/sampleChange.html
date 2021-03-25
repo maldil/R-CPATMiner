@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 candidates generated using the random planner (use the current DA)
+        if &quotrandom&quot in self.rival_gen_strategy:
+            random_doc = self.random_candgen.generate_tree(da)
+            <a id="change">for _ in xrange(self.rival_number - 1):
+                self.random_candgen.generate_tree(da, random_doc)
+           </a> rival_ttrees.extend(ttrees_from_doc(random_doc, self.language, self.selector))
+            rival_feats.extend([self.vectorizer.transform(self.feats.get_features(ttree, {&quotda&quot: da}))
+                                for ttree in rival_ttrees])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            random_doc = None
+            while random_doc is None or (len(random_doc.bundles) &lt; self.rival_number):
+                random_doc = self.random_candgen.generate_tree(da, random_doc)
+                <a id="change">if (random_doc.bundles[-1].get_zone(self.language, self.selector).ttree
+                    == train_ttrees[gold_ttree_no]):  &#47&#47 don&quott generate trees identical to the gold one
+                    del random_doc.bundles[-1]
+           </a> random_ttrees = ttrees_from_doc(random_doc, self.language, self.selector)
+            rival_ttrees.extend(random_ttrees)
+            rival_feats.extend([self.vectorizer.transform(self.feats.get_features(ttree, {&quotda&quot: da}))
+                                for ttree in random_ttrees])</code></pre>

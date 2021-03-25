@@ -1,0 +1,30 @@
+<html><h3>d54b1ef0718023c0d25c7da3319f0a9a288913ea,tgen/logreg_rank.py,LogisticRegressionRanker,create_training_data,#LogisticRegressionRanker#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                true_children = set([(c.formeme, c.t_lemma, c &gt; node) for c in node.get_children()])
+                for cand in cdfs[node.formeme]:
+                    feats = self.features.get_features(cand, node)
+                    feats[&quotsel&quot] = <a id="change">cand in true_children</a>
+                    train.append(feats)
+        &#47&#47 save to file
+        log_info(&quotWriting &quot + train_arff_fname)
+        train_set = DataSet()</code></pre><h3>After Change</h3><pre><code class='java'>
+                true_children = [(c.formeme, c.t_lemma, c &gt; node) for c in node.get_children()]
+                &#47&#47 generate false candidate instances
+                pdist = {}
+                <a id="change">if node.formeme in cdfs:
+                    true_children_set = set(true_children)
+                    pdist = self.cdf_to_dist(cdfs[node.formeme])
+                    for cand, prob in pdist.iteritems():
+                        if cand in true_children_set:
+                            continue
+                        feats = self.features.get_features((cand, prob), node)
+                        feats[&quotsel&quot] = 0
+                        train.append(feats)
+                &#47&#47 generate true instances
+               </a> for true_child in true_children:
+                    feats = self.features.get_features((true_child, pdist.get(true_child, self.LO_PROB)), node)
+                    feats[&quotsel&quot] = 1
+                    train.append(feats)</code></pre><img src="35746711.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/d54b1ef0718023c0d25c7da3319f0a9a288913ea#diff-4a56dd414f90e821275ffdb81b5260fc645a56a5bb49069a1dc51ade2a708f83L138' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: d54b1ef0718023c0d25c7da3319f0a9a288913ea</div><div id='time'> Time: 2014-03-31</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/logreg_rank.py</div><div id='class'> Class Name: LogisticRegressionRanker</div><div id='method'> Method Name: create_training_data</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/d54b1ef0718023c0d25c7da3319f0a9a288913ea#diff-4a56dd414f90e821275ffdb81b5260fc645a56a5bb49069a1dc51ade2a708f83L138' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: d54b1ef0718023c0d25c7da3319f0a9a288913ea</div><div id='time'> Time: 2014-03-31</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/logreg_rank.py</div><div id='class'> Class Name: LogisticRegressionRanker</div><div id='method'> Method Name: create_training_data</div><BR><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/31978b5eb3ccc4683ca0abb22697ebac80f2cba9#diff-a23de6aa06961de4922190cd83cf08a87c739921542afdaa23199cf6cb8e45a1L108' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: 31978b5eb3ccc4683ca0abb22697ebac80f2cba9</div><div id='time'> Time: 2015-10-07</div><div id='author'> Author: eric.talevich@gmail.com</div><div id='file'> File Name: cnvlib/vary.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _parse_records</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/c08c98415395b76371581432be55381f0f6e2b40#diff-da421d42f214ebd5259e2b883809f4d8a21d35a904e71892c4a336b6ec37177cL65' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: c08c98415395b76371581432be55381f0f6e2b40</div><div id='time'> Time: 2018-01-09</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/audit/format_string.py</div><div id='class'> Class Name: format_string</div><div id='method'> Method Name: _analyze_result</div><BR>

@@ -1,0 +1,24 @@
+<html><h3>d3ec733c425e7d9d066380b95e04605843339bd0,dirty_cat/similarity_encoder.py,,get_prototype_sorted_by_frequencies,#,47
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Returns a numpy array of the values without their frequencies
+    
+    uniques, counts = np.unique(prototypes, return_counts=True)
+    frequencies = <a id="change">list(zip(uniques, counts))</a>
+    frequencies, _ = sorted(frequencies, key=lambda elt: elt[1], reverse=True)
+    <a id="change">return np.array([f for f in frequencies])</a>
+
+
+_VECTORIZED_EDIT_DISTANCES = {
+    &quotlevenshtein-ratio&quot: np.vectorize(string_distances.levenshtein_ratio),</code></pre><h3>After Change</h3><pre><code class='java'>
+    Returns a numpy array of the values without their frequencies
+    
+    uniques, counts = np.unique(prototypes, return_counts=True)
+    <a id="change">sorted_indexes = np.argsort(counts)[::-1]</a>
+    <a id="change">return uniques[sorted_indexes], counts[sorted_indexes]</a>
+
+
+_VECTORIZED_EDIT_DISTANCES = {
+    &quotlevenshtein-ratio&quot: np.vectorize(string_distances.levenshtein_ratio),</code></pre><img src="11477359.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/d3ec733c425e7d9d066380b95e04605843339bd0#diff-a57db3d1663d61ea5375f4c19da71219fbbde9728519cebe30152e591e8aaaa5L54' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: d3ec733c425e7d9d066380b95e04605843339bd0</div><div id='time'> Time: 2018-11-08</div><div id='author'> Author: maxime.cuny@inria.fr</div><div id='file'> File Name: dirty_cat/similarity_encoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_prototype_sorted_by_frequencies</div><BR><BR><div id='link'><a href='https://github.com/robertmartin8/PyPortfolioOpt/commit/5e56bcc41a7d147c710e57c4c764651c7e148581#diff-d9be8bdb863d43140081123f1961beccb4e8d7828d8f66a0007b417fb73cbccfL94' target='_blank'>Link</a></div><div id='project'> Project Name: robertmartin8/PyPortfolioOpt</div><div id='commit'> Commit Name: 5e56bcc41a7d147c710e57c4c764651c7e148581</div><div id='time'> Time: 2020-04-30</div><div id='author'> Author: thomas.schmlezer@gmail.com</div><div id='file'> File Name: pypfopt/hierarchical_portfolio.py</div><div id='class'> Class Name: HRPOpt</div><div id='method'> Method Name: _get_quasi_diag</div><BR><BR><div id='link'><a href='https://github.com/robertmartin8/PyPortfolioOpt/commit/70b08e1d2e703b4e3d16da9aaa04706dd4413232#diff-d9be8bdb863d43140081123f1961beccb4e8d7828d8f66a0007b417fb73cbccfL104' target='_blank'>Link</a></div><div id='project'> Project Name: robertmartin8/PyPortfolioOpt</div><div id='commit'> Commit Name: 70b08e1d2e703b4e3d16da9aaa04706dd4413232</div><div id='time'> Time: 2020-05-01</div><div id='author'> Author: thomas.schmlezer@gmail.com</div><div id='file'> File Name: pypfopt/hierarchical_portfolio.py</div><div id='class'> Class Name: HRPOpt</div><div id='method'> Method Name: _get_quasi_diag</div><BR>

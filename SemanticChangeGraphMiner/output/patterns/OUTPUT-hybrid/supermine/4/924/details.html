@@ -1,0 +1,21 @@
+<html><h3>ba03571f28ffb877b16643304494c060c0dd21f4,se3cnn/SO3.py,,spherical_harmonics,#,110
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Js = Js.reshape(-1, *[1] * alpha.dim())
+    Ms = Ms.reshape(-1, *[1] * alpha.dim())
+    alpha = alpha.view(1, *alpha.size())
+    beta = <a id="change">beta.view(1, *beta.size())</a>
+    Y = sh(Js, Ms, math.pi - beta.cpu().numpy(), alpha.cpu().numpy())
+    return torch.tensor(Y, dtype=dtype, device=device)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Ms = np.concatenate([np.arange(-J, J + 1, 1) for J in order], 0)
+    Js = Js.reshape(-1, *[1] * alpha.dim())
+    Ms = Ms.reshape(-1, *[1] * alpha.dim())
+    alpha = <a id="change">alpha.unsqueeze(0)</a>
+    beta = beta.unsqueeze(0)
+    Y = sh(Js, Ms, math.pi - beta.cpu().numpy(), alpha.cpu().numpy())
+    return torch.tensor(Y, dtype=dtype, device=device)
+</code></pre><img src="4013913.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/ba03571f28ffb877b16643304494c060c0dd21f4#diff-aea3495328514bc68256872a4bcf515b46f9ca204264d5875abd8053e5c4800eL140' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: ba03571f28ffb877b16643304494c060c0dd21f4</div><div id='time'> Time: 2019-07-15</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/SO3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: spherical_harmonics</div><BR><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/44ff365b7952593a02744ecc4d507e3ee460ef4f#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L72' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: 44ff365b7952593a02744ecc4d507e3ee460ef4f</div><div id='time'> Time: 2017-12-06</div><div id='author'> Author: kwk236@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Decoder</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/978c13b33a85552e1de130e839d7eab74cfccd69#diff-80a11d6c58dfefa22cb7fe542b1dddb91ab537422b26c834f3c0ae182d0d8cadL87' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 978c13b33a85552e1de130e839d7eab74cfccd69</div><div id='time'> Time: 2017-05-03</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: th_affine2d</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/54d89c639d8d6d72e5ada833c00762b82ba63348#diff-02c26cdc93bed585f4e563df8b7382be6521c404d88fb970de7c58f16595055bL127' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 54d89c639d8d6d72e5ada833c00762b82ba63348</div><div id='time'> Time: 2018-05-26</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/munit/munit.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_images</div><BR>

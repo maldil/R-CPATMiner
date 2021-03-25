@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+parser.add_argument("gold", type=str, help="Path to gold data.")
+args = parser.parse_args()
+
+<a id="change">with open(args.system, "r", encoding="utf-8") as system_file:
+    system = [line.rstrip("\n") for line in system_file]
+
+</a>with open(args.gold, "r", encoding="utf-8") as gold_file:
+    gold = [line.rstrip("\n") for line in gold_file]
+
+if len(system) &lt; len(gold):
+    raise RuntimeError("The system output is shorter than gold data: {} vs {}.".format(len(system), len(gold)))
+
+score = 0
+for i in range(len(gold)):
+    gold_sentence = gold[i].split(" ")
+    system_sentence = system[i].split(" ")
+    <a id="change">score</a> += edit_distance(gold_sentence, system_sentence) / len(gold_sentence)
+
+print("Average normalized edit distance: {:.2f}%".format(100 * score / len(gold)))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            )
+    return a[-1][-1]
+
+<a id="change">if __name__ == "__main__":
+    &#47&#47 Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("predictions", type=str, help="Path to predicted output.")
+    parser.add_argument("dataset", type=str, help="Which dataset to evaluate (&quotdev&quot, &quottest&quot).")
+    args = parser.parse_args([] if "__file__" not in globals() else None)
+
+    gold = getattr(TimitMFCC(), args.dataset).data["letters"]
+
+    with open(args.predictions, "r", encoding="utf-8") as predictions_file:
+        predictions = [line.rstrip("\n") for line in predictions_file]
+
+    if len(predictions) &lt; len(gold):
+        raise RuntimeError("The predictions are shorter than gold data: {} vs {}.".format(len(predictions), len(gold)))
+
+    score = 0
+    for i in range(len(gold)):
+        gold_sentence = [TimitMFCC.LETTERS[letter] for letter in gold[i]]
+        predicted_sentence = predictions[i].split(" ")
+        score += edit_distance(gold_sentence, predicted_sentence) / len(gold_sentence)
+
+    print("Average normalized edit distance: {:.2f}%".format(100 * score / len(gold)))</a>
+</code></pre>

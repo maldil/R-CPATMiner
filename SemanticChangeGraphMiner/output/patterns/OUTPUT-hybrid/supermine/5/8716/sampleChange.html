@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if mapping is not None:
+            mapping_out = mapping
+            for switch in mapping:
+                <a id="change">categories_dict = dict(switch.get(&quotmapping&quot))</a>
+                column = switch.get(&quotcol&quot)
+                transformed_column = X[column].map(lambda x: categories_dict.get(x, np.nan))
+
+                try:</code></pre><h3>After Change</h3><pre><code class='java'>
+                index = []
+                values = []
+
+                <a id="change">for i in range(len(categories)):
+                    index.append(categories[i])
+                    values.append(i + 1)
+
+               </a> mapping = pd.Series(data=values, index=index)
+
+                mapping_out.append({&quotcol&quot: col, &quotmapping&quot: mapping, &quotdata_type&quot: X[col].dtype}, )
+</code></pre>

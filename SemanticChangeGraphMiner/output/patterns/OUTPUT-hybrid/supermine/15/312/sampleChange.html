@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    lr.fit(X, y)  &#47&#47 0, 1 class
+    np.testing.assert_almost_equal(lr.w_, t, 2)
+    <a id="change">assert((y == lr.predict(X)).all())</a>
+
+
+def test_l2_regularization_gd():
+    lr = LogisticRegression(eta=0.01,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    lr.fit(X, y)  &#47&#47 0, 1 class
+    np.testing.assert_almost_equal(lr.w_, t, 2)
+    <a id="change">y_pred = lr.predict(X)</a>
+    <a id="change">acc = np.sum(y == y_pred, axis=0) / float(X.shape[0])</a>
+    assert acc == 1.0, "Acc: %s" % acc
+
+
+def test_l2_regularization_gd():</code></pre>

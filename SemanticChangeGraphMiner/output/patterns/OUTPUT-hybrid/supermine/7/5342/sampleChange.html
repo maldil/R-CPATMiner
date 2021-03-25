@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 If we can find this layer in our pseudo-cache then find the
+                &#47&#47 matching prettified version in the associated list.
+                key_values = sorted(context_layer.items())
+                if <a id="change">key_values in self.seen_layers</a>:
+                    index = self.seen_layers.index(key_values)
+                    pformatted = self.pformat_layers[index]
+                else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 Check if the layer is in the cache.
+                key_values = sorted(context_layer.items())
+                pformatted = None
+                <a id="change">for _key_values, _pformatted in self.pformat_layers:
+                    if _key_values == key_values:
+                        pformatted = _pformatted
+                        break
+
+               </a> if pformatted is None:
+                    temp_layer = {}
+                    for key, value in context_layer.items():
+                        &#47&#47 Replace any request elements - they have a large</code></pre>

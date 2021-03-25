@@ -1,0 +1,27 @@
+<html><h3>5e35bf984690a196063e3eb3fe5807b1475e7d0e,capsulelayers.py,CapsuleLayer,call,#CapsuleLayer#,94
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.bias = K.update(self.bias, self.bias + K.sum(inputs_hat * outputs, [0, -2, -1]))
+
+        &#47&#47 Handling with no routing scenario. Prior bias will always be zero.
+        <a id="change">if self.num_routing == 0:
+            c = K.softmax(self.bias)
+            c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)
+            outputs = squash(K.sum(c_expand * inputs_hat, 1, keepdims=True))
+
+       </a> return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])
+
+    def compute_output_shape(self, input_shape):
+        return tuple([None, self.num_capsule, self.dim_vector])</code></pre><h3>After Change</h3><pre><code class='java'>
+            outputs = squash(K.sum(c * inputs_hat, 1, keepdims=True))
+
+            &#47&#47 last iteration needs not compute bias which will not be passed to the graph any more anyway.
+            <a id="change">if i != self.num_routing - 1:
+                self.bias += K.sum(inputs_hat * outputs, -1, keepdims=True)
+
+       </a> return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])
+
+    def compute_output_shape(self, input_shape):
+        return tuple([None, self.num_capsule, self.dim_vector])</code></pre><img src="23429045.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/5e35bf984690a196063e3eb3fe5807b1475e7d0e#diff-70158145f8c3017473e154d3e9318cd7ebab5469186eddb6bcbe943621b770a0L94' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 5e35bf984690a196063e3eb3fe5807b1475e7d0e</div><div id='time'> Time: 2017-11-01</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulelayers.py</div><div id='class'> Class Name: CapsuleLayer</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/utkuozbulak/pytorch-cnn-visualizations/commit/697e7fa4f4a6e45566843adc24b126165b817ac0#diff-f3c7c28a77fc893fcb1450dda7cbffa449c1e0a0e36a530d3de393851b21f497L110' target='_blank'>Link</a></div><div id='project'> Project Name: utkuozbulak/pytorch-cnn-visualizations</div><div id='commit'> Commit Name: 697e7fa4f4a6e45566843adc24b126165b817ac0</div><div id='time'> Time: 2019-05-03</div><div id='author'> Author: utku.ozbulak@gmail.com</div><div id='file'> File Name: src/misc_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_image</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/4af750bec058da0cf5d4a3245a443549b9d7fd33#diff-97050f864b120e12efbf2dc90b39500f0534c635d2c6f5cd442216bc9abcebcbL55' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 4af750bec058da0cf5d4a3245a443549b9d7fd33</div><div id='time'> Time: 2016-04-05</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/gp_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: acquisition</div><BR>

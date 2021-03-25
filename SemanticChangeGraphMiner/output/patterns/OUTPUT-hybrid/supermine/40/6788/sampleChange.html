@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47         &gt;
+&#47&#47     |   [^&lt;&gt;] )*
+&#47&#47   &gt;
+<a id="change">_RE_PATTERN_IDENT = r&quot[_a-zA-Z]\w*&quot</a>  &#47&#47 =~ [[:alpha:]][[:alnum:]]*
+<a id="change">_RE_PATTERN_TYPE = (
+    r&quot(?:const\s+)?(?:typename\s+|class\s+|struct\s+|union\s+|enum\s+)?&quot
+    r&quot(?:\w|&quot
+    r&quot\s*&lt;(?:&lt;(?:&lt;[^&lt;&gt;]*&gt;|[^&lt;&gt;])*&gt;|[^&lt;&gt;])*&gt;|&quot
+    r&quot::)+&quot)</a>
+&#47&#47 A call-by-reference parameter ends with &quot& identifier&quot.
+<a id="change">_RE_PATTERN_REF_PARAM = re.compile(
+    r&quot(&quot + _RE_PATTERN_TYPE + r&quot(?:\s*(?:\bconst\b|[*]))*\s*&quot
+    r&quot&\s*&quot + _RE_PATTERN_IDENT + r&quot)\s*(?:=[^,()]+)?[,)]&quot)</a>
+&#47&#47 A call-by-const-reference parameter either ends with &quotconst& identifier&quot
+&#47&#47 or looks like &quotconst type& identifier&quot when &quottype&quot is atomic.
+<a id="change">_RE_PATTERN_CONST_REF_PARAM = (
+    r&quot(?:.*\s*\bconst\s*&\s*&quot + _RE_PATTERN_IDENT +
+    r&quot|const\s+&quot + _RE_PATTERN_TYPE + r&quot\s*&\s*&quot + _RE_PATTERN_IDENT + r&quot)&quot)</a>
+
+
+def CheckLanguage(filename, clean_lines, linenum, file_extension,
+                  include_state, nesting_state, error):</code></pre><h3>After Change</h3><pre><code class='java'>
+    CheckSectionSpacing(filename, clean_lines, classinfo, linenum, error)
+
+
+_RE_PATTERN_INCLUDE_NEW_STYLE = <a id="change">re.compile(r&quot&#47&#47include +"[^/]+\.h"&quot)</a>
+_RE_PATTERN_INCLUDE = <a id="change">re.compile(r&quot^\s*&#47&#47\s*include\s*([&lt;"])([^&gt;"]*)[&gt;"].*$&quot)</a>
+&#47&#47 Matches the first component of a filename delimited by -s and _s. That is:
+&#47&#47  _RE_FIRST_COMPONENT.match(&quotfoo&quot).group(0) == &quotfoo&quot
+&#47&#47  _RE_FIRST_COMPONENT.match(&quotfoo.cc&quot).group(0) == &quotfoo&quot
+&#47&#47  _RE_FIRST_COMPONENT.match(&quotfoo-bar_baz.cc&quot).group(0) == &quotfoo&quot
+&#47&#47  _RE_FIRST_COMPONENT.match(&quotfoo_bar-baz.cc&quot).group(0) == &quotfoo&quot
+<a id="change">_RE_FIRST_COMPONENT = re.compile(r&quot^[^-_.]+&quot)</a>
+
+
+def _DropCommonSuffixes(filename):
+  Drops common suffixes like _test.cc or -inl.h from filename.</code></pre>

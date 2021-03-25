@@ -1,0 +1,35 @@
+<html><h3>48a579ae1638f5c60e62d8f5c3bad35e0dcef249,librosa/beat.py,,onset_estimate_bpm,#,145
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47   this fails if ac_window &gt; length of song   
+
+    bpms                    = 60.0 * fft_resolution / (numpy.arange(1, ac_window+1))
+    x_corr_weighting        = numpy.exp(-0.5 * (<a id="change">(numpy.log2(bpms) - numpy.log2(start_bpm))</a> / bpm_std)**2)
+
+    &#47&#47 Compute the weighted autocorrelation
+    x_corr                  = <a id="change">x_corr * x_corr_weighting</a>
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks                 = librosa.localmax(x_corr)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    mincol      = max(0,    maxcol - numpy.round(DURATION * fft_res))
+
+    &#47&#47 Use auto-correlation out of 4 seconds (empirically set??)
+    ac_window   = numpy.round(<a id="change">AC_SIZE * fft_res</a>)
+
+    &#47&#47 Compute the autocorrelation
+    x_corr      = librosa.autocorrelate(onsets[mincol:maxcol], ac_window)
+
+
+    &#47&#47   FIXME:  2013-01-25 08:55:40 by Brian McFee &lt;brm2132@columbia.edu&gt;
+    &#47&#47   this fails if ac_window &gt; length of song   
+    &#47&#47 re-weight the autocorrelation by log-normal prior
+    bpms    = 60.0 * fft_res / (numpy.arange(1, ac_window+1))
+
+    &#47&#47 Smooth the autocorrelation by a log-normal distribution
+    x_corr  = x_corr * numpy.exp(-0.5 * <a id="change">((numpy.log2(bpms / start_bpm)) / BPM_STD)</a>**2)
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks = librosa.localmax(x_corr)</code></pre><img src="39663197.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/48a579ae1638f5c60e62d8f5c3bad35e0dcef249#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L158' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 48a579ae1638f5c60e62d8f5c3bad35e0dcef249</div><div id='time'> Time: 2013-03-23</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: onset_estimate_bpm</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/1cdfcfa8a884ffb5f670812ee4b528a76f367be9#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL524' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 1cdfcfa8a884ffb5f670812ee4b528a76f367be9</div><div id='time'> Time: 2016-05-07</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: __fft_filters</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/c5d2c23110586075a1ad6721dd9a74064111b595#diff-33ed63a42e365ade60abd769575eefc0ed4ff819f4977c26b6fc2a53af90d9e7L196' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: c5d2c23110586075a1ad6721dd9a74064111b595</div><div id='time'> Time: 2015-03-18</div><div id='author'> Author: chebee7i@gmail.com</div><div id='file'> File Name: dit/math/aitchison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inner</div><BR>

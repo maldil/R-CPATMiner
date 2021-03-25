@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+import torch.nn as nn
+from torch.autograd import Variable
+
+<a id="change">sys.path.append(&quot../pytorch2keras&quot)</a>
+from converter import pytorch_to_keras
+
+&#47&#47 The code from torchvision
+import math</code></pre><h3>After Change</h3><pre><code class='java'>
+        k_model = pytorch_to_keras(model, input_var, (3, 224, 224,), verbose=True)
+
+        pytorch_output = output.data.numpy()
+        keras_output = <a id="change">k_model.predict(input_np)</a>
+
+        <a id="change">error = np.max(pytorch_output - keras_output)</a>
+        print(<a id="change">error</a>)
+        if max_error &lt; error:
+            max_error = error
+
+    <a id="change">print(&quotMax error: {0}&quot.format(max_error))</a>
+</code></pre>

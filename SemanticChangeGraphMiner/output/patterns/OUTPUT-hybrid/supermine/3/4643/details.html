@@ -1,0 +1,38 @@
+<html><h3>900b9a7f2884aaf419e62508be7497b0ad3e1f62,pytext/metric_reporters/squad_metric_reporter.py,SquadMetricReporter,_unnumberize,#SquadMetricReporter#,358
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        start_char_idx = 0
+        end_char_idx = 0
+        answer_str = ""
+        <a id="change">for doc_token_idx in range(len(doc_tokens) - num_ans_tokens):
+            if doc_tokens[doc_token_idx : doc_token_idx + num_ans_tokens] == ans_tokens:
+                start_char_idx = start_idx[doc_token_idx]
+                end_char_idx = end_idx[doc_token_idx + num_ans_tokens - 1]
+                answer_str = doc_str[start_char_idx:end_char_idx]
+                break
+       </a> return answer_str, start_char_idx, end_char_idx
+
+    &#47&#47 The following three functions are copied from Squad&quots evaluation script.
+    &#47&#47 https://worksheets.codalab.org/rest/bundles/0x6b567e1cf2e041ec80d7098f031c5c9e/contents/blob/</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idxs, end_idxs = self.tensorizer._lookup_tokens(doc_str)
+        &#47&#47 find the offset of doc_tokens in tokens
+        offset = <a id="change">list(
+            map(
+                lambda x: tokens[x : x + len(doc_tokens)] == doc_tokens,
+                range(len(tokens) - len(doc_tokens) + 1),
+            )
+        ).index(True)</a>
+        assert offset &gt; -1
+
+        &#47&#47 find the answer char idxs
+        start_char_idx = 0
+        end_char_idx = end_idxs[-1]
+        try:
+            <a id="change">start_char_idx = start_idxs[ans_token_start - offset]</a>
+            end_char_idx = end_idxs[ans_token_end - offset]
+        except IndexError:
+            &#47&#47 if token indices fall outside the bounds due to a model misprediction.
+            pass</code></pre><img src="19940193.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/900b9a7f2884aaf419e62508be7497b0ad3e1f62#diff-1516e23205a74c8bcb7f842f8260f7c9118246fc6a6b12bd5b7fb16810cefa04L368' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 900b9a7f2884aaf419e62508be7497b0ad3e1f62</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: debo@fb.com</div><div id='file'> File Name: pytext/metric_reporters/squad_metric_reporter.py</div><div id='class'> Class Name: SquadMetricReporter</div><div id='method'> Method Name: _unnumberize</div><BR><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/e185a7110ec79864dcef5114b71356691eec39df#diff-57561c2146eb37a6099d1ace43af05873a136aad44a23380fa3faacddc71762cL61' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: e185a7110ec79864dcef5114b71356691eec39df</div><div id='time'> Time: 2016-07-16</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/commands/sample.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/22b9e1215932f9111c49d4ec5e1ccd25bab1fc3c#diff-7a0a537f9cec6a99a8c1ccc23167393b089cb17926b1432dac0e02bd33a4b3eeL173' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: 22b9e1215932f9111c49d4ec5e1ccd25bab1fc3c</div><div id='time'> Time: 2019-09-27</div><div id='author'> Author: svlandeg@users.noreply.github.com</div><div id='file'> File Name: spacy/pipeline/entityruler.py</div><div id='class'> Class Name: EntityRuler</div><div id='method'> Method Name: add_patterns</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/e0b6f888a677336586dc33f091a04e2e8d8adba6#diff-28d196bcde351278998bb252f02014931b199b4afd0d0d9a30204303e000d647L81' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: e0b6f888a677336586dc33f091a04e2e8d8adba6</div><div id='time'> Time: 2017-04-24</div><div id='author'> Author: keryn@kerynknight.com</div><div id='file'> File Name: debug_toolbar/panels/templates/panel.py</div><div id='class'> Class Name: TemplatesPanel</div><div id='method'> Method Name: _store_template_info</div><BR>

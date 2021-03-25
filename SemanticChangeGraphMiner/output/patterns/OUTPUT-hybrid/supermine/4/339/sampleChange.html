@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _score(self, X, y):
+        for switch in self.mapping:
+            &#47&#47 Get column name (can be anything: str, number,...)
+            column = <a id="change">switch.get(&quotcol&quot)</a>
+
+            &#47&#47 Score the column
+            transformed_column = pd.Series([np.nan] * X.shape[0], name=column)
+            for val in switch.get(&quotwoe&quot):
+                transformed_column.loc[X[column] == val] = switch.get(&quotwoe&quot)[val] &#47&#47 THIS LINE IS SLOW
+
+            &#47&#47 Replace missing values only in the computed columns
+            if self.impute_missing:
+                if self.handle_unknown == &quotimpute&quot:
+                    transformed_column.fillna(0, inplace=True)
+                elif self.handle_unknown == &quoterror&quot:
+                    <a id="change">missing = transformed_column.isnull()</a>
+                    if any(missing):
+                        raise ValueError(&quotUnexpected categories found in column %s&quot % switch.get(&quotcol&quot))
+
+            &#47&#47 Randomization is meaningful only for training data -&gt; we do it only if y is present</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _score(self, X, y):
+        for col in self.cols:
+            &#47&#47 Score the column
+            <a id="change">X[col] = X[col].map(self.mapping[col])</a>
+
+            &#47&#47 Replace missing values only in the computed columns
+            if self.impute_missing:
+                if self.handle_unknown == &quotimpute&quot:</code></pre>

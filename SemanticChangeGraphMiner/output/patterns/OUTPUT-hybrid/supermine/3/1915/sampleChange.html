@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rotated_tangent_vec_a = gs.matmul(transp_eigvecs, tangent_vec_a)
+        rotated_tangent_vec_a = gs.matmul(rotated_tangent_vec_a, eigvecs)
+        rotated_tangent_vec_b = gs.matmul(transp_eigvecs, tangent_vec_b)
+        <a id="change">rotated_tangent_vec_b = gs.matmul(rotated_tangent_vec_b, eigvecs)</a>
+
+        ones = gs.ones(eigvals.shape)
+        vertical_index = gs.einsum(&quot...i,...j-&gt;...ij&quot, eigvals, ones)
+        horizontal_index = gs.einsum(&quot...j,...i-&gt;...ij&quot, eigvals, ones)</code></pre><h3>After Change</h3><pre><code class='java'>
+            Inner-product.
+        
+        eigvals, eigvecs = gs.linalg.eigh(base_point)
+        transp_eigvecs = <a id="change">Matrices.transpose(eigvecs)</a>
+        rotated_tangent_vec_a = Matrices.mul(transp_eigvecs, tangent_vec_a,
+                                             eigvecs)
+        rotated_tangent_vec_b = Matrices.mul(transp_eigvecs, tangent_vec_b,
+                                             eigvecs)</code></pre>

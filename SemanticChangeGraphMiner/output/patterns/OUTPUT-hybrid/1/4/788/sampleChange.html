@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for file in train_chunk_files:
+            print("Using %s" % file)
+            train_dataset = DataSet.read(file)
+            <a id="change">n.train(train_dataset)</a>
+            n.save_variables(save_file)
+            if n.get_global_step() &gt; last_save_checkpoint + checkpoint_freq:
+                n.check_accuracy(test_dataset)
+                last_save_checkpoint = n.get_global_step()</code></pre><h3>After Change</h3><pre><code class='java'>
+            print("Using %s" % file)
+            with timer("load dataset"):
+                train_dataset = DataSet.read(file)
+            <a id="change">with timer("training"):
+                n.train(train_dataset)
+           </a> with timer("save model"):
+                n.save_variables(save_file)
+            if n.get_global_step() &gt; last_save_checkpoint + checkpoint_freq:
+                with timer("test set evaluation"):</code></pre>

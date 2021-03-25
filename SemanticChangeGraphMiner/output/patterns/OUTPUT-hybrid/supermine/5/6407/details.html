@@ -1,0 +1,44 @@
+<html><h3>34870dec55add27958d5d9267cf782ee1e2f39b9,vae.py,,train,#,77
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  train_op = optimizer.minimize(-elbo)
+
+  &#47&#47 Merge all the summaries
+  summary_op = <a id="change">tf.merge_all_summaries()</a>
+
+  init_op = tf.initialize_all_variables()
+
+  &#47&#47 Run training</code></pre><h3>After Change</h3><pre><code class='java'>
+                                            hidden_size=FLAGS.hidden_size)
+    prior_predictive = distributions.Bernoulli(logits=p_x_given_z_logits)
+    prior_predictive_samples = prior_predictive.sample()
+    <a id="change">tf</a>.summary.image(&quotprior_predictive&quot,
+                     tf.cast(prior_predictive_samples, tf.float32))
+
+  &#47&#47 Take samples from the prior with a placeholder
+  with tf.variable_scope(&quotmodel&quot, reuse=True):
+    z_input = tf.placeholder(tf.float32, [None, FLAGS.latent_dim])
+    p_x_given_z_logits = generative_network(z=z_input,
+                                            hidden_size=FLAGS.hidden_size)
+    prior_predictive_inp = distributions.Bernoulli(logits=p_x_given_z_logits)
+    prior_predictive_inp_sample = prior_predictive_inp.sample()
+
+  &#47&#47 Build the evidence lower bound (ELBO) or the negative loss
+  kl = tf.reduce_sum(distributions.kl(q_z.distribution, p_z), 1)
+  expected_log_likelihood = tf.reduce_sum(p_x_given_z.log_pmf(x),
+                                          [1, 2, 3])
+
+  elbo = tf.reduce_sum(expected_log_likelihood - kl, 0)
+
+  optimizer = tf.train.RMSPropOptimizer(learning_rate=0.001)
+
+  train_op = optimizer.minimize(-elbo)
+
+  &#47&#47 Merge all the summaries
+  summary_op = <a id="change">tf.summary.merge_all()</a>
+
+  init_op = tf.global_variables_initializer()
+
+  &#47&#47 Run training</code></pre><img src="25591698.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/altosaar/variational-autoencoder/commit/34870dec55add27958d5d9267cf782ee1e2f39b9#diff-420087d333f9292feacfd6fa0ee20a8629065ab8ff5387d55e7d0d5a20cf6916L83' target='_blank'>Link</a></div><div id='project'> Project Name: altosaar/variational-autoencoder</div><div id='commit'> Commit Name: 34870dec55add27958d5d9267cf782ee1e2f39b9</div><div id='time'> Time: 2016-12-22</div><div id='author'> Author: jaan.altosaar@gmail.com</div><div id='file'> File Name: vae.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/altosaar/variational-autoencoder/commit/34870dec55add27958d5d9267cf782ee1e2f39b9#diff-420087d333f9292feacfd6fa0ee20a8629065ab8ff5387d55e7d0d5a20cf6916L83' target='_blank'>Link</a></div><div id='project'> Project Name: altosaar/variational-autoencoder</div><div id='commit'> Commit Name: 34870dec55add27958d5d9267cf782ee1e2f39b9</div><div id='time'> Time: 2016-12-22</div><div id='author'> Author: jaan.altosaar@gmail.com</div><div id='file'> File Name: vae.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/SullyChen/Autopilot-TensorFlow/commit/88508420f66fc7c3baa5f362893d3a4b5de11a16#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L20' target='_blank'>Link</a></div><div id='project'> Project Name: SullyChen/Autopilot-TensorFlow</div><div id='commit'> Commit Name: 88508420f66fc7c3baa5f362893d3a4b5de11a16</div><div id='time'> Time: 2019-01-21</div><div id='author'> Author: emmanuel.sciara@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/MorvanZhou/tutorials/commit/bd0245981d11faa2aad750fc32821205689da874#diff-22ccfb54f64d581adbe414bfde803e6ef72fd536c990e57c7efc7403f32c07afL50' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/tutorials</div><div id='commit'> Commit Name: bd0245981d11faa2aad750fc32821205689da874</div><div id='time'> Time: 2017-03-18</div><div id='author'> Author: morvanzhou@hotmail.com</div><div id='file'> File Name: tensorflowTUT/tf17_dropout/full_code.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/6f1a876bf8614a7aa0f1a7043d2f15f0b3064d5f#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L319' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 6f1a876bf8614a7aa0f1a7043d2f15f0b3064d5f</div><div id='time'> Time: 2016-12-27</div><div id='author'> Author: jakeret@phys.ethz.ch</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: _initialize</div><BR>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 save model
+    transformer.eval()
+    transformer.cpu()
+    <a id="change">torch.save(transformer, args.checkpoint_dir + "/epoch_" + str(args.epochs) + "_"
+               + str(time.ctime()).replace(&quot &quot, &quot_&quot) + "_"
+               + str(args.content_weight) + "_" + str(args.style_weight)
+               + ".model")</a>
+
+    print("\nDone :)")
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+
+    <a id="change">if args.cuda and not torch.cuda.is_available():
+        print("WARNING: torch.cuda not available, using CPU.")
+        args.cuda = 0
+
+   </a> if args.cuda:
+        torch.cuda.manual_seed(args.seed)
+        kwargs = {&quotnum_workers&quot: 0, &quotpin_memory&quot: False}
+    else:</code></pre>

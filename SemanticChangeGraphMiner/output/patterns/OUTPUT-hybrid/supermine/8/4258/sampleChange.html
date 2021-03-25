@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                 version="0.2.1",
+                 packages=setuptools.find_packages(),
+                 package_data={&quot&quot: [&quot*.txt&quot, &quot*.md&quot]},
+                 install_requires=<a id="change">["liac-arff&gt;=2.1.1dev",
+                                   "numpy&gt;=1.6.2",
+                                   "scipy&gt;=0.13.3",
+                                   "xmltodict",
+                                   "nose",
+                                   "numpydoc",
+                                   "requests"]</a>,
+                 test_suite="nose.collector",
+                 classifiers=[&quotIntended Audience :: Science/Research&quot,
+                              &quotIntended Audience :: Developers&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+requirements_file = os.path.join(os.path.dirname(__file__), &quotrequirements.txt&quot)
+requirements = []
+dependency_links = []
+<a id="change">with open(requirements_file) as fh:
+    for line in fh:
+        line = line.strip()
+        if line:
+            &#47&#47 Make sure the github URLs work here as well
+            split = line.split(&quot@&quot)
+            split = split[0]
+            split = split.split(&quot/&quot)
+            url = &quot/&quot.join(split[:-1])
+            requirement = split[-1]
+            requirements.append(requirement)
+            &#47&#47 Add the rest of the URL to the dependency links to allow
+            &#47&#47 setup.py test to work
+            if &quotgit+https&quot in url:
+                dependency_links.append(line.replace(&quotgit+&quot, &quot&quot))
+
+
+</a>setuptools.setup(name="openml",
+                 author="Matthias Feurer",
+                 author_email="feurerm@informatik.uni-freiburg.de",
+                 maintainer="Matthias Feurer",</code></pre>

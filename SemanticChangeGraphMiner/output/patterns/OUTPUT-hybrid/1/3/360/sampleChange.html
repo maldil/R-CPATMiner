@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return 1.0
+
+    study = create_study(storage_init_func())
+    <a id="change">study.optimize(objective, n_trials=1)</a>
+
+    assert study.best_trial.distributions == {
+        "a": UniformDistribution(low=0, high=10),
+        "b": LogUniformDistribution(low=0.1, high=10),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    with StorageSupplier(storage_mode) as storage:
+        study = create_study(storage=storage)
+        <a id="change">study.optimize(objective, n_trials=1)</a>
+
+        assert study.best_trial.distributions == {
+            "a": UniformDistribution(low=0, high=10),
+            "b": LogUniformDistribution(low=0.1, high=10),</code></pre>

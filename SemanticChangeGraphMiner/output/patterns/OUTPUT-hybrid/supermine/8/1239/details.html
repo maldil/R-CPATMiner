@@ -1,0 +1,40 @@
+<html><h3>ecc8b0b34138fa480e1b1876fd2695c07be9b159,simple_rl/tasks/navigation/NavigationMDP.py,NavigationMDP,reset_goals,#NavigationMDP#,179
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 Assume all goals are same
+                self.cells[goal_r, goal_c] = len(self.cell_types)
+                self.cell_rewards[goal_r, goal_c] = self.goal_rewards[0]
+                <a id="change">self.goal_xy_to_idx[(goal_loc[0], goal_loc[1])] = 0</a>
+            else:
+                &#47&#47 Each goal is different in type and rewards
+                self.cells[goal_r, goal_c] = len(self.cell_types) + goal_idx
+                <a id="change">self.cell_rewards[goal_r, goal_c] = self.goal_rewards[goal_idx]</a>
+                self.goal_xy_to_idx[(goal_loc[0], goal_loc[1])] = goal_idx
+        self._policy_invalidated = True
+
+    def _reward_func(self, state, action):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.goal_cell_locs = goal_cell_locs
+        self.goal_cell_rewards = goal_cell_rewards
+        self.goal_cell_types = goal_types
+        self.goal_cell_ids = <a id="change">list(range(self.living_cell_ids[-1] + 1,
+                                        self.living_cell_ids[-1] + 1 + len(
+                                            self.goal_cell_locs)))</a>
+        &#47&#47 Reset goal xy to idx dict
+        self.goal_xy_to_idx = {}
+        &#47&#47 Reset cell type and cell reward grid with no goals
+        self.state_space = self.state_space_wo_goals.copy()
+        self.state_rewards = self.state_rewards_wo_goals.copy()
+
+        &#47&#47 Update goals and their rewards
+        for idx, goal_loc in enumerate(self.goal_cell_locs):
+            goal_r, goal_c = self._xy_to_rowcol(goal_loc[0], goal_loc[1])
+            self.state_space[goal_r, goal_c] = self.goal_cell_ids[idx]
+            self.state_rewards[goal_r, goal_c] = self.goal_cell_rewards[idx]
+            self.goal_xy_to_idx[(goal_loc[0], goal_loc[1])] = idx
+        <a id="change">self.cell_ids = self.living_cell_ids + self.goal_cell_ids</a>
+        self.cell_types = self.living_cell_types + self.goal_cell_types
+        self.cell_type_rewards = self.living_cell_rewards + self.goal_cell_rewards
+        self._policy_invalidated = True
+</code></pre><img src="6775847.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/ecc8b0b34138fa480e1b1876fd2695c07be9b159#diff-b74d75d58be202c2d32f413f61792a437c05c163e7f96767ed35d2f2db5b1daaL179' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: ecc8b0b34138fa480e1b1876fd2695c07be9b159</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yagneshrevar@gmail.com</div><div id='file'> File Name: simple_rl/tasks/navigation/NavigationMDP.py</div><div id='class'> Class Name: NavigationMDP</div><div id='method'> Method Name: reset_goals</div><BR><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/ecc8b0b34138fa480e1b1876fd2695c07be9b159#diff-b74d75d58be202c2d32f413f61792a437c05c163e7f96767ed35d2f2db5b1daaL179' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: ecc8b0b34138fa480e1b1876fd2695c07be9b159</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yagneshrevar@gmail.com</div><div id='file'> File Name: simple_rl/tasks/navigation/NavigationMDP.py</div><div id='class'> Class Name: NavigationMDP</div><div id='method'> Method Name: reset_goals</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b46c893e2c0f9cd505b597c2ff215a0df04b6050#diff-05a01ce0503407dc9169caee0a0fdf0a97d6724ba90ef37b32beff27304e65fbL173' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b46c893e2c0f9cd505b597c2ff215a0df04b6050</div><div id='time'> Time: 2020-05-19</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/f2e989565ab89af58dff63ab3cf89fe63af38327#diff-5435677dac91293689eab6cb0ec809ef0498f0f2f0b2b518ef5b81cb7297943eL67' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: f2e989565ab89af58dff63ab3cf89fe63af38327</div><div id='time'> Time: 2020-06-02</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: examples/raytracing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

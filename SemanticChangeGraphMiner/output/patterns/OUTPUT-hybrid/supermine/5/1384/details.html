@@ -1,0 +1,24 @@
+<html><h3>f68733f5a94aff716051e16a5bea00b1f4059963,policy.py,PolicyNetwork,set_up_network,#PolicyNetwork#,45
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _current_h_conv = h_conv_init
+        for i in range(self.num_int_conv_layers):
+            W_conv_intermediate.append(_weight_variable([3, 3, self.k, self.k], name="W_conv_inter" + str(i)))
+            h_conv_intermediate.append(tf.nn.relu(_conv2d(_current_h_conv, W_conv_intermediate[-1]), name=<a id="change">"h_conv_inter" + str(i)</a>))
+            _current_h_conv = h_conv_intermediate[-1]
+
+        W_conv_final = _weight_variable([1, 1, self.k, 1], name="W_conv_final")</code></pre><h3>After Change</h3><pre><code class='java'>
+        h_conv_intermediate = []
+        _current_h_conv = h_conv_init
+        for i in range(self.num_int_conv_layers):
+            <a id="change">with tf.name_scope("layer"+str(i)):
+                W_conv_intermediate.append(_weight_variable([3, 3, self.k, self.k], name="W_conv"))
+                h_conv_intermediate.append(tf.nn.relu(_conv2d(_current_h_conv, W_conv_intermediate[-1]), name="h_conv"))
+                _current_h_conv = h_conv_intermediate[-1]
+
+       </a> W_conv_final = _weight_variable([1, 1, self.k, 1], name="W_conv_final")
+        b_conv_final = tf.Variable(tf.constant(0, shape=[go.N ** 2], dtype=tf.float32), name="b_conv_final")
+        h_conv_final = _conv2d(h_conv_intermediate[-1], W_conv_final)
+        output = tf.nn.softmax(tf.reshape(h_conv_final, [-1, go.N ** 2]) + b_conv_final)</code></pre><img src="7529574.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/f68733f5a94aff716051e16a5bea00b1f4059963#diff-3d9f5c51ee85fb2da79a74349657cb62bb9abc5a02fd3d0238ffc76251310e24L75' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: f68733f5a94aff716051e16a5bea00b1f4059963</div><div id='time'> Time: 2016-09-19</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: policy.py</div><div id='class'> Class Name: PolicyNetwork</div><div id='method'> Method Name: set_up_network</div><BR><BR><div id='link'><a href='https://github.com/ricsinaruto/Seq2seqChatbots/commit/d9748278abf04a9c74a95053fda62d0bff8b9f93#diff-e8f8fd031d53268e57b80ba8307170cf38d276b76ce0a6a3dc7f412c21fe72acL137' target='_blank'>Link</a></div><div id='project'> Project Name: ricsinaruto/Seq2seqChatbots</div><div id='commit'> Commit Name: d9748278abf04a9c74a95053fda62d0bff8b9f93</div><div id='time'> Time: 2019-02-16</div><div id='author'> Author: ricsinaruto@hotmail.com</div><div id='file'> File Name: t2t_csaky/utils/run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/ddb4bc80d140422bcccc6670448a76e48f139844#diff-3d9f5c51ee85fb2da79a74349657cb62bb9abc5a02fd3d0238ffc76251310e24L77' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: ddb4bc80d140422bcccc6670448a76e48f139844</div><div id='time'> Time: 2016-10-12</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: policy.py</div><div id='class'> Class Name: PolicyNetwork</div><div id='method'> Method Name: set_up_network</div><BR>

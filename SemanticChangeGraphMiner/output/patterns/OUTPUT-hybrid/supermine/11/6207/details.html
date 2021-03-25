@@ -1,0 +1,32 @@
+<html><h3>99095d5412483ec623278bdb1a0c9e24b18bfc85,pdpipe/basic_stages.py,Bin,_op,#Bin#,324
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if verbose:
+            colnames = tqdm.tqdm(colnames)
+        for colname in colnames:
+            <a id="change">assign_map[colname+&quot_binned&quot]</a> = df[colname].apply(
+                self._get_col_binner(self._bin_map[colname]))
+        inter_df = df.assign(**assign_map)
+        if self._drop:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for colname in colnames:
+            if verbose:
+                colnames.set_description(colname)
+            <a id="change">source_col = df[colname]</a>
+            <a id="change">loc = df.columns.get_loc(colname) + 1</a>
+            <a id="change">new_name = colname + "_bin"</a>
+            if self._drop:
+                inter_df = inter_df.drop(colname, axis=1)
+                <a id="change">new_name = colname</a>
+                <a id="change">loc -= 1</a>
+            inter_df = <a id="change">out_of_place_col_insert(
+                df=inter_df,
+                series=source_col.apply(
+                    self._get_col_binner(self._bin_map[colname])),
+                loc=loc,
+                column_name=new_name)</a>
+        return inter_df
+
+
+class Binarize(PipelineStage):</code></pre><img src="25338112.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L324' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Bin</div><div id='method'> Method Name: _op</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L497' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: MapColVals</div><div id='method'> Method Name: _op</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L577' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Encode</div><div id='method'> Method Name: _op</div><BR>

@@ -1,0 +1,49 @@
+<html><h3>e2bf248a400175ac1a153cdba62147e9162a710f,nilearn/image/resampling.py,,resample_img,#,291
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 TODO: flip axes that are flipped
+        &#47&#47 TODO: un-shuffle permuted dimensions
+
+        <a id="change">indices = []</a>
+        <a id="change">for tmpo, tmpb in zip(offsets[:3], b):
+            indices.append()
+       </a> slices=1
+        &#47&#47 for each dimension:
+        &#47&#47     Save index as translation + offset
+        &#47&#47       (if not flipped: offset before, else: offset after)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if copy and not input_img_is_string:
+            img = _utils.copy_img(img)
+        return img
+    <a id="change">if target_affine is affine and target_shape is shape:
+        return img
+   </a> if target_affine is not None:
+        target_affine = np.asarray(target_affine)
+
+    if (np.all(np.array(target_shape) == shape[:3]) and
+            np.allclose(target_affine, affine)):
+        if copy and not input_img_is_string:
+            img = _utils.copy_img(img)
+        return img
+
+    &#47&#47 We now know that some resampling must be done.
+    &#47&#47 The value of "copy" is of no importance: output is always a separate
+    &#47&#47 array.
+    data = img.get_data()
+
+    &#47&#47 Get a bounding box for the transformed data
+    &#47&#47 Embed target_affine in 4x4 shape if necessary
+    if target_affine.shape == (3, 3):
+        missing_offset = True
+        target_affine_tmp = np.eye(4)
+        target_affine_tmp[:3, :3] = target_affine
+        target_affine = target_affine_tmp
+    else:
+        missing_offset = False
+        target_affine = target_affine.copy()
+    <a id="change">print(affine)</a>
+    print(target_affine)
+    transform_affine = np.linalg.inv(target_affine).dot(affine)
+    (xmin, xmax), (ymin, ymax), (zmin, zmax) = get_bounds(
+        data.shape[:3], transform_affine)</code></pre><img src="18115042.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/e2bf248a400175ac1a153cdba62147e9162a710f#diff-0ceebcced35647adafa45bd384e89527fd1d1f9d0b57f268e3c5e3afe644b648L421' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: e2bf248a400175ac1a153cdba62147e9162a710f</div><div id='time'> Time: 2019-04-17</div><div id='author'> Author: gkiar07@gmail.com</div><div id='file'> File Name: nilearn/image/resampling.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: resample_img</div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/b0848e1af4b1cf9c4898d549de19e81b167043b2#diff-771037fdeab3e63530757e85ec4d30179dcdd23b7fed819d1533836923911843L344' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: b0848e1af4b1cf9c4898d549de19e81b167043b2</div><div id='time'> Time: 2018-07-17</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/evaluator.py</div><div id='class'> Class Name: Evaluator</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/daniel-kukiela/nmt-chatbot/commit/0e2a7f6d85a341959eba41d65019b2566084b406#diff-6bb87854f62182076b9d47e5a3fa17d5fb46826b979e3292b7ae7bef07022cf4L233' target='_blank'>Link</a></div><div id='project'> Project Name: daniel-kukiela/nmt-chatbot</div><div id='commit'> Commit Name: 0e2a7f6d85a341959eba41d65019b2566084b406</div><div id='time'> Time: 2017-12-03</div><div id='author'> Author: daniel@kukiela.pl</div><div id='file'> File Name: inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

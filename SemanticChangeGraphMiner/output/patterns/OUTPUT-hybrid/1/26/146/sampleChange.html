@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        output = model(input)
+        score_map = output[-1].cpu()
+        if flip:
+            <a id="change">flip_input</a> = torch.autograd.Variable(
+                    <a id="change">torch.from_numpy(fliplr(input.clone().numpy())).float().to(device)</a>,
+                    volatile=True
+                )
+            flip_output_var = model(flip_input)
+            <a id="change">flip_output</a> = flip_back(flip_output_var[-1].cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target)
+        <a id="change">acc</a> = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            <a id="change">predictions[meta[&quotindex&quot][n], :, :]</a> = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(input, target)
+            <a id="change">pred_batch_img</a> = batch_with_heatmap(input, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                <a id="change">pred_win</a> = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)</code></pre><h3>After Change</h3><pre><code class='java'>
+        output = model(input)[-1]
+        score_map = output[-1].cpu()
+        if flip:
+            <a id="change">flip_input</a> = <a id="change">torch.from_numpy(fliplr(input.clone().numpy())).float().to(device)</a>
+            flip_output_var = model(flip_input)
+            <a id="change">flip_output</a> = flip_back(flip_output_var[-1].cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target)
+        <a id="change">acc</a> = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            <a id="change">predictions[meta[&quotindex&quot][n], :, :]</a> = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(input, target)
+            <a id="change">pred_batch_img</a> = batch_with_heatmap(input, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                <a id="change">pred_win</a> = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)</code></pre>

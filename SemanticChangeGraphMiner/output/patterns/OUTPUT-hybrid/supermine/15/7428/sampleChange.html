@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        @torch.jit.script
+        def op_script(input):
+            return kornia.filters.sobel(input)
+        img = <a id="change">torch.rand(2, 3, 4, 5).to(device)</a>
+        actual = op_script(img)
+        <a id="change">expected = kornia.filters.sobel(img)</a>
+        assert_allclose(actual, expected)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                         raise_exception=True)
+
+    def test_jit(self, device, dtype):
+        img = <a id="change">torch.rand(2, 3, 4, 5, device=device, dtype=dtype)</a>
+        <a id="change">op = kornia.filters.sobel</a>
+        <a id="change">op_script = torch.jit.script(op)</a>
+        <a id="change">expected = op(img)</a>
+        actual = op_script(img)
+        assert_allclose(actual, expected)
+
+    def test_module(self, device, dtype):</code></pre>

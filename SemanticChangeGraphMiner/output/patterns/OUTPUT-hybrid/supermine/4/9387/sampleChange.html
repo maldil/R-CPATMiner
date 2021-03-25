@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        loss_v.backward()
+        optimizer.step()
+        print("%d: loss=%.3f, reward_mean=%.3f, reward_bound=%.3f, batch=%d" % (
+            iter_no, <a id="change">loss_v.data[0]</a>, reward_mean, reward_bound, len(full_batch)))
+        writer.add_scalar("loss", loss_v.data[0], iter_no)
+        writer.add_scalar("reward_mean", reward_mean, iter_no)
+        writer.add_scalar("reward_bound", reward_bound, iter_no)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not full_batch:
+            continue
+        obs_v = torch.FloatTensor(obs)
+        acts_v = <a id="change">torch.LongTensor(acts)</a>
+        full_batch = full_batch[-500:]
+
+        optimizer.zero_grad()
+        action_scores_v = net(obs_v)</code></pre>

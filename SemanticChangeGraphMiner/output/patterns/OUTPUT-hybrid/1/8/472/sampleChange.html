@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 log-uniform prior
+    a = Real(10**2.0, 10**4.0, prior="log-uniform", transform="normalize")
+    for i in range(50):
+        <a id="change">yield (check_limits, a.rvs(random_state=i), 10**2, 10**4)</a>
+
+    rng = np.random.RandomState(0)
+    X = np.clip(10**3 * rng.randn(100), 10**2.0, 10**4.0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 log-uniform prior
+    a = Real(10**2.0, 10**4.0, prior="log-uniform", transform="normalize")
+    for i in range(50):
+        <a id="change">check_limits(a.rvs(random_state=i), 10**2, 10**4)</a>
+
+    rng = np.random.RandomState(0)
+    X = np.clip(10**3 * rng.randn(100), 10**2.0, 10**4.0)
+</code></pre>

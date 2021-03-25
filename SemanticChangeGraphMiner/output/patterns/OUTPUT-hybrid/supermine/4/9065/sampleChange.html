@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 We also modify the dispay name to remove the id
+                element[&quotdisplay_name&quot] = element[&quotname&quot][element[&quotname&quot].find("_")+1:]
+                element[&quotparams&quot] = &quot%s %s:"%s"&quot % (filter_query, flt, urlquote_plus(element[&quotname&quot]))
+                <a id="change">filtered_facet.append(element)</a>
+        else:
+            element[&quotdisplay_name&quot] = element[&quotname&quot]
+            element[&quotparams&quot] = &quot%s %s:"%s"&quot % (filter_query, flt, urlquote_plus(element[&quotname&quot]))
+            filtered_facet.append(element)</code></pre><h3>After Change</h3><pre><code class='java'>
+        )
+        filtered_facet.append(element)
+
+    <a id="change">if using_beastwhoosh(context[&quotrequest&quot]):
+        &#47&#47 In BW ui, we sort the facets of type "cloud" by their frequency of occurrence and apply an opacity filter
+        filtered_facet = sorted(filtered_facet, key=lambda x: x[&quotcount&quot], reverse=True)
+        max_count = max([element[&quotcount&quot] for element in filtered_facet])
+        for element in filtered_facet:
+            element[&quotweight&quot] = (1.0 * element[&quotcount&quot]) / max_count
+
+   </a> context.update({
+        "facet": filtered_facet,
+        "type": type,
+        "filter": flt,</code></pre>

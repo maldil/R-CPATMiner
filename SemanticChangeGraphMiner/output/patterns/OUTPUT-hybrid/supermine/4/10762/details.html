@@ -1,0 +1,22 @@
+<html><h3>ba256835a4f33d9139a70b6440c3223123132bc8,torchnet/meter/confusionmeter.py,ConfusionMeter,add,#ConfusionMeter#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            assert (target.sum(1) == 1).all(), \
+                    &quotmulti-label setting is not supported&quot
+ 
+        pred = <a id="change">output.argmax(1)</a>
+        for i,n in enumerate(pred):
+            pos = onehot and target[i].argmax(0) or int(target[i])
+            self.conf[pos][n] += 1
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 hack for bincounting 2 arrays together
+        x = predicted + self.k * target
+        <a id="change">bincount_2d = np.bincount(x.astype(np.int32),
+                                  minlength=self.k ** 2)</a>
+        assert bincount_2d.size == self.k ** 2
+        conf = bincount_2d.reshape((self.k, self.k))
+
+        self.conf += conf</code></pre><img src="39337353.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/tnt/commit/ba256835a4f33d9139a70b6440c3223123132bc8#diff-b0fefc107703573331e0796b347c2dd79a8b764065b45683dce317a53d0ea0f1L28' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tnt</div><div id='commit'> Commit Name: ba256835a4f33d9139a70b6440c3223123132bc8</div><div id='time'> Time: 2017-08-24</div><div id='author'> Author: swetha.tanamala@gmail.com</div><div id='file'> File Name: torchnet/meter/confusionmeter.py</div><div id='class'> Class Name: ConfusionMeter</div><div id='method'> Method Name: add</div><BR><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/e3a249cd2de8b2518470021db0f579e26cafbfba#diff-cb0e7994f57b06a68c1e8cdf4ececa2089e279700573e6ce98017d9e166f1e91L219' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: e3a249cd2de8b2518470021db0f579e26cafbfba</div><div id='time'> Time: 2020-02-19</div><div id='author'> Author: hoffman.sc@gmail.com</div><div id='file'> File Name: aif360/sklearn/inprocessing/adversarial_debiasing.py</div><div id='class'> Class Name: AdversarialDebiasing</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR>

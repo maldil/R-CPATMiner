@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if mel.shape[-1] &lt; 5:
+                print(" [!] Instance is too short! : {}".format(wavpath))
+                <a id="change">self.item_list[index]</a> = self.item_list[index + 1]
+                audio = self.ap.load_wav(wavpath)
+                mel = self.ap.melspectrogram(audio)
+            if self.mode in ["gauss", "mold"]:</code></pre><h3>After Change</h3><pre><code class='java'>
+            min_audio_len = 2 * self.seq_len + (2 * self.pad * self.hop_len)
+            if audio.shape[0] &lt; min_audio_len:
+                print(" [!] Instance is too short! : {}".format(wavpath))
+                <a id="change">audio = np.pad(audio, [0, min_audio_len - audio.shape[0] + self.hop_len])</a>
+            mel = self.ap.melspectrogram(audio)
+
+            if self.mode in ["gauss", "mold"]:
+                x_input = audio</code></pre>

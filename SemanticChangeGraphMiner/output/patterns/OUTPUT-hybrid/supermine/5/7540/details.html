@@ -1,0 +1,20 @@
+<html><h3>2a74e12fec206dd222f98cd3ac2a15c48ebdf0a9,data/prepare_train_data.py,,main,#,59
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for scene in tqdm(data_loader.scenes):
+            dump_example(args, scene)
+    else:
+        Parallel(n_jobs=args.num_threads)(<a id="change">delayed</a>(dump_example)(args, scene) <a id="change">for</a> scene in tqdm(data_loader.scenes))
+
+    print(&quotGenerating train val lists&quot)
+    np.random.seed(8964)</code></pre><h3>After Change</h3><pre><code class='java'>
+            dump_example(args, scene)
+    else:
+        with ProcessPool(max_workers=args.num_threads) as pool:
+            tasks = <a id="change">pool.map(dump_example, [args]*n_scenes, data_loader.scenes)</a>
+            try:
+                for _ in tqdm(tasks.result(), total=n_scenes):
+                    pass
+            except KeyboardInterrupt as e:</code></pre><img src="29085119.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/SfmLearner-Pytorch/commit/2a74e12fec206dd222f98cd3ac2a15c48ebdf0a9#diff-a4834320005da2142dd8c6342076445453ff4a25b8bdf23a0a2518a6641a14caL68' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/SfmLearner-Pytorch</div><div id='commit'> Commit Name: 2a74e12fec206dd222f98cd3ac2a15c48ebdf0a9</div><div id='time'> Time: 2019-02-18</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: data/prepare_train_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/971719830d589eba66434ddabfc62c1a689be677#diff-941c1cb20593c08ec2c17714f1eac34b3ab078e9caa1d0c971a3c6d487be80e3L420' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 971719830d589eba66434ddabfc62c1a689be677</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: weixuanf@upenn.edu</div><div id='file'> File Name: skrebate/relieff.py</div><div id='class'> Class Name: ReliefF</div><div id='method'> Method Name: _run_algorithm</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/560726e17da36cfb80cad355860fe876faa7ee8a#diff-582c2b3a47dccf00f8ae87df5238e88b7a562699489f6ef37c3a511762d632aaL99' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 560726e17da36cfb80cad355860fe876faa7ee8a</div><div id='time'> Time: 2018-08-19</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/backends/shared.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: einsum</div><BR><BR><div id='link'><a href='https://github.com/miso-belica/sumy/commit/6e545e41f1190c70462419d163390c291ee1ec55#diff-a185ff148b6f41b6ee23f7e1afaf058f2883db899924bc37484980c1a3926d75L21' target='_blank'>Link</a></div><div id='project'> Project Name: miso-belica/sumy</div><div id='commit'> Commit Name: 6e545e41f1190c70462419d163390c291ee1ec55</div><div id='time'> Time: 2013-02-28</div><div id='author'> Author: miso.belica@gmail.com</div><div id='file'> File Name: sumy/algorithms/_luhn.py</div><div id='class'> Class Name: LuhnMethod</div><div id='method'> Method Name: stop_words</div><BR>

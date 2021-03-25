@@ -1,0 +1,30 @@
+<html><h3>a1c84511bce067d9a585d8ea31dba479f6421fb8,models/torch_resnet_cspn_nyu.py,Simple_Gudi_UpConv_Block,_up_pooling,#Simple_Gudi_UpConv_Block#,161
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _up_pooling(self, x, scale):
+
+        <a id="change">x = nn.Upsample(scale_factor=scale, mode=&quotnearest&quot)(x)</a>
+        if self.oheight !=0 and self.owidth !=0:
+            x = x.narrow(2,0,self.oheight)
+            x = x.narrow(3,0,self.owidth)
+&#47&#47            x = x[:,:,0:self.oheight, 0:self.owidth].clone()
+        <a id="change">mask = torch.zeros_like(x)</a>
+        <a id="change">for h in range(0, self.oheight, 2):
+            for w in range(0, self.owidth, 2):
+                mask[:,:,h,w] = 1
+       </a> <a id="change">x = torch.mul(mask, x)</a>
+        return x
+
+    def forward(self, x):
+        x = self._up_pooling(x, 2)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _up_pooling(self, x, scale):
+        
+        <a id="change">x = self._up_pool(x)</a>
+        if self.oheight !=0 and self.owidth !=0:
+            x = x.narrow(2,0,self.oheight)
+            x = x.narrow(3,0,self.owidth)
+        return x</code></pre><img src="4150735.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 17</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/XinJCheng/CSPN/commit/a1c84511bce067d9a585d8ea31dba479f6421fb8#diff-fe5a4645018d3a736c38896a90d9646cfcdae333e1f7b3901b8bfdb38df2410dL1' target='_blank'>Link</a></div><div id='project'> Project Name: XinJCheng/CSPN</div><div id='commit'> Commit Name: a1c84511bce067d9a585d8ea31dba479f6421fb8</div><div id='time'> Time: 2019-07-04</div><div id='author'> Author: chengxinjing@baidu.com</div><div id='file'> File Name: models/torch_resnet_cspn_nyu.py</div><div id='class'> Class Name: Simple_Gudi_UpConv_Block</div><div id='method'> Method Name: _up_pooling</div><BR><BR><div id='link'><a href='https://github.com/XinJCheng/CSPN/commit/a1c84511bce067d9a585d8ea31dba479f6421fb8#diff-fe5a4645018d3a736c38896a90d9646cfcdae333e1f7b3901b8bfdb38df2410dL161' target='_blank'>Link</a></div><div id='project'> Project Name: XinJCheng/CSPN</div><div id='commit'> Commit Name: a1c84511bce067d9a585d8ea31dba479f6421fb8</div><div id='time'> Time: 2019-07-04</div><div id='author'> Author: chengxinjing@baidu.com</div><div id='file'> File Name: models/torch_resnet_cspn_nyu.py</div><div id='class'> Class Name: Simple_Gudi_UpConv_Block</div><div id='method'> Method Name: _up_pooling</div><BR><BR><div id='link'><a href='https://github.com/XinJCheng/CSPN/commit/a1c84511bce067d9a585d8ea31dba479f6421fb8#diff-fe5a4645018d3a736c38896a90d9646cfcdae333e1f7b3901b8bfdb38df2410dL255' target='_blank'>Link</a></div><div id='project'> Project Name: XinJCheng/CSPN</div><div id='commit'> Commit Name: a1c84511bce067d9a585d8ea31dba479f6421fb8</div><div id='time'> Time: 2019-07-04</div><div id='author'> Author: chengxinjing@baidu.com</div><div id='file'> File Name: models/torch_resnet_cspn_nyu.py</div><div id='class'> Class Name: Gudi_UpProj_Block_Cat</div><div id='method'> Method Name: _up_pooling</div><BR><BR><div id='link'><a href='https://github.com/XinJCheng/CSPN/commit/a1c84511bce067d9a585d8ea31dba479f6421fb8#diff-fe5a4645018d3a736c38896a90d9646cfcdae333e1f7b3901b8bfdb38df2410dL187' target='_blank'>Link</a></div><div id='project'> Project Name: XinJCheng/CSPN</div><div id='commit'> Commit Name: a1c84511bce067d9a585d8ea31dba479f6421fb8</div><div id='time'> Time: 2019-07-04</div><div id='author'> Author: chengxinjing@baidu.com</div><div id='file'> File Name: models/torch_resnet_cspn_nyu.py</div><div id='class'> Class Name: Simple_Gudi_UpConv_Block_Last_Layer</div><div id='method'> Method Name: _up_pooling</div><BR>

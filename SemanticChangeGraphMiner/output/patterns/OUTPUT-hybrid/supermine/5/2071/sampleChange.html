@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    `cusolverDn&lt;t&gt;getrs &lt;http://docs.nvidia.com/cuda/cusolver/index.html&#47&#47cuds-lt-t-gt-getrs&gt;`_
+    
+
+    <a id="change">trans = trans.encode(&quotascii&quot)</a>
+    status = _libcusolver.cusolverDnZgetrs(handle, trans, n, nrhs,
+                                           int(A), lda,
+                                           int(devIpiv), int(B),
+                                           ldb, int(devInfo))</code></pre><h3>After Change</h3><pre><code class='java'>
+    `cusolverDn&lt;t&gt;getrs &lt;http://docs.nvidia.com/cuda/cusolver/index.html&#47&#47cuds-lt-t-gt-getrs&gt;`_
+    
+
+    status = _libcusolver.cusolverDnZgetrs(handle, <a id="change">cublas._CUBLAS_OP[trans]</a>, n, nrhs,
+                                           int(A), lda,
+                                           int(devIpiv), int(B),
+                                           ldb, int(devInfo))</code></pre>

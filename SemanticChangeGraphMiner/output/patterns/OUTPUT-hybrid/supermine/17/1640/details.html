@@ -1,0 +1,41 @@
+<html><h3>f0c15f219b0761b14329ddd416cda82fa4bae841,deslib/dcs/mcb.py,MCB,estimate_competence,#MCB#,98
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        BKS_query = predictions
+
+        &#47&#47 Use the BKS to filter the competence region
+        <a id="change">selected_idx = []</a>
+        for sample_index in idx_neighbors:
+            T = (self.BKS_dsel[sample_index][:] == BKS_query)
+            S = sum(T) / self.n_classifiers
+            if S &gt; self.similarity_threshold:
+                selected_idx.append(sample_index)
+
+        &#47&#47 Use the whole neighborhood if no sample is selected to form the region of competence
+        if len(selected_idx) == 0:
+            selected_idx = idx_neighbors
+        &#47&#47 Estimate the classifier competence for the filtered region of competence
+        <a id="change">for clf_index in range(self.n_classifiers):
+
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                clf_competence = [self.processed_dsel[sample_idx][clf_index] for sample_idx in selected_idx]
+                competences[clf_index] = np.mean(np.array(clf_competence))
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Use the pre-compute decisions to transform the query to the BKS space
+        BKS_query = predictions
+
+        T = (<a id="change">self.BKS_dsel[idx_neighbors] == BKS_qu</a>ery.reshape(BKS_query.shape[0], -1, BKS_query.shape[1]))
+        S = np.sum(T, axis=2) / self.n_classifiers
+
+        &#47&#47 get a mask with the neighbors that will be considered for the competence estimation for all samples.
+        <a id="change">boolean_mask = (S &gt; self.similarity_threshold)</a>
+        <a id="change">boolean_mask[~np.any(boolean_mask, axis=1), :] = True</a>
+        &#47&#47 Expanding this mask to the third axis (n_classifiers) since it is the same for each classifier.
+        boolean_mask = np.repeat(np.expand_dims(boolean_mask, axis=2), self.n_classifiers, axis=2)
+
+        &#47&#47 Use the masked array mean to take into account the removed neighbors</code></pre><img src="8414849.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-4aa9336c477916c68a0a0c1dd39a6df0343168ed578ac17b07ab57957c50d302L137' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knop.py</div><div id='class'> Class Name: KNOP</div><div id='method'> Method Name: select</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-418b7e06c6963d234362daf596e7ecf369548db4acebef3dd2ed15c37ac1c1eeL99' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_u.py</div><div id='class'> Class Name: KNORAU</div><div id='method'> Method Name: select</div><BR>

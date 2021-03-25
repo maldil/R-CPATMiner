@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        conv8_3 = self.model8(conv8_up)
+
+        if(self.classification):
+            <a id="change">return self.model_class(conv8_3)</a>
+        else:
+            &#47&#47 embed()
+            conv9_up = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            conv9_3 = self.model9(conv9_up)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if(self.classification):
+            out_class = self.model_class(conv8_3)
+
+            conv9_up = self.model9up(conv8_3.detach()) + self.model2short9(<a id="change">conv2_2.detach()</a>)
+            conv9_3 = self.model9(conv9_up)
+
+            conv10_up = self.model10up(conv9_3) + self.model1short10(conv1_2.detach())
+            conv10_2 = self.model10(conv10_up)
+
+            out_reg = self.model_out(conv10_2)
+
+            <a id="change">return (out_class, out_reg)</a>
+        else:
+            conv9_up = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            conv9_3 = self.model9(conv9_up)
+            conv10_up = self.model10up(conv9_3) + self.model1short10(conv1_2)</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>43e740fa6ea915e7143b9e58a231042d22ab5587,opt_einsum/contract.py,,contract_path,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            idx_result = output_subscript
+        else:
+            sort_result = [(dimension_dict[ind], ind) for ind in out_inds]
+            idx_result = "".join([x[1] for x in <a id="change">sorted(sort_result)</a>])
+
+        shp_result = parser.find_output_shape(tmp_inputs, tmp_shapes, idx_result)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            &#47&#47 use tensordot order to minimize transpositions
+            all_input_inds = "".join(tmp_inputs)
+            idx_result = <a id="change">"".join(sorted(out_inds, key=all_input_inds.find))</a>
+
+        shp_result = parser.find_output_shape(tmp_inputs, tmp_shapes, idx_result)
+
+        input_list.append(idx_result)</code></pre><img src="23712249.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/43e740fa6ea915e7143b9e58a231042d22ab5587#diff-4faec428380907dd73ac590b1fa70f4a2d0da11e3e08ca911e021f8cd0fbc158L131' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 43e740fa6ea915e7143b9e58a231042d22ab5587</div><div id='time'> Time: 2018-08-09</div><div id='author'> Author: john.gray.14@ucl.ac.uk</div><div id='file'> File Name: opt_einsum/contract.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: contract_path</div><BR><BR><div id='link'><a href='https://github.com/google/nucleus/commit/1f3dcd25bcbefcda72218a76f0cb609460bc9b98#diff-cd728bc2a012a07a52c102d45ca3c651c982c4cd07a0190648b4451360132823L48' target='_blank'>Link</a></div><div id='project'> Project Name: google/nucleus</div><div id='commit'> Commit Name: 1f3dcd25bcbefcda72218a76f0cb609460bc9b98</div><div id='time'> Time: 2019-05-03</div><div id='author'> Author: no-reply@google.com</div><div id='file'> File Name: nucleus/examples/ascii_pileup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/d8abd944a8b95b36ead150abbf6b42a9276bf660#diff-ee892135f0a9b098affcb86dfd38e584940f7e4d6372b82a0581bcf620de3c58L142' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: d8abd944a8b95b36ead150abbf6b42a9276bf660</div><div id='time'> Time: 2017-05-02</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/train.py</div><div id='class'> Class Name: GroundTruthContainer</div><div id='method'> Method Name: repartition</div><BR>

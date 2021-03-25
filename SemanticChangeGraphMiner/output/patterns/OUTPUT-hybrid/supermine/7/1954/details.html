@@ -1,0 +1,31 @@
+<html><h3>7247571ab448f9ccf6b392a26df0b8b40b1085eb,2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py,,,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+zip_files = ["%s/%s" % (zip_dir, fn) for fn in zip_files]
+assert all([os.path])
+
+<a id="change">for fn in sorted(glob("train-*/*/*/*.trans.txt")):
+    for l in open(fn).read().splitlines():
+        seq_name, txt = l.split(" ", 1)
+        print(txt)
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+assert all([os.path.exists(fn) for fn in zip_files])
+zip_files = [ZipFile(fn) for fn in zip_files]
+
+<a id="change">for zip_file in zip_files:
+  assert zip_file.filelist
+  assert zip_file.filelist[0].filename.startswith("LibriSpeech/")
+  for info in zip_file.filelist:
+    assert isinstance(info, ZipInfo)
+    path = info.filename.split("/")
+    assert path[0] == "LibriSpeech", "does not expect %r (%r)" % (info, info.filename)
+    if path[1].startswith("train-"):
+      subdir = path[1]  &#47&#47 e.g. "train-clean-100"
+      if path[-1].endswith(".trans.txt"):
+        for l in zip_file.read(info).decode("utf8").splitlines():
+          seq_name, txt = l.split(" ", 1)
+          print(txt)</a>
+</code></pre><img src="9360959.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rwth-i6/returnn-experiments/commit/7247571ab448f9ccf6b392a26df0b8b40b1085eb#diff-d401bc87316c813350aef3f067c31d4a6851f27ec3d48a39d239b54f4fbaab97L10' target='_blank'>Link</a></div><div id='project'> Project Name: rwth-i6/returnn-experiments</div><div id='commit'> Commit Name: 7247571ab448f9ccf6b392a26df0b8b40b1085eb</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: zeyer@i6.informatik.rwth-aachen.de</div><div id='file'> File Name: 2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/90dc61f239a19e072df1409a23440768331b7d0c#diff-a31c7ed5d35f5ed8233994868c54d625b18e6bacb6794344c4531e62bd9dde59L32' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 90dc61f239a19e072df1409a23440768331b7d0c</div><div id='time'> Time: 2020-07-31</div><div id='author'> Author: rth.yurchak@gmail.com</div><div id='file'> File Name: conftest.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pytest_collection_modifyitems</div><BR>

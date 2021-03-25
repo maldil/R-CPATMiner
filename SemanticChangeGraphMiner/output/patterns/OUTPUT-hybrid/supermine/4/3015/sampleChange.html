@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        num_classes = max(
+            outputs.shape[argmax_dim], int(targets.max().detach().item() + 1)
+        )
+        <a id="change">outputs = torch.argmax(outputs, dim=argmax_dim)</a>
+    if num_classes is None:
+        &#47&#47 as far as we expect the outputs/targets tensors to be int64
+        &#47&#47 we could find number of classes as max available number
+        num_classes = max(</code></pre><h3>After Change</h3><pre><code class='java'>
+        tensor([0., 0., 0., 1., 1.]), tensor([1., 1., 0., 0., 0.]),
+        tensor([1., 1., 0., 1., 1.])
+    
+    <a id="change">outputs</a>, targets, num_classes = process_multiclass_components(
+        outputs=outputs,
+        targets=targets,
+        argmax_dim=argmax_dim,</code></pre>

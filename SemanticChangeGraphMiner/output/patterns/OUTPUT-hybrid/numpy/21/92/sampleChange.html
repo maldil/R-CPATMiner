@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.mark.parametrize(&quotbackend&quot, [&quotnumpy&quot, torch_if_found])
+def test_sharing_value(backend):
+    <a id="change">w = np.random.normal(size=(2, 3, 4))</a>
+    x = <a id="change">np.random.normal(size=(3, 4, 5))</a>
+    y = np.random.normal(size=(4, 5, 6))
+    z = <a id="change">np.random.normal(size=(5, 6, 7))</a>
+    expr = &quotabc,bcd,cde,def-&gt;af&quot
+
+    expected = contract(expr, w, x, y, z, backend=backend)
+    with shared_intermediates():</code></pre><h3>After Change</h3><pre><code class='java'>
+    eq = &quotabc,bcd,cde,def-&gt;af&quot
+    views = helpers.build_views(eq)
+    shapes = [v.shape for v in views]
+    <a id="change">expr = contract_expression(eq, *shapes)</a>
+
+    expected = expr(*views, backend=backend)
+    with shared_intermediates():
+        actual = expr(*views, backend=backend)</code></pre>

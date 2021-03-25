@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Given a list of ddlite Documents with PubTator/CDR annotations,
+    extract a dictionary of annotations by type.
+    
+    annotations = <a id="change">defaultdict(list)</a>
+    for a in doc.attribs[&quotroot&quot].xpath(&quot.//annotation&quot):
+
+        &#47&#47 Relation annotations
+        if len(a.xpath(&quot./infon[@key="relation"]&quot)) &gt; 0:
+            type = a.xpath(&quot./infon[@key="relation"]/text()&quot)[0]
+            types = a.xpath(&quot./infon[@key != "relation"]/@key&quot)
+            mesh_ids = a.xpath(&quot./infon[@key != "relation"]/text()&quot)
+            <a id="change">annotations[type].append(PubtatorRelation(types=types, mesh_ids=mesh_ids))</a>
+
+        &#47&#47 Mention annotations
+        else:
+            txt = a.xpath(&quot./text/text()&quot)[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+                    si = i - 1
+                    break
+            &#47&#47offset -= sent_offsets[si]
+            <a id="change">ngrams.append(Ngram(offset, offset + length - 1, sents[si], metadata={
+                &quotmesh_id&quot : mesh, &quottype&quot : type}))</a>
+    return ngrams
+</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        from sklearn.neighbors import NearestNeighbors
+
+        &#47&#47 Find the nearest neighbour of every point
+        <a id="change">print("Finding nearest neighbour...", end="")</a>
+        nn = NearestNeighbors(n_neighbors=2)
+        nn.fit(ret_x)
+        nns = nn.kneighbors(ret_x, return_distance=False)[:, 1]
+        print("done!")</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Send the information to is_tomek function to get boolean vector back
+        links = self.is_tomek(ret_y, nns, self.minc, self.verbose)
+
+        <a id="change">if self.verbose==True:
+            print("Over-sampling performed: " + str(Counter(ret_y[logical_not(links)])))
+
+        &#47&#47 Return data set without majority Tomek links.
+       </a> return ret_x[logical_not(links)], ret_y[logical_not(links)]
+
+class SMOTEENN(UnbalancedDataset):
+    </code></pre>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            request.urlconf = &quotdebug_toolbar.urls&quot
+
+            self.debug_toolbars[request] = DebugToolbar(request)
+            for panel in <a id="change">self.debug_toolbars[request].panels</a>:
+                panel.process_request(request)
+
+    def process_view(self, request, view_func, view_args, view_kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+            toolbar = DebugToolbar(request)
+            for panel in toolbar.panels:
+                panel.process_request(request)
+            self.debug_toolbars[<a id="change">thread.get_ident()</a>] = toolbar
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        toolbar = self.debug_toolbars.get(thread.get_ident())</code></pre>

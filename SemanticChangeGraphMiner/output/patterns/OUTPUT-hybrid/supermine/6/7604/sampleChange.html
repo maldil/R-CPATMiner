@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_cooccurence():
+    cooccurence = mahotas._texture.cooccurence
+    f = <a id="change">np.array([
+          [0,1,1,1],
+          [0,0,1,1],
+          [2,2,2,2],
+        ])</a>
+    res = np.zeros((5,5), np.long)
+    cooccurence(f, res, 0)
+    assert res[0,0] == 1
+    assert res[0,1] == 2</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_cooccurence():
+    np.random.seed(222)
+    f = np.random.rand(32, 32)
+    <a id="change">f = (f * 255).astype(np.int32)</a>
+
+    assert np.all(mahotas.texture.cooccurence(f, 0) == brute_force(f, 0, 1))
+    assert np.all(mahotas.texture.cooccurence(f, 1) == brute_force(f, 1, 1))
+    assert np.all(mahotas.texture.cooccurence(f, 2) == brute_force(f, 1, 0))</code></pre>

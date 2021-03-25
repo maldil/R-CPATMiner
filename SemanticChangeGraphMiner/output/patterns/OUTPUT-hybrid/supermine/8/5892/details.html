@@ -1,0 +1,24 @@
+<html><h3>bfc638d502b8b991e6ef5aaaa1946049312e6336,python/caffe/io.py,Transformer,set_mean,#Transformer#,236
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                ms = (1,) + ms
+            if len(ms) != 3:
+                raise ValueError(&quotMean shape invalid&quot)
+            <a id="change">if ms != self.inputs[in_][1:]:
+                raise ValueError(&quotMean shape incompatible with input shape.&quot)
+       </a> self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+                in_shape = self.inputs[in_][1:]
+                m_min, m_max = mean.min(), mean.max()
+                normal_mean = (mean - m_min) / (m_max - m_min)
+                <a id="change">mean = resize_image(normal_mean.transpose((1,2,0)),
+                        in_shape[1:]).transpose((2,0,1)) * \
+                        (m_max - m_min) + m_min</a>
+        self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre><img src="24444500.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/bfc638d502b8b991e6ef5aaaa1946049312e6336#diff-528bd29352c7471d35a4f6d90b05bbef21ab1a9dba3ec3a812e42bf9071dd7feL236' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: bfc638d502b8b991e6ef5aaaa1946049312e6336</div><div id='time'> Time: 2017-11-02</div><div id='author'> Author: geunsik.lim@samsung.com</div><div id='file'> File Name: python/caffe/io.py</div><div id='class'> Class Name: Transformer</div><div id='method'> Method Name: set_mean</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/1aff9ce62a0c9db7f02b93830fed4073fed49bd1#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L60' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 1aff9ce62a0c9db7f02b93830fed4073fed49bd1</div><div id='time'> Time: 2015-02-02</div><div id='author'> Author: jwasilkowski@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/738c8758e30c6f8bdf9155529aeb431547af65d6#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L196' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 738c8758e30c6f8bdf9155529aeb431547af65d6</div><div id='time'> Time: 2014-05-19</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_set_mean</div><BR>

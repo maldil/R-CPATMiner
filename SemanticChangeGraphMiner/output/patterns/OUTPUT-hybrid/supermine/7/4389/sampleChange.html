@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if test_reg_name == reg["name"]:
+      src_registry = os.path.join(test_reg_path, reg["path"])
+      reg_path = os.path.join(tmp_dir, *os.path.join(reg["name"], reg["path"]).split(&quot/&quot)[:-1])
+      <a id="change">if not os.path.exists(reg_path):
+        os.makedirs(reg_path)
+     </a> print("cp -r %s %s" % (src_registry, reg_path))
+      os.system("cp -r %s %s" % (src_registry, reg_path))
+    else:
+      reg_path = os.path.join(tmp_dir, reg["name"])</code></pre><h3>After Change</h3><pre><code class='java'>
+  for reg in conf[&quotregistries&quot]:
+    if test_reg_name == reg["name"]:
+      excludes = [".git*", ".idea", "vendor", "node_modules"]
+      sync_cmd = "rsync -a %s %s %s" % <a id="change">(test_reg_path, os_tmp_dir, " ".join(["--exclude=" + term for term in excludes]))</a>
+      print(sync_cmd)
+      os.system(sync_cmd)
+    else:
+      reg_path = os.path.join(os_tmp_dir, reg["name"])</code></pre>

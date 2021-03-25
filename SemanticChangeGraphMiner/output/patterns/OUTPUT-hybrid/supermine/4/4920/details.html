@@ -1,0 +1,24 @@
+<html><h3>9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e,GANs/stylegan2/generate.py,,main,#,98
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        print(f"using style noise seed {args.seed_mix} for layers {args.mix_after}-{num_layers}.")
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        <a id="change">style_noises = [nn.Variable((batch_size, 512)).apply(d=z)
+                        for _ in range(args.mix_after)]</a>
+        <a id="change">style_noises += [nn.Variable((batch_size, 512)).apply(d=z2)
+                         for _ in range(num_layers - args.mix_after)]</a>
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")
+        style_noise = nn.Variable((batch_size, 512)).apply(d=z)</code></pre><h3>After Change</h3><pre><code class='java'>
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        style_noises = [nn.NdArray.from_numpy_array(z)]
+        style_noises += <a id="change">[nn.NdArray.from_numpy_array(z2)]</a>
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")
+        style_noises = [nn.NdArray.from_numpy_array(z) for _ in range(2)]</code></pre><img src="21156674.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e#diff-006be648ca04cea91a1d8a53fb6f6d1355e73c72738686ba1261e0b61fc96bd1L104' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 9dab8ae56ce90f1b9ba6808a6e0673ab6f13103e</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/7d51c2e47a41418904a76c8c744c7ec51ac8a9aa#diff-bd2f7f909047d5bc24c883f1d9cb8120c88258256bfc15153eff6a8739849137L1' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 7d51c2e47a41418904a76c8c744c7ec51ac8a9aa</div><div id='time'> Time: 2019-01-09</div><div id='author'> Author: alexmxu99@gmail.com</div><div id='file'> File Name: visualizer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/7d8f3f66495979f1bbd27205d422d673991709f2#diff-006be648ca04cea91a1d8a53fb6f6d1355e73c72738686ba1261e0b61fc96bd1L104' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 7d8f3f66495979f1bbd27205d422d673991709f2</div><div id='time'> Time: 2021-01-26</div><div id='author'> Author: Krishna.Wadhwani@sony.com</div><div id='file'> File Name: GANs/stylegan2/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

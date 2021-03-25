@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+print(__doc__)
+
+<a id="change">sns.set()</a>
+
+&#47&#47 Define some color for the plotting
+almost_black = &quot&#47&#47262626&quot
+<a id="change">palette = sns.color_palette()</a>
+
+
+&#47&#47 Generate the dataset
+X, y = make_classification(n_classes=2, class_sep=2, weights=[0.1, 0.9],
+                           n_informative=3, n_redundant=1, flip_y=0,
+                           n_features=20, n_clusters_per_class=1,
+                           n_samples=5000, random_state=10)
+
+&#47&#47 Instanciate a PCA object for the sake of easy visualisation
+pca = PCA(n_components=2)
+&#47&#47 Fit and transform x to visualise inside a 2D feature space
+X_vis = pca.fit_transform(X)
+
+&#47&#47 Apply SMOTE + ENN
+sm = SMOTEENN()
+X_resampled, y_resampled = sm.fit_sample(X, y)
+X_res_vis = pca.transform(X_resampled)
+
+&#47&#47 Two subplots, unpack the axes array immediately
+f, (ax1, ax2) = plt.subplots(1, 2)
+
+ax1.scatter(X_vis[y == 0, 0], X_vis[y == 0, 1], label="Class &#47&#470", alpha=0.5,
+            edgecolor=almost_black, facecolor=<a id="change">palette[0]</a>, linewidth=0.15)
+ax1.scatter(X_vis[y == 1, 0], X_vis[y == 1, 1], label="Class &#47&#471", alpha=0.5,
+            edgecolor=almost_black, facecolor=<a id="change">palette[2]</a>, linewidth=0.15)
+ax1.set_title(&quotOriginal set&quot)
+
+ax2.scatter(X_res_vis[y_resampled == 0, 0], X_res_vis[y_resampled == 0, 1],
+            label="Class &#47&#470", alpha=.5, edgecolor=almost_black,
+            facecolor=<a id="change">palette[0]</a>, linewidth=0.15)
+ax2.scatter(X_res_vis[y_resampled == 1, 0], X_res_vis[y_resampled == 1, 1],
+            label="Class &#47&#471", alpha=.5, edgecolor=almost_black,
+            facecolor=<a id="change">palette[2]</a>, linewidth=0.15)
+ax2.set_title(&quotSMOTE + ENN&quot)
+
+plt.show()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+f.legend((c0, c1), (&quotClass &#47&#470&quot, &quotClass &#47&#471&quot), loc=&quotlower center&quot,
+         ncol=2, labelspacing=0.)
+<a id="change">plt.tight_layout(pad=3)</a>
+plt.show()
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    try:
+        p = (p1 * n1 + pt * nt) / (n1 + nt)
+        standard_error = sqrt(p * (1 - p) * ((1 / n1) + (1 / nt)))
+        <a id="change">z_scores = (p1 - pt) / standard_error</a>
+        <a id="change">return z_scores</a>
+    except ZeroDivisionError:
+        return &quotInsignificant&quot
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+             NOT an anomaly.
+    
+    assert n1 &gt; 0, SEG_NON_POSITIVE_MESSAGE
+    <a id="change">assert nt &gt; 0, SEG_NON_POSITIVE_MESSAGE</a>
+    p = (p1 * n1 + pt * nt) / (n1 + nt)
+    standard_error = (p * (1 - p) * ((1 / n1) + (1 / nt)))**0.5
+    if standard_error == 0:
+        return 0</code></pre>

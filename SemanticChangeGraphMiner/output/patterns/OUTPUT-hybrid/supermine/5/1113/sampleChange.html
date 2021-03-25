@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def attempt_download(weights):
+    &#47&#47 Attempt to download pretrained weights if not found locally
+    weights = str(weights).strip().replace("&quot", &quot&quot)
+    <a id="change">file = Path(weights).name.lower()</a>
+
+    msg = weights + &quot missing, try downloading from https://github.com/ultralytics/yolov3/releases/&quot
+    response = requests.get(&quothttps://api.github.com/repos/ultralytics/yolov3/releases/latest&quot).json()  &#47&#47 github api
+    assets = [x[&quotname&quot] for x in response[&quotassets&quot]]  &#47&#47 release assets [&quotyolov3.pt&quot, &quotyolov3-spp.pt&quot, &quotyolov3-tiny.pt&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Attempt file download if does not exist
+    file = Path(str(file).strip().replace("&quot", &quot&quot).lower())
+
+    <a id="change">if not file.exists():
+        response = requests.get(&quothttps://api.github.com/repos/ultralytics/yolov3/releases/latest&quot).json()  &#47&#47 github api
+        assets = [x[&quotname&quot] for x in response[&quotassets&quot]]  &#47&#47 release assets [&quotyolov3.pt&quot, &quotyolov3-spp.pt&quot, ...]
+        name = file.name
+
+        if name in assets:
+            msg = f&quot{file} missing, try downloading from https://github.com/ultralytics/yolov3/releases/&quot
+            redundant = False  &#47&#47 second download option
+            try:  &#47&#47 GitHub
+                tag = response[&quottag_name&quot]  &#47&#47 i.e. &quotv1.0&quot
+                url = f&quothttps://github.com/ultralytics/yolov3/releases/download/{tag}/{name}&quot
+                print(f&quotDownloading {url} to {file}...&quot)
+                torch.hub.download_url_to_file(url, file)
+                assert file.exists() and file.stat().st_size &gt; 1E6  &#47&#47 check
+            except Exception as e:  &#47&#47 GCP
+                print(f&quotDownload error: {e}&quot)
+                assert redundant, &quotNo secondary mirror&quot
+                url = f&quothttps://storage.googleapis.com/ultralytics/yolov3/ckpt/{name}&quot
+                print(f&quotDownloading {url} to {file}...&quot)
+                os.system(f&quotcurl -L {url} -o {file}&quot)  &#47&#47 torch.hub.download_url_to_file(url, weights)
+            finally:
+                if not file.exists() or file.stat().st_size &lt; 1E6:  &#47&#47 check
+                    file.unlink(missing_ok=True)  &#47&#47 remove partial downloads
+                    print(f&quotERROR: Download failure: {msg}&quot)
+                print(&quot&quot)
+                return
+
+
+</a>def gdrive_download(id=&quot16TiPfZj7htmTyhntwcZyEEAejOUxuT6m&quot, file=&quottmp.zip&quot):
+    &#47&#47 Downloads a file from Google Drive. from yolov3.utils.google_utils import *; gdrive_download()
+    t = time.time()
+    file = Path(file)</code></pre>

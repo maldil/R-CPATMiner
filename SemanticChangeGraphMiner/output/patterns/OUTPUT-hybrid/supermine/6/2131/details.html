@@ -1,0 +1,39 @@
+<html><h3>379a62714282b82147d84134864df41cc1975b1e,invesalius/data/imagedata_utils.py,,ResampleImage2D,#,61
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    spacing = imagedata.GetSpacing()
+    dimensions = imagedata.GetDimensions()
+
+    <a id="change">if resolution_percentage:
+        px = math.ceil(dimensions[0] * resolution_percentage)
+        py = math.ceil(dimensions[1] * resolution_percentage)
+
+   </a> if abs(extent[1]-extent[3]) &lt; abs(extent[3]-extent[5]):
+        f = extent[1]
+    elif abs(extent[1]-extent[5]) &lt; abs(extent[1] - extent[3]):
+        f = extent[1]</code></pre><h3>After Change</h3><pre><code class='java'>
+    spacing = imagedata.GetSpacing()
+    dimensions = imagedata.GetDimensions()
+
+    <a id="change">if resolution_percentage:
+        factor_x = resolution_percentage
+        factor_y = resolution_percentage
+    else:
+        if abs(extent[1]-extent[3]) &lt; abs(extent[3]-extent[5]):
+            f = extent[1]
+        elif abs(extent[1]-extent[5]) &lt; abs(extent[1] - extent[3]):
+            f = extent[1]
+        elif abs(extent[3]-extent[5]) &lt; abs(extent[1] - extent[3]):
+            f = extent[3]
+        else:
+            f = extent[1]
+
+        factor_x = px/float(f+1)
+        factor_y = py/float(f+1)
+
+   </a> resample = vtk.vtkImageResample()
+    resample.SetInputData(imagedata)
+    resample.SetAxisMagnificationFactor(0, factor_x)
+    resample.SetAxisMagnificationFactor(1, factor_y)</code></pre><img src="9879702.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/invesalius/invesalius3/commit/379a62714282b82147d84134864df41cc1975b1e#diff-a103df4af27d378feaf5525b563743097e133f85755128e7df68d2bd7070d994L69' target='_blank'>Link</a></div><div id='project'> Project Name: invesalius/invesalius3</div><div id='commit'> Commit Name: 379a62714282b82147d84134864df41cc1975b1e</div><div id='time'> Time: 2018-01-15</div><div id='author'> Author: totonixsame@gmail.com</div><div id='file'> File Name: invesalius/data/imagedata_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ResampleImage2D</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/f947b1479e76dbeee06400e8d97b23bf64d0c8ff#diff-c563295221637cd185ffad4213ba15b18af223d9a21c646b65ab7b8dc29c7062L74' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: f947b1479e76dbeee06400e8d97b23bf64d0c8ff</div><div id='time'> Time: 2013-11-21</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: recurrence_matrix</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/e64a027b9a50e6a10e520aeaa540adf60ceeb87c#diff-85c85d1130a250ce4a33ac994e2a79734d48d7ec259be97adfaf2f38b9996b3aL196' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: e64a027b9a50e6a10e520aeaa540adf60ceeb87c</div><div id='time'> Time: 2017-08-15</div><div id='author'> Author: darias0826@gmail.com</div><div id='file'> File Name: lexos/processors/prepare/cutter.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cut_by_number</div><BR>

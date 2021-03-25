@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	if significance:
+		prediction = model.predict(x, significance)
+	else:
+		<a id="change">prediction = model.predict(x)</a>
+
+	interval_size = 0
+	for j in range(y.size):
+		interval_size += np.abs(prediction[j, 1] - prediction[j, 0])
+	<a id="change">return interval_size / y.size</a>
+
+def class_avg_c(model, x, y, significance=None):
+	Calculates the average number of classes per prediction of a conformal
+	classification model.</code></pre><h3>After Change</h3><pre><code class='java'>
+	Calculates the average prediction interval size of a conformal
+	regression model.
+	
+	<a id="change">return np.mean(_reg_interval_size(prediction, y, significance))</a>
+
+def class_avg_c(prediction, y, significance):
+	Calculates the average number of classes per prediction of a conformal
+	classification model.</code></pre>

@@ -1,0 +1,33 @@
+<html><h3>3735a6f690676bf2ab29f57ca1a02c1c63565b6c,ch16/02_breakout_es.py,,,#,179
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        writer.add_scalar("batch_steps", batch_steps, step_idx)
+        speed = batch_steps / (time.time() - t_start)
+        writer.add_scalar("speed", speed, step_idx)
+        <a id="change">print("%d: reward=%.2f, speed=%.2f f/s" % (step_idx, m_reward, speed))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                break
+            time.sleep(0.1)
+
+        dt_data = <a id="change">time.time() - t_start</a>
+        m_reward = np.mean(batch_reward)
+        if m_reward &gt; 18:
+            print("Solved in %d steps" % step_idx)
+            break
+
+        train_step(net, batch_noise, batch_reward, writer, step_idx)
+        writer.add_scalar("reward_mean", m_reward, step_idx)
+        writer.add_scalar("reward_std", np.std(batch_reward), step_idx)
+        writer.add_scalar("reward_max", np.max(batch_reward), step_idx)
+        writer.add_scalar("batch_episodes", len(batch_reward), step_idx)
+        writer.add_scalar("batch_steps", batch_steps, step_idx)
+        speed = batch_steps / (time.time() - t_start)
+        writer.add_scalar("speed", speed, step_idx)
+        dt_step = <a id="change">time</a>.time() - t_start - dt_data
+
+        <a id="change">print("%d: reward=%.2f, speed=%.2f f/s, data_gather=%.3f, train=%.3f, steps_mean=%.2f, min=%.2f, max=%.2f, steps_std=%.2f" % (
+            step_idx, m_reward, speed, dt_data, dt_step, np.mean(batch_steps_data),
+            np.min(batch_steps_data), np.max(batch_steps_data), np.std(batch_steps_data)))</a>
+</code></pre><img src="3680568.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/3735a6f690676bf2ab29f57ca1a02c1c63565b6c#diff-f80cbb174b212291f06a8add860dd3027fb76b5c7da1ca1cdbfcb570d03c15f2L182' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 3735a6f690676bf2ab29f57ca1a02c1c63565b6c</div><div id='time'> Time: 2018-02-20</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch16/02_breakout_es.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/astorfi/TensorFlow-World/commit/496e3d795c1f33010899f34c2e171a76a3d8e75c#diff-e3408c158429e3df704a73ae06a262ad94a31afeea736af23b6864c3e8e9dba2L73' target='_blank'>Link</a></div><div id='project'> Project Name: astorfi/TensorFlow-World</div><div id='commit'> Commit Name: 496e3d795c1f33010899f34c2e171a76a3d8e75c</div><div id='time'> Time: 2017-06-14</div><div id='author'> Author: amirsina.torfi@gmail.com</div><div id='file'> File Name: codes/2-basics_in_machine_learning/linear_svm/code/linear_SVM.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/hunkim/PyTorchZeroToAll/commit/55b880469ced115de9949d5d25ff835dabbb2caa#diff-c09086a518eb8a5f3912a08dd78ce1a2f3613753f5f1a33bc5ced859113b71edL109' target='_blank'>Link</a></div><div id='project'> Project Name: hunkim/PyTorchZeroToAll</div><div id='commit'> Commit Name: 55b880469ced115de9949d5d25ff835dabbb2caa</div><div id='time'> Time: 2017-11-08</div><div id='author'> Author: hunkim@gmail.com</div><div id='file'> File Name: 13_2_seq2seq_att.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

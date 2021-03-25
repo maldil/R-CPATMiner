@@ -1,0 +1,20 @@
+<html><h3>fc2cbd6638ec1f132d0d33924d7b9d9a94b51979,torchbenchmark/util/machine_config.py,,get_pstate_frequency,#,210
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def get_pstate_frequency():
+    CPU_FREQ_BASE_DIR = &quot/sys/devices/system/cpu&quot
+    CPU_FREQ_FILES = ["scaling_min_freq", "scaling_max_freq", "scaling_cur_freq"]
+    cpu_dirs = [f <a id="change">for</a> f in <a id="change">os.listdir(CPU_FREQ_BASE_DIR)</a> if re.match(r&quotcpu[0-9]+&quot, f)]
+    output = dict()
+    for cpu_dir in cpu_dirs:
+        full_path = os.path.join(CPU_FREQ_BASE_DIR, cpu_dir, "cpufreq")</code></pre><h3>After Change</h3><pre><code class='java'>
+def get_pstate_frequency():
+    CPU_FREQ_BASE_DIR = &quot/sys/devices/system/cpu&quot
+    CPU_FREQ_FILES = ["scaling_min_freq", "scaling_max_freq", "scaling_cur_freq"]
+    <a id="change">cpu_dirs = ["cpu" + str(cpu[0]) for cpu in parse_lscpu_cpu_core_list() if cpu[2]]</a>
+    output = dict()
+    for cpu_dir in cpu_dirs:
+        full_path = os.path.join(CPU_FREQ_BASE_DIR, cpu_dir, "cpufreq")
+        freq_paths = [os.path.join(full_path, x) for x in CPU_FREQ_FILES]</code></pre><img src="33123320.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/benchmark/commit/fc2cbd6638ec1f132d0d33924d7b9d9a94b51979#diff-5c30c87a74ef5a926f650dba5fe4204408747a4b4e9460dd0cb74ec848341eb5L211' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/benchmark</div><div id='commit'> Commit Name: fc2cbd6638ec1f132d0d33924d7b9d9a94b51979</div><div id='time'> Time: 2021-02-12</div><div id='author'> Author: xzhao9@fb.com</div><div id='file'> File Name: torchbenchmark/util/machine_config.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_pstate_frequency</div><BR><BR><div id='link'><a href='https://github.com/coala/coala-bears/commit/b9f710538abab20f120d3d3e23c123ba7a6f7536#diff-766153bec18bb30eea4436c82f5788c08aa63f195291df1e7ad1e1547d74cc18L53' target='_blank'>Link</a></div><div id='project'> Project Name: coala/coala-bears</div><div id='commit'> Commit Name: b9f710538abab20f120d3d3e23c123ba7a6f7536</div><div id='time'> Time: 2018-07-10</div><div id='author'> Author: rafidteam@gmail.com</div><div id='file'> File Name: tests/c_languages/codeclone_detection/ClangCloneDetectionBearTest.py</div><div id='class'> Class Name: ClangCloneDetectionBearTest</div><div id='method'> Method Name: test_clones</div><BR><BR><div id='link'><a href='https://github.com/pytorch/benchmark/commit/fc2cbd6638ec1f132d0d33924d7b9d9a94b51979#diff-5c30c87a74ef5a926f650dba5fe4204408747a4b4e9460dd0cb74ec848341eb5L228' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/benchmark</div><div id='commit'> Commit Name: fc2cbd6638ec1f132d0d33924d7b9d9a94b51979</div><div id='time'> Time: 2021-02-12</div><div id='author'> Author: xzhao9@fb.com</div><div id='file'> File Name: torchbenchmark/util/machine_config.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: set_pstate_frequency</div><BR>

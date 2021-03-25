@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mu: Mean parameters for the variational family Normal
+    sigma: Standard deviation parameters for the variational family Normal
+  
+  with slim.arg_scope(<a id="change">[slim.fully_connected]</a>, activation_fn=tf.nn.relu):
+    net = slim.flatten(x)
+    net = slim.fully_connected(net, hidden_size)
+    net = slim.fully_connected(net, hidden_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+    mu: Mean parameters for the variational family Normal
+    sigma: Standard deviation parameters for the variational family Normal
+  
+  inference_net = tfk.Sequential(<a id="change">[
+    tfkl.Flatten(),
+    tfkl.Dense(hidden_size, activation=tf.nn.relu),
+    tfkl.Dense(hidden_size, activation=tf.nn.relu),
+    tfkl.Dense(latent_dim * 2, activation=None)
+    ]</a>)
+  gaussian_params = inference_net(x)
+  &#47&#47 The mean parameter is unconstrained
+  mu = gaussian_params[:, :latent_dim]</code></pre>

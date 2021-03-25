@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            UrhoU = torch.sum(UrhoU_v, dim=(1, 2))
+
+            for i in range(v.shape[0]):
+                <a id="change">for j in range(v.shape[0]):
+                    rotated_grad[0] += cplx.scalar_mult(
+                        UrhoU_v[:, i, j], self.am_grads(v[i, ...], v[j, ...])
+                    )
+                    rotated_grad[1] += cplx.scalar_mult(
+                        UrhoU_v[:, i, j], self.ph_grads(v[i, ...], v[j, ...])
+                    )
+
+       </a> grad = [
+            -cplx.real(cplx.scalar_divide(rotated_grad[0], UrhoU)),
+            -cplx.real(cplx.scalar_divide(rotated_grad[1], UrhoU)),
+        ]</code></pre><h3>After Change</h3><pre><code class='java'>
+            ph_grads = self.ph_grads(v, v, expand=True)
+
+            rotated_grad[0] = cplx.einsum("ij,ij...-&gt;...", UrhoU_v, am_grads)
+            rotated_grad[1] = <a id="change">cplx.einsum("ij,ij...-&gt;...", UrhoU_v, ph_grads)</a>
+
+        grad = [
+            -cplx.real(cplx.scalar_divide(rotated_grad[0], UrhoU)),
+            -cplx.real(cplx.scalar_divide(rotated_grad[1], UrhoU)),</code></pre>

@@ -1,0 +1,31 @@
+<html><h3>908b49cb7d2d527b701996f0d0b9e1e19e765819,debug_toolbar/settings.py,,,#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+CONFIG = {}
+CONFIG.update(CONFIG_DEFAULTS)
+<a id="change">CONFIG.update(getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}))</a>
+
+
+PANELS_DEFAULTS = [
+    &quotdebug_toolbar.panels.versions.VersionsPanel&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+CONFIG = CONFIG_DEFAULTS.copy()
+USER_CONFIG = getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {})
+&#47&#47 Backward-compatibility for 1.0, remove in 2.0.
+_RENAMED_CONFIG = <a id="change">{
+    &quotRESULTS_STORE_SIZE&quot: &quotRESULTS_CACHE_SIZE&quot,
+    &quotROOT_TAG_ATTRS&quot: &quotROOT_TAG_EXTRA_ATTRS&quot,
+    &quotHIDDEN_STACKTRACE_MODULES&quot: &quotHIDE_IN_STACKTRACES&quot
+}</a>
+<a id="change">for old_name, new_name in _RENAMED_CONFIG.items():
+    if old_name in USER_CONFIG:
+        warnings.warn(
+            "%r was renamed to %r. Update your DEBUG_TOOLBAR_CONFIG "
+            "setting." % (old_name, new_name), DeprecationWarning)
+        USER_CONFIG[new_name] = USER_CONFIG.pop(old_name)
+</a>if &quotTAG&quot in USER_CONFIG:
+     warnings.warn(
+        "TAG was replaced by INSERT_BEFORE. Update your "
+        "DEBUG_TOOLBAR_CONFIG setting.", DeprecationWarning)</code></pre><img src="27516963.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/908b49cb7d2d527b701996f0d0b9e1e19e765819#diff-a8ed9ffd9de3f6215d1e1f1ca1f5c0462af5bc9befc667fde0ddda64af9b3b94L16' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 908b49cb7d2d527b701996f0d0b9e1e19e765819</div><div id='time'> Time: 2013-11-24</div><div id='author'> Author: aymeric.augustin@m4x.org</div><div id='file'> File Name: debug_toolbar/settings.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/6883db3f8072d1d17a34e3898f4c51042ee7abb6#diff-b7ceb1dd72c5271ca1ac8f53565f0121136b83635e7a81e3e2f6fcbea699a81aL12' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 6883db3f8072d1d17a34e3898f4c51042ee7abb6</div><div id='time'> Time: 2019-03-22</div><div id='author'> Author: code@jmsmkn.com</div><div id='file'> File Name: app/grandchallenge/workstations/views.py</div><div id='class'> Class Name: FormTemplateHTMLRenderer</div><div id='method'> Method Name: get_template_context</div><BR><BR><div id='link'><a href='https://github.com/pytorch/contrib/commit/2ac62badfbc795b54b67c8123d1236b06d19ccf7#diff-afa305310a92702219b2e55555a85dc89bdf4f695cf6969ebe3ed7767691bf17L86' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/contrib</div><div id='commit'> Commit Name: 2ac62badfbc795b54b67c8123d1236b06d19ccf7</div><div id='time'> Time: 2018-07-28</div><div id='author'> Author: izmailovpavel@gmail.com</div><div id='file'> File Name: torchcontrib/optim/swa.py</div><div id='class'> Class Name: SWA</div><div id='method'> Method Name: load_state_dict</div><BR>

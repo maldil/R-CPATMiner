@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                     "fuzziness" : 1,
+                                     "operator":   "and"},
+                }
+            <a id="change">r</a> = <a id="change">Q("match", country_code3=country)</a>
+            <a id="change">res</a> = <a id="change">self</a>.conn.query(q).query(<a id="change">r</a>)[0:50].execute()
+
+        <a id="change">out</a> = utilities.structure_results(res)
+        return out
+
+    def _feature_location_type_mention(self, ent):</code></pre><h3>After Change</h3><pre><code class='java'>
+                }
+            &#47&#47r = Q("match", country_code3=country)
+            &#47&#47res = self.conn.query(q).query(r)[0:50].execute()
+            <a id="change">res</a> = <a id="change">self</a>.conn.filter(<a id="change">"term"</a>, country_code3=country).query(q)[0:50].execute()
+
+        <a id="change">out</a> = utilities.structure_results(res)
+        return out
+
+    def _feature_location_type_mention(self, ent):</code></pre>

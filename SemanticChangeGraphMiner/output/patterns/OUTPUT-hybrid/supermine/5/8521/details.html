@@ -1,0 +1,20 @@
+<html><h3>3a3dc678e50e60f9cf05e95e992ab873046c1b8f,cifar10.py,,,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47                    validation_data=(testX, Y_test),
+&#47&#47                    nb_val_samples=testX.shape[0], verbose=1)
+
+<a id="change">yPreds = model.predict(testX)</a>
+yPred = np.argmax(yPreds, axis=1)
+yTrue = testY
+
+accuracy = metrics.accuracy_score(yTrue, yPred) * 100</code></pre><h3>After Change</h3><pre><code class='java'>
+                   callbacks=[ModelCheckpoint("weights/DenseNet-40-12-CIFAR10.h5", monitor="val_acc", save_best_only=True,
+                                              save_weights_only=True)],
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),
+                   nb_val_samples=<a id="change">testX.shape[0]</a>, verbose=1)
+
+scores = model.evaluate_generator(test_generator.flow(testX, testY, nb_epoch), testX.shape[0])
+print("Accuracy = %f" % (100 * scores[1]))</code></pre><img src="33252155.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/3a3dc678e50e60f9cf05e95e992ab873046c1b8f#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 3a3dc678e50e60f9cf05e95e992ab873046c1b8f</div><div id='time'> Time: 2016-12-05</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/b00dcfd14da97cd213a72129911d48d7d62cfac6#diff-4b17f27de33266511fa60dd73b9069c1529349e85d6d45e5738cc0342e66feefL36' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: b00dcfd14da97cd213a72129911d48d7d62cfac6</div><div id='time'> Time: 2018-04-04</div><div id='author'> Author: kvamme@samba8.ad.nr.no</div><div id='file'> File Name: pycox/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: brier_score</div><BR><BR><div id='link'><a href='https://github.com/zo7/deconvfaces/commit/41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c#diff-93945a688e62274699c4f9f6fb1380052c78cebb78d4b0f6f226902745d45eceL426' target='_blank'>Link</a></div><div id='project'> Project Name: zo7/deconvfaces</div><div id='commit'> Commit Name: 41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c</div><div id='time'> Time: 2016-09-04</div><div id='author'> Author: zo7.flynn@gmail.com</div><div id='file'> File Name: facegen/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_from_yaml</div><BR>

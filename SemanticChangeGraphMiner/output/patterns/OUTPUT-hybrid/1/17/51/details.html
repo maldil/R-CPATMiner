@@ -1,0 +1,29 @@
+<html><h3>a57bdeecacb664e80e0c8408492e28eb9dd31a79,spacy/tests/test_misc.py,,test_load_model_version_compat,#,152
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 additional compatible upper pin
+        nlp.meta["spacy_version"] = "&gt;=2.3.0,&lt;2.4.0"
+        nlp.to_disk(d)
+        nlp2 = <a id="change">util.load_model(d)</a>
+
+        &#47&#47 incompatible older version
+        nlp.meta["spacy_version"] = "&gt;=2.2.5"
+        <a id="change">nlp.to_disk(d)</a>
+        with pytest.warns(UserWarning):
+            nlp_reloaded = util.load_model(d)
+
+        &#47&#47 invalid version specification</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 no change: compatible
+        nlp.to_disk(d)
+        meta_path = Path(d / "meta.json")
+        <a id="change">util.get_model_meta(d)</a>
+
+        &#47&#47 additional compatible upper pin
+        nlp.meta["spacy_version"] = "&gt;=2.3.0,&lt;2.4.0"
+        <a id="change">srsly.write_json(Path(d / "meta.json"), nlp.meta)</a>
+        util.get_model_meta(d)
+
+        &#47&#47 incompatible older version
+        nlp.meta["spacy_version"] = "&gt;=2.2.5"</code></pre><img src="82112.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/a57bdeecacb664e80e0c8408492e28eb9dd31a79#diff-5178e2ed8b9b95a18d5bf4bdf5b12d933077dd6de9587f391aa0a036877f5aafL156' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: a57bdeecacb664e80e0c8408492e28eb9dd31a79</div><div id='time'> Time: 2020-06-03</div><div id='author'> Author: adrianeboyd@gmail.com</div><div id='file'> File Name: spacy/tests/test_misc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_load_model_version_compat</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/a57bdeecacb664e80e0c8408492e28eb9dd31a79#diff-5178e2ed8b9b95a18d5bf4bdf5b12d933077dd6de9587f391aa0a036877f5aafL156' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: a57bdeecacb664e80e0c8408492e28eb9dd31a79</div><div id='time'> Time: 2020-06-03</div><div id='author'> Author: adrianeboyd@gmail.com</div><div id='file'> File Name: spacy/tests/test_misc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_load_model_version_compat</div><BR>

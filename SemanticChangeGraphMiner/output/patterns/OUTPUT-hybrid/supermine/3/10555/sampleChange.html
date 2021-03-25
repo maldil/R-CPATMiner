@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+x_ticks = plt.xticks(range(len(labels) - 1), labels[1:], rotation=90)
+y_ticks = plt.yticks(range(len(labels) - 1), labels[1:])
+plt.gca().yaxis.tick_right()
+<a id="change">plt.subplots_adjust(left=.01, bottom=.3, top=.99, right=.62)</a>
+plt.suptitle(&quotNo confounds&quot, size=27)
+
+plt.show()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Mask the main diagonal for visualization:
+np.fill_diagonal(correlation_matrix, 0)
+
+<a id="change">fig</a>, ax = plt.subplots(1, 1, figsize=(10, 10))
+plot_matrix(correlation_matrix, ax=ax, labels=labels, cmap="RdBu_r",
+            vmax=0.8, vmin=-0.8)
+plt.title(&quotNo confounds&quot, size=27)</code></pre>

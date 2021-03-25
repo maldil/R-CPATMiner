@@ -1,0 +1,22 @@
+<html><h3>9bdbb11cf27060e7847a87dcdf691dd6b96ce6df,rlkit/data_management/obs_dict_replay_buffer.py,ObsDictRelabelingBuffer,random_batch,#ObsDictRelabelingBuffer#,171
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                possible_future_obs_idxs = self._idx_to_future_obs_idx[i]
+                &#47&#47 This is generally faster than random.choice. Makes you wonder what
+                &#47&#47 random.choice is doing
+                num_options = <a id="change">len(possible_future_obs_idxs)</a>
+                next_obs_i = int(np.random.randint(0, num_options))
+                future_obs_idxs.append(possible_future_obs_idxs[next_obs_i])
+            future_obs_idxs = np.array(future_obs_idxs)
+            resampled_goals[-num_future_goals:] = self._next_obs[</code></pre><h3>After Change</h3><pre><code class='java'>
+        if num_future_goals &gt; 0:
+            &#47&#47&#47&#47 better future obs sample algorithm
+            future_indices = indices[-num_future_goals:]
+            <a id="change">possible_future_obs_lens = np.array([len(self._idx_to_future_obs_idx[i]) for i in future_indices])</a>
+            <a id="change">next_obs_idxs = (np.random.random(num_future_goals) * possible_future_obs_lens).astype(np.int)</a>
+            future_obs_idxs = np.array([self._idx_to_future_obs_idx[ids][next_obs_idxs[i]] for i, ids in enumerate(future_indices)])
+
+            resampled_goals[-num_future_goals:] = self._next_obs[
+                self.achieved_goal_key</code></pre><img src="39000497.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/vitchyr/rlkit/commit/9bdbb11cf27060e7847a87dcdf691dd6b96ce6df#diff-2178a345f4deabd282ac87d8dcb0e8ccc6d47221247628b8dbc0938f186b7b3aL171' target='_blank'>Link</a></div><div id='project'> Project Name: vitchyr/rlkit</div><div id='commit'> Commit Name: 9bdbb11cf27060e7847a87dcdf691dd6b96ce6df</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 38036768+YangRui2015@users.noreply.github.com</div><div id='file'> File Name: rlkit/data_management/obs_dict_replay_buffer.py</div><div id='class'> Class Name: ObsDictRelabelingBuffer</div><div id='method'> Method Name: random_batch</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/516c2a4c7e8f92e1ea299e966215c2ffe4c5b980#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 516c2a4c7e8f92e1ea299e966215c2ffe4c5b980</div><div id='time'> Time: 2016-12-07</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

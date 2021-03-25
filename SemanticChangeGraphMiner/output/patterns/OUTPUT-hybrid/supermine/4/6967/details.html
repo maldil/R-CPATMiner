@@ -1,0 +1,21 @@
+<html><h3>9d56361641a64ff73ac630812ecd4964eedbc7aa,gat/graph_attention_layer.py,GraphAttention,call,#GraphAttention#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            combination_slices = tf.unstack(K.reshape(combinations, (B, -1, 2 * self.F_)))
+            output_features = []
+            for slice in combination_slices:
+                <a id="change">dense = Dense(1)(slice)</a>  &#47&#47 N x 1 (basically "a(Wh_i, Wh_j)" in the paper)
+                &#47&#47 TODO: masking
+                <a id="change">e_i = K.reshape(dense, (1, -1))</a>  &#47&#47 1 x N (e_i in the paper)
+                softmax = K.squeeze(K.softmax(e_i))  &#47&#47 N (alpha_i in the paper)
+                softmax_broadcast = K.transpose(K.reshape(K.tile(softmax, [self.F_]), [self.F_, -1]))
+                node_features = K.sum(softmax_broadcast * linear_transf, axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        X = inputs[0]  &#47&#47 input graph (B x F)
+        G = inputs[1]  &#47&#47 full graph (N x F) (this is necessary in code, but not in theory. Check section 2.2 of the paper)
+        B = K.shape(X)[0]  &#47&#47 Get batch size at runtime
+        N = <a id="change">K.shape(G)[0]</a>  &#47&#47 Get number of nodes in the graph at runtime
+
+        outputs = []  &#47&#47 Will store the outputs of each attention head (B x F&quot or B x KF&quot)
+        for head in range(self.attention_heads):</code></pre><img src="27512736.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/danielegrattarola/keras-gat/commit/9d56361641a64ff73ac630812ecd4964eedbc7aa#diff-b5eead7f2a637c33998de1add9a690c0678e849a3d16791260f0f0a16506c7c3L72' target='_blank'>Link</a></div><div id='project'> Project Name: danielegrattarola/keras-gat</div><div id='commit'> Commit Name: 9d56361641a64ff73ac630812ecd4964eedbc7aa</div><div id='time'> Time: 2017-11-09</div><div id='author'> Author: daniele.grattarola@gmail.com</div><div id='file'> File Name: gat/graph_attention_layer.py</div><div id='class'> Class Name: GraphAttention</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14#diff-a1a14690bd4d0db68da6b27026209aa1ee45066f7ce9125d736e3b406d0059ceL10' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: 0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14</div><div id='time'> Time: 2019-11-20</div><div id='author'> Author: premy@cogent.co.jp</div><div id='file'> File Name: tasks/save_reload_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

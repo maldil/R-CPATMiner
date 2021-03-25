@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test3DProjectLocalData(self, serializer, empty_project_file):
+        for fileName in self.generatedImages3Dc:
+            <a id="change">graph = lazyflow.graph.Graph()</a>
+            reader = OperatorWrapper(OpDataSelection, graph=graph, operator_kwargs={&quotforceAxisOrder&quot: False})
+            <a id="change">reader.ProjectFile.setValue(empty_project_file)</a>
+            reader.WorkingDirectory.setValue(str(Path(empty_project_file.filename).parent))
+            <a id="change">reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)</a>
+
+            &#47&#47 From project
+            inner_path = serializer.importStackAsLocalDataset([fileName])
+            info = DatasetInfo(</code></pre><h3>After Change</h3><pre><code class='java'>
+        empty_project_file[&quotDataSelection/local_data&quot].create_dataset(&quotdataset1&quot, data=self.imgData3Dc)
+        reader = OperatorWrapper(OpDataSelection, graph=Graph(), operator_kwargs={&quotforceAxisOrder&quot: False})
+        reader.WorkingDirectory.setValue(str(Path(empty_project_file.filename).parent))
+        info = <a id="change">DatasetInfo(
+            filepath=&quotDataSelection/local_data/dataset1&quot,
+            project_file=empty_project_file,
+            location=DatasetInfo.Location.ProjectInternal
+        )</a>
+        reader.Dataset.setValues(<a id="change">[info]</a>)
+
+        projectInternalData = reader.Image[0][...].wait()
+        assert projectInternalData.shape == self.imgData3Dc.shape, (projectInternalData.shape, self.imgData3Dc.shape)</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+				if joint_name[:6] == "ignore":
+					Joint(self._p, joint_name, bodies, i, j).disable_motor()
+					<a id="change">continue</a>
+
+				if joint_name[:8] != "jointfix":
+					joints[joint_name] = Joint(self._p, joint_name, bodies, i, j)
+					ordered_joints.append(joints[joint_name])</code></pre><h3>After Change</h3><pre><code class='java'>
+				if joint_name[:6] == "ignore":
+					ignored_joint = Joint(self._p, joint_name, bodies, i, j)
+					ignored_joint.disable_motor()
+					<a id="change">if self.add_ignored_joints:  &#47&#47 some of the robots (Hopper, Walker2D and HalfCheetah in mujoco) require read-access to these joints
+						joints[joint_name] = ignored_joint
+						ordered_joints.append(ignored_joint)
+						joints[joint_name].power_coef = 0.0
+				</a>	continue
+
+				if joint_name[:8] != "jointfix":
+					joints[joint_name] = Joint(self._p, joint_name, bodies, i, j)</code></pre>

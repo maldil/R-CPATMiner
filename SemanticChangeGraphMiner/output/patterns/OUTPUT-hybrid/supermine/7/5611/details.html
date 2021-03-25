@@ -1,0 +1,27 @@
+<html><h3>7247571ab448f9ccf6b392a26df0b8b40b1085eb,2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py,,,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+zip_dir = "data/dataset"
+zip_files = ["train-clean-100.zip", "train-clean-360.zip", "train-clean-500.zip"]
+zip_files = ["%s/%s" % (zip_dir, fn) for fn in zip_files]
+<a id="change">assert all([os.path])</a>
+
+for fn in sorted(glob("train-*/*/*/*.trans.txt")):
+    for l in open(fn).read().splitlines():
+        seq_name, txt = l.split(" ", 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+for zip_file in zip_files:
+  assert zip_file.filelist
+  assert zip_file.filelist[0].filename.startswith("LibriSpeech/")
+  <a id="change">for info in zip_file.filelist:
+    assert isinstance(info, ZipInfo)
+    path = info.filename.split("/")
+    assert path[0] == "LibriSpeech", "does not expect %r (%r)" % (info, info.filename)
+    if path[1].startswith("train-"):
+      subdir = path[1]  &#47&#47 e.g. "train-clean-100"
+      if path[-1].endswith(".trans.txt"):
+        for l in zip_file.read(info).decode("utf8").splitlines():
+          seq_name, txt = l.split(" ", 1)
+          print(txt)</a>
+</code></pre><img src="23724746.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rwth-i6/returnn-experiments/commit/7247571ab448f9ccf6b392a26df0b8b40b1085eb#diff-d401bc87316c813350aef3f067c31d4a6851f27ec3d48a39d239b54f4fbaab97L10' target='_blank'>Link</a></div><div id='project'> Project Name: rwth-i6/returnn-experiments</div><div id='commit'> Commit Name: 7247571ab448f9ccf6b392a26df0b8b40b1085eb</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: zeyer@i6.informatik.rwth-aachen.de</div><div id='file'> File Name: 2018-asr-attention/librispeech/full-setup-attention/tools/collect-train-text.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/YerevaNN/mimic3-benchmarks/commit/7567cc646d258e40dde9790a28a9b264ccd494fb#diff-4303007b303bc8905ab1b14df5e2a1719f537eed23ecd0d02bb9c656baa84793L5' target='_blank'>Link</a></div><div id='project'> Project Name: YerevaNN/mimic3-benchmarks</div><div id='commit'> Commit Name: 7567cc646d258e40dde9790a28a9b264ccd494fb</div><div id='time'> Time: 2017-08-27</div><div id='author'> Author: harhro@gmail.com</div><div id='file'> File Name: mimic3models/split_train_val.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/YerevaNN/mimic3-benchmarks/commit/5d353701dd56a1fc8abc15e4082e33b7bed2a241#diff-4303007b303bc8905ab1b14df5e2a1719f537eed23ecd0d02bb9c656baa84793L5' target='_blank'>Link</a></div><div id='project'> Project Name: YerevaNN/mimic3-benchmarks</div><div id='commit'> Commit Name: 5d353701dd56a1fc8abc15e4082e33b7bed2a241</div><div id='time'> Time: 2017-08-09</div><div id='author'> Author: harhro@gmail.com</div><div id='file'> File Name: mimic3models/split_train_val.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

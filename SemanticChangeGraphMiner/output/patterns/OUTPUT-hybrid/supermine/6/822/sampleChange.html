@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+class ImageViewSet(ReadOnlyModelViewSet):
+    serializer_class = ImageSerializer
+    <a id="change">queryset</a> = <a id="change">Image.objects.all()</a>
+    permission_classes = (DjangoObjectPermissions,)
+    filter_backends = (
+        DjangoFilterBackend,
+        ObjectPermissionsFilter,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+class ImageViewSet(ReadOnlyModelViewSet):
+    serializer_class = ImageSerializer
+    <a id="change">queryset</a> = <a id="change">Image.objects.all().prefetch_related(
+        "files",
+        "archive_set",
+        "componentinterfacevalue_set__algorithms_jobs_as_input",
+    )</a>
+    permission_classes = (DjangoObjectPermissions,)
+    filter_backends = (
+        DjangoFilterBackend,
+        ObjectPermissionsFilter,</code></pre>

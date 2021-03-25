@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.rg = self.G(self.rc, context={"z":self.rz})
+        self.g = self.input_cache[self.gan.frames-1]
+        self.i=0
+        <a id="change">for i in range(self.gan.frames):
+            g = self.input_cache[i]
+            self.z = self.EZ(g, context={"z":self.z})
+            self.c = self.EC(self.z, context={"c":self.c})
+            self.g = self.G(self.z)
+            self.i = 0
+
+   </a> def refresh_input_cache(self):
+        self.input_cache = list(torch.chunk(self.gan.inputs.next(), self.gan.frames, dim=1))
+        for i in range(len(self.input_cache)-1):
+            self.gan.inputs.next()</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.state = self.gan.gen_state()
+        print("STATET1", self.state.shape)
+
+        enc = self.gan.encoder(<a id="change">torch.cat(self.input_cache[:-1], dim=1)</a>)
+        self.state = self.gan.state(enc, context={"past": self.state})
+        print("STATET", self.state.shape)
+        g = self.gan.decoder(self.state)</code></pre>

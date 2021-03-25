@@ -1,0 +1,29 @@
+<html><h3>a178a47269013e94c4756f94a2c9a0c373e04a18,examples/next-frame.py,VideoFrameSampler,_sample,#VideoFrameSampler#,589
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.i % (8*24) == 0:
+            print("RESET")
+            self.seed()
+        <a id="change">if self.gan.config.random:
+            samples += [(&quotrand&quot, self.rg)]
+            self.rz = self.EZ(self.rg, context={"z":self.rz})
+            self.rc = self.EC(self.rz, context={"c":self.rc})
+            self.rg = self.G(self.rc, context={"z":self.rz})
+       </a> self.i += 1
+        samples += [(&quotgenerator&quot, self.g)]
+        return samples
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.next_input()
+        samples = []
+        inframes = self.current_frames[-args.per_sample_frames+1:]
+        enc = self.gan.encoder(<a id="change">torch.cat(inframes, dim=1)</a>)
+        self.state = self.gan.state(enc, context={"past": self.state})
+        g = self.gan.decoder(self.state)
+        self.current_frames += [g]
+        <a id="change">self.current_frames = self.current_frames[1:]</a>
+        self.g = g
+        print(self.g.mean())
+        if self.i % (8*24) == 0:
+            print("RESET")</code></pre><img src="33383261.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HyperGAN/HyperGAN/commit/a178a47269013e94c4756f94a2c9a0c373e04a18#diff-6dc6d9702e9042e567a1a0e506ca63f2c0ce7f4d2f73217a7ceab357820ab00dL292' target='_blank'>Link</a></div><div id='project'> Project Name: HyperGAN/HyperGAN</div><div id='commit'> Commit Name: a178a47269013e94c4756f94a2c9a0c373e04a18</div><div id='time'> Time: 2021-01-02</div><div id='author'> Author: mikkel@255bits.com</div><div id='file'> File Name: examples/next-frame.py</div><div id='class'> Class Name: VideoFrameSampler</div><div id='method'> Method Name: _sample</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/142bc348f80ae6c1f6ede5b598b0443af8048717#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL153' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 142bc348f80ae6c1f6ede5b598b0443af8048717</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/HyperGAN/HyperGAN/commit/a178a47269013e94c4756f94a2c9a0c373e04a18#diff-6dc6d9702e9042e567a1a0e506ca63f2c0ce7f4d2f73217a7ceab357820ab00dL556' target='_blank'>Link</a></div><div id='project'> Project Name: HyperGAN/HyperGAN</div><div id='commit'> Commit Name: a178a47269013e94c4756f94a2c9a0c373e04a18</div><div id='time'> Time: 2021-01-02</div><div id='author'> Author: mikkel@255bits.com</div><div id='file'> File Name: examples/next-frame.py</div><div id='class'> Class Name: VideoFrameSampler</div><div id='method'> Method Name: seed</div><BR>

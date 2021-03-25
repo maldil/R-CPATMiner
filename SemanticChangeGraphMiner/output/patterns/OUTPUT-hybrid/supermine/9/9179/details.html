@@ -1,0 +1,42 @@
+<html><h3>0db94786a7a463fed49825811fac903f1f1fc3c8,python/caffe/classifier.py,Classifier,predict,#Classifier#,49
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                     for N images and C classes.
+        
+        &#47&#47 Scale to standardize input dimensions.
+        <a id="change">inputs = np.asarray([caffe.io.resize_image(im, self.image_dims)
+                             for im in inputs])</a>
+
+        if oversample:
+            &#47&#47 Generate center, corner, and mirrored crops.
+            inputs = caffe.io.oversample(inputs, self.crop_dims)</code></pre><h3>After Change</h3><pre><code class='java'>
+                     for N images and C classes.
+        
+        &#47&#47 Scale to standardize input dimensions.
+        <a id="change">input_ = np.zeros((len(inputs),
+            self.image_dims[0], self.image_dims[1], inputs[0].shape[2]),
+            dtype=np.float32)</a>
+        for ix, in_ in enumerate(inputs):
+            <a id="change">input_[ix]</a> = caffe.io.resize_image(in_, self.image_dims)
+
+        if oversample:
+            &#47&#47 Generate center, corner, and mirrored crops.
+            input_ = caffe.io.oversample(input_, self.crop_dims)
+        else:
+            &#47&#47 Take center crop.
+            center = np.array(self.image_dims) / 2.0
+            crop = np.tile(center, (1, 2))[0] + np.concatenate([
+                -self.crop_dims / 2.0,
+                self.crop_dims / 2.0
+            ])
+            input_ = input_[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        <a id="change">caffe_in = np.zeros(np.array(input_.shape)[[0,3,1,2]],
+                            dtype=np.float32)</a>
+        for ix, in_ in enumerate(input_):
+            caffe_in[ix] = self.preprocess(self.inputs[0], in_)
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))</code></pre><img src="35582460.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/0db94786a7a463fed49825811fac903f1f1fc3c8#diff-e1985c25341ace1ca09898b0e992000443b28df0ab70b23d9eb3b57a86df91aaL49' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 0db94786a7a463fed49825811fac903f1f1fc3c8</div><div id='time'> Time: 2014-08-05</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/classifier.py</div><div id='class'> Class Name: Classifier</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/ece383696800b9b34854df27a65a3d1d74669952#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: ece383696800b9b34854df27a65a3d1d74669952</div><div id='time'> Time: 2020-05-28</div><div id='author'> Author: alexmxu@alexs-mbp-3.attlocal.net</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/163eb7df13667e21b0e02a2706e18d1f53eee610#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 163eb7df13667e21b0e02a2706e18d1f53eee610</div><div id='time'> Time: 2020-01-29</div><div id='author'> Author: alexmxu99@gmail.com</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR>

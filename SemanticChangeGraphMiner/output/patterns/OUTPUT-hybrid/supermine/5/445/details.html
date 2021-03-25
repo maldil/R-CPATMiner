@@ -1,0 +1,41 @@
+<html><h3>30a84d87f185185a7256231097a461e2a255247d,dirty_cat/test/test_dirty_cat.py,,test_similarity_encoder,#,7
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    X = np.array([&quotaa&quot, &quotaaa&quot, &quotaaab&quot]).reshape(-1, 1)
+    X_test = np.array([[&quotaa&quot, &quotaaa&quot, &quotaaa&quot, &quotaaab&quot, &quotaaac&quot]]).reshape(-1, 1)
+    model.fit(X)
+    <a id="change">encoder = model.transform(X_test)</a>
+    ans = np.zeros((len(X_test), len(X)))
+    for i, x_t in enumerate(X_test.reshape(-1)):
+        for j, x in enumerate(X.reshape(-1)):
+            ans[i, j] = lev.ratio(x_t, x)</code></pre><h3>After Change</h3><pre><code class='java'>
+    X = np.array([&quotaa&quot, &quotaaa&quot, &quotaaab&quot]).reshape(-1, 1)
+    X_test = np.array([[&quotaa&quot, &quotaaa&quot, &quotaaa&quot, &quotaaab&quot, &quotaaac&quot]]).reshape(-1, 1)
+
+    <a id="change">similarity_types = [
+        &quotlevenshtein-ratio&quot,
+        &quotjaro-winkler&quot
+        ]</a>
+
+    <a id="change">for similarity_type in similarity_types:
+        model = similarity_encoder.SimilarityEncoder(
+            similarity_type=similarity_type, handle_unknown=&quotignore&quot)
+
+        encoder = model.fit(X).transform(X_test)
+
+        if similarity_type == &quotlevenshtein-ratio&quot:
+            ans = np.zeros((len(X_test), len(X)))
+            for i, x_t in enumerate(X_test.reshape(-1)):
+                for j, x in enumerate(X.reshape(-1)):
+                    ans[i, j] = lev.ratio(x_t, x)
+            assert np.array_equal(encoder, ans)
+
+        if similarity_type == &quotjaro-winkler&quot:
+            ans = np.zeros((len(X_test), len(X)))
+            for i, x_t in enumerate(X_test.reshape(-1)):
+                for j, x in enumerate(X.reshape(-1)):
+                    ans[i, j] = jaro_distance(x_t, x)
+            assert np.array_equal(encoder, ans)</a>
+</code></pre><img src="2060367.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/30a84d87f185185a7256231097a461e2a255247d#diff-87f22b54e377bb4788f5e5d869916d53c640e25b9aba28a5308ac3d4f63a475eL8' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: 30a84d87f185185a7256231097a461e2a255247d</div><div id='time'> Time: 2018-03-14</div><div id='author'> Author: patricio.cerda@inria.fr</div><div id='file'> File Name: dirty_cat/test/test_dirty_cat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_similarity_encoder</div><BR><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/ff8dccc29edca64877b3cef1b53c7958ce321f76#diff-625b81cc65a1adec94f4ecde7a5f6c474356c69bd3a97d68b15bb94797bb51b4L8' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: ff8dccc29edca64877b3cef1b53c7958ce321f76</div><div id='time'> Time: 2018-03-14</div><div id='author'> Author: patricio.cerda@inria.fr</div><div id='file'> File Name: dirty_cat/test/test_similarity_encoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_similarity_encoder</div><BR><BR><div id='link'><a href='https://github.com/undertheseanlp/underthesea/commit/cf98094a2b174b5df0cab0ad0a02c0f82f6ab29e#diff-fb77c10af5f2523d6e2f7b76e66bccaea14b6de4f6ce58fc1d0d251299ee7ac1L16' target='_blank'>Link</a></div><div id='project'> Project Name: undertheseanlp/underthesea</div><div id='commit'> Commit Name: cf98094a2b174b5df0cab0ad0a02c0f82f6ab29e</div><div id='time'> Time: 2017-10-10</div><div id='author'> Author: brother.rain.1024@gmail.com</div><div id='file'> File Name: underthesea/word_sent/model.py</div><div id='class'> Class Name: CRFModel</div><div id='method'> Method Name: predict</div><BR>

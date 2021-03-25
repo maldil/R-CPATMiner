@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        is_training = targets is not None
+        for yolo_layer in self.yolo_layers:
+            yolo_layer.img_dim = x.shape[2]
+        output = <a id="change">[]</a>
+        loss = 0
+        layer_outputs = []
+        for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
+            if module_def["type"] in ["convolutional", "upsample", "maxpool"]:
+                x = module(x)
+            elif module_def["type"] == "route":
+                layer_i = [int(x) for x in module_def["layers"].split(",")]
+                x = torch.cat([layer_outputs[i] for i in layer_i], 1)
+            elif module_def["type"] == "shortcut":
+                layer_i = int(module_def["from"])
+                x = layer_outputs[-1] + layer_outputs[layer_i]
+            elif module_def["type"] == "yolo":
+                if is_training:
+                    x, layer_loss = module[0](x, targets)
+                    loss += layer_loss
+                else:
+                    x = module(x)
+                output.append(x)
+            layer_outputs.append(x)
+
+        if is_training:
+            return loss, to_cpu(torch.cat(output, 1))
+        else:
+            <a id="change">return to_cpu(torch.cat(output, 1))</a>
+
+    def load_darknet_weights(self, weights_path):
+        Parses and loads the weights stored in &quotweights_path&quot
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                loss += layer_loss
+                yolo_outputs.append(x)
+            layer_outputs.append(x)
+        <a id="change">yolo_outputs = to_cpu(torch.cat(yolo_outputs, 1))</a>
+        <a id="change">return yolo_outputs if targets is None else (loss, yolo_outputs)</a>
+
+    def load_darknet_weights(self, weights_path):
+        Parses and loads the weights stored in &quotweights_path&quot
+</code></pre>

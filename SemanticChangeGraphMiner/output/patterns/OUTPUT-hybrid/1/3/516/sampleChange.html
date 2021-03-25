@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ctx = mx.gpu(0)
+    gl_params = gl_model._collect_params_with_prefix()
+    &#47&#47 gl_w = np.transpose(tf2_w, axes=(3, 2, 0, 1))
+    gl_params[&quotconv.weight&quot]._load_init(<a id="change">mx.nd.array(gl_w, ctx)</a>, ctx)
+    &#47&#47 gl_params[&quotconv.bias&quot]._load_init(mx.nd.array(b, ctx), ctx)
+
+    gl_x = mx.nd.array(x, ctx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 gl_y = gl_model(gl_x).asnumpy()
+
+    ctx = mx.gpu(0)
+    gl_x = <a id="change">mx.nd.zeros((3, 7, 80), ctx)</a>
+    gl_model.initialize(ctx=ctx)
+    gl_model(gl_x)
+    gl_params = gl_model._collect_params_with_prefix()
+    _calc_width(gl_model)</code></pre>

@@ -1,0 +1,24 @@
+<html><h3>9ba91fa13cbb1e7bc4069e46469b34abb5ca4869,models/networks.py,GANLoss,get_target_tensor,#GANLoss#,130
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                self.real_label_var = Variable(real_tensor, requires_grad=False)
+            target_tensor = self.real_label_var
+        else:
+            <a id="change">create_label = ((self.fake_label_var is None) or
+                            (self.fake_label_var.numel() != input.numel()))</a>
+            if create_label:
+                fake_tensor = <a id="change">self.Tensor(input.size()).fill_(self.fake_label)</a>
+                self.fake_label_var = Variable(fake_tensor, requires_grad=False)
+            target_tensor = self.fake_label_var
+        return target_tensor
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            target_tensor = self.real_label
+        else:
+            target_tensor = self.fake_label
+        <a id="change">return target_tensor.expand_as(input)</a>
+
+    def __call__(self, input, target_is_real):
+        target_tensor = self.get_target_tensor(input, target_is_real)
+        return self.loss(input, target_tensor)</code></pre><img src="29881446.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L126' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: GANLoss</div><div id='method'> Method Name: get_target_tensor</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/bcbef3267f372186f457b9c22feec249bd85b2f6#diff-d6757ab1e3ffa225bc5e10234856fffd764bbefcce478fc1c4baee1f4c7ef308L214' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: bcbef3267f372186f457b9c22feec249bd85b2f6</div><div id='time'> Time: 2018-12-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: util/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cal_feat_mask</div><BR>

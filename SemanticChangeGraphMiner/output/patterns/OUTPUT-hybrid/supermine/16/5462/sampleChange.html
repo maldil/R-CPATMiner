@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Extract optional parameters from load_kwargs
+        date_now = datetime.now().isoformat().split(&quot.&quot)[0]
+        output_name = load_kwargs.pop(&quotoutput_name&quot, &quotNILMTK_FHMM_&quot + date_now)
+        resample_seconds = <a id="change">load_kwargs.pop(&quotresample_seconds&quot, 60)</a>
+
+        <a id="change">resample_rule = &quot{:d}S&quot.format(resample_seconds)</a>
+        timeframes = []
+        building_path = &quot/building{}&quot.format(mains.building())
+        mains_data_location = &quot{}/elec/meter1&quot.format(building_path)
+        data_is_available = False</code></pre><h3>After Change</h3><pre><code class='java'>
+        date_now = datetime.now().isoformat().split(&quot.&quot)[0]
+        output_name = load_kwargs.pop(&quotoutput_name&quot, &quotNILMTK_FHMM_&quot + date_now)
+
+        <a id="change">if &quotresample_seconds&quot in load_kwargs:
+            warn("&quotresample_seconds&quot is deprecated."
+                 "  Please use &quotsample_period&quot instead.")
+            load_kwargs[&quotsample_period&quot] = load_kwargs.pop(&quotresample_seconds&quot)
+
+       </a> load_kwargs.setdefault(&quotsample_period&quot, 60)
+        <a id="change">resample_seconds = load_kwargs[&quotsample_period&quot]</a>
+        timeframes = []
+        building_path = &quot/building{}&quot.format(mains.building())
+        mains_data_location = &quot{}/elec/meter1&quot.format(building_path)
+        data_is_available = False</code></pre>

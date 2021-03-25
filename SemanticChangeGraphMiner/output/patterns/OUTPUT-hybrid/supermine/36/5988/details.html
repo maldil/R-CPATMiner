@@ -1,0 +1,92 @@
+<html><h3>07909cf049840ac40ff8d80509baba215e568aea,dev/benchmarks/openmp/test_openmp_3.py,,,#,3
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+pylab.ylabel(&quot&#47&#47 cell&quot)
+for t in threads:
+    pylab.plot(results[t][&quotspikes&quot][0], results[t][&quotspikes&quot][1], &quot.&quot)
+<a id="change">pylab.legend(list(map(str, threads)))</a>
+&#47&#47pylab.xlim(0.5, 0.6)
+
+pylab.subplot(322)
+pylab.title(&quotFinal Distribution&quot)
+pylab.xlabel(&quotWeight [ns]&quot)
+pylab.ylabel(&quotNumber of synapses&quot)
+for t in threads:
+    x, y = numpy.histogram(results[t][&quotw&quot], 100)
+    pylab.plot(y[1:], x)
+<a id="change">pylab.legend(list(map(str, threads)))</a>
+
+pylab.subplot(323)
+pylab.title(&quotWeight Evolution&quot)
+pylab.xlabel(&quotTime [s]&quot)
+pylab.ylabel(&quotWeight [ns]&quot)
+for t in threads:
+    pylab.plot(results[t][&quottrace_w&quot].T[0])
+<a id="change">pylab.legend(list(map(str, threads)))</a>
+
+pylab.subplot(324)
+pylab.title(&quotWeight Evolution&quot)
+pylab.xlabel(&quotTime [s]&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+filename = &quotexample_standalone.py&quot
+datapath = &quotdata_example&quot
+<a id="change">threads</a>  = [0, 1, 2, 4, 6]
+results  = {}
+results[&quotduration&quot] = []
+
+for t in threads:
+    start = time.time()
+    os.system(&quotpython %s 1 %d&quot %(filename, t))
+    with open(&quot%s_%d/speed.txt&quot %(datapath, t), &quotr&quot) as f:
+        results[&quotduration&quot] += [float(f.read())]
+    results[t] = {}
+
+for t in threads:
+    results[t]  = {}
+    path        = datapath + &quot_%d/&quot %t
+    ids         = numpy.fromfile(path+&quotresults/_dynamic_array_spikemonitor_i&quot, dtype=numpy.int32)
+    times       = numpy.fromfile(path+&quotresults/_dynamic_array_spikemonitor_t&quot, dtype=numpy.float64)
+    w           = numpy.fromfile(path+&quotresults/_dynamic_array_synapses_w&quot, dtype=numpy.float64)
+    times_w     = numpy.fromfile(path+&quotresults/_dynamic_array_statemonitor_t&quot, dtype=numpy.float64)
+    w_over_time = numpy.fromfile(path+&quotresults/_dynamic_array_statemonitor__recorded_w&quot, dtype=numpy.float64)
+    v_over_time = numpy.fromfile(path+&quotresults/_dynamic_array_statemonitor_1__recorded_v&quot, dtype=numpy.float64)
+    times_v     = numpy.fromfile(path+&quotresults/_dynamic_array_statemonitor_1_t&quot, dtype=numpy.float64)
+    results[t][&quotspikes&quot]  = (times, ids)
+    results[t][&quotw&quot]       = w
+    results[t][&quottrace_w&quot] = w_over_time.reshape(len(times_w), len(w_over_time)/len(times_w))
+    results[t][&quottrace_v&quot] = v_over_time.reshape(len(times_v), len(v_over_time)/len(times_v))
+
+results[&quotcolors&quot] = [&quotb&quot, &quotg&quot, &quotr&quot, &quotc&quot, &quotk&quot]
+
+pylab.figure()
+pylab.subplot(321)
+pylab.title(&quotRaster plots&quot)
+pylab.xlabel(&quotTime [s]&quot)
+pylab.ylabel(&quot&#47&#47 cell&quot)
+for t in threads:
+    pylab.plot(results[t][&quotspikes&quot][0], results[t][&quotspikes&quot][1], &quot.&quot)
+<a id="change">pylab.legend([str(t) for t in threads])</a>
+&#47&#47pylab.xlim(0.5, 0.6)
+
+pylab.subplot(322)
+pylab.title(&quotFinal Distribution&quot)
+pylab.xlabel(&quotWeight [ns]&quot)
+pylab.ylabel(&quotNumber of synapses&quot)
+for t in threads:
+    x, y = numpy.histogram(results[t][&quotw&quot], 100)
+    pylab.plot(y[1:], x)
+<a id="change">pylab.legend([str(t) for t in threads])</a>
+
+pylab.subplot(323)
+pylab.title(&quotWeight Evolution&quot)
+pylab.xlabel(&quotTime [s]&quot)
+pylab.ylabel(&quotWeight [ns]&quot)
+for t in threads:
+    pylab.plot(results[t][&quottrace_w&quot].T[0])
+<a id="change">pylab.legend([str(t) for t in threads])</a>
+
+pylab.subplot(324)
+pylab.title(&quotWeight Evolution&quot)
+pylab.xlabel(&quotTime [s]&quot)</code></pre><img src="24615799.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 27</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/07909cf049840ac40ff8d80509baba215e568aea#diff-993a19230656496dada3c1057eef0717957610d375c5f947478c85e451469058L5' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 07909cf049840ac40ff8d80509baba215e568aea</div><div id='time'> Time: 2020-01-14</div><div id='author'> Author: ben.d.evans@gmail.com</div><div id='file'> File Name: dev/benchmarks/openmp/test_openmp_3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/07909cf049840ac40ff8d80509baba215e568aea#diff-5b6a376b625a107dc5775f675763f65cb5d878604f4409c30d9843dc45b1423cL5' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 07909cf049840ac40ff8d80509baba215e568aea</div><div id='time'> Time: 2020-01-14</div><div id='author'> Author: ben.d.evans@gmail.com</div><div id='file'> File Name: dev/benchmarks/openmp/test_openmp_2.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/07909cf049840ac40ff8d80509baba215e568aea#diff-993a19230656496dada3c1057eef0717957610d375c5f947478c85e451469058L5' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 07909cf049840ac40ff8d80509baba215e568aea</div><div id='time'> Time: 2020-01-14</div><div id='author'> Author: ben.d.evans@gmail.com</div><div id='file'> File Name: dev/benchmarks/openmp/test_openmp_3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/07909cf049840ac40ff8d80509baba215e568aea#diff-76499dc832008f7eecabb84a6dc2433a52ce7a94e353b97680d57f4de0c80208L5' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 07909cf049840ac40ff8d80509baba215e568aea</div><div id='time'> Time: 2020-01-14</div><div id='author'> Author: ben.d.evans@gmail.com</div><div id='file'> File Name: dev/benchmarks/openmp/test_openmp_4.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

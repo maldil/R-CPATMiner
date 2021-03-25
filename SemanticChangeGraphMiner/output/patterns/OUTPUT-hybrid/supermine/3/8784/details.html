@@ -1,0 +1,22 @@
+<html><h3>0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7,transformer/Translator.py,Translator,translate_batch,#Translator#,52
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 -- Preparing decoded pos seq -- &#47&#47
+            &#47&#47 size: 1 x seq
+            dec_partial_pos = <a id="change">torch.arange(1, len_dec_seq + 1).unsqueeze(0)</a>
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_pos = dec_partial_pos.repeat(n_remaining_sents * beam_size, 1)
+            &#47&#47 wrap into a Variable
+            dec_partial_pos = Variable(dec_partial_pos.type(torch.LongTensor), volatile=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 -- Preparing decoded data seq -- &#47&#47
+            &#47&#47 size: batch x beam x seq
+            dec_partial_seq = <a id="change">torch.stack([
+                b.get_current_state() for b in beams if not b.done]).to(self.device)</a>
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_seq = dec_partial_seq.view(-1, len_dec_seq)
+
+            &#47&#47 -- Preparing decoded pos seq -- &#47&#47</code></pre><img src="34525310.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL52' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: translate_batch</div><BR><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/c80225544e2fb43abbccd94148cc2045d95f8f63#diff-37a4715fdaa05c0e90592803dcbd0a86a10452d078801890b8f65ac544ce2f9eL83' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: c80225544e2fb43abbccd94148cc2045d95f8f63</div><div id='time'> Time: 2020-11-06</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/vocoder/models/wavegrad.py</div><div id='class'> Class Name: Wavegrad</div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/b078a27def328cfc16dc7ab17f2537b8593544f1#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L114' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: b078a27def328cfc16dc7ab17f2537b8593544f1</div><div id='time'> Time: 2019-04-27</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_input</div><BR>

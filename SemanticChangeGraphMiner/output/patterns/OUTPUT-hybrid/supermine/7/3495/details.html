@@ -1,0 +1,106 @@
+<html><h3>523a62159f0324438901e9716b593775ec4c5c10,nsgt/nsgtf.py,,nsgtf_sl,#,13
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            
+        &#47&#47 The actual transform
+        &#47&#47 TODO: stuff loop into theano
+        <a id="change">for mii,gii,gi1,gi2,win_range,Lg,col in loopparams:
+&#47&#47            Lg = len(gii)            
+            &#47&#47 if the number of time channels is too small (mii &lt; Lg), aliasing is introduced
+            &#47&#47 wrap around and sum up in the end (below)
+&#47&#47            col = int(ceil(float(Lg)/mii)) &#47&#47 normally col == 1                        
+&#47&#47            assert col*mii &gt;= Lg                        
+
+            temp = temp0[:col*mii]
+
+            &#47&#47 original version
+&#47&#47            t = ft[win_range]*N.fft.fftshift(N.conj(gii))
+&#47&#47            temp[:(Lg+1)//2] = t[Lg//2:]  &#47&#47 if mii is odd, this is of length mii-mii//2
+&#47&#47            temp[-(Lg//2):] = t[:Lg//2]  &#47&#47 if mii is odd, this is of length mii//2
+
+            &#47&#47 modified version to avoid superfluous memory allocation
+            t1 = temp[:(Lg+1)//2]
+            t1[:] = gi1  &#47&#47 if mii is odd, this is of length mii-mii//2
+            t2 = temp[-(Lg//2):]
+            t2[:] = gi2  &#47&#47 if mii is odd, this is of length mii//2
+
+            ftw = ft[win_range]
+            t2 *= ftw[:Lg//2]
+            t1 *= ftw[Lg//2:]
+
+&#47&#47            (wh1a,wh1b),(wh2a,wh2b) = win_range
+&#47&#47            t2[:wh1a.stop-wh1a.start] *= ft[wh1a]
+&#47&#47            t2[wh1a.stop-wh1a.start:] *= ft[wh1b]
+&#47&#47            t1[:wh2a.stop-wh2a.start] *= ft[wh2a]
+&#47&#47            t1[wh2a.stop-wh2a.start:] *= ft[wh2b]
+            
+            temp[(Lg+1)//2:-(Lg//2)] = 0  &#47&#47 clear gap (if any)
+            
+            if col &gt; 1:
+                temp = N.sum(temp.reshape((mii,-1)),axis=1)
+            else:
+                temp = temp.copy()
+ 
+            c.append(temp)
+            
+       </a> yield map(ifft,c)  &#47&#47 TODO: if matrixform, perform "2D" FFT along one axis
+
+        
+&#47&#47 non-sliced version</code></pre><h3>After Change</h3><pre><code class='java'>
+        p = (mii,gii,gi1,gi2,win_range,Lg,col)
+        loopparams.append(p)
+
+    <a id="change">if True or T is None:
+        def loop(temp0):
+            c = [] &#47&#47 Initialization of the result
+                
+            &#47&#47 The actual transform
+            &#47&#47 TODO: stuff loop into theano
+            for mii,gii,gi1,gi2,win_range,Lg,col in loopparams:
+    &#47&#47            Lg = len(gii)            
+                &#47&#47 if the number of time channels is too small (mii &lt; Lg), aliasing is introduced
+                &#47&#47 wrap around and sum up in the end (below)
+    &#47&#47            col = int(ceil(float(Lg)/mii)) &#47&#47 normally col == 1                        
+    &#47&#47            assert col*mii &gt;= Lg                        
+    
+                temp = temp0[:col*mii]
+    
+                &#47&#47 original version
+    &#47&#47            t = ft[win_range]*N.fft.fftshift(N.conj(gii))
+    &#47&#47            temp[:(Lg+1)//2] = t[Lg//2:]  &#47&#47 if mii is odd, this is of length mii-mii//2
+    &#47&#47            temp[-(Lg//2):] = t[:Lg//2]  &#47&#47 if mii is odd, this is of length mii//2
+    
+                &#47&#47 modified version to avoid superfluous memory allocation
+                t1 = temp[:(Lg+1)//2]
+                t1[:] = gi1  &#47&#47 if mii is odd, this is of length mii-mii//2
+                t2 = temp[-(Lg//2):]
+                t2[:] = gi2  &#47&#47 if mii is odd, this is of length mii//2
+    
+                ftw = ft[win_range]
+                t2 *= ftw[:Lg//2]
+                t1 *= ftw[Lg//2:]
+    
+    &#47&#47            (wh1a,wh1b),(wh2a,wh2b) = win_range
+    &#47&#47            t2[:wh1a.stop-wh1a.start] *= ft[wh1a]
+    &#47&#47            t2[wh1a.stop-wh1a.start:] *= ft[wh1b]
+    &#47&#47            t1[:wh2a.stop-wh2a.start] *= ft[wh2a]
+    &#47&#47            t1[wh2a.stop-wh2a.start:] *= ft[wh2b]
+                
+                temp[(Lg+1)//2:-(Lg//2)] = 0  &#47&#47 clear gap (if any)
+                
+                if col &gt; 1:
+                    temp = N.sum(temp.reshape((mii,-1)),axis=1)
+                else:
+                    temp = temp.copy()
+     
+                c.append(temp)
+            return c
+    else:
+        raise RuntimeError("Theano support not implemented yet")
+
+   </a> for f in f_slices:
+        Ls = len(f)
+        
+        &#47&#47 some preparation    </code></pre><img src="15121534.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/grrrr/nsgt/commit/523a62159f0324438901e9716b593775ec4c5c10#diff-d1ea483b51f15c3b6f0b60b040d4d224ffe68bcca490094259509f2d6eb84882L31' target='_blank'>Link</a></div><div id='project'> Project Name: grrrr/nsgt</div><div id='commit'> Commit Name: 523a62159f0324438901e9716b593775ec4c5c10</div><div id='time'> Time: 2012-08-31</div><div id='author'> Author: gr@grrrr.org</div><div id='file'> File Name: nsgt/nsgtf.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: nsgtf_sl</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/6e3d793152231d6e39f4cc7f33e0a1f74981e15c#diff-3d1bec78cdea4c71c5088a205abc19f9cb797aad5075c24ab41d4922179e6bc0L188' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 6e3d793152231d6e39f4cc7f33e0a1f74981e15c</div><div id='time'> Time: 2018-11-13</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/cox.py</div><div id='class'> Class Name: CoxBase</div><div id='method'> Method Name: fit_dataloader</div><BR><BR><div id='link'><a href='https://github.com/grrrr/nsgt/commit/523a62159f0324438901e9716b593775ec4c5c10#diff-2ea147196a0108d7dd860ba92471e158ebff27df2d89ddef422656d060de1d61L88' target='_blank'>Link</a></div><div id='project'> Project Name: grrrr/nsgt</div><div id='commit'> Commit Name: 523a62159f0324438901e9716b593775ec4c5c10</div><div id='time'> Time: 2012-08-31</div><div id='author'> Author: gr@grrrr.org</div><div id='file'> File Name: nsgt/nsigtf.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: nsigtf_sl</div><BR>

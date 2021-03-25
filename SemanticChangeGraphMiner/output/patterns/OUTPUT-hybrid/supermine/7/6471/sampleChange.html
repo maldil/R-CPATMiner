@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 O(NK) + O(N)
+            prob = self.model.predict_real(X_pool)
+            min_margin = np.inf
+            <a id="change">for j in range(len(prob)):
+                m1_id = np.argmax(prob[j])
+                m2_id = np.argmax(np.delete(prob[j], m1_id))
+                margin = prob[j][m1_id] - prob[j][m2_id]
+                if margin &lt; min_margin:
+                    min_margin = margin
+                    ask_id = j
+
+       </a> else:
+            raise ValueError(
+                "Invalid method &quot%s&quot (available choices: (&quotlc&quot, &quotsm&quot, &quotle&quot)"
+                % self.method</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quotlc&quot (Least Confident), &quotsm&quot (Smallest Margin)
+        
+        dataset = self.dataset
+        <a id="change">self.model.train(dataset)</a>
+
+        unlabeled_entry_ids, X_pool = zip(*dataset.get_unlabeled_entries())
+
+        if self.method == &quotlc&quot:  &#47&#47 least confident</code></pre>

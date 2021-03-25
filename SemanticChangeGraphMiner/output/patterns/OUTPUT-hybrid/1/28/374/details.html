@@ -1,0 +1,77 @@
+<html><h3>c9fd2c425cb873508ba16221819574400ad2443e,dask_image/ndmeasure/__init__.py,,extrema,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    out_dtype = numpy.dtype([
+        ("min_val", input.dtype),
+        ("min_pos", numpy.int),
+        <a id="change">("max_val", input.dtype)</a>,
+        ("max_pos", numpy.int)
+    ])
+    <a id="change">default</a> = numpy.zeros((), out_dtype)[()]
+
+    extrema_lbl = labeled_comprehension(
+        input, labels, index,
+        _utils._extrema, out_dtype, default, pass_positions=True
+    )
+
+    <a id="change">extrema_lbl</a> = {k: extrema_lbl[k] for <a id="change">k</a> in extrema_lbl.dtype.names}
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        <a id="change">pos_nd</a> = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            <a id="change">pos_nd</a> = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            <a id="change">pos_nd</a> = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        <a id="change">extrema_lbl[pos_key]</a> = pos_nd
+
+    result = (
+        extrema_lbl["min_val"],</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    type_mapping = collections.OrderedDict([
+        ("min_val", input.dtype),
+        <a id="change">("max_val", input.dtype)</a>,
+        ("min_pos", numpy.dtype(numpy.int)),
+        ("max_pos", numpy.dtype(numpy.int))
+    ])
+    out_dtype = numpy.dtype(list(type_mapping.items()))
+
+    <a id="change">default_1d</a> = numpy.zeros((1,), dtype=out_dtype)
+
+    func = functools.partial(_utils._extrema, dtype=out_dtype)
+    extrema_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+
+    <a id="change">extrema_lbl</a> = collections.OrderedDict([
+        (k, extrema_lbl[k]) for <a id="change">k</a> in type_mapping.keys()
+    ])
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        <a id="change">pos_nd</a> = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            <a id="change">pos_nd</a> = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            <a id="change">pos_nd</a> = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        <a id="change">extrema_lbl[pos_key]</a> = pos_nd
+
+    result = tuple(extrema_lbl.values())
+</code></pre><img src="2018334.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/c9fd2c425cb873508ba16221819574400ad2443e#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L101' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: c9fd2c425cb873508ba16221819574400ad2443e</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extrema</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/b5453ae0c6700e0d9e12de02876f6a07c58b45ec#diff-57c0ab886d429035789d88738019609e548bf3c729d209ca9df60cf73eee74a9L74' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: b5453ae0c6700e0d9e12de02876f6a07c58b45ec</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: epnevmatikakis@gmail.com</div><div id='file'> File Name: kymatio/scattering1d/frontend/tensorflow_frontend.py</div><div id='class'> Class Name: ScatteringTensorFlow1D</div><div id='method'> Method Name: scattering</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/094d40234092f583f55b1d025b9424d2a1b20b43#diff-6d8e14d72d966bbdac0075edfd331b61b7078f847ff81b1de40f1d5345e44042L19' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 094d40234092f583f55b1d025b9424d2a1b20b43</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering2d/frontend/tensorflow_frontend.py</div><div id='class'> Class Name: ScatteringTensorFlow2D</div><div id='method'> Method Name: scattering</div><BR>

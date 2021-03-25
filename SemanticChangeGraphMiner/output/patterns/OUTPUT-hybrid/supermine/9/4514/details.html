@@ -1,0 +1,27 @@
+<html><h3>85d5c30d2186d07857d1f0fb7c269eb08d2b7d79,deslib/des/des_clustering.py,DESClustering,fit,#DESClustering#,96
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 Compute accuracy of each classifier in this cluster
+            prediction_matrix = np.zeros((len(targets), self.n_classifiers))
+            <a id="change">for clf_index in range(self.n_classifiers):
+                predictions = self.BKS_dsel[sample_indices, clf_index]
+                prediction_matrix[:, clf_index] = predictions
+                &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+                self.accuracy_cluster[cluster_index][clf_index] = accuracy_score(np.array(targets), predictions)
+
+            &#47&#47 Get the N most accurate classifiers for the corresponding cluster
+           </a> accuracies = self.accuracy_cluster[cluster_index, :]
+            accuracy_indices = np.argsort(accuracies)[::-1][0:self.N]
+
+            self.diversity_cluster[cluster_index, :] = self._compute_diversity(targets, prediction_matrix)</code></pre><h3>After Change</h3><pre><code class='java'>
+            sample_indices = np.where(labels == cluster_index)[0]
+
+            &#47&#47 Compute accuracy of each classifier in this cluster
+            <a id="change">accuracy = np.mean(self.processed_dsel[sample_indices, :], axis=0)</a>
+            self.accuracy_cluster[cluster_index, :] = accuracy
+
+            &#47&#47 Get the N most accurate classifiers for the corresponding cluster
+            accuracy_indices = np.argsort(accuracy)[::-1][0:self.N]</code></pre><img src="19580606.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/85d5c30d2186d07857d1f0fb7c269eb08d2b7d79#diff-8f7a6bbb5cc4b2c27507b741ab3849957f6e35ee2de8ef4d6566aaa92617c5c8L92' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 85d5c30d2186d07857d1f0fb7c269eb08d2b7d79</div><div id='time'> Time: 2018-04-07</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_clustering.py</div><div id='class'> Class Name: DESClustering</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR>

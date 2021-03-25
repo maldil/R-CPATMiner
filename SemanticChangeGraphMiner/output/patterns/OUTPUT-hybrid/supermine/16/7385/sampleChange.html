@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+         Returns arbitrary number of points sampled by selected method
+        
+        if name in S_POINTS:
+            <a id="change">kwargs["points"] = self.xyz</a>
+            valid_args = crosscheck_kwargs_function(kwargs, S_POINTS[name])
+            return S_POINTS[name](**valid_args)
+        
+        elif name in S_MESH:
+            kwargs["v1"], kwargs["v2"], kwargs["v3"] = self.get_mesh_vertices()
+            valid_args = crosscheck_kwargs_function(kwargs, S_MESH[name])
+            return S_MESH[name](**valid_args)
+        
+        elif name in S_VOXELGRID:
+            kwargs["voxelgrid"] = <a id="change">self</a>.voxelgrids[kwargs["voxelgrid"]]
+            valid_args = crosscheck_kwargs_function(kwargs, S_VOXELGRID[name])
+            return S_VOXELGRID[name](**valid_args)
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            raise ValueError("Unsupported filter. Check docstring")
+            
+    def get_sample(<a id="change">self</a>, name, **kwargs):
+         Returns arbitrary number of points sampled by selected method
+        
+        Parameters
+        ----------
+        name : str
+            One of the avaliable names. See bellow.
+        kwargs 
+            Vary for each name. See bellow.
+        
+        Returns
+        -------
+        sampled_points: (n, 3) ndarray
+            &quotn&quot vary for each method.
+            
+        Notes
+        -----
+        
+        Avaliable sampling methods are:
+
+        REQUIRE MESH
+        --------------
+        NAMES
+            random_mesh    
+                n : int
+                    Number of points to be sampled.   
+                    
+        REQUIRE VOXELGRID
+        -----------------
+        ARGS
+            voxelgrid : VoxelGrid.id
+                voxelgrid = self.add_structure("voxelgrid", ...)
+        NAMES
+            voxelgrid_centers    
+             
+            voxelgrid_centroids
+            
+            voxelgrid_nearest    
+
+        USE POINTS
+        ----------
+        NAMES
+            random_points
+                n : int    
+                    Number of points to be sampled.                      
+
+        
+        if name in ALL_SAMPLING:
+            <a id="change">S = ALL_SAMPLING[name](self, **kwargs)</a>
+            <a id="change">S.extract_info()</a>
+            return <a id="change">S.compute()</a>
+
+        else:
+            raise ValueError("Unsupported sampling. Check docstring") 
+            </code></pre>

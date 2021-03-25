@@ -1,0 +1,25 @@
+<html><h3>4a6cb19fc21993fe0505f3962da6bdfa94de4a0a,cube/models/vocoder.py,BeeCoder,load,#BeeCoder#,85
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x = 0
+
+    def load(self, output_base):
+        <a id="change">self.network.load_state_dict(torch.load(output_base + ".network"))</a>
+        self.network.to(device)
+        &#47&#47 self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, noise):</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = 0
+
+    def load(self, output_base):
+        <a id="change">if torch.cuda.is_available():
+            self.network.load_state_dict(torch.load(output_base + ".network"))
+        else:
+            self.network.load_state_dict(
+                torch.load(output_base + &quot.network&quot,  map_location=lambda storage, loc: storage))
+       </a> self.network.to(device)
+        &#47&#47 self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, noise):</code></pre><img src="27410394.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/4a6cb19fc21993fe0505f3962da6bdfa94de4a0a#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L86' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 4a6cb19fc21993fe0505f3962da6bdfa94de4a0a</div><div id='time'> Time: 2018-11-10</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/e2b72f5da0a45f9bc81fd7f926a1a6205bb3b182#diff-7c1ece53a18959b293126dd93f3cf0f768220f50d2c1201e1601681873e6f6e4L78' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: e2b72f5da0a45f9bc81fd7f926a1a6205bb3b182</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: junyanzhu89@gmail.com</div><div id='file'> File Name: models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_networks</div><BR>

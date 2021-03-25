@@ -1,0 +1,26 @@
+<html><h3>cf8a3fb30547d6e980ecd8182f64a51df8e55c62,python/dgl/backend/pytorch/tensor.py,,pack_padded_tensor,#,248
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def pack_padded_tensor(input, lengths):
+    batch_size, max_len = input.shape[:2]
+    device = input.device
+    <a id="change">index = []</a>
+    for i, l in enumerate(lengths):
+        index.extend(range(i * max_len, i * max_len + l))
+    index = th.tensor(index).to(device)
+    return gather_row(input.view(batch_size * max_len, -1), index)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not is_tensor(lengths):
+        lengths = th.tensor(lengths, dtype=th.int64, device=device)
+    else:
+        lengths = <a id="change">lengths.to(device)</a>
+    input = input.view(-1, *input.shape[2:])
+    out_len = lengths.sum().item()
+    index = th.ones(out_len, dtype=th.int64, device=device)
+    cum_lengths = th.cumsum(lengths, 0)
+    <a id="change">index[cum_lengths[:-1]] += (max_len - lengths[:-1])</a>
+    index = th.cumsum(index, 0) - 1
+    return input[index]
+
+def boolean_mask(input, mask):</code></pre><img src="584059.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/9a2903dac097a7f3633f6c828533ed385c7159c9#diff-88f94f9ee4f72507e49385a2ac8be9457e0e07ab44eb55782f3f642c17084dc4L75' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 9a2903dac097a7f3633f6c828533ed385c7159c9</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_refbasis_samples</div><BR><BR><div id='link'><a href='https://github.com/naoto0804/pytorch-AdaIN/commit/4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L56' target='_blank'>Link</a></div><div id='project'> Project Name: naoto0804/pytorch-AdaIN</div><div id='commit'> Commit Name: 4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: inoue@hal.t.u-tokyo.ac.jp</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

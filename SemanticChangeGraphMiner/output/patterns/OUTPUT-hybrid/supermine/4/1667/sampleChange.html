@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mean, var = tf.nn.moments(x, axis, keep_dims=True)
+
+    if not use_affine:
+        <a id="change">return tf.divide(x - mean, tf.sqrt(var + epsilon), name=&quotoutput&quot)</a>
+
+    beta = tf.get_variable(&quotbeta&quot, [ch], initializer=tf.constant_initializer())
+    beta = tf.reshape(beta, new_shape)
+    if gamma_init is None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        gamma = tf.get_variable(&quotgamma&quot, [ch], initializer=gamma_initializer)
+        gamma = tf.reshape(gamma, new_shape)
+    else:
+        <a id="change">gamma = tf.ones([1, 1, 1, 1], name=&quotgamma&quot, dtype=x.dtype)</a>
+    ret = tf.nn.batch_normalization(x, mean, var, beta, gamma, epsilon, name=&quotoutput&quot)
+
+    vh = ret.variables = VariableHolder()
+    if scale:</code></pre>

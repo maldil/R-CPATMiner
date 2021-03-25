@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &quot&quot&quot
+    template = template.astype(f.dtype)
+    <a id="change">output = _get_output(f, None, &quotfind&quot)</a>
+    _check_mode(mode, cval, &quotfind&quot)
+    match = _convolve.template_match(f, template, output, mode2int[mode], 1)
+
+    &#47&#47 We now need to adjust the positions
+    <a id="change">coords = np.where(match == 0)
+   </a> coords = np.array(coords).T
+    coords -= np.array(template.shape)//2
+    return coords.T
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        output of ``np.where``, but in an ndarray.
+
+    &quot&quot&quot
+    <a id="change">if f.ndim != 2:
+        raise ValueError(&quotmahotas.find: Cannot handle multi-dimensional images&quot)
+   </a> template = template.astype(f.dtype)
+    out = np.empty(f.shape, bool)
+    match = _convolve.find2d(f, template, out)
+    return np.array(np.where(match))</code></pre>

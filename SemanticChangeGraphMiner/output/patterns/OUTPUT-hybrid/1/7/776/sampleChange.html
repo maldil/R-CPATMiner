@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@raises(ValueError)
+def test_4d_image():
+    <a id="change">texture.haralick(np.arange(4**5).reshape((4,4,4,4,4)))</a>
+
+
+def rand_haralick():
+    f = 255*np.random.random((128,128))</code></pre><h3>After Change</h3><pre><code class='java'>
+        texture.haralick(zeros, ignore_zeros=True)
+
+def test_4d_image():
+    <a id="change">with pytest.raises(ValueError):
+        texture.haralick(np.arange(4**5).reshape((4,4,4,4,4)))
+
+
+</a>def rand_haralick():
+    f = 255*np.random.random((128,128))
+    f = f.astype(np.uint8)
+    f = mh.features.haralick(f)</code></pre>

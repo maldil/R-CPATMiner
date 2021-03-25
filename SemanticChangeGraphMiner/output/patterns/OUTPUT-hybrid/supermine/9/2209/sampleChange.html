@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    if pad:
+        padding         = [(0, 0)]  * data.ndim
+        padding[axis]   = <a id="change">(order, 0)</a>
+        delta_x              = np.pad(delta_x, padding, mode=&quotconstant&quot)
+
+    return delta_x
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        delta_x     = scipy.signal.lfilter(window, 1, delta_x, axis=axis)
+    
+    if trim:
+        <a id="change">idx         = [Ellipsis] * delta_x.ndim</a>
+        <a id="change">idx[axis]   = slice(half_length, -half_length)</a>
+        delta_x     = delta_x[idx]
+    
+    return delta_x
+</code></pre>

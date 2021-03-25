@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.assertEqual(len(response.json().get(&quotresults&quot)), 1)
+
+    def test_returns_docs_to_project_member_filtered_to_completed(self):
+        <a id="change">self.client.login(username=self.project_member_name,
+                          password=self.project_member_pass)</a>
+        response = <a id="change">self.client.get(&quot{}?doc_annotations__isnull=false&quot.format(self.url), format=&quotjson&quot)</a>
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json().get(&quotresults&quot)), 2)
+
+    def test_returns_docs_in_consistent_order_for_all_users(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+                        expected_num_results=1)
+
+    def test_returns_docs_to_project_member_filtered_to_completed(self):
+        <a id="change">self._test_list(&quot{}?doc_annotations__isnull=false&quot.format(self.url),
+                        username=self.project_member_name,
+                        password=self.project_member_pass,
+                        expected_num_results=2)</a>
+
+    def test_returns_docs_in_consistent_order_for_all_users(self):
+        self.client.login(username=self.project_member_name, password=self.project_member_pass)
+        user1_documents = self.client.get(self.url, format=&quotjson&quot).json().get(&quotresults&quot)</code></pre>

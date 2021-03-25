@@ -1,0 +1,24 @@
+<html><h3>98c6d3bc803e5d04be425e6b2eabca3ea707ed0e,finetune/nn/target_blocks.py,,_apply_class_weight,#,134
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        weights = (
+            tf.reduce_sum(input_tensor=class_weights * tf.cast(targets, dtype=tf.float32), axis=1)
+        )
+        weights *= <a id="change">tf.cast(tf.reduce_prod(input_tensor=tf.shape(input=weights)), dtype=tf.float32) / tf.reduce_sum(
+            input_tensor=weights
+        )</a>
+        <a id="change">losses</a> *= tf.expand_dims(weights, 1)
+    return losses
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            tf.cast(
+                tf.reduce_prod(input_tensor=tf.shape(input=weights)), dtype=tf.float32
+            ),
+            <a id="change">tf.reduce_sum(input_tensor=weights)</a>,
+        )
+        <a id="change">losses</a> *= tf.expand_dims(weights, 1)
+    return losses
+
+</code></pre><img src="8591474.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/IndicoDataSolutions/finetune/commit/98c6d3bc803e5d04be425e6b2eabca3ea707ed0e#diff-21532e7250473b772d47e723fd7b913e73d1ec3010a88371c9fe974bd8aa641eL140' target='_blank'>Link</a></div><div id='project'> Project Name: IndicoDataSolutions/finetune</div><div id='commit'> Commit Name: 98c6d3bc803e5d04be425e6b2eabca3ea707ed0e</div><div id='time'> Time: 2020-08-24</div><div id='author'> Author: madison@indico.io</div><div id='file'> File Name: finetune/nn/target_blocks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _apply_class_weight</div><BR><BR><div id='link'><a href='https://github.com/ylongqi/openrec/commit/f08653c95fbbff7db73244b97839caf10883a7ff#diff-0b9b084d8cbc8f68c8959f0e65cc13b436846bc2695678af85bb77caced0905bL39' target='_blank'>Link</a></div><div id='project'> Project Name: ylongqi/openrec</div><div id='commit'> Commit Name: f08653c95fbbff7db73244b97839caf10883a7ff</div><div id='time'> Time: 2018-03-27</div><div id='author'> Author: tonyxuan26@foxmail.com</div><div id='file'> File Name: openrec/modules/interactions/ns_eu_dist.py</div><div id='class'> Class Name: NSEuDist</div><div id='method'> Method Name: _build_training_graph</div><BR><BR><div id='link'><a href='https://github.com/cheungdaven/DeepRec/commit/a6c93234c876777d9fe45ee719eff72c41ae1c49#diff-c5f7cc2a7604004aebac89200768b5a5bb773febb0bf794094b2cad314f1cdceL79' target='_blank'>Link</a></div><div id='project'> Project Name: cheungdaven/DeepRec</div><div id='commit'> Commit Name: a6c93234c876777d9fe45ee719eff72c41ae1c49</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: cheungdaven@gmail.com</div><div id='file'> File Name: models/seq_rec/AttRec.py</div><div id='class'> Class Name: AttRec</div><div id='method'> Method Name: build_network</div><BR>

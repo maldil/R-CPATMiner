@@ -1,0 +1,25 @@
+<html><h3>f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8,pgmpy/inference/Sampling.py,BayesianModelSampling,forward_sample,#BayesianModelSampling#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for node in self.topological_order:
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                <a id="change">weights = []</a>
+                <a id="change">for i in range(size):
+                    evid = [sampled[var][i] for var in cpd.evidence]
+                    weights.append(cpd.reduce(evid, inplace=False).values)
+               </a> sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                &#47&#47 can generate the column at once
+                weights = cpd.values</code></pre><h3>After Change</h3><pre><code class='java'>
+        for index, node in enumerate(self.topological_order):
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                <a id="change">evidence = sampled.values[:, :index].tolist()</a>
+                <a id="change">weights = np.apply_along_axis(lambda t: cpd.reduce(t, inplace=False).values, 1, evidence)</a>
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], cpd.values, size)
+        return sampled</code></pre><img src="32040157.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL63' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8</div><div id='time'> Time: 2015-06-16</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: forward_sample</div><BR><BR><div id='link'><a href='https://github.com/data61/python-paillier/commit/96416b889c76f3b6d15af0e3dfd0d4cb2b8b2d23#diff-5590ceeabc11dcfc4b149f190cdd2fe504b911360e7775c9f5058efa1b6b0342L175' target='_blank'>Link</a></div><div id='project'> Project Name: data61/python-paillier</div><div id='commit'> Commit Name: 96416b889c76f3b6d15af0e3dfd0d4cb2b8b2d23</div><div id='time'> Time: 2017-06-15</div><div id='author'> Author: giorgio.patrini@anu.edu.au</div><div id='file'> File Name: examples/paillier_logistic_regression.py</div><div id='class'> Class Name: Alice</div><div id='method'> Method Name: encrypt_weights</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR>

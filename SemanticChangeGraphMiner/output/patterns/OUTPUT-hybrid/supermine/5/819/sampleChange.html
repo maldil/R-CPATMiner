@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def linear_mmd2(f_of_X, f_of_Y):
+    loss = 0.0
+    delta = f_of_X - f_of_Y
+    loss = <a id="change">torch.mean((delta[:-1] * delta[1:]).sum(1))</a>
+    return loss
+
+
+&#47&#47 Consider linear time MMD with a polynomial kernel:</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 f_of_Y: batch_size * k
+def linear_mmd2(f_of_X, f_of_Y):
+    loss = 0.0
+    delta = <a id="change">f_of_X.float().mean() - f_of_Y.float().mean()</a>
+    <a id="change">loss = delta.dot(delta.T)</a>
+    return loss
+
+
+&#47&#47 Consider linear time MMD with a polynomial kernel:</code></pre>

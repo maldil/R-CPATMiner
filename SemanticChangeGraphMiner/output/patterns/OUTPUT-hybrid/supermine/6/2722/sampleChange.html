@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+inputs = Variable(torch.Tensor([[h, e, l, l, o]]))
+print("input size", inputs.size())
+
+for one in <a id="change">inputs[0]</a>:
+    one = one.view(1, 1, -1)
+    &#47&#47 Input: (batch, seq_len, input_size) when batch_first=True
+    out, hidden = cell(one, hidden)</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 We can do the whole at once
+&#47&#47 Propagate input through RNN
+&#47&#47 Input: (batch, seq_len, input_size) when batch_first=True
+<a id="change">inputs = inputs.view(1, 5, -1)</a>
+out, hidden = cell(inputs, hidden)
+print("sequence input size", inputs.size(), "out size", out.size())
+
+</code></pre>

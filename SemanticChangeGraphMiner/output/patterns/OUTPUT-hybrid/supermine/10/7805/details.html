@@ -1,0 +1,23 @@
+<html><h3>fc0f28ef337bb7b087fbba43fb085af27d34d846,torchsample/transforms/image_transforms.py,Contrast,__call__,#Contrast#,220
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.var = var
+
+    def __call__(self, x, y=None):
+        <a id="change">channel_means = x.mean(1)</a>
+        for i in range(2,x.dim()):
+            <a id="change">channel_means = channel_means.mean(i)</a>
+        channel_means = channel_means.expand_as(x)
+
+        x = (x - channel_means) * self.var + channel_means
+        if y is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = th.clamp((x - channel_means) * self.value + channel_means,0,1)
+
+        if y is not None:
+            channel_means = <a id="change">y</a>.mean(1).mean(<a id="change">2</a>).expand_as(y)
+            <a id="change">y = th.clamp((y - channel_means) * self.value + channel_means,0,1)</a>       
+            return x, y
+        return x
+</code></pre><img src="30070731.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/fc0f28ef337bb7b087fbba43fb085af27d34d846#diff-511bc83b5412852ac488cc24e3fbc230b0233c39c7a7f05216bee4ec132395e0L161' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: fc0f28ef337bb7b087fbba43fb085af27d34d846</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/image_transforms.py</div><div id='class'> Class Name: Contrast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/8ea593ba135faf00d9ba39f393682172366eee9b#diff-94220af99e7e87e05109cebdfe1bf2795301e457e9a38123b05bd52449dbc2aaL88' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 8ea593ba135faf00d9ba39f393682172366eee9b</div><div id='time'> Time: 2017-06-09</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/retrofit.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: retrofit</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/19a796cf092d0b0f88e2919cbee45bb5270835cf#diff-94220af99e7e87e05109cebdfe1bf2795301e457e9a38123b05bd52449dbc2aaL88' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 19a796cf092d0b0f88e2919cbee45bb5270835cf</div><div id='time'> Time: 2017-06-21</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/retrofit.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: retrofit</div><BR>

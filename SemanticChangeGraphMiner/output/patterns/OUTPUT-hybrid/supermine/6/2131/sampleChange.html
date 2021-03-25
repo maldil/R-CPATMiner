@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    spacing = imagedata.GetSpacing()
+    dimensions = imagedata.GetDimensions()
+
+    <a id="change">if resolution_percentage:
+        px = math.ceil(dimensions[0] * resolution_percentage)
+        py = math.ceil(dimensions[1] * resolution_percentage)
+
+   </a> if abs(extent[1]-extent[3]) &lt; abs(extent[3]-extent[5]):
+        f = extent[1]
+    elif abs(extent[1]-extent[5]) &lt; abs(extent[1] - extent[3]):
+        f = extent[1]</code></pre><h3>After Change</h3><pre><code class='java'>
+    spacing = imagedata.GetSpacing()
+    dimensions = imagedata.GetDimensions()
+
+    <a id="change">if resolution_percentage:
+        factor_x = resolution_percentage
+        factor_y = resolution_percentage
+    else:
+        if abs(extent[1]-extent[3]) &lt; abs(extent[3]-extent[5]):
+            f = extent[1]
+        elif abs(extent[1]-extent[5]) &lt; abs(extent[1] - extent[3]):
+            f = extent[1]
+        elif abs(extent[3]-extent[5]) &lt; abs(extent[1] - extent[3]):
+            f = extent[3]
+        else:
+            f = extent[1]
+
+        factor_x = px/float(f+1)
+        factor_y = py/float(f+1)
+
+   </a> resample = vtk.vtkImageResample()
+    resample.SetInputData(imagedata)
+    resample.SetAxisMagnificationFactor(0, factor_x)
+    resample.SetAxisMagnificationFactor(1, factor_y)</code></pre>

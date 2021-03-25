@@ -1,0 +1,28 @@
+<html><h3>bfc638d502b8b991e6ef5aaaa1946049312e6336,python/caffe/io.py,Transformer,set_mean,#Transformer#,236
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                ms = (1,) + ms
+            if len(ms) != 3:
+                raise ValueError(&quotMean shape invalid&quot)
+            if <a id="change">ms != self.i</a>nputs[in_][1:]:
+                <a id="change">raise ValueError(&quotMean shape incompatible with input shape.&quot)</a>
+        self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+                ms = (1,) + ms
+            if len(ms) != 3:
+                raise ValueError(&quotMean shape invalid&quot)
+            if <a id="change">ms != self.i</a>nputs[in_][1:]:
+                in_shape = self.inputs[in_][1:]
+                m_min, m_max = mean.min(), mean.max()
+                normal_mean = (mean - m_min) / (m_max - m_min)
+                <a id="change">mean = resize_image(normal_mean.transpose((1,2,0)),
+                        in_shape[1:]).transpose((2,0,1)) * \
+                        (m_max - m_min) + m_min</a>
+        self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre><img src="22546779.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/bfc638d502b8b991e6ef5aaaa1946049312e6336#diff-528bd29352c7471d35a4f6d90b05bbef21ab1a9dba3ec3a812e42bf9071dd7feL236' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: bfc638d502b8b991e6ef5aaaa1946049312e6336</div><div id='time'> Time: 2017-11-02</div><div id='author'> Author: geunsik.lim@samsung.com</div><div id='file'> File Name: python/caffe/io.py</div><div id='class'> Class Name: Transformer</div><div id='method'> Method Name: set_mean</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/738c8758e30c6f8bdf9155529aeb431547af65d6#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L196' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 738c8758e30c6f8bdf9155529aeb431547af65d6</div><div id='time'> Time: 2014-05-19</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_set_mean</div><BR><BR><div id='link'><a href='https://github.com/cornellius-gp/gpytorch/commit/bca150def5e45d0b55d5d20860e3e1b6b6d1ed42#diff-d04056d4385e0ff07126e73e62c9e38bcb17de8e1e6ee5878301f290a5b941a1L158' target='_blank'>Link</a></div><div id='project'> Project Name: cornellius-gp/gpytorch</div><div id='commit'> Commit Name: bca150def5e45d0b55d5d20860e3e1b6b6d1ed42</div><div id='time'> Time: 2021-02-15</div><div id='author'> Author: wjm363@nyu.edu</div><div id='file'> File Name: gpytorch/distributions/multivariate_normal.py</div><div id='class'> Class Name: MultivariateNormal</div><div id='method'> Method Name: rsample</div><BR>

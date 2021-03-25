@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    block_stream = __stream(path, sr, block_length, frame_length, hop_length,
+                            mono, offset, duration, fill_value, dtype)
+
+    <a id="change">return block_stream, sr</a>
+
+
+def __stream(path, sr, block_length, frame_length, hop_length,
+             mono, offset, duration, fill_value, dtype):</code></pre><h3>After Change</h3><pre><code class='java'>
+        start = 0
+
+    if duration:
+        <a id="change">frames = int(duration * sr)</a>
+    else:
+        frames = -1
+
+    <a id="change">blocks = sf.blocks(path,
+                       blocksize=frame_length + (block_length - 1) * hop_length,
+                       overlap=frame_length - hop_length,
+                       fill_value=fill_value,
+                       start=start,
+                       frames=frames,
+                       dtype=dtype,
+                       always_2d=False)</a>
+
+    <a id="change">for block in blocks:
+        if mono:
+            yield to_mono(block.T)
+        else:
+            yield block.T
+
+
+</a>@cache(level=20)
+def to_mono(y):
+    &quot&quot&quotForce an audio signal down to mono.
+</code></pre>

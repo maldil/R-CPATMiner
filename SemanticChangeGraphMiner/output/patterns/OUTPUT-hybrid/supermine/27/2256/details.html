@@ -1,0 +1,49 @@
+<html><h3>0dec477ddd9d7151035315d2280b8e2fa0a391f9,examples/transferlearning_model.py,,,#,2
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    print(&quotraw image shape: &quot + str(images.shape))
+
+print(&quotProcessing data...&quot)
+<a id="change">imageProcessor = ImageProcessor(images, target_dimensions=target_dimensions, rgb=True)</a>
+<a id="change">images = imageProcessor.process_training_data()</a>
+if verbose:
+    print (&quotprocessed image shape: &quot + str(images.shape))
+
+print(&quot--------------- Inception-V3 Model -------------------&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+K.set_image_data_format("channels_last")
+
+verbose = True
+<a id="change">target_dimensions</a> = (128, 128)
+raw_dimensions = (48, 48)
+target_labels = [0, 1, 2, 3, 4, 5, 6]
+model_name = &quotinception_v3&quot
+
+print(&quotLoading data...&quot)
+csv_file_path = "image_data/sample.csv"
+
+dataLoader = DataLoader(from_csv=True, target_labels=target_labels, datapath=csv_file_path,
+                        image_dimensions=raw_dimensions, csv_label_col=0, csv_image_col=1, out_channels=3)
+images, labels = dataLoader.get_data()
+if verbose:
+    print(&quotraw image shape: &quot + str(images.shape))
+
+print(&quotCreating training/testing data...&quot)
+validation_split = 0.15
+<a id="change">X_train</a>, <a id="change">X_test</a>, <a id="change">y_train</a>, <a id="change">y_test</a> = train_test_split(images, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)
+<a id="change">train_gen = DataGenerator().fit(X_train, y_train)</a>
+<a id="change">test_gen = DataGenerator().fit(X_test, y_test)</a>
+
+print(&quot--------------- Inception-V3 Model -------------------&quot)
+print(&quotInitializing neural network with InceptionV3 base model...&quot)
+model = TransferLearningNN(model_name=model_name, target_labels=target_labels)
+
+print(&quotTraining model...&quot)
+print(&quotnumLayers: &quot + str(len(model.model.layers)))
+
+<a id="change">model.fit_generator(train_gen.generate(target_dimensions, 10),
+                    test_gen.generate(target_dimensions, 10),
+                    epochs=10)</a>
+</code></pre><img src="10468286.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 18</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/0dec477ddd9d7151035315d2280b8e2fa0a391f9#diff-c4c44346344579b2af745d2e70f32ab74cfd80a5b2a289d99fe9439a33ed7ee7L7' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: 0dec477ddd9d7151035315d2280b8e2fa0a391f9</div><div id='time'> Time: 2018-02-27</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/transferlearning_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/a94f7b93251013d51d9918c27ab2569eb526a494#diff-d6e61b85eb714ffb73e54ff49fb8cab0bf43187c535ba0922e243c15c405924eL12' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: a94f7b93251013d51d9918c27ab2569eb526a494</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/timedelay_conv_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/a94f7b93251013d51d9918c27ab2569eb526a494#diff-cb3809abb78287fa8597abd877d4c0f541c64570a7e9ce62fc4887d0ab99eb61L9' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: a94f7b93251013d51d9918c27ab2569eb526a494</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/convolutional_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/0dec477ddd9d7151035315d2280b8e2fa0a391f9#diff-c4c44346344579b2af745d2e70f32ab74cfd80a5b2a289d99fe9439a33ed7ee7L7' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: 0dec477ddd9d7151035315d2280b8e2fa0a391f9</div><div id='time'> Time: 2018-02-27</div><div id='author'> Author: puneethp@thoughtworks.com</div><div id='file'> File Name: examples/transferlearning_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

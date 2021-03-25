@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        yield 0, len(X)
+    else:
+        n_sequences = len(lengths)
+        <a id="change">end</a> = <a id="change">np.cumsum(lengths)</a>
+        <a id="change">start</a> = end - lengths
+        for i in range(n_sequences):
+            yield start[i], end[i]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        yield 0, len(X)
+    elif lengths:
+        n_samples = X.shape[0]
+        <a id="change">end</a> = <a id="change">np</a>.cumsum(lengths).astype(np.int32)
+        <a id="change">start</a> = end - lengths
+        if end[-1] &gt; n_samples:
+            raise ValueError("More than {0:d} samples in lengths array {1!s}"
+                             .format(n_samples, lengths))</code></pre>

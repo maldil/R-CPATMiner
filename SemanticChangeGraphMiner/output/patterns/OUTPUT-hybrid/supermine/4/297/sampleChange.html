@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                return device
+    for device in devices:
+        if b"llvm" in device.description.lower():
+            <a id="change">return device</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    plaidml.settings.experimental = True
+    devices, _ = plaidml.devices(ctx, limit=100, return_all=True)
+    out_devices = []
+    <a id="change">for device in devices:
+        points = 0
+        if b"cuda" in device.description.lower():
+            points += 1
+        if b"opencl" in device.description.lower():
+            points += 1
+        if b"nvidia" in device.description.lower():
+            points += 1
+        if b"amd" in device.description.lower():
+            points += 1
+        out_devices.append((points, device))
+
+   </a> out_devices.sort(reverse=True)
+    return {device.description.decode("utf8"): device.id.decode("utf8") for points, device in out_devices }
+</code></pre>

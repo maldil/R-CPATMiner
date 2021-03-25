@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Now I can be sure that I found a vuln, we control the response
+            &#47&#47 time with the delay
+            desc = &quotBlind SQL injection using time delays was found at: %s&quot
+            <a id="change">desc</a> = <a id="change">desc % mutant.found_at()</a>
+
+            response_ids = [r.id for r in responses]
+
+            <a id="change">v</a> = Vuln.from_mutant(&quotBlind SQL injection vulnerability&quot, desc,
+                                 severity.HIGH, response_ids, &quotblind_sqli&quot,
+                                 mutant)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Now I can be sure that I found a vuln, we control the response
+            &#47&#47 time with the delay
+            desc = &quotBlind SQL injection using time delays was found at: %s&quot
+            <a id="change">desc</a> %= <a id="change">mutant.found_at()</a>
+
+            response_ids = [r.id for r in responses]
+
+            <a id="change">v</a> = Vuln.from_mutant(&quotBlind SQL injection vulnerability&quot, desc,
+                                 severity.HIGH, response_ids, &quotblind_sqli&quot,
+                                 mutant)
+</code></pre>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    download_url(url, root, hash_value=checksum)
+                extract_archive(archive)
+
+        <a id="change">walker = walk_files(
+            self._path, suffix=self._ext_audio, prefix=False, remove_suffix=True
+        )</a>
+        <a id="change">self._walker = list(walker)</a>
+
+    def __getitem__(self, n: int) -&gt; Tuple[Tensor, int, str, str, int, int, str]:
+        Load the n-th sample from the dataset.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        basename = basename.split(".")[0]
+        folder_in_archive = os.path.join(folder_in_archive, basename)
+
+        <a id="change">self._path</a> = os.path.join(root, folder_in_archive)
+
+        if download:
+            if not os.path.isdir(self._path):
+                if not os.path.isfile(archive):
+                    checksum = _CHECKSUMS.get(url, None)
+                    download_url(url, root, hash_value=checksum)
+                extract_archive(archive)
+
+        <a id="change">self._walker = sorted(str(p.stem) for p in Path(self._path).glob(&quot*/*/*&quot + self._ext_audio))</a>
+
+    def __getitem__(self, n: int) -&gt; Tuple[Tensor, int, str, str, int, int, str]:
+        Load the n-th sample from the dataset.
+</code></pre>

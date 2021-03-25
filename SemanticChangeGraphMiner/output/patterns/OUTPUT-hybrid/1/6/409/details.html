@@ -1,0 +1,32 @@
+<html><h3>81d6155030e5f58ce3bd1781dc939fd56d6eed01,train.py,,,#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    dataset = torchvision.datasets.ImageFolder(opt.dataroot, 
+        transform=transforms.Compose([
+            <a id="change">transforms.Resize((opt.loadSize,opt.loadSize))</a>,
+            transforms.RandomResizedCrop(opt.fineSize),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()]))
+    <a id="change">dataset_loader</a> = torch.utils.data.DataLoader(dataset,batch_size=opt.batchSize, shuffle=True)
+
+    &#47&#47 data_loader = CreateDataLoader(opt)
+    &#47&#47 dataset = data_loader.load_data()</code></pre><h3>After Change</h3><pre><code class='java'>
+            transforms.RandomChoice([transforms.Resize(opt.loadSize,interpolation=1),
+                transforms.Resize(opt.loadSize,interpolation=2),
+                transforms.Resize(opt.loadSize,interpolation=3),
+                <a id="change">transforms.Resize((opt.loadSize,opt.loadSize),interpolation=1)</a>,
+                transforms.Resize((opt.loadSize,opt.loadSize),interpolation=2),
+                transforms.Resize((opt.loadSize,opt.loadSize),interpolation=3)]),
+            transforms.RandomResizedCrop(opt.fineSize),
+            transforms.RandomChoice([transforms.ColorJitter(brightness=.1,contrast=.1,saturation=.1,hue=.1),
+                transforms.ColorJitter(brightness=0,contrast=0,saturation=.1,hue=.2),
+                transforms.ColorJitter(brightness=0,contrast=0,saturation=0,hue=0),]),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor()]))
+    <a id="change">dataset_loader</a> = torch.utils.data.DataLoader(dataset,batch_size=opt.batchSize, shuffle=True)
+
+    &#47&#47 data_loader = CreateDataLoader(opt)
+    &#47&#47 dataset = data_loader.load_data()</code></pre><img src="2158096.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/81d6155030e5f58ce3bd1781dc939fd56d6eed01#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L18' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 81d6155030e5f58ce3bd1781dc939fd56d6eed01</div><div id='time'> Time: 2018-08-24</div><div id='author'> Author: rzhang88@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kenshohara/3D-ResNets-PyTorch/commit/002c64b2ef562528043a1fd9961607415e1170aa#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L189' target='_blank'>Link</a></div><div id='project'> Project Name: kenshohara/3D-ResNets-PyTorch</div><div id='commit'> Commit Name: 002c64b2ef562528043a1fd9961607415e1170aa</div><div id='time'> Time: 2018-11-21</div><div id='author'> Author: kensho.hara@aist.go.jp</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_test_utils</div><BR><BR><div id='link'><a href='https://github.com/kenshohara/3D-ResNets-PyTorch/commit/3bdd430adce3bb4b345eb46348685345fbcb8ce6#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L217' target='_blank'>Link</a></div><div id='project'> Project Name: kenshohara/3D-ResNets-PyTorch</div><div id='commit'> Commit Name: 3bdd430adce3bb4b345eb46348685345fbcb8ce6</div><div id='time'> Time: 2019-07-05</div><div id='author'> Author: kensho.hara@aist.go.jp</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_test_utils</div><BR>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                for pattern in matching_patterns:
+                    list_match = re.findall(pattern, response, flags=re.IGNORECASE)
+
+                    if <a id="change">len(list_match) != 0:
+  </a>                      error_list.extend(list_match)
+                        msg = &quotFind unnecessary error message : {}&quot.format(list_match)
+                        self.utility.print_message(OK, msg)
+                        self.utility.write_log(20, msg)</code></pre><h3>After Change</h3><pre><code class='java'>
+            with codecs.open(self.signature_path, &quotr&quot, &quotutf-8&quot) as fin:
+                matching_patterns = fin.readlines()
+                for signature in matching_patterns:
+                    <a id="change">try:
+                        &#47&#47 Find bad message.
+                        pattern = signature.replace(&quot\r&quot, &quot&quot).replace(&quot\n&quot, &quot&quot)
+                        obj_match = re.search(pattern, response, flags=re.IGNORECASE)
+
+                        if obj_match is not None:
+                            trigger = obj_match.group(1)
+                            error_list.append(trigger)
+                            msg = &quotDetect unnecessary message: {}&quot.format(trigger)
+                            self.utility.print_message(OK, msg)
+                            self.utility.write_log(20, msg)
+                    except Exception as e:
+                        self.utility.print_exception(e, &quotInvalid signature: {}, {}&quot.format(signature, e))
+                        self.utility.write_log(30, &quot{}&quot.format(e))
+       </a> except Exception as e:
+            msg = &quotGetting error message is failure : {}.&quot.format(e)
+            self.utility.print_exception(e, msg)
+            self.utility.write_log(30, msg)</code></pre>

@@ -1,0 +1,21 @@
+<html><h3>b6a6ef0940efe48fba7ca76a2009ef196fd2f2fe,policy.py,PolicyNetwork,initialize_logging,#PolicyNetwork#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def initialize_logging(self, tensorboard_logdir):
+        for weight_var in itertools.chain([self.W_conv_init], self.W_conv_intermediate, [self.W_conv_final]):
+            tf.histogram_summary(weight_var.name, weight_var)
+        <a id="change">tf.scalar_summary("accuracy", self.accuracy)</a>
+        tf.scalar_summary("log_likelihood_cost", self.log_likelihood_cost)
+        self.summaries = tf.merge_all_summaries()
+        self.summary_writer = tf.train.SummaryWriter(tensorboard_logdir, self.session.graph_def)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                [self.W_conv_init],
+                self.W_conv_intermediate,
+                [self.W_conv_final])]
+        accuracy = <a id="change">tf.scalar_summary("accuracy", self.accuracy)</a>
+        cost = tf.scalar_summary("log_likelihood_cost", self.log_likelihood_cost)
+        self.weight_summaries = tf.merge_summary(weight_summaries)
+        self.accuracy_summaries = tf.merge_summary([accuracy, cost])
+        self.test_summary_writer = tf.train.SummaryWriter(os.path.join(tensorboard_logdir, "test"), self.session.graph)</code></pre><img src="2608882.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/b6a6ef0940efe48fba7ca76a2009ef196fd2f2fe#diff-3d9f5c51ee85fb2da79a74349657cb62bb9abc5a02fd3d0238ffc76251310e24L82' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: b6a6ef0940efe48fba7ca76a2009ef196fd2f2fe</div><div id='time'> Time: 2016-07-06</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: policy.py</div><div id='class'> Class Name: PolicyNetwork</div><div id='method'> Method Name: initialize_logging</div><BR><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/b6a6ef0940efe48fba7ca76a2009ef196fd2f2fe#diff-3d9f5c51ee85fb2da79a74349657cb62bb9abc5a02fd3d0238ffc76251310e24L82' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: b6a6ef0940efe48fba7ca76a2009ef196fd2f2fe</div><div id='time'> Time: 2016-07-06</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: policy.py</div><div id='class'> Class Name: PolicyNetwork</div><div id='method'> Method Name: initialize_logging</div><BR><BR><div id='link'><a href='https://github.com/MorvanZhou/tutorials/commit/cd04b76b7fd1d8ee1cfdb247bb794fd336f631a4#diff-87a2b6f565642f240cb5e8f2edb12cc7f63a199c5230b6848993d437459a03bbL53' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/tutorials</div><div id='commit'> Commit Name: cd04b76b7fd1d8ee1cfdb247bb794fd336f631a4</div><div id='time'> Time: 2017-01-14</div><div id='author'> Author: morvanzhou@hotmail.com</div><div id='file'> File Name: tensorflowTUT/tf15_tensorboard/full_code.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

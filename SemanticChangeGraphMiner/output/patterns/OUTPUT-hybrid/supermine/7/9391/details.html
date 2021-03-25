@@ -1,0 +1,56 @@
+<html><h3>b523b464d8cafe29e352981c1c6df941f205592a,nilmtk/metrics.py,,mean_normalized_error_power,#,109
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    denominator = {}
+
+    for appliance in predicted_power:
+        numerator[appliance] = <a id="change">np.sum(np.abs(predicted_power[appliance] -
+                                             df_appliances_ground_truth[appliance].values))</a>
+        denominator[appliance] = np.sum(
+            df_appliances_ground_truth[appliance].values)
+        <a id="change">mne[appliance] = numerator[appliance] * 1.0 / denominator[appliance]</a>
+    return mne
+
+
+def rms_error_power(predicted_power, df_appliances_ground_truth):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 TODO: need to resample to keep things in step
+    mne = {}
+    <a id="change">for meter in predictions.submeters():
+        ground_truth_meter_identifier = meter.identifier._replace(
+            dataset=ground_truth.dataset())
+        ground_truth_meter = ground_truth[ground_truth_meter_identifier]
+        sections = meter.good_sections()
+        sample_period = meter.sample_period()
+        period_alias = &quot{:d}S&quot.format(sample_period)
+
+        &#47&#47 TODO: preprocessing=[Resample(sample_period)])
+        pred_generator = meter.power_series(periods=sections)
+        total_diff = 0
+        sum_of_ground_truth_power = 0
+        while True:
+            try:
+                pred_chunk = next(pred_generator)
+            except StopIteration:
+                break
+            else:
+                truth_generator = ground_truth_meter.power_series(
+                    periods=[pred_chunk.timeframe], chunksize=1E9)
+                truth_chunk = next(truth_generator)
+                
+                &#47&#47 TODO: do this resampling in the pipeline?
+                truth_chunk = truth_chunk.resample(period_alias)
+                pred_chunk = pred_chunk.resample(period_alias)
+
+                diff = (pred_chunk.icol(0) - truth_chunk.icol(0)).dropna() 
+                total_diff += sum(abs(diff))
+                sum_of_ground_truth_power += truth_chunk.icol(0).dropna().sum()
+
+        mne[meter.instance()] = total_diff / sum_of_ground_truth_power
+
+   </a> return pd.Series(mne)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47 FUNCTIONS BELOW THIS LINE HAVE NOT YET CONVERTED TO NILMTK v0.2 &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+</code></pre><img src="36049830.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/b523b464d8cafe29e352981c1c6df941f205592a#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L128' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: b523b464d8cafe29e352981c1c6df941f205592a</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_normalized_error_power</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/626173412d4281b693244e0705a787c4e7c08031#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L92' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 626173412d4281b693244e0705a787c4e7c08031</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fraction_energy_assigned_correctly</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7a8383a84dc1ce059b7395fab2e50c85cdfa42ef4fb635e1a1cf4b4905f4c682L39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/hitrate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hitrate</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/dd17b42f452bc156f55e3400f8ebc84d58761e65#diff-b3e4f227d9c19bf809be06f1e34bfd82b4670dc470f56965b6c7cb2d9f639ad4L104' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: dd17b42f452bc156f55e3400f8ebc84d58761e65</div><div id='time'> Time: 2019-12-30</div><div id='author'> Author: gregory.lee@cchmc.org</div><div id='file'> File Name: skimage/filters/_window.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: window</div><BR>

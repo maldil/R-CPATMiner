@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _inputs_same_shape(self, inputs):
+        for input_node in inputs:
+            if input_node.shape.as_list() != inputs[0].shape.as_list():
+                <a id="change">return False</a>
+        return True
+
+
+class Flatten(block_module.Block):</code></pre><h3>After Change</h3><pre><code class='java'>
+        return layers.Concatenate()(inputs)
+
+    def _inputs_same_shape(self, inputs):
+        <a id="change">return all(
+            input_node.shape.as_list() == inputs[0].shape.as_list()
+            for input_node in inputs
+        )</a>
+
+
+class Flatten(block_module.Block):
+    Flatten the input tensor with Keras Flatten layer.</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  &#47&#47 batch norm
+  if batch_norm:
+    z = <a id="change">tf.keras.layers.BatchNormalization(
+      momentum=bn_momentum,
+      gamma_initializer=&quotzeros&quot,
+      fused=True)(z)</a>
+
+  &#47&#47 residual add
+  current = tf.keras.layers.Add()([current,z])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  &#47&#47 batch norm
+  if batch_norm:
+    <a id="change">if bn_type == &quotsync&quot:
+      bn_layer = tf.keras.layers.experimental.SyncBatchNormalization
+    else:
+      bn_layer = tf.keras.layers.BatchNormalization
+   </a> z = bn_layer(
+      momentum=bn_momentum,
+      gamma_initializer=&quotzeros&quot)(z)
+</code></pre>

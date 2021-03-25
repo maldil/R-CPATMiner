@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def gpumemusage():
+    gpu_mem = subprocess.check_output("nvidia-smi | grep MiB | cut -f 3 -d &quot|&quot", shell=True).replace(&quot &quot, &quot&quot).replace(&quot\n&quot, &quot&quot).replace(&quoti&quot, &quot&quot)
+    curr, tot = [float(a[:-2]) for a in <a id="change">gpu_mem.split(&quot/&quot)</a>]
+    
+    util = "%1.2f"%(100*curr/tot)+&quot%&quot
+    cmem = str(int(math.ceil(curr/1024.)))+&quotGB&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+    all_stat = [float(a) for a in gpu_mem.replace(&quot/&quot,&quot&quot).split(&quotMB&quot)[:-1]]
+
+    gpu_mem = &quot&quot
+    <a id="change">for i in range(len(all_stat)/2):
+        curr, tot = all_stat[2*i], all_stat[2*i+1]
+        util = "%1.2f"%(100*curr/tot)+&quot%&quot
+        cmem = str(int(math.ceil(curr/1024.)))+&quotGB&quot
+        gmem = str(int(math.ceil(tot/1024.)))+&quotGB&quot
+        gpu_mem += util + &quot--&quot + join(cmem, gmem) + &quot &quot
+   </a> return gpu_mem
+
+
+def update_hyperparameter_schedule(args, epoch, global_iteration, optimizer):</code></pre>

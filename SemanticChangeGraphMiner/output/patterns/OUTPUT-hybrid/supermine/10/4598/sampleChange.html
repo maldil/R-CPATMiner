@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def is_support_non_standard_domain():
+    &#47&#47 from ONNX 1.5, skip schema check on ops in non-standard domain
+    &#47&#47 see: https://github.com/onnx/onnx/pull/1876
+    <a id="change">return version.parse(onnx.__version__) &gt;= version.parse(&quot1.5&quot)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 see: https://github.com/onnx/onnx/pull/1876
+    &#47&#47 this checker expects onnx adapts semantic versioning
+    versions = onnx.__version__.split(&quot.&quot)
+    <a id="change">if len(versions) &lt; 2 or (not versions[1].isdecimal()):
+        raise RuntimeError(
+            &quotONNX-Chainer cannot get major and minor version ONNX module: &quot
+            &quot{}&quot.format(onnx.__version__))
+   </a> <a id="change">major, minor = versions[0], versions[1]</a>
+    <a id="change">return major == &quot1&quot and int(minor) &gt;= 5</a>
+</code></pre>

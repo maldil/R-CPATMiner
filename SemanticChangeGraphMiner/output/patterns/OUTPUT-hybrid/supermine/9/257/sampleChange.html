@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  &#47&#47 which are valid directories in fileystems like "gs://".
+  norm_rel_path = os.path.normpath(rel_path.lstrip("/"))
+
+  <a id="change">if norm_rel_path == ".":
+    return dst_path
+
+  &#47&#47 Check that the norm rel path does not starts with "..".
+ </a> <a id="change">if norm_rel_path.startswith(".."):
+    raise ValueError("Relative path %r is invalid." % rel_path)
+
+ </a> merged = os.path.join(dst_path, norm_rel_path)
+
+  &#47&#47 After merging verify that the merged path keeps the original dst_path.
+  if not merged.startswith(dst_path):
+    raise ValueError("Relative path %r is invalid. Failed to merge with %r." % <a id="change">(
+        rel_path, dst_path)</a>)
+  <a id="change">return merged</a>
+
+
+def _module_descriptor_file(module_dir):
+  Returns the name of the file containing descriptor for the &quotmodule_dir&quot.</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def _merge_relative_path(dst_path, rel_path):
+  Merge a relative tar file to a destination (which can be "gs://...").
+  <a id="change">return file_utils.merge_relative_path(dst_path, rel_path)</a>
+
+
+def _module_descriptor_file(module_dir):
+  Returns the name of the file containing descriptor for the &quotmodule_dir&quot.</code></pre>

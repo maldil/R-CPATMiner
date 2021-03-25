@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+              callbacks=callbacks_factory(histogram_freq=1), epochs=2)
+
+    &#47&#47 fit generator without validation data
+    model.fit_generator(<a id="change">data_generator(True)</a>, len(X_train), epochs=2,
+                        callbacks=callbacks_factory(histogram_freq=0,
+                                                    embeddings_freq=0))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+              validation_data=([X_test] * 2, [y_test] * 2),
+              callbacks=callbacks_factory(histogram_freq=1), epochs=2)
+
+    <a id="change">train_generator = data_generator([X_train] * 2, [y_train] * 2, batch_size)</a>
+
+    &#47&#47 fit generator without validation data
+    model.fit_generator(train_generator, len(X_train), epochs=2,
+                        callbacks=callbacks_factory(histogram_freq=0,</code></pre>

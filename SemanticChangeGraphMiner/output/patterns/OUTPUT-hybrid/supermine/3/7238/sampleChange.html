@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        all_protos = short_row_keys.union(short_frame_protocols) - self.DROP_PROTOS
+        all_protos_int = 0
+        for proto in all_protos.intersection(WK_IP_PROTOS):
+            index = <a id="change">WK_IP_PROTOS.index(proto)</a>
+            all_protos_int += 2**index
+        <a id="change">return all_protos_int</a>
+
+    def _tshark_all(self, df, srcmacid):
+        print(&quotcalculating intermediates&quot, end=&quot&quot, flush=True)
+        df[&quot_host_key&quot], df[&quot_srcip&quot], df[&quot_dstip&quot], df[&quot_both_private_ip&quot], df[&quot_ipv4_multicast&quot], df[&quot_protos_int&quot] = zip(*df.apply(self._host_key, axis=1))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _df_proto_flags(self, row):
+        short_row_keys = frozenset(x.split(&quot.&quot)[0] for x, y in row.items() if not pd.isnull(y) and not x.startswith(&quot_&quot))
+        <a id="change">return self._encode_df_proto_flags(short_row_keys, row[&quotframe.protocols&quot])</a>
+
+    def _tshark_all(self, df, srcmacid):
+        print(&quotcalculating intermediates&quot, end=&quot&quot, flush=True)
+        df[&quot_host_key&quot], df[&quot_srcip&quot], df[&quot_dstip&quot], df[&quot_both_private_ip&quot], df[&quot_ipv4_multicast&quot], df[&quot_protos_int&quot] = zip(*df.apply(self._host_key, axis=1))</code></pre>

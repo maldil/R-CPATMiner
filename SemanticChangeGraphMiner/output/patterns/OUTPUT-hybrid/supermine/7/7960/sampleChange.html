@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        super(Attention, self).__init__()
+
+        self.attention_type = attention_type
+        <a id="change">assert (self.attention_type in ["dot", "general"]), "Invalid attention type selected."</a>
+
+        if self.attention_type == &quotgeneral&quot:
+            self.linear_in = nn.Linear(dimensions, dimensions, bias=False)
+        self.linear_out = nn.Linear(dimensions * 2, dimensions, bias=False)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, dimensions, attention_type=&quotgeneral&quot):
+        super(Attention, self).__init__()
+
+        <a id="change">if attention_type not in [&quotdot&quot, &quotgeneral&quot]:
+            raise ValueError(&quotInvalid attention type selected.&quot)
+
+       </a> self.attention_type = attention_type
+        if self.attention_type == &quotgeneral&quot:
+            self.linear_in = nn.Linear(dimensions, dimensions, bias=False)
+</code></pre>

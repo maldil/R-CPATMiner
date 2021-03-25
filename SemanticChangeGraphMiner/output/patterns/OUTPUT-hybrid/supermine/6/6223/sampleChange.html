@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    intersected = big_frame.loc[small_frame.index].dropna()
+    index, index_map = build_annoy_tree(intersected, tree_depth)
+    replacements = {}
+    <a id="change">average_similarity = []</a>
+    for term in big_frame.index:
+        if term not in small_frame.index:
+            indices, scores = index.get_nns_by_vector(big_frame.loc[term], 2,
+                                                   include_distances=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+    replacements = {}
+    for term in big_frame.index:
+        if term not in small_frame.index:
+            <a id="change">most_similar = similar_to_vec(intersected, big_frame.loc[term], limit=1)</a>
+            <a id="change">got = list(most_similar.index)</a>
+            <a id="change">if got:
+                replacements[term] = got[0]
+   </a> return replacements
+
+
+def choose_small_vocabulary(big_frame):</code></pre>

@@ -1,0 +1,27 @@
+<html><h3>dc832101a57afe93706ce85cc90f476645be6d37,pycox/models/base.py,BaseModel,_predict_func_numpy,#BaseModel#,63
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with torch.no_grad():
+            dataset = NumpyTensorDataset(X)
+            dataloader = DataLoaderSlice(dataset, batch_size)
+            preds = [<a id="change">func(x.to(self.device))</a> for x in iter(dataloader)]
+            preds = torch.cat(preds)
+        if eval_:
+            func.train()
+
+        if return_numpy:
+            <a id="change">return preds.numpy()</a>
+        return preds
+
+    def save_model_weights(self, path, **kwargs):
+        &quot&quot&quotSave the model weights.</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quot&quot&quot
+        dataset = NumpyTensorDataset(X)
+        dataloader = DataLoaderSlice(dataset, batch_size)
+        <a id="change">return self._predict_func_dataloader(func, dataloader, return_numpy, eval_)</a>
+        &#47&#47 if eval_:
+        &#47&#47     func.eval()
+        &#47&#47 with torch.no_grad():
+        &#47&#47     dataset = NumpyTensorDataset(X)</code></pre><img src="39633086.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/dc832101a57afe93706ce85cc90f476645be6d37#diff-221b5975166016b8efb344b09810883d7e4ae00242132282f874cd8a3961d3f4L63' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: dc832101a57afe93706ce85cc90f476645be6d37</div><div id='time'> Time: 2018-06-11</div><div id='author'> Author: havard@DN0a22c98f.SUNet</div><div id='file'> File Name: pycox/models/base.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: _predict_func_numpy</div><BR><BR><div id='link'><a href='https://github.com/openml/openml-python/commit/6c00e23c0ebb2a93cf06c840d392b66e67a6e3a3#diff-cce4323af466db2f54edb9161a510818e26857ea520e94923c3b987aff28dfc8L297' target='_blank'>Link</a></div><div id='project'> Project Name: openml/openml-python</div><div id='commit'> Commit Name: 6c00e23c0ebb2a93cf06c840d392b66e67a6e3a3</div><div id='time'> Time: 2019-04-16</div><div id='author'> Author: p.gijsbers@tue.nl</div><div id='file'> File Name: openml/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: thread_safe_if_oslo_installed</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/20ea228773616f824fa5099d0a6e51b7f829d094#diff-27b4f5af4fd243c13cbea81d5dc3eb8d49e670f7a02f5cbfdaa140d3c25508bbL310' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: 20ea228773616f824fa5099d0a6e51b7f829d094</div><div id='time'> Time: 2016-03-10</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tfdeploy.py</div><div id='class'> Class Name: Operation</div><div id='method'> Method Name: eval</div><BR>

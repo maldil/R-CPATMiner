@@ -1,0 +1,22 @@
+<html><h3>a00b602f3572c1cb2a194bd6a8ffef19dd7164a2,main.py,,train,#,65
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for file in train_chunk_files:
+            print("Using %s" % file)
+            train_dataset = DataSet.read(file)
+            <a id="change">n.train(train_dataset)</a>
+            n.save_variables(save_file)
+            if n.get_global_step() &gt; last_save_checkpoint + checkpoint_freq:
+                n.check_accuracy(test_dataset)
+                last_save_checkpoint = n.get_global_step()</code></pre><h3>After Change</h3><pre><code class='java'>
+            print("Using %s" % file)
+            with timer("load dataset"):
+                train_dataset = DataSet.read(file)
+            <a id="change">with timer("training"):
+                n.train(train_dataset)
+           </a> with timer("save model"):
+                n.save_variables(save_file)
+            if n.get_global_step() &gt; last_save_checkpoint + checkpoint_freq:
+                with timer("test set evaluation"):</code></pre><img src="3795337.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/a00b602f3572c1cb2a194bd6a8ffef19dd7164a2#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L81' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: a00b602f3572c1cb2a194bd6a8ffef19dd7164a2</div><div id='time'> Time: 2017-06-23</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/ca078e83147f95ec7df149ef5eea9b6a8424d3bf#diff-50345066c3320a30a946b107a01b394bf8b919d2d397c44e62c2db397ae23fcbL226' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: ca078e83147f95ec7df149ef5eea9b6a8424d3bf</div><div id='time'> Time: 2019-12-12</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_memory_saving.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_memory_saving</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/magenta/commit/eafe1675d36e677784d894ae91d08dd21fc64b34#diff-0f83851f17ef9cef67c7e118696174f7481ccfebce0fc7708920e55300f37f4bL21' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/magenta</div><div id='commit'> Commit Name: eafe1675d36e677784d894ae91d08dd21fc64b34</div><div id='time'> Time: 2020-06-19</div><div id='author'> Author: iansimon@google.com</div><div id='file'> File Name: magenta/models/shared/events_rnn_train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: run_training</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/85426e4964fb6ee30ca5b14c5c79f4843e948962#diff-b08004f13dca27c579c0e9f70d9d82b38368e038dbcd92aa19e7ec040898815eL135' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 85426e4964fb6ee30ca5b14c5c79f4843e948962</div><div id='time'> Time: 2019-12-12</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_revop.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_revblock_chained</div><BR>

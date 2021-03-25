@@ -1,0 +1,44 @@
+<html><h3>579f8c923ae459c52f05be90637fbb58222c1961,tests/test_pipeline.py,VisualPipelineTests,test_fit_transform_poof_and_draw_calls,#VisualPipelineTests#,158
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.draw.assert_called_once_with()
+
+        <a id="change">pipeline.poof()</a>
+        for name, step in pipeline.named_steps.items():
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.poof.assert_called_once_with()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        Test calling fit, transform, and poof on the pipeline
+        
+
+        <a id="change">pipeline</a> = VisualPipeline([
+            (&quota&quot, mock.MagicMock(MockTransformer())),
+            (&quotb&quot, mock.MagicMock(MockVisualTransformer())),
+            (&quotc&quot, mock.MagicMock(MockTransformer())),
+            (&quotd&quot, mock.MagicMock(MockVisualTransformer())),
+            (&quote&quot, mock.MagicMock(MockEstimator()),)
+        ])
+
+        X = [[1, 1, 1, 1, 1],
+             [2, 2, 2, 2, 2],
+             [3, 3, 3, 3, 3]]
+
+        y =  [1, 2, 3, 4, 5]
+
+        pipeline.fit(X, y)
+        for name, step in pipeline.named_steps.items():
+            step.fit.assert_called_once_with(X, y)
+
+        pipeline.transform(X)
+        for name, step in pipeline.named_steps.items():
+            if name == &quote&quot: continue
+            step.transform.assert_called_once_with(X)
+
+        <a id="change">pipeline.poof()</a>
+        for name, step in pipeline.named_steps.items():
+            if name in {&quota&quot, &quotc&quot, &quote&quot}: continue
+            step.poof.assert_called_once_with(outpath=None)
+</code></pre><img src="798606.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/579f8c923ae459c52f05be90637fbb58222c1961#diff-ef5f0938c9abd7d9ab658f28e363b093e59f677949829145bc7d6036cec3897fL163' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: 579f8c923ae459c52f05be90637fbb58222c1961</div><div id='time'> Time: 2017-05-21</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: tests/test_pipeline.py</div><div id='class'> Class Name: VisualPipelineTests</div><div id='method'> Method Name: test_fit_transform_poof_and_draw_calls</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/1ef1c68001e5117664acdb2a5156f3991e80cbcf#diff-c2fe85318517c5e2b0b6dc6850bdeb27a1d2ffa7703e82b4cadaef4a858a6f1eL34' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: 1ef1c68001e5117664acdb2a5156f3991e80cbcf</div><div id='time'> Time: 2017-03-24</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: tests/test_cluster/test_elbow.py</div><div id='class'> Class Name: KElbowVisualizerTests</div><div id='method'> Method Name: test_integrated_elbow</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/1279fcc8d506bf4c1985d2e631ce4a534870c233#diff-c2fe85318517c5e2b0b6dc6850bdeb27a1d2ffa7703e82b4cadaef4a858a6f1eL48' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: 1279fcc8d506bf4c1985d2e631ce4a534870c233</div><div id='time'> Time: 2017-03-24</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: tests/test_cluster/test_elbow.py</div><div id='class'> Class Name: KElbowVisualizerTests</div><div id='method'> Method Name: test_integrated_elbow</div><BR>

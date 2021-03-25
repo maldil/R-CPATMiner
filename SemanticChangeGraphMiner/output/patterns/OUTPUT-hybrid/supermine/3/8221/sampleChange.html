@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    df = pd.DataFrame.from_records(rows, columns=header)
+    df.to_csv("./prediction/brats_scores.csv")
+
+    <a id="change">plt.boxplot(df.values, labels=df.columns)</a>
+    plt.ylabel("Dice Coefficient")
+    plt.savefig("validation_scores_boxplot.png")
+    plt.close()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    scores = dict()
+    for index, score in enumerate(df.columns):
+        values = <a id="change">df.values.T[index]</a>
+        scores[score] = values[np.isnan(values) == False]
+
+    plt.boxplot(list(scores.values()), labels=list(scores.keys()))
+    plt.ylabel("Dice Coefficient")</code></pre>

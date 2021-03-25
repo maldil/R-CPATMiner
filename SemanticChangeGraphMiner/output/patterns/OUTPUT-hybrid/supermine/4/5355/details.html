@@ -1,0 +1,21 @@
+<html><h3>a4697d7e45e66a3264eb56dcf489d67d4df40d23,implementations/cgan/cgan.py,Discriminator,forward,#Discriminator#,98
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        label_emb = nn.Embedding(opt.n_classes, opt.img_size**2)(labels)
+        label_emb = label_emb.view(label_emb.shape[0], 1, opt.img_size, opt.img_size)
+        &#47&#47 Concatenate label embedding and image by channels
+        d_input = <a id="change">torch.cat((label_emb, img), 1)</a>
+        feature_repr = self.model(d_input)
+        feature_repr = feature_repr.view(feature_repr.shape[0], -1)
+        validity = self.adv_layer(feature_repr)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, img, labels):
+        &#47&#47 Concatenate label embedding and image by channels
+        <a id="change">d_input = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</a>
+        validity = self.model(d_input)
+
+        return validity
+</code></pre><img src="23144033.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/a4697d7e45e66a3264eb56dcf489d67d4df40d23#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L1' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: a4697d7e45e66a3264eb56dcf489d67d4df40d23</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL250' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67</div><div id='time'> Time: 2019-04-26</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/0e63a5cd9e6f50d996a2491a300f760c681d4349#diff-a1945832a9b4ca40a852c04e82b29706d275f6b2d745b42fa448b13430edededL91' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 0e63a5cd9e6f50d996a2491a300f760c681d4349</div><div id='time'> Time: 2018-07-24</div><div id='author'> Author: ewijmans2@gmail.com</div><div id='file'> File Name: storage.py</div><div id='class'> Class Name: RolloutStorage</div><div id='method'> Method Name: recurrent_generator</div><BR><BR><div id='link'><a href='https://github.com/osmr/imgclsmob/commit/0c7d4353191b13cc2ec021b7adeeb41d44ca7054#diff-8d731ff0e6ff6a67e4d9f918f60b0c47d03aa2ea268c5b6e223fcd459e6489b2L139' target='_blank'>Link</a></div><div id='project'> Project Name: osmr/imgclsmob</div><div id='commit'> Commit Name: 0c7d4353191b13cc2ec021b7adeeb41d44ca7054</div><div id='time'> Time: 2021-02-15</div><div id='author'> Author: osemery@gmail.com</div><div id='file'> File Name: pytorch/pytorchcv/models/others/_espnet.py</div><div id='class'> Class Name: ESPNet</div><div id='method'> Method Name: forward</div><BR>

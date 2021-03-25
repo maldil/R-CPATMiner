@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        basis : array-like, shape=[dim, n, n]
+            Orthonormal basis.
+        
+        metric_matrix = self.reshape_metric_matrix(metric_matrix) + <a id="change">gs.eye(
+            self.n)</a>
+        return self.basis / gs.sqrt(<a id="change">2 * metric_matrix</a>)
+
+    def projection(self, mat):
+        Project a matrix to the Lie Algebra.</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        metric_matrix = self.reshape_metric_matrix(metric_matrix)
+        norms = gs.sum(
+            metric_matrix * self.basis * self.basis, <a id="change">(-2, -1)</a>)
+
+        return gs.einsum(&quoti, ikl-&gt;ikl&quot, 1. / gs.sqrt(norms), self.basis)
+</code></pre>

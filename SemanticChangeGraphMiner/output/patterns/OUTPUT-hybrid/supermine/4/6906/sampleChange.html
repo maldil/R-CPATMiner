@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if isinstance(group, (list, tuple)):
+                flattened_arguments.extend(arguments[i])
+            else:
+                <a id="change">flattened_arguments.append(arguments[i])</a>
+        return flattened_arguments
+
+    def _group_return_values(self, function, signature):
+        Wraps a function inside another function which groups the return</code></pre><h3>After Change</h3><pre><code class='java'>
+        flattened_arguments = []
+        for i, group_size in enumerate(signature):
+            argument = arguments[i]
+            <a id="change">if group_size == 1:
+                assert not isinstance(argument, (list, tuple))
+                flattened_arguments.append(argument)
+            else:
+                assert len(argument) == group_size
+                flattened_arguments.extend(argument)
+       </a> return flattened_arguments
+
+    def _group_return_values(self, function, signature):
+        Wraps a function inside another function which groups the return</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    scores=numpy.random.uniform(0.0, 1.0, popSize) 
+    bestScore=float("inf")
+    
+    ga=<a id="change">numpy.random.uniform(0,1,(popSize,dim))</a> *(ub-lb)+lb
+    convergence_curve=numpy.zeros(iters)
+    
+    print("GA is optimizing  \""+objf.__name__+"\"")  </code></pre><h3>After Change</h3><pre><code class='java'>
+    if not isinstance(lb, list):
+        lb = [lb] * dim
+    if not isinstance(ub, list):
+        <a id="change">ub = [ub] * dim</a>
+        
+    bestIndividual=numpy.zeros(dim)    
+    scores=numpy.random.uniform(0.0, 1.0, popSize) 
+    bestScore=float("inf")
+    
+    ga = numpy.zeros((popSize, dim))
+    for i in range(dim):
+        <a id="change">ga[:, i]=numpy.random.uniform(0,1,popSize) * (ub[i] - lb[i]) + lb[i]</a>
+    convergence_curve=numpy.zeros(iters)
+    
+    print("GA is optimizing  \""+objf.__name__+"\"")  </code></pre>

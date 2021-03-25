@@ -1,0 +1,29 @@
+<html><h3>cd000fd96342d660c4f7d2d21eab9888fbab3526,deslib/util/prob_functions.py,,min_difference,#,205
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    n_samples = len(idx_correct_label)
+    C_src = np.zeros(n_samples)
+    <a id="change">for index in range(n_samples):
+        supports_correct = supports[index][idx_correct_label[index]]
+        &#47&#47 removing index of the correct class
+        difference = supports_correct - supports[index, :]
+        difference = np.delete(difference, idx_correct_label[index])
+        C_src[index] = np.sort(difference)[0]
+   </a> return C_src
+
+
+def softmax(w, theta=1.0):</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    n_samples = len(idx_correct_label)
+    &#47&#47 Boolean mask for the correct class
+    <a id="change">mask = np.zeros(supports.shape, dtype=np.bool)</a>
+    mask[np.arange(n_samples), idx_correct_label] = True
+    &#47&#47 Get supports for the correct class
+    <a id="change">supports_correct = supports[mask]</a>
+    &#47&#47 Get supports for the other classes
+    supports_others = supports[~mask]
+    difference = supports_correct.reshape(-1, 1) - supports_others.reshape(supports_correct.size, -1)
+    C_src = np.sort(difference, axis=1)[:, 0]</code></pre><img src="23688553.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/cd000fd96342d660c4f7d2d21eab9888fbab3526#diff-fd4bf1097806f070ee537aca811ec97ed1965ee9c648d5b9b18edbd0f1e05ebcL225' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: cd000fd96342d660c4f7d2d21eab9888fbab3526</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/util/prob_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: min_difference</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/cd000fd96342d660c4f7d2d21eab9888fbab3526#diff-fd4bf1097806f070ee537aca811ec97ed1965ee9c648d5b9b18edbd0f1e05ebcL225' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: cd000fd96342d660c4f7d2d21eab9888fbab3526</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/util/prob_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: min_difference</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L97' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: _predict_one</div><BR>

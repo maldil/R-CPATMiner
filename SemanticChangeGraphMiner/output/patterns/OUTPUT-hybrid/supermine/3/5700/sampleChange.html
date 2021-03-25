@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = Variable(<a id="change">torch.from_numpy(np.array(traj_states, dtype=np.float32))</a>)
+            traj_actions_v = Variable(torch.from_numpy(np.array(traj_actions, dtype=np.float32)))
+            if args.cuda:
+                <a id="change">traj_states_v = traj_states_v.cuda()</a>
+                traj_actions_v = traj_actions_v.cuda()
+
+            traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, cuda=args.cuda)
+            mu_v = net_act(traj_states_v)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 critic step
+            opt_crt.zero_grad()
+            value_v = net_crt(traj_states_v)
+            loss_value_v = F.mse_loss(<a id="change">value_v.squeeze(-1)</a>, traj_ref_v)
+            loss_value_v.backward()
+            opt_crt.step()
+</code></pre>

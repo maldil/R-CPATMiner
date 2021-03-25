@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_thread = 20
+
+    print(&quotParent process %s.&quot % os.getpid())
+    start = <a id="change">time.time()</a>
+
+    p = Pool(n_thread)
+    &#47&#47 read all files to a list
+    all_files = []
+    for root, _, fnames in sorted(os.walk(GT_dir)):
+        full_path = [os.path.join(root, x) for x in fnames]
+        all_files.extend(full_path)
+    &#47&#47 cut into subtasks
+    def chunkify(lst, n):  &#47&#47 for non-continuous chunks
+        return [lst[i::n] for i in range(n)]
+
+    sub_lists = chunkify(all_files, n_thread)
+    &#47&#47 call workers
+    for i in range(n_thread):
+        p.apply_async(worker, args=(sub_lists[i], save_GT_dir))
+    print(&quotWaiting for all subprocesses done...&quot)
+    p.close()
+    p.join()
+    end = time.time()
+    print(&quotAll subprocesses done. Using time {} sec.&quot.format(<a id="change">end - start</a>))
+
+
+def worker(GT_paths, save_GT_dir):</code></pre><h3>After Change</h3><pre><code class='java'>
+    pool = Pool(n_thread)
+    for path in img_list:
+        pool.apply_async(worker,
+            args=<a id="change">(path, save_folder, crop_sz, step, thres_sz, compression_level)</a>,
+            callback=update)
+    pool.close()
+    pool.join()</code></pre>

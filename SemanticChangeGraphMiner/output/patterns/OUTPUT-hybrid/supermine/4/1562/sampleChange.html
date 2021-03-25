@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    Y_metadata_list.append(Y_metadata_i)
+
+                val = self.site_derivatives_ep(Y[index], tau[index], v[index], Y_metadata_i)
+                dlik_dtheta[<a id="change">:, index</a>] = val.ravel()
+
+            f = partial(self.integrate)
+            quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten())))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    Y_metadata_list.append(Y_metadata_i)
+
+            if quad_mode == &quotgk&quot:
+                <a id="change">f = partial(self.integrate_gk)</a>
+                quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten()), Y_metadata_list))
+                quads = np.vstack(quads)
+                quads.reshape(self.size, shape[0], shape[1])
+            elif quad_mode == &quotgh&quot:</code></pre>

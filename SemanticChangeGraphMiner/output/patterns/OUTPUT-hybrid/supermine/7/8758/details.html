@@ -1,0 +1,28 @@
+<html><h3>19fbae4ea6092bfc69e4f828febbd15f72365311,cesium/features/cadence_features.py,,delta_t_hist,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def delta_t_hist(t, nbins=50):
+    Build histogram of all possible delta_t&quots without storing every value
+    <a id="change">hist = np.zeros(nbins, dtype=&quotint&quot)</a>
+    <a id="change">bins = np.linspace(0, max(t) - min(t), nbins + 1)</a>
+    for i in range(len(t)):
+        hist += np.histogram(t[i] - t[:i], bins=bins)[0]
+        hist += np.histogram(t[i + 1:] - t[i], bins=bins)[0]
+    <a id="change">return hist / 2</a>  &#47&#47 Double-counts since we loop over every pair twice
+
+
+def normalize_hist(hist, total_time):</code></pre><h3>After Change</h3><pre><code class='java'>
+    and then aggregate the result to have `nbins` total values.
+    
+    f, x = np.histogram(t, bins=conv_oversample * nbins)
+    <a id="change">g = np.convolve(f, f[::-1])[len(f) - 1:]</a>  &#47&#47 Discard negative domain
+    g[0] -= len(t)  &#47&#47 First bin is double-counted because of i=j terms
+    <a id="change">hist = g.reshape((-1, conv_oversample)).sum(axis=1)</a>  &#47&#47 Combine bins
+    <a id="change">return hist</a>
+
+
+def normalize_hist(hist, total_time):
+    Normalize histogram such that integral from t_min to t_max equals 1.</code></pre><img src="34409997.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/19fbae4ea6092bfc69e4f828febbd15f72365311#diff-18b89c316eebfe270b903f39274553bde16096007d0e677541e2d0dd35697ec2L24' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 19fbae4ea6092bfc69e4f828febbd15f72365311</div><div id='time'> Time: 2016-11-10</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/features/cadence_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: delta_t_hist</div><BR><BR><div id='link'><a href='https://github.com/kbardool/keras-frcnn/commit/649325ff53812350688e3beea2979b0c7e62940a#diff-72e4443c0c57759cabf2a69a368fb4f6def1f2daa8ca2a596953a847f081d9efL26' target='_blank'>Link</a></div><div id='project'> Project Name: kbardool/keras-frcnn</div><div id='commit'> Commit Name: 649325ff53812350688e3beea2979b0c7e62940a</div><div id='time'> Time: 2017-06-15</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: keras_frcnn/data_generators.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: union</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L208' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR>

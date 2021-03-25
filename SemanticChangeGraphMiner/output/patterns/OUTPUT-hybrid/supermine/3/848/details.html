@@ -1,0 +1,64 @@
+<html><h3>4fde867a550b532a6bbc6ea82db69a0d902862f9,train.py,,,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Determine approximate time left for epoch
+        epoch_batches_left = len(dataloader) - (batch_i + 1)
+        time_left = datetime.timedelta(seconds=epoch_batches_left * (<a id="change">time.time()</a> - prev_time))
+        prev_time = time.time()
+        print(f"---- ETA {time_left}")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
+
+for epoch in range(opt.epochs):
+    start_time = <a id="change">time.time()</a>
+    for batch_i, (_, imgs, targets) in enumerate(dataloader):
+
+        batches_done = len(dataloader) * epoch + batch_i
+
+        imgs = Variable(imgs.to(device))
+        targets = Variable(targets.to(device), requires_grad=False)
+
+        optimizer.zero_grad()
+
+        loss = model(imgs, targets)
+
+        loss.backward()
+        optimizer.step()
+
+        &#47&#47 ----------------
+        &#47&#47   Log progress
+        &#47&#47 ----------------
+
+        print("\n---- [Epoch %d/%d, Batch %d/%d] ----" % (epoch, opt.epochs, batch_i, len(dataloader)))
+        for i in range(4):
+            print(
+                "[%s] [loss %f, x %f, y %f, w %f, h %f, conf %f, cls %f, cls_acc: %.2f%%, recall: %.5f, precision: %.5f]"
+                % (
+                    "Total" if i + 1 == 4 else "YOLO Layer %d" % (i + 1),
+                    model.losses[i]["loss"],
+                    model.losses[i]["x"],
+                    model.losses[i]["y"],
+                    model.losses[i]["w"],
+                    model.losses[i]["h"],
+                    model.losses[i]["conf"],
+                    model.losses[i]["cls"],
+                    model.losses[i]["cls_acc"],
+                    model.losses[i]["recall"],
+                    model.losses[i]["precision"],
+                )
+            )
+
+            &#47&#47 Tensorboard logging
+            for name, loss in model.losses[i].items():
+                loss_name = f"{name}_total" if i + 1 == 4 else f"{name}_{i+1}"
+                logger.scalar_summary(loss_name, loss, batches_done)
+
+        &#47&#47 Determine approximate time left for epoch
+        epoch_batches_left = len(dataloader) - (batch_i + 1)
+        time_left = datetime.timedelta(seconds=epoch_batches_left * <a id="change">(time.time() - start_time)</a> / (batch_i + 1))
+        print(f"---- ETA {time_left}")
+
+        model.seen += imgs.size(0)</code></pre><img src="3966108.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/4fde867a550b532a6bbc6ea82db69a0d902862f9#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L74' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 4fde867a550b532a6bbc6ea82db69a0d902862f9</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/muse-lsl/commit/1398b69de5022a579d45375f8d7fa9addab7c694#diff-f975b9f8aa588f8e793e83532e857552dffc237af420fd09a57c4ec9bd86dba0L133' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/muse-lsl</div><div id='commit'> Commit Name: 1398b69de5022a579d45375f8d7fa9addab7c694</div><div id='time'> Time: 2018-05-21</div><div id='author'> Author: morrisondano@gmail.com</div><div id='file'> File Name: muselsl/record.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: record_direct</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/7978a2a13cbc73841de76f7f641894383af4f4e2#diff-897ef0f649ea3a8596b429beb28630c111b595c7378a5bb7eb578766fef62ecfL238' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 7978a2a13cbc73841de76f7f641894383af4f4e2</div><div id='time'> Time: 2018-06-26</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/data/url/handlers/keepalive/connection_manager.py</div><div id='class'> Class Name: ConnectionManager</div><div id='method'> Method Name: cleanup_broken_connections</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/c2abce56431e874d0968658bffd56d589036445c#diff-e4e7f1e5e0d932fbf1b862fe0d27d734295bf0c1420417aa48029e4247e29091L46' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: c2abce56431e874d0968658bffd56d589036445c</div><div id='time'> Time: 2017-11-04</div><div id='author'> Author: mathew@mathewsavage.com</div><div id='file'> File Name: mlxtend/utils/counter.py</div><div id='class'> Class Name: Counter</div><div id='method'> Method Name: update</div><BR>

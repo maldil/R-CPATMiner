@@ -1,0 +1,27 @@
+<html><h3>e2ec9a36878944e2157d2dfd03b81368b633939f,ptan/agent.py,DQNAgent,__call__,#DQNAgent#,44
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            v = v.cuda()
+        q = self.dqn_model(v)
+        actions = self.action_selector(q)
+        <a id="change">return actions.data.cpu().numpy()</a>
+
+
+class TargetNet:
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        self.action_selector = action_selector
+
+    def __call__(self, observations, states):
+        v = Variable(<a id="change">torch.FloatTensor(observations)</a>)
+        if env_params.get().cuda_enabled:
+            v = v.cuda()
+        q_v = self.dqn_model(v)
+        q = q_v.data.cpu().numpy()
+        actions = self.action_selector(q)
+        <a id="change">return actions, states</a>
+
+
+class TargetNet:
+    </code></pre><img src="36551048.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/e2ec9a36878944e2157d2dfd03b81368b633939f#diff-6dda8aba3ea5a9c179631bc7052d029cc34bfbbbecaf23bd594e5bd178910921L45' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: e2ec9a36878944e2157d2dfd03b81368b633939f</div><div id='time'> Time: 2017-10-03</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ptan/agent.py</div><div id='class'> Class Name: DQNAgent</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/nerox8664/pytorch2keras/commit/7e393ee9a334ff30b264ac2c822d3cda45ac9da8#diff-b7695085bf7c776f006c190fa5a969d3c0b9e0c7b17eb02eb347b797721cb0cdL13' target='_blank'>Link</a></div><div id='project'> Project Name: nerox8664/pytorch2keras</div><div id='commit'> Commit Name: 7e393ee9a334ff30b264ac2c822d3cda45ac9da8</div><div id='time'> Time: 2019-01-01</div><div id='author'> Author: nerox8664@gmail.com</div><div id='file'> File Name: tests/layers/constants/constant.py</div><div id='class'> Class Name: FTest</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/milesial/Pytorch-UNet/commit/4063565295aae8f739b006ac5ab814c12bd8a81e#diff-60507ec3b7e34a0098fe1774e4ae10d6bfba2006dfc8c266079d34ab7eaa4a0dL31' target='_blank'>Link</a></div><div id='project'> Project Name: milesial/Pytorch-UNet</div><div id='commit'> Commit Name: 4063565295aae8f739b006ac5ab814c12bd8a81e</div><div id='time'> Time: 2017-08-17</div><div id='author'> Author: milesial@users.noreply.github.com</div><div id='file'> File Name: myloss.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dice_coeff</div><BR>

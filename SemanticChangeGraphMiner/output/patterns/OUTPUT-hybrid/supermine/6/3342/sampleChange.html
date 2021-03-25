@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 %%
+initial_value = 1.2
+a = <a id="change">tf.Variable(initial_value)</a>
+
+&#47&#47 %% [markdown]
+&#47&#47 Create `Checkpoint` object:
+
+&#47&#47 %%
+<a id="change">ckpt = tf.train.Checkpoint(a=a)</a>
+<a id="change">manager = tf.train.CheckpointManager(ckpt, output_logdir, max_to_keep=3)</a>
+
+&#47&#47 %% [markdown]
+&#47&#47 Save the variable `a` and change its value right after:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+print_task = ExecuteCallback(callback=print_cb)
+
+&#47&#47 We group these tasks and specify a period of `100` steps for them
+fast_tasks = MonitorTaskGroup(<a id="change">[model_task, elbo_task, print_task]</a>, period=100)
+
+&#47&#47 We also want to see the model&quots fit during the optimisation
+<a id="change">image_task = ImageToTensorBoard(output_logdir, plot_model, "samples_image")</a>
+
+&#47&#47 We typically don&quott want to plot too frequently during optimisation,
+&#47&#47 which is why we specify a larger period for this task.
+slow_taks = MonitorTaskGroup(image_task, period=500)
+<a id="change">monitor = Monitor(fast_tasks, slow_taks)</a>
+
+
+def monitored_training_loop(epochs: int):
+    tf_optimization_step = tf.function(optimization_step)</code></pre>

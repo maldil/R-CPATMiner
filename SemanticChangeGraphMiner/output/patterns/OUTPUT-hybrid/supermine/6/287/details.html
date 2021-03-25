@@ -1,0 +1,19 @@
+<html><h3>fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b,torchsample/constraints.py,MaxNorm,__call__,#MaxNorm#,121
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.lagrangian:
+            w = module.weight
+            norm = th.norm(w,2,self.axis)
+            return self.scale * th.sum(<a id="change">th.clamp(norm-self.value,0,1e-15)</a>)
+        else:
+            w = module.weight
+            norm = th.norm(w,2,self.axis).expand_as(w) / float(self.value)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.lagrangian:
+            w = module.weight
+            norm_diff = th.norm(w,2,self.axis).sub(self.value)
+            return self.scale * th.sum(<a id="change">norm_diff.gt(0).float().mul(norm_diff)</a>)
+        else:
+            module.weight.data = th.renorm(module.weight.data, 2, self.axis, self.value)
+</code></pre><img src="1673321.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b#diff-1a828297af3a3bb20ca9652897ebdcbc818ca7935f585bf095213bec34bbf9c0L122' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b</div><div id='time'> Time: 2017-05-01</div><div id='author'> Author: ncullen@Nicks-MacBook-Pro.local</div><div id='file'> File Name: torchsample/constraints.py</div><div id='class'> Class Name: MaxNorm</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b#diff-1a828297af3a3bb20ca9652897ebdcbc818ca7935f585bf095213bec34bbf9c0L86' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b</div><div id='time'> Time: 2017-05-01</div><div id='author'> Author: ncullen@Nicks-MacBook-Pro.local</div><div id='file'> File Name: torchsample/constraints.py</div><div id='class'> Class Name: UnitNorm</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b#diff-1a828297af3a3bb20ca9652897ebdcbc818ca7935f585bf095213bec34bbf9c0L147' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: fb5b85e7f4c9af0190019ea8a8bcaa3e4a1e6d6b</div><div id='time'> Time: 2017-05-01</div><div id='author'> Author: ncullen@Nicks-MacBook-Pro.local</div><div id='file'> File Name: torchsample/constraints.py</div><div id='class'> Class Name: NonNeg</div><div id='method'> Method Name: __call__</div><BR>

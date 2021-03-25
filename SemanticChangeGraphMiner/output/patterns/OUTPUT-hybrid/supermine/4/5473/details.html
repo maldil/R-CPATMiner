@@ -1,0 +1,32 @@
+<html><h3>4707229d41b18ac74ff186bf9a6874035c378719,common.py,,update_loglosses,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    test_logloss = log_loss(test_data["target"].as_matrix(), submission_test_data["probability"].as_matrix())
+
+    &#47&#47 TODO: Get the postgres submission id
+    cursor.execute(<a id="change">"UPDATE submissions SET validation_logloss={} AND test_logloss={} WHERE id = &quot{}&quot".format(validation_logloss, test_logloss, )</a>)
+    postgres_db.commit()
+    cursor.close()
+    postgres_db.close()</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_data.sort_values("id", inplace=True)
+
+    &#47&#47 Calculate logloss
+    submission_validation_data = <a id="change">submission.loc[submission["id"].isin(validation_data["id"].as_matrix())].copy()</a>
+    submission_validation_data.sort_values("id", inplace=True)
+    submission_test_data = submission.loc[submission["id"].isin(test_data["id"].as_matrix())].copy()
+    submission_test_data.sort_values("id", inplace=True)
+    validation_logloss = log_loss(validation_data["target"].as_matrix(), submission_validation_data["probability"].as_matrix())
+    test_logloss = log_loss(test_data["target"].as_matrix(), submission_test_data["probability"].as_matrix())
+
+    &#47&#47 Get the submission Postgres id
+    query = "SELECT s.id FROM submissions s INNER JOIN users u ON s.user_id = u.id WHERE u.username = &quot{}&quot AND s.inserted_at = &quot{}&quot".format(mongo_submission["username"], mongo_submission["created"])
+    cursor.execute(query)
+    submission_id = cursor.fetchone()[0]
+
+    <a id="change">query = "UPDATE submissions SET validation_logloss={}, test_logloss={} WHERE id = &quot{}&quot".format(validation_logloss, test_logloss, submission_id)</a>
+    cursor.execute(query)
+    print("Updated {} with validation_logloss={} and test_logloss={}".format(submission_id, validation_logloss, test_logloss))
+    postgres_db.commit()
+    cursor.close()</code></pre><img src="23480325.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/numerai/submission-criteria/commit/4707229d41b18ac74ff186bf9a6874035c378719#diff-306e28897a4282ae3852eb0568483edafeed04a979ec5b8afa2b2ee685f2148dL73' target='_blank'>Link</a></div><div id='project'> Project Name: numerai/submission-criteria</div><div id='commit'> Commit Name: 4707229d41b18ac74ff186bf9a6874035c378719</div><div id='time'> Time: 2017-11-10</div><div id='author'> Author: xander@numer.ai</div><div id='file'> File Name: common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: update_loglosses</div><BR><BR><div id='link'><a href='https://github.com/datascienceinc/Skater/commit/8c6336d24b905d39f88396e50c8cb23870c38bfe#diff-8617490ec49d27286192534236ed7620591bb71879c15e88f9a23e446a69feacL66' target='_blank'>Link</a></div><div id='project'> Project Name: datascienceinc/Skater</div><div id='commit'> Commit Name: 8c6336d24b905d39f88396e50c8cb23870c38bfe</div><div id='time'> Time: 2018-02-18</div><div id='author'> Author: pramitchoudhary@ip-172-30-0-2.us-west-2.compute.internal</div><div id='file'> File Name: skater/core/global_interpretation/interpretable_models/rule_lists.py</div><div id='class'> Class Name: BayesianRuleLists</div><div id='method'> Method Name: discretizer</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/fc06baef499b8e0a6d677d4a19fa983f173ad06c#diff-76c1b698a39908553a336a1284b06031ca2bfaea2db2293149b825edc61d4284L486' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: fc06baef499b8e0a6d677d4a19fa983f173ad06c</div><div id='time'> Time: 2020-07-28</div><div id='author'> Author: 34657725+jeremiedbb@users.noreply.github.com</div><div id='file'> File Name: sklearn/cluster/_kmeans.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _kmeans_single_lloyd</div><BR><BR><div id='link'><a href='https://github.com/zegami/image-similarity-clustering/commit/87357e38b749168c806ed57614e08ad9771b191c#diff-2a43d04c51b91165352524aa212ec28d88850e7cc615b12ab7e07aa045bc41eaL19' target='_blank'>Link</a></div><div id='project'> Project Name: zegami/image-similarity-clustering</div><div id='commit'> Commit Name: 87357e38b749168c806ed57614e08ad9771b191c</div><div id='time'> Time: 2020-10-14</div><div id='author'> Author: douglawrence0010@gmail.com</div><div id='file'> File Name: tsne_reducer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: tsne</div><BR>

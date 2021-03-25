@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for yi in range(obs_shape[0]):
+        for xi in range(obs_shape[1]):
+            new_x_gen_np = sess.run(new_x_gen, {x_sample: x_gen})
+            x_gen[:,yi,xi,:] = <a id="change">new_x_gen_np[:,yi,xi,:].copy()</a>
+    return x_gen
+
+&#47&#47 get loss gradients over multiple GPUs
+xs = []</code></pre><h3>After Change</h3><pre><code class='java'>
+    x_gen = [np.zeros((args.batch_size,) + obs_shape, dtype=np.float32) for i in range(args.nr_gpu)]
+    for yi in range(obs_shape[0]):
+        for xi in range(obs_shape[1]):
+            new_x_gen_np = sess.run(new_x_gen, <a id="change">{xs[i]: x_gen[i] for i in range(args.nr_gpu)}</a>)
+            for i in range(args.nr_gpu):
+                x_gen[i][:,yi,xi,:] = new_x_gen_np[i][:,yi,xi,:]
+    return np.concat(x_gen, axis=0)</code></pre>

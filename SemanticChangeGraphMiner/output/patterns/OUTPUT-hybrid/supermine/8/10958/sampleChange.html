@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    time_series = data_management.parse_and_store_ts_data(data_file_path,
+                      TEMP_DIR, header_path, cleanup_archive=False,
+                      cleanup_header=False)
+    <a id="change">for ts in time_series:
+        assert all(f in [&quotmeta1&quot, &quotmeta2&quot, &quotmeta3&quot]
+                   for f in ts.meta_features.keys())
+        assert(len(ts.time) == len(ts.measurement)
+               and len(ts.time) == len(ts.error))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    time_series = data_management.parse_and_store_ts_data(
+        data_file_path, TEMP_DIR, header_path, cleanup_archive=False,
+        cleanup_header=False)
+    <a id="change">for ts in time_series:
+        assert isinstance(ts, str)
+        assert os.path.exists(ts)</a>
+</code></pre>

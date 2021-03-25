@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 save a dump of all sentences and the encoded latent space
+            if split == &quotvalid&quot:
+                dump = {&quottarget_sents&quot:tracker[&quottarget_sents&quot], &quotz&quot:tracker[&quotz&quot].tolist()}
+                <a id="change">os.makedirs(&quotdumps/&quot+ts)</a>
+                with open(os.path.join(&quotdumps/&quot+ts+&quot/valid_E%i.json&quot%epoch), &quotw&quot) as dump_file:
+                    json.dump(dump,dump_file)
+
+            &#47&#47 save checkpoint</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 save a dump of all sentences and the encoded latent space
+            if split == &quotvalid&quot:
+                dump = {&quottarget_sents&quot:tracker[&quottarget_sents&quot], &quotz&quot:tracker[&quotz&quot].tolist()}
+                <a id="change">if not os.path.exists(os.path.join(&quotdumps&quot, ts)):
+                    os.makedirs(&quotdumps/&quot+ts)
+               </a> with open(os.path.join(&quotdumps/&quot+ts+&quot/valid_E%i.json&quot%epoch), &quotw&quot) as dump_file:
+                    json.dump(dump,dump_file)
+
+            &#47&#47 save checkpoint</code></pre>

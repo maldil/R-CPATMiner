@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                src_domain, tar_domain = scipy.io.loadmat(src), scipy.io.loadmat(tar)
+                Xs, Ys, Xt, Yt = src_domain[&quotfeas&quot], src_domain[&quotlabel&quot], tar_domain[&quotfeas&quot], tar_domain[&quotlabel&quot]
+                jda = JDA(Xs, Ys, Xt, Yt, kernel_type=&quotprimal&quot, dim=30, lamb=1, gamma=1)
+                acc, ypre, list_acc = <a id="change">jda.fit_predict()</a>
+                print(acc)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                src, tar = &quotdata/&quot + domains[i], &quotdata/&quot + domains[j]
+                src_domain, tar_domain = scipy.io.loadmat(src), scipy.io.loadmat(tar)
+                Xs, Ys, Xt, Yt = src_domain[&quotfeas&quot], src_domain[&quotlabel&quot], tar_domain[&quotfeas&quot], tar_domain[&quotlabel&quot]
+                <a id="change">jda</a> = JDA(kernel_type=&quotprimal&quot, dim=30, lamb=1, gamma=1)
+                acc, ypre, list_acc = <a id="change">jda.fit_predict(Xs, Ys, Xt, Yt)</a>
+                print(acc)
+</code></pre>

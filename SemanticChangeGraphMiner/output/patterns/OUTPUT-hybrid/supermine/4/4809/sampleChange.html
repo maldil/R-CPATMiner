@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            projectId=project_id,
+            region=region).execute()
+        cluster_list = result[&quotclusters&quot]
+        <a id="change">cluster = [c
+                   for c in cluster_list
+                   if c[&quotclusterName&quot] == cluster_name][0]</a>
+        if cluster[&quotstatus&quot][&quotstate&quot] == &quotERROR&quot:
+            raise Exception(result[&quotstatus&quot][&quotdetails&quot])
+        if cluster[&quotstatus&quot][&quotstate&quot] == &quotRUNNING&quot:
+            print("Cluster created.")</code></pre><h3>After Change</h3><pre><code class='java'>
+    Wait for cluster creation.
+    print(&quotWaiting for cluster creation...&quot)
+
+    <a id="change">while True:
+        if not waiting_callback:
+            print("Cluster created.")
+            break
+
+
+&#47&#47 [START dataproc_list_clusters_with_detail]
+</a>def list_clusters_with_details(dataproc, project, region):
+    List the details of clusters in the region.
+    for cluster in dataproc.list_clusters(project, region):
+        print((&quot{} - {}&quot.format(cluster.cluster_name,</code></pre>

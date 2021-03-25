@@ -1,0 +1,22 @@
+<html><h3>85d879803c88aa036934d36977a10b5d28b70aaa,debug_toolbar/views.py,,sql_explain,#,21
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    from debug_toolbar.panels.sql import reformat_sql
+    sql = request.GET.get(&quotsql&quot, &quot&quot)
+    if sql.lower().startswith(&quotselect&quot):
+        params = <a id="change">simplejson.loads(request.GET.get(&quotparams&quot, &quot&quot))</a>
+        cursor = connection.cursor()
+        cursor.execute("EXPLAIN %s" % (sql,), params)
+        headers = [d[0] for d in cursor.description]
+        result = cursor.fetchall()</code></pre><h3>After Change</h3><pre><code class='java'>
+    sql = request.GET.get(&quotsql&quot, &quot&quot)
+    params = request.GET.get(&quotparams&quot, &quot&quot)
+    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    <a id="change">if hash != request.GET.get(&quothash&quot, &quot&quot):
+        return HttpResponse(&quot&lt;h3&gt;Tamper alert&lt;/h3&gt;&quot) &#47&#47 SQL Tampering alert
+   </a> if sql.lower().startswith(&quotselect&quot):
+        params = simplejson.loads(params)
+        cursor = connection.cursor()
+        cursor.execute("EXPLAIN %s" % (sql,), params)</code></pre><img src="13681328.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/85d879803c88aa036934d36977a10b5d28b70aaa#diff-b5e824a73cdcc7c9e616cfc8237b67792ad3eb098691872bf1833ae06f314782L33' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 85d879803c88aa036934d36977a10b5d28b70aaa</div><div id='time'> Time: 2008-09-24</div><div id='author'> Author: rob@cogit8.org</div><div id='file'> File Name: debug_toolbar/views.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sql_explain</div><BR><BR><div id='link'><a href='https://github.com/sentinel-hub/eo-learn/commit/d3baf96418c790cad57c007cf43224866844ae99#diff-f7532a8b1f3bad6e878ae9b30853c6c714cd0647243cbbe831e657353070669eL744' target='_blank'>Link</a></div><div id='project'> Project Name: sentinel-hub/eo-learn</div><div id='commit'> Commit Name: d3baf96418c790cad57c007cf43224866844ae99</div><div id='time'> Time: 2019-11-29</div><div id='author'> Author: matic.lubej@sinergise.com</div><div id='file'> File Name: core/eolearn/core/eodata.py</div><div id='class'> Class Name: EOPatch</div><div id='method'> Method Name: load_aws</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/386917355bbe616ec57881ba8a950a49cfbef9b0#diff-2b23def1076a1f2592d10b040f8722adea9c60f8fc9054509341a803c97383b7L116' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: 386917355bbe616ec57881ba8a950a49cfbef9b0</div><div id='time'> Time: 2015-12-18</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/parallel_percrank_train.py</div><div id='class'> Class Name: ParallelRanker</div><div id='method'> Method Name: train</div><BR>

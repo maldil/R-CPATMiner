@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    device = torch.device(&quotcuda&quot if opt.cuda else &quotcpu&quot)
+    &#47&#47========= Loading Dataset =========&#47&#47
+    <a id="change">data = pickle.load(open(opt.data, &quotrb&quot))</a>
+    opt.max_token_seq_len = data[&quotsettings&quot].max_len
+    opt.src_pad_idx = data[&quotvocab&quot][&quotsrc&quot].vocab.stoi[Constants.PAD_WORD]
+    opt.trg_pad_idx = data[&quotvocab&quot][&quottrg&quot].vocab.stoi[Constants.PAD_WORD]
+
+    opt.src_vocab_size = len(data[&quotvocab&quot][&quotsrc&quot].vocab)
+    <a id="change">opt.trg_vocab_size = len(data[&quotvocab&quot][&quottrg&quot].vocab)</a>
+    training_data, validation_data = prepare_dataloaders(data, device, opt.batch_size)
+
+    &#47&#47========= Preparing Model =========&#47&#47
+    if opt.embs_share_weight:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if opt.data_pkl:
+        training_data, validation_data = prepare_dataloaders(opt, device)
+    elif all(<a id="change">(opt.train_path, opt.val_path)</a>):
+        training_data, validation_data = prepare_dataloaders_from_bpe_files(opt, device)
+    else:
+        raise</code></pre>

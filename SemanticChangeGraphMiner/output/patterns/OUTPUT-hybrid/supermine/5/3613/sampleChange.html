@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        collected = transformed_df.collect()
+        for row in collected:
+            predictions = row[output_col]
+            <a id="change">self.assertEqual(len(predictions), self.appModel.numOutputFeatures())</a>
+            &#47&#47 TODO: actually check the value of the output to see if they are reasonable
+            &#47&#47 e.g. -- compare to just running with keras.
+
+    def test_featurizer_in_pipeline(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Note: keras features may be multi-dimensional np arrays, but transformer features
+        &#47&#47 will be 1-d vectors. Regardless, the dimensions should add up to the same.
+        self.assertEqual(np.prod(self.kerasFeatures.shape), np.prod(features.shape))
+        <a id="change">kerasReshaped = self.kerasFeatures.reshape(self.kerasFeatures.shape[0], -1)</a>
+        np.testing.assert_array_almost_equal(kerasReshaped, features, decimal=6)
+
+    def test_featurizer_in_pipeline(self):
+        </code></pre>

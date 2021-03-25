@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47string check required because if nodes not present networkx
+        &#47&#47automatically adds those nodes
+        <a id="change">if u == v:
+            raise Exceptions.SelfLoopError("Self Loops are not allowed")
+       </a> <a id="change">if not(isinstance(u, str) and isinstance(v, str)):
+            raise TypeError("Name of nodes must be strings")
+
+       </a> nx.DiGraph.add_edge(self, u, v)
+
+        self._update_node_parents([u, v])
+        self._update_node_rule_for_parents([u, v])</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        &#47&#47string check required because if nodes not present networkx
+        &#47&#47automatically adds those nodes
+        <a id="change">self._check_node_string([u, v])</a>
+        if <a id="change">self._check_graph([(u, v)], delete_graph=False)</a>:
+            nx.DiGraph.add_edge(self, u, v)
+
+        self._update_node_parents([u, v])</code></pre>

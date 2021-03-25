@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        summarize = m.group(4) == &quots&quot
+        hidden = int(m.group(6))
+        l = TransposedSummarizingRNN(input[1], hidden, type, direction, dim, summarize)
+        <a id="change">return l.get_shape(input), [l]</a>
+
+    def build_dropout(self, input, block):
+        pattern = re.compile(r&quot(?P&lt;type&gt;Do)(?P&lt;name&gt;{\w+})?&quot)
+        m = pattern.match(block)</code></pre><h3>After Change</h3><pre><code class='java'>
+        dim = m.group(3)  == &quoty&quot
+        summarize = m.group(4) == &quots&quot
+        hidden = int(m.group(6))
+        <a id="change">l</a> = TransposedSummarizingRNN(input[1], hidden, type, direction, dim, summarize)
+
+        <a id="change">return l.get_shape(input), self.get_layer_name(type, m.group(&quotname&quot)), l</a>
+
+    def build_dropout(self, input, block):
+        pattern = re.compile(r&quot(?P&lt;type&gt;Do)(?P&lt;name&gt;{\w+})?&quot)
+        m = pattern.match(block)</code></pre>

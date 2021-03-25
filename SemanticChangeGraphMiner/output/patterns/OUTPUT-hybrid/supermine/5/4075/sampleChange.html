@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                    &quotINDEX_%s_data.%i&quot % (pdbind_set, version))
+
+                if isfile(csv_file):
+                    <a id="change">self._set_ids[pdbind_set] = []</a>
+                    self._set_act[pdbind_set] = []
+                    for row in csv.reader(_csv_file_filter(csv_file), delimiter=&quot &quot):
+                        pdbid = row[0]
+                        f = join(self.home, self.id, &quot%s_pocket.pdb&quot % self.id)
+                        if not isfile(f):
+                            continue
+                        <a id="change">self._set_ids[pdbind_set].append(pdbid)</a>
+                        self._set_act[pdbind_set].append(float(row[3]))
+                    self.sets[pdbind_set] = dict(zip(self._set_ids[pdbind_set],
+                                                     self._set_act[pdbind_set]))
+            if len(self.sets) == 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+                                              &quotact&quot],
+                                       comment=&quot&#47&#47&quot)
+                    self._set_ids[pdbind_set] = data[&quotpdbid&quot].tolist()
+                    <a id="change">self._set_act[pdbind_set] = data[&quotact&quot].tolist()</a>
+                    self.sets[pdbind_set] = dict(zip(self._set_ids[pdbind_set],
+                                                     self._set_act[pdbind_set]))
+            if len(self.sets) == 0:
+                raise Exception(&quotThere is no PDBbind set availabe&quot)</code></pre>

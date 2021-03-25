@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)
+                for entry in <a id="change">entries.values()</a>
+            ]
+        )
+
+    def _is_existing(self, journal: &quotJournalEditor&quot, entry: Directive) -&gt; bool:</code></pre><h3>After Change</h3><pre><code class='java'>
+        uncleared_entries = defaultdict(list)
+        for hash_ in entries:
+            &#47&#47 number of matching cleared entries in journal
+            <a id="change">n = len(similar_entries_in_journal(entries[hash_][0],
+                                               journal.entries,
+                                               self.comparator))</a>
+            &#47&#47 If journal has n cleared entries for this hash, pick remaining
+            <a id="change">for entry in entries[hash_][n:]:
+                &#47&#47 add importer name as sorce description to source postings
+                self._add_description(entry)
+                &#47&#47 balance amount
+                self.balance_amounts(entry)
+                uncleared_entries[hash_].append(entry)
+
+       </a> results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)
+                for entry in itertools.chain.from_iterable(uncleared_entries.values())
+            ]</code></pre>

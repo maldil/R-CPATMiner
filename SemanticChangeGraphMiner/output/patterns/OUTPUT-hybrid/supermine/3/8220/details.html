@@ -1,0 +1,19 @@
+<html><h3>364cd40384ad4f9cda4df949d0b1bd63abdcf6df,torchsample/transforms/image_transforms.py,Contrast,__call__,#Contrast#,216
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        x_gs = Grayscale(keep_channels=True)(x)
+        x_gs.fill_(<a id="change">x_gs</a>[<a id="change">1</a>].mean())
+
+        alpha = 1.0 + random.uniform(-self.var, self.var)
+        x = _blend(x, x_gs, alpha)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        channel_means = x.mean(1)
+        for i in range(2,<a id="change">x.dim()</a>):
+            channel_means = channel_means.mean(i)
+        channel_means = channel_means.expand_as(x)
+</code></pre><img src="31809133.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/364cd40384ad4f9cda4df949d0b1bd63abdcf6df#diff-511bc83b5412852ac488cc24e3fbc230b0233c39c7a7f05216bee4ec132395e0L217' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 364cd40384ad4f9cda4df949d0b1bd63abdcf6df</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/image_transforms.py</div><div id='class'> Class Name: Contrast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/06a07d00d11fb103a079a9adb0de4c3865a7f69e#diff-2a93c03f28550ec68b1b7cfcae940b96788d84d85ed53de6832d72f872d549d1L138' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: 06a07d00d11fb103a079a9adb0de4c3865a7f69e</div><div id='time'> Time: 2017-08-19</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/layers.py</div><div id='class'> Class Name: BloomEmbedding</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/4586366c1018257dd448d62f1fc7534e3f5a4338#diff-a597aecc59e41b41f533f66301835a79e40040cef4cd699cd8e069233c4d67c7L49' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 4586366c1018257dd448d62f1fc7534e3f5a4338</div><div id='time'> Time: 2017-11-23</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: enjoy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

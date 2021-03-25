@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    expect_weights = np.array([0.303, 1.066, 2.329])
+
+    np.testing.assert_almost_equal(lr.w_, expect_weights, 3)
+    acc = sum(y_pred == y) / <a id="change">len(y)</a>
+    assert(acc == 1.0)
+
+
+def test_l2_regularization_sgd():</code></pre><h3>After Change</h3><pre><code class='java'>
+    expect_weights = np.array([0.153, 1.055, 2.284])
+
+    np.testing.assert_almost_equal(lr.w_, expect_weights, 3)
+    <a id="change">y_pred = lr.predict(X)</a>
+    acc = np.sum(y == y_pred, axis=0) / <a id="change">float(X.shape[0])</a>
+    assert acc == 1.0, "Acc: %s" % acc
+
+
+def test_l2_regularization_sgd():</code></pre>

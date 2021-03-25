@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                   str_html))
+
+                    &#47&#47 Save gene information when last epoch.
+                    <a id="change">if epoch == (self.num_epoch - 1):
+                        lst_scripts.append([lst_genom, str_html, noise])
+
+            &#47&#47 Save weights of network each epoch.
+           </a> self.generator.save_weights(self.util.join_path(self.weight_dir,
+                                                            self.gen_weight_file.replace(&quot*&quot, str(epoch))))
+            discriminator.save_weights(self.util.join_path(self.weight_dir,
+                                                           self.dis_weight_file.replace(&quot*&quot, str(epoch))))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    &#47&#47 Evaluate generated injection code.
+                    for eval_place in self.eval_place_list:
+                        &#47&#47 Build html syntax.
+                        <a id="change">html = self.template.render({eval_place: str_html})</a>
+                        <a id="change">with codecs.open(self.eval_html_path, &quotw&quot, encoding=&quotutf-8&quot) as fout:
+                            fout.write(html)
+
+                        &#47&#47 Evaluate individual using selenium.
+                       </a> selenium_score, error_flag = self.util.check_individual_selenium(self.obj_browser,
+                                                                                         self.eval_html_path)
+                        if error_flag:
+                            continue</code></pre>

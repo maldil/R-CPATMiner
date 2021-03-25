@@ -1,0 +1,29 @@
+<html><h3>3c956a6c512724ca3f75062ffcae40dfc0568427,skopt/optimizer/optimizer.py,Optimizer,__init__,#Optimizer#,156
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self._initial_samples = None
+        self._initial_point_generator = initial_point_generator
+        <a id="change">if init_point_gen_kwargs is None:
+            init_point_gen_kwargs = dict()
+       </a> self.init_point_gen_kwargs = init_point_gen_kwargs
+        if initial_point_generator != "random" and \
+                isinstance(initial_point_generator, str):
+            if initial_point_generator == "sobol":</code></pre><h3>After Change</h3><pre><code class='java'>
+        self._initial_point_generator = cook_initial_point_generator(
+            initial_point_generator)
+
+        <a id="change">if self._initial_point_generator is not None:
+            transformer = self.space.get_transformer()
+            self._initial_samples = self._initial_point_generator.generate(
+                self.space.dimensions, n_initial_points,
+                random_state=self.rng.randint(0, np.iinfo(np.int32).max))
+            self.space.set_transformer(transformer)
+
+        &#47&#47 record categorical and non-categorical indices
+       </a> self._cat_inds = []
+        self._non_cat_inds = []
+        for ind, dim in enumerate(self.space.dimensions):
+            if isinstance(dim, Categorical):</code></pre><img src="38461930.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/3c956a6c512724ca3f75062ffcae40dfc0568427#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L156' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 3c956a6c512724ca3f75062ffcae40dfc0568427</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/a1292078d2016dff4228fff869430ab4ace79b6b#diff-a8d9a5bac3d887341b048e769eb859857af8b3f085d42952b935f75f85f27641L92' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: a1292078d2016dff4228fff869430ab4ace79b6b</div><div id='time'> Time: 2019-01-04</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/datasets/sdss_corrected_spectra.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fetch_sdss_corrected_spectra</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/24b57d44d27fc6a9a9c4dff4cac5c7c7d8025e67#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L156' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 24b57d44d27fc6a9a9c4dff4cac5c7c7d8025e67</div><div id='time'> Time: 2020-02-20</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: __init__</div><BR>

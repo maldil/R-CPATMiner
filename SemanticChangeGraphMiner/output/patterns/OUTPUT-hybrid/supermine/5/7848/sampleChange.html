@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            np.array(image.origin).reshape(3, 1),
+        ]
+    )
+    <a id="change">affine = np.vstack([affine, np.array([0, 0, 0, 1.0])])</a>
+    <a id="change">affine[:2, :] *= -1</a>
+    new_img = nib.Nifti1Image(array_data, affine)
+    return new_img
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    import nibabel as nib
+    tmpfile = mktemp(suffix=".nii.gz")
+    image.to_filename(tmpfile)
+    new_img = <a id="change">nib.load(tmpfile)</a>
+    &#47&#47 os.remove(tmpfile) &#47&#47&#47&#47 Don&quott remove tmpfile as nibabel lazy loads the data.
+    return new_img
+
+</code></pre>

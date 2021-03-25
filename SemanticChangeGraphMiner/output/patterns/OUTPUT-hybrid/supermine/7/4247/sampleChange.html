@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.running_var.fill_(1)
+        if self.affine:
+            self.weight.data.fill_(1)
+            <a id="change">self.bias.data.zero_()</a>
+
+    def forward(self, x):
+        return inplace_abn(x, self.weight, self.bias, autograd.Variable(self.running_mean),
+                           autograd.Variable(self.running_var), self.training, self.momentum, self.eps,</code></pre><h3>After Change</h3><pre><code class='java'>
+        nn.init.constant_(self.running_var, 1)
+        if self.affine:
+            nn.init.constant_(self.weight, 1)
+            <a id="change">nn.init.constant_(self.bias, 0)</a>
+
+    def forward(self, x):
+        return inplace_abn(x, self.weight, self.bias, self.running_mean, self.running_var,
+                           self.training, self.momentum, self.eps, self.activation, self.slope)</code></pre>

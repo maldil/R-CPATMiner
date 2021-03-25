@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        words = map(self.stem_word, self._document.words)
+        words = filter(self._is_bonus_word, words)
+        <a id="change">word_counts = Counter(self.stem_word(w) for w in words)</a>
+        word_frequencies = word_counts.values()
+        max_word_frequency = <a id="change">1 if not word_frequencies else max(word_frequencies)</a>
+        <a id="change">significant_words = tuple(w for w, c in word_counts.items()
+            if c/max_word_frequency &gt; weight)</a>
+
+        <a id="change">return self._get_best_sentences(self._document.sentences,
+            sentences_count, self._rate_sentence_by_key_method,
+            significant_words)</a>
+
+    def _is_bonus_word(self, word):
+        return word in self._bonus_words
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        summarization_method = EdmundsonKeyMethod(self._document, self._stemmer,
+            self._bonus_words)
+
+        <a id="change">return summarization_method(sentences_count, weight)</a>
+
+    def title_method(self, sentences_count):
+        self.__check_null_words()
+</code></pre>

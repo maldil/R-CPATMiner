@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 mask_B \in [0, +0.5]
+
+        input_A = torch.Tensor(input_A).cuda()[None, :, :, :]
+        <a id="change">input_B</a> = <a id="change">torch</a>.Tensor(input_B).cuda()[None, :, :, :]
+        <a id="change">mask_B</a> = <a id="change">torch</a>.Tensor(mask_B).cuda()[None, :, :, :]
+
+        <a id="change">conv1_2</a> = self.model1(torch.cat((input_A / 100., input_B / 110., mask_B - .5), dim=1))
+        <a id="change">conv2_2</a> = self.model2(conv1_2[:, :, ::2, ::2])
+        <a id="change">conv3_3</a> = self.model3(conv2_2[:, :, ::2, ::2])
+        <a id="change">conv4_3</a> = self.model4(conv3_3[:, :, ::2, ::2])
+        <a id="change">conv5_3</a> = self.model5(conv4_3)
+        <a id="change">conv6_3</a> = self.model6(conv5_3)
+        <a id="change">conv7_3</a> = self.model7(conv6_3)
+
+        <a id="change">conv8_up</a> = self.model8up(conv7_3) + self.model3short8(conv3_3)
+        <a id="change">conv8_3</a> = self.model8(conv8_up)
+
+        if(self.dist):
+            <a id="change">out_cl</a> = self.upsample4(self.softmax(self.model_class(conv8_3) * .2))
+
+            <a id="change">conv9_up</a> = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            <a id="change">conv9_3</a> = self.model9(conv9_up)
+            <a id="change">conv10_up</a> = self.model10up(conv9_3) + self.model1short10(conv1_2)
+            <a id="change">conv10_2</a> = self.model10(conv10_up)
+            <a id="change">out_reg</a> = self.model_out(conv10_2) * 110
+
+            return (out_reg * 110, out_cl)
+        else:
+            <a id="change">conv9_up</a> = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            <a id="change">conv9_3</a> = self.model9(conv9_up)
+            <a id="change">conv10_up</a> = self.model10up(conv9_3) + self.model1short10(conv1_2)
+            <a id="change">conv10_2</a> = self.model10(conv10_up)
+            <a id="change">out_reg</a> = self.model_out(conv10_2)
+            return out_reg * 110
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 mask_B \in [0, +1.0]
+
+        input_A = torch.Tensor(input_A)[None, :, :, :]
+        <a id="change">input_B</a> = torch.Tensor(input_B)[None, :, :, :]
+        <a id="change">mask_B</a> = <a id="change">torch</a>.Tensor(mask_B)[None, :, :, :]
+        mask_B = mask_B - maskcent
+        
+        &#47&#47 input_A = torch.Tensor(input_A).cuda()[None, :, :, :]
+        &#47&#47 input_B = torch.Tensor(input_B).cuda()[None, :, :, :]
+        &#47&#47 mask_B = torch.Tensor(mask_B).cuda()[None, :, :, :]
+
+        <a id="change">conv1_2</a> = self.model1(torch.cat((input_A / 100., input_B / 110., mask_B), dim=1))
+        <a id="change">conv2_2</a> = self.model2(conv1_2[:, :, ::2, ::2])
+        <a id="change">conv3_3</a> = self.model3(conv2_2[:, :, ::2, ::2])
+        <a id="change">conv4_3</a> = self.model4(conv3_3[:, :, ::2, ::2])
+        <a id="change">conv5_3</a> = self.model5(conv4_3)
+        <a id="change">conv6_3</a> = self.model6(conv5_3)
+        <a id="change">conv7_3</a> = self.model7(conv6_3)
+
+        <a id="change">conv8_up</a> = self.model8up(conv7_3) + self.model3short8(conv3_3)
+        <a id="change">conv8_3</a> = self.model8(conv8_up)
+
+        if(self.dist):
+            <a id="change">out_cl</a> = self.upsample4(self.softmax(self.model_class(conv8_3) * .2))
+
+            <a id="change">conv9_up</a> = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            <a id="change">conv9_3</a> = self.model9(conv9_up)
+            <a id="change">conv10_up</a> = self.model10up(conv9_3) + self.model1short10(conv1_2)
+            <a id="change">conv10_2</a> = self.model10(conv10_up)
+            <a id="change">out_reg</a> = self.model_out(conv10_2) * 110
+
+            return (out_reg * 110, out_cl)
+        else:
+            <a id="change">conv9_up</a> = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            <a id="change">conv9_3</a> = self.model9(conv9_up)
+            <a id="change">conv10_up</a> = self.model10up(conv9_3) + self.model1short10(conv1_2)
+            <a id="change">conv10_2</a> = self.model10(conv10_up)
+            <a id="change">out_reg</a> = self.model_out(conv10_2)
+            return out_reg * 110
+</code></pre>

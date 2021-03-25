@@ -1,0 +1,40 @@
+<html><h3>237e4335ca2927526e00e81456543da624e2ba31,pb_bss/distribution/vmfcacgmm.py,VMFCACGMM,_predict,#VMFCACGMM#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        )
+
+        affiliation = (
+            <a id="change">unsqueeze</a>(<a id="change">np.log(self.weight)</a>, self.weight_constant_axis)
+            + self.spatial_weight * cacg_log_pdf
+            + self.spectral_weight * vmf_log_pdf
+        )
+        <a id="change">affiliation -= np.max(affiliation, axis=-2, keepdims=True)</a>
+        np.exp(affiliation, out=affiliation)
+        denominator = np.maximum(
+            np.einsum("...kt-&gt;...t", affiliation)[..., None, :],
+            np.finfo(affiliation.dtype).tiny,</code></pre><h3>After Change</h3><pre><code class='java'>
+            np.reshape(vmf_log_pdf, (num_classes, F, T)), (1, 0, 2)
+        )
+
+        <a id="change">if inline_permutation_alignment:
+            affiliation \
+                = log_pdf_to_affiliation_for_integration_models_with_inline_pa(
+                    weight=unsqueeze(self.weight, self.weight_constant_axis),
+                    spatial_log_pdf=self.spatial_weight * cacg_log_pdf,
+                    spectral_log_pdf=self.spectral_weight * vmf_log_pdf,
+                )
+        else:
+            affiliation = log_pdf_to_affiliation(
+                weight=unsqueeze(self.weight, self.weight_constant_axis),
+                log_pdf=(
+                    self.spatial_weight * cacg_log_pdf
+                    + self.spectral_weight * vmf_log_pdf
+                ),
+            )
+
+       </a> return affiliation, quadratic_form
+
+
+class VMFCACGMMTrainer:</code></pre><img src="23515220.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/237e4335ca2927526e00e81456543da624e2ba31#diff-9e6654b445fd562cb31df6678032e3defa210f64db98baadb17e75c25b1c3d3aL51' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: 237e4335ca2927526e00e81456543da624e2ba31</div><div id='time'> Time: 2019-08-08</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: pb_bss/distribution/vmfcacgmm.py</div><div id='class'> Class Name: VMFCACGMM</div><div id='method'> Method Name: _predict</div><BR><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/237e4335ca2927526e00e81456543da624e2ba31#diff-c7f43caa734c3eea05d21af19a44b80537ffbf45799fbdce26552440da5bfd0bL60' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: 237e4335ca2927526e00e81456543da624e2ba31</div><div id='time'> Time: 2019-08-08</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: pb_bss/distribution/gcacgmm.py</div><div id='class'> Class Name: GCACGMM</div><div id='method'> Method Name: _predict</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/0623ff0490b7558791a2f15f391fc47e8de2ed0f#diff-50be3f01c704d22f67d31d641fcbac1290d5d7c777ee3e1b286a0fa262f3b510L19' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 0623ff0490b7558791a2f15f391fc47e8de2ed0f</div><div id='time'> Time: 2016-02-02</div><div id='author'> Author: jmvegh@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Power/Battery/Sizing/initialize_from_energy_and_power.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: initialize_from_energy_and_power</div><BR>

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    DEF_COLDROP_APPLY_MSG = &quotDropping columns {}...&quot
+
+    def __init__(self, columns, exraise=True):
+        <a id="change">self._columns</a> = _interpret_columns_param(columns, &quotcolumns&quot)
+        <a id="change">super(ColDrop, self).__init__(
+            exraise=exraise,
+            exmsg=ColDrop.DEF_COLDROP_EXC_MSG.format(self._columns),
+            appmsg=ColDrop.DEF_COLDROP_APPLY_MSG.format(self._columns)
+        )</a>
+
+    def _prec(self, df):
+        return set(self._columns).issubset(df.columns)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return "Drop column{} {}".format(
+            &quots&quot if len(self._columns) &gt; 1 else &quot&quot, self._columns_str)
+
+    def __init__(<a id="change">self</a>, columns, **kwargs):
+        self._columns = columns
+        <a id="change">self._columns_str = _list_str(self._columns)</a>
+        if not callable(columns):
+            <a id="change">self._columns</a> = _interpret_columns_param(columns, &quotcolumns&quot)
+        <a id="change">super_kwargs = {
+            &quotexmsg&quot: ColDrop._DEF_COLDROP_EXC_MSG.format(self._columns_str),
+            &quotappmsg&quot: ColDrop._DEF_COLDROP_APPLY_MSG.format(self._columns_str),
+            &quotdesc&quot: self._default_desc()
+        }</a>
+        <a id="change">super_kwargs.update(**kwargs)</a>
+        super().__init__(**super_kwargs)
+
+    def _prec(self, df):
+        if callable(self._columns):</code></pre>

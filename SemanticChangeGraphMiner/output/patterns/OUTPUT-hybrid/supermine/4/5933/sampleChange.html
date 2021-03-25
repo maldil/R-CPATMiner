@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _ts_expand(self, X, y = None):
+        &#47&#47 if its a record array we need to expand &quotts&quot and &quoth&quot
+        Nt = self._number_of_segments_per_series(<a id="change">X[&quotts&quot]</a>)
+        ye = []
+        if y is not None:
+            ye = self._expand_series_variable_to_segments(y, Nt)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _ts_expand(self, X, y = None):
+        &#47&#47 if its a record array we need to expand &quotts&quot and &quoth&quot
+        <a id="change">Xt, Xs = get_ts_data_parts(X)</a>
+        Nt = self._number_of_segments_per_series(Xt)
+        Xt_new = np.concatenate(Xt)
+
+        ye = []</code></pre>

@@ -1,0 +1,40 @@
+<html><h3>474ed3789d19fd1bdf40a7365a5d196e118132c0,codes/models/SRGAN_model.py,SRGANModel,__init__,#SRGANModel#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                self.l_gp_w = train_opt[&quotgp_weigth&quot]
+
+            &#47&#47 optimizers
+            <a id="change">self.optimizers = []</a>  &#47&#47 G and D
+            &#47&#47 G
+            wd_G = train_opt[&quotweight_decay_G&quot] if train_opt[&quotweight_decay_G&quot] else 0
+            optim_params = []
+            for k, v in self.netG.named_parameters():  &#47&#47 can optimize for a part of the model
+                if v.requires_grad:
+                    optim_params.append(v)
+                else:
+                    print(&quotWARNING: params [%s] will not optimize.&quot % k)
+            self.optimizer_G = torch.optim.Adam(optim_params, lr=train_opt[&quotlr_G&quot], \
+                weight_decay=wd_G, betas=(train_opt[&quotbeta1_G&quot], 0.999))
+            self.optimizers.append(self.optimizer_G)
+            &#47&#47 D
+            wd_D = train_opt[&quotweight_decay_D&quot] if train_opt[&quotweight_decay_D&quot] else 0
+            self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=train_opt[&quotlr_D&quot], \
+                weight_decay=wd_D, betas=(train_opt[&quotbeta1_D&quot], 0.999))
+            self.optimizers.append(self.optimizer_D)
+
+            &#47&#47 schedulers
+            <a id="change">self.schedulers = []</a>
+            if train_opt[&quotlr_scheme&quot] == &quotMultiStepLR&quot:
+                for optimizer in self.optimizers:
+                    self.schedulers.append(lr_scheduler.MultiStepLR(optimizer, \
+                        train_opt[&quotlr_steps&quot], train_opt[&quotlr_gamma&quot]))</code></pre><h3>After Change</h3><pre><code class='java'>
+                if v.requires_grad:
+                    optim_params.append(v)
+                else:
+                    <a id="change">print(&quotWARNING: params [{:s}] will not optimize.&quot.format(k))</a>
+            self.optimizer_G = torch.optim.Adam(optim_params, lr=train_opt[&quotlr_G&quot], \
+                weight_decay=wd_G, betas=(train_opt[&quotbeta1_G&quot], 0.999))
+            self.optimizers.append(self.optimizer_G)
+            &#47&#47 D</code></pre><img src="22541255.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/474ed3789d19fd1bdf40a7365a5d196e118132c0#diff-22a166d8fb7c904a8302d231d13bb2a6372bd048eff4633ef6b23ca935c023a0L17' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 474ed3789d19fd1bdf40a7365a5d196e118132c0</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/SRGAN_model.py</div><div id='class'> Class Name: SRGANModel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/474ed3789d19fd1bdf40a7365a5d196e118132c0#diff-f4b8513f2ad038786519bd890bcd7fb465b285b0f3dde842bf59b65f588cc4a0L17' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 474ed3789d19fd1bdf40a7365a5d196e118132c0</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/SRRaGAN_model.py</div><div id='class'> Class Name: SRRaGANModel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/474ed3789d19fd1bdf40a7365a5d196e118132c0#diff-22a166d8fb7c904a8302d231d13bb2a6372bd048eff4633ef6b23ca935c023a0L17' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 474ed3789d19fd1bdf40a7365a5d196e118132c0</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/SRGAN_model.py</div><div id='class'> Class Name: SRGANModel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/474ed3789d19fd1bdf40a7365a5d196e118132c0#diff-ab194f49b3f13c89de26d37e12f009fc644275b722df650e98f4c7810256270bL13' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 474ed3789d19fd1bdf40a7365a5d196e118132c0</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/SR_model.py</div><div id='class'> Class Name: SRModel</div><div id='method'> Method Name: __init__</div><BR>

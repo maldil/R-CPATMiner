@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    opt = parser.parse_args()
+    print(opt)
+
+    <a id="change">cuda</a> = <a id="change">torch.cuda.is_available()</a>
+
+    os.makedirs("output", exist_ok=True)
+
+    &#47&#47 Set up model
+    model = Darknet(opt.config_path, img_size=opt.img_size)
+
+    if opt.weights_path.endswith(".weights"):
+        &#47&#47 Load darknet weights
+        model.load_darknet_weights(opt.weights_path)
+    else:
+        &#47&#47 Load checkpoint weights
+        model.load_state_dict(torch.load(opt.weights_path))
+
+    <a id="change">if cuda:
+        model.cuda()
+
+   </a> model.eval()  &#47&#47 Set in evaluation mode
+
+    dataloader = DataLoader(
+        ImageFolder(opt.image_folder, img_size=opt.img_size),</code></pre><h3>After Change</h3><pre><code class='java'>
+    opt = parser.parse_args()
+    print(opt)
+
+    device = torch.device(<a id="change">"cuda" if torch.cuda.is_available() else "cpu"</a>)
+
+    os.makedirs("output", exist_ok=True)
+</code></pre>

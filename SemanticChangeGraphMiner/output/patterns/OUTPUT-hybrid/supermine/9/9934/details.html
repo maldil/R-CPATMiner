@@ -1,0 +1,21 @@
+<html><h3>e0239b74eca0dda2e5d92a8df3217bb157113b33,utils/ddfa.py,,reconstruct_vertex,#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            param = np.concatenate((param[:11], [0], param[11:]))
+            param = param * param_std + param_mean
+    <a id="change">p_ = param[:12].reshape(3, -1)</a>
+    <a id="change">p = p_[:, :3]</a>
+    offset = p_[:, -1].reshape(3, 1)
+    alpha_shp = param[12:52].reshape(-1, 1)
+    alpha_exp = param[52:].reshape(-1, 1)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            param = np.concatenate((param[:11], [0], param[11:]))
+            param = param * param_std + param_mean
+
+    <a id="change">p</a>, offset, alpha_shp, alpha_exp = _parse_param(param)
+
+    if dense:
+        vertex = p @ (u + w_shp @ alpha_shp + w_exp @ alpha_exp).reshape(3, -1, order=&quotF&quot) + offset</code></pre><img src="37910450.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cleardusk/3DDFA/commit/e0239b74eca0dda2e5d92a8df3217bb157113b33#diff-24dccdb7428721ebd4a1424ffea0e550fbbdf42a93ec3d74cd9c19398adf8d77L24' target='_blank'>Link</a></div><div id='project'> Project Name: cleardusk/3DDFA</div><div id='commit'> Commit Name: e0239b74eca0dda2e5d92a8df3217bb157113b33</div><div id='time'> Time: 2018-12-22</div><div id='author'> Author: guojianzhu1994@foxmail.com</div><div id='file'> File Name: utils/ddfa.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: reconstruct_vertex</div><BR><BR><div id='link'><a href='https://github.com/robertmartin8/PyPortfolioOpt/commit/70b08e1d2e703b4e3d16da9aaa04706dd4413232#diff-d9be8bdb863d43140081123f1961beccb4e8d7828d8f66a0007b417fb73cbccfL89' target='_blank'>Link</a></div><div id='project'> Project Name: robertmartin8/PyPortfolioOpt</div><div id='commit'> Commit Name: 70b08e1d2e703b4e3d16da9aaa04706dd4413232</div><div id='time'> Time: 2020-05-01</div><div id='author'> Author: thomas.schmlezer@gmail.com</div><div id='file'> File Name: pypfopt/hierarchical_portfolio.py</div><div id='class'> Class Name: HRPOpt</div><div id='method'> Method Name: _get_cluster_var</div><BR><BR><div id='link'><a href='https://github.com/robertmartin8/PyPortfolioOpt/commit/5e56bcc41a7d147c710e57c4c764651c7e148581#diff-d9be8bdb863d43140081123f1961beccb4e8d7828d8f66a0007b417fb73cbccfL79' target='_blank'>Link</a></div><div id='project'> Project Name: robertmartin8/PyPortfolioOpt</div><div id='commit'> Commit Name: 5e56bcc41a7d147c710e57c4c764651c7e148581</div><div id='time'> Time: 2020-04-30</div><div id='author'> Author: thomas.schmlezer@gmail.com</div><div id='file'> File Name: pypfopt/hierarchical_portfolio.py</div><div id='class'> Class Name: HRPOpt</div><div id='method'> Method Name: _get_cluster_var</div><BR>

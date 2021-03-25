@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    join(src_top, "bin", "pitch", "swipe", "swipe.c"),
+    join(src_top, "bin", "pitch", "swipe", "vector.c"),
+]
+hts_engine_src = <a id="change">glob(join(src_top, "bin", "vc", "hts_engine_API", "*.c"))</a>
+sptklib_src = glob(join(src_top, "lib", "*.c"))
+sptk_src = glob(join(src_top, "bin", "*", "_*.c"))
+
+&#47&#47 collect all sources</code></pre><h3>After Change</h3><pre><code class='java'>
+sptk_all_src = sptk_src + sptklib_src + swipe_src
+
+&#47&#47 Filter ignore list
+ignore_bin_list = <a id="change">[join(src_bin_top, "wavjoin"), join(src_bin_top, "wavsplit"),
+                   join(src_bin_top, "vc")]</a>
+for ignore in ignore_bin_list:
+    sptk_all_src = list(
+        filter(lambda s: not s.startswith(ignore), sptk_all_src))
+</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        a = RCNNMaskLoss.binary_crossentropy(target=target_mask, output=output_mask)
+
+        &#47&#47 loss = keras.backend.sum(a * b) / keras.backend.sum(b)
+        <a id="change">loss</a> = <a id="change">keras.backend.mean(a * b)</a>
+
+        &#47&#47 TODO: we should try:
+        &#47&#47   `keras.backend.mean(a * b) + keras.backend.mean(1 - b)`
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        a = RCNNMaskLoss.binary_crossentropy(target=target_mask, output=output_mask)
+
+        <a id="change">loss</a> = <a id="change">keras.backend.sum(a * b) / keras.backend.sum(b)</a>
+        &#47&#47 loss = keras.backend.mean(a * b)
+
+        &#47&#47 TODO: we should try:
+        &#47&#47   `keras.backend.mean(a * b) + keras.backend.mean(1 - b)`</code></pre>

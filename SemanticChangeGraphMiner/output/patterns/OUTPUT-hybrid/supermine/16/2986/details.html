@@ -1,0 +1,26 @@
+<html><h3>1b353a3d96de2d48b22ad8c2db6a15ede008c767,thinc/layers/embed.py,,Embed,#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )
+    model = <a id="change">model if column is None else chain(ints_getitem(column), model)</a>
+    model.attrs["column"] = column
+    return cast(Model[InT, OutT], model)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )
+    <a id="change">if column is not None:
+        &#47&#47 This is equivalent to array[:, column]. What you&quotre actually doing
+        &#47&#47 there is passing in a tuple: array[(:, column)], except in the context
+        &#47&#47 of array indexing, the ":" creates an object slice(0, None).
+        &#47&#47 So array[:, column] is array.__getitem__(slice(0), column).
+        model = chain(ints_getitem((slice(0), column)), model)
+   </a> model.attrs["column"] = column
+    return cast(Model[InT, OutT], model)
+
+</code></pre><img src="12856224.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1b353a3d96de2d48b22ad8c2db6a15ede008c767#diff-2000e8749a91df13f189f011eef0f2fb64aa34578021a257f7791b78dcdd9a88L29' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1b353a3d96de2d48b22ad8c2db6a15ede008c767</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/embed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Embed</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/858880eb22f2e0b85df33137fd748e6bb09b3383#diff-d1f167dcc3c741a849fafd63f377e067115b14d17a55a90071dacd6ac276e1b7L29' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 858880eb22f2e0b85df33137fd748e6bb09b3383</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/hashembed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: HashEmbed</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/858880eb22f2e0b85df33137fd748e6bb09b3383#diff-21079e08c6f58c844f9af2d2088659accf24180bd54f0fff62bb0cc0d7ec2030L28' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 858880eb22f2e0b85df33137fd748e6bb09b3383</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/staticvectors.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: StaticVectors</div><BR>

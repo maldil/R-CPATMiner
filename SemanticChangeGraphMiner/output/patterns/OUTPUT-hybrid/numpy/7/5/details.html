@@ -1,0 +1,19 @@
+<html><h3>adfcd7c21f3f2fc6077eb00abf4887cd2d567880,deslib/dcs/base.py,DCS,predict_proba_with_ds,#DCS#,239
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 TODO refactor for batch (use masked array; perfom mean)
+            indices = self.select(competences)[0]
+            classifier_ensemble = self._get_classifier_ensemble(indices)
+            <a id="change">predicted_proba = predict_proba_ensemble(classifier_ensemble, query)</a>
+
+        return predicted_proba
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            selected_classifiers = np.broadcast_to(selected_classifiers, probabilities.shape)
+            masked_proba = np.ma.MaskedArray(probabilities, ~selected_classifiers)
+
+            <a id="change">predicted_proba = np.mean(masked_proba, axis=1)</a>
+
+        return predicted_proba
+</code></pre><img src="65796.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/adfcd7c21f3f2fc6077eb00abf4887cd2d567880#diff-94a1701a6014217bb8cdeb38df7630507985fd11d214cb28ebe726c4458f4001L239' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: adfcd7c21f3f2fc6077eb00abf4887cd2d567880</div><div id='time'> Time: 2018-04-06</div><div id='author'> Author: luiz.gh@gmail.com</div><div id='file'> File Name: deslib/dcs/base.py</div><div id='class'> Class Name: DCS</div><div id='method'> Method Name: predict_proba_with_ds</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/adfcd7c21f3f2fc6077eb00abf4887cd2d567880#diff-23f8b15927f6f6a050f2f264c52e73c6b156df0e29e8c64f6e1d3b87a948b9b9L197' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: adfcd7c21f3f2fc6077eb00abf4887cd2d567880</div><div id='time'> Time: 2018-04-06</div><div id='author'> Author: luiz.gh@gmail.com</div><div id='file'> File Name: deslib/des/base.py</div><div id='class'> Class Name: DES</div><div id='method'> Method Name: predict_proba_with_ds</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/a9a1eced2a339815b5b78e356789d1c5419b9ea1#diff-93dca2ddf223483634985a0c321206b3d75653e9106665a441ce64e31e344f00L247' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: a9a1eced2a339815b5b78e356789d1c5419b9ea1</div><div id='time'> Time: 2018-03-13</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/util/aggregation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: average_rule</div><BR>

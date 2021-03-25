@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.bigram_field is not None:
+                bigram_input = input_[&quotbigram&quot]
+                embed = self.bigram_embeddings(bigram_input)
+                <a id="change">embed</a> = <a id="change">embed.sum(1) / lengths[&quotbigram&quot].float().view(bigram_input.size()[0], -1)</a>
+                <a id="change">embed</a> = self.dropout(embed)
+                embedding_list.append(embed)
+
+            if self.trigram_field is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.bigram_field is not None:
+                bigram_input = input_[&quotbigram&quot]
+                embed = self.bigram_embeddings(bigram_input)
+                <a id="change">embed</a> = <a id="change">self._pool(embed, lengths[&quotbigram&quot].float, bigram_input.size()[0])</a>
+                <a id="change">embed</a> = self.dropout(embed)
+                embedding_list.append(embed)
+
+            if self.trigram_field is not None:</code></pre>

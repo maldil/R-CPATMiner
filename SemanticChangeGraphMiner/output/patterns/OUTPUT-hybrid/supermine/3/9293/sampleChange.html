@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            trainX = torch.FloatTensor(trainX)
+            trainy = torch.LongTensor(trainy)
+            <a id="change">devX = torch.FloatTensor(devX)</a>
+            devy = torch.LongTensor(devy)
+
+        return trainX, trainy, devX, devy
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            trainX, trainy = X[trainidx], y[trainidx]
+            devX, devy = X[devidx], y[devidx]
+
+        device = <a id="change">torch.device(&quotcpu&quot) if self.cudaEfficient else torch.device(&quotcuda&quot)</a>
+
+        trainX = torch.from_numpy(trainX).to(device, dtype=torch.float32)
+        trainy = torch.from_numpy(trainy).to(device, dtype=torch.int64)
+        devX = torch.from_numpy(devX).to(device, dtype=torch.float32)</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        x_dst = x[0]*0.299 + x[1]*0.587 + x[2]*0.114
+        <a id="change">x_gs = x_dst.repeat(self.channels,1,1)</a>
+
+        if y is not None:
+            y_dst = y[0]*0.299 + y[1]*0.587 + y[2]*0.114
+            y_gs= y_dst.repeat(self.channels,1,1)</code></pre><h3>After Change</h3><pre><code class='java'>
+            _input_dst = _input[0]*0.299 + _input[1]*0.587 + _input[2]*0.114
+            _input_gs = _input_dst.repeat(self.channels,1,1)
+            outputs.append(_input_gs)
+        return outputs if idx &gt; 1 else <a id="change">outputs[0]</a>
+
+class RandomGrayscale(object):
+    
+    Randomly grayscales some images with given probability,</code></pre>

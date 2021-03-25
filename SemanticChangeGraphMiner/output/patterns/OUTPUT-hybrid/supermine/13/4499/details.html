@@ -1,0 +1,39 @@
+<html><h3>ba5ce0dcacefae377a199b2b6115263528fa8bad,lexos/processors/analyze/topword.py,,analyze_all_to_para,#,96
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    assert np.size(count_matrix) &gt; 0, EMPTY_NP_ARRAY_MESSAGE
+
+    &#47&#47 initialize the value to return
+    <a id="change">all_results = []</a>
+    count_matrix_sum = np.sum(count_matrix, axis=0)
+
+    &#47&#47 generate data
+    <a id="change">for _, row in enumerate(count_matrix):
+        &#47&#47 get analysis result
+        word_z_score_dict = _z_test_word_list_(count_list_i=row,
+                                               count_list_j=count_matrix_sum,
+                                               words=words)
+
+        &#47&#47 sort result and put into result list
+        sorted_list = sorted(list(word_z_score_dict.items()),
+                             key=lambda item: abs(item[1]),
+                             reverse=True)
+        all_results.append(sorted_list)
+
+   </a> return all_results
+
+
+def analyze_para_to_group(group_values: List[np.ndarray], words: np.ndarray) \</code></pre><h3>After Change</h3><pre><code class='java'>
+    count_matrix_sum = np.sum(count_matrix, axis=0)
+
+    &#47&#47 generate data
+    <a id="change">all_results = [_z_test_word_list_(count_list_i=row,
+                                      count_list_j=count_matrix_sum,
+                                      words=words)
+                   for _, row in enumerate(count_matrix)]</a>
+
+    return all_results
+
+</code></pre><img src="19517400.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/ba5ce0dcacefae377a199b2b6115263528fa8bad#diff-014d4d57aab87d8860f64e4c5af4902b345f64c9354cac90fcc13f33815b3d80L110' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: ba5ce0dcacefae377a199b2b6115263528fa8bad</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_all_to_para</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/d8cb4f0bb3d16ffe913457485eeb7aa276253a06#diff-014d4d57aab87d8860f64e4c5af4902b345f64c9354cac90fcc13f33815b3d80L201' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: d8cb4f0bb3d16ffe913457485eeb7aa276253a06</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_group_to_group</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/d8cb4f0bb3d16ffe913457485eeb7aa276253a06#diff-014d4d57aab87d8860f64e4c5af4902b345f64c9354cac90fcc13f33815b3d80L145' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: d8cb4f0bb3d16ffe913457485eeb7aa276253a06</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_para_to_group</div><BR>

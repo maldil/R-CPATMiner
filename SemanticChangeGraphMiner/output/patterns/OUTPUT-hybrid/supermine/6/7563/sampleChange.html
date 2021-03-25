@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &lt;h3&gt;Distance: %s&lt;/h3&gt;
+             % dm.capitalize()
+        for ds in sorted_datasets:
+            <a id="change">for idd in sorted([e for e in datasets.keys() \
+                    if e.split("_")[0] == ds and e.split("_")[-1] == dm], \
+                    key = lambda elem: int(elem.split("_")[1])):
+                ds_name = query_info[idd]["dataset"] + " (k = " + \
+                    str(query_info[idd]["count"]) + ")"
+                output_str += 
+            &lt;a href="./%(name)s.html"&gt;
+            &lt;div class="row" id="%(name)s"&gt;
+                &lt;div class = "col-md-4 bg-success"&gt;
+                    &lt;h4&gt;%(desc)s&lt;/h4&gt;
+                &lt;/div&gt;
+                &lt;div class = "col-md-8"&gt;
+                    &lt;img class = "img-responsive" src="%(name)s.png" /&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;/a&gt;
+            &lt;hr /&gt;
+        % { "desc" : ds_name, "name" : idd }
+   </a> output_str += 
+        &lt;h2 id="algorithms"&gt;Results by Algorithm&lt;/h2&gt;
+        &lt;ul class="list-inline"&gt;&lt;b&gt;Algorithms:&lt;/b&gt;
+    algorithm_names = algorithms.keys()</code></pre><h3>After Change</h3><pre><code class='java'>
+            &lt;h3&gt;Distance: %s&lt;/h3&gt;
+             % dm.capitalize()
+        for ds in sorted_datasets:
+            <a id="change">matching_datasets = [e for e in datasets.keys() \
+                    if get_dataset_from_desc(e) == ds and \
+                       get_distance_from_desc(e) == dm]</a>
+            <a id="change">sorted_matches = sorted(matching_datasets, \
+                    key = lambda e: int(get_count_from_desc(e)))</a>
+            for idd in sorted_matches:
+                ds_name = get_dataset_from_desc(idd) + " (k = " + \
+                    get_count_from_desc(idd) + ")"
+                output_str += get_row_desc(idd, ds_name)</code></pre>

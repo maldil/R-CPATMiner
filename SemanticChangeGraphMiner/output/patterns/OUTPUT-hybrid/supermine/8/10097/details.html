@@ -1,0 +1,50 @@
+<html><h3>200d1ccf8a79c370d21a42bb0e2cb7439576956e,mnist/rwa_model/score.py,,,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		maxval=np.sqrt(6.0*initialization_factor/(num_features+2.0*num_cells))
+	)
+)
+<a id="change">b_a = tf.Variable(tf.zeros([num_cells]))</a>
+
+W_o = tf.Variable(
+	tf.random_uniform(
+		[num_cells, num_classes],
+		minval=-np.sqrt(6.0*initialization_factor/(num_cells+num_classes)),
+		maxval=np.sqrt(6.0*initialization_factor/(num_cells+num_classes))
+	)
+)
+b_o = tf.Variable(tf.zeros([num_classes]))
+
+&#47&#47 Internal states
+&#47&#47
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+h = tf.zeros([batch_size, num_cells])
+a_max = tf.fill([batch_size, num_cells], -1E38)	&#47&#47 Start off with lowest number possible
+
+&#47&#47 Define model
+&#47&#47
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = <a id="change">tf.matmul(xh_join, W_a)+b_a</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	a_newmax = tf.maximum(a_max, a)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = <a id="change">tf.matmul(xh_join, W_a)</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	a_newmax = tf.maximum(a_max, a)</code></pre><img src="38082613.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 11</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/200d1ccf8a79c370d21a42bb0e2cb7439576956e#diff-4a7e42e621a7fe855eab2a9b16d2d1cbd8af3a3dacde7049b19281d6a72d9d9eL26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: 200d1ccf8a79c370d21a42bb0e2cb7439576956e</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: mnist/rwa_model/score.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-7a2a9567d691fceb394319ad1b5787450f070175951b7c559a1866bdec445dc6L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: mnist/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-8ff612dd80b23a1b96fd137cf470640d6cbba994e355f25b4ffa999e6b8e0658L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: mnist_permuted/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/5321ff7dbc8717b90643e2c7082bcdd31be028b1#diff-8505717fe75c23494b92f891c26476180e7b83877e806ea57f10863fa07dbb28L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: 5321ff7dbc8717b90643e2c7082bcdd31be028b1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: mnist_permuted/rwa_model/score.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-6c95824d51f315d965d7a574d8904907835127c2bcfd50ffc87ad0230525c20dL26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: length_problem_1000/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-9af6483f1996064b86d5fd2a318794a680c4c3629ccd45c7f674de9bfd781a68L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: adding_problem_1000/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-9ccc030d37287fbe08e3992ee7304ad789b23c51949bfa5bab1e2cf34a9b236dL26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: copy_problem_1000/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-881fb0d7f567825e7582a06d5618b3324a84e4d6ec6d2565acc0e71e983e0617L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: copy_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-c1c445d0e190322c92a3c3832e655893af989606f9a82a14e137a353bd8e25fdL26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: reber_grammar/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-f8f479d0e7303a6d13f4a8327100abc134fff12940dc3fd5a2937235e69dc71dL26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: length_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/baea9134fa7370fdf3338173b02f8b1ccdbd23f1#diff-27e421b87f69b4c02403a4485730123bcdcab610493aba32ffafc40b53c2e5b8L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: baea9134fa7370fdf3338173b02f8b1ccdbd23f1</div><div id='time'> Time: 2017-03-13</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: adding_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

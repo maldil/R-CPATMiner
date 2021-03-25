@@ -1,0 +1,57 @@
+<html><h3>5214393bb75498ded8fc140914edd79c1799af05,pyroomacoustics/beamforming.py,Beamformer,steering_vector_2D_from_point,#Beamformer#,361
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 normalize for far-field if requested
+        if (ff):
+            X -= self.center
+            Xn = <a id="change">np.sqrt(np.sum(X**2, axis=0))</a>
+            <a id="change">X *= constants.get(&quotffdist&quot)/Xn</a>
+            X += self.center
+
+        D = distance(self.R, X)
+        omega = 2 * np.pi * frequency
+
+        if attn:
+            &#47&#47 TO DO 1: This will mean slightly different absolute value for
+            &#47&#47 every entry, even within the same steering vector. Perhaps a
+            &#47&#47 better paradigm is far-field with phase carrier.
+            return 1. / (4 * np.pi) / D * np.exp(-1j * omega * D / constants.get(&quotc&quot))
+        else:
+            <a id="change">return np.exp(-1j * omega * D / constants.get(&quotc&quot))</a>
+
+    def response(self, phi_list, frequency):
+
+        i_freq = np.argmin(np.abs(self.frequencies - frequency))</code></pre><h3>After Change</h3><pre><code class='java'>
+        omega = 2 * np.pi * frequency
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            &#47&#47 unit vectors pointing towards sources
+            p = (X - self.center)
+            p /= np.linalg.norm(p)
+
+            &#47&#47 The projected microphone distances on the unit vectors
+            D = np.dot(self.R.T, p)
+
+            &#47&#47 subtract minimum in each column
+            D -= np.min(D)
+
+        else:
+
+            D = distance(self.R, X)
+
+       </a> phase = np.exp(-1j * omega * D / constants.get(&quotc&quot))
+
+        if attn:
+            &#47&#47 TO DO 1: This will mean slightly different absolute value for
+            &#47&#47 every entry, even within the same steering vector. Perhaps a
+            &#47&#47 better paradigm is far-field with phase carrier.
+            return 1. / (4 * np.pi) / D * phase
+        else:
+            <a id="change">return phase</a>
+
+    def response(self, phi_list, frequency):
+
+        i_freq = np.argmin(np.abs(self.frequencies - frequency))</code></pre><img src="36264009.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/5214393bb75498ded8fc140914edd79c1799af05#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 5214393bb75498ded8fc140914edd79c1799af05</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/7685876d31bc74dc9e1a3426c337d0c55c3d87da#diff-a1b13e42a9bbb06a7c7970b55fea4befc9eebce8517f1414d0b0de14a54268b4L179' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: 7685876d31bc74dc9e1a3426c337d0c55c3d87da</div><div id='time'> Time: 2019-08-02</div><div id='author'> Author: heitkaemper@nt.upb.de</div><div id='file'> File Name: paderbox/speech_enhancement/beamformer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_pca_vector</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/7a77233231c67038271c9945760b7a1d711b242d#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 7a77233231c67038271c9945760b7a1d711b242d</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR>

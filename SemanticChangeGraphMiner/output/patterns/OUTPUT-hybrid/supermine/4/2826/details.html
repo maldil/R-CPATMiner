@@ -1,0 +1,36 @@
+<html><h3>0bf56c5e8db53e152e7095087499d072018283e6,src/mjsynth.py,,threaded_input_pipeline,#,94
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Pad batches to max data size (bucketing it all into the same bucket)
+        dataset = dataset.apply(tf.contrib.data.bucket_by_sequence_length
+                                (element_length_func=_element_length_fn,
+                                 bucket_batch_sizes=<a id="change">[batch_size, batch_size]</a>,
+                                 bucket_boundaries=[0]))
+
+        dataset = dataset.map(lambda image, 
+                              width, label, 
+                              length, text, filename: 
+                              (image, width, 
+                               tf.cast(tf.deserialize_many_sparse(label, tf.int64), 
+                                       tf.int32),
+                               length, text, filename))
+        num_epochs = None
+        &#47&#47 Repeat for num_epochs
+        <a id="change">dataset = dataset.repeat(num_epochs)</a>
+
+    return dataset
+
+def _element_length_fn(image, width, label, length, text, filename):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Hack -- probably a better way to do this! Just want dynamic padding!
+        &#47&#47 Pad batches to max data size (bucketing it all into the same bucket)
+        <a id="change">dataset = dataset.apply(tf.contrib.data.bucket_by_sequence_length
+                                (element_length_func=_element_length_fn,
+                                 bucket_batch_sizes=[0, 10],
+                                 bucket_boundaries=[0]))</a>
+
+        dataset = dataset.map(lambda image, 
+                              width, label, 
+                              length, text, filename: </code></pre><img src="12435039.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/weinman/cnn_lstm_ctc_ocr/commit/0bf56c5e8db53e152e7095087499d072018283e6#diff-e890182f7dba54d8ed735d296797dbf830d695560535c914150dd721d275e7f4L101' target='_blank'>Link</a></div><div id='project'> Project Name: weinman/cnn_lstm_ctc_ocr</div><div id='commit'> Commit Name: 0bf56c5e8db53e152e7095087499d072018283e6</div><div id='time'> Time: 2018-06-29</div><div id='author'> Author: am.lamsal@gmail.com</div><div id='file'> File Name: src/mjsynth.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: threaded_input_pipeline</div><BR><BR><div id='link'><a href='https://github.com/weinman/cnn_lstm_ctc_ocr/commit/96fad3497a4373cc289f9e7c4272d4722a22f381#diff-e890182f7dba54d8ed735d296797dbf830d695560535c914150dd721d275e7f4L47' target='_blank'>Link</a></div><div id='project'> Project Name: weinman/cnn_lstm_ctc_ocr</div><div id='commit'> Commit Name: 96fad3497a4373cc289f9e7c4272d4722a22f381</div><div id='time'> Time: 2018-06-20</div><div id='author'> Author: am.lamsal@gmail.com</div><div id='file'> File Name: src/mjsynth.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucketed_input_pipeline</div><BR><BR><div id='link'><a href='https://github.com/weinman/cnn_lstm_ctc_ocr/commit/f72e30b86039b53dcced080dc999e1a9fb052c49#diff-e890182f7dba54d8ed735d296797dbf830d695560535c914150dd721d275e7f4L45' target='_blank'>Link</a></div><div id='project'> Project Name: weinman/cnn_lstm_ctc_ocr</div><div id='commit'> Commit Name: f72e30b86039b53dcced080dc999e1a9fb052c49</div><div id='time'> Time: 2018-06-19</div><div id='author'> Author: am.lamsal@gmail.com</div><div id='file'> File Name: src/mjsynth.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucketed_input_pipeline</div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def forward(self, noise, labels):
+        gen_input = torch.mul(self.label_emb(labels), noise)
+        out = self.l1(gen_input)
+        <a id="change">out = out.view(out.shape[0], 128, self.init_size, self.init_size)</a>
+        img = self.model(out)
+        return img
+
+class Discriminator(nn.Module):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def forward(self, noise, labels):
+        gen_input = torch.mul(self.label_emb(labels), noise)
+        img = self.model(gen_input)
+        <a id="change">img = img.view(img.size(0), opt.channels, opt.img_size, opt.img_size)</a>
+        return img
+
+class Discriminator(nn.Module):
+    def __init__(self):</code></pre>

@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def merge_neighbors_loose_p_value(pLoosePValue, pData, pViewpointObj, pResolution, pTruncateZeroPvalues):
+    accepted = {}
+    accepted_line = {}
+    <a id="change">for key in pData[1]:
+        if pTruncateZeroPvalues:
+            if pData[1][key][1] == 0 or pData[1][key][1] &gt; pLoosePValue:
+                continue
+        else:
+            if pData[1][key][1] &gt; pLoosePValue:
+                continue
+        accepted[key] = pData[1][key]
+        accepted_line[key] = pData[2][key]
+   </a> if accepted_line:
+        return pViewpointObj.merge_neighbors(accepted_line, pMergeThreshold=pResolution)
+    return accepted_line, None
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    continue
+            accepted[key] = pData[1][key]
+            accepted_line[key] = pData[2][key]
+    elif <a id="change">isinstance(pLoosePValue, dict)</a>:
+        <a id="change">for key in pData[1]:
+            if pTruncateZeroPvalues:
+                if pData[1][key][1] == 0 or pData[1][key][1] &gt; pLoosePValue[key]:
+                    continue
+            else:
+                if pData[1][key][1] &gt; pLoosePValue[key]:
+                    continue
+            accepted[key] = pData[1][key]
+            accepted_line[key] = pData[2][key]
+   </a> if accepted_line:
+        return pViewpointObj.merge_neighbors(accepted_line, pMergeThreshold=pResolution)
+    return accepted_line, None
+</code></pre>

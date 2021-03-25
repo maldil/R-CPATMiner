@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.assertEqual(len(set(out[&quotextra&quot].values)), 4)
+
+        &#47&#47 single group under threshold
+        <a id="change">enc = encoders.CountEncoder(verbose=1, min_group_size=30)</a>
+        <a id="change">enc.fit(X)</a>
+        out = enc.transform(X_t)
+        self.assertEqual(len(set(out[&quotextra&quot].values)), 4)
+
+        &#47&#47 multiple groups under threshold</code></pre><h3>After Change</h3><pre><code class='java'>
+        enc.fit(X)
+        out = enc.transform(X_t)
+        self.assertTrue(np.isin([31, 28, 41], out[&quotnone&quot].unique()).all())
+        <a id="change">self.assertTrue(out[&quotnone&quot].unique().shape == (3,))</a>
+        self.assertTrue(out[&quotnone&quot].isna().sum() == 0)
+        self.assertIn(&quotB_nan&quot, enc.mapping[&quotnone&quot])
+        self.assertTrue(np.isin([28, 25, 19], out[&quotna_categorical&quot].unique()).all())
+        self.assertTrue(out[&quotna_categorical&quot].unique().shape == (3,))</code></pre>

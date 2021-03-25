@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    rval = scope.sklearn_SVC(
+        kernel=&quotlinear&quot,
+        C=<a id="change">hp.lognormal(
+            _name(&quotC&quot),
+            np.log(1.0),
+            np.log(4.0))</a> if C is None else C,
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=scope.inv_patience_param(
+            <a id="change">hp.lognormal(
+                _name(&quottol&quot),
+                np.log(1e-3),
+                np.log(10))</a>) if tol is None else tol,
+        &#47&#47 -- this is basically only here to prevent
+        &#47&#47    an infinite loop in libsvm&quots solver.
+        &#47&#47    A more useful control mechanism might be a timer
+        &#47&#47    or a kill msg to a sub-process or something...
+        max_iter=<a id="change">scope.patience_param(scope.int(
+            hp.qloguniform(
+                _name(&quotmax_iter&quot),
+                np.log(100),
+                np.log(10000),
+                q=10,
+                )))</a> if max_iter is None else max_iter,
+        verbose=verbose,
+        cache_size=cache_size,
+        )</code></pre><h3>After Change</h3><pre><code class='java'>
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=_svc_tol(name) if tol is None else tol,
+        max_iter=<a id="change">_svc_max_iter(name)</a> if max_iter is None else max_iter,
+        verbose=verbose,
+        cache_size=cache_size,
+        )</code></pre>

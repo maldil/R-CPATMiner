@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        input, labels, index, _utils._argmin, int, 0, pass_positions=True
+    )
+
+    <a id="change">if not min_1dpos_lbl.ndim:
+        min_1dpos_lbl = min_1dpos_lbl[None]
+
+   </a> min_pos_lbl = _utils._unravel_index(min_1dpos_lbl, input.shape)
+
+    if index.shape == tuple():
+        min_pos_lbl = dask.array.squeeze(min_pos_lbl)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if index.shape:
+        index = index.flatten()
+
+    out_dtype = <a id="change">numpy.dtype([("pos", int, (input.ndim,))])</a>
+    <a id="change">default_1d = numpy.zeros((1,), dtype=out_dtype)</a>
+
+    func = functools.partial(
+        _utils._argmin, shape=input.shape, dtype=out_dtype
+    )
+    min_pos_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+    <a id="change">min_pos_lbl = min_pos_lbl["pos"]</a>
+
+    if index.shape == tuple():
+        min_pos_lbl = dask.array.squeeze(min_pos_lbl)
+</code></pre>

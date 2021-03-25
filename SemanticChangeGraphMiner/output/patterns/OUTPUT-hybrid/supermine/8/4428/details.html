@@ -1,0 +1,44 @@
+<html><h3>5798262e2f9d254f37cbe762f89747b7049a8acc,measurements/crinacle/crinacle_crawler.py,CrinacleCrawler,process,#CrinacleCrawler#,107
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                raise TypeError(&quotCrinacle\&quots Gras measurements are not supported yet!&quot)
+            else:
+                &#47&#47 Read text file for IEM and Ears-711 headphone measurements
+                <a id="change">with open(fp, &quotr&quot, encoding=&quotutf-8&quot) as fh:
+                    s = fh.read()
+
+           </a> freq = []
+            raw = []
+            for line in s.split(&quot\n&quot):
+                if len(line) == 0 or line[0] == &quot*&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        return file_paths
+
+    def process(self, item, file_paths, target_dir=None):
+        <a id="change">if target_dir is None:
+            raise TypeError(&quot"target_dir" must be given&quot)
+       </a> avg_fr = FrequencyResponse(name=item.true_name)
+        avg_fr.raw = np.zeros(avg_fr.frequency.shape)
+        for fp in file_paths:
+            <a id="change">with open(fp, &quotr&quot, encoding=&quotutf-8&quot) as fh:
+                s = fh.read()
+
+           </a> freq = []
+            raw = []
+            for line in s.split(&quot\n&quot):
+                if len(line) == 0 or line[0] == &quot*&quot:
+                    &#47&#47 Skip empty lines and comments
+                    if &quotC-weighting compensation: On&quot in line:
+                        print(f&quotC-weighted measurement: {item.false_name}&quot)
+                    continue
+
+                frp = line.split(&quot, &quot)
+                if len(frp) == 1:
+                    frp = line.split(&quot\t&quot)
+                <a id="change">if len(frp) == 1:
+                    frp = line.split(&quot &quot)
+               </a> if len(frp) == 2:
+                    f, r = frp
+                elif len(frp) == 3:
+                    f, r, p = frp</code></pre><img src="19303250.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jaakkopasanen/AutoEq/commit/5798262e2f9d254f37cbe762f89747b7049a8acc#diff-f60dcd75745b8a69ac22a06a74d67db4aa9bd70ee559c204e7e467a96df09147L108' target='_blank'>Link</a></div><div id='project'> Project Name: jaakkopasanen/AutoEq</div><div id='commit'> Commit Name: 5798262e2f9d254f37cbe762f89747b7049a8acc</div><div id='time'> Time: 2020-10-18</div><div id='author'> Author: jaakko.o.pasanen@gmail.com</div><div id='file'> File Name: measurements/crinacle/crinacle_crawler.py</div><div id='class'> Class Name: CrinacleCrawler</div><div id='method'> Method Name: process</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/122f897f82c5101b2dfa764c7736b6fd9a24c0c2#diff-d8c7322bad71404522a489cb47c789fd4e6ec02b09f93563b51c1d599d4d9707L954' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 122f897f82c5101b2dfa764c7736b6fd9a24c0c2</div><div id='time'> Time: 2019-12-27</div><div id='author'> Author: kogito@hotmail.fr</div><div id='file'> File Name: tests/test_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_mfcc_to_mel</div><BR><BR><div id='link'><a href='https://github.com/chartbeat-labs/textacy/commit/12fbf10e8ac5758330b68477c72d57212e304249#diff-a95246ed11694d38aedb2092cc7cbf72f7510ff675b2a2dc81171bfc4bf43cdbL56' target='_blank'>Link</a></div><div id='project'> Project Name: chartbeat-labs/textacy</div><div id='commit'> Commit Name: 12fbf10e8ac5758330b68477c72d57212e304249</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: burton@chartbeat.com</div><div id='file'> File Name: textacy/io/spacy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: write_spacy_docs</div><BR>

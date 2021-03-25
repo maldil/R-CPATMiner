@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cv = skms.check_cv(self.cv, y, classifier=skms.is_classifier(self.estimator))
+        self.scorer_ = skms.check_scoring(self.estimator, scoring=self.scoring)
+
+        <a id="change">pd = self.param_distributions</a>
+
+        if self.optimizer is None:
+            dimensions = [pd[k] for k in <a id="change">sorted(pd.keys())</a>]
+            <a id="change">self.optimizer = Optimizer(dimensions, GaussianProcessRegressor())</a>
+
+        <a id="change">params = self.optimizer.ask()</a>
+        params_dict = {k: v for k,v in zip(sorted(pd.keys()), params)}
+
+        cv_iter = list(cv.split(X, y, groups))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if key not in self.optimizer:
+            self.optimizer[key] =  self._make_optimizer(param_space)
+
+        <a id="change">optimizer = self.optimizer[key]</a>
+
+        params = optimizer.ask()
+        params_dict = self._skopt_to_dict(param_space, params)
+</code></pre>

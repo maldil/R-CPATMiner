@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                dtype = np.uint8
+            else:
+                dtype = np.float32
+            logger.warn(<a id="change">"gym.spaces.Box autodetected dtype as {}. Please provide explicit dtype.".format(dtype)</a>)
+        self.low = low.astype(dtype)
+        self.high = high.astype(dtype)
+        super(Box, self).__init__(shape, dtype)</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.high = np.full(self.shape, high)
+            low = low + np.zeros(shape)
+            high = high + np.zeros(shape)
+        <a id="change">self.low = self.low.astype(self.dtype)</a>
+        self.high = self.high.astype(self.dtype)
+        super(Box, self).__init__(self.shape, self.dtype)
+
+    def sample(self):</code></pre>

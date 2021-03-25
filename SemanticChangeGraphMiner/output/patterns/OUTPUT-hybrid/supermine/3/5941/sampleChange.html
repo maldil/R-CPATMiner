@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def forward(model: Model[InT, OutT], X: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    W = <a id="change">model.get_param("W")</a>
+    b = model.get_param("b")
+
+    Y = model.ops.affine(X, W, b)
+    Y = model.ops.relu(Y)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def forward(model: Model[InT, OutT], X: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    W = <a id="change">cast(Array2d, model.get_param("W"))</a>
+    b = model.get_param("b")
+    Y = model.ops.affine(X, W, b)
+    Y = model.ops.relu(Y)
+</code></pre>

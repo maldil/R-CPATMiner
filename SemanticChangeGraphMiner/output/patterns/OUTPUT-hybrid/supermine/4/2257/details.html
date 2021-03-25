@@ -1,0 +1,19 @@
+<html><h3>e6d500b7c29066efbfe4cb7ab0e001cb624ad694,models/shift_net/shiftnet_model.py,ShiftNetModel,set_input,#ShiftNetModel#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 directly load mask offline
+        &#47&#47 TODO: make masks variant each image in a batch
+        self.mask_global = input[&quotM&quot].to(self.device).byte()
+        self.mask_global = <a id="change">self</a>.mask_global.narrow(<a id="change">0</a>,<a id="change">0</a>,1).narrow(1,0,1)
+
+        &#47&#47 create mask online
+        if not self.opt.offline_loading_mask:</code></pre><h3>After Change</h3><pre><code class='java'>
+                self.mask_global = self.create_random_mask().type_as(self.mask_global).view(1, *self.mask_global.size()[-3:])
+                &#47&#47 As generating random masks online are computation-heavy
+                &#47&#47 So just generate one ranodm mask for a batch images.
+                self.mask_global = self.mask_global.expand(self.opt.batchSize, <a id="change">*</a>self.mask_global.size()[-3:])
+            else:
+                raise ValueError("Mask_type [%s] not recognized." % self.opt.mask_type)
+        &#47&#47 For loading mask offline, we also need to change &quotopt.mask_type&quot and &quotopt.mask_sub_type&quot</code></pre><img src="10468575.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/e6d500b7c29066efbfe4cb7ab0e001cb624ad694#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L115' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: e6d500b7c29066efbfe4cb7ab0e001cb624ad694</div><div id='time'> Time: 2019-04-28</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_input</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/5f0a67ce3c2d01a2da19b18f2f0834bb31c35182#diff-a10f91b4f318450612d7015ec60d7752cc8ab176e48f7051a5a518021bcb6b6fL30' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 5f0a67ce3c2d01a2da19b18f2f0834bb31c35182</div><div id='time'> Time: 2019-03-02</div><div id='author'> Author: edouard.oyallon@centralesupelec.fr</div><div id='file'> File Name: kymatio/scattering2d/backend/backend_torch.py</div><div id='class'> Class Name: Pad</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/5f0a67ce3c2d01a2da19b18f2f0834bb31c35182#diff-388508e5d994803116d8b8bcffa19ede14b509fb5d4b9f8246154e7f1776a709L50' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 5f0a67ce3c2d01a2da19b18f2f0834bb31c35182</div><div id='time'> Time: 2019-03-02</div><div id='author'> Author: edouard.oyallon@centralesupelec.fr</div><div id='file'> File Name: kymatio/scattering2d/backend/backend_skcuda.py</div><div id='class'> Class Name: Pad</div><div id='method'> Method Name: __call__</div><BR>

@@ -1,0 +1,40 @@
+<html><h3>aa40fe1aa0382bf5148d1475dd647def1d2ed332,TTS/tts/models/speedy_speech.py,SpeedySpeech,forward,#SpeedySpeech#,59
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x_emb = torch.transpose(x_emb, 1, -1)
+
+        &#47&#47 compute sequence masks
+        x_mask = <a id="change">torch.unsqueeze(sequence_mask(x_lengths, x.shape[1]),
+                                 1).to(x.dtype)</a>
+
+        <a id="change">y_mask = torch.unsqueeze(sequence_mask(y_lengths, None),
+                                 1).to(x_mask.dtype)</a>
+
+        &#47&#47 encoder pass
+        o_en = self.encoder(x_emb, x_mask)
+
+        &#47&#47 duration predictor pass
+        o_dr_log = self.duration_predictor(o_en.detach(), x_mask)
+
+        &#47&#47 expand o_en with durations
+        o_en_ex, attn = self.expand_encoder_outputs(o_en, dr, x_mask, y_mask)
+
+        &#47&#47 positional encoding
+        if hasattr(self, &quotpos_encoder&quot):
+            o_en_ex = self.pos_encoder(o_en_ex, y_mask)
+
+        &#47&#47 decoder pass
+        <a id="change">o_de = self.decoder(o_en_ex, y_mask)</a>
+
+        return o_de, o_dr_log.squeeze(1), attn.transpose(1, 2)
+
+    def inference(self, x, x_lengths, g=None):  &#47&#47 pylint: disable=unused-argument</code></pre><h3>After Change</h3><pre><code class='java'>
+        return o_de, attn.transpose(1, 2)
+
+    def forward(self, x, x_lengths, y_lengths, dr, g=None):  &#47&#47 pylint: disable=unused-argument
+        <a id="change">o_en</a>, o_en_dp, x_mask, g = self._forward_encoder(x, x_lengths, g)
+        o_dr_log = self.duration_predictor(o_en_dp.detach(), x_mask)
+        o_de, attn= self._forward_decoder(o_en, o_en_dp, dr, x_mask, y_lengths, g=g)
+        return o_de, o_dr_log.squeeze(1), attn</code></pre><img src="32513329.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/aa40fe1aa0382bf5148d1475dd647def1d2ed332#diff-f338be1a7b6e47e5fd87f0f1eb704ddb47c9329b9a9ab9f21c4b45d1ff29f3b2L59' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: aa40fe1aa0382bf5148d1475dd647def1d2ed332</div><div id='time'> Time: 2021-01-06</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/tts/models/speedy_speech.py</div><div id='class'> Class Name: SpeedySpeech</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/aa40fe1aa0382bf5148d1475dd647def1d2ed332#diff-f338be1a7b6e47e5fd87f0f1eb704ddb47c9329b9a9ab9f21c4b45d1ff29f3b2L91' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: aa40fe1aa0382bf5148d1475dd647def1d2ed332</div><div id='time'> Time: 2021-01-06</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/tts/models/speedy_speech.py</div><div id='class'> Class Name: SpeedySpeech</div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/50822819b664cd9d751d410a5eabd4cc0688311d#diff-d326fb9d1b950eb547922e26b05058b90847ee3ca26a5ab52bb76be089376d52L38' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: 50822819b664cd9d751d410a5eabd4cc0688311d</div><div id='time'> Time: 2020-11-03</div><div id='author'> Author: matthias.fey@tu-dortmund.de</div><div id='file'> File Name: examples/tgn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

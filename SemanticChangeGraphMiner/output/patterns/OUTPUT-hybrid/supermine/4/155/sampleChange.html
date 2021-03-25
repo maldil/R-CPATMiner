@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nB = len(seqs)
+        nS = max([len(seq) for seq in seqs])
+        arr: Array3d = self.alloc_f3d(nB, nS, seqs[0].shape[1])
+        for arr_i, (length, seqs_i) in <a id="change">enumerate(lengths_indices)</a>:
+            arr[<a id="change">arr_i, :</a>length] = self.asarray(seqs[seqs_i])
+        arr = self.as_contig(arr.transpose((1, 0, 2)))
+        &#47&#47 Build a lookup table so we can find how big the batch is at point t.
+        batch_size_at_t_ = numpy.zeros(nS, dtype="i")</code></pre><h3>After Change</h3><pre><code class='java'>
+        lengths_ = [length for length, i in lengths_indices]
+        nB = len(seqs)
+        nS = max([len(seq) for seq in seqs])
+        arr: <a id="change">Array3d = self.pad(seqs)</a>
+        &#47&#47 Build a lookup table so we can find how big the batch is at point t.
+        batch_size_at_t_ = numpy.zeros(nS, dtype="i")
+        batch_size_at_t_ += 1
+        i = len(lengths_)</code></pre>

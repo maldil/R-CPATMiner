@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if y.ndim == 1:
+        y = core.resample(y, sr, target_sr, res_type=&quotlinear&quot)
+    else:
+        y = np.vstack([<a id="change">core.resample(_, sr, target_sr)</a> for _ in y])
+
+    y = np.abs(y)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    util.valid_audio(y, mono=False)
+
+    <a id="change">if not (util.valid_int(max_sr) and max_sr &gt; 0):
+        raise ParameterError(&quotmax_sr must be a non-negative integer&quot)
+
+   </a> target_sr = sr
+
+    if max_points is not None:
+        if max_points &lt;= 0:
+            raise ParameterError(&quotmax_points must be strictly positive&quot)
+
+        if max_points &lt; y.shape[-1]:
+            target_sr = min(max_sr, (sr * y.shape[-1]) // max_points)
+
+        <a id="change">hop_length = sr // target_sr</a>
+
+        if y.ndim == 1:
+            y = __envelope(y, hop_length)
+        else:</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    parser.add_argument("--recodex", default=False, action="store_true", help="Evaluation in ReCodEx.")
+    parser.add_argument("--rnn_dim", default=64, type=int, help="RNN cell dimension.")
+    parser.add_argument("--threads", default=1, type=int, help="Maximum number of threads to use.")
+    <a id="change">args = parser.parse_args()</a>
+
+    &#47&#47 Fix random seeds and number of threads
+    np.random.seed(42)
+    tf.random.set_seed(42)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Report only errors by default
+    if not args.verbose:
+        <a id="change">os.environ["TF_CPP_MIN_LOG_LEVEL"]</a> = "3"
+
+    &#47&#47 Create logdir name
+    args.logdir = os.path.join("logs", "{}-{}-{}".format(</code></pre>

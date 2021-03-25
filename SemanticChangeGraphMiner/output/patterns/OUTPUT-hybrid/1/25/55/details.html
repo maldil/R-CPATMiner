@@ -1,0 +1,55 @@
+<html><h3>10f51a7713242b65cd4c6ed89f644631fb5ef583,mir_eval/segment.py,,boundary_detection,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Convert intervals to boundaries
+    reference_boundaries = util.intervals_to_boundaries(reference_intervals)[0]
+    <a id="change">estimated_boundaries</a> = <a id="change">util.intervals_to_boundaries(estimated_intervals)[0]</a>
+
+    &#47&#47 Suppress the first and last intervals
+    if trim:
+        reference_boundaries = reference_boundaries[1:-1]
+        <a id="change">estimated_boundaries</a> = estimated_boundaries[1:-1]
+
+    &#47&#47 If we have no boundaries, we get no score.
+    if len(reference_boundaries) == 0 or len(estimated_boundaries) == 0:
+        return 0.0, 0.0, 0.0
+
+    &#47&#47 Compute the hits
+    <a id="change">dist</a>        = np.abs( np.subtract.outer(reference_boundaries, estimated_boundaries)) &lt;= window
+
+    &#47&#47 Precision: how many estimated intervals were hits?
+    <a id="change">precision</a>   = np.mean(dist.max(axis=0))
+
+    &#47&#47 Recall: how many of the intervals did we catch?
+    <a id="change">recall</a>      = np.mean(dist.max(axis=1))
+
+    &#47&#47 And the f-measure
+    f_measure   = util.f_measure(precision, recall, beta=beta)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Convert intervals to boundaries
+    reference_boundaries = util.intervals_to_boundaries(reference_intervals)
+    <a id="change">estimated_boundaries</a> = <a id="change">util.intervals_to_boundaries(estimated_intervals)</a>
+
+    &#47&#47 Suppress the first and last intervals
+    if trim:
+        reference_boundaries = reference_boundaries[1:-1]
+        <a id="change">estimated_boundaries</a> = estimated_boundaries[1:-1]
+
+    &#47&#47 If we have no boundaries, we get no score.
+    if len(reference_boundaries) == 0 or len(estimated_boundaries) == 0:
+        return 0.0, 0.0, 0.0
+
+    &#47&#47 Compute the hits
+    <a id="change">dist</a>        = np.abs( np.subtract.outer(reference_boundaries, estimated_boundaries)) &lt;= window
+
+    &#47&#47 Precision: how many estimated intervals were hits?
+    <a id="change">precision</a>   = np.mean(dist.max(axis=0))
+
+    &#47&#47 Recall: how many of the intervals did we catch?
+    <a id="change">recall</a>      = np.mean(dist.max(axis=1))
+
+    &#47&#47 And the f-measure
+    f_measure   = util.f_measure(precision, recall, beta=beta)</code></pre><img src="91377.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/10f51a7713242b65cd4c6ed89f644631fb5ef583#diff-d9dd0dc8b692cee872527638f7a1f6f30d4a7379c59ce845317dca9fcf034f93L59' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 10f51a7713242b65cd4c6ed89f644631fb5ef583</div><div id='time'> Time: 2014-03-29</div><div id='author'> Author: craffel@gmail.com</div><div id='file'> File Name: mir_eval/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: boundary_detection</div><BR><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/10f51a7713242b65cd4c6ed89f644631fb5ef583#diff-d9dd0dc8b692cee872527638f7a1f6f30d4a7379c59ce845317dca9fcf034f93L113' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 10f51a7713242b65cd4c6ed89f644631fb5ef583</div><div id='time'> Time: 2014-03-29</div><div id='author'> Author: craffel@gmail.com</div><div id='file'> File Name: mir_eval/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: boundary_deviation</div><BR>

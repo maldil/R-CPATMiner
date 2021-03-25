@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            end_time = time.time()
+
+            for i in range(0, y_pred.shape[1]-int(self.drop_first)):
+                preds["est"+str(c+1)+"_class"+str(i)+"_("+<a id="change">str(end_time-start_time)</a>+"sec)"] = y_pred[:,i]
+
+            clf.fit(X.drop(indexes_to_drop), y.drop(indexes_to_drop))      &#47&#47 and we refit the base estimator on entire train set
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        layer = 1
+        while(len(np.intersect1d(X.columns, ["layer"+str(layer)+"_"+s for s in preds.columns]))&gt;0):
+            <a id="change">layer = layer + 1</a>
+        <a id="change">preds.columns = ["layer"+str(layer)+"_"+s for s in preds.columns]</a>
+            
+        self.__fittransformOK = True
+
+        if(self.copy==True):</code></pre>

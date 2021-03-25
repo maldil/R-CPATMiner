@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        onehot = np.ndim(target) != 1
+        assert output.shape[0] == target.shape[0], \
+                &quotnumber of targets and outputs do not match&quot
+        <a id="change">assert output.shape[1] == self.conf.shape[0], \
+                &quotnumber of outputs does not match size of confusion matrix&quot</a>
+        assert not onehot or target.shape[1] == output.shape[1], \
+                &quottarget should be 1D Tensor or have size of output (one-hot)&quot
+        if onehot:
+            assert (target &gt;= 0).all() and (target &lt;= 1).all(), \</code></pre><h3>After Change</h3><pre><code class='java'>
+        if np.ndim(predicted) != 1:
+            assert predicted.shape[1] == self.k, \
+                &quotnumber of predictions does not match size of confusion matrix&quot
+            <a id="change">predicted = np.argmax(predicted, 1)</a>
+        else:
+            assert (predicted.max() &lt; self.k) and (predicted.min() &gt;= 0), \
+                &quotpredicted values are not between 1 and k&quot
+</code></pre>

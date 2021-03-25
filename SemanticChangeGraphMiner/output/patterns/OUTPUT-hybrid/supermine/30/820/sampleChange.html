@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+       (via `tf.keras.backend.set_floatx(float_dtype)`).
+      **kwargs: Additional keyword arguments.
+    
+    <a id="change">return super(Zeros, self).__call__(shape, dtype=_get_dtype(dtype), **kwargs)</a>
+
+
+@keras_export(&quotkeras.initializers.Ones&quot, &quotkeras.initializers.ones&quot, v1=[])
+class Ones(tf.ones_initializer, Initializer):</code></pre><h3>After Change</h3><pre><code class='java'>
+      **kwargs: Additional keyword arguments.
+    
+    _validate_kwargs(self.__class__.__name__, kwargs)
+    <a id="change">dtype = _get_dtype(dtype)</a>
+    <a id="change">if not dtype.is_numpy_compatible or dtype == tf.string:
+      raise ValueError(&quotExpected numeric or boolean dtype, got %s.&quot % dtype)
+   </a> <a id="change">if _PARTITION_SHAPE in kwargs:
+      shape = kwargs[_PARTITION_SHAPE]
+   </a> <a id="change">return tf.zeros(shape, dtype)</a>
+
+
+@keras_export(&quotkeras.initializers.Ones&quot, &quotkeras.initializers.ones&quot, v1=[])
+class Ones(Initializer):</code></pre>

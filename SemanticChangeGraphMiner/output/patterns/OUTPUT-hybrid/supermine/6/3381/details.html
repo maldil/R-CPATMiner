@@ -1,0 +1,47 @@
+<html><h3>7ce6642f777e9da6249bd5b05330d57fa09ea37a,example/mpii.py,,train,#,131
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data_time.update(time.time() - end)
+
+        input_var = torch.autograd.Variable(inputs.cuda())
+        <a id="change">target_var = torch.autograd.Variable(target.cuda(async=True)</a>)
+
+        &#47&#47 compute output
+        output = model(input_var)
+        score_map = output[-1].data.cpu()
+
+        loss = criterion(output[0], target_var)
+        for j in range(1, len(output)):
+            loss += criterion(output[j], target_var)
+        acc = accuracy(score_map, target, idx)
+
+        if debug: &#47&#47 visualize groundtruth and predictions
+            gt_batch_img = batch_with_heatmap(inputs, target)
+            pred_batch_img = batch_with_heatmap(inputs, score_map)
+            if not gt_win or not pred_win:
+                ax1 = plt.subplot(121)
+                ax1.title.set_text(&quotGroundtruth&quot)
+                gt_win = plt.imshow(gt_batch_img)
+                ax2 = plt.subplot(122)
+                ax2.title.set_text(&quotPrediction&quot)
+                pred_win = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)
+            plt.pause(.05)
+            plt.draw()
+
+        &#47&#47 measure accuracy and record loss
+        losses.update(<a id="change">loss</a>.data[0], inputs.size(0))
+        acces.update(acc[0], inputs.size(0))
+
+        &#47&#47 compute gradient and do SGD step</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if debug: &#47&#47 visualize groundtruth and predictions
+            gt_batch_img = batch_with_heatmap(input, target)
+            pred_batch_img = batch_with_heatmap(input, <a id="change">output[0]</a>)
+            if not gt_win or not pred_win:
+                ax1 = plt.subplot(121)
+                ax1.title.set_text(&quotGroundtruth&quot)</code></pre><img src="14708886.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/7ce6642f777e9da6249bd5b05330d57fa09ea37a#diff-6da4f16e5d214b553c1e56ae7a915dfde240f02def5e33970b302775f3eb314aL148' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 7ce6642f777e9da6249bd5b05330d57fa09ea37a</div><div id='time'> Time: 2019-01-07</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mpii.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/pytorch/contrib/commit/1e3564915cd6ce0b05fd656274768393372b49b9#diff-afa305310a92702219b2e55555a85dc89bdf4f695cf6969ebe3ed7767691bf17L280' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/contrib</div><div id='commit'> Commit Name: 1e3564915cd6ce0b05fd656274768393372b49b9</div><div id='time'> Time: 2018-08-30</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: torchcontrib/optim/swa.py</div><div id='class'> Class Name: SWA</div><div id='method'> Method Name: bn_update</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L281' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR>

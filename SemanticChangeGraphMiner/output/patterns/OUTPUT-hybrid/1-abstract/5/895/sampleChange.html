@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    act = Activation(&quotsigmoid&quot)(final_convolution)
+    model = Model(inputs=inputs, outputs=act)
+
+    <a id="change">model.compile(optimizer=Adam(lr=initial_learning_rate), loss=dice_coef_loss,
+                  metrics=[dice_coef] + [get_label_dice_coefficient_function(index) for index in range(n_labels)])</a>
+
+    return model
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            metrics = label_wise_dice_metrics
+
+    <a id="change">model.compile(optimizer=Adam(lr=initial_learning_rate), loss=dice_coef_loss, metrics=metrics)</a>
+    return model
+
+
+def dice_coef(y_true, y_pred, smooth=1.):</code></pre>

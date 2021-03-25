@@ -1,0 +1,35 @@
+digraph G {
+subgraph cluster0 {
+1 [label="cuda" a="32" s="6027" l="6" shape="box"];
+3 [label="Variable" a="32" s="5841,5907" l="9,1" shape="box"];
+4 [label="array" a="32" s="5873,5905" l="6,1" shape="box"];
+5 [label="IfStatement" a="25" s="5920,5933" l="4,2" shape="diamond"];
+8 [label="from_numpy" a="32" s="5856,5906" l="11,1" shape="box"];
+9 [label="Assignment:=" a="7" s="6011" l="1" shape="box"];
+10 [label="FieldAccess" a="22" s="5892" l="13" shape="box"];
+11 [label="FieldAccess" a="22" s="5924" l="4" shape="box"];
+12 [label="SimpleName" a="42" s="5892" l="5" shape="ellipse"];
+13 [label="SimpleName" a="42" s="5867" l="5" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="FloatTensor" a="32" s="5648,5671" l="12,1" shape="box"];
+6 [label="to" a="32" s="5673,5682" l="3,1" shape="box"];
+7 [label="FieldAccess" a="22" s="5676" l="6" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 9 [label="_para_"];
+2 -> 6 [label="_recv_"];
+3 -> 1 [label="_recv_"];
+4 -> 8 [label="_para_"];
+5 -> 1 [label="_control_"];
+5 -> 9 [label="_control_"];
+7 -> 6 [label="_para_"];
+8 -> 3 [label="_para_"];
+10 -> 4 [label="_para_"];
+11 -> 5 [label="_cond_"];
+12 -> 10 [label="_qual_"];
+13 -> 4 [label="_recv_"];
+}

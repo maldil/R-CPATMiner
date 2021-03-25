@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    selector = random_blotches(selector, 3*blotches, blotches)
+    paper = make_multiscale_noise_uniform(image.shape, span=(0.8, 1.0))
+    ink = make_multiscale_noise_uniform(image.shape, span=(0.0, 0.2))
+    blurred = (<a id="change">ndi.gaussian_filter(selector, blur)</a> + selector) / 2
+    printed = blurred * ink + (1-blurred) * paper
+    if inverted:
+        return 1 - printed</code></pre><h3>After Change</h3><pre><code class='java'>
+    selector = random_blotches(selector, 3*blotches, blotches)
+    paper = make_multiscale_noise_uniform(image.shape[:2], span=(0.8, 1.0))
+    ink = make_multiscale_noise_uniform(image.shape[:2], span=(0.0, 0.2))
+    blurred = (<a id="change">cv.GaussianBlur(selector, (0, 0), sigmaX=blur, borderType=cv.BORDER_REFLECT)</a> + selector) / 2
+    if blurred.ndim == 3:
+        ink = np.repeat(ink[:, :, None], 3, 2)
+        paper = np.repeat(paper[:, :, None], 3, 2)</code></pre>

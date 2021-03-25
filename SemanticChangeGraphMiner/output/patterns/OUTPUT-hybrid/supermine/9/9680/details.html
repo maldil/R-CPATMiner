@@ -1,0 +1,26 @@
+<html><h3>7a8be4139a3d1f3968081728375c4621285ec3fe,unrestricted_advex/eval_kit/eval_with_attacks.py,,plot_confident_error_rate,#,145
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ax = fig.add_subplot(111)
+
+    plt.plot(coverages, [float(len(idxs)) / num_examples
+                         <a id="change">for</a> idxs in cov_to_confident_error_idxs])
+    plt.title(title.format(attack_name=attack_name))
+    plt.ylabel("Risk \n (error rate on covered data)")
+    plt.xlabel("Coverage \n (fraction of points not abstained on)")</code></pre><h3>After Change</h3><pre><code class='java'>
+  fig = plt.figure()
+  ax = fig.add_subplot(111)
+
+  <a id="change">cov_to_num_covered_examples = [
+    num_examples * coverage for coverage in coverages
+  ]</a>
+
+  risk_on_covered_data = [
+    float(len(error_idxs)) / num_covered_examples
+    <a id="change">for</a> error_idxs, num_covered_examples in
+    <a id="change">zip(cov_to_confident_error_idxs, cov_to_num_covered_examples)</a>]
+
+  plt.plot(coverages, risk_on_covered_data)
+  plt.title(title.format(attack_name=attack_name))</code></pre><img src="37279547.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/google/unrestricted-adversarial-examples/commit/7a8be4139a3d1f3968081728375c4621285ec3fe#diff-d1207792ed1b0c3b614ca207cd9694385b40b41732fd565f0b5118315e3c87c7L152' target='_blank'>Link</a></div><div id='project'> Project Name: google/unrestricted-adversarial-examples</div><div id='commit'> Commit Name: 7a8be4139a3d1f3968081728375c4621285ec3fe</div><div id='time'> Time: 2018-08-25</div><div id='author'> Author: nottombrown@gmail.com</div><div id='file'> File Name: unrestricted_advex/eval_kit/eval_with_attacks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_confident_error_rate</div><BR><BR><div id='link'><a href='https://github.com/autoreject/autoreject/commit/e6dc6899d0aa846636c48562c79b161347c35235#diff-e89b7cc298cd7e026773e1652569566ff747b6c7d2fbbd772c9fa6ecba9f9240L192' target='_blank'>Link</a></div><div id='project'> Project Name: autoreject/autoreject</div><div id='commit'> Commit Name: e6dc6899d0aa846636c48562c79b161347c35235</div><div id='time'> Time: 2019-06-04</div><div id='author'> Author: mainakjas@gmail.com</div><div id='file'> File Name: autoreject/ransac.py</div><div id='class'> Class Name: Ransac</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/agents/commit/aaafecb49e4eb1764f58a9b0a47e2941983c9bc6#diff-2469600d6861ac1680532eca74945050df7fe0de48cf03d3993260cc97e5f04dL104' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/agents</div><div id='commit'> Commit Name: aaafecb49e4eb1764f58a9b0a47e2941983c9bc6</div><div id='time'> Time: 2021-02-04</div><div id='author'> Author: ebrevdo@google.com</div><div id='file'> File Name: tf_agents/networks/sequential.py</div><div id='class'> Class Name: Sequential</div><div id='method'> Method Name: __init__</div><BR>

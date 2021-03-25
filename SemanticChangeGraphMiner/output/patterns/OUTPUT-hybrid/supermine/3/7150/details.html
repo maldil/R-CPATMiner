@@ -1,0 +1,20 @@
+<html><h3>bcdec7cdfadef83ea07a918a973aba4220177eaf,models/AttModel.py,AttModel,_diverse_sample,#AttModel#,346
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        unfinished = it &gt; 0
+                    else:
+                        unfinished = (seq[:,t-1] &gt; 0) & (it &gt; 0) &#47&#47 changed
+                    <a id="change">it = it * unfinished.type_as(it)</a>
+                    seq[:,t] = it
+                    seqLogprobs[:,t] = sampleLogprobs.view(-1)
+
+        return torch.stack(seq_table, 1).reshape(batch_size * group_size, -1), torch.stack(seqLogprobs_table, 1).reshape(batch_size * group_size, -1)</code></pre><h3>After Change</h3><pre><code class='java'>
+                    if t == 0:
+                        unfinished = it != self.eos_idx
+                    else:
+                        unfinished = seq[:,t-1] != self.pad_idx & seq[<a id="change">:,t</a>-1] != self.eos_idx
+                        it[~unfinished] = self.pad_idx
+                        unfinished = unfinished & (it != self.eos_idx) &#47&#47 changed
+                    seq[:,t] = it</code></pre><img src="27898073.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ruotianluo/self-critical.pytorch/commit/bcdec7cdfadef83ea07a918a973aba4220177eaf#diff-19db989ab9f9301d21cdc9066529071818266d09691a8afb0dd298eaded0b467L351' target='_blank'>Link</a></div><div id='project'> Project Name: ruotianluo/self-critical.pytorch</div><div id='commit'> Commit Name: bcdec7cdfadef83ea07a918a973aba4220177eaf</div><div id='time'> Time: 2020-04-02</div><div id='author'> Author: rluo@ttic.edu</div><div id='file'> File Name: models/AttModel.py</div><div id='class'> Class Name: AttModel</div><div id='method'> Method Name: _diverse_sample</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/9503fd51007f3c31daa5a8c110c4b090d3644fdc#diff-abdc21ce99efdb199d82860bb37609b41fe209e56f030ef883e5ac86f2137346L31' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 9503fd51007f3c31daa5a8c110c4b090d3644fdc</div><div id='time'> Time: 2018-12-13</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/accelerated_shift_net/accelerated_InnerShiftTripleFunction.py</div><div id='class'> Class Name: AcceleratedInnerShiftTripleFunction</div><div id='method'> Method Name: forward</div><BR>

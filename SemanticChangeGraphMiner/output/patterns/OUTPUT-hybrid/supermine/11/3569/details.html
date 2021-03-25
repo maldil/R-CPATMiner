@@ -1,0 +1,27 @@
+<html><h3>cd4186d816ef7482e64fe66c671fba9578eae19b,brian2/codegen/generators/GSL_generator.py,GSLCodeGenerator,get_dimension_code,#GSLCodeGenerator#,122
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        end_function = self.get_syntax(&quotend_function&quot)
+        code = &quot\n{start_function}int set_dimension(size_t * dimension){open_function}&quot.format(start_function=start_function,
+                                                                                            open_function=open_function)
+        code += <a id="change">&quot\n\tdimension[0] = {diff_num}{end_statement}&quot.format(diff_num=diff_num, end_statement=end_statement)</a>
+        code += &quot\n\treturn GSL_SUCCESS{end_statement}\n&quot.format(end_statement=end_statement)
+        code += end_function
+        <a id="change">return code</a>
+
+    def yvector_code(self, diff_vars):
+        start_function = self.get_syntax(&quotstart_function&quot)
+        open_function = self.get_syntax(&quotopen_function&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return to_replace
+
+    def get_dimension_code(self, diff_num):
+        code = <a id="change">[&quot\n{start_function}int set_dimension(size_t * dimension){open_function}&quot]</a>
+        <a id="change">code += [&quot\tdimension[0] = %d{end_statement}&quot%diff_num]</a>
+        <a id="change">code += [&quot\treturn GSL_SUCCESS{end_statement}&quot]</a>
+        <a id="change">return (&quot\n&quot).join(code).format(**self.syntax)</a>
+
+    def yvector_code(self, diff_vars):
+        allocate_y = [&quot\n{start_function}double* assign_memory_y(){open_function}&quot]
+        allocate_y += [&quot\treturn {open_cast}double *{close_cast} malloc(%d*sizeof(double))&quot%len(diff_vars)]</code></pre><img src="15805777.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/cd4186d816ef7482e64fe66c671fba9578eae19b#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL122' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: cd4186d816ef7482e64fe66c671fba9578eae19b</div><div id='time'> Time: 2017-07-20</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: get_dimension_code</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL350' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL377' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: unpack_namespace</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    p_new = np.zeros_like(p_old)
+
+    for observation_interval in observation_intervals:
+        <a id="change">p_temp = np.zeros_like(p_old)</a>
+
+        &#47&#47 find all turnbull intervals, t, that are contained in (ol, or). Call this set T
+        &#47&#47 the denominator is sum of p_old[T] probabilities
+        &#47&#47 the numerator is p_old[t]</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 the numerator is p_old[t]
+
+        ix = list(turnbull_interval_lookup[observation_interval])
+        p_new[ix] += p_old[ix] / <a id="change">p_old</a>[ix].sum()
+
+    return p_new / N
+</code></pre>

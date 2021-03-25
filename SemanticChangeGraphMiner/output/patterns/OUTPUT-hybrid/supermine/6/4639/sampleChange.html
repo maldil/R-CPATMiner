@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  Returns:
+    A set of strings.
+  
+  return set(<a id="change">[
+      name
+      for name, op in op_def_registry.get_registered_ops().items()
+      if op.is_stateful and not op.input_arg
+  ]</a>)
+
+
+def get_state_map(meta_graph, state_ops, unsupported_state_ops,</code></pre><h3>After Change</h3><pre><code class='java'>
+    A set of strings.
+  
+  used_ops = (node.op for node in graph_def.node)
+  return <a id="change">{op for op in used_ops if is_registered_stateful_op_without_inputs(op)}</a>
+
+
+def get_state_map(meta_graph, state_ops, unsupported_state_ops,
+                  get_tensor_by_name):</code></pre>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                   feature_names=boston.feature_names)
+
+    with pytest.raises(ValueError, match=msg):
+        <a id="change">disp.plot(ax=[ax1, ax2, ax3])</a>
+
+
+def test_plot_partial_dependence_with_same_axes(pyplot, clf_boston, boston):
+    &#47&#47 The first call to plot_partial_dependence will create two new axes to</code></pre><h3>After Change</h3><pre><code class='java'>
+                                   grid_resolution=grid_resolution,
+                                   feature_names=boston.feature_names)
+
+    <a id="change">for ax_format in axes_formats:
+        with pytest.raises(ValueError, match=msg):
+            plot_partial_dependence(clf_boston, boston.data,
+                                    [&quotCRIM&quot, &quotZN&quot],
+                                    grid_resolution=grid_resolution,
+                                    feature_names=boston.feature_names,
+                                    ax=ax_format)
+
+        &#47&#47 with axes object
+        with pytest.raises(ValueError, match=msg):
+            disp.plot(ax=ax_format)
+
+
+</a>def test_plot_partial_dependence_with_same_axes(pyplot, clf_boston, boston):
+    &#47&#47 The first call to plot_partial_dependence will create two new axes to
+    &#47&#47 place in the space of the passed in axes, which results in a total of
+    &#47&#47 three axes in the figure.</code></pre>

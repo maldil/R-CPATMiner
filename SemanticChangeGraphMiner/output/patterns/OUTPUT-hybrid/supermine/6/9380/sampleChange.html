@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Train!
+    try:
+        <a id="change">train(model, data_loader, optimizer, writer,
+              init_lr=hparams.initial_learning_rate,
+              checkpoint_dir=checkpoint_dir,
+              checkpoint_interval=hparams.checkpoint_interval,
+              nepochs=hparams.nepochs,
+              clip_thresh=hparams.clip_thresh,
+              )</a>
+    except KeyboardInterrupt:
+        save_checkpoint(
+            model, optimizer, global_step, checkpoint_dir, global_epoch)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Dataset and Dataloader setup
+    data_loaders = {}
+    <a id="change">for phase in ["train", "test"]:
+        train = phase == "train"
+        X = FileSourceDataset(RawAudioDataSource(data_root, speaker_id=speaker_id,
+                                                 train=train,
+                                                 test_size=hparams.test_size,
+                                                 random_state=hparams.random_state))
+        if local_conditioning:
+            Mel = FileSourceDataset(MelSpecDataSource(data_root, speaker_id=speaker_id,
+                                                      train=train,
+                                                      test_size=hparams.test_size,
+                                                      random_state=hparams.random_state))
+            assert len(X) == len(Mel)
+            print("Local conditioning enabled. Shape of a sample: {}.".format(
+                Mel[0].shape))
+        else:
+            Mel = None
+        print("[{}]: length of the dataset is {}".format(phase, len(X)))
+
+        if train:
+            lengths = np.array(X.file_data_source.lengths)
+            &#47&#47 Prepare sampler
+            sampler = PartialyRandomizedSimilarTimeLengthSampler(
+                lengths, batch_size=hparams.batch_size)
+        else:
+            sampler = None
+
+        dataset = PyTorchDataset(X, Mel)
+        data_loader = data_utils.DataLoader(
+            dataset, batch_size=hparams.batch_size,
+            num_workers=hparams.num_workers, sampler=sampler,
+            collate_fn=collate_fn, pin_memory=hparams.pin_memory)
+
+        data_loaders[phase] = data_loader
+
+    &#47&#47 Model
+   </a> model = build_model()
+    print(model)
+    if use_cuda:
+        model = model.cuda()</code></pre>

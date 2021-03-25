@@ -1,0 +1,19 @@
+<html><h3>1c1b85686b9744f988d05ecdbaca20c198488e7b,lightning/impl/prank.py,PRank,predict,#PRank#,73
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def predict(self, X):
+        n_samples = X.shape[0]
+        <a id="change">pred = np.zeros(X.shape[0], dtype=int)</a>
+        for i in xrange(n_samples):
+            <a id="change">pred[i] = self._predit(X[i])[0]</a>
+        return self.label_encoder_.inverse_transform(pred)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples = X.shape[0]
+        dot = safe_sparse_dot(X, self.coef_)
+        out = np.zeros(n_samples, dtype=np.int32)
+        _prank_predict(dot, self.thresholds_, <a id="change">len(self.classes_)</a>, out)
+        return self.label_encoder_.inverse_transform(out)
+</code></pre><img src="37921056.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/lightning/commit/1c1b85686b9744f988d05ecdbaca20c198488e7b#diff-3642767e76dd64ef8aa72daf38b96471855ba6bcd3c7950b0c00c3f912dc4927L48' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/lightning</div><div id='commit'> Commit Name: 1c1b85686b9744f988d05ecdbaca20c198488e7b</div><div id='time'> Time: 2014-06-20</div><div id='author'> Author: mathieu@mblondel.org</div><div id='file'> File Name: lightning/impl/prank.py</div><div id='class'> Class Name: PRank</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/d7df3585734f7d0326d5f854d8f16fe3b3d06373#diff-88aab84e64f10a27a27b04adbe4fda93b6d0eddfc80fa896b60fc5b2e62eb1b5L97' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: d7df3585734f7d0326d5f854d8f16fe3b3d06373</div><div id='time'> Time: 2014-04-18</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: mir_eval/boundary.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: detection</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/a0a5505bbae885e0871b4fd3739d36371be234e6#diff-a36803df0756aedb25904ad796c8214d440ee4e395509a128bfc223a047f84f6L210' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: a0a5505bbae885e0871b4fd3739d36371be234e6</div><div id='time'> Time: 2015-07-29</div><div id='author'> Author: fpishdadian@u.northwestern.edu</div><div id='file'> File Name: KAM.py</div><div id='class'> Class Name: Kernel</div><div id='method'> Method Name: genkernel</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/imbalanced-learn/commit/aa6af82f458acf3f853e5174d34b11d319eea1c0#diff-771e1f1d61d44bb681ce8c7052e222e5960c7de4b91706569e0b88e5127db21cL189' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/imbalanced-learn</div><div id='commit'> Commit Name: aa6af82f458acf3f853e5174d34b11d319eea1c0</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: victor.dvro@gmail.com</div><div id='file'> File Name: unbalanced_dataset/under_sampling/instance_hardness_threshold.py</div><div id='class'> Class Name: InstanceHardnessThreshold</div><div id='method'> Method Name: transform</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if transformers is not None:
+                _call_fit(transformers.fit,
+                          <a id="change">self._get_col_subset(X, columns, input_df)</a>, y)
+
+        &#47&#47 handle features not explicitly selected
+        if self.built_default:  &#47&#47 not False and not None</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if transformers is not None:
+                with add_column_names_to_exception(columns):
+                    <a id="change">Xt = self._get_col_subset(X, columns, input_df)</a>
+                    _call_fit(transformers.fit, Xt, y)
+
+        &#47&#47 handle features not explicitly selected
+        if self.built_default:  &#47&#47 not False and not None</code></pre>

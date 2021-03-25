@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    for i in range(maxiter):
+        X[i] = lb + (ub - lb) * rng.rand(n_params)
+        y[i] = <a id="change">func(X[i])</a>
+
+    res = OptimizeResult()
+    best = np.argmin(y)
+    res.x = X[best]</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not np.isscalar(init_y):
+        raise ValueError(
+            "The function to be optimized should return a scalar")
+    <a id="change">y = np.asarray([init_y] + [func(X[i]) for i in range(maxiter - 1)])</a>
+
+    res = OptimizeResult()
+    best = np.argmin(y)
+    res.x = X[best]</code></pre>

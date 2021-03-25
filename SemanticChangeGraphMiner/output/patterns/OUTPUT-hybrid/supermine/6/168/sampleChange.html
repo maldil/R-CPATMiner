@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    vals = [float(i) for i in prob_line[len(parents):]]
+                    offset = sum((len(parents)-i)*self.variable_states[parents[i]].index(states[i])
+                                 for i in range(len(states)))
+                    <a id="change">for i, val in enumerate(vals):
+                        arr[i][offset] = val
+               </a> arr = numpy.array(arr)
+            variable_cpds[var_name] = arr
+
+        return variable_cpds</code></pre><h3>After Change</h3><pre><code class='java'>
+                for prob_line in cpds:
+                    states = prob_line[:len(parents)]
+                    vals = [float(i) for i in prob_line[len(parents):]]
+                    values_dict[<a id="change">tuple(states)</a>] = vals
+                for index, combination in enumerate(product(*[self.variable_states[var] for var in parents])):
+                    <a id="change">arr[:, index] = values_dict[combination]</a>
+            variable_cpds[var_name] = arr
+
+        return variable_cpds
+</code></pre>

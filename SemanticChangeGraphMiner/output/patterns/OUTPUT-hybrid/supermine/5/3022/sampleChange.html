@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        mapping = []
+        found_column_counts = {}
+        for col in self.cols:
+            <a id="change">col_tuples = copy.deepcopy(
+                [class_map[&quotmapping&quot] for class_map in self.ordinal_encoder.mapping if class_map[&quotcol&quot] == col][0])</a>
+            if self.handle_unknown == &quotimpute&quot:
+                col_tuples.append((&quot-1&quot, -1))
+
+            col_mappings = []</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for switch in self.ordinal_encoder.mapping:
+            col = switch.get(&quotcol&quot)
+            column_mapping = <a id="change">switch.get(&quotmapping&quot).copy(deep=True)</a>
+
+            if self.handle_unknown == &quotimpute&quot:
+                <a id="change">column_mapping = column_mapping.append(pd.Series(data=[-1], index=[&quot-1&quot]))</a>
+
+            col_mappings = []
+            for cat_name, class_ in column_mapping.iteritems():
+                if self.use_cat_names:</code></pre>

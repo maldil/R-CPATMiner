@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            output = torch.cat([y1, y2], dim=1)
+            y1.set_()
+            del y1
+            <a id="change">y2.set_()</a>
+            <a id="change">del y2</a>
+
+        &#47&#47 save the input and output variables
+        ctx.save_for_backward(x.data, output)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            y2 = x2 * gmr1 + gmr2
+            x2.set_()
+            del x2
+            output = <a id="change">torch.cat([y1, y2], dim=1).detach_()</a>
+
+        &#47&#47 save the input and output variables
+        ctx.save_for_backward(xin, output)
+</code></pre>

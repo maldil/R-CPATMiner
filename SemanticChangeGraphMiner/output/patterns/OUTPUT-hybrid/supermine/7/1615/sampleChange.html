@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return torch.max(first, torch.max(second, third))
+
+model = SplitMax()
+<a id="change">input = Variable(torch.randn(1, 6, 2, 3))</a>
+save_data_and_model("split_max", input, model)
+
+class Squeeze(nn.Module):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+model = Split(dim=0)
+save_data_and_model("split_2", input, model)
+
+model = Split(split_size_sections=<a id="change">[1, 1]</a>)
+save_data_and_model("split_3", input, model)
+
+model = Split(dim=0, split_size_sections=[1, 1])</code></pre>

@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        d_real = D(x, context={"c": c})
+        self.c = c
+        self.d_fake_inputs = []
+        <a id="change">rems = [None]+gs[:self.frames-1]</a>
+        for g, c in zip(gs[self.frames-1:], gcs):
+            rems = rems[1:] + [g]
+            d_fake_input = torch.cat(rems, dim=1)
+            self.d_fake_inputs.append(d_fake_input)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward_pass(self, frames, x, cs, gs, gcs, rgs, rcs, loss):
+        d_fakes = []
+        <a id="change">d_losses = []</a>
+        g_losses = []
+
+        D = self.discriminator
+        if self.config.discriminator3d:
+            if self.config.gcsf:
+                c = gcs[0][:,:,None,:,:]
+            else:
+                c = cs[-1][:,:,None,:,:]
+        else:
+            c = cs[-1]
+
+        d_real = D(x, context={"c": c})
+        self.d_real = d_real
+        self.c = c
+        self.d_fake_inputs = []
+        rems = frames&#47&#47gs[:self.frames]
+        for g, c in zip(gs, gcs):
+            rems = rems[1:] + [g]
+            d_fake_input = torch.cat(rems, dim=1)
+            self.d_fake_inputs.append(d_fake_input)
+            d_fake = D(d_fake_input, context={"c": c})
+            d_fakes.append(d_fake)
+            _d_loss, _g_loss = loss.forward(d_real, d_fake)
+            d_losses.append(_d_loss)
+            g_losses.append(_g_loss)
+
+        if len(rgs) &gt; 0:
+            grems = rgs[:len(rems)]
+            rc = rcs[len(rems)-1]
+            if config.discriminator3d:
+                grems = [g[:,:,None,:,:] for g in grems]
+                rc = rc[:,:,None,:,:]
+                d_fakes.append(D(torch.cat(grems, dim=2), context={"c":rc}))
+            else:
+                d_fakes.append(D(torch.cat(grems, dim=1), context={"c":rc}))
+            for rg, rc in zip(rgs[len(rems):], rcs[len(rems):]):
+                grems = grems[1:] + [rg]
+                d_fakes.append(D(torch.cat(grems, dim=1), context={"c":rc}))
+
+        <a id="change">d_loss = sum(d_losses)/len(d_losses)</a>
+        g_loss = sum(g_losses)/len(g_losses)
+        return d_loss, g_loss
+
+    def forward_video_discriminator(self, cs, gcs, rcs):</code></pre>

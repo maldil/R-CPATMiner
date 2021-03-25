@@ -1,0 +1,27 @@
+<html><h3>5d353701dd56a1fc8abc15e4082e33b7bed2a241,mimic3models/split_train_val.py,,,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+val_lines = [x for x in lines if x[:x.find("_")] in val_patients]
+assert len(train_lines) + len(val_lines) == len(lines)
+
+<a id="change">if not os.path.exists("data/%s/" % args.task):
+    os.makedirs("data/%s/" % args.task)
+
+</a>with open("data/%s/train_listfile.csv" % args.task, "w") as train_listfile:
+    if has_header:
+        train_listfile.write(header)
+    for line in train_lines:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+val_patients = set()
+with open("mimic3models/valset.csv", "r") as valset_file:
+    <a id="change">for line in valset_file:
+        x, y = line.split(&quot,&quot)
+        if int(y) == 1:
+            val_patients.add(x)
+
+</a>has_header = False
+if args.task in [&quotphenotyping&quot, &quotmultitask&quot]:
+    has_header = True
+</code></pre><img src="30785652.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/YerevaNN/mimic3-benchmarks/commit/5d353701dd56a1fc8abc15e4082e33b7bed2a241#diff-4303007b303bc8905ab1b14df5e2a1719f537eed23ecd0d02bb9c656baa84793L5' target='_blank'>Link</a></div><div id='project'> Project Name: YerevaNN/mimic3-benchmarks</div><div id='commit'> Commit Name: 5d353701dd56a1fc8abc15e4082e33b7bed2a241</div><div id='time'> Time: 2017-08-09</div><div id='author'> Author: harhro@gmail.com</div><div id='file'> File Name: mimic3models/split_train_val.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/YerevaNN/mimic3-benchmarks/commit/7567cc646d258e40dde9790a28a9b264ccd494fb#diff-4303007b303bc8905ab1b14df5e2a1719f537eed23ecd0d02bb9c656baa84793L5' target='_blank'>Link</a></div><div id='project'> Project Name: YerevaNN/mimic3-benchmarks</div><div id='commit'> Commit Name: 7567cc646d258e40dde9790a28a9b264ccd494fb</div><div id='time'> Time: 2017-08-27</div><div id='author'> Author: harhro@gmail.com</div><div id='file'> File Name: mimic3models/split_train_val.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/7ee43f4346812c46b8df43c8cdf7a3016958949c#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L85' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 7ee43f4346812c46b8df43c8cdf7a3016958949c</div><div id='time'> Time: 2020-01-15</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: clean</div><BR>

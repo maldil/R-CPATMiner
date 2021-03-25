@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+wc = 0
+<a id="change">tag_counts</a> = <a id="change">FreqDist()</a>
+iob_counts = FreqDist()
+tag_iob_counts = ConditionalFreqDist()
+word_set = set()
+
+for obj in chunked_corpus.chunked_words():
+	if isinstance(obj, Tree):
+		iob_counts.inc(obj.node)
+		
+		for word, tag in obj.leaves():
+			wc += 1
+			word_set.add(word)
+			tag_counts.inc(tag)
+			tag_iob_counts[tag].inc(obj.node)
+	else:
+		word, tag = obj
+		wc += 1
+		word_set.add(word)
+		<a id="change">tag_counts.inc(tag)</a>
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47&#47&#47 output &#47&#47&#47&#47
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+wc = 0
+<a id="change">tag_counts</a> = collections.defaultdict(int)
+iob_counts = collections.defaultdict(int)
+tag_iob_counts = collections.defaultdict(lambda: collections.defaultdict(int))
+word_set = set()
+
+for obj in chunked_corpus.chunked_words():
+	if isinstance(obj, Tree):
+		label = node_label(obj)
+		<a id="change">iob_counts[label]</a> += 1
+		
+		for word, tag in obj.leaves():
+			wc += 1
+			word_set.add(word)
+			tag_counts[tag] += 1
+			tag_iob_counts[tag][label] += 1
+	else:
+		word, tag = obj
+		wc += 1
+		word_set.add(word)
+		<a id="change">tag_counts[tag] += 1</a>
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47&#47&#47 output &#47&#47&#47&#47
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre>

@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self):
+        super(Generator, self).__init__()
+
+        self.model = <a id="change">nn.Sequential(
+            nn.Linear(opt.latent_dim, 128),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(128, 256),
+            nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(256, 512),
+            nn.BatchNorm1d(512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 1024),
+            nn.BatchNorm1d(1024),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(1024, opt.img_size**2),
+            nn.Tanh()
+        )</a>
+
+    def forward(self, noise):
+        img = self.model(noise)
+        img = img.view(img.shape[0], opt.channels, opt.img_size, opt.img_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            return layers
+
+        self.model = <a id="change">nn.Sequential(
+            *block(opt.latent_dim, 128, normalize=False),
+            *block(128, 256),
+            *block(256, 512),
+            *block(512, 1024),
+            nn.Linear(1024, int(np.prod(img_shape))),
+            nn.Tanh()
+        )</a>
+
+    def forward(self, z):
+        img = self.model(z)
+        img = img.view(img.shape[0], *img_shape)</code></pre>

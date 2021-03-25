@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 decode, optionally save RNN output
+        numBatchElements = len(batch.imgs)
+        evalRnnOutput = self.dump or calcProbability
+        <a id="change">evalList = [self.decoder] + ([self.ctcIn3dTBC] if evalRnnOutput else [])</a>
+        feedDict = {self.inputImgs: batch.imgs, self.seqLen: [Model.maxTextLen] * numBatchElements,
+                    self.is_train: False}
+        evalRes = self.sess.run(evalList, feedDict)
+        decoded = evalRes[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+        numBatchElements = len(batch.imgs)
+
+        &#47&#47 put tensors to be evaluated into list
+        <a id="change">evalList = []</a>
+
+        if self.decoderType == DecoderType.WordBeamSearch:
+            <a id="change">evalList.append(self.wbsInput)</a>
+        else:
+            evalList.append(self.decoder)
+
+        <a id="change">if self.dump or calcProbability:
+            evalList.append(self.ctcIn3dTBC)
+
+        &#47&#47 dict containing all tensor fed into the model
+       </a> feedDict = {self.inputImgs: batch.imgs, self.seqLen: [Model.maxTextLen] * numBatchElements,
+                    self.is_train: False}
+
+        &#47&#47 evaluate model
+        evalRes = self.sess.run(evalList, feedDict)
+
+        &#47&#47 TF decoders: decoding already done in TF graph
+        if self.decoderType != DecoderType.WordBeamSearch:
+            decoded = evalRes[0]
+        &#47&#47 word beam search decoder: decoding is done in C++ function compute()
+        else:
+            <a id="change">decoded = self.decoder.compute(evalRes[0])</a>
+
+        &#47&#47 map labels (numbers) to character string
+        texts = self.decoderOutputToText(decoded, numBatchElements)
+</code></pre>

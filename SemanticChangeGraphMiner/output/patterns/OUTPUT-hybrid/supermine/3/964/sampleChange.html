@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Set the X and Y limits
+        &#47&#47 The silhouette coefficient can range from -1, 1
+        self.ax.set_xlim(<a id="change">[-1, 1]</a>)
+        &#47&#47 The (n_clusters_+1)*10 is for inserting blank space between
+        &#47&#47 silhouette plots of individual clusters, to demarcate them clearly.
+        self.ax.set_ylim([0, self.n_samples_ + (self.n_clusters_ + 1) * 10])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 l_xlim and u_xlim are lower and upper limits of the x-axis,
+        &#47&#47 set according to our calculated maximum and minimum silhouette score along with necessary padding
+        <a id="change">l_xlim = max(-1, min(-0.1, round(min(self.silhouette_samples_) - 0.1, 1)))</a>
+        u_xlim = min(1, round(max(self.silhouette_samples_) + 0.1, 1))
+        self.ax.set_xlim([l_xlim, u_xlim])
+
+        &#47&#47 The (n_clusters_+1)*10 is for inserting blank space between</code></pre>

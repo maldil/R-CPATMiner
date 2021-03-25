@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if now is None:
+            now = timezone.now()
+
+        <a id="change">subs</a> = <a id="change">Submission.objects.filter(
+            challenge=self.request.challenge,
+            creator=self.request.user,
+            created__gte=now - period,
+        ).order_by("-created")</a>
+
+        try:
+            <a id="change">next_sub_at</a> = subs[max_subs - 1].created + period
+        except (IndexError, AssertionError):
+            next_sub_at = now
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if now is None:
+            now = timezone.now()
+
+        <a id="change">subs</a> = (
+            <a id="change">Submission</a>.objects.filter(
+                challenge=self.request.challenge,
+                creator=self.request.user,
+                created__gte=now - period,
+            )
+            .exclude(job__status=Job.FAILURE)
+            .order_by("-created")
+            .distinct()
+        )
+
+        try:
+            <a id="change">next_sub_at</a> = subs[max_subs - 1].created + period
+        except (IndexError, AssertionError):
+            next_sub_at = now
+</code></pre>

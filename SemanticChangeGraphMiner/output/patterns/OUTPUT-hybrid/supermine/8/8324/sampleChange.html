@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def cdf_to_dist(self, cdf):
+        Convert a CDF to a distribution (keep the list format, just discount lower bounds).
+        lo_bound = 0.0
+        <a id="change">dist = []</a>
+        for cand, hi_bound in cdf:
+            <a id="change">dist.append((cand, hi_bound - lo_bound))</a>
+            lo_bound = hi_bound
+        return dist
+
+    def get_best_child(self, parent, cdf):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def cdf_to_dist(self, cdf):
+        Convert a CDF to a distribution (keep the list format, just discount lower bounds).
+        lo_bound = 0.0
+        <a id="change">dist = {}</a>
+        for cand, hi_bound in cdf:
+            <a id="change">dist[cand] = hi_bound - lo_bound</a>
+            lo_bound = hi_bound
+        return dist
+
+    def get_best_child(self, parent, cdf):</code></pre>

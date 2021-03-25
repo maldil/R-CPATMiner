@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        new_img = Image.new(&quotRGBA&quot, (self.width, self.height), self.color)
+        if self.anchor:
+            x = int((self.width - img.size[0]) * Anchor._ANCHOR_PTS[self.anchor][0])
+            y = int((self.height - <a id="change">img.size[1]</a>) * Anchor._ANCHOR_PTS[self.anchor][1])
+        else:
+            x, y = self.x, self.y
+        new_img.paste(img, (x, y))</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.color = color or (255, 255, 255, 0)
+
+    def process(self, img):
+        <a id="change">original_width</a>, original_height = img.size
+
+        if self.anchor:
+            anchor = Anchor.get_tuple(self.anchor)
+            <a id="change">trim_x, trim_y = self.width - original_width, \
+                    self.height - original_height</a>
+            x = int(float(trim_x) * float(anchor[0]))
+            y = int(float(trim_y) * float(anchor[1]))
+        else:
+            x, y = self.x, self.y</code></pre>

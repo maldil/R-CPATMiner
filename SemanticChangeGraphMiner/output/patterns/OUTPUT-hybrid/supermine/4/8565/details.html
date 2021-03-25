@@ -1,0 +1,38 @@
+<html><h3>32d40eb01a5a61304720fb1c425abef0a1f5b5a0,model.py,Generator,__init__,#Generator#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class Generator(nn.Module):
+    def __init__(self):
+        super(Generator, self).__init__()
+        <a id="change">self.main = nn.Sequential(
+            &#47&#47 input is Z, going into a convolution
+            nn.ConvTranspose2d(100, 32 * 8, 4, 1, 0, bias=False),
+            nn.BatchNorm2d(32 * 8),
+            nn.ReLU(True),
+            &#47&#47 state size. (32*8) x 4 x 4
+            nn.ConvTranspose2d(32 * 8, 32 * 4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(32 * 4),
+            nn.ReLU(True),
+            &#47&#47 state size. (32*4) x 8 x 8
+            nn.ConvTranspose2d(32 * 4, 32 * 2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(32 * 2),
+            nn.ReLU(True),
+            &#47&#47 state size. (32*2) x 16 x 16
+            nn.ConvTranspose2d(32 * 2, 3, 4, 2, 1, bias=False),
+            nn.Tanh()
+            &#47&#47 state size. (3) x 32 x 32
+        )</a>
+
+    def forward(self, x):
+        output = self.main(x)
+        return output</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(Generator, self).__init__()
+
+        self.conv1 = nn.Conv2d(3, 64, (5, 5), (1, 1), (2, 2))
+        <a id="change">self.conv2 = nn.Conv2d(64, 64, (3, 3), (1, 1), (1, 1))</a>
+        self.conv3 = nn.Conv2d(64, 32, (3, 3), (1, 1), (1, 1))
+        self.conv4 = nn.Conv2d(32, 3 * (upscale_factor ** 2), (3, 3), (1, 1), (1, 1))
+        self.pixel_shuffle = nn.PixelShuffle(upscale_factor)
+</code></pre><img src="33557824.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/32d40eb01a5a61304720fb1c425abef0a1f5b5a0#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L24' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 32d40eb01a5a61304720fb1c425abef0a1f5b5a0</div><div id='time'> Time: 2017-11-19</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Generator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR><BR><div id='link'><a href='https://github.com/danielegrattarola/keras-gat/commit/9d56361641a64ff73ac630812ecd4964eedbc7aa#diff-fe6ab220dc73cc950cd30e2dae9df435bd7e7b9b61c58e368567967668a0e2f6L4' target='_blank'>Link</a></div><div id='project'> Project Name: danielegrattarola/keras-gat</div><div id='commit'> Commit Name: 9d56361641a64ff73ac630812ecd4964eedbc7aa</div><div id='time'> Time: 2017-11-09</div><div id='author'> Author: daniele.grattarola@gmail.com</div><div id='file'> File Name: gat/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/bcbef3267f372186f457b9c22feec249bd85b2f6#diff-d6757ab1e3ffa225bc5e10234856fffd764bbefcce478fc1c4baee1f4c7ef308L214' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: bcbef3267f372186f457b9c22feec249bd85b2f6</div><div id='time'> Time: 2018-12-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: util/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cal_feat_mask</div><BR>

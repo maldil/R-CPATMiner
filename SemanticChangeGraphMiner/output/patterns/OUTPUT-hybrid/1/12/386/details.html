@@ -1,0 +1,23 @@
+<html><h3>87dac30ee939178a00f908c7aae63960f0a4c988,ch07/lib/dqn_model.py,NoisyLinear,__init__,#NoisyLinear#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class NoisyLinear(nn.Linear):
+    def __init__(self, in_features, out_features, sigma_init=0.017, bias=True):
+        super(NoisyLinear, self).__init__(in_features, out_features, bias=bias)
+        <a id="change">self.register_buffer("sigma_weight", torch.full((out_features, in_features), sigma_init))</a>
+        self.register_buffer("epsilon_weight", torch.zeros(out_features, in_features))
+        if bias:
+            self.register_buffer("sigma_bias", torch.full((out_features,), sigma_init))
+            self.register_buffer("epsilon_bias", torch.zeros(out_features))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+class NoisyLinear(nn.Linear):
+    def __init__(<a id="change">self</a>, in_features, out_features, sigma_init=0.017, bias=True):
+        super(NoisyLinear, self).__init__(in_features, out_features, bias=bias)
+        self.sigma_weight = <a id="change">nn.Parameter(torch.full((out_features, in_features), sigma_init))</a>
+        self.register_buffer("epsilon_weight", torch.zeros(out_features, in_features))
+        if bias:
+            self.sigma_bias = nn.Parameter(torch.full((out_features,), sigma_init))
+            self.register_buffer("epsilon_bias", torch.zeros(out_features))</code></pre><img src="2059573.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/87dac30ee939178a00f908c7aae63960f0a4c988#diff-4ed2ce3f4dc5da964682889d7157cf57dce62beedbb25c022cce4224f10443c0L10' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 87dac30ee939178a00f908c7aae63960f0a4c988</div><div id='time'> Time: 2018-05-06</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch07/lib/dqn_model.py</div><div id='class'> Class Name: NoisyLinear</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/87dac30ee939178a00f908c7aae63960f0a4c988#diff-4ed2ce3f4dc5da964682889d7157cf57dce62beedbb25c022cce4224f10443c0L39' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 87dac30ee939178a00f908c7aae63960f0a4c988</div><div id='time'> Time: 2018-05-06</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch07/lib/dqn_model.py</div><div id='class'> Class Name: NoisyFactorizedLinear</div><div id='method'> Method Name: __init__</div><BR>

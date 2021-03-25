@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    scores = check_array(scores)
+
+    if estimator_weight is not None:
+        <a id="change">estimator_weight = column_or_1d(estimator_weight).reshape(1, -1)</a>
+        assert_equal(scores.shape[1], estimator_weight.shape[1])
+
+        &#47&#47 (d1*w1 + d2*w2 + ...+ dn*wn)/(w1+w2+...+wn)
+        &#47&#47 generated weighted scores</code></pre><h3>After Change</h3><pre><code class='java'>
+    scores = check_array(scores)
+
+    if estimator_weights is not None:
+        if estimator_weights.shape != <a id="change">(1, scores.shape[1])</a>:
+            raise ValueError(
+                &quotBad input shape of estimator_weight: (1, {score_shape}),&quot
+                &quotand {estimator_weights} received&quot.format(</code></pre>

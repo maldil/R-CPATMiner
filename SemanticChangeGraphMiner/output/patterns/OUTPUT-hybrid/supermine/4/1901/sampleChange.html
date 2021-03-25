@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bpms = core.tempo_frequencies(tg.shape[0], hop_length=hop_length, sr=sr)
+
+    &#47&#47 Weight the autocorrelation by a log-normal distribution
+    prior = <a id="change">np.exp(-0.5 * ((np.log2(bpms) - np.log2(start_bpm)) / std_bpm)**2)</a>
+
+    &#47&#47 Kill everything above the max tempo
+    if max_tempo is not None:
+        max_idx = np.argmax(bpms &lt; max_tempo)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 it would also make time aggregation much more natural
+
+    &#47&#47 Get the maximum, weighted by the prior
+    best_period = np.argmax(<a id="change">np.log(tg + 1e-10)</a> + logprior[:, np.newaxis], axis=0)
+
+    tempi = bpms[best_period]
+    &#47&#47 Wherever the best tempo is index 0, return start_bpm</code></pre>

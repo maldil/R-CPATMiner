@@ -1,0 +1,25 @@
+<html><h3>9b95e0f07b60b6a144893dcc506dfaf90db61c95,librosa/feature/utils.py,,stack_memory,#,119
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    history = np.vstack([np.roll(data, -i * delay, axis=1) for i in range(n_steps)[::-1]])
+
+    &#47&#47 Trim to original width
+    <a id="change">if delay &gt; 0:
+        history = history[:, :t]
+    else:
+        history = history[:, -t:]
+
+    &#47&#47 Make contiguous
+   </a> return np.asfortranarray(history)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    t = data.shape[-1]
+    
+    if t &lt; 1:
+        <a id="change">raise ParameterError(&quotCannot stack memory when input data has &quot
+                             &quotno columns. Given data.shape={}&quot.format(data.shape))</a>
+    kwargs.setdefault(&quotmode&quot, &quotconstant&quot)
+
+    if kwargs[&quotmode&quot] == &quotconstant&quot:
+        kwargs.setdefault(&quotconstant_values&quot, [0])</code></pre><img src="19254836.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9b95e0f07b60b6a144893dcc506dfaf90db61c95#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL223' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9b95e0f07b60b6a144893dcc506dfaf90db61c95</div><div id='time'> Time: 2020-05-18</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stack_memory</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/d9f36b1c8bb77f6829c51987ce310831730623ba#diff-fa34127405f91de9275bf79dda0ad98d662d23508ca4c09287424c581d636159L222' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: d9f36b1c8bb77f6829c51987ce310831730623ba</div><div id='time'> Time: 2019-12-27</div><div id='author'> Author: kogito@hotmail.fr</div><div id='file'> File Name: librosa/feature/inverse.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mfcc_to_mel</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/cfff799d604ea57385ea2c0e49d6ed9662a38a17#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL131' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: cfff799d604ea57385ea2c0e49d6ed9662a38a17</div><div id='time'> Time: 2015-07-01</div><div id='author'> Author: ebattenberg@gmail.com</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cqt</div><BR>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def make_global_state(self, l2_norm_clip, stddev):
+    Creates a global state from the given parameters.
+    <a id="change">return self._GlobalState(tf.cast(l2_norm_clip, tf.float32),
+                             tf.cast(stddev, tf.float32))</a>
+
+  def initial_global_state(self):
+    return self.make_global_state(self._l2_norm_clip, self._stddev)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Creates a global state from the given parameters.
+    l2_norm_clip = float(l2_norm_clip) if isinstance(
+        l2_norm_clip, numbers.Number) else tf.cast(l2_norm_clip, tf.float32)
+    stddev = <a id="change">float(stddev) if isinstance(stddev, numbers.Number) else tf.cast(
+        stddev, tf.float32)</a>
+    <a id="change">return self._GlobalState(l2_norm_clip, stddev)</a>
+
+  def initial_global_state(self):
+    return self.make_global_state(self._l2_norm_clip, self._stddev)
+</code></pre>

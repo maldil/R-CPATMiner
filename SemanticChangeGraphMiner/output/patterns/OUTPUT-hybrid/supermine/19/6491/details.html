@@ -1,0 +1,24 @@
+<html><h3>55bab51a583edf62328c654f72321d3f0caf62a2,yarll/agents/sac.py,SAC,build_actor_network,#SAC#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        w_bound = 3e-3
+        x = self.states
+        with tf.variable_scope("actor"):
+            <a id="change">x = tf.nn.relu(linear(x, self.config["n_hidden_units"], "L1", normalized_columns_initializer()))</a>
+            <a id="change">x = tf.nn.relu(linear(x, self.config["n_hidden_units"], "L2", normalized_columns_initializer()))</a>
+
+            mean = linear(x,
+                          self.n_actions,
+                          "mean",</code></pre><h3>After Change</h3><pre><code class='java'>
+        w_bound = 3e-3
+        x = self.states
+        with tf.variable_scope("actor"):
+            <a id="change">for i in range(self.config["n_hidden_layers"]):
+                x = tf.nn.relu(linear(x, self.config["n_hidden_units"], "L{}".format(i + 1), normalized_columns_initializer()))
+
+           </a> mean = linear(x,
+                          self.n_actions,
+                          "mean",
+                          tf.random_uniform_initializer(-w_bound, w_bound),</code></pre><img src="25665005.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 14</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/55bab51a583edf62328c654f72321d3f0caf62a2#diff-6b52b386c0b630c9582cbe2d41fb4eee1eb7f2ab2cec377dd486b5406f4ccb8dL89' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 55bab51a583edf62328c654f72321d3f0caf62a2</div><div id='time'> Time: 2018-11-14</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/sac.py</div><div id='class'> Class Name: SAC</div><div id='method'> Method Name: build_actor_network</div><BR><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/55bab51a583edf62328c654f72321d3f0caf62a2#diff-6b52b386c0b630c9582cbe2d41fb4eee1eb7f2ab2cec377dd486b5406f4ccb8dL121' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 55bab51a583edf62328c654f72321d3f0caf62a2</div><div id='time'> Time: 2018-11-14</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/sac.py</div><div id='class'> Class Name: SAC</div><div id='method'> Method Name: build_softq_network</div><BR><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/55bab51a583edf62328c654f72321d3f0caf62a2#diff-6b52b386c0b630c9582cbe2d41fb4eee1eb7f2ab2cec377dd486b5406f4ccb8dL138' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 55bab51a583edf62328c654f72321d3f0caf62a2</div><div id='time'> Time: 2018-11-14</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/sac.py</div><div id='class'> Class Name: SAC</div><div id='method'> Method Name: build_value_network</div><BR>

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quotsize&quot, [3, 4, 5])
+@pytest.mark.parametrize(&quotbackend&quot, [&quotnumpy&quot, torch_if_found])
+def test_chain(size, backend):
+    xs = [np.random.normal(size=<a id="change">(2, 2)</a>) for _ in range(size)]
+    alphabet = &quot&quot.join(get_symbol(i) for i in range(size + 1))
+    names = [alphabet[i:i+2] for i in range(size)]
+    inputs = &quot,&quot.join(names)</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quotbackend&quot, backends)
+def test_chain(size, backend):
+    xs = [np.random.rand(2, 2) for _ in range(size)]
+    <a id="change">shapes = [x.shape for x in xs]</a>
+    alphabet = &quot&quot.join(get_symbol(i) for i in range(size + 1))
+    names = [alphabet[i:i+2] for i in range(size)]
+    inputs = &quot,&quot.join(names)
+
+    with shared_intermediates():
+        print(inputs)
+        for i in range(size + 1):
+            target = alphabet[i]
+            eq = &quot{}-&gt;{}&quot.format(inputs, target)
+            path_info = contract_path(eq, *xs)
+            print(path_info[1])
+            <a id="change">expr = contract_expression(eq, *shapes)</a>
+            expr(*xs, backend=backend)
+        print(&quot-&quot * 40)
+
+</code></pre>

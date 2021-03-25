@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+For example, use --haralick switch to compute Haralick features\n&quot&quot&quot)
+        sys.exit(1)
+
+    features = <a id="change">[]</a>
+    colnames = []
+    first = True
+    for fname in args.fnames:
+        cur = []
+        im = read_bw(fname, args)
+        if args.haralick:
+            har = mh.features.haralick(im, return_mean_ptp=True)
+            cur.append(har)
+            if first:
+                colnames.extend(mh.features.texture.haralick_labels[:-1])
+                colnames.extend(["ptp:{}".format(ell) for ell in mh.features.texture.haralick_labels[:-1]])
+
+        features.append(np.concatenate(cur))
+        first = False
+
+    <a id="change">features = np.array(features)</a>
+    try:
+        import pandas as pd
+        <a id="change">features = pd.DataFrame(features, index=args.fnames, columns=colnames)</a>
+        features.to_csv(args.output, sep=&quot\t&quot)
+    except ImportError:
+        np.savetxt(args.output, features)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                args.output.write(cname)
+            args.output.write("\n")
+            first = False
+        <a id="change">for fs in cur:
+            args.output.write(fname)
+            for f in fs:
+                args.output.write("\t")
+                args.output.write(&quot{:.8}&quot.format(f))
+            args.output.write(&quot\n&quot)
+
+</a>if __name__ == &quot__main__&quot:
+    main()
+</code></pre>

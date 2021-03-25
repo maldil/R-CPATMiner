@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        optimizer_G.zero_grad()
+
+        &#47&#47 Sample noise as generator input
+        <a id="change">z = Variable(Tensor(np.random.normal(0, 1, (imgs.shape[0], opt.latent_dim))))</a>
+
+        &#47&#47 Generate a batch of images
+        gen_imgs = generator(z)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Generate a batch of images
+            fake_imgs = generator(z)
+            &#47&#47 Adversarial loss
+            <a id="change">loss_D = -torch.mean(discriminator(real_imgs)) + torch.mean(discriminator(fake_imgs))</a>
+
+            loss_D.backward()
+            optimizer_D.step()
+</code></pre>

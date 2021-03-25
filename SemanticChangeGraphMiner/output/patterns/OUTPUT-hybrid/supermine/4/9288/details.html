@@ -1,0 +1,26 @@
+<html><h3>3f923941d0c6025160491286c2d119170a6d9d59,cnvlib/vary.py,,read_vcf,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def read_vcf(vcf_fname, sample_id=None, min_depth=1, skip_hom=True,
+             skip_reject=False, skip_somatic=True):
+    Parse SNV coordinates from a VCF file into a DataFrame.
+    <a id="change">with open(vcf_fname) as vcffile:
+        vcf_reader = vcf.Reader(vcffile)
+        rows = parse_records(vcf_reader, sample_id, min_depth, skip_hom,
+                             skip_reject, skip_somatic)
+        dframe = pd.DataFrame.from_records(rows, columns=[
+            "chromosome", "start", "end",
+            "ref", "alt", "zygosity", "depth", "alt_count"])
+   </a> dframe["alt_freq"] = dframe["alt_count"] / dframe["depth"]
+    return dframe
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def read_vcf(cls, infile, sample_id=None, min_depth=1, skip_hom=True,
+                 skip_reject=False, skip_somatic=True):
+        Parse SNV coordinates from a VCF file into a VariantArray.
+        if <a id="change">isinstance(infile, basestring)</a>:
+            vcf_reader = vcf.Reader(filename=infile)
+        else:
+            vcf_reader = vcf.Reader(infile)</code></pre><img src="35673424.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/3f923941d0c6025160491286c2d119170a6d9d59#diff-a23de6aa06961de4922190cd83cf08a87c739921542afdaa23199cf6cb8e45a1L13' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: 3f923941d0c6025160491286c2d119170a6d9d59</div><div id='time'> Time: 2015-08-11</div><div id='author'> Author: eric.talevich@gmail.com</div><div id='file'> File Name: cnvlib/vary.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_vcf</div><BR><BR><div id='link'><a href='https://github.com/Cadene/bootstrap.pytorch/commit/5d5209a072c84408e0856e2a1b6c193a439920de#diff-149c1b546ff11426a12f46f77c0e49b174a85c7451136ea79752f41a943d8af9L309' target='_blank'>Link</a></div><div id='project'> Project Name: Cadene/bootstrap.pytorch</div><div id='commit'> Commit Name: 5d5209a072c84408e0856e2a1b6c193a439920de</div><div id='time'> Time: 2019-09-09</div><div id='author'> Author: mcoaky@gmail.com</div><div id='file'> File Name: bootstrap/lib/options.py</div><div id='class'> Class Name: Options</div><div id='method'> Method Name: load_yaml_opts</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/9c309a959052ec40cf92cf4baa3894f5118cf8c4#diff-96c9865e97651dada84c1a0027cbe9124208d3c0a48420dc6911b85549a6ae6cL15' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 9c309a959052ec40cf92cf4baa3894f5118cf8c4</div><div id='time'> Time: 2019-07-08</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/blocks/point_gated_block.py</div><div id='class'> Class Name: PointGatedBlock</div><div id='method'> Method Name: __init__</div><BR>

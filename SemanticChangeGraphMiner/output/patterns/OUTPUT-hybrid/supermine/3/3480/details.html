@@ -1,0 +1,24 @@
+<html><h3>3648cbc1a8caa528224750aa2120890fde626fdd,vae/main.py,VAE,reparametrize,#VAE#,57
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def reparametrize(self, mu, logvar):
+        std = logvar.mul(0.5).exp_()
+        if args.cuda:
+            eps = torch.cuda.FloatTensor(<a id="change">std.size()</a>).normal_()
+        else:
+            eps = torch.FloatTensor(std.size()).normal_()
+        <a id="change">eps = Variable(eps)</a>
+        return eps.mul(std).add_(mu)
+
+    def decode(self, z):
+        h3 = self.relu(self.fc3(z))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def reparametrize(self, mu, logvar):
+        std = logvar.mul(0.5).exp_()
+        eps = <a id="change">Variable(std.data.new(std.size()).normal_())</a>
+        return eps.mul(std).add_(mu)
+
+    def decode(self, z):
+        h3 = self.relu(self.fc3(z))</code></pre><img src="15078583.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/3648cbc1a8caa528224750aa2120890fde626fdd#diff-33ebfafed83bd68e38392ad55cae52465a5c7ac12d5dae5923480085b03adb5bL58' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 3648cbc1a8caa528224750aa2120890fde626fdd</div><div id='time'> Time: 2017-09-22</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: vae/main.py</div><div id='class'> Class Name: VAE</div><div id='method'> Method Name: reparametrize</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/54a0f981802ccb86350033a42c3cedd114efc49d#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L62' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 54a0f981802ccb86350033a42c3cedd114efc49d</div><div id='time'> Time: 2017-09-24</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/vinhkhuc/PyTorch-Mini-Tutorials/commit/713df9556d874cf9ede91563fccb746b8c54c35f#diff-789b74eb303ae0656f017fd04da6099969e49f833187245fc38f4ffa9790212bL47' target='_blank'>Link</a></div><div id='project'> Project Name: vinhkhuc/PyTorch-Mini-Tutorials</div><div id='commit'> Commit Name: 713df9556d874cf9ede91563fccb746b8c54c35f</div><div id='time'> Time: 2017-05-24</div><div id='author'> Author: knvinh@gmail.com</div><div id='file'> File Name: 6_lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: predict</div><BR>

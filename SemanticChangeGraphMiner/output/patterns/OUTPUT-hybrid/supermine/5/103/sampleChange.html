@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    queue_size,
+                    adjustment_ratio)
+
+            <a id="change">om.out.debug(msg % args)</a>
+
+            return None
+
+        if input_speed &gt;= output_speed:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if adjustment is None:
+            adjustment = Adjustment(known=1.0, unknown=1.0)
+
+        <a id="change">if output_speed == 0 and input_speed == 0:
+            &#47&#47 The consumer has finished
+            eta = 0.0
+
+            self.log_calculate_eta(eta, input_speed, output_speed, queue_size,
+                                   _type, adjustment, average)
+
+            return eta
+
+       </a> if output_speed == 0 and input_speed != 0:
+            &#47&#47 The output speed is zero, this is a very strange case... it will
+            &#47&#47 be impossible to calculate the ETA, just remove "I&quotll be there
+            &#47&#47 in 5 minutes" (just like the pizza delivery when you call them
+            &#47&#47 because you&quotre hungry)
+            &#47&#47
+            &#47&#47 The next time the code calls calculate_eta() the output_speed
+            &#47&#47 will (most likely) be different from zero and it will be possible
+            &#47&#47 to calculate a real ETA
+            <a id="change">eta = 5 * 60.0</a>
+
+            self.log_calculate_eta(eta, input_speed, output_speed, queue_size,
+                                   _type, adjustment, average)
+</code></pre>

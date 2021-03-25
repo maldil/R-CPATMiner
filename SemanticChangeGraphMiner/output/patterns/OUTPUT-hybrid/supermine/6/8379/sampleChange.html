@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if x0 and y0 is None:
+        for x in x0:
+            y = func(x)
+            curr_res = <a id="change">optimizer.tell(x, y)</a>
+
+            if callbacks:
+                for c in callbacks:
+                    c(curr_res)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 User suggested points at which to evaluate the objective first
+    if x0 and y0 is None:
+        for i, x in enumerate(x0):
+            <a id="change">fit_model = i == len(x0) - 1</a>
+            y = func(x)
+            curr_res = <a id="change">optimizer.tell(x, y, fit_model=fit_model)</a>
+
+            if callbacks:
+                for c in callbacks:
+                    c(curr_res)</code></pre>

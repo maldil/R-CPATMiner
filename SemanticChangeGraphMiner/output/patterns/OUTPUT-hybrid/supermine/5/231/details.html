@@ -1,0 +1,24 @@
+<html><h3>8da4857396fcedb1abd19a08cd4de40d16c7bc50,research/audioset/yamnet/yamnet_test.py,YAMNetTest,clip_test,#YAMNetTest#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        np.reshape(waveform, [1, -1]), steps=1)[0], axis=0)
+      top_n_class_names = YAMNetTest._yamnet_classes[
+        np.argsort(prediction)[-top_n:]]
+      <a id="change">self.assertIn(expected_class_name, top_n_class_names)</a>
+
+  def testZeros(self):
+    self.clip_test(
+        waveform=np.zeros((1, int(3 * params.SAMPLE_RATE))),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  def clip_test(self, waveform, expected_class_name, top_n=10):
+    Run the model on the waveform, check that expected class is in top-n.
+    <a id="change">predictions</a>, embeddings, log_mel_spectrogram = YAMNetTest._yamnet(waveform)
+    clip_predictions = np.mean(predictions, axis=0)
+    top_n_indices = np.argsort(clip_predictions)[-top_n:]
+    <a id="change">top_n_scores = clip_predictions[top_n_indices]</a>
+    top_n_class_names = YAMNetTest._yamnet_classes[top_n_indices]
+    top_n_predictions = list(zip(top_n_class_names, top_n_scores))
+    self.assertIn(expected_class_name, top_n_class_names,
+                  &quotDid not find expected class {} in top {} predictions: {}&quot.format(</code></pre><img src="1353172.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/8da4857396fcedb1abd19a08cd4de40d16c7bc50#diff-5daaabb2051c9bd20f18a49d0777bbff5e224b60e3f4c53441eca2bec7678258L40' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 8da4857396fcedb1abd19a08cd4de40d16c7bc50</div><div id='time'> Time: 2020-08-17</div><div id='author'> Author: 30733558+plakal@users.noreply.github.com</div><div id='file'> File Name: research/audioset/yamnet/yamnet_test.py</div><div id='class'> Class Name: YAMNetTest</div><div id='method'> Method Name: clip_test</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/b32c8a990a744e135c8787456ef5b62ab40d6da7#diff-8a4dfc009e66996cdf35878fdba538502e939753fd330f3efcf0434ece841e18L10' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: b32c8a990a744e135c8787456ef5b62ab40d6da7</div><div id='time'> Time: 2019-04-18</div><div id='author'> Author: jerome-alexis.chevalier@inria.fr</div><div id='file'> File Name: nilearn/regions/tests/test_rena_clustering.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rena_clustering</div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/8bf9d4923eb3f9184280ff6f71df9794b968c9a6#diff-d8fa0bddf37d7afcbddff2402c555bdbff76a8624406ea9115f9bd407fd988acL6' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 8bf9d4923eb3f9184280ff6f71df9794b968c9a6</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/tests/cases_tests/test_views.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_annotation_list_filter</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/b8ec0e6dc9bc2b069fa9cdb86b8a32ef6a10a6aa#diff-254a51c95545edd5f7188d4a7e71c1de4944ba8bddb7d769c1fae2d1b527d081L2084' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: b8ec0e6dc9bc2b069fa9cdb86b8a32ef6a10a6aa</div><div id='time'> Time: 2019-03-25</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tests/keras/backend/backend_test.py</div><div id='class'> Class Name: TestBackend</div><div id='method'> Method Name: test_clip_supports_tensor_arguments</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/bed0a0ae26451c9897cf1ee0f7302e42eba9b42c#diff-a6a596f1b879b5a9b6619ca2e20a4a5ec1725229f46a2e80291aa2a89ef6dc5cL34' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: bed0a0ae26451c9897cf1ee0f7302e42eba9b42c</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_attn_subsequent_mask</div><BR>

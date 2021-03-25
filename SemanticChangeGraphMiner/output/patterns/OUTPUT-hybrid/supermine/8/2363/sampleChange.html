@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                 lambda_ / alpha_)[:, np.newaxis])
+            coef_ = np.dot(coef_, XT_y)
+        else:
+            coef_ = <a id="change">np.dot(X.T, np.dot(
+                U / (eigen_vals_ + lambda_ / alpha_)[None, :], U.T))</a>
+            coef_ = np.dot(coef_, y)
+
+        rmse_ = np.sum((y - np.dot(X, coef_)) ** 2)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                               alpha_)[:, np.newaxis],
+                                         XT_y])
+        else:
+            coef_ = <a id="change">np.linalg.multi_dot([X.T,
+                                         U / (eigen_vals_ + lambda_ /
+                                              alpha_)[None, :],
+                                         U.T, y])</a>
+
+        rmse_ = np.sum((y - np.dot(X, coef_)) ** 2)
+
+        return coef_, rmse_</code></pre>

@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                temp_competence = np.multiply(self.C_src[:, clf_index], potential_dists)
+                <a id="change">competences[clf_index] = np.sum(temp_competence)/sum_potential</a>
+
+        return competences
+
+    def select(self, competences):</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        &#47&#47 TODO: Adapt this function to batch processing
+        dists, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        <a id="change">dists = np.atleast_2d(dists)</a>
+        dists_organized = np.take(dists, idx_neighbors)
+
+        &#47&#47dists_organized = np.array([dists[index] for index in np.argsort(idx_neighbors)])
+        potential_dists = self.potential_func(dists_organized)
+        sum_potential = np.sum(potential_dists, axis=1)
+
+        competences = np.einsum(&quotijk,ij-&gt;ik&quot, self.C_src[<a id="change">np.newaxis, :, :</a>], potential_dists)
+        <a id="change">competences = competences/sum_potential.reshape(-1, 1)</a>
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47 for clf_index in range(self.n_classifiers):
+        &#47&#47     &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used</code></pre>

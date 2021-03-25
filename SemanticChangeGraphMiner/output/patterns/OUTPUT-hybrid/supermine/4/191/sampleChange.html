@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Qs, Ks, Vs = self._split_seqs(QKV, lengths)
+        Xattns, get_dQs_dKs_dVs = self._attend_seqs(Qs, Ks, Vs)
+        assert Xattns[0].shape == (lengths[0], X.shape[1]), (Xattns[0].shape, X.shape[1])
+        <a id="change">Xattn = self.ops.flatten(Xattns)</a>
+        assert Xattn.shape == X.shape
+        <a id="change">Y, get_dXattn = self.get_output.begin_update(Xattn, drop=drop)</a>
+
+        def backprop_self_attn(dY, sgd=None):
+            dXattn = get_dXattn(dY, sgd=sgd)
+            dXattns = self.ops.unflatten(dXattn, lengths)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def begin_update(self, inputs, drop=0.0):
+        (Qs, Ks, Vs), get_d_inputs = self.handle_inputs(inputs, drop=drop)
+        Y, get_dQs_dKs_dVs = self.attend((Qs, Ks, Vs), drop=drop)
+        <a id="change">outputs</a>, get_dY = self.handle_outputs(Y, inputs)
+
+        def backprop_self_attn(d_outputs, sgd=None):
+            dY = get_dY(d_outputs, sgd=sgd)</code></pre>

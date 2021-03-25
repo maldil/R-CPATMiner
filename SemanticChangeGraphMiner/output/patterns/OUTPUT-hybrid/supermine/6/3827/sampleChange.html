@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            grad_out.contiguous(), idx, weight, m
+        )
+
+        <a id="change">return grad_features, None, None</a>
+
+
+three_interpolate = ThreeInterpolate.apply
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        None
+        
+        idx, weight, features = ctx.saved_tensors
+        <a id="change">m = features.size(2)</a>
+
+        grad_features = _ext.three_interpolate_grad(
+            grad_out.contiguous(), idx, weight, m
+        )
+
+        <a id="change">return grad_features, torch.zeros_like(idx), torch.zeros_like(weight)</a>
+
+
+three_interpolate = ThreeInterpolate.apply
+</code></pre>

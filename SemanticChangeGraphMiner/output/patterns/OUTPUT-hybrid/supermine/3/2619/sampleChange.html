@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            start = i
+            code = dec[i]
+        if start is not None and (dec[i-1] != dec[i]):
+            x.append(<a id="change">(code, start, i , val[start:i+1].max().data[-1])</a>)
+            start = None
+    return x
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    seq_len = outputs.shape[1]
+    mask = np.eye(outputs.shape[0], dtype=&quotbool&quot)[labels].T
+    classes = []
+    <a id="change">for label, group in groupby(zip(np.arange(seq_len), labels, outputs[mask]), key=lambda x: x[1]):
+        group = list(group)
+        if label != 0:
+            classes.append((label, group[0][0], group[-1][0], max(x[2] for x in group)))
+   </a> return classes
+
+def blank_threshold_decoder(outputs, threshold=0.5):
+    </code></pre>

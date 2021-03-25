@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    coefficient.
+    
+    if any(np.isnan(x) or x &lt;=0 for x in [spearman_score[&quotlow&quot], pearson_score[&quotlow&quot]]):
+        acc_harmonic_mean = <a id="change">float(&quotNaN&quot)</a>
+        low_harmonic_mean = float(&quotNaN&quot)
+        high_harmonic_mean = float(&quotNaN&quot)
+    else:
+        acc_harmonic_mean = hmean([spearman_score[&quotacc&quot], pearson_score[&quotacc&quot]])</code></pre><h3>After Change</h3><pre><code class='java'>
+    and a Spearman correlation coefficient.
+    
+    intervals = [&quotacc&quot, &quotlow&quot, &quothigh&quot]
+    <a id="change">scores = []</a>
+    <a id="change">for interval in intervals:
+        if any(np.isnan(x) for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(float(&quotNaN&quot))
+        elif any(x &lt;= 0 for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(0)
+        else:
+            scores.append(hmean([spearman_score[interval], pearson_score[interval]]))
+
+   </a> return pd.Series(
+        scores,
+        index=intervals
+    )</code></pre>

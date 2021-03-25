@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+print(&quotProcessing data...&quot)
+imageProcessor = ImageProcessor(image_data, target_dimensions=target_dimensions)
+<a id="change">image_array = imageProcessor.process_training_data()</a>
+image_data = list()
+
+<a id="change">for image in image_array:
+    image_data.append(np.array([image]).reshape((list(target_dimensions)+[channels])))
+</a>image_data = np.array(image_data)
+if verbose:
+    print(&quotProcessed image data shape: &quot + str(image_data.shape))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+X_train, X_test, y_train, y_test = train_test_split(image_data, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)
+train_gen = DataGenerator().fit(X_train, y_train)
+test_gen = <a id="change">DataGenerator().fit(X_test, y_test)</a>
+print(&quotTraining net...&quot)
+model = ConvolutionalNN(target_dimensions, channels, label_count)
+&#47&#47 model.fit(image_data, labels, validation_split)
+model.fit_generator(train_gen.generate(target_dimensions, batch_size=5),</code></pre>

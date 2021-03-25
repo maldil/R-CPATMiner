@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if sum(self.membership[ik,:]) == 0:
+                while True:
+                    rIndx = np.random.randint(nPoints)
+                    if <a id="change">not all(Xnum[rIndx] == self.centroids[0]).any() and \
+                       not all(Xcat[rIndx] == self.centroids[1]).any()</a>:
+                        break
+                self._add_point_to_cluster(Xnum[rIndx], Xcat[rIndx], rIndx, ik)
+                fromCluster = np.argwhere(self.membership[:,rIndx])[0][0]</code></pre><h3>After Change</h3><pre><code class='java'>
+            if sum(self.membership[ik,:]) == 0:
+                while True:
+                    rIndx = np.random.randint(nPoints)
+                    if not np.all(np.vstack((<a id="change">np.all(Xnum[rIndx] == self.centroids[0], axis=1)</a>, \
+                                             np.all(Xcat[rIndx] == self.centroids[1], axis=1))), \
+                                             axis=0).any():
+                        break</code></pre>

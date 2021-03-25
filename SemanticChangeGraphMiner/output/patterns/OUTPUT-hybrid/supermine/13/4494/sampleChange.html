@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    :param c: The binary-Mention Candidate to evaluate
+    
+    <a id="change">span1 = _to_span(c[0])</a>
+    span2 = _to_span(c[1])
+    ancestor1 = <a id="change">np.array(span1.sentence.xpath.split("/"))</a>
+    ancestor2 = np.array(span2.sentence.xpath.split("/"))
+    <a id="change">min_len = min(ancestor1.size, ancestor2.size)</a>
+    return min_len - np.argmin(ancestor1[:min_len] == ancestor2[:min_len])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    :param c: The multinary-Mention Candidate to evaluate
+    
+    <a id="change">spans = [_to_span(i) for i in c]</a>
+    ancestors = [np.array(span.sentence.xpath.split("/")) <a id="change">for</a> span in spans]
+    min_len = min([a.size for a in ancestors])
+    arrays = <a id="change">np.array([a[:min_len] for a in ancestors])</a>
+    arg_min = np.argmin(arrays[:-1] == arrays[1:], axis=1)
+    <a id="change">val = np.min(arg_min[np.nonzero(arg_min)])</a>
+    return min_len - val
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def bucket():
+    Creates a test bucket and deletes it upon completion.
+    client = storage.Client()
+    bucket_name = <a id="change">"bucket-lock-" + str(int(time.time()))</a>
+    <a id="change">bucket = client.create_bucket(bucket_name)</a>
+    yield bucket
+    bucket.delete(force=True)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Yields a bucket that is deleted after the test completes.
+    bucket = None
+    while bucket is None or bucket.exists():
+        <a id="change">bucket_name = "bucket-lock-{}".format(uuid.uuid4())</a>
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    yield bucket
+    bucket.delete(force=True)</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        weights = keras.backend.reshape(weights, (-1,))
+
+        <a id="change">updates = keras.backend.tile(weights, (4,))</a>
+
+        labels = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output_deltas, dtype=&quotfloat32&quot), indices, updates)
+
+        loss = keras_rcnn.backend.smooth_l1(output_deltas * labels, target_deltas * labels, anchored=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        updates = keras.backend.ones_like(indices, dtype=keras.backend.floatx())
+
+        labels = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output_deltas, dtype=&quotfloat32&quot), indices, <a id="change">updates[:, 0]</a>)
+
+        loss = keras_rcnn.backend.smooth_l1(output_deltas * labels, target_deltas * labels, anchored=True)
+</code></pre>

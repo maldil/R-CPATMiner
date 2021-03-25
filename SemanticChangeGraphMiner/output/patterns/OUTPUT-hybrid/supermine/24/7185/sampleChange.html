@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :param local_pep8_config: Set to true if autopep8 should use a config
+                                  file as if run normally from this directory.
+        
+        <a id="change">return self.lint(filename,
+                         file,
+                         apply_config=local_pep8_config,
+                         ignore=pep_ignore,
+                         select=pep_select,
+                         max_line_length=max_line_length,
+                         indent_size=tab_width)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        :param local_pep8_config: Set to true if autopep8 should use a config
+                                  file as if run normally from this directory.
+        
+        <a id="change">options = {"ignore": pep_ignore,
+                   "select": pep_select,
+                   "max_line_length": max_line_length,
+                   "indent_size": tab_width}</a>
+
+        <a id="change">corrected = autopep8.fix_code(&quot&quot.join(file),
+                                      apply_config=local_pep8_config,
+                                      options=options).splitlines(True)</a>
+
+        diffs = <a id="change">Diff.from_string_arrays(file, corrected).split_diff()</a>
+
+        <a id="change">for diff in diffs:
+            yield Result(self,
+                         "The code does not comply to PEP8.",
+                         affected_code=(diff.range(filename),),
+                         diffs={filename: diff})</a>
+</code></pre>

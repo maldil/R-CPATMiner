@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    try:
+        log("Installing Python dependencies")
+        reqFilePath = os.path.join(setupHome, "requirements.txt")
+        if <a id="change">os.path.isfile(reqFilePath)</a>:
+            reqItems = [line.strip() for line in open(reqFilePath)]
+            for r in reqItems:
+                log("Installing package: {0}".format(r))</code></pre><h3>After Change</h3><pre><code class='java'>
+    try:
+        log("Installing Python dependencies")
+        reqFilePath = os.path.join(setupHome, "requirements.txt")
+        if <a id="change">not os.path.isfile(reqFilePath)</a>:
+            die("Dependency listing file not found: {0}".format(reqFilePath), 5)
+
+        c = [pipExePath, "install", "--find-links={0}".format(distHome), "-r", reqFilePath]</code></pre>

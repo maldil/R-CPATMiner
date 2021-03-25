@@ -1,0 +1,25 @@
+<html><h3>72e735a98644b76208d558c0b85150190594c5b1,statsmodels/tools/tools.py,,add_constant,#,281
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if is_nonzero_const.any():
+        if has_constant == &quotskip&quot:
+            return x
+        elif <a id="change">has_constant == &quotraise</a>&quot:
+            raise ValueError("data already contains a constant")
+
+    x = [np.ones(x.shape[0]), x]</code></pre><h3>After Change</h3><pre><code class='java'>
+    if is_nonzero_const.any():
+        if has_constant == &quotskip&quot:
+            return x
+        elif <a id="change">has_constant == &quotraise</a>&quot:
+            if ndim == 1:
+                raise ValueError("data is constant.")
+            else:
+                <a id="change">columns = np.arange(x.shape[1])</a>
+                <a id="change">cols = ",".join([str(c) for c in columns[is_nonzero_const]])</a>
+                raise ValueError(f"Column(s) {cols} are constant.")
+
+    x = [np.ones(x.shape[0]), x]
+    x = x if prepend else x[::-1]</code></pre><img src="28419968.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/statsmodels/statsmodels/commit/72e735a98644b76208d558c0b85150190594c5b1#diff-f59fdaf9522cbeac57510fd4588e8b9e5ef8019b8ef1ad85b53b123ad2c64c3eL319' target='_blank'>Link</a></div><div id='project'> Project Name: statsmodels/statsmodels</div><div id='commit'> Commit Name: 72e735a98644b76208d558c0b85150190594c5b1</div><div id='time'> Time: 2020-06-28</div><div id='author'> Author: kevin.sheppard@gmail.com</div><div id='file'> File Name: statsmodels/tools/tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_constant</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/0994a6bfdff6d12da7a3e44955ab82d5b83527d9#diff-c30b7dc7a4bbf5b2657a546c17c17810e20cb59e0618bcccc83153fba27adcb1L424' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 0994a6bfdff6d12da7a3e44955ab82d5b83527d9</div><div id='time'> Time: 2020-01-26</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/types.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate_array_dtype</div><BR><BR><div id='link'><a href='https://github.com/masa-su/pixyz/commit/f293a29e908ad289a042cc8e906b131d4f9281ce#diff-b5aaf24237243b8fed2b3534f4a09c4ba43f8c187b87d5131c3d2d9f63ba8619L103' target='_blank'>Link</a></div><div id='project'> Project Name: masa-su/pixyz</div><div id='commit'> Commit Name: f293a29e908ad289a042cc8e906b131d4f9281ce</div><div id='time'> Time: 2019-05-26</div><div id='author'> Author: masa@weblab.t.u-tokyo.ac.jp</div><div id='file'> File Name: pixyz/distributions/poe.py</div><div id='class'> Class Name: ProductOfNormal</div><div id='method'> Method Name: prob_factorized_text</div><BR>

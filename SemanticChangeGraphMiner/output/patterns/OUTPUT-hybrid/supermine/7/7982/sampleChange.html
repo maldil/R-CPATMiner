@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ValueError("An input is not of the right dimension.")
+
+    z = torch.zeros(2, x.size()[1], y.size()[1], dtype=x.dtype, device=x.device)
+    z[0] = torch.ger(<a id="change">x[0]</a>, y[0]) - torch.ger(x[1], -y[1])
+    z[1] = torch.ger(x[0], -y[1]) + torch.ger(<a id="change">x[1]</a>, y[0])
+
+    return z
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError("An input is not of the right dimension.")
+
+    z = torch.zeros(2, x.size()[1], y.size()[1], dtype=x.dtype, device=x.device)
+    z[0] = torch.ger(<a id="change">real(x)</a>, real(y)) - torch.ger(imag(x), -imag(y))
+    z[1] = torch.ger(real(x), -imag(y)) + torch.ger(imag(x), real(y))
+
+    return z</code></pre>

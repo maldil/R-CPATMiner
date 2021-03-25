@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def Phi(self, pi, x, label_count, feature_count):
+        ret = 0.0
+        <a id="change">for i in range(label_count):
+            A = self.A(pi, i, x, label_count, feature_count)
+            F = self.Fisher(pi, x, label_count, feature_count)
+            ret += np.trace( np.dot(A, F) )
+       </a> return ret
+
+
+    def E(self, X, y, qx, clf, label_count):</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def Phi(self, PI, X, epi, ex, label_count, feature_count):
+        A, F = varRedu.estVar(0.000001, PI, X, epi, ex)
+        <a id="change">try:
+            ret = np.trace(np.dot(A, np.linalg.pinv(F)))
+        except:
+            print(F)
+       </a> return ret
+
+
+    def E(self, X, y, qx, clf, label_count):</code></pre>

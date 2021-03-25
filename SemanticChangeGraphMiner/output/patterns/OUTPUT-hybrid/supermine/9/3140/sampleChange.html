@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)
+
+        &#47&#47 Create a list of dataset infos . . .
+        <a id="change">datasetInfos = []</a>
+
+        &#47&#47 From project
+        info = DatasetInfo()
+        info.location = DatasetInfo.Location.ProjectInternal
+        info.filePath = "This string should be ignored..."
+        info._datasetId = &quotdataset1&quot  &#47&#47 (Cheating a bit here...)
+        info.invertColors = False
+        info.convertToGrayscale = False
+        <a id="change">datasetInfos.append(info)</a>
+
+        reader.Dataset.setValues(datasetInfos)
+
+        projectInternalData = reader.Image[0][...].wait()</code></pre><h3>After Change</h3><pre><code class='java'>
+            numpy.testing.assert_array_equal(imgData2Dc, self.imgData2Dc)
+
+    def testProjectLocalData(self, serializer, empty_project_file):
+        <a id="change">for fileName in self.generatedImages2Dc:
+            &#47&#47 For some reason vigra saves 2D+c data compressed in gifs, so skip!
+            if Path(fileName).suffix in self.compressedExtensions + [&quot.gif&quot]:
+                continue
+            graph = lazyflow.graph.Graph()
+            reader = OperatorWrapper(OpDataSelection, graph=graph, operator_kwargs={&quotforceAxisOrder&quot: False})
+            reader.ProjectFile.setValue(empty_project_file)
+            reader.WorkingDirectory.setValue(str(Path(empty_project_file.filename).parent))
+            reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)
+
+            &#47&#47 From project
+            inner_path = serializer.importStackAsLocalDataset([fileName])
+            info = DatasetInfo(
+                location=DatasetInfo.Location.ProjectInternal,
+                project_file=empty_project_file,
+                filepath=inner_path
+            )
+
+            reader.Dataset.setValues([info])
+
+            projectInternalData = reader.Image[0][...].wait()
+
+            assert projectInternalData.shape == self.imgData2Dc.shape, (projectInternalData.shape, self.imgData2Dc.shape)
+            assert (projectInternalData == self.imgData2Dc).all()
+
+
+</a>class TestOpDataSelection_Basic_native_3D(object):
+    Test related to loading file types that support 3D
+    @classmethod
+    def setup_class(cls):</code></pre>

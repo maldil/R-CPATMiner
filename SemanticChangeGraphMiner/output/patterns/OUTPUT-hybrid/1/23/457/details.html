@@ -1,0 +1,46 @@
+<html><h3>3e4c8751ecea36db6c23f05ccff1019fbd3e1b55,lib/model/rpn/proposal_target_layer_cascade.py,_ProposalTargetLayer,_sample_rois_pytorch,#_ProposalTargetLayer#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 sampling bg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * bg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * bg_num_rois)
+                <a id="change">rand_num</a> = <a id="change">torch.from_numpy(rand_num).long().cuda()</a>
+
+                <a id="change">bg_inds</a> = bg_inds[rand_num]
+                bg_rois_per_this_image = rois_per_image
+                fg_rois_per_this_image = 0
+            else:
+                print("bg_num_rois = 0 and fg_num_rois = 0, this should not happen!")
+                pdb.set_trace()
+
+            &#47&#47 The indices that we&quotre selecting (both fg and bg)
+            <a id="change">keep_inds</a> = torch.cat([fg_inds, bg_inds], 0)
+
+            &#47&#47 Select sampled values from various arrays:
+            labels_batch[i].copy_(labels[i][keep_inds])</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 sampling fg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * fg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * fg_num_rois)
+                rand_num = <a id="change">torch</a>.from_numpy(rand_num).type_as(<a id="change">gt_boxes</a>).long()
+                fg_inds = fg_inds[rand_num]
+                fg_rois_per_this_image = rois_per_image
+                bg_rois_per_this_image = 0
+            elif bg_num_rois &gt; 0 and fg_num_rois == 0:
+                &#47&#47 sampling bg
+                &#47&#47rand_num = torch.floor(torch.rand(rois_per_image) * bg_num_rois).long().cuda()
+                rand_num = np.floor(np.random.rand(rois_per_image) * bg_num_rois)
+                <a id="change">rand_num</a> = <a id="change">torch.from_numpy(rand_num).type_as(gt_boxes).long()</a>
+
+                <a id="change">bg_inds</a> = bg_inds[rand_num]
+                bg_rois_per_this_image = rois_per_image
+                fg_rois_per_this_image = 0
+            else:
+                error("bg_num_rois = 0 and fg_num_rois = 0, this should not happen!")
+                
+            &#47&#47 The indices that we&quotre selecting (both fg and bg)
+            <a id="change">keep_inds</a> = torch.cat([fg_inds, bg_inds], 0)
+
+            &#47&#47 Select sampled values from various arrays:
+            labels_batch[i].copy_(labels[i][keep_inds])</code></pre><img src="2538790.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jwyang/faster-rcnn.pytorch/commit/3e4c8751ecea36db6c23f05ccff1019fbd3e1b55#diff-eaf759a8564a8679cf42c89cddaa27d1c9811e5a7f3719e5c8870ac265d72de2L159' target='_blank'>Link</a></div><div id='project'> Project Name: jwyang/faster-rcnn.pytorch</div><div id='commit'> Commit Name: 3e4c8751ecea36db6c23f05ccff1019fbd3e1b55</div><div id='time'> Time: 2017-09-07</div><div id='author'> Author: echosenm@gmail.com</div><div id='file'> File Name: lib/model/rpn/proposal_target_layer_cascade.py</div><div id='class'> Class Name: _ProposalTargetLayer</div><div id='method'> Method Name: _sample_rois_pytorch</div><BR>

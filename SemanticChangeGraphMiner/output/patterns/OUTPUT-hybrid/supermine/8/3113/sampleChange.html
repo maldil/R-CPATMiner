@@ -1,0 +1,110 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            trpo.trpo_step(net_act, get_loss, get_kl, TRPO_MAX_KL, TRPO_DAMPING, cuda=args.cuda)
+
+            trajectory.clear()
+            writer.add_scalar("advantage", <a id="change">traj_adv_v.mean().data.cpu().numpy()[0]</a>, step_idx)
+            writer.add_scalar("values", traj_ref_v.mean().data.cpu().numpy()[0], step_idx)
+            writer.add_scalar("loss_value", loss_value_v.data.cpu().numpy()[0], step_idx)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument("-n", "--name", required=True, help="Name of the run")
+    parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
+    args = parser.parse_args()
+    <a id="change">device = torch.device("cuda" if args.cuda else "cpu")</a>
+
+    save_path = os.path.join("saves", "trpo-" + args.name)
+    os.makedirs(save_path, exist_ok=True)
+
+    env = gym.make(args.env)
+    test_env = gym.make(args.env)
+
+    net_act = model.ModelActor(env.observation_space.shape[0], env.action_space.shape[0]).to(device)
+    net_crt = model.ModelCritic(env.observation_space.shape[0]).to(<a id="change">device</a>)
+    print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-trpo_" + args.name)
+    agent = model.AgentA2C(net_act, device=<a id="change">device</a>)
+    exp_source = ptan.experience.ExperienceSource(env, agent, steps_count=1)
+
+    opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    trajectory = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        for step_idx, exp in enumerate(exp_source):
+            rewards_steps = exp_source.pop_rewards_steps()
+            if rewards_steps:
+                rewards, steps = zip(*rewards_steps)
+                writer.add_scalar("episode_steps", np.mean(steps), step_idx)
+                tracker.reward(np.mean(rewards), step_idx)
+
+            if step_idx % TEST_ITERS == 0:
+                ts = time.time()
+                rewards, steps = test_net(net_act, test_env, device=device)
+                print("Test done in %.2f sec, reward %.3f, steps %d" % (
+                    time.time() - ts, rewards, steps))
+                writer.add_scalar("test_reward", rewards, step_idx)
+                writer.add_scalar("test_steps", steps, step_idx)
+                if best_reward is None or best_reward &lt; rewards:
+                    if best_reward is not None:
+                        print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                        name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                        fname = os.path.join(save_path, name)
+                        torch.save(net_act.state_dict(), fname)
+                    best_reward = rewards
+
+            trajectory.append(exp)
+            if len(trajectory) &lt; TRAJECTORY_SIZE:
+                continue
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = torch.FloatTensor(traj_states).to(device)
+            traj_actions_v = torch.FloatTensor(traj_actions).to(device)
+            traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, device=device)
+            mu_v = net_act(traj_states_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+
+            &#47&#47 normalize advantages
+            traj_adv_v = (traj_adv_v - torch.mean(traj_adv_v)) / torch.std(traj_adv_v)
+
+            &#47&#47 drop last entry from the trajectory, an our adv and ref value calculated without it
+            trajectory = trajectory[:-1]
+            old_logprob_v = old_logprob_v[:-1].detach()
+            traj_states_v = traj_states_v[:-1]
+            traj_actions_v = traj_actions_v[:-1]
+            sum_loss_value = 0.0
+            sum_loss_policy = 0.0
+            count_steps = 0
+
+            &#47&#47 critic step
+            opt_crt.zero_grad()
+            value_v = net_crt(traj_states_v)
+            loss_value_v = F.mse_loss(value_v.squeeze(-1), traj_ref_v)
+            loss_value_v.backward()
+            opt_crt.step()
+
+            &#47&#47 actor step
+            def get_loss():
+                mu_v = net_act(traj_states_v)
+                logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+                action_loss_v = -traj_adv_v.unsqueeze(dim=-1) * torch.exp(logprob_v - old_logprob_v)
+                return action_loss_v.mean()
+
+            def get_kl():
+                mu_v = net_act(traj_states_v)
+                logstd_v = net_act.logstd
+                mu0_v = mu_v.detach()
+                logstd0_v = logstd_v.detach()
+                std_v = torch.exp(logstd_v)
+                std0_v = std_v.detach()
+                kl = logstd_v - logstd0_v + (std0_v ** 2 + ((mu0_v - mu_v) ** 2) / (2.0 * std_v ** 2)) - 0.5
+                return kl.sum(1, keepdim=True)
+
+            trpo.trpo_step(net_act, get_loss, get_kl, TRPO_MAX_KL, TRPO_DAMPING, device=<a id="change">device</a>)
+
+            trajectory.clear()
+            writer.add_scalar("advantage", traj_adv_v.mean().item(), step_idx)</code></pre>

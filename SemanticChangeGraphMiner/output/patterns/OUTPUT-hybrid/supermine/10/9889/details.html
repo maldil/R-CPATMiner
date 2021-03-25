@@ -1,0 +1,31 @@
+<html><h3>e33d1ba9150a3084947ae000f12a9b6f2f644648,conceptnet5/vectors/evaluation/wordsim.py,,evaluate_semeval_monolingual,#,307
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    scores = []
+    for lang in [&quoten&quot, &quotde&quot, &quotes&quot, &quotit&quot, &quotfa&quot]:
+        scores.append(spearman_evaluate(vectors, read_semeval_monolingual(lang)))
+    <a id="change">top_scores = sorted(scores, key=lambda x: x[&quotacc&quot] if not np.isnan(x[&quotacc&quot]) else 0)[-4:]</a>
+    acc_average = tmean([<a id="change">score[&quotacc&quot]</a> for score in top_scores])
+    low_average = tmean([score[&quotlow&quot] <a id="change">for</a> score in top_scores])
+    <a id="change">high_average = tmean([score[&quothigh&quot] for score in top_scores])</a>
+    <a id="change">return pd.Series(
+        [acc_average, low_average, high_average],
+        index=[&quotacc&quot, &quotlow&quot, &quothigh&quot]
+    )</a>
+
+def evaluate_semeval_crosslingual(vectors):
+    
+    According to Semeval2017-Subtask2 rules. the global score is the average of the individual</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    Get a semeval score for a single monolingual test set.
+    
+    <a id="change">spearman_score = measure_correlation(spearmanr, vectors, read_semeval_monoling(lang))</a>
+    <a id="change">pearson_score = measure_correlation(pearsonr, vectors, read_semeval_monoling(lang))</a>
+    score = compute_semeval_score(spearman_score, pearson_score)
+    <a id="change">return score</a>
+
+
+def evaluate_semeval_crosslingual(vectors, lang1, lang2):
+    </code></pre><img src="37769025.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/e33d1ba9150a3084947ae000f12a9b6f2f644648#diff-253b7b1370893f9dae749cbbb879fcd47ad5744716c706119d4cad41054156f8L313' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: e33d1ba9150a3084947ae000f12a9b6f2f644648</div><div id='time'> Time: 2017-02-23</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/wordsim.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate_semeval_monolingual</div><BR><BR><div id='link'><a href='https://github.com/matthewwithanm/django-imagekit/commit/5718c304cfd3a8f0e59ba918ebf9e485d4edc738#diff-98e5f9c0f8236638a6ad5e43cec457b159e996b684f203ee6c038bb4e5d5888cL163' target='_blank'>Link</a></div><div id='project'> Project Name: matthewwithanm/django-imagekit</div><div id='commit'> Commit Name: 5718c304cfd3a8f0e59ba918ebf9e485d4edc738</div><div id='time'> Time: 2011-09-21</div><div id='author'> Author: matthew@exanimo.com</div><div id='file'> File Name: imagekit/fields.py</div><div id='class'> Class Name: BoundImageSpec</div><div id='method'> Method Name: _suggested_extension</div><BR><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR>

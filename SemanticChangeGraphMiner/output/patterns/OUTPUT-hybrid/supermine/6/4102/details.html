@@ -1,0 +1,31 @@
+<html><h3>e6bbf54046cf4567e88cb130300b6b78ec88cb27,test_imagenet.py,,validate,#,95
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 measure accuracy and record loss
+            prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            losses.update(loss.data[0], input.size(0))
+            <a id="change">top1.update(prec1[0], input.size(0))</a>
+            top5.update(prec5[0], input.size(0))
+
+            &#47&#47 measure elapsed time
+            batch_time.update(time.time() - end)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 measure accuracy and record loss
+            prec1, prec5 = accuracy_sum(output.data, target, topk=(1, 5))
+
+            <a id="change">loss *= target.shape[0]</a>
+            count = target.new_tensor([target.shape[0]],dtype=torch.long)
+            if dist.is_initialized():
+              dist.all_reduce(count, dist.reduce_op.SUM)
+            <a id="change">for meter,val in (losses,loss), (top1,prec1), (top5,prec5):
+              if dist.is_initialized():
+                dist.all_reduce(val, dist.reduce_op.SUM)
+              val /= count.item()
+              meter.update(val.item(), count.item())
+            
+            &#47&#47 measure elapsed time
+           </a> batch_time.update(time.time() - end)
+            end = time.time()
+
+            if i % args.print_freq == 0:</code></pre><img src="18282263.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/e6bbf54046cf4567e88cb130300b6b78ec88cb27#diff-da60e8ade9599a15b323c80fc6bed3fa60a2c6c6dc32f0a62839dae0cdbdf82cL98' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: e6bbf54046cf4567e88cb130300b6b78ec88cb27</div><div id='time'> Time: 2018-11-28</div><div id='author'> Author: samuel@mapillary.com</div><div id='file'> File Name: test_imagenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/908b49cb7d2d527b701996f0d0b9e1e19e765819#diff-a8ed9ffd9de3f6215d1e1f1ca1f5c0462af5bc9befc667fde0ddda64af9b3b94L16' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 908b49cb7d2d527b701996f0d0b9e1e19e765819</div><div id='time'> Time: 2013-11-24</div><div id='author'> Author: aymeric.augustin@m4x.org</div><div id='file'> File Name: debug_toolbar/settings.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

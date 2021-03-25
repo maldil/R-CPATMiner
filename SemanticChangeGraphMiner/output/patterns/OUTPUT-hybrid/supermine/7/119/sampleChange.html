@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def random_pad(image, horizontal=(0, 100)):
+    l, r = np.random.randint(*horizontal, size=1), np.random.randint(*horizontal, size=1)
+    <a id="change">return np.pad(image, ((l[0], r[0]), (0, 0)), mode="constant")</a>
+&#47&#47
+&#47&#47 random distortions
+&#47&#47
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def random_pad(image, horizontal=(0, 100)):
+    l, r = np.random.randint(*horizontal, size=1), np.random.randint(*horizontal, size=1)
+    <a id="change">return cv.copyMakeBorder(image, l[0], r[0], 0, 0, cv.BORDER_CONSTANT,
+                             value=[0]*(1 if image.ndim == 2 else image.shape[-1]))</a>
+
+&#47&#47
+&#47&#47 random distortions
+&#47&#47</code></pre>

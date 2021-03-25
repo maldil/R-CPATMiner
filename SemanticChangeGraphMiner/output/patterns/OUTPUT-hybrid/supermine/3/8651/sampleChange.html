@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    train_loss = pg_loss + vf_coef * vf_loss
+
+    <a id="change">self.grads_check = grads = tf.gradients(train_loss, params_pi1)</a>
+    grads = list(zip(grads, params_pi1))
+    trainer = tf.train.RMSPropOptimizer(learning_rate=lr, decay=alpha, epsilon=epsilon)
+    _train = trainer.apply_gradients(grads)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    params = find_trainable_variables("model")
+    grads = tf.gradients(loss, params)
+    if max_grad_norm is not None:
+      <a id="change">grads</a>, _ = tf.clip_by_global_norm(grads, max_grad_norm)
+    grads = list(zip(grads, params))
+    trainer = tf.train.RMSPropOptimizer(learning_rate=lr, decay=alpha, epsilon=epsilon)
+    _train = trainer.apply_gradients(grads)</code></pre>

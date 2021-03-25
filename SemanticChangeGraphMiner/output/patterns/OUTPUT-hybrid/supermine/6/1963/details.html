@@ -1,0 +1,23 @@
+<html><h3>a392ddaeae3a8343a968c8839afeea70b6f3a8b8,thinc/layers/recurrent.py,,recurrent,#,6
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def recurrent(step_model: Model) -&gt; Model:
+    <a id="change">return Model(step_model.name, forward, layers=[step_model])</a>
+
+
+def forward(model: Model, X_size_at_t: Tuple[Array, Array], is_train: bool):
+    &#47&#47 Expect padded batches, sorted by decreasing length. The size_at_t array</code></pre><h3>After Change</h3><pre><code class='java'>
+        dims={"nO": step_model.get_dim("nO") if step_model.has_dim("nO") else None},
+        layers=[step_model]
+    )
+    <a id="change">if model.has_dim("nO"):
+        model.initialize()
+   </a> <a id="change">return model</a>
+
+
+def init(model, X=None, Y=None):
+    Xt = X[0][0] if X is not None else None</code></pre><img src="9363448.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/a392ddaeae3a8343a968c8839afeea70b6f3a8b8#diff-b84111412be61ffb2b1c7026217f94c7cd2e4d37a4d2370946f84b844c92ca1bL7' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: a392ddaeae3a8343a968c8839afeea70b6f3a8b8</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/recurrent.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: recurrent</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/5dccee984b2c25f6508947d3731b8934296ff4c5#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L17' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 5dccee984b2c25f6508947d3731b8934296ff4c5</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: LSTM_step</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/25c541e93c0ac1cafe517eba573d0c7704ed7a1b#diff-2000e8749a91df13f189f011eef0f2fb64aa34578021a257f7791b78dcdd9a88L23' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 25c541e93c0ac1cafe517eba573d0c7704ed7a1b</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/layers/embed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Embed</div><BR>

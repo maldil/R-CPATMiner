@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 HACK: remove not-visited bonds
+    if visited_bonds:  &#47&#47 probably we dont want to delete all
+        new_mol = Chem.RWMol(new_mol)
+        <a id="change">all_bonds = set(range(new_mol.GetNumBonds()))</a>
+        visited_bonds = set(visited_bonds)
+        for bid in sorted(all_bonds.difference(visited_bonds), reverse=True):
+            bond = new_mol.GetBondWithIdx(bid)
+            a1 = bond.GetBeginAtom()</code></pre><h3>After Change</h3><pre><code class='java'>
+        visited_bonds = set(visited_bonds)
+        for a1_ix, a2_ix in product(range(new_mol.GetNumAtoms()), repeat=2):
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            <a id="change">if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue
+           </a> a1 = new_mol.GetAtomWithIdx(a1_ix)
+            a2 = new_mol.GetAtomWithIdx(a2_ix)
+            a1_num = a1.GetPDBResidueInfo().GetResidueNumber()
+            a2_num = a2.GetPDBResidueInfo().GetResidueNumber()</code></pre>

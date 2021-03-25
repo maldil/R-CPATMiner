@@ -1,0 +1,45 @@
+<html><h3>0a8e27413d721bf8d753e5e6061cc24f5bf6474f,train.py,,eval_model,#,489
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        initial_input = Variable(torch.from_numpy(initial_input)).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = Variable(<a id="change">torch.zeros(1, 1, 1).fill_(initial_value)</a>)
+    initial_input = initial_input.cuda() if use_cuda else initial_input
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        <a id="change">y_hat</a> = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        <a id="change">y_hat</a> = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        y_hat = y_hat.view(-1).cpu().data.numpy()</code></pre><h3>After Change</h3><pre><code class='java'>
+        initial_input = torch.from_numpy(initial_input).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = <a id="change">torch.zeros(1, 1, 1).fill_(initial_value)</a>
+    initial_input = initial_input.to(device)
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        <a id="change">y_hat</a> = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        <a id="change">y_hat</a> = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        y_hat = y_hat.view(-1).cpu().data.numpy()</code></pre><img src="2847394.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/0a8e27413d721bf8d753e5e6061cc24f5bf6474f#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L486' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 0a8e27413d721bf8d753e5e6061cc24f5bf6474f</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_model</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/14e92cdd22a62bb87c8da94f727eb449353436b4#diff-c5eedb08baaaf69ea213bc66bcc0a64829f735814342a5cf331499c98ef8890bL148' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 14e92cdd22a62bb87c8da94f727eb449353436b4</div><div id='time'> Time: 2020-04-16</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/ml/unfold/gaussian_mixture.py</div><div id='class'> Class Name: GaussianMixtureTorch</div><div id='method'> Method Name: init_params</div><BR><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/c959d29c381e5bef7cdfb0cd420ddacd89d11520#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L60' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: c959d29c381e5bef7cdfb0cd420ddacd89d11520</div><div id='time'> Time: 2018-07-12</div><div id='author'> Author: sean.narenthiran@digitalreasoning.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: MaskConv</div><div id='method'> Method Name: forward</div><BR>

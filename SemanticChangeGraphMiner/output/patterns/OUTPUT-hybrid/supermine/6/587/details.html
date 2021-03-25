@@ -1,0 +1,35 @@
+<html><h3>b18662872a2575996418c7e0b8bb744017a2c54d,apps/api/views.py,,login,#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            errors = form.errors
+        if form.is_valid():
+            login_user(request, form.get_user())
+            logging.user(request, "~FG~BB~SKAPI Login~FW: %s" % <a id="change">request.environ.get(&quotHTTP_USER_AGENT&quot, &quot&quot)</a>)
+            code = 1
+    else:
+        errors = dict(method="Invalid method. Use POST. You used %s" % request.method)</code></pre><h3>After Change</h3><pre><code class='java'>
+def login(request):
+    code = -1
+    errors = None
+    <a id="change">user_agent = request.environ.get(&quotHTTP_USER_AGENT&quot, &quot&quot)</a>
+
+    <a id="change">if not user_agent:
+        errors = dict(user_agent="You must set a user agent to login.")
+        logging.user(request, "~FG~BB~SK~FRBlocked ~FGAPI Login~SN~FW: %s" % user_agent)
+    elif request.method == "POST":
+        form = LoginForm(data=request.POST)
+        if form.errors:
+            errors = form.errors
+        if form.is_valid():
+            login_user(request, form.get_user())
+            logging.user(request, "~FG~BB~SKAPI Login~SN~FW: %s" % user_agent)
+            code = 1
+    else:
+        errors = dict(method="Invalid method. Use POST. You used %s" % request.method)
+        
+   </a> return dict(code=code, errors=errors)
+    
+@json.json_view
+def signup(request):</code></pre><img src="2485181.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/samuelclay/NewsBlur/commit/b18662872a2575996418c7e0b8bb744017a2c54d#diff-f2d6db88f906a75f630c801162b51bda4cfc778f2dfe6f6ca9a560c48f832654L26' target='_blank'>Link</a></div><div id='project'> Project Name: samuelclay/NewsBlur</div><div id='commit'> Commit Name: b18662872a2575996418c7e0b8bb744017a2c54d</div><div id='time'> Time: 2013-06-15</div><div id='author'> Author: samuel@ofbrooklyn.com</div><div id='file'> File Name: apps/api/views.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: login</div><BR><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/30bb1928d465ae04b4389d5bb8bf5394bc161e24#diff-122472350f3b2d786198067fb66a91e74a0789b05d07f250e7af01f1fc272171L63' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 30bb1928d465ae04b4389d5bb8bf5394bc161e24</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: delavega@utexas.edu</div><div id='file'> File Name: pliers/stimuli/audio.py</div><div id='class'> Class Name: AudioStim</div><div id='method'> Method Name: get_sampling_rate</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/508d83c4111c5884ca7a520b1ccfe7b6c68f2aaf#diff-86c491e336487d6991c384b5adb96c602f5eb2cc9a22776141b15058c7faac45L55' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 508d83c4111c5884ca7a520b1ccfe7b6c68f2aaf</div><div id='time'> Time: 2010-02-26</div><div id='author'> Author: jannis@leidel.info</div><div id='file'> File Name: debug_toolbar/middleware.py</div><div id='class'> Class Name: DebugToolbarMiddleware</div><div id='method'> Method Name: _show_toolbar</div><BR><BR><div id='link'><a href='https://github.com/numerai/submission-criteria/commit/e6708dd96f352f3f7adaa03756e7cd3242ad1e74#diff-306e28897a4282ae3852eb0568483edafeed04a979ec5b8afa2b2ee685f2148dL61' target='_blank'>Link</a></div><div id='project'> Project Name: numerai/submission-criteria</div><div id='commit'> Commit Name: e6708dd96f352f3f7adaa03756e7cd3242ad1e74</div><div id='time'> Time: 2017-11-10</div><div id='author'> Author: xander@numer.ai</div><div id='file'> File Name: common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: connect_to_postgres</div><BR>

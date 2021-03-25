@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Returns a tensor given by *name* using a deep lookup within the model. *None* is returned
+        when no tensor was found. In case a tensor is passed, it&quots name is used for the lookup.
+        
+        <a id="change">if isinstance(name, Tensor):
+            name = name.name
+
+        &#47&#47 append the default value_index if there&quots none
+       </a> if not self.value_index_cre.search(name):
+            name += ":%d" % self.default_value_index
+
+        &#47&#47 return the first occurance of a tensor with that name</code></pre><h3>After Change</h3><pre><code class='java'>
+        returned when no tensor was found. In case a tensor is passed, it&quots name is used for the
+        lookup.
+        
+        <a id="change">tensors = tuple(self._get(name) for name in names)</a>
+        return tensors[0] if len(names) == 1 else tensors
+
+    def _get(self, name):
+        if isinstance(name, Tensor):</code></pre>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with pytest.warns(UserWarning):
+            modf2 = OrderedModel.from_formula(formula, data, distr=&quotlogit&quot)
+
+        with <a id="change">pytest.warns(UserWarning)</a>:
+            resf2 = modf2.fit(method=&quotbfgs&quot)
+            assert np.isnan(resf2.bse).all()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 warns but doesn&quott raise
+        formula = "apply ~ 0 + pared + public + gpa + C(dummy)"
+
+        with <a id="change">pytest.warns(SpecificationWarning)</a>:
+            modf2 = OrderedModel.from_formula(formula, data, distr=&quotlogit&quot)
+
+        with pytest.warns(HessianInversionWarning):</code></pre>

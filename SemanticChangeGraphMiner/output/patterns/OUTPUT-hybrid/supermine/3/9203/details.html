@@ -1,0 +1,20 @@
+<html><h3>4a53e30fafdd8c65c42d0cf978312e6333182db4,modules/functions.py,InPlaceABNSync,forward,#,167
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _check_contiguous(x, mean, var, weight, bias)
+        _check(_ext.bn_forward_cuda,
+               x, mean, var,
+               <a id="change">weight if weight is not None else x.new()</a>,
+               bias if bias is not None else x.new(),
+               x, x, ctx.eps)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Mark in-place modified tensors
+            ctx.mark_dirty(x, running_mean, running_var)
+        else:
+            <a id="change">mean, var = running_mean.contiguous(), running_var.contiguous()</a>
+            ctx.mark_dirty(x)
+
+        &#47&#47 BN forward + activation
+        backend.forward(x, mean, var, weight, bias, ctx.affine, ctx.eps)</code></pre><img src="35611487.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/4a53e30fafdd8c65c42d0cf978312e6333182db4#diff-352019e02af2c679214aad4aef6c53091e53e92ea89929d91ce5541fb1bcb552L136' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: 4a53e30fafdd8c65c42d0cf978312e6333182db4</div><div id='time'> Time: 2018-05-21</div><div id='author'> Author: lorenzo@mapillary.com</div><div id='file'> File Name: modules/functions.py</div><div id='class'> Class Name: InPlaceABNSync</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/9ea14875825b2ab63a43ad2f0f5159d99df86d02#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L122' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: 9ea14875825b2ab63a43ad2f0f5159d99df86d02</div><div id='time'> Time: 2019-07-29</div><div id='author'> Author: rasmus.arpe@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Lookahead</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/4a53e30fafdd8c65c42d0cf978312e6333182db4#diff-352019e02af2c679214aad4aef6c53091e53e92ea89929d91ce5541fb1bcb552L72' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: 4a53e30fafdd8c65c42d0cf978312e6333182db4</div><div id='time'> Time: 2018-05-21</div><div id='author'> Author: lorenzo@mapillary.com</div><div id='file'> File Name: modules/functions.py</div><div id='class'> Class Name: InPlaceABN</div><div id='method'> Method Name: forward</div><BR>

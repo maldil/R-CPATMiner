@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 clean up / setup directory
+&#47&#47
+
+<a id="change">cmd</a> = &quotrm -rf %s&quot % (VOICE_PATH % voice)
+<a id="change">logging.info(cmd)</a>
+os.system(cmd)
+
+<a id="change">cmd</a> = &quotmkdir -p %s&quot % (VOICE_PATH % voice)
+logging.info(cmd)
+<a id="change">os.system(cmd)</a>
+
+cmd = &quotcp %s %s&quot % (DSFN_HPARAMS % voice, HPARAMS_FN % voice)
+logging.info(cmd)
+os.system(cmd)</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 clean up / setup directory
+&#47&#47
+
+<a id="change">if not options.incremental:
+
+    cmd = &quotrm -rf %s&quot % (VOICE_PATH % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+    cmd = &quotmkdir -p %s&quot % (VOICE_PATH % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+    cmd = &quotcp %s %s&quot % (DSFN_HPARAMS % voice, HPARAMS_FN % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+    cmd = &quotmkdir -p %s&quot % (CHECKPOINT_DIR % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+    cmd = &quotmkdir -p %s&quot % (EVAL_DIR % voice)
+    logging.info(cmd)
+    os.system(cmd)
+
+
+&#47&#47
+&#47&#47 training
+&#47&#47
+
+</a>taco = Tacotron(voice, is_training=True, tf_device=options.tf_device)
+
+taco.train(num_epochs = options.num_epochs)
+</code></pre>

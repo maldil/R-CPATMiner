@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        original_train_ops = list(self.train_ops)
+        &#47&#47 Remove excluded train_ops
+        for t in self.train_ops:
+            <a id="change">if excl_trainops and t in excl_trainops:
+                self.train_ops.remove(t)
+
+        &#47&#47 shuffle is an override for simplicty, it will overrides every
+        &#47&#47 training op batch shuffling
+       </a> if isinstance(shuffle_all, bool):
+            for t in self.train_ops: t.shuffle = shuffle_all
+
+        with self.graph.as_default():</code></pre><h3>After Change</h3><pre><code class='java'>
+        original_train_ops = list(self.train_ops)
+        &#47&#47 Remove excluded train_ops
+        if excl_trainops:
+            self.train_ops = <a id="change">list(filter(lambda a: a not in excl_trainops, self.train_ops))</a>
+	    
+        &#47&#47 shuffle is an override for simplicty, it will overrides every
+        &#47&#47 training op batch shuffling
+        if isinstance(shuffle_all, bool):</code></pre>

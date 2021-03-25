@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                adv_v = vals_ref_v.unsqueeze(dim=-1) - value_v.detach()
+                log_prob_v = adv_v * calc_logprob(mu_v, var_v, actions_v)
+                loss_policy_v = -log_prob_v.mean()
+                <a id="change">entropy_loss_v = ENTROPY_BETA * (-(torch.log(2*math.pi*var_v) + 1)/2).mean()</a>
+
+                loss_v = loss_policy_v + entropy_loss_v + loss_value_v
+                loss_v.backward()
+                optimizer.step()</code></pre><h3>After Change</h3><pre><code class='java'>
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)
+
+    opt_act = optim.Adam(net_act.parameters(), lr=LEARNING_RATE_ACTOR)
+    <a id="change">opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)</a>
+
+    batch = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:</code></pre>

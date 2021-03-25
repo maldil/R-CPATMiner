@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  df_list = []
+
+  &#47&#47 Use "application default credentials"
+  <a id="change">storage_client = storage.Client()</a>
+
+  &#47&#47 Parse bucket name and file pattern
+  parse_result = urlparse(file_pattern)
+  file_pattern = parse_result.path
+  bucket_name = parse_result.hostname
+
+  bucket = storage_client.get_bucket(bucket_name)
+
+  &#47&#47 Find all the files match the provided pattern
+  blobs = bucket.list_blobs(prefix=file_pattern)
+
+  <a id="change">for blob in blobs:
+    file_path = temp_folder + blob.name.split(&quot/&quot)[-1]
+    blob.download_to_filename(file_path)
+    &#47&#47 Assume there is no header
+    df_list.append(pd.read_csv(file_path, header=None))
+    &#47&#47 TODO: Can remove after download to save space
+
+ </a> data_df = pd.concat(df_list)
+
+  return data_df
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Download the files to local /tmp/ foler
+  df_list = []
+
+  <a id="change">for file in gfile.Glob(file_pattern):
+    with gfile.Open(file, &quotr&quot) as f:
+      &#47&#47 Assume there is no header
+      df_list.append(pd.read_csv(f, header=None))
+
+ </a> data_df = pd.concat(df_list)
+
+  return data_df
+</code></pre>

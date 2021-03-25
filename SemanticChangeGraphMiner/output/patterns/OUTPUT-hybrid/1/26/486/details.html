@@ -1,0 +1,83 @@
+<html><h3>dbd087f55b79484532451d2754dcf10d60564fc3,se3cnn/batchnorm.py,SE3BatchNorm,forward,#SE3BatchNorm#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if d == 1:  &#47&#47 scalars
+                if self.training:
+                    field_mean = <a id="change">field</a>.mean(0).mean(-1).view(-1).detach()  &#47&#47 [feature]
+                    new_means.append(self._roll_avg(self.running_mean[irm:irm+m], field_mean))
+                else:
+                    field_mean = self.running_mean[irm: irm + m]
+                irm += m
+                <a id="change">field</a> = field - field_mean.view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.training:
+                field_norm = torch.sum(field ** 2, dim=2)  &#47&#47 [batch, feature, x * y * z]
+                if self.reduce == &quotmean&quot:
+                    <a id="change">field_norm</a> = field_norm.mean(-1)  &#47&#47 [batch, feature]
+                elif self.reduce == &quotmax&quot:
+                    <a id="change">field_norm</a> = field_norm.max(-1)[0]  &#47&#47 [batch, feature]
+                else:
+                    raise ValueError("Invalid reduce option")
+                <a id="change">field_norm</a> = field_norm.mean(0).detach()  &#47&#47 [feature]
+                new_vars.append(self._roll_avg(self.running_var[irv: irv+m], field_norm))
+            else:
+                field_norm = self.running_var[irv: irv + m]
+            irv += m
+
+            field_norm = (field_norm + self.eps).pow(-0.5).view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine:
+                weight = self.weight[iw: iw + m]  &#47&#47 [feature]
+                iw += m
+                <a id="change">field_norm</a> = field_norm * weight.view(1, m, 1, 1)  &#47&#47 [batch, feature, repr, x * y * z]
+
+            <a id="change">field</a> = field * field_norm  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine and d == 1:  &#47&#47 scalars
+                bias = self.bias[ib: ib + m]  &#47&#47 [feature]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if d == 1:  &#47&#47 scalars
+                if self.training:
+                    field_mean = <a id="change">field.mean(0).mean(-1).view(-1)</a>  &#47&#47 [feature]
+                    new_means.append(
+                        self._roll_avg(self.running_mean[irm:irm+m], field_mean)
+                    )
+                else:
+                    field_mean = self.running_mean[irm: irm + m]
+                irm += m
+
+                &#47&#47 [batch, feature, repr, x * y * z]
+                <a id="change">field</a> = field - field_mean.view(1, m, 1, 1)
+
+            if self.training:
+                field_norm = torch.sum(field ** 2, dim=2)  &#47&#47 [batch, feature, x * y * z]
+                if self.reduce == &quotmean&quot:
+                    <a id="change">field_norm</a> = field_norm.mean(-1)  &#47&#47 [batch, feature]
+                elif self.reduce == &quotmax&quot:
+                    <a id="change">field_norm</a> = field_norm.max(-1)[0]  &#47&#47 [batch, feature]
+                else:
+                    raise ValueError("Invalid reduce option {}".format(self.reduce))
+
+                <a id="change">field_norm</a> = field_norm.mean(0)  &#47&#47 [feature]
+                new_vars.append(self._roll_avg(self.running_var[irv: irv+m], field_norm))
+            else:
+                field_norm = self.running_var[irv: irv + m]
+            irv += m
+
+            &#47&#47 [batch, feature, repr, x * y * z]
+            field_norm = (field_norm + self.eps).pow(-0.5).view(1, m, 1, 1)
+
+            if self.affine:
+                weight = self.weight[iw: iw + m]  &#47&#47 [feature]
+                iw += m
+
+                &#47&#47 [batch, feature, repr, x * y * z]
+                <a id="change">field_norm</a> = field_norm * weight.view(1, m, 1, 1)
+
+            <a id="change">field</a> = field * field_norm  &#47&#47 [batch, feature, repr, x * y * z]
+
+            if self.affine and d == 1:  &#47&#47 scalars
+                bias = self.bias[ib: ib + m]  &#47&#47 [feature]</code></pre><img src="2635744.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/dbd087f55b79484532451d2754dcf10d60564fc3#diff-e7ed64295f7e6b75063cb14210a5c367a4ca53a8830376fba14c38d8b09f0d29L46' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: dbd087f55b79484532451d2754dcf10d60564fc3</div><div id='time'> Time: 2018-10-18</div><div id='author'> Author: michal.tyszkiewicz@gmail.com</div><div id='file'> File Name: se3cnn/batchnorm.py</div><div id='class'> Class Name: SE3BatchNorm</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/9d619970e5c38657efbb34cee1e9bf52962fd996#diff-80a11d6c58dfefa22cb7fe542b1dddb91ab537422b26c834f3c0ae182d0d8cadL172' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 9d619970e5c38657efbb34cee1e9bf52962fd996</div><div id='time'> Time: 2017-05-10</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: th_bilinear_interp2d</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/dbd087f55b79484532451d2754dcf10d60564fc3#diff-e7ed64295f7e6b75063cb14210a5c367a4ca53a8830376fba14c38d8b09f0d29L180' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: dbd087f55b79484532451d2754dcf10d60564fc3</div><div id='time'> Time: 2018-10-18</div><div id='author'> Author: michal.tyszkiewicz@gmail.com</div><div id='file'> File Name: se3cnn/batchnorm.py</div><div id='class'> Class Name: SE3BNConvolution</div><div id='method'> Method Name: forward</div><BR>

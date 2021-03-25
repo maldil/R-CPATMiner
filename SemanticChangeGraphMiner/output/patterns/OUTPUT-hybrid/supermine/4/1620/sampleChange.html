@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            y=y, sr=sr, S=S, n_fft=n_fft, hop_length=hop_length, fmin=fmin,
+            fmax=fmax, threshold=threshold)
+
+    <a id="change">S = np.asarray([[1, 0, 0]]).T</a>
+    np.seterr(divide=&quotraise&quot)
+    yield __test, None, 22050, S, 4096, None, 150.0, 4000.0, 0.1
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    for n_fft in [2048, 4096]:
+        for hop_length in [None, n_fft // 4, n_fft // 2]:
+            <a id="change">S = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))</a>
+            for fmin in [0, 100]:
+                for fmax in [4000, 8000, sr // 2]:
+                    for threshold in [0.1, 0.2, 0.5]:
+                        yield __test, S, n_fft, hop_length, fmin, fmax, threshold</code></pre>

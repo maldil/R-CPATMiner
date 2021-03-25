@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def delta_t_hist(t, nbins=50):
+    Build histogram of all possible delta_t&quots without storing every value
+    <a id="change">hist = np.zeros(nbins, dtype=&quotint&quot)</a>
+    <a id="change">bins = np.linspace(0, max(t) - min(t), nbins + 1)</a>
+    for i in range(len(t)):
+        hist += np.histogram(t[i] - t[:i], bins=bins)[0]
+        hist += np.histogram(t[i + 1:] - t[i], bins=bins)[0]
+    <a id="change">return hist / 2</a>  &#47&#47 Double-counts since we loop over every pair twice
+
+
+def normalize_hist(hist, total_time):</code></pre><h3>After Change</h3><pre><code class='java'>
+    and then aggregate the result to have `nbins` total values.
+    
+    f, x = np.histogram(t, bins=conv_oversample * nbins)
+    <a id="change">g = np.convolve(f, f[::-1])[len(f) - 1:]</a>  &#47&#47 Discard negative domain
+    g[0] -= len(t)  &#47&#47 First bin is double-counted because of i=j terms
+    <a id="change">hist = g.reshape((-1, conv_oversample)).sum(axis=1)</a>  &#47&#47 Combine bins
+    <a id="change">return hist</a>
+
+
+def normalize_hist(hist, total_time):
+    Normalize histogram such that integral from t_min to t_max equals 1.</code></pre>

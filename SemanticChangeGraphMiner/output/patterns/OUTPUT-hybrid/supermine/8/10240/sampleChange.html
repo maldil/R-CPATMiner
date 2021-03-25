@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise Exception(&quotInput not in {}&quot.format(self.inputs))
+    mean = np.load(mean_f)
+    if mode == &quotelementwise&quot:
+        <a id="change">if mean.shape != self.input.data.shape[1:]:
+            raise Exception(&quotThe mean shape does not match the input shape.&quot)
+       </a> self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = mean.mean(1).mean(1)
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    in_shape = self.blobs[input_].data.shape
+    mean = np.load(mean_f)
+    if mode == &quotelementwise&quot:
+        <a id="change">if mean.shape != in_shape[1:]:
+            mean = caffe.io.resize_image(mean.transpose((1,2,0)),
+                    in_shape[2:]).transpose((2,0,1))
+       </a> self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = mean.mean(1).mean(1).reshape((in_shape[1], 1, 1))
+    else:</code></pre>

@@ -1,0 +1,34 @@
+<html><h3>cf8a3fb30547d6e980ecd8182f64a51df8e55c62,python/dgl/backend/pytorch/tensor.py,,pad_packed_tensor,#,228
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    device = input.device
+    x = input.new(batch_size * max_len, *old_shape[1:])
+    x.fill_(value)
+    <a id="change">index = []</a>
+    for i, l in enumerate(lengths):
+        index.extend(range(i * max_len, i * max_len + l))
+    index = th.tensor(index).to(device)
+    return scatter_row(x, index, input).view(batch_size, max_len, *old_shape[1:])</code></pre><h3>After Change</h3><pre><code class='java'>
+    old_shape = input.shape
+    device = input.device
+    if not is_tensor(lengths):
+        lengths = th.tensor(lengths, dtype=<a id="change">th.int64</a>, device=device)
+    else:
+        lengths = lengths.to(device)
+    max_len = as_scalar(lengths.max())
+
+    if l_min is not None:
+        max_len = builtins.max(max_len, l_min)
+
+    batch_size = len(lengths)
+    x = input.new(batch_size * max_len, *old_shape[1:])
+    x.fill_(value)
+    index = <a id="change">th.ones(len(input), dtype=th.int64, device=device)</a>
+    cum_lengths = th.cumsum(lengths, 0)
+    <a id="change">index[cum_lengths[:-1]] += (max_len - lengths[:-1])</a>
+    index = th.cumsum(index, 0) - 1
+    x[index] = input
+    return x.view(batch_size, max_len, *old_shape[1:])
+</code></pre><img src="38129460.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L230' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_packed_tensor</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L230' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_packed_tensor</div><BR>

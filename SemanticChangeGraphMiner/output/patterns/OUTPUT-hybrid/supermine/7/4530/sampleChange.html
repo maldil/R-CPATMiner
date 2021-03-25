@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return result
+
+        elif len(p) == cls.dim:
+            <a id="change">result = np.zeros([4, 6])</a>
+            result[0:3, 0:3] = p[3] * np.eye(3)
+            result[0:3, 3:6] = -SO3.wedge(p[0:3])
+
+            return result</code></pre><h3>After Change</h3><pre><code class='java'>
+    @classmethod
+    def odot(cls, p, **kwargs):
+        SE(3) \odot operator as defined by Barfoot.
+        <a id="change">p = np.atleast_2d(p)</a>
+        result = np.zeros([p.shape[0], p.shape[1], cls.dof])
+
+        if <a id="change">p</a>.shape[1] == cls.dim - 1:
+            &#47&#47 Assume scale parameter is 1 unless otherwise p is a direction
+            &#47&#47 vector, in which case the scale is 0
+            scale_is_zero = kwargs.get(&quotdirectional&quot, False)
+            if not scale_is_zero:
+                result[:, 0:3, 0:3] = np.eye(3)
+
+            result[:, 0:3, 3:6] = -SO3.wedge(p)
+
+        elif p.shape[1] == cls.dim:
+            result[:, 0:3, 0:3] = p[:, 3] * np.eye(3)
+            result[:, 0:3, 3:6] = -SO3.wedge(p[:, 0:3])
+
+        else:
+            <a id="change">raise ValueError("p must have shape ({},), ({},), (N,{}) or (N,{})".format(
+                cls.dim - 1, cls.dim, cls.dim - 1, cls.dim))</a>
+
+        return np.squeeze(result)
+
+    @classmethod</code></pre>

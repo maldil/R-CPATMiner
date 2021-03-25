@@ -1,0 +1,29 @@
+<html><h3>977e38de2e77d46b36ace96b4c76910174f77ad7,models/face_shift_net/face_shiftnet_model.py,FaceShiftNetModel,set_input,#FaceShiftNetModel#,127
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 make it 4 dimensions.
+            &#47&#47 Mention: the extra dim, the masked part is filled with 0, non-mask part is filled with 1.
+            real_A = torch.cat((real_A, (1 - self.mask_global).expand(real_A.size(0), 1, real_A.size(2), real_A.size(3)).type_as(real_A)), dim=1)
+            <a id="change">real_A_flip</a> = torch.cat((real_A_flip, <a id="change">(1 - self.mask_global_flip).expand(real_A_flip.size(0), 1, real_A.size(2), real_A.size(3)).type_as(real_A)</a>), dim=1)
+
+        self.real_A = real_A
+        self.real_B = real_B</code></pre><h3>After Change</h3><pre><code class='java'>
+        real_A.narrow(1,1,1).masked_fill_(self.mask_global, 0.)&#47&#472*104.0/255.0 - 1.0
+        real_A.narrow(1,2,1).masked_fill_(self.mask_global, 0.)&#47&#472*117.0/255.0 - 1.0
+
+        <a id="change">self.mask_global_flip</a> = torch.flip(self.mask_global.float(), [3]).bool()
+        real_A_flip.narrow(1,0,1).masked_fill_(self.mask_global_flip, 0.)&#47&#472*123.0/255.0 - 1.0
+        real_A_flip.narrow(1,1,1).masked_fill_(self.mask_global_flip, 0.)&#47&#472*104.0/255.0 - 1.0
+        real_A_flip.narrow(1,2,1).masked_fill_(self.mask_global_flip, 0.)&#47&#472*117.0/255.0 - 1.0
+
+
+        if self.opt.add_mask2input:
+            &#47&#47 make it 4 dimensions.
+            &#47&#47 Mention: the extra dim, the masked part is filled with 0, non-mask part is filled with 1.
+            real_A = torch.cat((real_A, (~self.mask_global).expand(real_A.size(0), 1, real_A.size(2), real_A.size(3)).type_as(real_A)), dim=1)
+            <a id="change">real_A_flip</a> = torch.cat((real_A_flip, <a id="change">(~self.mask_global_flip).expand(real_A_flip.size(0), 1, real_A.size(2), real_A.size(3)).type_as(real_A)</a>), dim=1)
+
+        self.real_A = real_A
+        self.real_B = real_B</code></pre><img src="3080809.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/977e38de2e77d46b36ace96b4c76910174f77ad7#diff-15440536e8dc4fcde96b24f6098fd61b70d1d96245b9fd4dda3d97e4ac35ee1dL134' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 977e38de2e77d46b36ace96b4c76910174f77ad7</div><div id='time'> Time: 2020-06-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/face_shift_net/face_shiftnet_model.py</div><div id='class'> Class Name: FaceShiftNetModel</div><div id='method'> Method Name: set_input</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/977e38de2e77d46b36ace96b4c76910174f77ad7#diff-15440536e8dc4fcde96b24f6098fd61b70d1d96245b9fd4dda3d97e4ac35ee1dL190' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 977e38de2e77d46b36ace96b4c76910174f77ad7</div><div id='time'> Time: 2020-06-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/face_shift_net/face_shiftnet_model.py</div><div id='class'> Class Name: FaceShiftNetModel</div><div id='method'> Method Name: set_gt_latent</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/4e611ef928fdeb52d4fd5521a6f2b2d3bf3fb4a5#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L129' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 4e611ef928fdeb52d4fd5521a6f2b2d3bf3fb4a5</div><div id='time'> Time: 2019-12-21</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_input</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/4e611ef928fdeb52d4fd5521a6f2b2d3bf3fb4a5#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L177' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 4e611ef928fdeb52d4fd5521a6f2b2d3bf3fb4a5</div><div id='time'> Time: 2019-12-21</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_gt_latent</div><BR>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, theta, model):
+        &#47&#47 TODO: Take model as parameter instead of precision_matrix
+
+        <a id="change">if not isinstance(theta, np.matrix):
+            if isinstance(theta, (np.ndarray, list, tuple, set, frozenset)):
+                length = len(theta)
+                theta = np.matrix(theta)
+                theta = np.reshape(theta, (1, length))
+            else:
+                raise TypeError("theta should be a 1d array type object")
+            theta = np.reshape(theta, (len(theta), 1))
+
+       </a> if theta.shape[1] != model.precision_matrix.shape[0]:
+            raise ValueError("shape of theta vector should be 1 X d if shape" +
+                             " of precision matrix of model is d X d")
+        self.theta = theta</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, theta, model):
+        &#47&#47 TODO: Take model as parameter instead of precision_matrix
+
+        if isinstance(theta, (<a id="change">np.matrix</a>, np.ndarray, list, tuple, set, frozenset)):
+            theta = <a id="change">np.array(theta).flatten()</a>
+            theta = <a id="change">np.matrix(np.reshape(theta, (len(theta), 1)))</a>
+        else:
+            raise TypeError("theta should be a 1d array type object")
+
+        if theta.shape[0] != model.precision_matrix.shape[0]:</code></pre>

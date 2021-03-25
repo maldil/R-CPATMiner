@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for cid, kid, val in q.all():
+            if cid not in row_index:
+                row_index[cid] = len(row_index)
+            <a id="change">if kid not in col_index:
+                col_index[kid] = len(col_index)
+           </a> X[row_index[cid], col_index[kid]] = val
+
+        &#47&#47 Return as an AnnotationMatrix
+        return self.matrix_cls(X, candidate_set=candidate_set, key_set=key_set)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        &#47&#47 Iteratively construct row index and output sparse matrix
+        cid_to_row = {}
+        <a id="change">row_to_cid = {}</a>
+        for cid, kid, val in q.all():
+            if cid not in cid_to_row:
+                i = len(cid_to_row)
+</code></pre>

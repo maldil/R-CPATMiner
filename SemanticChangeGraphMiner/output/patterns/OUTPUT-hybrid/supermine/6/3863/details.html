@@ -1,0 +1,21 @@
+<html><h3>589950b1125c4561b3ec7480cc1f71bfb85249a8,opt_einsum/backends/shared.py,,tensordot,#,79
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    backend = _CURRENT_BACKEND[0]
+    cache = _SHARING_STACK[-1]
+    cache[&quottensor&quot, id(x)] = x
+    <a id="change">cache[&quottensor&quot, id(y)] = y</a>
+
+    if isinstance(axes, numbers.Number):
+        axes = list(range(len(x.shape)))[len(x.shape) - axes:], list(range(len(y.shape)))[:axes]
+    axes = tuple(axes[0]), tuple(axes[1])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def tensordot(x, y, axes=2):
+    <a id="change">_save_tensors(x, y)</a>
+
+    &#47&#47 hash based on the (axes_x,axes_y) form of axes
+    if isinstance(axes, numbers.Number):
+        axes = list(range(len(x.shape)))[len(x.shape) - axes:], list(range(len(y.shape)))[:axes]</code></pre><img src="17037410.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/589950b1125c4561b3ec7480cc1f71bfb85249a8#diff-582c2b3a47dccf00f8ae87df5238e88b7a562699489f6ef37c3a511762d632aaL80' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 589950b1125c4561b3ec7480cc1f71bfb85249a8</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/backends/shared.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: tensordot</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/589950b1125c4561b3ec7480cc1f71bfb85249a8#diff-582c2b3a47dccf00f8ae87df5238e88b7a562699489f6ef37c3a511762d632aaL65' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 589950b1125c4561b3ec7480cc1f71bfb85249a8</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/backends/shared.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: transpose</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/589950b1125c4561b3ec7480cc1f71bfb85249a8#diff-582c2b3a47dccf00f8ae87df5238e88b7a562699489f6ef37c3a511762d632aaL98' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 589950b1125c4561b3ec7480cc1f71bfb85249a8</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/backends/shared.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: einsum</div><BR>

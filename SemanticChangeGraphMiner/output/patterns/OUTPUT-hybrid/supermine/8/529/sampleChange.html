@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        elif self.penalty in ("l1", "l2", "nn"):
+            penalty = self._get_penalty()
+            <a id="change">for k in xrange(n_vectors):
+                n_pos = np.sum(Y[:, k] == 1)
+                n_neg = n_samples - n_pos
+                tol = self.tol * max(min(n_pos, n_neg), 1) / n_samples
+
+                vinit = self.violation_init_.get(k, 0) * self.C / self.C_init
+                viol = _primal_cd(self, self.coef_, self.errors_,
+                                  ds, y, Y, k, False,
+                                  indices, penalty, self._get_loss(),
+                                  self.selection, self.permute,
+                                  self.termination,
+                                  self.C, self.alpha, 1e12,
+                                  self.max_iter, max_steps,
+                                  self.shrinking, vinit,
+                                  rs, tol, self.callback, self.n_calls,
+                                  self.verbose)
+
+                if self.warm_start and not k in self.violation_init_:
+                    self.violation_init_[k] = viol
+
+       </a> if self.debiasing:
+            nz = self.coef_ != 0
+
+            if not self.warm_debiasing:</code></pre><h3>After Change</h3><pre><code class='java'>
+            vinit = np.asarray([self.violation_init_.get(k, 0)
+                                for k in xrange(n_vectors)]) * self.C / self.C_init
+
+            jobs = <a id="change">(delayed(_primal_cd)(self, self.coef_, self.errors_,
+                                        ds, y, Y, k, False,
+                                        indices, penalty, self._get_loss(),
+                                        self.selection, self.permute,
+                                        self.termination,
+                                        self.C, self.alpha, 1e12,
+                                        self.max_iter, max_steps,
+                                        self.shrinking, vinit[k],
+                                        rs, tol[k], self.callback, self.n_calls,
+                                        self.verbose)
+                    for k in xrange(n_vectors))</a>
+            <a id="change">viol = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(jobs)</a>
+
+            for k in range(n_vectors):
+                if self.warm_start and not k in self.violation_init_:
+                    self.violation_init_[k] = viol[k]</code></pre>

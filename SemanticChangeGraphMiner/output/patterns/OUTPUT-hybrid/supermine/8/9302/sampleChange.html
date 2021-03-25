@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data_loaders = get_data_loaders(data_root, speaker_id, test_shuffle=True)
+
+    &#47&#47 Model
+    model = <a id="change">build_model()</a>
+    print(model)
+    if use_cuda:
+        model = model.cuda()
+
+    <a id="change">receptive_field</a> = model.receptive_field
+    print("Receptive field (samples / ms): {} / {}".format(
+        receptive_field, receptive_field / fs * 1000))
+
+    <a id="change">optimizer</a> = optim.Adam(model.parameters(),
+                           lr=hparams.initial_learning_rate, betas=(
+        hparams.adam_beta1, hparams.adam_beta2),
+        eps=hparams.adam_eps, weight_decay=hparams.weight_decay)</code></pre><h3>After Change</h3><pre><code class='java'>
+    device = torch.device("cuda" if use_cuda else "cpu")
+
+    &#47&#47 Model
+    model = <a id="change">build_model().to(device)</a>
+
+    <a id="change">receptive_field</a> = model.receptive_field
+    print("Receptive field (samples / ms): {} / {}".format(
+        receptive_field, receptive_field / fs * 1000))
+
+    <a id="change">optimizer</a> = optim.Adam(model.parameters(),
+                           lr=hparams.initial_learning_rate, betas=(
+        hparams.adam_beta1, hparams.adam_beta2),
+        eps=hparams.adam_eps, weight_decay=hparams.weight_decay,</code></pre>

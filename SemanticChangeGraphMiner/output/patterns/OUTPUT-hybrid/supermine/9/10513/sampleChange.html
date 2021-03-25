@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        timeframe = timeframe.intersect(chunk_from_next_meter.timeframe)
+        chunk = chunk.add(chunk_from_next_meter, fill_value=0, level=&quotphysical_quantity&quot)
+
+        <a id="change">if len(chunk) != len(chunk_from_next_meter):
+            warn("Meters are not perfectly aligned.")
+
+        &#47&#47 Update columns_to_average_counter
+       </a> physical_quantities = chunk_from_next_meter.columns.get_level_values(&quotphysical_quantity&quot)
+        columns_to_average = (set(PHYSICAL_QUANTITIES_TO_AVERAGE)
+                              .intersection(physical_quantities))
+        counter_increment = pd.DataFrame(1, columns=columns_to_average, </code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            chunk = chunk.add(chunk_from_next_meter, fill_value=0)
+        except ValueError as e:
+            <a id="change">if str(e) != "cannot join with no level specified and no overlapping names":
+                raise
+           </a> chunk = chunk.add(chunk_from_next_meter, fill_value=0, 
+                              level=&quotphysical_quantity&quot) 
+
+        &#47&#47 Update columns_to_average_counter - this is necessary so we do not</code></pre>

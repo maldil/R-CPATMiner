@@ -1,0 +1,54 @@
+<html><h3>0db94786a7a463fed49825811fac903f1f1fc3c8,python/caffe/classifier.py,Classifier,predict,#Classifier#,49
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                     for N images and C classes.
+        
+        &#47&#47 Scale to standardize input dimensions.
+        inputs = np.asarray(<a id="change">[caffe.io.resize_image(im, self.image_dims)
+                             for im in inputs]</a>)
+
+        if oversample:
+            &#47&#47 Generate center, corner, and mirrored crops.
+            inputs = caffe.io.oversample(inputs, self.crop_dims)
+        else:
+            &#47&#47 Take center crop.
+            center = np.array(self.image_dims) / 2.0
+            crop = np.tile(center, (1, 2))[0] + np.concatenate([
+                -self.crop_dims / 2.0,
+                self.crop_dims / 2.0
+            ])
+            inputs = inputs[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        caffe_in = np.asarray([self.preprocess(self.inputs[0], in_)
+                    <a id="change">for</a> in_ in inputs])
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        input_ = np.zeros((len(inputs),
+            self.image_dims[0], self.image_dims[1], inputs[0].shape[2]),
+            dtype=np.float32)
+        <a id="change">for ix, in_ in enumerate(inputs):
+            input_[ix] = caffe.io.resize_image(in_, self.image_dims)
+
+       </a> if oversample:
+            &#47&#47 Generate center, corner, and mirrored crops.
+            input_ = caffe.io.oversample(input_, self.crop_dims)
+        else:
+            &#47&#47 Take center crop.
+            center = np.array(self.image_dims) / 2.0
+            crop = np.tile(center, (1, 2))[0] + np.concatenate([
+                -self.crop_dims / 2.0,
+                self.crop_dims / 2.0
+            ])
+            input_ = input_[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        <a id="change">caffe_in = np.zeros(np.array(input_.shape)[[0,3,1,2]],
+                            dtype=np.float32)</a>
+        for ix, in_ in enumerate(input_):
+            caffe_in[ix] = self.preprocess(self.inputs[0], in_)
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))</code></pre><img src="24937596.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/0db94786a7a463fed49825811fac903f1f1fc3c8#diff-e1985c25341ace1ca09898b0e992000443b28df0ab70b23d9eb3b57a86df91aaL49' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 0db94786a7a463fed49825811fac903f1f1fc3c8</div><div id='time'> Time: 2014-08-05</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/classifier.py</div><div id='class'> Class Name: Classifier</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/0b0afd2d644c65554c907f8e8320e507f8caaefc#diff-389467d0696a8f5f01e3e916558e7954fc1588d96e5652e4c31e137b424e1d32L50' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 0b0afd2d644c65554c907f8e8320e507f8caaefc</div><div id='time'> Time: 2020-07-17</div><div id='author'> Author: noelanorodriguez@gmail.com</div><div id='file'> File Name: sklearn/feature_selection/_mutual_info.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _compute_mi_cc</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/0b0afd2d644c65554c907f8e8320e507f8caaefc#diff-389467d0696a8f5f01e3e916558e7954fc1588d96e5652e4c31e137b424e1d32L117' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 0b0afd2d644c65554c907f8e8320e507f8caaefc</div><div id='time'> Time: 2020-07-17</div><div id='author'> Author: noelanorodriguez@gmail.com</div><div id='file'> File Name: sklearn/feature_selection/_mutual_info.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _compute_mi_cd</div><BR>

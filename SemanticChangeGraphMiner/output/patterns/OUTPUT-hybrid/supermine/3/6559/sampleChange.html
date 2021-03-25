@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+vol_actor = actor.slicer(t1_data)
+
+<a id="change">vol_actor.display(40, None, None)</a>
+vol_actor2 = vol_actor.copy()
+vol_actor2.display(None, None, 35)
+
+ren = window.Renderer()</code></pre><h3>After Change</h3><pre><code class='java'>
+from dipy.tracking.streamline import select_random_set_of_streamlines
+plot_streamlines = select_random_set_of_streamlines(streamlines, 900)
+
+<a id="change">if have_fury:
+    streamlines_actor = actor.streamtube(
+        list(move_streamlines(plot_streamlines, inv(t1_aff))),
+        colormap.line_colors(streamlines), linewidth=0.1)
+
+    vol_actor = actor.slicer(t1_data)
+
+    vol_actor.display(40, None, None)
+    vol_actor2 = vol_actor.copy()
+    vol_actor2.display(None, None, 35)
+
+    ren = window.Renderer()
+    ren.add(streamlines_actor)
+    ren.add(vol_actor)
+    ren.add(vol_actor2)
+
+    window.record(ren, out_path=&quottractogram_sfm.png&quot, size=(800, 800))
+    if interactive:
+        window.show(ren)
+
+</a>
+.. figure:: tractogram_sfm.png
+   :align: center
+</code></pre>

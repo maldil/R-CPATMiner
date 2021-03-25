@@ -1,0 +1,25 @@
+<html><h3>002c64b2ef562528043a1fd9961607415e1170aa,main.py,,get_test_utils,#,183
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    normalize = get_normalize_method(opt.mean, opt.std, opt.no_mean_norm,
+                                     opt.no_std_norm)
+
+    spatial_transform = <a id="change">[Resize(opt.sample_size)]</a>
+    if opt.test_crop == &quotcenter&quot:
+        spatial_transform.append(CenterCrop(opt.sample_size))
+    <a id="change">spatial_transform += [ToTensor(), ScaleValue(opt.value_scale), normalize]</a>
+    spatial_transform = Compose(spatial_transform)
+
+    temporal_transform = LoopPadding(opt.sample_duration)
+    target_transform = TargetCompose([VideoID(), Segment()])</code></pre><h3>After Change</h3><pre><code class='java'>
+    if opt.test_crop == &quotcenter&quot:
+        temporal_transform = LoopPadding(opt.sample_duration)
+    else:
+        <a id="change">del spatial_transform[1]</a>  &#47&#47remove CenterCrop
+        <a id="change">temporal_transform = SlidingWindow(opt.sample_duration, opt.test_stride)</a>
+
+    target_transform = TargetCompose([VideoID(), Segment()])
+
+    test_data, collate_fn = get_test_set(</code></pre><img src="7587019.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kenshohara/3D-ResNets-PyTorch/commit/002c64b2ef562528043a1fd9961607415e1170aa#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L189' target='_blank'>Link</a></div><div id='project'> Project Name: kenshohara/3D-ResNets-PyTorch</div><div id='commit'> Commit Name: 002c64b2ef562528043a1fd9961607415e1170aa</div><div id='time'> Time: 2018-11-21</div><div id='author'> Author: kensho.hara@aist.go.jp</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_test_utils</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/0abb9b835ffeb020410bdf9a1e0532139ffa5cfc#diff-ce27fd81e6dbaf1157116418f5501cf495f022bb2d533c0329d5e0e31c054d3fL20' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 0abb9b835ffeb020410bdf9a1e0532139ffa5cfc</div><div id='time'> Time: 2016-08-16</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/kern/src/add.py</div><div id='class'> Class Name: Add</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/8d74e077e63dac70a6932eb0496a4bb821253f5b#diff-c307bd6e9461bc7f7b22395497bc85796d9456212ddf2ed743b4ddfeb489e833L21' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: 8d74e077e63dac70a6932eb0496a4bb821253f5b</div><div id='time'> Time: 2012-12-05</div><div id='author'> Author: daniel.b.allan@gmail.com</div><div id='file'> File Name: mr/wire_models.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: fit</div><BR>

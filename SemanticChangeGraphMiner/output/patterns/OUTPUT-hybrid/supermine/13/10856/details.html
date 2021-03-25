@@ -1,0 +1,30 @@
+<html><h3>33a33b24185e45478c4758ac14cab8ae5234c44b,pgmpy/inference/base_continuous.py,AbstractGaussian,get_val,#AbstractGaussian#,50
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        --------
+        float : Value of the distribution at X
+        
+        <a id="change">if not isinstance(X, np.matrix):
+            if isinstance(X, (np.ndarray, list, tuple, set, frozenset)):
+                X = np.matrix(X)
+                X = np.reshape(X, (1, len(X)))
+            else:
+                raise TypeError("mean_vec should be a 1d array type object")
+       </a> X = np.reshape(X, (len(X), 1))
+        sub_vec = X - self.mean_vec
+        n = len(sub_vec)
+        return float(np.exp(-0.5 * sub_vec.transpose() * self.precision_matrix * sub_vec) /</code></pre><h3>After Change</h3><pre><code class='java'>
+        --------
+        float : Value of the distribution at X
+        
+        <a id="change">if isinstance(X, (np.matrix, np.ndarray, list, tuple, set, frozenset)):
+            X = np.array(X).flatten()
+            X = np.matrix(np.reshape(X, (len(X), 1)))
+        else:
+            raise TypeError("X should be a 1d array type object")
+       </a> sub_vec = X - self.mean_vec
+        n = len(sub_vec)
+        return np.float(np.exp(-0.5 * sub_vec.transpose() * self.precision_matrix * sub_vec) /
+                        (2 * np.pi) ** (n * 0.5) * np.linalg.det(self.cov_matrix) ** 0.5)</code></pre><img src="39632990.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L62' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: AbstractGaussian</div><div id='method'> Method Name: get_val</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L112' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: GradientLogPDF</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L203' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: DiscretizeTime</div><div id='method'> Method Name: __init__</div><BR>

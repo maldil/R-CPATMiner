@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 Compute feature combinations
+            repeated = K.reshape(K.tile(linear_transf_X, [1, N]), (N * N, self.F_))  &#47&#47 (N^2 x F&quot)
+            tiled = K.tile(linear_transf_X, <a id="change">[N, 1]</a>)  &#47&#47 (N^2 x F&quot)
+            combinations = K.concatenate([repeated, tiled])  &#47&#47 (N^2 x 2F&quot)
+            <a id="change">combination_slices = K.reshape(combinations, (N, -1, 2 * self.F_))</a>  &#47&#47 (N x N x 2F&quot)
+
+            &#47&#47 Attention head
+            dense = K.squeeze(K.dot(combination_slices, attention_kernel), -1)  &#47&#47 a(Wh_i, Wh_j) in the paper (N x N x 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 Compute feature combinations
+            &#47&#47 Note: [[a_1], [a_2]]^T [[Wh_i], [Wh_2]] = [a_1]^T [Wh_i] + [a_2]^T [Wh_j]
+            attn_for_self = <a id="change">K.dot(
+                linear_transf_X, attention_kernel[0])</a>  &#47&#47 (N x 1), [a_1]^T [Wh_i]
+            attn_for_neighs = K.dot(
+                linear_transf_X, attention_kernel[1])  &#47&#47 (N x 1), [a_2]^T [Wh_j]
+
+            &#47&#47 Attention head a(Wh_i, Wh_j) = a^T [[Wh_i], [Wh_j]]
+            <a id="change">dense = attn_for_self + K.transpose(attn_for_neighs)</a>  &#47&#47 (N x N) via broadcasting
+
+            &#47&#47 add nonlinearty
+            dense = LeakyReLU(alpha=0.2)(dense)</code></pre>

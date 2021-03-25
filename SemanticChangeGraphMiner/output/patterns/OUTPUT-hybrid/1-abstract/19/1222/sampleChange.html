@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nD = V0.shape[-1]
+        V1 = V0.reshape((nB * nH, nL, nD))
+        S1 = S0.reshape((nB * nH, nL, nL))
+        <a id="change">S2</a> = <a id="change">self.ops.xp.matmul(S1, V1)</a>
+
+        <a id="change">S3</a> = S2.reshape((nB, nH, nL, nD))
+
+        def backprop_attn4(dS3):
+            dS2 = dS3.reshape((nB * nH, nL, nD))</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 S3: (nB, nH, nL, nD)
+        nB, nH, nL, nL = S0.shape
+        nD = V0.shape[-1]
+        <a id="change">V1</a> = V0.reshape((nB * nH, nL, nD))
+        S1 = S0.reshape((nB * nH, nL, nL))
+        <a id="change">S2</a> = <a id="change">self.ops.matmul(self.ops.xp.ascontiguousarray(S1), self.ops.xp.ascontiguousarray(V1))</a>
+
+        <a id="change">S3</a> = S2.reshape((nB, nH, nL, nD))
+
+        def backprop_attn4(dS3):
+            dS2 = self.ops.xp.ascontiguousarray(dS3.reshape((nB * nH, nL, nD)))</code></pre>

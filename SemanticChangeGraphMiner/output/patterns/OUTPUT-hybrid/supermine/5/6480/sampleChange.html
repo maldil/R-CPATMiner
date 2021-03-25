@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    plt.close()
+    &#47&#47 test if reordering with default linkage works
+    ax = plot_matrix(mat, labels=labels, reorder=True)
+    <a id="change">plt.close()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    ax.axes.set_title(&quotTitle&quot)
+    plt.close()
+    import scipy
+    <a id="change">if int(scipy.__version__.split(&quot.&quot)[0]) &gt;= 1:
+        &#47&#47 test if reordering with default linkage works
+        idx = [2, 3, 5]
+        from itertools import permutations
+        &#47&#47 make symmetric matrix of similarities so we can get a block
+        for perm in permutations(idx, 2):
+            mat[perm] = 1
+        ax = plot_matrix(mat, labels=labels, reorder=True)
+        reordered_labels = [int(lbl.get_text())
+                            for lbl in ax.axes.get_xticklabels()]
+        &#47&#47 block order does not matter
+        assert_true(reordered_labels[:3] == idx or reordered_labels[-3:] == idx,
+                    &quotClustering does not find block structure.&quot)
+        plt.close()</a>
+</code></pre>

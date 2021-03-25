@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        if ebunch is not None:
+            for edge in ebunch:
+                <a id="change">if not (isinstance(edge[0], str) and isinstance(edge[1], str)):
+                    raise TypeError("Name of nodes must be strings")
+               </a> if edge[0] == edge[1]:
+                    <a id="change">raise Exceptions.SelfLoopError("Self Loops "
+                                                   "are not allowed", edge)</a>
+
+        nx.DiGraph.add_edges_from(self, ebunch)
+
+        new_nodes = set(itertools.chain(*ebunch))</code></pre><h3>After Change</h3><pre><code class='java'>
+        if ebunch is not None:
+            self._check_node_string(set(itertools.chain(*ebunch)))
+
+        <a id="change">if self._check_graph(ebunch, delete_graph=False):
+            nx.DiGraph.add_edges_from(self, ebunch)
+
+       </a> new_nodes = set(itertools.chain(*ebunch))
+        self._update_node_parents(new_nodes)
+        self._update_node_rule_for_parents(new_nodes)
+</code></pre>

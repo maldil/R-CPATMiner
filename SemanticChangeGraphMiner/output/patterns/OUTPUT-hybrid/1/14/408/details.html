@@ -1,0 +1,37 @@
+<html><h3>4ab331db8a6380d4785ddffa45895fd4bce2459e,core/eolearn/core/eodata.py,EOPatch,walk_filtered,#,819
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def walk_filtered(filesystem, patch_location, features):
+         Based on EOPatch.walk generator, but applies feature filtering based on the `features` argument
+        
+        itr = <a id="change">EOPatch.walk(filesystem, patch_location)</a>
+        itr = ((FeatureType(ftype), fname, path) for ftype, fname, path in itr)
+
+        features = FeatureParser(features).feature_collection
+        for ftype, fname, path in itr:
+            if ftype in [FeatureType.BBOX, FeatureType.TIMESTAMP, FeatureType.META_INFO]:
+                yield ftype, fname, path
+
+            if ftype not in features.keys():
+                continue
+
+            <a id="change">ftrs</a> = features[ftype]
+            if ftrs == Ellipsis or fname in ftrs:
+                yield ftype, fname, path
+</code></pre><h3>After Change</h3><pre><code class='java'>
+         Based on EOPatch.walk generator, but applies feature filtering based on the `features` argument
+        
+        features = FeatureParser(features).feature_collection
+        for ftype, fname, path in <a id="change">EOPatch.walk(filesystem, patch_location)</a>:
+            if ftype.is_meta():
+                yield ftype, fname, path
+
+            if ftype not in features:
+                continue
+
+            <a id="change">ftrs</a> = features[ftype]
+            if ftrs is Ellipsis or fname in ftrs:
+                yield ftype, fname, path
+</code></pre><img src="2157792.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/sentinel-hub/eo-learn/commit/4ab331db8a6380d4785ddffa45895fd4bce2459e#diff-f7532a8b1f3bad6e878ae9b30853c6c714cd0647243cbbe831e657353070669eL822' target='_blank'>Link</a></div><div id='project'> Project Name: sentinel-hub/eo-learn</div><div id='commit'> Commit Name: 4ab331db8a6380d4785ddffa45895fd4bce2459e</div><div id='time'> Time: 2019-12-23</div><div id='author'> Author: jovan.visnjic@sinergise.com</div><div id='file'> File Name: core/eolearn/core/eodata.py</div><div id='class'> Class Name: EOPatch</div><div id='method'> Method Name: walk_filtered</div><BR><BR><div id='link'><a href='https://github.com/openml/openml-python/commit/3c680c10486e1a39789b5505a531c7ee4165607a#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128L64' target='_blank'>Link</a></div><div id='project'> Project Name: openml/openml-python</div><div id='commit'> Commit Name: 3c680c10486e1a39789b5505a531c7ee4165607a</div><div id='time'> Time: 2021-02-12</div><div id='author'> Author: feurerm@informatik.uni-freiburg.de</div><div id='file'> File Name: tests/conftest.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_file_list</div><BR><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/4ffd4096c0077eb52725d927132a20635b503684#diff-58df2b78db17f65f223274dc4fa834f4bcf968558d739846511a5368483fc695L97' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: 4ffd4096c0077eb52725d927132a20635b503684</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: miguelvramos@ist.utl.pt</div><div id='file'> File Name: data/librispeech.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

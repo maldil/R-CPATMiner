@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+
+final_pred = <a id="change">final_test[&quotfullVisitorId&quot]</a>
+
+final_pred[train_yht] = test_y
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47merge the predictions with the sample sub
+submission = submission.merge(final_by_ind, on = &quotfullVisitorId&quot, how = &quotleft&quot)
+&#47&#47fill nas and move to right column name
+submission[&quotPredictedLogRevenue&quot] = <a id="change">submission[&quottest_pred&quot].fillna(0.0)</a>
+submission = submission.drop([&quottest_pred&quot], axis = 1)
+
+&#47&#47submit the output
+submission.to_csv(&quotcam_lightgbm_pred2.csv&quot, index = False)</code></pre>

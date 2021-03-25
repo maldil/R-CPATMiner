@@ -1,0 +1,54 @@
+<html><h3>a0ae4ee2efb684a81a53a99c8e7f2689cc74e0c8,dynamicgem/embedding/dynRNN.py,DynRNN,learn_embeddings,#DynRNN#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Process inputs
+        [x_hat, y] = self._autoencoder(x_in)
+        &#47&#47 Outputs
+        x_diff = <a id="change">merge([x_hat, x_pred],
+                       mode=lambda a, b: a - b,
+                       output_shape=lambda L: L[1])</a>
+
+        &#47&#47 Objectives
+        def weighted_mse_x(y_true, y_pred):
+            &quot&quot&quot Hack: This fn doesn&quott accept additional arguments.
+                      We use y_true to pass them.
+                y_pred: Contains x_hat - x_pred
+                y_true: Contains b
+            &quot&quot&quot
+            return KBack.sum(
+                KBack.square(y_pred * y_true[:, 0:self._node_num]),
+                axis=-1
+            )
+
+        &#47&#47 Model
+        <a id="change">self._model</a> = Model(input=[x_in, x_pred], output=x_diff)
+        sgd = SGD(lr=self._xeta, decay=1e-5, momentum=0.99, nesterov=True)
+        adam = Adam(lr=self._xeta, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+        self._model.compile(optimizer=adam, loss=weighted_mse_x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Process inputs
+        [x_hat, y] = self._autoencoder(x_in)
+        &#47&#47 Outputs
+        x_diff = <a id="change">Subtract()([x_hat, x_in])</a> 
+&#47&#47         x_diff = merge([x_hat, x_pred],
+&#47&#47                        mode=lambda a, b: a - b,
+&#47&#47                        output_shape=lambda L: L[1])
+
+        &#47&#47 Objectives
+        def weighted_mse_x(y_true, y_pred):
+            &quot&quot&quot Hack: This fn doesn&quott accept additional arguments.
+                      We use y_true to pass them.
+                y_pred: Contains x_hat - x_pred
+                y_true: Contains b
+            &quot&quot&quot
+            return KBack.sum(
+                KBack.square(y_pred * y_true[:, 0:self._node_num]),
+                axis=-1
+            )
+
+        &#47&#47 Model
+        <a id="change">self._model</a> = Model(input=[x_in, x_pred], output=x_diff)
+        sgd = SGD(lr=self._xeta, decay=1e-5, momentum=0.99, nesterov=True)
+        adam = Adam(lr=self._xeta, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+        self._model.compile(optimizer=adam, loss=weighted_mse_x)</code></pre><img src="21166343.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/palash1992/DynamicGEM/commit/a0ae4ee2efb684a81a53a99c8e7f2689cc74e0c8#diff-08b7126120a95c3d6b2173534ef0ba73d3e3eabd20e04ddfd5dd547e7b62596aL140' target='_blank'>Link</a></div><div id='project'> Project Name: palash1992/DynamicGEM</div><div id='commit'> Commit Name: a0ae4ee2efb684a81a53a99c8e7f2689cc74e0c8</div><div id='time'> Time: 2018-11-03</div><div id='author'> Author: sujitchhetri@gmail.com</div><div id='file'> File Name: dynamicgem/embedding/dynRNN.py</div><div id='class'> Class Name: DynRNN</div><div id='method'> Method Name: learn_embeddings</div><BR><BR><div id='link'><a href='https://github.com/palash1992/DynamicGEM/commit/0c9ffc6744c4ef474de2e49db75483568f24e49c#diff-584f28429ffddca42e18a7c78ca7abfea5d71991b7ff9506c85372dcb6ed19beL153' target='_blank'>Link</a></div><div id='project'> Project Name: palash1992/DynamicGEM</div><div id='commit'> Commit Name: 0c9ffc6744c4ef474de2e49db75483568f24e49c</div><div id='time'> Time: 2018-11-03</div><div id='author'> Author: sujitchhetri@gmail.com</div><div id='file'> File Name: dynamicgem/embedding/dynAERNN.py</div><div id='class'> Class Name: DynAERNN</div><div id='method'> Method Name: learn_embeddings</div><BR><BR><div id='link'><a href='https://github.com/palash1992/DynamicGEM/commit/4c80ea23581866773511ded242baf681d51ca29a#diff-08b7126120a95c3d6b2173534ef0ba73d3e3eabd20e04ddfd5dd547e7b62596aL140' target='_blank'>Link</a></div><div id='project'> Project Name: palash1992/DynamicGEM</div><div id='commit'> Commit Name: 4c80ea23581866773511ded242baf681d51ca29a</div><div id='time'> Time: 2018-11-12</div><div id='author'> Author: sujitchhetri@gmail.com</div><div id='file'> File Name: dynamicgem/embedding/dynRNN.py</div><div id='class'> Class Name: DynRNN</div><div id='method'> Method Name: learn_embeddings</div><BR><BR><div id='link'><a href='https://github.com/palash1992/DynamicGEM/commit/65dc973b99b6042cea5dbf5516ff02ac94f859f0#diff-0b36cbb7a647fa9b00c28390dc61ff26e87e00005e067c683157964194a948e0L112' target='_blank'>Link</a></div><div id='project'> Project Name: palash1992/DynamicGEM</div><div id='commit'> Commit Name: 65dc973b99b6042cea5dbf5516ff02ac94f859f0</div><div id='time'> Time: 2018-11-03</div><div id='author'> Author: sujitchhetri@gmail.com</div><div id='file'> File Name: dynamicgem/embedding/dynAE.py</div><div id='class'> Class Name: DynAE</div><div id='method'> Method Name: learn_embeddings</div><BR><BR><div id='link'><a href='https://github.com/palash1992/DynamicGEM/commit/83aecfabec9137569d41c48cd1e84b00e8bb7d72#diff-2f6727476a4d6549cc5e5b74f0348f2bf74068bfb80586d448b0b3240224ed39L132' target='_blank'>Link</a></div><div id='project'> Project Name: palash1992/DynamicGEM</div><div id='commit'> Commit Name: 83aecfabec9137569d41c48cd1e84b00e8bb7d72</div><div id='time'> Time: 2018-11-03</div><div id='author'> Author: sujitchhetri@gmail.com</div><div id='file'> File Name: dynamicgem/embedding/ae_static.py</div><div id='class'> Class Name: AE</div><div id='method'> Method Name: learn_embeddings</div><BR>

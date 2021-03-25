@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                state_dict = torch.load(load_path, map_location=str(self.device))
+                <a id="change">del state_dict._metadata</a>
+
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+                for key in list(state_dict.keys()):  &#47&#47 need to copy keys here because we mutate in loop
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                state_dict = torch.load(load_path, map_location=str(self.device))
+                <a id="change">if hasattr(state_dict, &quot_metadata&quot):
+                    del state_dict._metadata
+
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+               </a> for key in list(state_dict.keys()):  &#47&#47 need to copy keys here because we mutate in loop
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))
+                net.load_state_dict(state_dict)
+</code></pre>

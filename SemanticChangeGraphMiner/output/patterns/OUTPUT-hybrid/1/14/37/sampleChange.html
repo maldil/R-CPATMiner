@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    <a id="change">A_indices</a> = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None]))</a>, 0) for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]
+
+    generator = RelationalFullBatchNodeGenerator(G, sparse=True)
+    rgcnModel = RGCN([2], generator, num_bases=10, activations=["relu"], dropout=0.5)
+
+    x_in, x_out = rgcnModel.in_out_tensors()
+    model = keras.Model(inputs=x_in, outputs=x_out)
+
+    &#47&#47 Check fit method
+    out_indices = np.array([[0, 1]], dtype="int32")
+    <a id="change">preds_1</a> = model.predict([features[None, :, :], out_indices] + A_indices + A_values)
+    assert preds_1.shape == (1, 2, 2)
+
+    &#47&#47 Check fit method</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    <a id="change">A_indices</a> = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None])).astype(np.int64)</a>, 0)
+        for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]
+
+    generator = RelationalFullBatchNodeGenerator(G, sparse=True)
+    rgcnModel = RGCN([2], generator, num_bases=10, activations=["relu"], dropout=0.5)
+
+    x_in, x_out = rgcnModel.in_out_tensors()
+    model = keras.Model(inputs=x_in, outputs=x_out)
+
+    &#47&#47 Check fit method
+    out_indices = np.array([[0, 1]], dtype="int32")
+    <a id="change">preds_1</a> = model.predict([features[None, :, :], out_indices] + A_indices + A_values)
+    assert preds_1.shape == (1, 2, 2)
+
+    &#47&#47 Check fit method</code></pre>

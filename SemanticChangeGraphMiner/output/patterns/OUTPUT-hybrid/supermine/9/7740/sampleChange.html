@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ancestors = [np.array(span.sentence.xpath.split("/")) for span in spans]
+    min_len = min([a.size for a in ancestors])
+    arrays = np.array([a[:min_len] for a in ancestors])
+    arg_min = np.argmin(<a id="change">arrays[:-1] == arrays[1:], axis=1)
+ </a>   val = np.min(arg_min[np.nonzero(arg_min)])
+    return list(ancestors[0][:val])
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    min_len = min([a.size for a in ancestors])
+    ancestor = ancestors[0]
+    ind = 0  &#47&#47 all the ancestors are common up to this index (exclusive).
+    <a id="change">while ind &lt; min_len:
+        if not all([a[ind] == ancestor[ind] for a in ancestors]):
+            break
+        ind += 1
+   </a> return list(ancestors[0][:ind])
+
+
+def lowest_common_ancestor_depth(c: Tuple[SpanMention, ...]) -&gt; int:</code></pre>

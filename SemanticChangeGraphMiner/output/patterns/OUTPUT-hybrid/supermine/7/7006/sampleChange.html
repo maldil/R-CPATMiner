@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 
+        &#47&#47 The pixelBlocks dictionary does not contain scalars. 
+        inputBlock = pixelBlocks[&quotraster_pixels&quot]                  &#47&#47 get the input raster pixel block.
+        inputBlocks = <a id="change">pixelBlocks[&quotrasters_pixels&quot]</a>                  &#47&#47 get the input raster pixel block.
+        red = np.array(inblock[0], dtype=&quotfloat&quot)                   &#47&#47 extractbandids ensures first band is Red.
+        ir = np.array(inblock[1], dtype=&quotfloat&quot)                    &#47&#47 extractbandids ensures second band is Infrared.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 This method can update pixelBlocks[&quotoutput_pixels&quot] and pixelBlocks[&quotoutput_mask&quot]. 
+        &#47&#47 Note: the pixelBlocks dictionary does not contain any scalars parameters.
+
+        <a id="change">if not pixelBlocks.has_key("raster_pixels"):
+          raise Exception("No input raster was provided.")
+
+       </a> inputBlock = pixelBlocks[&quotraster_pixels&quot]           &#47&#47 get pixels of an raster
+        red  = np.array(inputBlock[0], dtype=&quotfloat&quot)       &#47&#47 assuming red&quots the first band
+        blue = np.array(inputBlock[2], dtype=&quotfloat&quot)       &#47&#47 assuming blue&quots the third band
+        <a id="change">outBlock = (red + blue) / 2.0</a>
+
+        np.copyto(pixelBlocks[&quotoutput_pixels&quot], outBlock, casting=&quotunsafe&quot)     &#47&#47 copy local array to output pixel block.
+        return pixelBlocks</code></pre>

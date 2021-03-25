@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        t = torch.tensor([padded_sent[i]]).type(type) &#47&#47 This is the target vector
+        log_prob = model(c)
+        loss = criterion(log_prob, t)   &#47&#47 loss for predicting target from context vector
+        <a id="change">if not inference:
+            &#47&#47 Back prop while training only
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+       </a> total_loss += loss.data.cpu().item()
+    return total_loss
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        t = torch.tensor([padded_sent[i]]).type(type) &#47&#47 This is the target vector
+        logits = model(c)
+        loss = criterion(logits, t)   &#47&#47 loss for predicting target from context vector
+        <a id="change">losses.append(loss)</a>
+    return torch.stack(losses).sum()
+
+
+MAX_LEN = 100</code></pre>

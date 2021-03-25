@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 check if we have all templates
+    for resname in unique_resname:
+        if resname not in residue_mols and resname not in [&quotHOH&quot]:
+            <a id="change">raise ValueError(&quotThere is no template for residue "%s"&quot % resname)</a>
+
+    &#47&#47 reset B.O. using templates
+    for resname in residue_mols.keys():
+        template = residue_mols[resname]</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    new_mol = Chem.RWMol(mol)
+    removal_queue = []
+    <a id="change">resnames = []</a>
+    for aix, atom in enumerate(new_mol.GetAtoms()):
+        atomicnum = atom.GetAtomicNum()
+        <a id="change">info = atom.GetPDBResidueInfo()</a>
+        resname = info.GetResidueName().strip().upper()
+        <a id="change">resnames.append(resname)</a>
+        &#47&#47 Remove Hs by hard, Chem.RemoveHs does not remove double bonded Hs
+        if removeHs and atomicnum == 1:
+            removal_queue.append(aix)
+        &#47&#47 Remove waters</code></pre>

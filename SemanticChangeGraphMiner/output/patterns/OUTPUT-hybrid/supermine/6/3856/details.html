@@ -1,0 +1,28 @@
+<html><h3>d6376d9c4aa3aea31dcf07e65e35125d7f091c2f,snorkel/learning/disc_learning.py,TFNoiseAwareModel,load,#TFNoiseAwareModel#,83
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._build(**kwargs)
+        saver = tf.train.Saver()
+        saver.restore(self.session, &quot{0}.meta&quot.format(model_name))
+        if <a id="change">kwargs.get(&quotverbose&quot, False)</a>:
+            print("[{0}] Loaded model &lt;{1}&gt;".format(self.name, model_name))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        load_dict = self._build()
+        saver = tf.train.Saver(load_dict)
+        ckpt = tf.train.get_checkpoint_state(&quot./&quot)
+        <a id="change">if ckpt and ckpt.model_checkpoint_path:
+            saver.restore(self.session, ckpt.model_checkpoint_path)
+            if verbose:
+                print("[{0}] Loaded model &lt;{1}&gt;".format(self.name, model_name))
+        else:
+            raise Exception("[{0}] No model found at &lt;{1}&gt;".format(
+                self.name, model_name
+            ))
+
+
+</a>def get_train_idxs(marginals, rebalance=False, split_lo=0.5, split_hi=0.5):
+    pos = np.where(marginals &lt; (split_lo - 1e-6))[0]
+    neg = np.where(marginals &gt; (split_hi + 1e-6))[0]
+    if rebalance:</code></pre><img src="17033083.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/d6376d9c4aa3aea31dcf07e65e35125d7f091c2f#diff-ee4b78ba1254b772fc00e785d492d8d1f56bf407d106c481ebeff9607b3aa3b9L83' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: d6376d9c4aa3aea31dcf07e65e35125d7f091c2f</div><div id='time'> Time: 2017-01-15</div><div id='author'> Author: henry.ehrenberg@outlook.com</div><div id='file'> File Name: snorkel/learning/disc_learning.py</div><div id='class'> Class Name: TFNoiseAwareModel</div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/0a68639f4c33323274e7829b9349d0170dc6c8ea#diff-24edcdcba3747a424b769b374189e8346f6c2f7bdb1e16d2d9ffbe9b926d45a7L161' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 0a68639f4c33323274e7829b9349d0170dc6c8ea</div><div id='time'> Time: 2017-02-08</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: evaluate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/708274289d66d9265f7ded03e3445bc2bd70f46e#diff-cd837a53c64122d434241fb0867246003867f2befc657744175c739137ff4e22L99' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: 708274289d66d9265f7ded03e3445bc2bd70f46e</div><div id='time'> Time: 2019-01-01</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: yellowbrick/download.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: download_data</div><BR>

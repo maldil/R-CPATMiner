@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test_noncontiguous(self, device):
+        batch_size = 3
+        inp = <a id="change">torch.rand(3, 5, 5).expand(batch_size, -1, -1, -1).to(device)</a>
+
+        actual = kornia.filters.spatial_gradient(inp)
+        expected = actual
+        assert_allclose(actual, actual)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test_noncontiguous(self, device, dtype):
+        batch_size = 3
+        inp = <a id="change">torch.rand(3, 5, 5, device=device, dtype=dtype).expand(batch_size, -1, -1, -1)</a>
+
+        actual = kornia.filters.spatial_gradient(inp)
+        assert_allclose(actual, actual)
+</code></pre>

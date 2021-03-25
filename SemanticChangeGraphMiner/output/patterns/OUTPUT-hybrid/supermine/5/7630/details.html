@@ -1,0 +1,21 @@
+<html><h3>5c177f3d9a29fc7737bd4734315820d1c11c7e87,cnn_text_classification.py,CNNClassifier,predict,#CNNClassifier#,156
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            self.__model.eval()
+
+            <a id="change">text = [[self.__text_field.vocab.stoi[x] for x in text]]</a>
+            x = Variable(torch.tensor(text))
+            x = x.cuda() if self.cuda and torch.cuda.is_available() else x
+            _, predicted = torch.max(self.__model(x), 1)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return y_output
+
+    def predict(self, X):
+        <a id="change">y_pred = [torch.argmax(yi, 1) for yi in self.__predict(X)]</a>
+        return [self.__label_field.vocab.itos[yi.data[0] + 1] for yi in y_pred]
+
+    def predict_proba(self, X):
+        softmax = nn.Softmax(dim=1)</code></pre><img src="29204703.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Shawn1993/cnn-text-classification-pytorch/commit/5c177f3d9a29fc7737bd4734315820d1c11c7e87#diff-c23d1e90f297ba698c11e950c0f34312a7bad7915cd6562b5eea91c120825403L156' target='_blank'>Link</a></div><div id='project'> Project Name: Shawn1993/cnn-text-classification-pytorch</div><div id='commit'> Commit Name: 5c177f3d9a29fc7737bd4734315820d1c11c7e87</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: rriva002@ucr.edu</div><div id='file'> File Name: cnn_text_classification.py</div><div id='class'> Class Name: CNNClassifier</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/scikit-multiflow/scikit-multiflow/commit/a8d354aa3f1d796ebfcf41586af1eb925f229ecc#diff-bb7d512162ec8c4ff00a34111d1e16fb429330f3ada121f9ee39445c9b37313dL148' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-multiflow/scikit-multiflow</div><div id='commit'> Commit Name: a8d354aa3f1d796ebfcf41586af1eb925f229ecc</div><div id='time'> Time: 2020-04-01</div><div id='author'> Author: 17923265+jacobmontiel@users.noreply.github.com</div><div id='file'> File Name: src/skmultiflow/lazy/knn_classifier.py</div><div id='class'> Class Name: KNNClassifier</div><div id='method'> Method Name: predict</div><BR>

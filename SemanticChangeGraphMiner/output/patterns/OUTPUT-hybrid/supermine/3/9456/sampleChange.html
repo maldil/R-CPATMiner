@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    criterion = nn.CrossEntropyLoss()
+    for epoch in range(1, N_EPOCH + 1):
+        &#47&#47 lr_schedule(optimizer, epoch)
+        print(&quotLearning rate: {:.8f}&quot.format(<a id="change">optimizer.param_groups[0][&quotlr&quot]</a>))
+        print(&quotLearning rate: {:.8f}&quot.format(optimizer.param_groups[-1][&quotlr&quot]))
+        for phase in [&quotsrc&quot, &quotval&quot, &quottar&quot]:
+            if phase == &quotsrc&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+            if phase == &quotval&quot and epoch_acc &gt; best_acc:
+                stop = 0
+                best_acc = epoch_acc
+                <a id="change">torch.save(model.state_dict(), &quotmodel.pkl&quot)</a>
+        if stop &gt;= args.early_stop:
+            break
+        print()
+    model.load_state_dict(torch.load(&quotmodel.pkl&quot))</code></pre>

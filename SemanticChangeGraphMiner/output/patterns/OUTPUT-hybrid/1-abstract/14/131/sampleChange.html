@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+print(&quotPreparing embedding matrix.&quot)
+
+&#47&#47 prepare embedding matrix
+<a id="change">num_words</a> = min(MAX_NUM_WORDS, <a id="change">len(word_index)</a>) + 1
+<a id="change">embedding_matrix</a> = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i &gt; MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        &#47&#47 words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
+
+&#47&#47 load pre-trained word embeddings into an Embedding layer
+&#47&#47 note that we set trainable = False so as to keep the embeddings fixed
+<a id="change">embedding_layer</a> = Embedding(num_words,
+                            EMBEDDING_DIM,
+                            embeddings_initializer=Constant(embedding_matrix),
+                            input_length=MAX_SEQUENCE_LENGTH,</code></pre><h3>After Change</h3><pre><code class='java'>
+print(&quotPreparing embedding matrix.&quot)
+
+&#47&#47 prepare embedding matrix
+<a id="change">num_words</a> = min(MAX_NUM_WORDS, <a id="change">len(word_index)</a> + 1)
+<a id="change">embedding_matrix</a> = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i &gt;= MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        &#47&#47 words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
+
+&#47&#47 load pre-trained word embeddings into an Embedding layer
+&#47&#47 note that we set trainable = False so as to keep the embeddings fixed
+<a id="change">embedding_layer</a> = Embedding(num_words,
+                            EMBEDDING_DIM,
+                            embeddings_initializer=Constant(embedding_matrix),
+                            input_length=MAX_SEQUENCE_LENGTH,</code></pre>

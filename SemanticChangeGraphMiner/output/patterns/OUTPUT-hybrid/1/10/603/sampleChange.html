@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.curr_iter += 1
+        out = &quot%d iter | %d sec&quot % (self.curr_iter, time.time() -
+                                    self.start_time)
+        <a id="change">self.stream.write(&quot\r%s&quot % out)</a>
+        self.stream.flush()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        out = &quot%d iter | %s sec&quot % (self.curr_iter,
+                                    self.precision % (self.end_time
+                                                      - self.start_time))
+        <a id="change">if self.name is None:
+            self.stream.write(&quot\r%s&quot % out)
+        else:
+            self.stream.write(&quot\r %s: %s&quot % (self.name, out))
+       </a> self.stream.flush()
+</code></pre>

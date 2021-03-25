@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+x = Dropout(0.5)(x)  &#47&#47 and dropout here.
+x = Dense(1, activation=&quotsigmoid&quot)(x)
+
+model = Model(inputs=[i], outputs=<a id="change">[x]</a>)
+
+if os.path.exists(&quottcn.npz&quot):
+    &#47&#47 Load checkpoint if file exists.</code></pre><h3>After Change</h3><pre><code class='java'>
+max_features = 50
+
+&#47&#47 make model
+model = <a id="change">Sequential(layers=[Embedding(max_features, 16, input_shape=(max_len,)),
+                           TCN(nb_filters=12,
+                               dropout_rate=0.5,
+                               kernel_size=6,
+                               dilations=[1, 2, 4]),
+                           Dropout(0.5),
+                           Dense(units=1, activation=&quotsigmoid&quot)])</a>
+
+&#47&#47 get model as json string and save to file
+<a id="change">model_as_json = model.to_json()</a>
+with open(r&quotmodel.json&quot, "w") as json_file:
+    json_file.write(model_as_json)
+&#47&#47 save weights to file (for this format, need h5py installed)
+model.save_weights(&quotweights.h5&quot)</code></pre>

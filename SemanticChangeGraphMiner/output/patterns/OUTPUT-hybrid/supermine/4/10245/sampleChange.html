@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def norm(x):
+        return (x - np.min(x)) / (np.max(x) - np.min(x))
+
+    <a id="change">X, y = make_moons(100)</a>
+    X = norm(X)
+    embedder = ParametricUMAP(parametric_reconstruction=True)
+    embedding = embedder.fit_transform(X)
+    Z = embedder.transform(X)</code></pre><h3>After Change</h3><pre><code class='java'>
+    X_r = embedder.inverse_transform(Z)
+    &#47&#47 completes successfully
+    assert X_r is not None
+    <a id="change">assert X_r.shape == X.shape</a>
+
+
+@tf_only
+def test_nonparametric(moon_dataset):</code></pre>

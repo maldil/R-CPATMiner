@@ -1,0 +1,36 @@
+<html><h3>1bddafd3102e4e0841d78673581c3ead8f68a7c8,dataproc/submit_job_to_cluster.py,,wait_for_job,#,174
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            region=region,
+            jobId=job_id).execute()
+        &#47&#47 Handle exceptions
+        <a id="change">if result[&quotstatus&quot][&quotstate&quot] == &quotERROR&quot:
+            raise Exception(result[&quotstatus&quot][&quotdetails&quot])
+        elif result[&quotstatus&quot][&quotstate&quot] == &quotDONE&quot:
+            print(&quotJob finished.&quot)
+            return result
+&#47&#47 [END dataproc_wait]
+
+
+&#47&#47 [START dataproc_get_client]
+</a>def get_client():
+    Builds an http client authenticated with the service account
+    credentials.
+    dataproc = googleapiclient.discovery.build(&quotdataproc&quot, &quotv1&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    while True:
+        job = dataproc.get_job(project, region, job_id)
+        &#47&#47 Handle exceptions
+        <a id="change">if job.status.State.Name(job.status.state) == &quotERROR&quot:
+            raise Exception(job.status.details)
+        elif job.status.State.Name(job.status.state) == &quotDONE&quot:
+            print(&quotJob finished.&quot)
+            return job
+&#47&#47 [END dataproc_wait]
+
+
+</a>def main(project_id,
+         zone,
+         cluster_name,
+         bucket_name,</code></pre><img src="18521937.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/1bddafd3102e4e0841d78673581c3ead8f68a7c8#diff-d7663da07ccc9061a7af6b9a00c44f85bcde6c194fff7298088cbd6afc04d4e2L177' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 1bddafd3102e4e0841d78673581c3ead8f68a7c8</div><div id='time'> Time: 2019-05-20</div><div id='author'> Author: amancuso@google.com</div><div id='file'> File Name: dataproc/submit_job_to_cluster.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wait_for_job</div><BR><BR><div id='link'><a href='https://github.com/pysb/pysb/commit/b20275d6dd7c505a166a8bc5f3b8bcf87a09e707#diff-20154262f34d61b3d0a3cd0ed96ae014b4c2ce3989610fe0dcfba312bde1e80eL10' target='_blank'>Link</a></div><div id='project'> Project Name: pysb/pysb</div><div id='commit'> Commit Name: b20275d6dd7c505a166a8bc5f3b8bcf87a09e707</div><div id='time'> Time: 2015-02-23</div><div id='author'> Author: lh64@cornell.edu</div><div id='file'> File Name: pysb/tools/pysb2gillespy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _translate_parameters</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/b171c97f2974ef3f884ad9674de137eda7023875#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L55' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: b171c97f2974ef3f884ad9674de137eda7023875</div><div id='time'> Time: 2015-03-01</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updateRasterInfo</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/187140c0d694b144a4ec81553eb2d40bb0df453e#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L57' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 187140c0d694b144a4ec81553eb2d40bb0df453e</div><div id='time'> Time: 2015-03-07</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updateRasterInfo</div><BR>

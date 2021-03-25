@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    seq = None
+
+    fname = abspath(expandvars(expanduser(fname)))
+    <a id="change">try:
+        seq = load_pronn(fname)
+        seq.kind = &quotproto-pyrnn&quot
+        return seq
+    except:
+        try:
+            seq = load_tlstm(fname)
+            return seq
+        except Exception as e:
+            if PY2:
+                try:
+                    seq = load_pyrnn(fname)
+                    seq.kind = &quotpyrnn&quot
+                    return seq
+                except Exception as e:
+                    raise
+            else:
+                raise
+
+</a>def load_clstm(fname):
+    
+    Loads a CLSTM model in protobuf format and instantiates an object
+    implementing the kraken.lib.SeqRecognizer interface.</code></pre><h3>After Change</h3><pre><code class='java'>
+        nn = TorchVGSLModel.load_clstm_model(fname)
+        kind = &quotclstm&quot
+    if not nn:
+        raise KrakenInvalidModelException(<a id="change">&quotFile {} not loadable by any parser.&quot.format(fname)</a>)
+    <a id="change">seq = TorchSeqRecognizer(nn)</a>
+    seq.kind = kind
+    return seq
+
+def load_pronn(fname):</code></pre>

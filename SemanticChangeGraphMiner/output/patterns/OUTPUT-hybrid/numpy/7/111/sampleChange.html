@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(xi) != cls.dof:
+            raise ValueError("xi must have length 3")
+
+        return <a id="change">np.vstack(
+            [np.hstack([SO2.wedge(xi[2]),
+                        np.reshape(xi[0:2], (2, 1))]),
+             [0, 0, 0]]
+        )</a>
+
+    @classmethod
+    def vee(cls, Xi):
+        SE(2) vee operator as defined by Barfoot.</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError(
+                "xi must have shape ({},) or (N,{})".format(cls.dof, cls.dof))
+
+        <a id="change">Xi = np.zeros([xi.shape[0], cls.dof, cls.dof])</a>
+        Xi[:, 0:2, 0:2] = SO2.wedge(xi[:, 2])
+        Xi[:, 0:2, 2] = xi[:, 0:2]
+
+        return <a id="change">np.squeeze(Xi)</a>
+
+    @classmethod
+    def vee(cls, Xi):
+        SE(2) vee operator as defined by Barfoot.</code></pre>

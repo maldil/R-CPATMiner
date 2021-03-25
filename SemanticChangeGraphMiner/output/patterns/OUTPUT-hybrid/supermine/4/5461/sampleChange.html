@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dimensions, dtype=dtype, chunks=chunks
+    )
+
+    <a id="change">indices = list(indices)</a>
+    for i in _pycompat.irange(len(indices)):
+        indices[i] *= dtype.type(numpy.prod(indices[i].shape[i + 1:]))
+    indices = dask.array.stack(indices).sum(axis=0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Gets the raveled indices shaped like input.
+    
+
+    <a id="change">indices = sum([
+        dask.array.arange(
+            0, numpy.prod(dimensions[i:]), numpy.prod(dimensions[i + 1:]),
+            dtype=dtype, chunks=c
+        )[i * (None,) + (slice(None),) + (len(dimensions) - i - 1) * (None,)]
+        for i, c in enumerate(chunks)
+    ])</a>
+
+    return indices
+
+</code></pre>

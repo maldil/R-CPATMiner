@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Prediction.
+        pred = model.predict(array_img)[0]
+        top_indices = <a id="change">pred.argsort()[-1:][::-1]</a>
+        results = [(classes[i], pred[i]) <a id="change">for</a> i in top_indices]
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+        cv2.imwrite(file_name, resized_face_image)
+
+        &#47&#47 Transform image to 4 dimension tensor.
+        img = image.img_to_array(image.load_img(file_name, target_size=<a id="change">(img_width, img_height)</a>))
+        x = image.img_to_array(img)
+        x = np.expand_dims(x, axis=0)
+        x = x / 255.0
+
+        &#47&#47 Prediction.
+        preds = model.predict(x)[0]
+        predict_idx = np.argmax(preds)
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot
+        prob = preds[predict_idx] * 100
+        if prob &gt; THRESHOLD:
+            judge = &quotUnlock&quot
+        msg = &quot{} ({:.1f}%). res="{}"&quot.format(<a id="change">classes[predict_idx]</a>, prob, judge)
+        print(msg)
+
+        &#47&#47 Draw frame to face.</code></pre>

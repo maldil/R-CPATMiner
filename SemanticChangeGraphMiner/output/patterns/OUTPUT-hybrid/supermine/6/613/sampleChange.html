@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    input_batch = input_batch.to(device)
+
+    &#47&#47 Forward input through encoder model
+    <a id="change">encoder_outputs</a>, encoder_hidden = encoder(input_batch, lengths)
+
+    &#47&#47 Prepare encoder&quots final hidden layer to be first hidden input to the decoder
+    decoder_hidden = encoder_hidden[:decoder.n_layers]</code></pre><h3>After Change</h3><pre><code class='java'>
+    input_batch = torch.LongTensor(indexes_batch).transpose(0, 1)
+    &#47&#47 Use appropriate device
+    input_batch = input_batch.to(device)
+    <a id="change">lengths = lengths.to(device)</a>
+    &#47&#47 Decode sentence with searcher
+    tokens, scores = searcher(input_batch, lengths, max_length)
+    &#47&#47 indexes -&gt; words
+    <a id="change">decoded_words = [voc.index2word[token.item()] for token in tokens]</a>
+    return decoded_words
+
+
+def evaluateInput(encoder, decoder, searcher, voc):</code></pre>

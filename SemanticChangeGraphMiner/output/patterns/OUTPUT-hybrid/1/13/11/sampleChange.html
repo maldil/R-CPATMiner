@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _validate(u_counts, v_counts, otu_ids, tree)
+
+    &#47&#47 cast to numpy types
+    <a id="change">u_counts</a> = <a id="change">np.asarray(u_counts)</a>
+    v_counts = np.asarray(v_counts)
+    otu_ids = np.asarray(otu_ids)
+
+    u_sum = <a id="change">u_counts.sum()</a>
+    v_sum = v_counts.sum()
+
+    &#47&#47 Quickly handle boundary cases
+    boundary = _boundary_case(u_sum, v_sum)
+    if boundary is not None:
+        return boundary
+
+    &#47&#47 aggregate state information up the tree (stored in counts_array), and
+    &#47&#47 retrieve the aggregated state information for each input count vector
+    counts = np.vstack([u_counts, v_counts])
+    count_array, indexed = _counts_and_index(counts, otu_ids, tree, None)
+    u_counts = count_array[:, 0]
+    v_counts = <a id="change">count_array[:, 1]</a>
+    branch_lengths = indexed[&quotlength&quot]
+    return _unweighted_unifrac(u_counts, v_counts, branch_lengths)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if validate:
+        _validate(u_counts, v_counts, otu_ids, tree)
+    &#47&#47 Quickly handle boundary cases
+    boundary = _boundary_case(<a id="change">sum(u_counts)</a>, sum(v_counts),
+                              normalized=normalized, unweighted=unweighted)
+    if boundary is not None:
+        return boundary</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not self.threads:
+            print("Error: can&quott run batch_geoparse without setting threads = True.")
+            return
+        nlped_docs = <a id="change">nlp.pipe(text_list, multiprocessing.cpu_count())</a>
+        &#47&#47pool = ThreadPool(self.n_threads)
+        &#47&#47processed = pool.map(self.geoparse, nlped_docs)
+        &#47&#47pool.close()
+        &#47&#47pool.join()</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        if not self.threads:
+            print("batch_geoparsed should be used with threaded searches. Please set `threads=True` when initializing the geoparser.")
+        nlped_docs = <a id="change">list(nlp.pipe(text_list, as_tuples=False, n_threads=multiprocessing.cpu_count()))</a>
+        processed = []
+        for i in tqdm(nlped_docs, disable=not self.progress):
+            p = self.geoparse(i)
+            processed.append(p)</code></pre>

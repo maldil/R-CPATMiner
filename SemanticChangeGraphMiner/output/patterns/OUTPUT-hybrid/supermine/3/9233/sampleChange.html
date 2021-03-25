@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n = len(x)
+    r = int(np.ceil(f * n))
+    h = [np.sort(np.abs(x - x[i]))[r] for i in range(n)]
+    w = np.clip(np.abs((x[<a id="change">:, None</a>] - x[None, :]) / h), 0.0, 1.0)
+    w = (1 - w ** 3) ** 3
+    yest = np.zeros(n)
+    delta = np.ones(n)</code></pre><h3>After Change</h3><pre><code class='java'>
+        residuals = y - yest
+        s = np.median(np.abs(residuals))
+        &#47&#47delta = np.clip(residuals / (6.0 * s), -1.0, 1.0)
+        delta = <a id="change">np.minimum(1.0, np.maximum(residuals / (6.0 * s), -1.0))</a>
+        delta = (1 - delta ** 2) ** 2
+
+    return yest
+</code></pre>

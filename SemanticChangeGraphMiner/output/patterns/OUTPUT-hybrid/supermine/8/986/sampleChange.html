@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 [START dataproc_list_clusters]
+def list_clusters(dataproc, project, region):
+    result = <a id="change">dataproc.projects().regions().clusters().list(
+        projectId=project,
+        region=region).execute()</a>
+    return result
+&#47&#47 [END dataproc_list_clusters]
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    List the details of clusters in the region.
+    for cluster in dataproc.list_clusters(project, region):
+        print((&quot{} - {}&quot.format(cluster.cluster_name,
+                                <a id="change">cluster.status.State.Name(
+                                    cluster.status.state)</a>)))
+&#47&#47 [END dataproc_list_clusters]
+
+</code></pre>

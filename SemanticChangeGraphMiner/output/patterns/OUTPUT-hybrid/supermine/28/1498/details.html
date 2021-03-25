@@ -1,0 +1,27 @@
+<html><h3>3cb4397b975536a3dbcb0568c777dcd7bbd78d33,astroML/tests/test_fourier.py,,test_PSD_continuous,#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_PSD_continuous():
+    t = np.linspace(-9, 10, 10000)
+    for a in (1, 2):
+        <a id="change">for t0 in (-2, 0, 2):
+            for f0 in (-1, 0, 1):
+                for method in (1, 2):
+                    yield (check_PSD_continuous, a, t0, f0, method, t)
+
+
+</a>def check_IFT_continuous(a, t0, f0, method, f):
+    H = sinegauss_FT(f, t0, f0, a)
+    t, h = IFT_continuous(f, H, method=method)
+    assert_allclose(h, sinegauss(t, t0, f0, a), atol=1E-12)</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quotmethod&quot, [1, 2])
+def test_PSD_continuous(a, t0, f0, method):
+    t = np.linspace(-9, 10, 10000)
+    <a id="change">h = sinegauss(t, t0, f0, a)</a>
+    <a id="change">f, P = PSD_continuous(t, h, method=method)</a>
+    assert_allclose(P, sinegauss_PSD(f, t0, f0, a), atol=1E-12)
+
+
+@pytest.mark.parametrize(&quota&quot, [1, 2])</code></pre><img src="7932537.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 18</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/3cb4397b975536a3dbcb0568c777dcd7bbd78d33#diff-5e4f1aa3a48f71278835819b09c74384b50d1dba9389898b048172eb51193e89L59' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 3cb4397b975536a3dbcb0568c777dcd7bbd78d33</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/tests/test_fourier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_PSD_continuous</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/3cb4397b975536a3dbcb0568c777dcd7bbd78d33#diff-5e4f1aa3a48f71278835819b09c74384b50d1dba9389898b048172eb51193e89L52' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 3cb4397b975536a3dbcb0568c777dcd7bbd78d33</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/tests/test_fourier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_FT_continuous</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/3cb4397b975536a3dbcb0568c777dcd7bbd78d33#diff-5e4f1aa3a48f71278835819b09c74384b50d1dba9389898b048172eb51193e89L67' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 3cb4397b975536a3dbcb0568c777dcd7bbd78d33</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/tests/test_fourier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_PSD_continuous</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/3cb4397b975536a3dbcb0568c777dcd7bbd78d33#diff-5e4f1aa3a48f71278835819b09c74384b50d1dba9389898b048172eb51193e89L14' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 3cb4397b975536a3dbcb0568c777dcd7bbd78d33</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/tests/test_fourier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_wavelets</div><BR>

@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                          ((num+1), self.n_folds))
+
+                if not self.use_probas:
+                    prediction = <a id="change">model.fit(X[train_index], y[train_index])\
+                        .predict(X[test_index])</a>
+                    <a id="change">prediction</a> = prediction.reshape(prediction.shape[0], 1)
+                else:
+                    prediction = model.fit(X[train_index], y[train_index]).\
+                        predict_proba(X[test_index])
+                <a id="change">single_model_prediction</a> = np.vstack([single_model_prediction.
+                                                    astype(prediction.dtype),
+                                                     prediction])
+
+            <a id="change">all_model_predictions</a> = np.hstack((all_model_predictions.
+                                               astype(single_model_prediction.
+                                                      dtype),
+                                               single_model_prediction))</code></pre><h3>After Change</h3><pre><code class='java'>
+                prediction = model.fit(X[train_index], y[train_index])
+
+                if not self.use_probas:
+                    prediction = <a id="change">prediction.predict(X[test_index])</a>
+                    <a id="change">prediction</a> = prediction.reshape(prediction.shape[0], 1)
+                else:
+                    prediction = prediction.predict_proba(X[test_index])
+                <a id="change">single_model_prediction</a> = np.vstack([single_model_prediction.
+                                                    astype(prediction.dtype),
+                                                     prediction])
+
+            <a id="change">all_model_predictions</a> = np.hstack((all_model_predictions.
+                                               astype(single_model_prediction.
+                                                      dtype),
+                                               single_model_prediction))</code></pre>

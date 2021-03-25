@@ -1,0 +1,26 @@
+<html><h3>e6dc6899d0aa846636c48562c79b161347c35235,autoreject/ransac.py,Ransac,fit,#Ransac#,192
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quotIterating epochs ...&quot)
+        verbose = False if self.n_jobs &gt; 1 else self.verbose
+        corrs = parallel(<a id="change">my_iterator</a>(self, epochs, idxs, verbose)
+                         <a id="change">for</a> idxs in np.array_split(np.arange(n_epochs),
+                         n_jobs))
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quotIterating epochs ...&quot)
+        verbose = False if self.n_jobs &gt; 1 else self.verbose
+        <a id="change">self.ch_subsets_ = [self._get_random_subsets(
+                            epochs.info, self.random_state + random_state)
+                            for random_state in np.arange(0, n_epochs, n_jobs)]</a>
+        epoch_idxs = np.array_split(np.arange(n_epochs), n_jobs)
+        <a id="change">corrs = parallel(my_iterator(self, epochs, idxs, chs, verbose)
+                         for idxs, chs in zip(epoch_idxs, self.ch_subsets_))</a>
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quot[Done]&quot)
+</code></pre><img src="19627816.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/autoreject/autoreject/commit/e6dc6899d0aa846636c48562c79b161347c35235#diff-e89b7cc298cd7e026773e1652569566ff747b6c7d2fbbd772c9fa6ecba9f9240L185' target='_blank'>Link</a></div><div id='project'> Project Name: autoreject/autoreject</div><div id='commit'> Commit Name: e6dc6899d0aa846636c48562c79b161347c35235</div><div id='time'> Time: 2019-06-04</div><div id='author'> Author: mainakjas@gmail.com</div><div id='file'> File Name: autoreject/ransac.py</div><div id='class'> Class Name: Ransac</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/df38756fb9220bd605acc3e8d5fd42f7f43c3a1e#diff-472c96156e796c79b5c6f6669651f01695443ab391a0f776ba35e29fa34b2935L56' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: df38756fb9220bd605acc3e8d5fd42f7f43c3a1e</div><div id='time'> Time: 2016-03-10</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tests/test_ops.py</div><div id='class'> Class Name: OpsTestCase</div><div id='method'> Method Name: random</div><BR><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-1ce4b6309bc5eacc0914bdafff9c0aeecefbe346c9963006c00ae848dd8ea4e2L120' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/adjoint.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: odeint_adjoint</div><BR>

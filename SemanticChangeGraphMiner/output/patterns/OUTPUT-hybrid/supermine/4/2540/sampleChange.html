@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                os.rename(os.path.join(path_to_temp_detector), os.path.join(path_to_detector))
+
+        self.face_detector = s3fd()
+        <a id="change">self.face_detector.load_state_dict(torch.load(path_to_detector))</a>
+        self.face_detector.to(device)
+        self.face_detector.eval()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(SFDDetector, self).__init__(device, verbose)
+
+        &#47&#47 Initialise the face detector
+        <a id="change">if path_to_detector is None:
+            model_weights = load_url(models_urls[&quots3fd&quot])
+        else:
+            model_weights = torch.load(path_to_detector)
+
+       </a> self.face_detector = s3fd()
+        self.face_detector.load_state_dict(model_weights)
+        self.face_detector.to(device)
+        self.face_detector.eval()</code></pre>

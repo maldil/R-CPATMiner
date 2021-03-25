@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if rising:
+        D   = numpy.maximum(0.0, D)
+    else:
+        <a id="change">D   = numpy.abs(D)</a>
+        pass
+
+    &#47&#47&#47&#47&#47&#47 Average over mel bands
+    D   = numpy.mean(D, 0)
+
+    &#47&#47&#47&#47&#47&#47 Filter with a difference operator
+    D   = scipy.signal.lfilter([1.0, -1.0], [1.0, -0.99], D)
+
+    &#47&#47&#47&#47&#47&#47 Normalize by the maximum onset strength
+    <a id="change">return D / numpy.max(D)</a>
+
+def _recursive_beat_decomposition(onset, t_min=16, sigma=16):
+
+    n           = len(onset)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if Znorm == 0:
+        Znorm = 1.0
+        pass
+    <a id="change">return (Z / Znorm, D)</a>
+
+def _recursive_beat_decomposition(onset, t_min=16, sigma=16):
+
+    n           = len(onset)</code></pre>

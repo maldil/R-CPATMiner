@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.forward_content()
+    self.disContent_opt.zero_grad()
+    loss_D_Content = self.backward_contentD(self.z_content_a, self.z_content_b)
+    self.disContent_loss = <a id="change">loss_D_Content.data.cpu().numpy()[0]</a>
+    nn.utils.clip_grad_norm(self.disContent.parameters(), 5)
+    self.disContent_opt.step()
+
+  def update_D(self, image_a, image_b):</code></pre><h3>After Change</h3><pre><code class='java'>
+    self.forward_content()
+    self.disContent_opt.zero_grad()
+    loss_D_Content = self.backward_contentD(self.z_content_a, self.z_content_b)
+    self.disContent_loss = <a id="change">loss_D_Content.data.cpu().numpy()</a>
+    nn.utils.clip_grad_norm_(self.disContent.parameters(), 5)
+    self.disContent_opt.step()
+
+  def update_D(self, image_a, image_b):</code></pre>

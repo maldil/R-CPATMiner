@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 For masking inputs with offline random masks.
+        if not self.opt.isTrain and self.opt.offline_testing:
+            self.mask_global = Image.open(os.path.join(&quotmasks&quot, os.path.splitext(<a id="change">os.path.basename(self.image_paths[0])</a>)[0]+&quot_mask.png&quot))
+            self.mask_global = transforms.ToTensor()(self.mask_global).unsqueeze(0).type_as(real_A).byte()
+            
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.mask_global = self.mask_global.narrow(0,0,1).narrow(1,0,1)
+
+        &#47&#47 create mask online
+        <a id="change">if not self.opt.offline_loading_mask:
+            if self.opt.mask_type == &quotcenter&quot:
+                self.mask_global.zero_()
+                self.mask_global[:, :, int(self.opt.fineSize/4) + self.opt.overlap : int(self.opt.fineSize/2) + int(self.opt.fineSize/4) - self.opt.overlap,\
+                                    int(self.opt.fineSize/4) + self.opt.overlap: int(self.opt.fineSize/2) + int(self.opt.fineSize/4) - self.opt.overlap] = 1
+                self.rand_t, self.rand_l = int(self.opt.fineSize/4) + self.opt.overlap, int(self.opt.fineSize/4) + self.opt.overlap
+            elif self.opt.mask_type == &quotrandom&quot:
+                self.mask_global = self.create_random_mask().type_as(self.mask_global).view_as(self.mask_global)
+            else:
+                raise ValueError("Mask_type [%s] not recognized." % self.opt.mask_type)
+        &#47&#47 For loading mask offline, we also need to change &quotopt.mask_type&quot and &quotopt.mask_sub_type&quot
+        &#47&#47 to avoid forgetting such settings.
+        else:
+            self.opt.mask_type = &quotrandom&quot
+            self.opt.mask_sub_type = &quotisland&quot
+
+       </a> self.set_latent_mask(self.mask_global)
+
+        real_A.narrow(1,0,1).masked_fill_(self.mask_global, 0.)&#47&#472*123.0/255.0 - 1.0
+        real_A.narrow(1,1,1).masked_fill_(self.mask_global, 0.)&#47&#472*104.0/255.0 - 1.0</code></pre>

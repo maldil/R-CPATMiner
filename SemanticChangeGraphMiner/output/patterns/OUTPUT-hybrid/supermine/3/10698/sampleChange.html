@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                for i, col in enumerate(self.__col):
+                    importance[col] = np.mean(
+                        <a id="change">filter(lambda x: x != 0, [k[col] if col in k else 0 for k in importance_bag])</a>)  &#47&#47 noqa
+
+            else:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    importance_bag.append(d.copy())
+
+                for i, col in enumerate(self.__col):
+                    list_filtered = <a id="change">filter(lambda x: x != 0,
+                                           [k[col] if col in k
+                                            else 0 for k in importance_bag])</a>
+                    importance[col] = np.mean(<a id="change">list(list_filtered)</a>)  &#47&#47 noqa
+
+            else:
+</code></pre>

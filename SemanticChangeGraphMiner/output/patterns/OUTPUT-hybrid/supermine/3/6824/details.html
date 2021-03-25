@@ -1,0 +1,21 @@
+<html><h3>f027bdc024eb9e85eddf98907c11ef3216f70652,trunk/SUAVE/Methods/Performance/estimate_take_off_field_length.py,,estimate_take_off_field_length,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            maximum_lift_coefficient, induced_drag_high_lift = compute_max_lift_coeff(vehicle,conditions)
+            vehicle.maximum_lift_coefficient = maximum_lift_coefficient
+        except:
+            <a id="change">raise ValueError("Maximum lift coefficient calculation error. Please, check inputs")</a>
+
+    &#47&#47 ==============================================
+    &#47&#47 Computing speeds (Vs, V2, 0.7*V2)
+    &#47&#47 ==============================================</code></pre><h3>After Change</h3><pre><code class='java'>
+        state.conditions.freestream.dynamic_pressure  = np.array(np.atleast_1d(0.5 * rho * V2_speed**2))
+        state.conditions.freestream.velocity          = np.array(np.atleast_1d(V2_speed))
+        state.conditions.freestream.mach_number       = np.array(np.atleast_1d(V2_speed/ a))
+        state.conditions.freestream.dynamic_viscosity = <a id="change">np.array(np.atleast_1d(mu))</a>
+        state.conditions.freestream.density          =  np.array(np.atleast_1d(rho))
+        results = vehicle.propulsors[&quotturbofan&quot].engine_out(state)
+        thrust = results.thrust_force_vector[0][0]
+</code></pre><img src="26872302.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/f027bdc024eb9e85eddf98907c11ef3216f70652#diff-7555e7f5cc77573c4323f8c75e278b50b3f2307806b2087eac84ef2ecd5a2e79L68' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: f027bdc024eb9e85eddf98907c11ef3216f70652</div><div id='time'> Time: 2020-07-17</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Performance/estimate_take_off_field_length.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: estimate_take_off_field_length</div><BR><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/7d805ab9d26c74db2319658f1ee1d0235f092845#diff-83f878a34b79e110cbc2ca300a23468dee863f99f29ba54245eae9d0e2c98d4bL232' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 7d805ab9d26c74db2319658f1ee1d0235f092845</div><div id='time'> Time: 2014-07-25</div><div id='author'> Author: craffel@gmail.com</div><div id='file'> File Name: mir_eval/input_output.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_time_series</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/7ca0da3854c49f73bd2aae5592f1cf5a9f7177d4#diff-c49b8660958f8ae6f4b060c6f2f98e7d1a003103974c4434d7673d538f3480e8L853' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 7ca0da3854c49f73bd2aae5592f1cf5a9f7177d4</div><div id='time'> Time: 2014-11-06</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: note_to_midi</div><BR>

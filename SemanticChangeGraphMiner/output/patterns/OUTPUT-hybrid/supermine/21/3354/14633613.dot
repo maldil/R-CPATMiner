@@ -1,0 +1,54 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Variable" a="32" s="3984,4021" l="9,1" shape="box"];
+4 [label="Assignment:=" a="7" s="4056" l="1" shape="box"];
+5 [label="FieldAccess" a="22" s="4032" l="4" shape="box"];
+6 [label="IfStatement" a="25" s="4028,4036" l="4,2" shape="diamond"];
+7 [label="cuda" a="32" s="4068" l="6" shape="box"];
+9 [label="from_numpy" a="32" s="3999,4020" l="11,1" shape="box"];
+14 [label="from_numpy" a="32" s="3367,3403" l="11,1" shape="box"];
+15 [label="cuda" a="32" s="3488" l="6" shape="box"];
+16 [label="Variable" a="32" s="3352,3404" l="9,1" shape="box"];
+17 [label="array" a="32" s="3384,3402" l="6,1" shape="box"];
+18 [label="FieldAccess" a="22" s="3456" l="4" shape="box"];
+19 [label="IfStatement" a="25" s="3452,3460" l="4,2" shape="diamond"];
+20 [label="Assignment:=" a="7" s="3478" l="1" shape="box"];
+22 [label="SimpleName" a="42" s="3361" l="5" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="to" a="32" s="3786,3795" l="3,1" shape="box"];
+3 [label="FieldAccess" a="22" s="3789" l="6" shape="box"];
+8 [label="FloatTensor" a="32" s="3762,3784" l="12,1" shape="box"];
+10 [label="SimpleName" a="42" s="2551" l="5" shape="ellipse"];
+11 [label="FloatTensor" a="32" s="3501,3524" l="12,1" shape="box"];
+12 [label="to" a="32" s="3526,3535" l="3,1" shape="box"];
+13 [label="FieldAccess" a="22" s="3529" l="6" shape="box"];
+21 [label="SimpleName" a="42" s="3495" l="5" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 7 [label="_recv_"];
+3 -> 2 [label="_para_"];
+5 -> 6 [label="_cond_"];
+6 -> 7 [label="_control_"];
+6 -> 4 [label="_control_"];
+7 -> 4 [label="_para_"];
+8 -> 2 [label="_recv_"];
+9 -> 8 [label="_map_"];
+9 -> 1 [label="_para_"];
+10 -> 21 [label="_ref_"];
+10 -> 8 [label="_recv_"];
+11 -> 12 [label="_recv_"];
+13 -> 12 [label="_para_"];
+14 -> 16 [label="_para_"];
+15 -> 20 [label="_para_"];
+16 -> 15 [label="_recv_"];
+17 -> 14 [label="_para_"];
+18 -> 19 [label="_cond_"];
+19 -> 20 [label="_control_"];
+19 -> 15 [label="_control_"];
+21 -> 11 [label="_recv_"];
+22 -> 14 [label="_recv_"];
+}

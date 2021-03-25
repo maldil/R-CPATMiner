@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                       pad=(pad_dim_0, pad_dim_1), apply_w=mask_type, name=&quotconv_f&quot)
+                out_g = PF.convolution(x, self.num_features, kernel_shape,
+                                       pad=(pad_dim_0, pad_dim_1), apply_w=mask_type, name=&quotconv_g&quot)
+                if <a id="change">type(payload) == nn._variable.Variable</a>:
+                    out_f += payload
+                    out_g += payload
+                if self.conditional:</code></pre><h3>After Change</h3><pre><code class='java'>
+                                       pad=(pad_dim_0, pad_dim_1), apply_w=mask_type, name=&quotconv_f&quot)
+                out_g = PF.convolution(x, self.num_features, kernel_shape,
+                                       pad=(pad_dim_0, pad_dim_1), apply_w=mask_type, name=&quotconv_g&quot)
+                if <a id="change">isinstance(payload, nn.Variable)</a>:
+                    out_f += payload
+                    out_g += payload
+                if self.conditional:</code></pre>

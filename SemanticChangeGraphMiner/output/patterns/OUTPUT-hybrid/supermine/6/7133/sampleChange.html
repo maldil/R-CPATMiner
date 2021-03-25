@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	def _calc(self, head, tail, rel):
+		relation_mention = tf.nn.l2_normalize(rel, 1)
+		entity_mention = self._ccorr(head, tail)
+		return -tf.sigmoid(<a id="change">tf.reduce_sum(relation_mention * entity_mention, 1, keep_dims = True)</a>)
+
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+		return self._real(res).flatten(start_dim = -2)
+
+	def _calc(self, h, t, r, mode):
+		<a id="change">if mode != &quotnormal&quot:
+			h = h.view(-1, r.shape[0], h.shape[-1])
+			t = t.view(-1, r.shape[0], t.shape[-1])
+			r = r.view(-1, r.shape[0], r.shape[-1])
+	</a>	<a id="change">score = self._ccorr(h, t) * r</a>
+		score = torch.sum(score, -1).flatten()
+		return score
+
+	def forward(self, data):</code></pre>

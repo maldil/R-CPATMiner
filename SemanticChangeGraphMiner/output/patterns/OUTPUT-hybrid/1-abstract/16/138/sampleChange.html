@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    A = np.abs(rng.randn(10, 10))
+    A[:, 2 * np.arange(5)] = 0
+
+    <a id="change">for init in [&quotrandom&quot, &quotnndsvd&quot]:
+        for solver in (&quotcd&quot, &quotmu&quot):
+            W_nmf, H, _ = non_negative_factorization(
+                A, init=init, solver=solver, random_state=1, tol=1e-2)
+            W_nmf_2, _, _ = non_negative_factorization(
+                A, H=H, update_H=False, init=init, solver=solver,
+                random_state=1, tol=1e-2)
+
+            model_class = NMF(init=init, solver=solver, random_state=1,
+                              tol=1e-2)
+            W_cls = model_class.fit_transform(A)
+            W_cls_2 = model_class.transform(A)
+
+            assert_array_almost_equal(W_nmf, W_cls, decimal=10)
+            assert_array_almost_equal(W_nmf_2, W_cls_2, decimal=10)
+
+
+</a>def test_non_negative_factorization_checking():
+    A = np.ones((2, 2))
+    &#47&#47 Test parameters checking is public function
+    nnmf = non_negative_factorization</code></pre><h3>After Change</h3><pre><code class='java'>
+        A, H=H, update_H=False, init=init, solver=solver,
+        regularization=regularization, random_state=1, tol=1e-2)
+
+    <a id="change">model_class</a> = NMF(init=init, solver=solver,
+                      regularization=regularization,
+                      random_state=1, tol=1e-2)
+    W_cls = model_class.fit_transform(A)
+    <a id="change">W_cls_2</a> = model_class.transform(A)
+
+    <a id="change">assert_array_almost_equal(W_nmf, W_cls, decimal=10)</a>
+    assert_array_almost_equal(W_nmf_2, W_cls_2, decimal=10)
+
+
+def test_non_negative_factorization_checking():</code></pre>

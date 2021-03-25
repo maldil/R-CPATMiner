@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        super().__init__(dis)
+
+    def dis_loss(self, real_samps, fake_samps, height, alpha):
+        return 0.5 * (<a id="change">((th.mean(self.dis(real_samps, height, alpha)) - 1) ** 2)</a>
+                      + (th.mean(self.dis(fake_samps, height, alpha))) ** 2)
+
+    def gen_loss(self, _, fake_samps, height, alpha):
+        return 0.5 * ((th.mean(self.dis(fake_samps, height, alpha)) - 1) ** 2)</code></pre><h3>After Change</h3><pre><code class='java'>
+        super().__init__(dis)
+
+    def dis_loss(self, real_samps, fake_samps, height, alpha):
+        return 0.5 * (<a id="change">th.mean((self.dis(real_samps, height, alpha) - 1) ** 2)</a>
+                      + (th.mean(self.dis(fake_samps, height, alpha) ** 2)))
+
+    def gen_loss(self, _, fake_samps, height, alpha):
+        return 0.5 * (th.mean((self.dis(fake_samps, height, alpha) - 1) ** 2))</code></pre>

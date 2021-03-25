@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    optimizer.step()
+    _, idx = outputs.max(1)
+    idx = idx.data.numpy()
+    result_str = [idx2char[c] <a id="change">for</a> c in <a id="change">idx.squeeze()</a>]
+    print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
+    print("Predicted string: ", &quot&quot.join(result_str))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    sys.stdout.write("predicted string: ")
+    for input, label in zip(inputs, labels):
+        &#47&#47 print(input.size(), label.size())
+        <a id="change">hidden</a>, <a id="change">output</a> = model(hidden, input)
+        val, idx = output.max(1)
+        sys.stdout.write(idx2char[idx.data[0]])
+        loss += criterion(output, label)</code></pre>

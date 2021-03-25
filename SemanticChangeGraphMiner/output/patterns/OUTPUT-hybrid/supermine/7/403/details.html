@@ -1,0 +1,28 @@
+<html><h3>0c9be6826b01fc82f6c57ae40b3e3fbbdfb95fc2,test/unit_test/test_cut_word.py,,test_cut_by_words_overlap,#,36
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 even with the prop = 0, the overlap makes it so that there are 2 words
+    assert cut_by_words("test test test", 2, 1, .5) == ["test test ",
+                                                        "test test"]
+    <a id="change">assert cut_by_words("test test test", 1, 2, .5) == ["test ", "test test ",
+                                                        "test test test"]</a>
+    &#47&#47 again, although we only want 1 word per chunk the overlap makes it so
+    &#47&#47 that the 2nd doc has 2 words and the 3rd has 3 words
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    assert cut_by_words("test test test", 2, 1, .5) == ["test test ",
+                                                        "test test"]
+    <a id="change">try:
+        _ = cut_by_words("test test test", 1, 2, .5)
+        raise AssertionError("did not throw error")
+    except AssertionError as error:
+        assert str(error) == OVERLAP_LARGE_MESSAGE
+
+
+</a>def test_cut_by_words_proportion():
+    assert cut_by_words("test test test", 2, 0, 0) == ["test test ", "test"]
+    assert cut_by_words("test test test", 2, 0, .5) == ["test test ", "test"]
+    assert cut_by_words("test test test", 2, 0, 1) == ["test test test"]</code></pre><img src="1904689.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/0c9be6826b01fc82f6c57ae40b3e3fbbdfb95fc2#diff-666bab82fb7da172b85edf71e5b3a5d737aeeb8015d7c70ed5c457f07b3f29c1L36' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 0c9be6826b01fc82f6c57ae40b3e3fbbdfb95fc2</div><div id='time'> Time: 2017-07-20</div><div id='author'> Author: alfiero_arianna@wheatoncollege.edu</div><div id='file'> File Name: test/unit_test/test_cut_word.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_cut_by_words_overlap</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/86f8e8e2d5f97e5c32da21ed10dec25273c6398b#diff-d0f321a38478450b3abd4ebc9a73813efa67e6a0a3bfd18e63c680da03207751L16' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 86f8e8e2d5f97e5c32da21ed10dec25273c6398b</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: test/unit_test/test_utility_topword.py</div><div id='class'> Class Name: TestZTest</div><div id='method'> Method Name: test_special_case</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/e76543eeb672b66f0c6dd485d79ea1109ff49f77#diff-d437630709c0389ccc04a33c0f49f646e6166fa40e41eb6ca5b4bbad7d441f6eL39' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: e76543eeb672b66f0c6dd485d79ea1109ff49f77</div><div id='time'> Time: 2017-07-20</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: test/unit_test/test_cut_char.py</div><div id='class'> Class Name: TestCutByCharacters</div><div id='method'> Method Name: test_pre_conditions</div><BR>

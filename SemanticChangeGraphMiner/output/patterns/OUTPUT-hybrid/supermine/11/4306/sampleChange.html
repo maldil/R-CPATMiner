@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 initialize location and hidden state vectors
+            h_t = torch.zeros(self.batch_size, self.hidden_size)
+            l_t = torch.Tensor(self.batch_size, 2).uniform_(-1, 1)
+            <a id="change">h_t</a>, <a id="change">l_t</a> = Variable(h_t), Variable(l_t)
+
+            for t in range(self.num_glimpses - 1):
+                &#47&#47 forward pass through model
+                h_t, l_t = self.model(img, l_t, h_t)
+
+                &#47&#47 bookeeping for later plotting
+                self.locs.append(l_t)
+
+            &#47&#47 last iteration
+            probas = <a id="change">self.model(img, l_t, h_t, last=True)</a>
+
+            &#47&#47 to be continued
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            l_t = Variable(l_t)
+
+            &#47&#47 extract the glimpses
+            <a id="change">sum_grad_log_pi = 0.</a>
+            for t in range(self.num_glimpses - 1):
+
+                &#47&#47 forward pass through model
+                self.h_t, mu, l_t = self.model(x, l_t, self.h_t)
+
+                &#47&#47 compute gradient of log of policy across batch
+                grad_log_pi = (mu-l_t) / (self.std*self.std)
+
+                &#47&#47 accumulate
+                sum_grad_log_pi += grad_log_pi
+
+            &#47&#47 last iteration
+            <a id="change">self</a>.h_t, mu, <a id="change">l_t</a>, b_t, log_probas = <a id="change">self.model(
+                img, l_t, self.h_t, last=True
+            )</a>
+
+            &#47&#47 calculate reward
+            R = (torch.max(log_probas, 1)[1] == y)
+
+            &#47&#47 compute losses for differentiable modules
+            self.loss_action = F.nll_loss(log_probas, y)
+            <a id="change">self.loss_baseline = F.mse_loss(R, b_t)</a>
+
+            &#47&#47 compute reinforce loss
+            
+</code></pre>

@@ -1,0 +1,25 @@
+<html><h3>7327bc3aa7a0e66168a84380edbd1e74a5a16355,ch04/02_frozenlake_naive.py,,,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        loss_v.backward()
+        optimizer.step()
+        print("%d: loss=%.3f, reward_mean=%.1f, reward_bound=%.1f" % (
+            iter_no, <a id="change">loss_v.data[0]</a>, reward_m, reward_b))
+        writer.add_scalar("loss", <a id="change">loss_v.data[0]</a>, iter_no)
+        writer.add_scalar("reward_bound", reward_b, iter_no)
+        writer.add_scalar("reward_mean", reward_m, iter_no)
+        if reward_m &gt; 0.8:</code></pre><h3>After Change</h3><pre><code class='java'>
+        obs_v, acts_v, reward_b, reward_m = filter_batch(batch, PERCENTILE)
+        optimizer.zero_grad()
+        action_scores_v = net(obs_v)
+        <a id="change">loss_v</a> = objective(action_scores_v, acts_v)
+        loss_v.backward()
+        optimizer.step()
+        print("%d: loss=%.3f, reward_mean=%.1f, reward_bound=%.1f" % (
+            iter_no, <a id="change">loss_v.item()</a>, reward_m, reward_b))
+        writer.add_scalar("loss", <a id="change">loss_v.item()</a>, iter_no)
+        writer.add_scalar("reward_bound", reward_b, iter_no)
+        writer.add_scalar("reward_mean", reward_m, iter_no)
+        if reward_m &gt; 0.8:</code></pre><img src="29150420.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7327bc3aa7a0e66168a84380edbd1e74a5a16355#diff-ea012b96ca2c3b980f52941af0aab93983a103716b23598f51d5385cd2f38e53L104' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7327bc3aa7a0e66168a84380edbd1e74a5a16355</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch04/02_frozenlake_naive.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7327bc3aa7a0e66168a84380edbd1e74a5a16355#diff-406952adfd2595f385533c3e7381117aba300b3e99e94a03db5ecf4ffa9063e6L108' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7327bc3aa7a0e66168a84380edbd1e74a5a16355</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch04/03_frozenlake_tweaked.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7327bc3aa7a0e66168a84380edbd1e74a5a16355#diff-ea012b96ca2c3b980f52941af0aab93983a103716b23598f51d5385cd2f38e53L104' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7327bc3aa7a0e66168a84380edbd1e74a5a16355</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch04/02_frozenlake_naive.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7327bc3aa7a0e66168a84380edbd1e74a5a16355#diff-6caa93f99b6d7a47e2ed2702e4c248114e601e2dc9cdb0846cf4dcc815a86d64L92' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7327bc3aa7a0e66168a84380edbd1e74a5a16355</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch04/01_cartpole.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7327bc3aa7a0e66168a84380edbd1e74a5a16355#diff-c5a841d77e16b120ace279dc121685c2a52374b71d12e9695608870e9aad9170L112' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7327bc3aa7a0e66168a84380edbd1e74a5a16355</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch04/04_frozenlake_nonslippery.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

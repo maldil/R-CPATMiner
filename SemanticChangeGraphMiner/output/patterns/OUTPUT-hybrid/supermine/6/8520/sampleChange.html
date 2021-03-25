@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        self.assertEqual(results, [], msg))
+
+    def test_clones(self):
+        <a id="change">self.clone_files</a> = [
+            os.path.join(self.base_test_path, &quotclones&quot, elem)
+            <a id="change">for</a> elem in <a id="change">os.listdir(os.path.join(self.base_test_path,
+                                                &quotclones&quot))</a>]
+
+        self.check_clone_detection_bear(<a id="change">self.clone_files</a>,
+                                        lambda results, msg:
+                                        self.assertNotEqual(results, [], msg))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Due to different floating numbers implementation on Python version
+        &#47&#47 3.5 and 3.4, we just run this test on Python 3.6 or later
+        if sys.version_info &gt; (3, 6, 0):
+            <a id="change">for files_result, files_expected_result in zip(
+                    files_results, files_expected_results_py36):
+                self.assertComparableObjectsEqual(files_result,
+                                                  files_expected_result)
+
+       </a> self.check_clone_detection_bear(clone_files,
+                                        lambda results, msg:
+                                        self.assertNotEqual(results, [], msg))
+</code></pre>

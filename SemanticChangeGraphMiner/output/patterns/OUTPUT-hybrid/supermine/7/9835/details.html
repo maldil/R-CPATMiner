@@ -1,0 +1,28 @@
+<html><h3>b89d864ba91813f3ccce46134fd7eec49a7501ed,librosa/util/_nnls.py,,nnls,#,141
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rho = 0.5 * svds.max() * svds.min()
+
+    &#47&#47 Cast up to float64 because numba isn&quott smart about typing
+    return _nnls(<a id="change">A.astype(np.float64)</a>,
+                 B.astype(np.float64),
+                 rho=rho,
+                 eps_abs=eps_abs,</code></pre><h3>After Change</h3><pre><code class='java'>
+    if B.ndim == 1:
+        return scipy.optimize.nnls(A, B)[0]
+
+    <a id="change">if B.size &gt; A.size:
+        A = A.astype(B.dtype)
+    elif B.size &lt; A.size:
+        B = B.astype(A.dtype)
+
+    &#47&#47 Otherwise, initialize our step size
+   </a> svds = np.linalg.svd(A, compute_uv=False)
+
+    &#47&#47 Explicitly cast to float so that numba isn&quott confused
+    rho = np.asanyarray(0.5 * svds.max() * svds.min(), dtype=<a id="change">A.dtype</a>)
+
+    return _nnls(A, B,
+                 rho=rho,</code></pre><img src="37510863.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/b89d864ba91813f3ccce46134fd7eec49a7501ed#diff-a11f6947a4e5905cd549c8411a5a89f2623fadba663bd35b443bd2f6cf3331f6L186' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: b89d864ba91813f3ccce46134fd7eec49a7501ed</div><div id='time'> Time: 2019-04-28</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/util/_nnls.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: nnls</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/a4100f17a0433eda78a6cf393f08f9a8d9b46fdb#diff-a11f6947a4e5905cd549c8411a5a89f2623fadba663bd35b443bd2f6cf3331f6L186' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: a4100f17a0433eda78a6cf393f08f9a8d9b46fdb</div><div id='time'> Time: 2019-06-21</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/util/_nnls.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: nnls</div><BR><BR><div id='link'><a href='https://github.com/keunwoochoi/kapre/commit/8cdbb1637b140c01f431831e7b2c2a63afc96209#diff-cdb9b0155cf70a0643d3f5b7fa6c9430ba1caea422b13f795023c83408149672L94' target='_blank'>Link</a></div><div id='project'> Project Name: keunwoochoi/kapre</div><div id='commit'> Commit Name: 8cdbb1637b140c01f431831e7b2c2a63afc96209</div><div id='time'> Time: 2020-08-14</div><div id='author'> Author: gnuchoi+github@gmail.com</div><div id='file'> File Name: kapre/backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: filterbank_log</div><BR>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def sample(self, x_dict={}, batch_n=None, sample_shape=torch.Size(), return_all=True, reparam=False):
+        &#47&#47 check whether the input is valid or convert it to valid dictionary.
+        x_dict = self._check_input(x_dict)
+        <a id="change">input_dict = {}</a>
+
+        &#47&#47 conditioned
+        <a id="change">if len(self.input_var) != 0:
+            input_dict.update(get_dict_values(x_dict, self.input_var, return_dict=True))
+
+       </a> self.set_dist(input_dict, batch_n=batch_n, sampling=True)
+        output_dict = self.get_sample(reparam=reparam,
+                                      sample_shape=sample_shape)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                raise ValueError()
+
+    def sample(<a id="change">self</a>, x_dict={}, batch_n=None, sample_shape=torch.Size(), return_all=True, reparam=False):
+        &#47&#47 check whether the input is valid or convert it to valid dictionary.
+        <a id="change">input_dict = self._get_input_dict(x_dict)</a>
+
+        self.set_dist(input_dict, batch_n=batch_n, sampling=True)
+        output_dict = self.get_sample(reparam=reparam, sample_shape=sample_shape)
+</code></pre>

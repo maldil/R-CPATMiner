@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        new_mean, new_count = _mean_update(self.mean, self.count, x, self.cap)
+        
+        &#47&#47 update op
+        <a id="change">updates = [(self.count, new_count), (self.mean, new_mean)]</a>
+        self.add_update(updates, x)
+
+        &#47&#47 prep for broadcasting :(
+        p = tf.concat((K.reshape(this_bs_int, (1,)), K.shape(self.mean)), 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        &#47&#47 update op
+        self.count.assign(new_count)
+        <a id="change">self.mean.assign(new_mean)</a>
+        
+        &#47&#47 the first few 1000 should not matter that much towards this cost
+        return K.minimum(1., new_count/self.cap) * (z * K.expand_dims(new_mean, 0))
+</code></pre>

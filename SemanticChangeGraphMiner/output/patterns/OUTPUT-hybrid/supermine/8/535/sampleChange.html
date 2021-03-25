@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    indices = ds.metadata[&quotselections&quot]
+                    point_mask = point_mask[indices]
+                    points = transpose(array((index[indices], value[indices])))
+                elif <a id="change">ds.metadata.get(&quotselection_mask&quot, None) is not N</a>one:
+                    point_mask &= ds.metadata[&quotselection_mask&quot]
+                else:
+                    continue</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 we&quotll have to define a small algebra about how they are combined,
+            &#47&#47 and this will fall out...
+            for ds in (self.index, self.value):
+                <a id="change">if ds.metadata.get(&quotselection_masks&quot, None) is not None:
+                    for mask in ds.metadata[&quotselection_masks&quot]:
+                        point_mask &= mask
+                    indices = where(point_mask == True)
+                    points = transpose(array((index[indices], value[indices])))
+                elif ds.metadata.get(&quotselections&quot, None) is not None:
+                    indices = ds.metadata[&quotselections&quot]
+                    point_mask = point_mask[indices]
+                    points = transpose(array((index[indices], value[indices])))
+                else:
+                    continue
+                
+               </a> self._cached_selection_point_mask = point_mask
+                self._cached_selected_pts = points
+                self._selection_cache_valid = True
+                break</code></pre>

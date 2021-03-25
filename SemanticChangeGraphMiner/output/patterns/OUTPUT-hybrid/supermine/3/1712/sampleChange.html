@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 If original_img is True then also plot the original image with the rest of them
+    if original_img:
+        converted_gray_img = cv2.cvtColor(gray_img, cv2.COLOR_GRAY2RGB)
+        plotting_img = np.hstack(<a id="change">[converted_gray_img, plotting_img]</a>)
+    plotting_img = resize(plotting_img,  resize_x=.5, resize_y=.5)
+
+    &#47&#47 Reset debug mode</code></pre><h3>After Change</h3><pre><code class='java'>
+    if grid_img:
+        &#47&#47 Compile images together into one
+        top_row = np.hstack([labeled_imgs[0], labeled_imgs[1]])
+        bot_row = <a id="change">np.hstack([labeled_imgs[2], labeled_imgs[3]])</a>
+        plotting_img = np.vstack([top_row, bot_row])
+        plotting_img = resize(plotting_img, resize_x=.5, resize_y=.5)
+
+        if params.debug == "print":</code></pre>

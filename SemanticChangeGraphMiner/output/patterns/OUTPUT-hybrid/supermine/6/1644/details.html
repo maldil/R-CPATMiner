@@ -1,0 +1,26 @@
+<html><h3>efc54499191ead69f875877badd3578c60eba7a6,nussl/audio_signal.py,AudioSignal,load_audio_from_file,#AudioSignal#,265
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise IOError("Cannot read from file, {file}".format(file=input_file_path))
+
+        self.path_to_input_file = input_file_path
+        self._active_end = signal_length if signal_length is not None else <a id="change">self._audio_data.shape[self._LEN]</a>
+        self._active_start = signal_starting_position
+
+    def load_audio_from_array(self, signal, sample_rate=constants.DEFAULT_SAMPLE_RATE):
+        Loads an audio signal from a numpy array. Only accepts float arrays and int arrays of depth 16-bits.</code></pre><h3>After Change</h3><pre><code class='java'>
+            with audioread.audio_open(os.path.realpath(input_file_path)) as input_file:
+                file_length = input_file.duration
+
+            <a id="change">if offset &gt; file_length:
+                raise ValueError(&quotoffset is longer than signal!&quot)
+
+           </a> if duration is not None and offset + duration &gt;= file_length:
+                <a id="change">warnings.warn(&quotoffset + duration are longer than the signal. Reading until end of signal...&quot,
+                              UserWarning)</a>
+
+            audio_input, self.sample_rate = librosa.load(input_file_path,
+                                                         sr=None,
+                                                         offset=offset,</code></pre><img src="8416168.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/efc54499191ead69f875877badd3578c60eba7a6#diff-99d2e76afba526df7aa773d938831ae112fde33395aba28b17e1713d791afaf6L265' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: efc54499191ead69f875877badd3578c60eba7a6</div><div id='time'> Time: 2017-02-08</div><div id='author'> Author: ethanmanilow@gmail.com</div><div id='file'> File Name: nussl/audio_signal.py</div><div id='class'> Class Name: AudioSignal</div><div id='method'> Method Name: load_audio_from_file</div><BR><BR><div id='link'><a href='https://github.com/ANTsX/ANTsPy/commit/6286ba014120ce05b49302007a0a28feed6d98c4#diff-491a136485a82a1ec087158a1811d7c5c7706538d84208ad6fc61f4079a9299cL136' target='_blank'>Link</a></div><div id='project'> Project Name: ANTsX/ANTsPy</div><div id='commit'> Commit Name: 6286ba014120ce05b49302007a0a28feed6d98c4</div><div id='time'> Time: 2020-09-10</div><div id='author'> Author: stnava@gmail.com</div><div id='file'> File Name: ants/segmentation/joint_label_fusion.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: joint_label_fusion</div><BR><BR><div id='link'><a href='https://github.com/tgsmith61591/pmdarima/commit/d8a351a4d505d46cdd4713292ee651a6cbc11712#diff-0a12d00820292864c41b653beb6b88fb1a31723e5b06610586ff8da852494900L521' target='_blank'>Link</a></div><div id='project'> Project Name: tgsmith61591/pmdarima</div><div id='commit'> Commit Name: d8a351a4d505d46cdd4713292ee651a6cbc11712</div><div id='time'> Time: 2019-11-18</div><div id='author'> Author: tgsmith61591@gmail.com</div><div id='file'> File Name: pmdarima/arima/arima.py</div><div id='class'> Class Name: ARIMA</div><div id='method'> Method Name: predict_in_sample</div><BR>

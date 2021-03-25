@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            if isinstance(first_arg, Node):
+                raise ValueError(
+                    <a id="change">&quot{}.__init__() received an instance of {} as the first argument. If you want to create a &quot
+                    &quotcopy of an existing node, the types must match and you must provide an additional stream_spec.&quot
+                    .format(self.__class__.__name__, first_arg.__class__.__name__)</a>
+                )
+            self.__init_fromscratch__(*args, **kwargs)
+
+    def stream(self, label=None, select=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.__check_input_types(stream_map, incoming_stream_types)
+        incoming_edge_map = self.__get_incoming_edge_map(stream_map)
+
+        <a id="change">super(Node, self).__init__(incoming_edge_map, name, args, kwargs)</a>
+        self.__outgoing_stream_type = outgoing_stream_type
+        self.__incoming_stream_types = incoming_stream_types
+
+    def stream(self, label=None, selector=None):</code></pre>

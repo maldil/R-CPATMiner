@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+y = y.data.cpu().numpy()
+y1 = <a id="change">y1</a>.data.cpu().numpy()
+<a id="change">y2 = y2.data.cpu().numpy()</a>
+
+relative_error = np.std(<a id="change">y1 - y2</a>) / np.std(y)
+
+print(&quotrelative error = {}&quot.format(relative_error))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    return torch.cat([x[:, :, :, n:], x[:, :, :, :n]], dim=3)
+
+&#47&#47 Create random input
+x = <a id="change">torch.autograd.Variable(torch.randn(1, 12, 128, 128), volatile=True).cuda()</a> &#47&#47 [batch, feature, beta, alpha]
+
+y = phi(x)
+<a id="change">y1 = rot(phi(x), angle=45)</a>
+y2 = phi(rot(x, angle=45))
+
+relative_error = torch.std(<a id="change">y1.data - y2.data</a>) / torch.std(y.data)
+
+print(&quotrelative error = {}&quot.format(relative_error))
+</code></pre>

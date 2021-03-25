@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for epoch_num in range(self._n_iter):
+
+            users, items, ratings = shuffle(<a id="change">*</a>(interactions.row,
+                                              interactions.col,
+                                              <a id="change">interactions.data</a>))
+
+            user_ids_tensor = gpu(torch.from_numpy(users),
+                                  self._use_cuda)</code></pre><h3>After Change</h3><pre><code class='java'>
+                predictions = self._net(user_var, item_var)
+
+                if self._loss == &quotpoisson&quot:
+                    predictions = <a id="change">torch.exp(predictions)</a>
+
+                self._optimizer.zero_grad()
+
+                loss = loss_fnc(ratings_var, predictions)</code></pre>

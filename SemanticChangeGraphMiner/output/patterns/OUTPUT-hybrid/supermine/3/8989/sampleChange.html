@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def get_urls(self):
+        &#47&#47 Link source is not a web page but raw_data folder
+        file_paths = dict()
+        <a id="change">for fp in glob(os.path.join(DIR_PATH, &quotraw_data&quot, &quot*&quot)):
+            name = os.path.split(fp)[1]
+            name = re.sub(r&quot [LR]\d*\.txt&quot, &quot&quot, name).replace(&quot.txt&quot, &quot&quot)
+            name = re.sub(r&quot &#47&#47\d$&quot, &quot&quot, name)
+            name = name.replace(&quot.mdat&quot, &quot&quot)
+            if name not in file_paths:
+                file_paths[name] = []
+            file_paths[name].append(fp)
+       </a> return file_paths
+
+    def process(self, item, file_paths):
+        fr = FrequencyResponse(name=item.true_name)</code></pre><h3>After Change</h3><pre><code class='java'>
+        for fp in iem_source_paths:
+            add_to(fp, &quotiem&quot)
+
+        legacy_source_paths = list(<a id="change">glob(os.path.join(patreon_dir, &quotHP measurements (legacy)&quot, &quot*.txt&quot))</a>)
+        for fp in legacy_source_paths:
+            add_to(fp, &quotlegacy&quot)
+</code></pre>

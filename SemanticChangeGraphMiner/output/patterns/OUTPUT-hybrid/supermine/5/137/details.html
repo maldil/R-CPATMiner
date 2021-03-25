@@ -1,0 +1,24 @@
+<html><h3>ad8f38c5c2687793d88c990a54bf9f3c9aeecf42,nonconformist/cp.py,TcpClassifier,predict,#TcpClassifier#,107
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+				train_y = np.hstack([self.train_y, y])
+				self.base_icp.fit(train_x, train_y)
+				self.base_icp.calibrate(train_x, train_y)
+				<a id="change">p[i, j] = self.base_icp.predict(np.array([x[i, :]]))[0, j]</a>
+				p[i, j] *= (n_train + 2)
+				if self.smoothing:
+					p[i, j] -= np.random.uniform(0, 1)
+				else:</code></pre><h3>After Change</h3><pre><code class='java'>
+				self.base_icp.fit(train_x, train_y)
+				scores = self.base_icp.nc_function.score(train_x, train_y)
+				n_gt = sum(scores &gt; scores[-1])
+				n_eq = <a id="change">sum(scores == scores[-1])</a>
+				if self.smoothing:
+					r = np.random.uniform(0, 1)
+					<a id="change">p[i, j] = (n_gt + r*n_eq) / (n_train + 1)</a>
+				else:
+					p[i, j] = (n_gt + n_eq) / (n_train + 1)
+
+		if significance is not None:</code></pre><img src="955631.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/donlnz/nonconformist/commit/ad8f38c5c2687793d88c990a54bf9f3c9aeecf42#diff-918fc3323a8049cf0f3f34fd031c82c75517451355f63a32dd724e79942165d2L107' target='_blank'>Link</a></div><div id='project'> Project Name: donlnz/nonconformist</div><div id='commit'> Commit Name: ad8f38c5c2687793d88c990a54bf9f3c9aeecf42</div><div id='time'> Time: 2018-01-19</div><div id='author'> Author: giovanni.cherubin@gmail.com</div><div id='file'> File Name: nonconformist/cp.py</div><div id='class'> Class Name: TcpClassifier</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/4e70cb5fc9a9494e866ccd7d2e1a9046091b6337#diff-122c1355ed3ef969705713dddf92fa1753f8935cd2721ddfc41996f3f5735760L18' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 4e70cb5fc9a9494e866ccd7d2e1a9046091b6337</div><div id='time'> Time: 2018-11-16</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/density_estimation/gauss_mixture.py</div><div id='class'> Class Name: GaussianMixture1D</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/bf50aed084ac14e44a5e7b146e263b3e0e8516cc#diff-bd8f7c2972de809163e2c5d3b673614ddc8787f68f59da61c512859a307ac5ccL30' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: bf50aed084ac14e44a5e7b146e263b3e0e8516cc</div><div id='time'> Time: 2010-11-11</div><div id='author'> Author: lpc@cmu.edu</div><div id='file'> File Name: mahotas/tas.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Resize
+        img = lycon.resize(img, height=self.img_size, width=self.img_size, interpolation=lycon.Interpolation.NEAREST)
+        &#47&#47 Channels-first
+        <a id="change">img = np.transpose(img, (2, 0, 1))</a>
+        &#47&#47 As pytorch tensor
+        img = torch.from_numpy(img).float() / 255.0
+
+        return img_path, img</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __getitem__(self, index):
+        img_path = self.files[index % len(self.files)]
+        &#47&#47 Extract image as PyTorch tensor
+        <a id="change">img = transforms.ToTensor()(Image.open(img_path))</a>
+        &#47&#47 Pad to square resolution
+        img, _ = pad_to_square(img, 0)
+        &#47&#47 Resize
+        img = resize(img, self.img_size)</code></pre>

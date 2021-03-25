@@ -1,0 +1,31 @@
+<html><h3>46248d91fbec1af87b58502c7169d3d21ef47376,nltk_trainer/classification/scoring.py,,sum_category_word_scores,#,7
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+from nltk_trainer import iteritems
+
+def sum_category_word_scores(categorized_words, score_fn):
+	<a id="change">word_fd</a> = <a id="change">FreqDist()</a>
+	category_word_fd = ConditionalFreqDist()
+	
+	for category, words in categorized_words:
+		for word in words:
+			<a id="change">word_fd.inc(word)</a>
+			category_word_fd[category].inc(word)
+	
+	scores = collections.defaultdict(int)
+	n_xx = category_word_fd.N()</code></pre><h3>After Change</h3><pre><code class='java'>
+from nltk_trainer import iteritems
+
+def sum_category_word_scores(categorized_words, score_fn):
+	<a id="change">word_fd</a> = collections.Counter()
+	category_word_fd = collections.defaultdict(collections.Counter)
+	
+	for category, words in categorized_words:
+		for word in words:
+			<a id="change">word_fd[word] += 1</a>
+			category_word_fd[category][word] += 1
+	
+	scores = collections.defaultdict(int)
+	n_xx = sum(itertools.chain(*[fd.values() for fd in category_word_fd.values()]))</code></pre><img src="12279691.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/japerk/nltk-trainer/commit/46248d91fbec1af87b58502c7169d3d21ef47376#diff-0e5a5cf80057f36d79a4867bd8776b36c304ff7e225566573a528ccbcc0cf2ecL7' target='_blank'>Link</a></div><div id='project'> Project Name: japerk/nltk-trainer</div><div id='commit'> Commit Name: 46248d91fbec1af87b58502c7169d3d21ef47376</div><div id='time'> Time: 2014-04-21</div><div id='author'> Author: japerk@gmail.com</div><div id='file'> File Name: nltk_trainer/classification/scoring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sum_category_word_scores</div><BR><BR><div id='link'><a href='https://github.com/japerk/nltk-trainer/commit/2ca3b0d5a88d414a87c343981b80ed1204b8dd8d#diff-c172e00a2b0c5c6e6dbaa24afb1018022f72b611604687f609fe738c7cf6b132L59' target='_blank'>Link</a></div><div id='project'> Project Name: japerk/nltk-trainer</div><div id='commit'> Commit Name: 2ca3b0d5a88d414a87c343981b80ed1204b8dd8d</div><div id='time'> Time: 2014-01-05</div><div id='author'> Author: japerk@gmail.com</div><div id='file'> File Name: analyze_chunked_corpus.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/japerk/nltk-trainer/commit/46248d91fbec1af87b58502c7169d3d21ef47376#diff-0e5a5cf80057f36d79a4867bd8776b36c304ff7e225566573a528ccbcc0cf2ecL7' target='_blank'>Link</a></div><div id='project'> Project Name: japerk/nltk-trainer</div><div id='commit'> Commit Name: 46248d91fbec1af87b58502c7169d3d21ef47376</div><div id='time'> Time: 2014-04-21</div><div id='author'> Author: japerk@gmail.com</div><div id='file'> File Name: nltk_trainer/classification/scoring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sum_category_word_scores</div><BR><BR><div id='link'><a href='https://github.com/japerk/nltk-trainer/commit/bc128d9596ed07d1c8d5d98f35b1f6905ad4d819#diff-3dfd98529b441ddd52438ba7eb36814a57ec763934a9833b77a3a35e0ddd4dc4L23' target='_blank'>Link</a></div><div id='project'> Project Name: japerk/nltk-trainer</div><div id='commit'> Commit Name: bc128d9596ed07d1c8d5d98f35b1f6905ad4d819</div><div id='time'> Time: 2014-01-05</div><div id='author'> Author: japerk@gmail.com</div><div id='file'> File Name: analyze_tagged_corpus.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

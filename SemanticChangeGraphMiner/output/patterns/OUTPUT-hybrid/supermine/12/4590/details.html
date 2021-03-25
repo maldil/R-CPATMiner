@@ -1,0 +1,41 @@
+<html><h3>f8d9a6c144ef84bad2478a4ba4eedb1c559274e0,skimage/_shared/coord.py,,ensure_spacing,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    output = coord
+    if <a id="change">len(coord)</a>:
+        &#47&#47 Use KDtree to find the peaks that are too close to each other
+        tree = cKDTree(coord)
+
+        indices = tree.query_ball_point(coord, r=spacing, p=p_norm)
+        rejected_peaks_indices = set()
+        for idx, candidates in enumerate(indices):
+            if idx not in rejected_peaks_indices:
+                &#47&#47 keep current point and the points at exactly spacing from it
+                candidates.remove(idx)
+                dist = distance.cdist(<a id="change">[coord[idx]]</a>,
+                                      coord[candidates],
+                                      distance.minkowski,
+                                      p=p_norm).reshape(-1)
+                <a id="change">candidates = [c for c, d in zip(candidates, dist)
+                              if d &lt; spacing]</a>
+
+                &#47&#47 candidates.remove(keep)
+                rejected_peaks_indices.update(candidates)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    output = coords
+    if len(coords):
+
+        <a id="change">coords = np.atleast_2d(coords)</a>
+        if batch_size is None:
+            batch_list = <a id="change">[coords]</a>
+        else:
+            batch_list = np.array_split(coords, batch_size)
+
+        output = np.zeros((0, <a id="change">coords.shape[1]</a>))
+        for batch in batch_list:
+            output = _ensure_spacing(np.vstack([output, batch]),
+                                     spacing, p_norm)</code></pre><img src="19726044.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-ccc16ee38df5a402e0629acb9b8a425cf4a23d88ce6964decfdffae6ecbbe688L79' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se2.py</div><div id='class'> Class Name: SE2</div><div id='method'> Method Name: odot</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-daeb16847a4515f22b7440cee4b42272a8506db0f24cbac5ab9ee347919454bdL68' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se3.py</div><div id='class'> Class Name: SE3</div><div id='method'> Method Name: odot</div><BR>

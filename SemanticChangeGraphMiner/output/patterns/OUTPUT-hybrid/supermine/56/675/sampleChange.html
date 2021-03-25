@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __getitem__(self, index):
+
+        <a id="change">img_pair</a> = <a id="change">self.transform(Image.open(self.files[index % len(self.files)]))</a>
+        _, h, w = <a id="change">img_pair.shape</a>
+        half_w = int(w/2)
+
+        <a id="change">item_A = img_pair[:, :, :half_w]</a>
+        <a id="change">item_B = img_pair[:, :, half_w:]</a>
+
+        return {&quotA&quot: item_A, &quotB&quot: item_B}
+
+    def __len__(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def __getitem__(self, index):
+
+        <a id="change">img</a> = <a id="change">Image.open(self.files[index % len(self.files)])</a>
+        w, h = <a id="change">img.size</a>
+        <a id="change">img_A = img.crop((0, 0, w/2, h))</a>
+        <a id="change">img_B = img.crop((w/2, 0, w, h))</a>
+
+        <a id="change">if np.random.random() &lt; 0.5:
+            img_A = Image.fromarray(np.array(img_A)[:, ::-1, :], &quotRGB&quot)
+            img_B = Image.fromarray(np.array(img_B)[:, ::-1, :], &quotRGB&quot)
+
+       </a> <a id="change">img_A = self.transform(img_A)</a>
+        <a id="change">img_B = self.transform(img_B)</a>
+
+        return {&quotA&quot: img_A, &quotB&quot: img_B}
+
+    def __len__(self):</code></pre>

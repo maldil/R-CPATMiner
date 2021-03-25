@@ -1,0 +1,37 @@
+<html><h3>bd1fa163ba2e3a02da40151c9ab5e498878800e9,riot_neuralnet/data.py,,get_raw_training_labels,#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    labels = dict()
+
+    for i, key in enumerate(prelabels):
+        <a id="change">row = prelabels[key]</a>
+        <a id="change">numImages = row[0]</a>
+
+        increment = list()
+        for j in range(4):
+            increment.append((row[2][j] - row[1][j]) / numImages)
+
+        rowLabels = list()
+        <a id="change">for k in range(numImages):
+            newLabel = list()
+            for labelIdx in range(4):
+                newLabel.append(increment[labelIdx]*k+(row[1][labelIdx]))
+            rowLabels.append(newLabel)
+       </a> labels[key] = rowLabels
+
+    return labels</code></pre><h3>After Change</h3><pre><code class='java'>
+                           9: [10, [.6, .4, .4, .7], [.9, .1, .1, .9]],
+                           10: [10, [.1, .5, .2, .1], [.7, .2, .2, .5]]}
+    labels = dict()
+    <a id="change">for time_series_key in raw_training_labels:
+        time_series = raw_training_labels[time_series_key]
+        num_images = time_series[0]
+        increment = [(time_series[2][emotion_dimension_idx] - time_series[1][emotion_dimension_idx]) / num_images for emotion_dimension_idx in range(4)]
+        labels[time_series_key] = [[increment[label_idx]*image_idx + (time_series[1][label_idx]) for label_idx in range(4)] for image_idx in range(num_images)]
+
+   </a> return labels
+
+
+&#47&#47 -------------------------------- UNUSED -------------------------------------- &#47&#47</code></pre><img src="21624008.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/bd1fa163ba2e3a02da40151c9ab5e498878800e9#diff-07e9c93f2cec703bf5d95545ca13f028732efcf4703c0d6df16a63f73200fdebL29' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: bd1fa163ba2e3a02da40151c9ab5e498878800e9</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: angelica.perez37@gmail.com</div><div id='file'> File Name: riot_neuralnet/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_raw_training_labels</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL128' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_posterior</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL150' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_prior</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L68' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR>

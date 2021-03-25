@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@npt.dec.skipif(skip_it or not has_fury)
+def test_horizon_events():
+    <a id="change">affine = np.diag([2., 1, 1, 1]).astype(&quotf8&quot)</a>
+    data = 255 * np.random.rand(150, 150, 150)
+    images = [(data, affine)]
+    &#47&#47 images = None
+    from dipy.segment.tests.test_bundles import setup_module</code></pre><h3>After Change</h3><pre><code class='java'>
+@npt.dec.skipif(skip_it or not has_fury)
+def test_horizon_events():
+    &#47&#47 using here MNI template affine
+    <a id="change">affine = np.array([[1., 0., 0., -98.],
+                       [0., 1., 0., -134.],
+                       [0., 0., 1., -72.],
+                       [0., 0., 0., 1.]])</a>
+
+    data = 255 * np.random.rand(197, 233, 189)
+    <a id="change">vox_size = (1., 1., 1.)</a>
+
+    images = [(data, affine)]
+    &#47&#47 images = None
+    from dipy.segment.tests.test_bundles import setup_module
+    setup_module()
+    from dipy.segment.tests.test_bundles import f1
+    streamlines = f1.copy()
+    streamlines._data += np.array([-98., -134., -72.])
+
+    <a id="change">header = create_nifti_header(affine, data.shape, vox_size)</a>
+    <a id="change">sft = StatefulTractogram(streamlines, header, Space.RASMM)</a>
+
+    tractograms = <a id="change">[sft]</a>
+
+    enable = [4]
+
+    if 1 in enable:  &#47&#47 just close the window</code></pre>

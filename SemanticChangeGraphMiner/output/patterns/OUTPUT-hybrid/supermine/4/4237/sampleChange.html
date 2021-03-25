@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, x):
+        x = self.conv2d(x)
+        x = <a id="change">x</a>.view([x.size(0), <a id="change">-1</a>, 2, 1, 1, 1, 1, 1]).view(x.size(0), -1).view(x.size(0), -1)
+        x = torch.nn.Tanh()(x)
+        return x
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        print(type(x.size()[0]))
+
+        x = x.view([<a id="change">int(x.size(0))</a>, -1])
+        x = self.fc(x)
+        return x
+</code></pre>

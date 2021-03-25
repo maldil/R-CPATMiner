@@ -1,0 +1,21 @@
+<html><h3>cbbcea8795e8da754a5b3ffb1a08ef66afd84eef,dask_image/ndmeasure/_utils.py,,_ravel_shape_indices,#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    )
+
+    indices = list(indices)
+    <a id="change">for i in _pycompat.irange(len(indices)):
+        indices[i] *= dtype.type(numpy.prod(indices[i].shape[i + 1:]))
+   </a> indices = dask.array.stack(indices).sum(axis=0)
+
+    return indices
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    indices = sum([
+        dask.array.arange(
+            0, numpy.prod(dimensions[i:]), <a id="change">numpy.prod(dimensions[i + 1:])</a>,
+            dtype=dtype, chunks=c
+        )[i * (None,) + (slice(None),) + (len(dimensions) - i - 1) * (None,)]
+        for i, c in enumerate(chunks)</code></pre><img src="32953780.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/cbbcea8795e8da754a5b3ffb1a08ef66afd84eef#diff-60a374c703dcf39413713f8dd108028587228bb7e3205616d19a8734f40bc05aL59' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: cbbcea8795e8da754a5b3ffb1a08ef66afd84eef</div><div id='time'> Time: 2018-09-02</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _ravel_shape_indices</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/274ec230054107d30bb91de43ec42b7393170928#diff-97881f884dd61de4cafa81d99538897be4699e6b7fec1a69dbc2d0e9c06f3ec1L72' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 274ec230054107d30bb91de43ec42b7393170928</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/training_statistics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rotate_psi</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/96c15a18423d911654eaae3aa9c69896e523147d#diff-1d63569008ff100b3d43c42b42ce345123fd6c93b6f0ebc813250edcbb28a401L114' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: 96c15a18423d911654eaae3aa9c69896e523147d</div><div id='time'> Time: 2019-11-09</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/measure/tests/test_marching_cubes.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_both_algs_same_result_donut</div><BR>

@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_zmq_case_with_agents(monkeypatch):
+    <a id="change">vhome = create_volttron_home()</a>
+    monkeypatch.setenv("VOLTTRON_HOME", vhome)
+    config_path = os.path.join(vhome, "config")
+
+    message_bus = "zmq"</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_zmq_case_with_agents(monkeypatch):
+    <a id="change">with create_vcfg_vhome() as vhome:
+        monkeypatch.setenv("VOLTTRON_HOME", vhome)
+        config_path = os.path.join(vhome, "config")
+
+        message_bus = "zmq"
+        vip_address = "tcp://127.0.0.15"
+        vip_port = "22916"
+        is_web_enabled = "N"
+        is_vcp = "Y"
+        instance_name = "test_zmq"
+        vc_hostname = "{}{}".format("https://", get_hostname())
+        vc_port = "8443"
+        install_historian = "Y"
+        install_driver = "Y"
+        install_fake_device = "Y"
+        install_listener = "Y"
+        agent_autostart = "N"
+
+        vcfg_args = "\n".join([message_bus,
+                               vip_address,
+                               vip_port,
+                               is_web_enabled,
+                               is_vcp,
+                               instance_name,
+                               vc_hostname,
+                               vc_port,
+                               agent_autostart,
+                               install_historian,
+                               agent_autostart,
+                               install_driver,
+                               install_fake_device,
+                               agent_autostart,
+                               install_listener,
+                               agent_autostart
+                               ])
+
+        with subprocess.Popen(["vcfg", "--vhome", vhome],
+                              env=os.environ,
+                              stdin=subprocess.PIPE,
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE,
+                              text=True
+                              ) as vcfg:
+            out, err = vcfg.communicate(vcfg_args)
+        &#47&#47 print("CWD is: {}".format(os.getcwd()))
+        print("OUT is: {}".format(out))
+        print("ERROR is: {}".format(err))
+        assert os.path.exists(config_path)
+        config = ConfigParser()
+        config.read(config_path)
+        assert config.get(&quotvolttron&quot, &quotmessage-bus&quot) == "zmq"
+        assert config.get(&quotvolttron&quot, &quotvip-address&quot) == "tcp://127.0.0.15:22916"
+        assert config.get(&quotvolttron&quot, &quotinstance-name&quot) == "test_zmq"
+        assert _is_agent_installed("listener")
+        assert _is_agent_installed("master_driver")
+        assert _is_agent_installed("platform_historian")
+        assert _is_agent_installed("vcp")
+        assert not _is_agent_installed("vc ")
+
+        assert not is_volttron_running(vhome)
+
+
+</a>def test_zmq_case_web_no_agents(monkeypatch):
+    with create_vcfg_vhome() as vhome:
+        monkeypatch.setenv("VOLTTRON_HOME", vhome)
+        config_path = os.path.join(vhome, "config")</code></pre>

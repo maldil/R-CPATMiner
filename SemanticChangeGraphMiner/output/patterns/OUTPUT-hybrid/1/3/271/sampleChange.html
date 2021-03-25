@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    rena = ReNA(n_clusters=10, mask=nifti_masker, scaling=False)
+
+    data_red = <a id="change">rena.fit_transform(data)</a>
+    data_compress = rena.inverse_transform(data_red)
+
+    assert_equal(10, rena.n_clusters_)
+    assert_equal(data.shape, data_compress.shape)</code></pre><h3>After Change</h3><pre><code class='java'>
+    assert_raises(ValueError, rena.fit, X)
+
+    rena = ReNA(mask_img, n_clusters=10, scaling=True)
+    X_red = <a id="change">rena.fit_transform(X)</a>
+    &#47&#47 X_compress = rena.inverse_transform(X_red)
+
+    for n_iter in [-2, 0]:
+        rena = ReNA(mask_img, n_iter=n_iter, memory=memory)</code></pre>

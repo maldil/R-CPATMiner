@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &#47&#47since the original image might not be a png, test multiple file formats
+                    valid_formats = {".png", ".jpg", ".jpeg"}
+                    found_valid = False
+                    <a id="change">for valid_format in valid_formats:
+                        test_file_name = os.path.splitext(file_name)[0] + valid_format
+                        ori_file_path = os.path.join(ori_dir, test_file_name)
+                        if os.path.isfile(ori_file_path):
+                            found_valid = True
+                            ori_img = Image.open(ori_file_path)
+                            self.decensor_image(ori_img, colored_img, file_name)
+                            continue
+                   </a> if not found_valid:
+                        print("Corresponding original, uncolored image not found in {ori_file_path}. \nCheck if it exists and is in the PNG or JPG format.".format(ori_file_path = ori_file_path))
+                else:
+                    self.decensor_image(colored_img, colored_img, file_name)</code></pre><h3>After Change</h3><pre><code class='java'>
+                    ori_dir = self.args.decensor_input_original_path
+                    &#47&#47since the original image might not be a png, test multiple file formats
+                    valid_formats = {".png", ".jpg", ".jpeg"}
+                    <a id="change">for test_file_name in os.listdir(ori_dir):
+                        test_bn, test_ext = os.path.splitext(test_file_name)
+                        if (test_bn == color_bn) and (test_ext.casefold() in valid_formats):
+                            ori_file_path = os.path.join(ori_dir, test_file_name)
+                            found_valid = True
+                            ori_img = Image.open(ori_file_path)
+                            self.decensor_image(ori_img, colored_img, file_name)
+                            break
+                    else: &#47&#47for...else, i.e if the loop finished without encountering break
+                        print("Corresponding original, uncolored image not found in {}.".format(ori_file_path))
+                        print("Check if it exists and is in the PNG or JPG format.")
+               </a> else:
+                    self.decensor_image(colored_img, colored_img, file_name)
+        print("--------------------------------------------------------------------------")
+</code></pre>

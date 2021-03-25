@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            %s
+        &quot&quot&quot % (
+            switcher,
+            <a id="change">&quot&quot if pyver == &quot2.7&quot else (r&quot&quot&quot
+            mv /usr/local/lib/python3/dist-packages/caffe2 \
+                /usr/local/lib/python%s/dist-packages && \
+            &quot&quot&quot % pyver).strip()</a>
+            )
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                typing \
+                && \
+
+        &quot&quot&quot + <a id="change">(r&quot&quot&quot
+            wget -O ~/caffe2.tar.xz \
+                https://github.com/ufoym/prebuild/raw/caffe2/caffe2-master-%s-%s-linux_x86_64.tar.xz && \
+            tar -xvf ~/caffe2.tar.xz -C /usr/local/lib && \
+        &quot&quot&quot % (cuver, platform) if cuver in [&quotcu90&quot] and platform in [&quotcp27-cp27mu&quot, &quotcp36-cp36m&quot] else r&quot&quot&quot
+            $GIT_CLONE https://github.com/pytorch/pytorch.git \
+                ~/caffe2 --branch master --recursive && \
+            cd ~/caffe2 && mkdir build && cd build && \
+            cmake -D CMAKE_BUILD_TYPE=RELEASE \
+                  -D CMAKE_INSTALL_PREFIX=/usr/local \
+                  -D USE_CUDA=%s \
+                  -D USE_MPI=OFF \
+                  -D USE_NNPACK=OFF \
+                  -D USE_ROCKSDB=OFF \
+                  -D BUILD_TEST=OFF \
+                  .. && \
+            make -j"$(nproc)" install && \
+        &quot&quot&quot % switcher)</a>
+</code></pre>

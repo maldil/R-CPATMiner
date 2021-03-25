@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    figure it out. Use main project. 
+    
+    
+    <a id="change">try:
+        resolution = resolve(request.path)
+    except Http404 as e:
+        &#47&#47 fail silently beacuse any exeception here will cause a 500 server
+        &#47&#47 error on page. Let views show errors but not the context processor
+        resolution = resolve("/")
+
+   </a> challenge_short_name = resolution.kwargs.get(
+        "challenge_short_name", settings.MAIN_PROJECT_NAME
+    )
+
+    try:
+        <a id="change">challenge = Challenge.objects.get(
+            short_name__iexact=challenge_short_name
+        )</a>
+        pages = challenge.page_set.all()
+    except Challenge.DoesNotExist:
+        &#47&#47 Don&quott crash the system here, if a challenge cannot be found it will
+        &#47&#47 crash in a more appropriate location</code></pre><h3>After Change</h3><pre><code class='java'>
+    except AttributeError:
+        user = get_anonymous_user()
+
+    <a id="change">if challenge is None:
+        permissions = pages = []
+        is_participant = False
+    else:
+        permissions = get_perms(user, challenge)
+        pages = challenge.page_set.all()
+        is_participant = challenge.is_participant(user)
+
+   </a> return {
+        "site": challenge,
+        "challenge_perms": permissions,
+        "user_is_participant": is_participant,</code></pre>

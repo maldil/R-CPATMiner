@@ -1,0 +1,19 @@
+<html><h3>b5e848af46b4a6fc21e718803dbf3d7c72afd72a,ch08/lib/common.py,,calc_loss,#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        next_states_v = next_states_v.cuda()
+        actions_v = actions_v.cuda()
+        rewards_v = rewards_v.cuda()
+        <a id="change">done_mask = done_mask.cuda()</a>
+
+    state_action_values = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_actions = net(next_states_v).max(1)[1]
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)
+    next_state_values[done_mask] = 0.0
+
+    expected_state_action_values = <a id="change">next_state_values.detach()</a> * gamma + rewards_v
+    return nn.MSELoss()(state_action_values, expected_state_action_values)
+</code></pre><img src="25581654.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/b5e848af46b4a6fc21e718803dbf3d7c72afd72a#diff-0104aecfb85abbde18ab9491b2abc8d61703dbec604fbb2b128d92051baf7519L91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: b5e848af46b4a6fc21e718803dbf3d7c72afd72a</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch08/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_loss</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/dc9aafd83851f7c55c6fe61702e281856ec023ca#diff-abdc21ce99efdb199d82860bb37609b41fe209e56f030ef883e5ac86f2137346L16' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: dc9aafd83851f7c55c6fe61702e281856ec023ca</div><div id='time'> Time: 2018-12-13</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/accelerated_shift_net/accelerated_InnerShiftTripleFunction.py</div><div id='class'> Class Name: AcceleratedInnerShiftTripleFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/bcbef3267f372186f457b9c22feec249bd85b2f6#diff-d6757ab1e3ffa225bc5e10234856fffd764bbefcce478fc1c4baee1f4c7ef308L214' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: bcbef3267f372186f457b9c22feec249bd85b2f6</div><div id='time'> Time: 2018-12-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: util/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cal_feat_mask</div><BR><BR><div id='link'><a href='https://github.com/jalola/improved-wgan-pytorch/commit/fc8951bbd36b14099e41fe171ab57e9f3937fe4f#diff-2ca8860f45b58b302da557bfd763c867c4b79d6f0e1d8a8912af84c7fefd7698L201' target='_blank'>Link</a></div><div id='project'> Project Name: jalola/improved-wgan-pytorch</div><div id='commit'> Commit Name: fc8951bbd36b14099e41fe171ab57e9f3937fe4f</div><div id='time'> Time: 2018-05-08</div><div id='author'> Author: waterstorm64@gmail.com</div><div id='file'> File Name: congan_train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    models = load_train_times()
+    for i, (timestamp, name, path) in enumerate(models):
+        if int(name) &lt; FLAGS.start:
+            <a id="change">logging.info(&quotSkiping %s&quot, name)</a>
+            continue
+        winrate = evaluate_model(path)
+        if winrate &gt;= FLAGS.winrate:
+            print(&quotModel {} beat target after {}s&quot.format(name, timestamp))</code></pre><h3>After Change</h3><pre><code class='java'>
+    models = load_train_times()
+
+    &#47&#47 Skip all models earlier than start and apply step.
+    models = <a id="change">[x for x in models if int(x[1]) &gt;= FLAGS.start][::FLAGS.step]</a>
+
+    for i, (timestamp, name, path) in enumerate(models):
+        winrate = evaluate_model(path)
+        if winrate &gt;= FLAGS.winrate:</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            elif "voxelgrids" in key:
+                self.voxelgrids = kwargs[key]
+            else:
+                <a id="change">setattr(self, key, kwargs[key])</a>
+        &#47&#47 store raw values to share memory along structures
+        self.xyz = self.points[["x", "y", "z"]].values
+        self.centroid = self.xyz.mean(0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.mesh = mesh
+        self.structures = StructuresDict()
+        for key, val in structures.items():
+            <a id="change">self.structures[key] = val</a>
+        for key, val in kwargs.items():
+            setattr(self, key, val)
+        &#47&#47 store raw xyz values to share memory along structures
+        self.xyz = self.points[["x", "y", "z"]].values</code></pre>

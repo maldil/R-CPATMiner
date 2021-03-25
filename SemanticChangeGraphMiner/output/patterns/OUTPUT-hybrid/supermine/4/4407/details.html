@@ -1,0 +1,28 @@
+<html><h3>803d7e1fc61536c846c811bdee158bd21db36779,models/Pointnet2Cls.py,,,#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    from torch.autograd import Variable
+    model = PointnetCls()
+    data = Variable(torch.randn(2, 10, 3))
+    print(<a id="change">model(data)</a>)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    import torch.optim as optim
+    B = 2
+    N = 32
+    <a id="change">inputs = torch.randn(B, N, 9).cuda()</a>
+    labels = torch.from_numpy(np.random.randint(0, 3, size=B)).cuda()
+    model = Pointnet2SSG(3)
+    model.cuda()
+
+    optimizer = optim.Adam(model.parameters(), lr=1e-2)
+
+    model_fn = model_fn_decorator(nn.CrossEntropyLoss())
+    for _ in range(20):
+        optimizer.zero_grad()
+        <a id="change">_, loss, _ = model_fn(model, (inputs, labels))</a>
+        loss.backward()
+        print(loss.data[0])
+        optimizer.step()
+</code></pre><img src="19186340.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erikwijmans/Pointnet2_PyTorch/commit/803d7e1fc61536c846c811bdee158bd21db36779#diff-291004800ba606e848ac537433b3592042f3544514048b51bbbf1a3dec727a47L94' target='_blank'>Link</a></div><div id='project'> Project Name: erikwijmans/Pointnet2_PyTorch</div><div id='commit'> Commit Name: 803d7e1fc61536c846c811bdee158bd21db36779</div><div id='time'> Time: 2017-12-26</div><div id='author'> Author: ewijmans2@gmail.com</div><div id='file'> File Name: models/Pointnet2Cls.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/fperazzi/proSR/commit/13287043443135f6f3f8ed787d3978866c390d81#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL87' target='_blank'>Link</a></div><div id='project'> Project Name: fperazzi/proSR</div><div id='commit'> Commit Name: 13287043443135f6f3f8ed787d3978866c390d81</div><div id='time'> Time: 2019-03-27</div><div id='author'> Author: fperazzi@adobe.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/14c0cf773f514788aca6b935298fa186890eecc1#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL40' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 14c0cf773f514788aca6b935298fa186890eecc1</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

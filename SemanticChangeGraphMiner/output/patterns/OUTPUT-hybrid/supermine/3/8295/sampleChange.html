@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &quottrain&quot, hparams.BATCH_SIZE * hparams.MAX_N_SIGNAL, shuffle=True)):
+                max_len = max(map(len, data_pt[0]))
+                spectra = np.stack(
+                    [np.pad(x, [(0, (-len(x))%max_len), (0,0)], mode=&quotconstant&quot) <a id="change">for</a> x in data_pt[0]])
+                spectra = np.reshape(
+                    spectra,
+                    [hparams.BATCH_SIZE, hparams.MAX_N_SIGNAL, max_len, hparams.FEATURE_SIZE])</code></pre><h3>After Change</h3><pre><code class='java'>
+            for i_batch, data_pt in enumerate(dataset.epoch(
+                    &quottrain&quot,
+                    hparams.BATCH_SIZE * hparams.MAX_N_SIGNAL, shuffle=True)):
+                to_feed = <a id="change">dict(
+                    zip(self.train_feed_keys, (
+                        np.reshape(data_pt[0], [hparams.BATCH_SIZE, hparams.MAX_N_SIGNAL, -1, hparams.FEATURE_SIZE]),
+                        hparams.DROPOUT_KEEP_PROB)))</a>
+                step_summary, step_fetch = g_sess.run(
+                    self.train_fetches, to_feed)[:2]
+                self.reset_state()
+                train_writer.add_summary(step_summary)</code></pre>

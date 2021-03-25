@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    def __init__(self, model):
+        if not isinstance(model, BayesianModel):
+            <a id="change">raise TypeError("model must an instance of BayesianModel")</a>
+        super(BayesianModelSampling, self).__init__(model)
+        self.topological_order = nx.topological_sort(model)
+        self.cpds = {node: model.get_cpds(node) for node in model.nodes()}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def __init__(self, model):
+        if not isinstance(model, BayesianModel):
+            <a id="change">raise TypeError("Model expected type: BayesianModel, got type: ", type(model))</a>
+
+        self.topological_order = nx.topological_sort(model)
+        super(BayesianModelSampling, self).__init__(model)
+        &#47&#47 self.cpds = {node: model.get_cpds(node) for node in model.nodes()}</code></pre>

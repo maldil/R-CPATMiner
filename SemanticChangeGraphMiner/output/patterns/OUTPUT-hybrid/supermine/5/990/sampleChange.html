@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                    ind_ds_original_matrix = ind_disagreement[ind_ds_classifier]
+
+                    <a id="change">for index in ind_ds_original_matrix:
+                        instance = X[ind_ds_original_matrix]
+                        predicted_proba[index, :] = self.predict_proba_with_ds(instance, base_predictions[index, :])
+
+        &#47&#47 Reset the neighbors and the distances as they are specific to a given query.
+       </a> self.neighbors = None
+        self.distances = None
+        return predicted_proba
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    predicted_proba[ind_knn_original_matrix] = self.roc_algorithm.predict_proba(X_DS[ind_knn_classifier])
+
+                    &#47&#47 Remove from the neighbors and distance matrices the samples that were classified using the KNN
+                    <a id="change">self.neighbors = np.delete(self.neighbors, ind_knn_classifier, axis=0)</a>
+                    self.distances = np.delete(self.distances, ind_knn_classifier, axis=0)
+            else:
+                &#47&#47 IH was not considered. So all samples with disagreement are passed down to the DS algorithm
+                ind_ds_classifier = np.arange(ind_disagreement.size)</code></pre>

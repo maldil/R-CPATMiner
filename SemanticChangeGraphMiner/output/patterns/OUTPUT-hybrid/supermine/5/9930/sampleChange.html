@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not isinstance(key, dict):
+            raise TypeError()
+        for k, v in key.iteritems():
+            <a id="change">try:
+                if getattr(self.identifier, k) != v:
+                    return False
+            except AttributeError:
+                if self.metadata.has_key(k):
+                    if self.metadata[k] != v:
+                        return False
+                else:
+                    if k == &quotcategory&quot:
+                        if v not in self.categories():
+                            return False
+                    elif self.type.get(k) != v:
+                        return False
+       </a> return True
+    
+
+def _flattern(list2d):</code></pre><h3>After Change</h3><pre><code class='java'>
+                if (isinstance(metadata_value, list) and 
+                    not isinstance(v, list)):
+                    &#47&#47 for example, &quotcontrol&quot is a list in metadata
+                    <a id="change">if v not in metadata_value:
+                        return False
+               </a> elif metadata_value != v:
+                    return False
+
+            else:</code></pre>

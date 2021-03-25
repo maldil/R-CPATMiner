@@ -1,0 +1,26 @@
+<html><h3>9b95e0f07b60b6a144893dcc506dfaf90db61c95,librosa/feature/utils.py,,stack_memory,#,119
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    data = np.pad(data, [(0, 0), padding], **kwargs)
+
+    history = np.vstack([<a id="change">np.roll(data, -i * delay, axis=1)</a> for i in range(n_steps)[::-1]])
+
+    &#47&#47 Trim to original width
+    if delay &gt; 0:
+        <a id="change">history = history[:, :t]</a>
+    else:
+        history = history[:, -t:]
+
+    &#47&#47 Make contiguous</code></pre><h3>After Change</h3><pre><code class='java'>
+    data = np.pad(data, [(0, 0), padding], **kwargs)
+
+    &#47&#47 Construct the shape of the target array
+    <a id="change">shape = list(data.shape)</a>
+    shape[0] = shape[0] * n_steps
+    <a id="change">shape[1]</a> = t
+    shape = tuple(shape)
+
+    &#47&#47 Construct the output array to match layout and dtype of input</code></pre><img src="17154374.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9b95e0f07b60b6a144893dcc506dfaf90db61c95#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL223' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9b95e0f07b60b6a144893dcc506dfaf90db61c95</div><div id='time'> Time: 2020-05-18</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stack_memory</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/1a89404a84393211c7b370077fafe536a8f44762#diff-f0bf571463d6a24e7ec7c08e3b48b5dea2f2559833e5c8491ce3a32a1e0aab1bL67' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 1a89404a84393211c7b370077fafe536a8f44762</div><div id='time'> Time: 2018-03-02</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch17/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: iterate_batches</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/f5122cdab53605b7b800c96d6700b791b8c9add8#diff-c563295221637cd185ffad4213ba15b18af223d9a21c646b65ab7b8dc29c7062L347' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: f5122cdab53605b7b800c96d6700b791b8c9add8</div><div id='time'> Time: 2016-04-26</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lag_to_recurrence</div><BR>

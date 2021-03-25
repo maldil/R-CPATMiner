@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    .. seealso:: :func:`librosa.util.match_intervals`
+    &quot&quot&quot
+
+    <a id="change">return np.argmin(np.abs(np.subtract.outer(events_from,
+                                              events_to)),
+                     axis=-1)</a>
+
+
+def find_files(directory, ext=None, recurse=True, case_sensitive=False,
+               limit=None, offset=0):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &quot&quot&quot
+    output = np.empty_like(events_from, dtype=np.int)
+
+    n_rows = int(<a id="change">librosa.core._MAX_MEM_BLOCK / (np.prod(output.shape[1:])
+                                                * len(events_to)
+                                                * events_from.itemsize)</a>)
+
+    &#47&#47 Make sure we can at least make some progress
+    <a id="change">n_rows = max(1, n_rows)</a>
+
+    &#47&#47 Iterate over blocks of the data
+    for bl_s in range(0, len(events_from), n_rows):
+        bl_t = min(bl_s + n_rows, len(events_from))</code></pre>

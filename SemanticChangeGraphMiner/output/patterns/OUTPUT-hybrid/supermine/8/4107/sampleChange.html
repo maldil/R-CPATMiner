@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    assert np.size(words) &gt; 0, EMPTY_NP_ARRAY_MESSAGE
+
+    &#47&#47 initialize the value to return
+    <a id="change">all_results = {}</a>
+
+    &#47&#47 find the total word count of each group
+    group_lists = [np.sum(value, axis=0)
+                   for _, value in enumerate(group_values)]
+
+    &#47&#47 find number of groups
+    num_group = len(group_lists)
+
+    &#47&#47 comparison map, in here is a list of tuple.
+    &#47&#47 There are two elements in the tuple, each one is a index of groups
+    &#47&#47 (for example the first group will have index 0)
+    &#47&#47 Two groups index cannot be equal.
+    comp_map = itertools.product(list(range(num_group)),
+                                 list(range(num_group)))
+    comp_map = [(i_index, j_index)
+                for (i_index, j_index) in comp_map if i_index != j_index]
+
+    &#47&#47 compare each paragraph in group_comp to group_base
+    for group_comp_index, group_base_index in comp_map:
+        &#47&#47 gives all the paragraphs in the group in a array
+        group_comp_paras = group_values[group_comp_index]
+        &#47&#47 the word list of base group
+        group_base_list = group_lists[group_base_index]
+
+        &#47&#47 enumerate through all the paragraphs in group_comp_paras
+
+        for para_index, paras in enumerate(group_comp_paras):
+            <a id="change">word_z_score_dict = _z_test_word_list_(
+                count_list_i=paras,
+                count_list_j=group_base_list,
+                words=words)</a>
+
+            &#47&#47 sort the dictionary
+
+            &#47&#47 pack the sorted result in sorted list
+            <a id="change">all_results.update(
+                {(group_comp_index, para_index, group_base_index):
+                     word_z_score_dict})</a>
+
+    return all_results
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            for para_index, paras in enumerate(comp_para)]
+
+        &#47&#47 generate header
+        <a id="change">temp_header = [&quotDocument "&quot + name_map[comp_index][para_index] +
+                         &quot" compared to Class: &quot + class_labels[base_index]
+                        for para_index, _ in enumerate(comp_para)]</a>
+
+        analysis_result += temp_analysis_result
+        header_list += temp_header
+
+    &#47&#47 put result together in a readable list
+    <a id="change">readable_result = list(zip(header_list, analysis_result))</a>
+
+    return readable_result
+
+</code></pre>

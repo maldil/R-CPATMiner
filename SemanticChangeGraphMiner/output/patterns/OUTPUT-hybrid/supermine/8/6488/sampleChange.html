@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            y1.set_()
+            del y1
+            output = torch.cat([x1, x2], dim=1)
+            <a id="change">x1.set_()</a>
+            <a id="change">x2.set_()</a>
+            <a id="change">del x1, x2</a>
+
+        &#47&#47 save the (empty) input and (non-empty) output variables
+        cty.save_for_backward(y.data, output)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with torch.no_grad():
+            &#47&#47 partition in two equally sized set of channels
+            <a id="change">y = yin.detach()</a>
+            y1, y2 = torch.chunk(y, 2, dim=1)
+            y1, y2 = y1.contiguous(), y2.contiguous()
+
+            &#47&#47 compute outputs</code></pre>

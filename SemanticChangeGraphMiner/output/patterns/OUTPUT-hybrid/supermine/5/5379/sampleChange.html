@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        domain_min = -inf
+                if domain_max is None:
+                    if self.restrict_to_data:
+                        domain_max = <a id="change">max([source.get_data().max()
+                                          for source in mapper.range.sources])</a>
+                    else:
+                        domain_max = inf
+
+                if (newlow &lt;= domain_min) and (newhigh &gt;= domain_max):</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 values.  As a first approximation, we&quotre just going to
+                &#47&#47 use a linear approximation, which works perfectly for
+                &#47&#47 linear mappers (which is used 99% of the time).
+                data = <a id="change">[arr for arr in
+                        (source.get_data() for source in mapper.range.sources)
+                        if arr.size &gt; 0]</a>
+                if domain_min is None:
+                    if self.restrict_to_data:
+                        domain_min = min([arr.min() for arr in data])
+                    else:
+                        domain_min = -inf
+                if domain_max is None:
+                    if self.restrict_to_data:
+                        domain_max = max([arr.max() <a id="change">for</a> arr in data])
+                    else:
+                        domain_max = inf
+</code></pre>

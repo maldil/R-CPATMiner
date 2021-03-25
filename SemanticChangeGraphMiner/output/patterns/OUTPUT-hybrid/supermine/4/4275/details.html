@@ -1,0 +1,20 @@
+<html><h3>b682d1f8b0e32517805828c8dc15e933d0057335,lifelines/fitters/__init__.py,ParametricRegressionFitter,_fit,#ParametricRegressionFitter#,1632
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 the .intersection preserves order, important!
+            self.regressors = {name: list(df.columns.intersection(cols)) for name, cols in sorted(regressors.items())}
+        else:
+            <a id="change">self.regressors = {name: df.columns.tolist() for name in sorted(self._fitted_parameter_names)}</a>
+        assert all(
+            len(cols) &gt; 0 for cols in self.regressors.values()
+        ), "All parameters must have at least one column associated with it. Did you mean to include a constant column?"
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            df = self._filter_dataframe_to_covariates(df).astype(float)
+            
+
+        <a id="change">self</a>.regressors, Xs = self._create_design_matrices(regressors)
+
+        _index = pd.MultiIndex.from_tuples(
+            sum(([(name, col) for col in columns] for name, columns in self.regressors.items()), [])</code></pre><img src="18532298.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b682d1f8b0e32517805828c8dc15e933d0057335#diff-ede743a710e4aa76e1b885075a8330acffdd55b1b59f01d4abffa19d85bf6439L1633' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b682d1f8b0e32517805828c8dc15e933d0057335</div><div id='time'> Time: 2020-07-11</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/__init__.py</div><div id='class'> Class Name: ParametricRegressionFitter</div><div id='method'> Method Name: _fit</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/7895f5165378bc37f14ab02e05614d015473155b#diff-8cd918eb73d2c92d99ce023e013a78f77aacbd3c164eeae419eb9efc06e8efd1L36' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 7895f5165378bc37f14ab02e05614d015473155b</div><div id='time'> Time: 2014-01-14</div><div id='author'> Author: nipunreddevil@gmail.com</div><div id='file'> File Name: scripts/plots_for_e_energy_2014/top_k_appliances_comparison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/c15d91b235b77b177377ea382bdf9d4149e52ca5#diff-0f3341a80828de74e5127aba683fcd78ff932b7320121b47bf47610d7add4c8bL179' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: c15d91b235b77b177377ea382bdf9d4149e52ca5</div><div id='time'> Time: 2015-09-20</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/src/rnnlm.py</div><div id='class'> Class Name: RNNLM</div><div id='method'> Method Name: load_params</div><BR>

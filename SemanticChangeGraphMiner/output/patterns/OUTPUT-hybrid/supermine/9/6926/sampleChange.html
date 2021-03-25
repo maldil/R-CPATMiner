@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x = 0
+
+    def load(self, output_base):
+        <a id="change">self.network.load_state_dict(torch.load(output_base + ".network"))</a>
+        self.network.to(device)
+        &#47&#47 self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, noise):</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = 0
+
+    def load(self, output_base):
+        <a id="change">if torch.cuda.is_available():
+            self.network.load_state_dict(torch.load(output_base + ".network"))
+        else:
+            self.network.load_state_dict(
+                torch.load(output_base + &quot.network&quot,  map_location=lambda storage, loc: storage))
+       </a> self.network.to(device)
+        &#47&#47 self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, noise):</code></pre>

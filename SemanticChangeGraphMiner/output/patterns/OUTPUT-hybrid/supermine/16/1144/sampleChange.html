@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif result &lt;= 0:
+        return FLOAT32_MAX
+    else:
+        <a id="change">return 0.5 * (np.log(l1_norm_x) + np.log(l1_norm_y)) - np.log(result)</a>
+
+
+@numba.vectorize(fastmath=True, cache=True)
+def sparse_correct_alternative_hellinger(d):</code></pre><h3>After Change</h3><pre><code class='java'>
+    elif result &lt;= 0:
+        return FLOAT32_MAX
+    else:
+        <a id="change">result = np.sqrt(l1_norm_x * l1_norm_y) / result</a>
+        <a id="change">return np.log2(result)</a>
+
+
+@numba.vectorize(fastmath=True, cache=True)
+def sparse_correct_alternative_hellinger(d):</code></pre>

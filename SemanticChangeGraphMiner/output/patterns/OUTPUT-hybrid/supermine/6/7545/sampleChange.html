@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    s_complex = np.fft.rfft(y, n=n, axis=0, norm=norm)
+    assert s_complex.shape[0] == n // 2 + 1
+    R, I = s_complex.real, s_complex.imag
+    <a id="change">return R * R + I * I</a>
+
+
+def modphase(y, n=4096, norm=None):
+    Phase of modulation spectrum.</code></pre><h3>After Change</h3><pre><code class='java'>
+    s_complex = np.fft.rfft(x, n=n, axis=0, norm=norm)
+    assert s_complex.shape[0] == n // 2 + 1
+    R, I = s_complex.real, s_complex.imag
+    <a id="change">ms = R * R + I * I</a>
+
+    &#47&#47 TODO: this is ugly...
+    if return_phase:
+        <a id="change">return ms, np.exp(1.j * np.angle(s_complex))</a>
+    else:
+        return ms
+
+</code></pre>

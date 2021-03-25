@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    ef = setup_efficient_frontier()
+    for sector in sector_upper:
+        is_sector = <a id="change">[v == sector for k, v in sector_mapper.items()]</a>
+        ef.add_constraint(lambda w: cp.sum(w[is_sector]) &lt;= sector_upper[sector])
+    for sector in sector_lower:
+        is_sector = [v == sector for k, v in sector_mapper.items()]
+        ef.add_constraint(lambda w: cp.sum(w[is_sector]) &gt;= sector_lower[sector])</code></pre><h3>After Change</h3><pre><code class='java'>
+        is_sector = [sector_mapper[t] == sector for t in ef.tickers]
+        ef.add_constraint(lambda w: cp.sum(w[is_sector]) &lt;= sector_upper[sector])
+    for sector in sector_lower:
+        is_sector = <a id="change">[sector_mapper[t] == sector for t in ef.tickers]</a>
+        ef.add_constraint(lambda w: cp.sum(w[is_sector]) &gt;= sector_lower[sector])
+
+    weights = ef.max_sharpe()
+</code></pre>

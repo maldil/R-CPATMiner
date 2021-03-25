@@ -1,0 +1,34 @@
+<html><h3>6ea7bb25fe15a53b69245d2785b3efd064963ebc,tensorflow_hub/resolver.py,,_merge_relative_path,#,187
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  &#47&#47 which are valid directories in fileystems like "gs://".
+  norm_rel_path = os.path.normpath(rel_path.lstrip("/"))
+
+  <a id="change">if norm_rel_path == ".":
+    return dst_path
+
+  &#47&#47 Check that the norm rel path does not starts with "..".
+ </a> <a id="change">if norm_rel_path.startswith(".."):
+    raise ValueError("Relative path %r is invalid." % rel_path)
+
+ </a> merged = os.path.join(dst_path, norm_rel_path)
+
+  &#47&#47 After merging verify that the merged path keeps the original dst_path.
+  if not merged.startswith(dst_path):
+    raise ValueError("Relative path %r is invalid. Failed to merge with %r." % <a id="change">(
+        rel_path, dst_path)</a>)
+  <a id="change">return merged</a>
+
+
+def _module_descriptor_file(module_dir):
+  Returns the name of the file containing descriptor for the &quotmodule_dir&quot.</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def _merge_relative_path(dst_path, rel_path):
+  Merge a relative tar file to a destination (which can be "gs://...").
+  <a id="change">return file_utils.merge_relative_path(dst_path, rel_path)</a>
+
+
+def _module_descriptor_file(module_dir):
+  Returns the name of the file containing descriptor for the &quotmodule_dir&quot.</code></pre><img src="1408775.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/6ea7bb25fe15a53b69245d2785b3efd064963ebc#diff-128be26741754943cb2d4a8f48cf5a231ff7e1b0b7f6439b70ea0666c5c4423fL166' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 6ea7bb25fe15a53b69245d2785b3efd064963ebc</div><div id='time'> Time: 2020-09-24</div><div id='author'> Author: no-reply@google.com</div><div id='file'> File Name: tensorflow_hub/resolver.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _merge_relative_path</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/a2f318363a1c4dde386d7f7ac316baa706678b89#diff-d72be2f10ab539b75f97e9a9902314f1901950df8423868b598b7f08d41001c2L333' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: a2f318363a1c4dde386d7f7ac316baa706678b89</div><div id='time'> Time: 2017-03-09</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/pyntcloud.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: get_sample</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/6a4fa82792bddc6126eaf944956f49f0a0cb7ca7#diff-28251da53a8cd871c2eaab22b92e2e4d30ef71a81d29c1af8d890c5c7c546d6eL153' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 6a4fa82792bddc6126eaf944956f49f0a0cb7ca7</div><div id='time'> Time: 2020-12-22</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: kornia/filters/sobel.py</div><div id='class'> Class Name: Sobel</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/89b703017ad90e56ce6382bb4686cab3430c46bc#diff-8d8c524f3f2335d9e1a764b8dd61e156f6ec112c64c651cf13f1ecd0f888ae7dL21' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: 89b703017ad90e56ce6382bb4686cab3430c46bc</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/sketch/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: randomized_uniform_sampling</div><BR>

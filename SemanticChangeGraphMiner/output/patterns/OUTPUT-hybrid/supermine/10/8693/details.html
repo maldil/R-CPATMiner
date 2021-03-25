@@ -1,0 +1,27 @@
+<html><h3>e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4,underthesea/word_sent/model.py,CRFModel,predict,#CRFModel#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for tag, word in zip(tags, sentence):
+            word = word[0]
+            if tag == "I_W":
+                <a id="change">tokenized_sentence = tokenized_sentence + u"_" + word</a>
+            else:
+                tokenized_sentence = tokenized_sentence + word
+            <a id="change">tokenized_sentence += " "</a>
+        format_sentence = &quot&quot
+        <a id="change">for word in tokenized_sentence.split("_"):
+            if word not in self.punctuation:
+                format_sentence += word[: -1] + "_"
+       </a> tokenized_sentence = format_sentence[:-1]
+        return tokenized_sentence
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        tokens = Transformer.transform(sentence)
+        tags = self.model.tag(tokens)
+        <a id="change">tokens = [item[0] for item in tokens]</a>
+        output = []
+        for tag, token in zip(tags, tokens):
+            if tag == "I_W":
+               output[-1] = output[-1] + u" " + token</code></pre><img src="33862148.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/undertheseanlp/underthesea/commit/e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4#diff-fb77c10af5f2523d6e2f7b76e66bccaea14b6de4f6ce58fc1d0d251299ee7ac1L19' target='_blank'>Link</a></div><div id='project'> Project Name: undertheseanlp/underthesea</div><div id='commit'> Commit Name: e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4</div><div id='time'> Time: 2017-05-08</div><div id='author'> Author: brother.rain.1024@gmail.com</div><div id='file'> File Name: underthesea/word_sent/model.py</div><div id='class'> Class Name: CRFModel</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/undertheseanlp/underthesea/commit/e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4#diff-fb77c10af5f2523d6e2f7b76e66bccaea14b6de4f6ce58fc1d0d251299ee7ac1L19' target='_blank'>Link</a></div><div id='project'> Project Name: undertheseanlp/underthesea</div><div id='commit'> Commit Name: e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4</div><div id='time'> Time: 2017-05-08</div><div id='author'> Author: brother.rain.1024@gmail.com</div><div id='file'> File Name: underthesea/word_sent/model.py</div><div id='class'> Class Name: CRFModel</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/de83e84dd87aef0dea564de76c648c72d0f6b5a1#diff-6aa1816a051a1fd91c0947878726947436b0e70902cf9881f5df2084ac98f0b0L220' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: de83e84dd87aef0dea564de76c648c72d0f6b5a1</div><div id='time'> Time: 2017-04-05</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/analogy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_google_analogies</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/86698c801848975de9a21fb17093e045b6271ea3#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L109' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 86698c801848975de9a21fb17093e045b6271ea3</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR>

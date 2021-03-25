@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Work with feasible data
+        X = self.data[0][valid, :]
+        Y = self.data[1][<a id="change">valid, :</a>]
+        Xrand = RandomDesign(self.gridsize, self._domain).generate()
+        fmean, fvar = m.predict_f(np.vstack((Xrand, X)))
+        right = np.min(Y)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Work with feasible data
+        X = self.data[0][valid, :]
+        <a id="change">N = np.shape(X)[0]</a>
+        Xrand = RandomDesign(self.gridsize, self._domain).generate()
+        fmean, fvar = m.predict_f(np.vstack((X, Xrand)))
+        idx = np.argmin(fmean[:N])
+        right = fmean[idx].flatten() + 2*np.sqrt(fvar[idx]).flatten()</code></pre>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dist = X[:,None,:] - X2[None,:,:]
+        dist = (dist[:,:,:,None]*dist[:,:,None,:])
+        I = np.ones((X.shape[0], X2.shape[0], X2.shape[1], X.shape[1]))*np.eye((X2.shape[1]))
+        grad = (np.einsum(&quotkl,klij-&gt;klij&quot,dL_dK*(tmp1*invdist2 - tmp2), dist) /l2[None,None,:,None] - <a id="change">np.einsum(&quotkl,klij-&gt;klij&quot,dL_dK*tmp1, I)</a>)/l2[None,None,None,:]
+        return grad
+
+    def gradients_XX_diag(self, dL_dK_diag, X):</code></pre><h3>After Change</h3><pre><code class='java'>
+        dist = (dist[:,:,:,None]*dist[:,:,None,:])
+        I = np.ones((X.shape[0], X2.shape[0], X2.shape[1], X.shape[1]))*np.eye((X2.shape[1]))
+        grad = (((dL_dK*(tmp1*invdist2 - tmp2))[:,:,None,None] * dist)/l2[None,None,:,None]
+                - <a id="change">(dL_dK*tmp1)[:,:,None,None]</a> * I)/l2[None,None,None,:]
+        return grad
+
+    def gradients_XX_diag(self, dL_dK_diag, X):</code></pre>

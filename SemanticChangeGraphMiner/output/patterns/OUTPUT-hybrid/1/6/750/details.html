@@ -1,0 +1,20 @@
+<html><h3>5c20f2d29ee7313b79412a2183cf11d74fcb89e1,model.py,,unet_model_3d,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    conv4 = Conv3D(int(512/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot,
+                   padding=&quotsame&quot)(conv4)
+
+    up5 = concatenate(<a id="change">[get_upconv(depth=2, nb_filters=int(512/config["downsize_nb_filters_factor"]))(conv4), conv3]</a>,
+                      axis=1)
+    conv5 = Conv3D(int(256/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot, padding=&quotsame&quot)(up5)
+    conv5 = Conv3D(int(256/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+    conv4 = Conv3D(int(512/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot,
+                   padding=&quotsame&quot)(conv4)
+
+    up5 = <a id="change">get_upconv(depth=2, nb_filters=int(512/config["downsize_nb_filters_factor"]))(conv4)</a>
+    up5 = concatenate(<a id="change">[up5, conv3]</a>, axis=1)
+    conv5 = Conv3D(int(256/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot, padding=&quotsame&quot)(up5)
+    conv5 = Conv3D(int(256/config["downsize_nb_filters_factor"]), (3, 3, 3), activation=&quotrelu&quot,
+                   padding=&quotsame&quot)(conv5)</code></pre><img src="3700955.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/5c20f2d29ee7313b79412a2183cf11d74fcb89e1#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L22' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: 5c20f2d29ee7313b79412a2183cf11d74fcb89e1</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: unet_model_3d</div><BR>

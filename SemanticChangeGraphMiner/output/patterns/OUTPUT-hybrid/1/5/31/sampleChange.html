@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            noise = rescale_images(noise, x.shape, channel_axis)
+
+        return <a id="change">ep.clip(noise + x, -epsilon, +epsilon)</a>
+
+    def choice(
+        self, a: int, size: Union[int, ep.TensorType], replace: bool, p: ep.TensorType
+    ) -&gt; Any:</code></pre><h3>After Change</h3><pre><code class='java'>
+            noise = rescale_images(noise, x.shape, channel_axis)
+
+        &#47&#47 clip noise to valid linf bounds
+        noise = <a id="change">ep.clip(noise, -epsilon, +epsilon)</a>
+
+        &#47&#47 clip to image bounds
+        return ep.clip(x + noise, 0.0, 1.0)
+</code></pre>

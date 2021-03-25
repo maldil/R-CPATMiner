@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def generate_cov(Nt,Ne):
+    Generate a set of cavariances matrices for test purpose
+    <a id="change">np.random.seed(1234)</a>
+    diags = 2.0+0.1*<a id="change">np.random.randn(Nt,Ne)</a>
+    covmats = np.empty((Nt,Ne,Ne))
+    for i in range(Nt):
+        <a id="change">covmats[i]</a> = <a id="change">np.diag(diags[i])</a>
+    return covmats
+
+def test_tangent_space():
+    Test tangent space projection</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def generate_cov(Nt, Ne):
+    Generate a set of cavariances matrices for test purpose
+    <a id="change">rs = np.random.RandomState(1234)</a>
+    diags = 2.0 + 0.1 * <a id="change">rs.randn(Nt, Ne)</a>
+    <a id="change">A = 2*rs.rand(Ne, Ne) - 1</a>
+    <a id="change">A /= np.atleast_2d(np.sqrt(np.sum(A**2, 1))).T</a>
+    covmats = np.empty((Nt, Ne, Ne))
+    for i in range(Nt):
+        <a id="change">covmats[i]</a> = <a id="change">np.dot(np.dot(A, np.diag(diags[i])), A.T)</a>
+    return covmats
+
+
+def test_tangent_space():</code></pre>

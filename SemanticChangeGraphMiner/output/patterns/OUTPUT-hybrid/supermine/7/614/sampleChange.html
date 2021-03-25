@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        style_noises = [nn.Variable((batch_size, 512)).apply(d=z)
+                        <a id="change">for</a> _ in <a id="change">range(args.mix_after)</a>]
+        style_noises += [nn.Variable((batch_size, 512)).apply(d=z2)
+                         for _ in range(num_layers - args.mix_after)]
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument(&quot--truncation-psi&quot, default=0.5, type=float,
+                        help="value for truncation trick.")
+
+    <a id="change">parser.add_argument(&quot--batch-size&quot, type=int, default=1,
+                        help="Number of images to generate.")</a>
+
+    parser.add_argument(&quot--mixing&quot, action=&quotstore_true&quot,
+                        help="if specified, apply style mixing with additional seed.")
+    parser.add_argument(&quot--seed-mix&quot, type=int, default=None,</code></pre>

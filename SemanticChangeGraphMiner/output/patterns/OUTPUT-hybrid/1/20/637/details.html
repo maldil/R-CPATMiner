@@ -1,0 +1,43 @@
+<html><h3>e928b77ac0860b6d37a256a5f2270e76ae269c7c,Orange/tests/test_table.py,CreateTableWithDomainAndTable,test_creates_table_with_given_domain_and_row_filter,#CreateTableWithDomainAndTable#,1684
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test_creates_table_with_given_domain_and_row_filter(self):
+        a, c, m = column_sizes(self.table)
+        <a id="change">order</a> = ([random.randrange(a) for _ in self.domain.attributes] +
+                 [random.randrange(a, a + c) for _ in self.domain.class_vars] +
+                 <a id="change">[random.randrange(-m + 1, 0) for _ in self.domain.metas]</a>)
+        random.shuffle(order)
+        vars = list(self.domain.variables) + list(self.domain.metas[::-1])
+        vars = [vars[i] for i in order]
+
+        new_domain = self.create_domain(vars, vars, vars)
+        <a id="change">new_table</a> = data.Table.from_table(new_domain, self.table, [0])
+        self.assert_table_with_filter_matches(
+            new_table, self.table[:1], xcols=order, ycols=order, mcols=order)
+
+        <a id="change">new_table</a> = data.Table.from_table(new_domain, self.table, [2, 1, 0])
+        self.assert_table_with_filter_matches(
+            new_table, self.table[2::-1], xcols=order, ycols=order, mcols=order)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test_creates_table_with_given_domain_and_row_filter(self):
+        a, c, m = column_sizes(self.table)
+        <a id="change">order</a> = (list(range(a+c)) + list(<a id="change">range(-m+1, 0)</a>))
+        random.shuffle(order)
+        vars = list(self.domain.variables) + list(self.domain.metas[::-1])
+        atrs = [vars[<a id="change">order[i]</a>] for i in range(a)]
+        cv = [vars[<a id="change">order[i]</a>] for i in range(a, a+c)]
+        metas = [vars[<a id="change">order[i]</a>] for i in range(a+c, a+c+m-1)]
+
+        new_domain = self.create_domain(atrs, cv, metas)
+        <a id="change">new_table</a> = data.Table.from_table(new_domain, self.table, [0])
+        self.assert_table_with_filter_matches(
+            new_table, self.table[:1], xcols=order[:a], ycols=order[a:a+c], mcols=order[a+c:])
+
+        <a id="change">new_table</a> = data.Table.from_table(new_domain, self.table, [2, 1, 0])
+        self.assert_table_with_filter_matches(
+            new_table, self.table[2::-1], xcols=order[:a], ycols=order[a:a+c], mcols=order[a+c:])
+</code></pre><img src="3107855.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/biolab/orange3/commit/e928b77ac0860b6d37a256a5f2270e76ae269c7c#diff-b5f2ddf9a4bd62c48b8122a7d53bcfdff56f14f73d38d35c80af3b0ca0220d6dL1684' target='_blank'>Link</a></div><div id='project'> Project Name: biolab/orange3</div><div id='commit'> Commit Name: e928b77ac0860b6d37a256a5f2270e76ae269c7c</div><div id='time'> Time: 2020-05-27</div><div id='author'> Author: kovacic.andreja@gmail.com</div><div id='file'> File Name: Orange/tests/test_table.py</div><div id='class'> Class Name: CreateTableWithDomainAndTable</div><div id='method'> Method Name: test_creates_table_with_given_domain_and_row_filter</div><BR><BR><div id='link'><a href='https://github.com/biolab/orange3/commit/e928b77ac0860b6d37a256a5f2270e76ae269c7c#diff-b5f2ddf9a4bd62c48b8122a7d53bcfdff56f14f73d38d35c80af3b0ca0220d6dL1684' target='_blank'>Link</a></div><div id='project'> Project Name: biolab/orange3</div><div id='commit'> Commit Name: e928b77ac0860b6d37a256a5f2270e76ae269c7c</div><div id='time'> Time: 2020-05-27</div><div id='author'> Author: kovacic.andreja@gmail.com</div><div id='file'> File Name: Orange/tests/test_table.py</div><div id='class'> Class Name: CreateTableWithDomainAndTable</div><div id='method'> Method Name: test_creates_table_with_given_domain_and_row_filter</div><BR><BR><div id='link'><a href='https://github.com/biolab/orange3/commit/e928b77ac0860b6d37a256a5f2270e76ae269c7c#diff-b5f2ddf9a4bd62c48b8122a7d53bcfdff56f14f73d38d35c80af3b0ca0220d6dL1660' target='_blank'>Link</a></div><div id='project'> Project Name: biolab/orange3</div><div id='commit'> Commit Name: e928b77ac0860b6d37a256a5f2270e76ae269c7c</div><div id='time'> Time: 2020-05-27</div><div id='author'> Author: kovacic.andreja@gmail.com</div><div id='file'> File Name: Orange/tests/test_table.py</div><div id='class'> Class Name: CreateTableWithDomainAndTable</div><div id='method'> Method Name: test_can_use_metas_as_new_columns</div><BR><BR><div id='link'><a href='https://github.com/biolab/orange3/commit/e928b77ac0860b6d37a256a5f2270e76ae269c7c#diff-b5f2ddf9a4bd62c48b8122a7d53bcfdff56f14f73d38d35c80af3b0ca0220d6dL1670' target='_blank'>Link</a></div><div id='project'> Project Name: biolab/orange3</div><div id='commit'> Commit Name: e928b77ac0860b6d37a256a5f2270e76ae269c7c</div><div id='time'> Time: 2020-05-27</div><div id='author'> Author: kovacic.andreja@gmail.com</div><div id='file'> File Name: Orange/tests/test_table.py</div><div id='class'> Class Name: CreateTableWithDomainAndTable</div><div id='method'> Method Name: test_can_use_combination_of_all_as_new_columns</div><BR>

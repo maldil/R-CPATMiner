@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        noise.data.resize_(batch_size, nz, 1, 1)
+        noise.data.normal_(0, 1)
+        fake = netG(noise)
+        <a id="change">label.data.fill_(fake_label)</a>
+        output = netD(fake.detach())
+        errD_fake = criterion(output, label)
+        errD_fake.backward()
+        D_G_z1 = output.data.mean()</code></pre><h3>After Change</h3><pre><code class='java'>
+        netD.zero_grad()
+        real_cpu, _ = data
+        batch_size = real_cpu.size(0)
+        <a id="change">if opt.cuda:
+            real_cpu = real_cpu.cuda()
+       </a> input.resize_as_(real_cpu).copy_(real_cpu)
+        label.resize_(batch_size).fill_(real_label)
+        inputv = Variable(input)
+        labelv = Variable(label)</code></pre>

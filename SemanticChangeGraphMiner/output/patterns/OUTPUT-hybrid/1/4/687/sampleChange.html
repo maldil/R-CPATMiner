@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    end = time.time()
+    for i, (input, target) in enumerate(val_loader):
+        target = target.cuda(async=True)
+        input_var = <a id="change">torch.autograd.Variable(torch.cat(input,1).cuda(), volatile=True)</a>
+        target_var = torch.autograd.Variable(target, volatile=True)
+
+        &#47&#47 compute output
+        output = model(input_var)</code></pre><h3>After Change</h3><pre><code class='java'>
+    end = time.time()
+    for i, (input, target) in enumerate(val_loader):
+        target = target.to(device)
+        input = <a id="change">torch.cat(input,1).to(device)</a>
+
+        &#47&#47 compute output
+        output = model(input)
+        flow2_EPE = args.div_flow*realEPE(output, target, sparse=args.sparse)</code></pre>

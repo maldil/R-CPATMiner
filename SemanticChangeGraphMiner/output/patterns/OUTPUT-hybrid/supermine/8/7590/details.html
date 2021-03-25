@@ -1,0 +1,29 @@
+<html><h3>63eefcc59a3d9ed5347695869833e48a91404108,core/eolearn/core/eodata.py,EOPatch,save_aws,#EOPatch#,564
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :type s3client: botocore.client.S3
+        
+
+        features = <a id="change">[(ftype, fname) for ftype, fname in FeatureParser(features)(self)]</a>
+
+        ftrs = [(ftype, fname) for ftype, fname in features if not ftype.is_meta()]
+        meta = list(set([(ftype, ...) <a id="change">for</a> ftype, _ in features if ftype.is_meta()]))
+        <a id="change">features = ftrs + meta</a>
+
+        file_saver_list = self._get_save_file_list(&quot&quot, &quot&quot, features, file_format, compress_level)
+        paths = [saver.get_file_path(patch_location) for saver in file_saver_list]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        :type s3client: botocore.client.S3
+        
+
+        features = <a id="change">list(FeatureParser(features)(self))</a>
+
+        ftrs = {(ftype, fname) for ftype, fname in features if not ftype.is_meta()}
+        meta = {(ftype, ...) <a id="change">for</a> ftype, _ in features if ftype.is_meta()}
+        <a id="change">features = list(ftrs | meta)</a>
+
+        file_saver_list = self._get_save_file_list(&quot&quot, &quot&quot, features, file_format, compress_level)
+        paths = [saver.get_file_path(patch_location) for saver in file_saver_list]
+</code></pre><img src="29126460.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/sentinel-hub/eo-learn/commit/63eefcc59a3d9ed5347695869833e48a91404108#diff-f7532a8b1f3bad6e878ae9b30853c6c714cd0647243cbbe831e657353070669eL582' target='_blank'>Link</a></div><div id='project'> Project Name: sentinel-hub/eo-learn</div><div id='commit'> Commit Name: 63eefcc59a3d9ed5347695869833e48a91404108</div><div id='time'> Time: 2019-12-02</div><div id='author'> Author: matic.lubej@sinergise.com</div><div id='file'> File Name: core/eolearn/core/eodata.py</div><div id='class'> Class Name: EOPatch</div><div id='method'> Method Name: save_aws</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9b95e0f07b60b6a144893dcc506dfaf90db61c95#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL223' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9b95e0f07b60b6a144893dcc506dfaf90db61c95</div><div id='time'> Time: 2020-05-18</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stack_memory</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/e1c4e6a7c7db68e123d978bfc56feb057898935f#diff-a17dc8b1db8a3f0d9d502c3c2d7d13001ca5af03ef5419bf371ac130926ce968L46' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: e1c4e6a7c7db68e123d978bfc56feb057898935f</div><div id='time'> Time: 2019-10-24</div><div id='author'> Author: kostasdedesar@penguin</div><div id='file'> File Name: Counting-sort.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

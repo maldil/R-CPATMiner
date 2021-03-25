@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                  of the amplitude and phase RBMS
+        :rtype: list[torch.Tensor, torch.Tensor]
+        
+        <a id="change">rotated_grad = [
+            torch.zeros(
+                2, getattr(self, net).num_pars, dtype=torch.double, device=self.device
+            )
+            for net in self.networks
+        ]</a>
+
+        Upsi, Upsi_v, v = unitaries.rotate_psi_inner_prod(
+            self, basis, sample, include_extras=True
+        )</code></pre><h3>After Change</h3><pre><code class='java'>
+            self, basis, sample, include_extras=True
+        )
+
+        <a id="change">vr = v.reshape(-1, v.shape[-1])</a>
+        <a id="change">raw_grads = [
+            self.am_grads(vr).reshape(2, *v.shape[:-1], -1),
+            self.ph_grads(vr).reshape(2, *v.shape[:-1], -1),
+        ]</a>
+
+        rotated_grad = [cplx.einsum("s...,s...g-&gt;...g", Upsi_v, g) for g in raw_grads]
+
+        grad = [</code></pre>

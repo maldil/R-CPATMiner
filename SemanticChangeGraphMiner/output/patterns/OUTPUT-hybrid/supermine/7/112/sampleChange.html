@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     Gets gradient a layer output for given inputs and outputs
+    &#47&#47 grads = model.optimizer.get_gradients(model.total_loss, model.layers[layer].output)
+    layer_names = [l.output.name for l in model.layers]
+    <a id="change">grads = model.optimizer.get_gradients(model.total_loss, [l.output for l in model.layers])</a>
+    <a id="change">output_grad = _evaluate(model, grads, model_inputs, outputs)</a>
+    <a id="change">result = dict(zip(layer_names, output_grad))</a>
+    <a id="change">return result</a>
+
+
+def get_activations(model, model_inputs, layer_name=None):
+    outputs = [layer.output for layer in model.layers if layer.name == layer_name or layer_name is None]</code></pre><h3>After Change</h3><pre><code class='java'>
+def get_gradients_of_activations(model, x, y, layer_name=None):
+    nodes = [layer.output for layer in model.layers if layer.name == layer_name or layer_name is None]
+    nodes_names = [n.name for n in nodes]
+    <a id="change">return _get_gradients(model, x, y, nodes, nodes_names)</a>
+
+
+def _get_gradients(model, x, y, nodes, nodes_names):
+    if model.optimizer is None:</code></pre>

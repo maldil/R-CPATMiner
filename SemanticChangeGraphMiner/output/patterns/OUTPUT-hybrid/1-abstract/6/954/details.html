@@ -1,0 +1,96 @@
+<html><h3>7446d43f2350302a1fb44278378e9072b29aaa80,mlxtend/feature_selection/exhaustive_feature_selector.py,ExhaustiveFeatureSelector,fit,#ExhaustiveFeatureSelector#,128
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.max_features &lt; self.min_features:
+            raise AttributeError(&quotmin_features must be &lt;= max_features&quot)
+
+        candidates = list(<a id="change">chain(*((combinations(range(X.shape[1]), r=i))
+                          for i in range(self.min_features,
+                                         self.max_features + 1)))</a>)
+
+        self.subsets_ = {}
+        all_comb = len(candidates)
+        n_jobs = min(self.n_jobs, all_comb)
+        parallel = Parallel(n_jobs=n_jobs, pre_dispatch=self.pre_dispatch)
+        work = enumerate(parallel(delayed(_calc_score)(self, X, y, c)
+                                  for c in candidates))
+
+        for iteration, (c, cv_scores) in work:
+
+            self.subsets_[iteration] = {&quotfeature_idx&quot: c,
+                                        &quotcv_scores&quot: cv_scores,
+                                        &quotavg_score&quot: np.mean(cv_scores)}
+
+            if self.print_progress:
+                sys.stderr.write(&quot\rFeatures: %d/%d&quot % (
+                    iteration + 1, all_comb))
+                sys.stderr.flush()
+
+        max_score = float(&quot-inf&quot)
+        for c in self.subsets_:
+            if self.subsets_[c][&quotavg_score&quot] &gt; max_score:
+                <a id="change">max_score</a> = self.subsets_[c][&quotavg_score&quot]
+                best_subset = c
+        score = max_score
+        idx = self.subsets_[best_subset][&quotfeature_idx&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.max_features &lt; self.min_features:
+            raise AttributeError(&quotmin_features must be &lt;= max_features&quot)
+
+        candidates = <a id="change">chain(*((combinations(range(X.shape[1]), r=i))
+                          for i in range(self.min_features,
+                                         self.max_features + 1)))</a>
+
+        self.subsets_ = {}
+        
+        def ncr(n, r):
+            Return the number of combinations of length r from n items.
+            
+            Parameters
+            ----------
+            n : {integer}
+            Total number of items
+            r : {integer}
+            Number of items to select from n
+            
+            Returns
+            -------
+            Number of combinations, integer
+            
+            
+            
+            r = min(r, n-r)
+            if r == 0:
+                return 1
+            numer = reduce(op.mul, range(n, n-r, -1))
+            denom = reduce(op.mul, range(1, r+1))
+            return numer//denom
+        
+        all_comb = np.sum([ncr(n=X.shape[1], r=i)
+                           for i in range(self.min_features,
+                                          self.max_features + 1)])
+        
+        n_jobs = min(self.n_jobs, all_comb)
+        parallel = Parallel(n_jobs=n_jobs, pre_dispatch=self.pre_dispatch)
+        work = enumerate(parallel(delayed(_calc_score)(self, X, y, c)
+                                  for c in candidates))
+
+        for iteration, (c, cv_scores) in work:
+
+            self.subsets_[iteration] = {&quotfeature_idx&quot: c,
+                                        &quotcv_scores&quot: cv_scores,
+                                        &quotavg_score&quot: np.mean(cv_scores)}
+
+            if self.print_progress:
+                sys.stderr.write(&quot\rFeatures: %d/%d&quot % (
+                    iteration + 1, all_comb))
+                sys.stderr.flush()
+
+        max_score = float(&quot-inf&quot)
+        for c in self.subsets_:
+            if self.subsets_[c][&quotavg_score&quot] &gt; max_score:
+                <a id="change">max_score</a> = self.subsets_[c][&quotavg_score&quot]
+                best_subset = c
+        score = max_score
+        idx = self.subsets_[best_subset][&quotfeature_idx&quot]</code></pre><img src="3879995.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/7446d43f2350302a1fb44278378e9072b29aaa80#diff-81c9e6887e09bb8060dcf0f74e756e10a0c59dabdfa90d4a9898a82fa8138fd5L160' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 7446d43f2350302a1fb44278378e9072b29aaa80</div><div id='time'> Time: 2017-09-07</div><div id='author'> Author: adam-erickson@users.noreply.github.com</div><div id='file'> File Name: mlxtend/feature_selection/exhaustive_feature_selector.py</div><div id='class'> Class Name: ExhaustiveFeatureSelector</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/42be5ed1d076e00cd5cbb85f1cb0062ac81dfa19#diff-1d1b6a9ab46e34cddb6b6dac848d6e98ecef73ce16db11bb9dc3a1cda1c17599L55' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 42be5ed1d076e00cd5cbb85f1cb0062ac81dfa19</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/pytorchwrapper.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/93ddba439d54cda15f22ffd9ca52318cfba01475#diff-fd888aea1d9bb293278102cc4639f3380c219ad2ed9a2dbd792343590e991b2eL80' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 93ddba439d54cda15f22ffd9ca52318cfba01475</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: Akio.Hayakawa@sony.com</div><div id='file'> File Name: speech-synthesis/WaveNet/model.py</div><div id='class'> Class Name: waveNet</div><div id='method'> Method Name: call</div><BR>

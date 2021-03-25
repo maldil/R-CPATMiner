@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            _all_states.add(state[&quotname&quot])
+        missing_states = _all_states - set(states)
+
+        <a id="change">if missing_states:
+            raise Exceptions.MissingStatesError(missing_states)
+        else:
+            return True
+
+   </a> def _no_extra_states(self, node, states):
+        "Returns True if the argument states contains only the states
+         present in Node.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &gt;&gt;&gt; bayesian_model._no_missing_states(&quotdifficulty&quot, (&quothard&quot, &quoteasy&quot))
+        True
+        
+        if sorted(self.node[node][&quot_states&quot]) == <a id="change">sorted(states)</a>:
+            return True
+        else:
+            raise Exceptions.MissingStatesError(set(self.node[node][&quot_states&quot]) - set(states))</code></pre>

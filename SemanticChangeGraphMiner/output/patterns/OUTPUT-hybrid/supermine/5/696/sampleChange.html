@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if l is None:
+            d = p - self.zero
+            n = np.zeros(3)
+            <a id="change">try:
+                n = d - np.dot(d, self.direction) * self.direction
+            except RuntimeWarning:
+                print(d, self.direction)
+           </a> return norm(n)
+        else:
+            normal = np.cross(self.direction, l.direction)
+            n = norm(normal)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 except RuntimeWarning:
+            &#47&#47     print(d, self.direction)
+            &#47&#47 return norm(n)
+            <a id="change">with warnings.catch_warnings(record=True) as w:
+                &#47&#47 Cause all warnings to always be triggered.
+                warnings.simplefilter("always")
+                n = d - np.dot(d, self.direction) * self.direction
+                &#47&#47 print(n, norm(n))
+                if len(w) &gt; 0 and issubclass(w[-1].category, RuntimeWarning):
+                    &#47&#47 Todo: check w/ Ram if this is what he meant to do when catch a warning: n = np.zeros(3)
+                    &#47&#47 n = np.zeros(3)
+                    &#47&#47 print(d, self.direction)
+                    pass
+                return norm(n)
+       </a> else:
+            normal = np.cross(self.direction, l.direction)
+            n = norm(normal)
+            if n &lt; sys.float_info.min:</code></pre>

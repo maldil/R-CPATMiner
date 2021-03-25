@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 check if we have all templates
+    for resname in unique_resname:
+        <a id="change">if resname not in residue_mols and resname not in [&quotHOH&quot]:
+            raise ValueError(&quotThere is no template for residue "%s"&quot % resname)
+
+    &#47&#47 reset B.O. using templates
+   </a> for resname in residue_mols.keys():
+        template = residue_mols[resname]
+        new_mol = AssignPDBResidueBondOrdersFromTemplate(template, new_mol)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    for atom in new_mol.GetAtoms():
+        if atom.GetAtomicNum() == 8 and atom.GetPDBResidueInfo().GetName().strip() == &quotOXT&quot:
+            bonds = atom.GetBonds()
+            if <a id="change">len(bonds) &gt; 0: &#47&#47 th</a>is should not happen at all
+                bonds[0].SetBondType(BondType.SINGLE)
+
+    return new_mol</code></pre>

@@ -1,0 +1,23 @@
+<html><h3>80c93a1c5489bf6d16745d1390e3bb4ba87dfb17,utils/utils.py,,build_targets,#,267
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            iou = bbox_iou(gt_box, pred_box, x1y1x2y2=False)
+            pred_label = torch.argmax(pred_cls[b, best_n, gj, gi])
+            score = pred_conf[b, best_n, gj, gi]
+            <a id="change">if iou &gt; 0.5 and pred_label == target_label and score &gt; 0.5:
+                num_correct += 1
+
+   </a> return num_targets, num_correct, obj_mask, noobj_mask, tx, ty, tw, th, tconf, tcls
+
+
+def to_categorical(y, num_classes):</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Get the shape of the gt box (centered at (100, 100))
+            gt_shape = torch.FloatTensor(np.array([100, 100, gw, gh])).unsqueeze(0)
+            &#47&#47 Get shape of anchor box
+            anchor_shapes = <a id="change">torch.ones((len(anchors), 4)).float() * 100</a>
+            anchor_shapes[:, 2:] = anchors
+            &#47&#47 Compute iou between gt and anchor shapes
+            anch_ious = bbox_iou(gt_shape, anchor_shapes, x1y1x2y2=False)
+            &#47&#47 Where the overlap is larger than threshold set mask to zero (ignore)</code></pre><img src="37995738.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/80c93a1c5489bf6d16745d1390e3bb4ba87dfb17#diff-9653b8c2ce917a6134298b00c8b3f7d4b7c4dc473a752303f37a870392742127L268' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 80c93a1c5489bf6d16745d1390e3bb4ba87dfb17</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_targets</div><BR><BR><div id='link'><a href='https://github.com/ufoym/deepo/commit/497ceb5d9ec7b943a7cee88e8919ea914d146928#diff-c7df6fbc614ecd4f44efdbd59154a7a9746d4d59829dcd63f34f09b72a660f71L36' target='_blank'>Link</a></div><div id='project'> Project Name: ufoym/deepo</div><div id='commit'> Commit Name: 497ceb5d9ec7b943a7cee88e8919ea914d146928</div><div id='time'> Time: 2018-05-15</div><div id='author'> Author: a@ufoym.com</div><div id='file'> File Name: scripts/make-gen-docker.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_command</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/22fececf3d3d75a6607b889f972663a1473bc37b#diff-4ef98290a75ea2e110a6012be5055b62e5bea91cf43f6fc5ff20fc6a98c5f016L49' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 22fececf3d3d75a6607b889f972663a1473bc37b</div><div id='time'> Time: 2010-08-24</div><div id='author'> Author: lpc@cmu.edu</div><div id='file'> File Name: mahotas/stretch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stretch</div><BR>

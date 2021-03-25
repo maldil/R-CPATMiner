@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+
+    <a id="change">res = OptimizeResult()</a>
+    <a id="change">best = np.argmin(yi)</a>
+    <a id="change">res.x = Xi[best]</a>
+    <a id="change">res.fun = yi[best]</a>
+    <a id="change">res.func_vals = np.array(yi)</a>
+    <a id="change">res.x_iters = Xi</a>
+    <a id="change">res.models = models</a>
+    <a id="change">res.space = space</a>
+    <a id="change">res.random_state = rng</a>
+
+    <a id="change">return res</a>
+
+
+def gbrt_minimize(func, dimensions, base_estimator=None, n_calls=100,
+                  n_points=1000, n_random_starts=10, x0=None, y0=None,</code></pre><h3>After Change</h3><pre><code class='java'>
+            print("Current minimum: %0.4f" % np.min(yi))
+        if callback is not None:
+            callback(pack_optimize_result(
+                x0 + <a id="change">X_rand[:i + 1]</a>, yi, space, rng, specs))
+
+    if np.ndim(yi) != 1:
+        raise ValueError("`func` should return a scalar")</code></pre>

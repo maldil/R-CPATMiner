@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        policy_loss -= (log_prob * reward).sum()
+        value_loss += F.smooth_l1_loss(value, Variable(torch.Tensor([r])))
+    optimizer.zero_grad()
+    <a id="change">(policy_loss + value_loss).backward()</a>
+    optimizer.step()
+    del model.rewards[:]
+    del model.saved_actions[:]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    R = 0
+    saved_actions = model.saved_actions
+    policy_losses = []
+    <a id="change">value_losses = []</a>
+    rewards = []
+    for r in model.rewards[::-1]:
+        R = r + args.gamma * R
+        rewards.insert(0, R)
+    rewards = torch.Tensor(rewards)
+    rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    for (log_prob, value), r in zip(saved_actions, rewards):
+        reward = r - value.data[0, 0]
+        policy_losses.append(-log_prob * reward)
+        <a id="change">value_losses.append(F.smooth_l1_loss(value, Variable(torch.Tensor([r]))))</a>
+    optimizer.zero_grad()
+    loss = torch.cat(policy_losses).sum() + <a id="change">torch.cat(value_losses).sum()</a>
+    loss.backward()
+    optimizer.step()
+    del model.rewards[:]
+    del model.saved_actions[:]</code></pre>

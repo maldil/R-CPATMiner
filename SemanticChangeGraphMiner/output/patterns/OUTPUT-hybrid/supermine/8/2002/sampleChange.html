@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def process_request(self, request):
+        __traceback_hide__ = True                                       &#47&#47 noqa
+        <a id="change">if self.show_toolbar(request):
+            toolbar = DebugToolbar(request)
+            for panel in toolbar.panels:
+                panel.enabled = panel.dom_id() not in request.COOKIES
+                if not panel.enabled:
+                    continue
+                panel.enable_instrumentation()
+                panel.process_request(request)
+            self.__class__.debug_toolbars[threading.current_thread().ident] = toolbar
+
+   </a> def process_view(self, request, view_func, view_args, view_kwargs):
+        __traceback_hide__ = True                                       &#47&#47 noqa
+        toolbar = self.__class__.debug_toolbars.get(threading.current_thread().ident)
+        if not toolbar:</code></pre><h3>After Change</h3><pre><code class='java'>
+            return
+        response = None
+        toolbar = DebugToolbar(request)
+        <a id="change">for panel in toolbar.enabled_panels:
+            panel.enable_instrumentation()
+       </a> for panel in toolbar.enabled_panels:
+            response = panel.process_request(request)
+            if response:
+                break</code></pre>

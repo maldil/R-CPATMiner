@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+n_queries = 10
+for idx in range(n_queries):
+    query_idx, query_instance = learner.query(X_pool, n_instances=100)
+    <a id="change">print(query_idx)</a>
+    learner.teach(X_pool[query_idx], y_pool[query_idx], only_new=True)
+    &#47&#47 remove queried instance from pool
+    X_pool = np.delete(X_pool, query_idx, axis=0)
+    y_pool = np.delete(y_pool, query_idx, axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+mnist_data = MNIST(&quot.&quot, download=True, transform=ToTensor())
+dataloader = DataLoader(mnist_data, shuffle=True, batch_size=60000)
+<a id="change">X, y = next(iter(dataloader))</a>
+
+&#47&#47 read training data
+X_train, X_test, y_train, y_test = X[:50000], X[50000:], y[:50000], y[50000:]
+X_train = X_train.reshape(50000, 1, 28, 28)</code></pre>

@@ -1,0 +1,41 @@
+<html><h3>963ec339d932d3888f79dea12d3d3a89cbd1f141,debug_toolbar/panels/request_vars.py,RequestVarsDebugPanel,process_response,#RequestVarsDebugPanel#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            else:
+                name = &quot&lt;no view&gt;&quot
+
+            <a id="change">self.record_stats({
+                &quotview_func&quot: name,
+                &quotview_args&quot: self.view_args,
+                &quotview_kwargs&quot: self.view_kwargs
+            })</a>
+
+        if hasattr(self.request, &quotsession&quot):
+            self.record_stats({
+                &quotsession&quot: [(k, self.request.session.get(k)) for k in self.request.session.iterkeys()]</code></pre><h3>After Change</h3><pre><code class='java'>
+            &quotpost&quot: [(k, self.request.POST.getlist(k)) for k in self.request.POST],
+            &quotcookies&quot: [(k, self.request.COOKIES.get(k)) for k in self.request.COOKIES],
+        })
+        view_info = <a id="change">{
+             &quotview_func&quot: _(&quot&lt;no view&gt;&quot),
+             &quotview_args&quot: &quotNone&quot,
+             &quotview_kwargs&quot: &quotNone&quot,
+             &quotview_urlname&quot: &quotNone&quot,
+         }</a>
+        try:
+            match = resolve(self.request.path)
+            func, args, kwargs = match
+            view_info[&quotview_func&quot] = get_name_from_obj(func)
+            view_info[&quotview_args&quot] = args
+            view_info[&quotview_kwargs&quot] = kwargs
+            view_info[&quotview_urlname&quot] = getattr(match, &quoturl_name&quot,
+                                                _(&quot&lt;unavailable&gt;&quot))
+        except Http404:
+            pass
+        <a id="change">self.record_stats(view_info)</a>
+
+        if hasattr(self.request, &quotsession&quot):
+            self.record_stats({
+                &quotsession&quot: [(k, self.request.session.get(k))</code></pre><img src="37542076.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/963ec339d932d3888f79dea12d3d3a89cbd1f141#diff-8e2f8947e6ef5ba9eb2b53b966e0b7bed15af6a6958df77693510a5d4d6b4981L29' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 963ec339d932d3888f79dea12d3d3a89cbd1f141</div><div id='time'> Time: 2012-04-06</div><div id='author'> Author: jannis@leidel.info</div><div id='file'> File Name: debug_toolbar/panels/request_vars.py</div><div id='class'> Class Name: RequestVarsDebugPanel</div><div id='method'> Method Name: process_response</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/12fdf7ea605d3716d6c9127e22a63bcc345d55be#diff-72ecd973e54107d746eff0947206cbdbe24cbb3c42216b00615e64d49ca70d73L140' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 12fdf7ea605d3716d6c9127e22a63bcc345d55be</div><div id='time'> Time: 2012-04-06</div><div id='author'> Author: jannis@leidel.info</div><div id='file'> File Name: debug_toolbar/panels/cache.py</div><div id='class'> Class Name: CacheDebugPanel</div><div id='method'> Method Name: process_response</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/9cb24492637aa8ef9e77f007016451d515f29d5d#diff-869e325fd754250e63f3c94bd984f65b2c04db3fd2371fc93fe84088738c9b05L31' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 9cb24492637aa8ef9e77f007016451d515f29d5d</div><div id='time'> Time: 2011-11-15</div><div id='author'> Author: albrecht.andi@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/timer.py</div><div id='class'> Class Name: TimerDebugPanel</div><div id='method'> Method Name: process_response</div><BR>

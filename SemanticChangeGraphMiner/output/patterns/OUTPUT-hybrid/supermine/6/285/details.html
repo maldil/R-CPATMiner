@@ -1,0 +1,23 @@
+<html><h3>934f26003a1b794a3a03ca824817fb1252dff270,hmmlearn/hmm.py,GMMHMM,_compute_log_likelihood,#GMMHMM#,574
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            g.fit(X)
+
+    def _compute_log_likelihood(self, X):
+        return <a id="change">np</a>.array([g.score(X) for g in self.gmms_]).T
+
+    def _generate_sample_from_state(self, state, random_state=None):
+        return self.gmms_[state].sample(1, random_state=random_state).flatten()</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples, _ = X.shape
+        res = np.zeros((n_samples, self.n_components))
+
+        <a id="change">for i in range(self.n_components):
+            log_denses = self._compute_log_weighted_gaussian_densities(X, i)
+            res[:, i] = logsumexp(log_denses, axis=1)
+
+       </a> return res
+
+    def _initialize_sufficient_statistics(self):
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()</code></pre><img src="1673051.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hmmlearn/hmmlearn/commit/934f26003a1b794a3a03ca824817fb1252dff270#diff-8d808ca467b022712fa56520d9a7604edbb74b948a536318d7086ed1915fc0fdL574' target='_blank'>Link</a></div><div id='project'> Project Name: hmmlearn/hmmlearn</div><div id='commit'> Commit Name: 934f26003a1b794a3a03ca824817fb1252dff270</div><div id='time'> Time: 2016-07-09</div><div id='author'> Author: yanenkoalexandr@gmail.com</div><div id='file'> File Name: hmmlearn/hmm.py</div><div id='class'> Class Name: GMMHMM</div><div id='method'> Method Name: _compute_log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/e0ff7e10a230b0523d0a4796e38957490a05f8f9#diff-449e277b5af2392fd7a99eaec03d2aeeaaa7bb6e8e2e34a55ca28fb33095a551L82' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: e0ff7e10a230b0523d0a4796e38957490a05f8f9</div><div id='time'> Time: 2015-10-19</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/RankFilter.py</div><div id='class'> Class Name: RankFilter</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/6d6a32dd677aa6097c4e77b359f81989c3e949af#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L440' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: 6d6a32dd677aa6097c4e77b359f81989c3e949af</div><div id='time'> Time: 2018-04-05</div><div id='author'> Author: vandesande.bram@gmail.com</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_rankings</div><BR>

@@ -1,0 +1,24 @@
+<html><h3>7db6246fae613a5abf1fbea0b2b987b615ae5a13,visdialch/encoders/lf.py,LateFusionEncoder,forward,#LateFusionEncoder#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ques_embed = self.ques_rnn(ques_embed, batch[&quotques_len&quot])
+
+        &#47&#47 embed history
+        hist = <a id="change">hist.view(-1, hist.size(2))</a>
+        hist_embed = self.word_embed(hist)
+        hist_embed = self.hist_rnn(hist_embed, batch[&quothist_len&quot])
+
+        fused_vector = torch.cat((img, ques_embed, hist_embed), 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        batch_size, num_rounds, max_sequence_length = ques.size()
+
+        &#47&#47 average bottom-up features of all proposals, to form fc7-like features
+        <a id="change">if img.dim() == 3:
+            img = torch.mean(img, dim=1)  &#47&#47 shape: (batch, img_feature_size)
+
+        &#47&#47 repeat image feature vectors to be provided for every round
+       </a> img = img.view(batch_size, 1, self.config["img_feature_size"])
+        img = img.repeat(1, num_rounds, 1)
+        img = img.view(batch_size * num_rounds, self.config["img_feature_size"])
+</code></pre><img src="39666217.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/batra-mlp-lab/visdial-challenge-starter-pytorch/commit/7db6246fae613a5abf1fbea0b2b987b615ae5a13#diff-6e1beed73304546a3e214cf2cd6d2b5a235020e3b703e38d6e0c20f8f11addc7L44' target='_blank'>Link</a></div><div id='project'> Project Name: batra-mlp-lab/visdial-challenge-starter-pytorch</div><div id='commit'> Commit Name: 7db6246fae613a5abf1fbea0b2b987b615ae5a13</div><div id='time'> Time: 2018-12-26</div><div id='author'> Author: karandesai281196@gmail.com</div><div id='file'> File Name: visdialch/encoders/lf.py</div><div id='class'> Class Name: LateFusionEncoder</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/5dba182362d6d3b7d87fe852a4d707bd7ec3153a#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L45' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 5dba182362d6d3b7d87fe852a4d707bd7ec3153a</div><div id='time'> Time: 2017-11-17</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/54a0f981802ccb86350033a42c3cedd114efc49d#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L62' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 54a0f981802ccb86350033a42c3cedd114efc49d</div><div id='time'> Time: 2017-09-24</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

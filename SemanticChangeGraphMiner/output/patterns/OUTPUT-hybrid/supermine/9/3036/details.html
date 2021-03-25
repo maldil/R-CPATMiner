@@ -1,0 +1,26 @@
+<html><h3>70c416bbd7ebc468fda10c37b1f2965d43059249,skopt/learning/gbrt.py,GradientBoostingQuantileRegressor,predict,#GradientBoostingQuantileRegressor#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def predict(self, X):
+        Predict for each quantile.
+        <a id="change">return np.asarray([rgr.predict(X) for rgr in self.regressors_]).T</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        predicted_quantiles = np.asarray(
+            [rgr.predict(X) for rgr in self.regressors_])
+        <a id="change">if not return_std:
+            return predicted_quantiles.T
+        else:
+            std_quantiles = [0.16, 0.5, 0.84]
+            is_present_mask = np.in1d(std_quantiles, self.quantiles)
+            if not np.all(is_present_mask):
+                raise ValueError(
+                    "return_std works only if the quan")
+            low = self.regressors_[self.quantiles.index(0.16)].predict(X)
+            high = self.regressors_[self.quantiles.index(0.84)].predict(X)
+            mean = self.regressors_[self.quantiles.index(0.5)].predict(X)
+            return mean, ((high - low) / 2.0)</a>
+</code></pre><img src="13650128.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/70c416bbd7ebc468fda10c37b1f2965d43059249#diff-bea2ae74816d8f301d47c3cf543ffb88eb0bdefb9da88df69edb9ba9eecaf7deL54' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 70c416bbd7ebc468fda10c37b1f2965d43059249</div><div id='time'> Time: 2016-04-26</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/learning/gbrt.py</div><div id='class'> Class Name: GradientBoostingQuantileRegressor</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L53' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_forward</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L100' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_backward</div><BR>

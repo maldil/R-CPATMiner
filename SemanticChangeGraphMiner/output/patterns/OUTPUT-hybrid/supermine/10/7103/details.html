@@ -1,0 +1,42 @@
+<html><h3>2bae518e899657e536572fa59df6e1587795e397,librosa/feature.py,,line_features,#,332
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    N, K = np.shape(S)
+    freq = np.transpose(np.linspace(0, sr/2, N))
+
+    slope = np.zeros(<a id="change">(1, K)</a>)
+    <a id="change">intercept = np.zeros((1, K))</a>
+
+    for k in range(0, K):
+        p = np.polyfit(freq, S[:, k], order)
+        slope[:, k] = p[0]
+        intercept[:, k] = p[1]
+
+    <a id="change">return (slope, intercept)</a>
+
+&#47&#47 - End Features added by BWalburn
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        S = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))
+    else:
+        &#47&#47 Infer n_fft from spectrogram shape
+        <a id="change">n_fft = (S.shape[0] - 1) * 2</a>
+
+    &#47&#47 Compute the center frequencies of each bin
+    if freq is None:
+        freq = librosa.core.fft_frequencies(sr=sr, n_fft=n_fft)
+
+    if <a id="change">freq.ndim</a> == 1:
+        <a id="change">coefficients = np.polyfit(freq, S, order)</a>
+    else:
+        coefficients = np.concatenate([[np.polyfit(freq_t, S_t, order)]
+                                       <a id="change">for</a> (freq_t, S_t) in zip(freq.T, S.T)],
+                                      axis=0).T
+
+    <a id="change">return coefficients</a>
+
+&#47&#47 - End Features added by BWalburn
+
+</code></pre><img src="27782310.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/344a3d49e7c78300258fb4745c92b98ac57f38b1#diff-b7119777edb4a2b34ccc116133e9e0a74935e49f49ce5e2e76900397458ebd49L62' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 344a3d49e7c78300258fb4745c92b98ac57f38b1</div><div id='time'> Time: 2016-07-12</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/learning/forest.py</div><div id='class'> Class Name: ExtraTreesRegressor</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/344a3d49e7c78300258fb4745c92b98ac57f38b1#diff-b7119777edb4a2b34ccc116133e9e0a74935e49f49ce5e2e76900397458ebd49L10' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 344a3d49e7c78300258fb4745c92b98ac57f38b1</div><div id='time'> Time: 2016-07-12</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/learning/forest.py</div><div id='class'> Class Name: RandomForestRegressor</div><div id='method'> Method Name: predict</div><BR>

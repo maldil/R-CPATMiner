@@ -1,0 +1,21 @@
+<html><h3>7cb327a5de4ad5669fdc998ee96ac2bdcff3e7be,brian2/core/functions.py,,timestep,#,546
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        int_steps = np.asarray(elapsed_steps, dtype=int)
+        if any(are_inf):
+            int_steps[are_inf & (elapsed_steps &lt; 0)] = _iinfo.min
+            <a id="change">int_steps[are_inf & (elapsed_steps &gt; 0)]</a> = _iinfo.max
+        return int_steps
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        int_steps = np.asarray(elapsed_steps, dtype=int)
+        are_inf, = np.nonzero(np.isinf(elapsed_steps))
+        <a id="change">int_steps[are_inf] = np.where(elapsed_steps[are_inf] &gt; 0,
+                                      _infinity_int, -_infinity_int)</a>
+        return int_steps
+
+
+DEFAULT_FUNCTIONS = {</code></pre><img src="30314586.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/7cb327a5de4ad5669fdc998ee96ac2bdcff3e7be#diff-88eb7001b37c59acad9c91b0ea7167108dbdd1c22dc2ba3cc39517efc86cc031L547' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 7cb327a5de4ad5669fdc998ee96ac2bdcff3e7be</div><div id='time'> Time: 2018-05-29</div><div id='author'> Author: marcel.stimberg@inserm.fr</div><div id='file'> File Name: brian2/core/functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: timestep</div><BR><BR><div id='link'><a href='https://github.com/mahyarnajibi/SNIPER/commit/ce9e61f795ab62c0d1b0823444483235a02040f7#diff-e08fac7eb9145e7681255f071cce7328388e8c5ec5f3304632c1a2150adc2434L276' target='_blank'>Link</a></div><div id='project'> Project Name: mahyarnajibi/SNIPER</div><div id='commit'> Commit Name: ce9e61f795ab62c0d1b0823444483235a02040f7</div><div id='time'> Time: 2018-05-08</div><div id='author'> Author: mahyarnajibi@gmail.com</div><div id='file'> File Name: lib/metric.py</div><div id='class'> Class Name: VisMetric</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/0514d4b6de97d652e6cd99c7b557018890a6ec99#diff-ee4b78ba1254b772fc00e785d492d8d1f56bf407d106c481ebeff9607b3aa3b9L152' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 0514d4b6de97d652e6cd99c7b557018890a6ec99</div><div id='time'> Time: 2017-06-26</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/disc_learning.py</div><div id='class'> Class Name: TFNoiseAwareModel</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/489a80fcb2cb9506afdf0a9620bfae103e160245#diff-fa34127405f91de9275bf79dda0ad98d662d23508ca4c09287424c581d636159L221' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 489a80fcb2cb9506afdf0a9620bfae103e160245</div><div id='time'> Time: 2019-11-06</div><div id='author'> Author: kogito@hotmail.fr</div><div id='file'> File Name: librosa/feature/inverse.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mfcc_to_mel</div><BR>

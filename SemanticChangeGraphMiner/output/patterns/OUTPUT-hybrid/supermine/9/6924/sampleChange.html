@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 If all weights is equals to zero, it means that no classifier was selected. Hence, use all of them with equal
+        &#47&#47 weights.
+        if np.sum(weights) == 0:
+            <a id="change">weights = np.ones(self.n_classifiers, dtype=int)</a>
+
+        <a id="change">votes = np.array([], dtype=int)</a>
+        for clf_idx, clf in enumerate(self.pool_classifiers):
+            <a id="change">votes = np.hstack(
+                (votes, np.ones(weights[clf_idx], dtype=int) * clf.predict(query)[0]))</a>
+
+        return votes
+
+    def classify_instance(self, query, predictions):</code></pre><h3>After Change</h3><pre><code class='java'>
+        indices = (competence &gt; 0)
+
+        &#47&#47 For the rows that are all False (i.e., no base classifier was selected, select all classifiers (set all True)
+        <a id="change">indices[~np.any(indices, axis=1), :]</a> = True
+        &#47&#47
+        &#47&#47 output_profile_query = self._output_profile_transform(query)
+        &#47&#47 weights = self.estimate_competence(output_profile_query.reshape(1, -1))</code></pre>

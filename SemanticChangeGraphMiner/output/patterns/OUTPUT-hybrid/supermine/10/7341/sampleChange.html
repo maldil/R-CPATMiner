@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        matched_face_names = []
+        matched_face_rects = []
+
+        <a id="change">for idx,face_encoding in enumerate(face_encodings):
+            preds = self.svm_model.predict_proba([face_encoding])[0]
+
+            print (preds, self.svm_model.classes_)
+            best_pred_ndx = np.argmax(preds)
+            best_pred = preds[best_pred_ndx]
+            loc = face_locations[idx]
+
+            if best_pred &gt;= g.config[&quotface_recog_min_confidence&quot]:
+                 matched_face_names.append(self.svm_model.classes_[best_pred_ndx])
+                 g.logger.debug(&quotface:{} matched with confidence: {}&quot.format(self.svm_model.classes_[best_pred_ndx], best_pred))
+            else:     
+                g.logger.debug (&quotface matched:{} but confidence of:{} is less than {}, marking it unknown&quot.format(self.svm_model.classes_[best_pred_ndx], best_pred, g.config[&quotface_recog_min_confidence&quot]))
+                matched_face_names.append(g.config[&quotunknown_face_name&quot])
+                best_pred = 1 &#47&#47 if unknown, don&quott carry over pred prob
+            matched_face_rects.append((loc[3], loc[0], loc[1], loc[2]))
+            conf.append(best_pred)
+       </a> return matched_face_rects, matched_face_names, conf
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Use the KNN model to find the best matches for the test face
+        closest_distances = self.knn.kneighbors(face_encodings, n_neighbors=1)
+        are_matches = <a id="change">[closest_distances[0][i][0] &lt;= g.config[&quotface_recog_dist_threshold&quot] for i in range(len(face_locations))]</a>
+
+        matched_face_names = []
+        matched_face_rects = []
+
+        <a id="change">for pred, loc, rec in zip(self.knn.predict(face_encodings), face_locations, are_matches):
+            label = pred if rec else g.config[&quotunknown_face_name&quot]
+            matched_face_rects.append((loc[3], loc[0], loc[1], loc[2]))
+            matched_face_names.append(label)
+            conf.append(1)
+
+       </a> return matched_face_rects, matched_face_names, conf
+</code></pre>

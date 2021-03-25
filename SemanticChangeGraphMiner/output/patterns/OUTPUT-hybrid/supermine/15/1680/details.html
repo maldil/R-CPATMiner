@@ -1,0 +1,25 @@
+<html><h3>0430f0811e0a5cd377b9c377e915bbbbb1572ce7,pycox/models/deephit.py,DeepHit,predict_cif,#DeepHit#,372
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        pmf = self.predict_pmf(input, batch_size, eval_, to_cpu, num_workers, False)
+        cif = pmf.cumsum(1)
+        if numpy is None:
+            <a id="change">if tuplefy(input).type() is np.ndarray:
+                cif = cif.cpu().numpy()
+       </a> elif numpy is True:
+                <a id="change">cif = cif.cpu().numpy()</a>
+        <a id="change">return cif</a>
+
+    def predict_survival_function(self, input, batch_size=8224, eval_=True, to_cpu=False,
+                                  num_workers=0, numpy=None):
+        Predict survival function (survive all of the event types).</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        pmf = self.predict_pmf(input, batch_size, False, eval_, to_cpu, num_workers)
+        cif = pmf.cumsum(1)
+        <a id="change">return array_or_tensor(cif, numpy, input)</a>
+
+    def predict_pmf(self, input, batch_size=8224, numpy=None, eval_=True,
+                     to_cpu=False, num_workers=0):
+        Predict the probability mass fuction (PMF) for `input`.</code></pre><img src="8472737.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 14</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/0430f0811e0a5cd377b9c377e915bbbbb1572ce7#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL192' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 0430f0811e0a5cd377b9c377e915bbbbb1572ce7</div><div id='time'> Time: 2019-10-02</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHit</div><div id='method'> Method Name: predict_cif</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/0430f0811e0a5cd377b9c377e915bbbbb1572ce7#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL399' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 0430f0811e0a5cd377b9c377e915bbbbb1572ce7</div><div id='time'> Time: 2019-10-02</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHit</div><div id='method'> Method Name: predict_pmf</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/190d9b204a1a4798f0723c8d8d37ac5ac950909e#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL37' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 190d9b204a1a4798f0723c8d8d37ac5ac950909e</div><div id='time'> Time: 2019-05-08</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHitSingle</div><div id='method'> Method Name: predict_survival_function</div><BR>

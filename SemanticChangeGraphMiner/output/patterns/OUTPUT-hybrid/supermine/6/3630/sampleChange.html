@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    stdout = sys.stdout
+    sys.stdout = sys.stderr
+
+    <a id="change">if sys.stdin.isatty() or len(sys.argv) &gt; 3 or len(sys.argv) == 1 or (len(sys.argv) == 3 and not sys.argv[2].isdigit()):
+        print(&quotUsage:&quot, sys.argv[0], &quotMODEL_NAME [CHUNK_SIZE] &lt; audio.wav&quot)
+        print(&quot    stdin should be a stream of raw int16 audio,&quot)
+        print(&quot    written in groups of CHUNK_SIZE samples.&quot)
+        print()
+        print(&quot    If no CHUNK_SIZE is given it will read until EOF.&quot)
+        print()
+        print(&quot    For every chunk, an inference will be given&quot)
+        print(&quot    via stdout as a float string, one per line&quot)
+        sys.exit(1)
+
+   </a> global tf
+    import tensorflow
+    tf = tensorflow
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.usage = parser.format_usage().strip().replace(&quotusage: &quot, &quot&quot) + &quot &lt; audio.wav&quot
+    args = parser.parse_args()
+
+    <a id="change">if sys.stdin.isatty():
+        parser.error(&quotPlease pipe audio via stdin using &lt; audio.wav&quot)
+
+   </a> global tf
+    import tensorflow
+    tf = tensorflow
+</code></pre>

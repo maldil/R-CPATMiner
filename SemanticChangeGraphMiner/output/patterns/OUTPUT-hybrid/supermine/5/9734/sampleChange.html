@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+ 
+        pred = output.argmax(1)
+        for i,n in enumerate(pred):
+            <a id="change">pos = onehot and target[i].argmax(0) or int(target[i])</a>
+            self.conf[pos][n] += 1
+
+    def value(self):
+        if self.normalized:</code></pre><h3>After Change</h3><pre><code class='java'>
+                &quotpredicted values are not between 1 and k&quot
+
+        &#47&#47 hack for bincounting 2 arrays together
+        x = predicted + <a id="change">self</a>.k * target
+        bincount_2d = np.bincount(<a id="change">x.astype(np.int32)</a>,
+                                  minlength=self.k ** 2)
+        assert bincount_2d.size == self.k ** 2
+        <a id="change">conf = bincount_2d.reshape((self.k, self.k))</a>
+
+        self.conf += conf
+
+    def value(self):</code></pre>

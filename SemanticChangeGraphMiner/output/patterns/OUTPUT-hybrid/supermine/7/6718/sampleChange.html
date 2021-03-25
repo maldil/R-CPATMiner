@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  if args.optimizer == "adam":
+    lr = lr * 0.1
+    optimizer = torch.optim.Adam([
+      <a id="change">{&quotparams&quot: fasterRCNN.RCNN_base.RCNN_base_model[0].parameters(), &quotlr&quot: lr * 0.0}</a>,
+      {&quotparams&quot: fasterRCNN.RCNN_base.RCNN_base_model[1].parameters(), &quotlr&quot: lr * 0.1},
+      {&quotparams&quot: fasterRCNN.RCNN_base.RCNN_base_model[2].parameters()},
+      {&quotparams&quot: fasterRCNN.RCNN_base.RCNN_rpn.parameters()},</code></pre><h3>After Change</h3><pre><code class='java'>
+              &quotloss_rcnn_cls&quot: fasterRCNN.RCNN_loss_cls.data[0],
+              &quotloss_rcnn_box&quot: fasterRCNN.RCNN_loss_bbox.data[0]
+            }
+            <a id="change">for tag, value in info.items():
+              logger.scalar_summary(tag, value, step)
+
+       </a> loss_temp = 0
+
+      if (step % args.checkpoint_interval == 0) and step &gt; 0:
+        &#47&#47   pdb.set_trace()</code></pre>

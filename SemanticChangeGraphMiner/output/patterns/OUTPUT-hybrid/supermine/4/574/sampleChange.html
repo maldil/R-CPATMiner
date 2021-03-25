@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return np.squeeze(
+                np.asarray(_fast_nl_means_denoising_2d(image, **nlm_kwargs)))
+        else:
+            <a id="change">return np.squeeze(
+                np.asarray(_nl_means_denoising_2d(image, **nlm_kwargs)))</a>
+    else:  &#47&#47 3-D grayscale
+        if fast_mode:
+            return np.asarray(_fast_nl_means_denoising_3d(image, **nlm_kwargs))
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise NotImplementedError("Non-local means denoising is only \
+        implemented for 2D grayscale and RGB images or 3-D grayscale images.")
+
+    if preserve_range is None and <a id="change">np.issubdtype(image.dtype, np.integer)</a>:
+        warn(&quotImage dtype is not float. By default denoise_nl_means will &quot
+             &quotassume you want to preserve the range of your image &quot
+             &quot(preserve_range=True). In scikit-image 0.19 this behavior will &quot</code></pre>

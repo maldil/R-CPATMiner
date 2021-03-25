@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    stdout = sys.stdout
+    sys.stdout = sys.stderr
+
+    if sys.stdin.isatty() or <a id="change">len(sys.argv) &gt; 3 or le</a>n(sys.argv) == 1 or (len(sys.argv) == 3 and not sys.argv[2].isdigit()):
+        print(&quotUsage:&quot, sys.argv[0], &quotMODEL_NAME [CHUNK_SIZE] &lt; audio.wav&quot)
+        print(&quot    stdin should be a stream of raw int16 audio,&quot)
+        print(&quot    written in groups of CHUNK_SIZE samples.&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument(&quot-v&quot, &quot--version&quot, action=&quotversion&quot, version=__version__)
+    parser.add_argument(&quotmodel_name&quot)
+    parser.add_argument(&quotchunk_size&quot, type=int, nargs=&quot?&quot, default=-1)
+    <a id="change">parser.usage = parser.format_usage().strip().replace(&quotusage: &quot, &quot&quot) + &quot &lt; audio.wav&quot</a>
+    args = parser.parse_args()
+
+    if sys.stdin.isatty():
+        parser.error(&quotPlease pipe audio via stdin using &lt; audio.wav&quot)</code></pre>

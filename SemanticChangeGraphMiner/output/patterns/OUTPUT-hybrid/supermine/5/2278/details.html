@@ -1,0 +1,25 @@
+<html><h3>0db94786a7a463fed49825811fac903f1f1fc3c8,python/caffe/detector.py,Detector,detect_windows,#Detector#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                window_inputs.append(self.crop(image, window))
+
+        &#47&#47 Run through the net (warping windows to input dimensions).
+        caffe_in = <a id="change">np.asarray([self.preprocess(self.inputs[0], window_in)
+                    for window_in in window_inputs])</a>
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+
+        &#47&#47 Package predictions with images and windows.</code></pre><h3>After Change</h3><pre><code class='java'>
+                window_inputs.append(self.crop(image, window))
+
+        &#47&#47 Run through the net (warping windows to input dimensions).
+        <a id="change">caffe_in = np.zeros((len(window_inputs), window_inputs[0].shape[2])
+                            + self.blobs[self.inputs[0]].data.shape[2:],
+                            dtype=np.float32)</a>
+        for ix, window_in in <a id="change">enumerate(window_inputs)</a>:
+            <a id="change">caffe_in[ix]</a> = self.preprocess(self.inputs[0], window_in)
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+</code></pre><img src="10579235.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/0db94786a7a463fed49825811fac903f1f1fc3c8#diff-7173bf5d2af5c5eda92a5c9def6c5f5d718a1267e3c1b0d3e5223c9cd27d04c2L58' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 0db94786a7a463fed49825811fac903f1f1fc3c8</div><div id='time'> Time: 2014-08-05</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect_windows</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/85e89ae2495998ae69ab34abf5400164f909a548#diff-c49b8660958f8ae6f4b060c6f2f98e7d1a003103974c4434d7673d538f3480e8L507' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 85e89ae2495998ae69ab34abf5400164f909a548</div><div id='time'> Time: 2013-12-21</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/core.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cqt</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/0db94786a7a463fed49825811fac903f1f1fc3c8#diff-e1985c25341ace1ca09898b0e992000443b28df0ab70b23d9eb3b57a86df91aaL49' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 0db94786a7a463fed49825811fac903f1f1fc3c8</div><div id='time'> Time: 2014-08-05</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/classifier.py</div><div id='class'> Class Name: Classifier</div><div id='method'> Method Name: predict</div><BR>

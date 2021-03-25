@@ -1,0 +1,32 @@
+<html><h3>4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27,stanfordnlp/models/common/char_model.py,CharacterLanguageModel,forward,#CharacterLanguageModel#,76
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.dropout = nn.Dropout(args[&quotchar_dropout&quot])
+
+    def forward(self, chars, charoffsets, charlens, char_orig_idx):
+        <a id="change">with torch.no_grad(): &#47&#47TODO: remove
+            embs = self.dropout(self.char_emb(chars))
+            batch_size = embs.size(0)
+            embs = pack_padded_sequence(embs, charlens, batch_first=True)
+            output, _ = self.charlstm(embs, charlens, hx=(\
+                    self.charlstm_h_init.expand(self.args[&quotchar_num_layers&quot], batch_size, self.args[&quotchar_hidden_dim&quot]).contiguous(), \
+                    self.charlstm_c_init.expand(self.args[&quotchar_num_layers&quot], batch_size, self.args[&quotchar_hidden_dim&quot]).contiguous()))
+            output = pad_packed_sequence(output, batch_first=True)[0]
+            res = [output[i, offsets] for i, offsets in enumerate(charoffsets)]
+            res = unsort(res, char_orig_idx)
+            res = pack_sequence(res)
+            if self.pad:
+                res = pad_packed_sequence(res, batch_first=True)[0]
+        
+       </a> <a id="change">return res</a></code></pre><h3>After Change</h3><pre><code class='java'>
+                      self.charlstm_c_init.expand(self.args[&quotchar_num_layers&quot], batch_size, self.args[&quotchar_hidden_dim&quot]).contiguous())
+        output, hidden = self.charlstm(embs, charlens, hx=hidden)
+        output = self.dropout(pad_packed_sequence(output, batch_first=True)[0])
+        <a id="change">decoded = self.decoder(output)</a>
+        <a id="change">return output, hidden, decoded</a>
+
+    def get_representation(self, chars, charoffsets, charlens, char_orig_idx):
+        with torch.no_grad(): &#47&#47TODO: remove
+            output, _, _ = self.forward(chars, charlens)</code></pre><img src="19750572.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/stanfordnlp/stanza/commit/4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27#diff-e4af714aa561396d3d07017b3a2ce37c4127b07e098cca11c5fedc38217c7846L76' target='_blank'>Link</a></div><div id='project'> Project Name: stanfordnlp/stanza</div><div id='commit'> Commit Name: 4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27</div><div id='time'> Time: 2019-09-06</div><div id='author'> Author: zyh.thu@gmail.com</div><div id='file'> File Name: stanfordnlp/models/common/char_model.py</div><div id='class'> Class Name: CharacterLanguageModel</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6d3ec6c28f32560121d93b8fcab2cf7924f59dc5#diff-1d1b6a9ab46e34cddb6b6dac848d6e98ecef73ce16db11bb9dc3a1cda1c17599L27' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6d3ec6c28f32560121d93b8fcab2cf7924f59dc5</div><div id='time'> Time: 2020-01-02</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/pytorchwrapper.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/batra-mlp-lab/visdial-challenge-starter-pytorch/commit/b4a66d31cbd7dd296bb524f0512e7cfc0673495c#diff-31ff2b98661fc77dbcbcf2fd938d48a1ba8e2ccc4916265ecebaa5a84bda462aL99' target='_blank'>Link</a></div><div id='project'> Project Name: batra-mlp-lab/visdial-challenge-starter-pytorch</div><div id='commit'> Commit Name: b4a66d31cbd7dd296bb524f0512e7cfc0673495c</div><div id='time'> Time: 2019-04-10</div><div id='author'> Author: karandesai281196@gmail.com</div><div id='file'> File Name: data/extract_features_detectron.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: detect_image</div><BR>

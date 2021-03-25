@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            fg_cnt = 0
+            self.rpn_loss_cls = 0
+            <a id="change">for i in range(batch_size):
+                rpn_keep = rpn_label[i].ne(-1).nonzero().squeeze()
+                rpn_keep_v = Variable(rpn_keep)
+                rpn_cls_score_single = torch.index_select(rpn_cls_score[i], 0, rpn_keep_v)
+                rpn_label_tmp = torch.index_select(rpn_label[i], 0, rpn_keep)
+                rpn_label_v = Variable(rpn_label_tmp.long())
+
+                fg_cnt += torch.sum(rpn_label_v.data.ne(0))
+
+                self.rpn_loss_cls += F.cross_entropy(rpn_cls_score_single, rpn_label_v)
+
+           </a> self.rpn_loss_cls /= batch_size
+
+            rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = rpn_data[1:]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 self.rpn_loss_cls /= batch_size
+
+            rpn_keep = Variable(<a id="change">rpn_label.view(-1).ne(-1).nonzero().view(-1)</a>)
+            rpn_cls_score = torch.index_select(rpn_cls_score.view(-1,2), 0, rpn_keep)
+            <a id="change">rpn_label = torch.index_select(rpn_label.view(-1), 0, rpn_keep.data)</a>
+            <a id="change">rpn_label = Variable(rpn_label.long())</a>
+            self.rpn_loss_cls = F.cross_entropy(rpn_cls_score, rpn_label)
+            fg_cnt = torch.sum(rpn_label.data.ne(0))
+
+            rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = rpn_data[1:]</code></pre>

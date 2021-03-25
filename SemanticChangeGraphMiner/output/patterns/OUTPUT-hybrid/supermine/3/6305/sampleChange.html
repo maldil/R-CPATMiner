@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                            for i in range(self.bucket_max_width + 1)}
+
+        filename_queue = tf.train.string_input_producer([self.annotation_path], num_epochs=self.epochs)
+        <a id="change">self</a>.images, self.labels = parse_tfrecords(filename_queue)
+
+    def clear(self):
+        self.bucket_data = {i: BucketData()</code></pre><h3>After Change</h3><pre><code class='java'>
+        dataset = tf.contrib.data.TFRecordDataset([self.annotation_path])
+        dataset = dataset.map(self._parse_record)
+        dataset = dataset.shuffle(buffer_size=10000)
+        <a id="change">self.dataset = dataset.repeat(self.epochs)</a>
+
+    def clear(self):
+        self.bucket_data = {i: BucketData()
+                            for i in range(self.bucket_max_width + 1)}</code></pre>

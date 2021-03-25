@@ -1,0 +1,92 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return kwargs
+
+    def updatePixels(self, tlc, shape, props, **pixelBlocks):
+        <a id="change">t</a> = <a id="change">np</a>.array(pixelBlocks[&quottemperature_pixels&quot], dtype=&quotf4&quot, copy=False).flatten()
+        r = np.array(pixelBlocks[&quotrh_pixels&quot], dtype=&quotf4&quot, copy=False).flatten()
+
+        &#47&#47 transform t to Fahrenheit space
+        if self.tempUnits == &quotk&quot:
+            t = (1.8 * t) - 459.67
+        elif self.tempUnits == &quotc&quot:
+            t = (1.8 * t) + 32.
+
+        <a id="change">tr</a> = t * r
+        rr = r * r
+        <a id="change">tt</a> = t * t
+        ttr = tt * r
+        trr = t * rr
+        ttrr = ttr * r
+
+        &#47&#47 compute simple heat index
+        <a id="change">H</a> = .5 * (t + 61. + (((t - 68.) * 1.2) + (r * .094)))   &#47&#47 simple heat index
+        a = ((H + t) / 2.) &gt; 80
+
+        &#47&#47 compute heat-index using Rothfusz&quots full regression model
+        <a id="change">fullHI</a> = (-42.379 + (2.04901523 * t) + (10.14333127 * r) - (0.22475541 * tr) 
+                    - (6.83783e-3 * tt) - (5.481717e-2 * rr) + (1.22874e-3 * ttr) 
+                    + (8.5282e-4 * trr) - (1.99e-6 * ttrr))
+
+        &#47&#47 apply adjustments
+        b = a & ((r &lt; 13) & ((t &gt;= 80.) | (t &lt;= 112)))
+        fullHI[b] -= (((13. - r) / 4.) * np.sqrt((17. - np.abs(t-95.)) / 17.))[b]
+        
+        <a id="change">b</a> = a & ((r &gt; 85) & ((t &gt;= 80.) | (t &lt;= 87)))
+        fullHI[b] += (((t - 85.) / 10.) * ((87. - t) / 5.))[b]
+        
+        &#47&#47 use full heat-index conditionally
+        H[a] = fullHI[a]
+
+        &#47&#47 transform HI to desired output space
+        if self.hiUnits == &quotk&quot:
+            <a id="change">H</a> = (H + 459.67) / 1.8
+        elif self.hiUnits == &quotc&quot:
+            H = (H - 32.) / 1.8
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return kwargs
+
+    def updatePixels(self, tlc, shape, props, **pixelBlocks):
+        <a id="change">t</a> = <a id="change">np</a>.array(pixelBlocks[&quottemperature_pixels&quot], dtype=&quotf4&quot, copy=False)[0].flatten()
+        r = np.array(pixelBlocks[&quotrh_pixels&quot], dtype=&quotf4&quot, copy=False)[0].flatten()
+
+        &#47&#47 transform t to Fahrenheit space
+        if self.tempUnits == &quotk&quot:
+            t = (1.8 * t) - 459.67
+        elif self.tempUnits == &quotc&quot:
+            t = (1.8 * t) + 32.
+
+        <a id="change">tr</a> = t * r
+        rr = r * r
+        <a id="change">tt</a> = t * t
+        ttr = tt * r
+        trr = t * rr
+        ttrr = ttr * r
+
+        &#47&#47 compute simple heat index
+        <a id="change">H</a> = .5 * (t + 61. + (((t - 68.) * 1.2) + (r * .094)))   &#47&#47 simple heat index
+        a = ((H + t) / 2.) &gt; 80
+
+        &#47&#47 compute heat-index using Rothfusz&quots full regression model
+        <a id="change">fullHI</a> = (-42.379 + (2.04901523 * t) + (10.14333127 * r) - (0.22475541 * tr) 
+                    - (6.83783e-3 * tt) - (5.481717e-2 * rr) + (1.22874e-3 * ttr) 
+                    + (8.5282e-4 * trr) - (1.99e-6 * ttrr))
+
+        &#47&#47 apply adjustments
+        b = a & ((r &lt; 13) & (t &gt;= 80.) & (t &lt;= 112))
+        fullHI[b] -= (((13. - r) / 4.) * np.sqrt((17. - np.abs(t-95.)) / 17.))[b]
+
+        <a id="change">b</a> = a & ((r &gt; 85) & (t &gt;= 80.) & (t &lt;= 87))
+        fullHI[b] += (((t - 85.) / 10.) * ((87. - t) / 5.))[b]
+
+        &#47&#47 use full heat-index conditionally
+        H[a] = fullHI[a]
+
+        &#47&#47 transform HI to desired output space
+        if self.hiUnits == &quotk&quot:
+            <a id="change">H</a> = (H + 459.67) / 1.8
+        elif self.hiUnits == &quotc&quot:
+            H = (H - 32.) / 1.8
+</code></pre>

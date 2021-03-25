@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nn_state = PositiveWaveFunction(num_visible=nv, num_hidden=nh, gpu=False)
+
+        space = nn_state.generate_hilbert_space(nv)
+        <a id="change">callbacks = [
+            MetricEvaluator(
+                log_every,
+                {"Fidelity": ts.fidelity, "KL": ts.KL},
+                target=target_psi,
+                space=space,
+                verbose=True,
+            )
+        ]</a>
+
+        initialize_posreal_params(request, nn_state)
+
+        nn_state.fit(</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        fidelities.append(ts.fidelity(nn_state, target_psi, space))
+        KLs.append(ts.KL(nn_state, target_psi, space))
+        <a id="change">print(f"Fidelity: {fidelities[-1]}; KL: {KLs[-1]}.")</a>
+
+    print("\nStatistics")
+    print("----------")
+    print(</code></pre>

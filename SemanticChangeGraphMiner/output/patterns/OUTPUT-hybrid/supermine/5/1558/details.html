@@ -1,0 +1,34 @@
+<html><h3>ae0138c4c9921c4280d20c0351d56ad6de448cfb,arviz/data/io_cmdstan.py,CmdStanConverter,_parse_prior,#CmdStanConverter#,150
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            paths = [paths]
+        chain_data = []
+        for path in paths:
+            <a id="change">parsed_output = _read_output(path)</a>
+            for sample, sample_stats, config, adaptation, timing in parsed_output:
+                <a id="change">chain_data.append(
+                    {
+                        "sample": sample,
+                        "sample_stats": sample_stats,
+                        "configuration_info": config,
+                        "adaptation_info": adaptation,
+                        "timing_info": timing,
+                    }
+                )</a>
+        self.prior = [item["sample"] for item in chain_data]
+        self.sample_stats_prior = [item["sample_stats"] for item in chain_data]
+
+    @requires("posterior")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        attrs = {}
+        for item in chain_data:
+            <a id="change">for key, value in item["configuration_info"].items():
+                if key not in attrs:
+                    attrs[key] = []
+                attrs[key].append(value)
+       </a> self.attrs_prior = attrs
+
+    @requires("posterior")
+    def posterior_to_xarray(self):</code></pre><img src="8050719.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL119' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_prior</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL128' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_posterior</div><BR><BR><div id='link'><a href='https://github.com/MycroftAI/padatious/commit/a1383be585a1798a3333139c4c1be149d3c5a454#diff-3bf89921fb04d56c333b5fac3d2accad6e915bb43feb030cbb6be39aa5c7c2d6L138' target='_blank'>Link</a></div><div id='project'> Project Name: MycroftAI/padatious</div><div id='commit'> Commit Name: a1383be585a1798a3333139c4c1be149d3c5a454</div><div id='time'> Time: 2017-09-15</div><div id='author'> Author: matthew3311999@gmail.com</div><div id='file'> File Name: padatious/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: resolve_conflicts</div><BR>

@@ -1,0 +1,24 @@
+<html><h3>07e464d81392c4e918e8c0f394793449866b0166,tensorpack/models/layer_norm.py,,InstanceNorm,#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mean, var = tf.nn.moments(x, axis, keep_dims=True)
+
+    if not use_affine:
+        return tf.divide(x - mean, <a id="change">tf.sqrt(var + epsilon)</a>, name=&quotoutput&quot)
+
+    beta = tf.get_variable(&quotbeta&quot, [ch], initializer=tf.constant_initializer())
+    beta = tf.reshape(beta, new_shape)</code></pre><h3>After Change</h3><pre><code class='java'>
+        beta = tf.reshape(beta, new_shape)
+    else:
+        beta = tf.zeros([1, 1, 1, 1], name=&quotbeta&quot, dtype=x.dtype)
+    <a id="change">if scale:
+        gamma = tf.get_variable(&quotgamma&quot, [ch], initializer=gamma_initializer)
+        gamma = tf.reshape(gamma, new_shape)
+    else:
+        gamma = tf.ones([1, 1, 1, 1], name=&quotgamma&quot, dtype=x.dtype)
+   </a> ret = tf.nn.batch_normalization(x, mean, var, beta, gamma, epsilon, name=&quotoutput&quot)
+
+    vh = ret.variables = VariableHolder()
+    if scale:</code></pre><img src="22947498.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorpack/tensorpack/commit/07e464d81392c4e918e8c0f394793449866b0166#diff-015352482dc875bea11e6bd395f24f4489ac02c7cdb58bf11933c01636706bf4L94' target='_blank'>Link</a></div><div id='project'> Project Name: tensorpack/tensorpack</div><div id='commit'> Commit Name: 07e464d81392c4e918e8c0f394793449866b0166</div><div id='time'> Time: 2020-03-08</div><div id='author'> Author: ppwwyyxx@users.noreply.github.com</div><div id='file'> File Name: tensorpack/models/layer_norm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: InstanceNorm</div><BR><BR><div id='link'><a href='https://github.com/keunwoochoi/kapre/commit/fe8a6175dc98c7bc3b667fe88afcb5c2a4c94169#diff-05bc302f37b3e89ef01404a0817dc09cec4cfa614684505c5a528733e3dcc7e2L144' target='_blank'>Link</a></div><div id='project'> Project Name: keunwoochoi/kapre</div><div id='commit'> Commit Name: fe8a6175dc98c7bc3b667fe88afcb5c2a4c94169</div><div id='time'> Time: 2017-01-17</div><div id='author'> Author: gnuchoi+github@gmail.com</div><div id='file'> File Name: kapre/stft.py</div><div id='class'> Class Name: Stft</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/wenwei202/iss-rnns/commit/fb98d7bb1877611d096861d5808cf09003ed718a#diff-a930d49b33c3c6d8cb745569ea81c576a4d9eb92229b7368308a521e45061946L185' target='_blank'>Link</a></div><div id='project'> Project Name: wenwei202/iss-rnns</div><div id='commit'> Commit Name: fb98d7bb1877611d096861d5808cf09003ed718a</div><div id='time'> Time: 2017-06-30</div><div id='author'> Author: weiwen.web@gmail.com</div><div id='file'> File Name: my/tensorflow/general.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_dimen_grouplasso</div><BR>

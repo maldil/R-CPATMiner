@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    for fdr, fdw in zip(stream, newstream):
+        fdr.close()
+        <a id="change">fdw.close()</a>
+
+
+if __name__ == "__main__":
+    parsed_args = parseargs()</code></pre><h3>After Change</h3><pre><code class='java'>
+    if args.num_shards == 1:
+        newstream = [[open(item + suffix, "w") for item in name]]
+    else:
+        <a id="change">newstream = [[open(item + "-%s-of-%s" % (i, args.num_shards), "w")
+                      for item in name] for i in range(args.num_shards)]</a>
+
+    for idx in indices.tolist():
+        lines = [item[idx] for item in data]
+</code></pre>

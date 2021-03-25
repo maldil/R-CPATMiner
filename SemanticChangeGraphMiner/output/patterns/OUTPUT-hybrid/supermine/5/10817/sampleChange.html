@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 ------------------ build target_net ------------------
+        with tf.variable_scope(&quottarget_net&quot):
+            &#47&#47 c_names(collections_names) are the collections to store variables
+            c_names = <a id="change">[&quottarget_net_params&quot, tf.GraphKeys.GLOBAL_VARIABLES]</a>
+            self.q_next = build_layers(self.s_, c_names, n_l1, w_initializer, b_initializer)
+
+        with tf.variable_scope(&quotq_target&quot):
+            q_target = self.r + self.gamma * tf.reduce_max(self.q_next, axis=1, name=&quotQmax_s_&quot)    &#47&#47 shape=(None, )</code></pre><h3>After Change</h3><pre><code class='java'>
+            q_target = self.r + self.gamma * tf.reduce_max(self.q_next, axis=1, name=&quotQmax_s_&quot)    &#47&#47 shape=(None, )
+            self.q_target = tf.stop_gradient(q_target)
+        with tf.variable_scope(&quotq_eval&quot):
+            a_indices = tf.stack(<a id="change">[tf.range(tf.shape(self.a)[0], dtype=tf.int32), self.a]</a>, axis=1)
+            self.q_eval_wrt_a = tf.gather_nd(params=self.q_eval, indices=a_indices)    &#47&#47 shape=(None, )
+        with tf.variable_scope(&quotloss&quot):
+            self.loss = tf.reduce_mean(tf.squared_difference(self.q_target, self.q_eval_wrt_a, name=&quotTD_error&quot))</code></pre>

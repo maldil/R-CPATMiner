@@ -1,0 +1,21 @@
+<html><h3>967e77866ca63db25f5b688db4be5d55480a1102,mlxtend/classifier/softmax_regression.py,SoftmaxRegression,_softmax,#SoftmaxRegression#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return (X.dot(W) + b)
+
+    def _softmax(self, z):
+        return (np.exp(z.T) / np.sum(<a id="change">np.exp(z)</a>, axis=1)).T
+
+    def _cross_entropy(self, output, y_target):
+        return - np.sum(np.log(output) * (y_target), axis=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return (X.dot(W) + b)
+
+    def _softmax(self, z):
+        e_x = np.exp(z - <a id="change">z.max(axis=1, keepdims=True)</a>)
+        <a id="change">out = e_x / e_x.sum(axis=1, keepdims=True)</a>
+        return out
+        &#47&#47return (np.exp(z.T) / np.sum(np.exp(z), axis=1)).T
+
+    def _cross_entropy(self, output, y_target):</code></pre><img src="9267133.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/967e77866ca63db25f5b688db4be5d55480a1102#diff-a448e95b74a0c3db02382f2a8eeed0913683529468650e1ba40801216eebd2c7L82' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 967e77866ca63db25f5b688db4be5d55480a1102</div><div id='time'> Time: 2016-07-13</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/classifier/softmax_regression.py</div><div id='class'> Class Name: SoftmaxRegression</div><div id='method'> Method Name: _softmax</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/967e77866ca63db25f5b688db4be5d55480a1102#diff-f112e964218071c9859ffd593935e9e9d71f7ac4595d17d46f8f4c3786e562d4L238' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 967e77866ca63db25f5b688db4be5d55480a1102</div><div id='time'> Time: 2016-07-13</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/classifier/multilayerperceptron.py</div><div id='class'> Class Name: MultiLayerPerceptron</div><div id='method'> Method Name: _softmax</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/2adbc42ae538a30bb310c575867bb9622bf9c4b3#diff-3d1bec78cdea4c71c5088a205abc19f9cb797aad5075c24ab41d4922179e6bc0L573' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 2adbc42ae538a30bb310c575867bb9622bf9c4b3</div><div id='time'> Time: 2019-02-21</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/cox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: loss_cox_ph</div><BR>

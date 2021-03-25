@@ -1,0 +1,43 @@
+<html><h3>5214393bb75498ded8fc140914edd79c1799af05,pyroomacoustics/beamforming.py,Beamformer,steering_vector_2D_from_point,#Beamformer#,361
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            X = source[:, np.newaxis]
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            X -= self.center
+            Xn = np.sqrt(np.sum(X**2, axis=0))
+            X *= constants.get(&quotffdist&quot)/Xn
+            X += self.center
+
+       </a> D = distance(self.R, X)
+        omega = 2 * np.pi * frequency
+
+        if attn:</code></pre><h3>After Change</h3><pre><code class='java'>
+            p /= np.linalg.norm(p)
+
+            &#47&#47 The projected microphone distances on the unit vectors
+            D = <a id="change">np.dot(self.R.T, p)</a>
+
+            &#47&#47 subtract minimum in each column
+            D -= np.min(D)
+
+        else:
+
+            D = distance(self.R, X)
+
+        phase = np.exp(-1j * omega * D / constants.get(&quotc&quot))
+
+        if attn:
+            &#47&#47 TO DO 1: This will mean slightly different absolute value for
+            &#47&#47 every entry, even within the same steering vector. Perhaps a
+            &#47&#47 better paradigm is far-field with phase carrier.
+            return 1. / (4 * np.pi) / D * phase
+        else:
+            <a id="change">return phase</a>
+
+    def response(self, phi_list, frequency):
+
+        i_freq = np.argmin(np.abs(self.frequencies - frequency))</code></pre><img src="33556536.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/5214393bb75498ded8fc140914edd79c1799af05#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 5214393bb75498ded8fc140914edd79c1799af05</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/55a12239a7638c0052b1f91f640f819a8c71face#diff-5dfdf9ce647cb4af1e694c363a20c9b3825066680fe0d56198a401735ed9a425L162' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 55a12239a7638c0052b1f91f640f819a8c71face</div><div id='time'> Time: 2017-05-12</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: __mul__</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/7a77233231c67038271c9945760b7a1d711b242d#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 7a77233231c67038271c9945760b7a1d711b242d</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/55a12239a7638c0052b1f91f640f819a8c71face#diff-3accf5b124fbceeb3c3291321de2714fb45e270c153414e48a68c61b2b6260faL261' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 55a12239a7638c0052b1f91f640f819a8c71face</div><div id='time'> Time: 2017-05-12</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/so3.py</div><div id='class'> Class Name: SO3</div><div id='method'> Method Name: __mul__</div><BR>

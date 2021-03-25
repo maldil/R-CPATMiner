@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            region=region,
+            jobId=job_id).execute()
+        &#47&#47 Handle exceptions
+        <a id="change">if result[&quotstatus&quot][&quotstate&quot] == &quotERROR&quot:
+            raise Exception(result[&quotstatus&quot][&quotdetails&quot])
+        elif result[&quotstatus&quot][&quotstate&quot] == &quotDONE&quot:
+            print(&quotJob finished.&quot)
+            return result
+&#47&#47 [END dataproc_wait]
+
+
+&#47&#47 [START dataproc_get_client]
+</a>def get_client():
+    Builds an http client authenticated with the service account
+    credentials.
+    dataproc = googleapiclient.discovery.build(&quotdataproc&quot, &quotv1&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    while True:
+        job = dataproc.get_job(project, region, job_id)
+        &#47&#47 Handle exceptions
+        <a id="change">if job.status.State.Name(job.status.state) == &quotERROR&quot:
+            raise Exception(job.status.details)
+        elif job.status.State.Name(job.status.state) == &quotDONE&quot:
+            print(&quotJob finished.&quot)
+            return job
+&#47&#47 [END dataproc_wait]
+
+
+</a>def main(project_id,
+         zone,
+         cluster_name,
+         bucket_name,</code></pre>

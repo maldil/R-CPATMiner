@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __init__(self, opt):
+        self.opt = opt
+        self.device = torch.device(<a id="change">&quotcuda&quot if opt.cuda else &quotcpu&quot</a>)
+
+        checkpoint = torch.load(opt.model)
+        model_opt = checkpoint[&quotsettings&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.register_buffer(&quotinit_seq&quot, torch.LongTensor([[trg_bos_idx]]))
+        self.register_buffer(
+            &quotblank_seqs&quot, 
+            <a id="change">torch.full((beam_size, max_seq_len), trg_pad_idx, dtype=torch.long)</a>)
+        self.blank_seqs[:, 0] = self.trg_bos_idx
+        self.register_buffer(
+            &quotlen_map&quot, </code></pre>

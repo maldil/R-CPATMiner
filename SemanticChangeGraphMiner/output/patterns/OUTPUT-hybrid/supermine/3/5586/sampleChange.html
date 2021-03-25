@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            idx_result = output_subscript
+        else:
+            sort_result = [(dimension_dict[ind], ind) for ind in out_inds]
+            idx_result = "".join([x[1] for x in <a id="change">sorted(sort_result)</a>])
+
+        shp_result = parser.find_output_shape(tmp_inputs, tmp_shapes, idx_result)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            &#47&#47 use tensordot order to minimize transpositions
+            all_input_inds = "".join(tmp_inputs)
+            idx_result = <a id="change">"".join(sorted(out_inds, key=all_input_inds.find))</a>
+
+        shp_result = parser.find_output_shape(tmp_inputs, tmp_shapes, idx_result)
+
+        input_list.append(idx_result)</code></pre>

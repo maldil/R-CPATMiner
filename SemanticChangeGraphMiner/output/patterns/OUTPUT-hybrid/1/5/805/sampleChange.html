@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 map image into target image
+        M = np.float32([[fx, 0, tx], [0, fy, ty]])
+        target = np.ones(imgSize[::-1]) * <a id="change">np.random.uniform(0, 255)</a>
+        img = cv2.warpAffine(img, M, dsize=imgSize, dst=target, borderMode=cv2.BORDER_TRANSPARENT)
+
+    &#47&#47 no data augmentation
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        h, w = img.shape
+        f = min(wt / w, ht / h)
+        fx = f * np.random.uniform(0.75, 1.25)
+        fy = f * <a id="change">np.random.uniform(0.75, 1.25)</a>
+
+        &#47&#47 random position around center
+        txc = (wt - w * fx) / 2
+        tyc = (ht - h * fy) / 2
+        freedom_x = max((wt - fx * w) / 2, 0) + wt / 10
+        freedom_y = <a id="change">max((ht - fy * h) / 2, 0) + ht / 10</a>
+        tx = txc + np.random.uniform(-freedom_x, freedom_x)
+        ty = tyc + np.random.uniform(-freedom_y, freedom_y)
+
+        &#47&#47 map image into target image</code></pre>

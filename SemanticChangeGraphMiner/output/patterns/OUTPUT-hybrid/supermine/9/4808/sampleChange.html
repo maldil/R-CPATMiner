@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.last_uuid = None
+
+        &#47&#47 store attributes as kwargs for calls to eval
+        self.kwargs = [tf_op.get_attr(attr) <a id="change">for</a> <a id="change">attr</a> in (self.attrs or [])]
+
+        &#47&#47 store output dtypes for calls to eval when x is True
+        self.output_dtypes = [dtype_map[dtype] for dtype in tf_op._output_types]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 store attributes as kwargs for calls to eval
+        self.kwargs = []
+        <a id="change">for attr in self.attrs:
+            try:
+                value = tf_op.get_attr(attr)
+            except ValueError:
+                value = None
+            self.kwargs.append(value)
+
+        &#47&#47 store output dtypes for calls to eval when x is True
+       </a> self.output_dtypes = [dtype_map[dtype] for dtype in tf_op._output_types]
+
+    @classmethod
+    def new(cls, tf_op, *args, **kwargs):</code></pre>

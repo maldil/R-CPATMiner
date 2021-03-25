@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                print("")
+                print("&gt; fitting estimator n°"+ str(c+1) + " : "+ str(clf.get_params())+" ...")
+
+            start_time = <a id="change">time.time()</a>
+            y_pred = cross_val_predict(estimator = clf, X = X, y = y, cv = cv)     &#47&#47for each base estimator, we create the meta feature on train set
+            end_time = time.time()
+
+            preds[<a id="change">"est"+str(c+1)+"_("+str(end_time-start_time)+"sec)"</a>] = y_pred
+
+            clf.fit(X, y)  &#47&#47 and we refit the base estimator on entire train set
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            reg.fit(X, y)  &#47&#47 and we refit the base estimator on entire train set
+
+        layer = 1
+        <a id="change">while(len(np.intersect1d(X.columns, ["layer"+str(layer)+"_"+s for s in preds.columns]))&gt;0):
+            layer = layer + 1
+        preds.columns = ["layer"+str(layer)+"_"+s f</a>or s in preds.columns]            
+            
+        self.__fittransformOK = True
+</code></pre>

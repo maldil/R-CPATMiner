@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def __getitem__(self, index):
+    crop_img = self.load_img(self.images[index], flip=self.flip, random_crop=True)
+    raw_data = crop_img.transpose(<a id="change">(2, 0, 1)</a>)
+    data = ((torch.FloatTensor(raw_data) / 255.0) - 0.5) * 2
+    return data
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  def __getitem__(self, index):
+    if self.dataset_size == self.A_size:
+      data_A = self.load_img(self.A[index], self.input_dim_A)
+      <a id="change">data_B = self.load_img(self.B[random.randint(0, self.B_size - 1)], self.input_dim_B)</a>
+    else:
+      <a id="change">data_A = self.load_img(self.A[random.randint(0, self.A_size - 1)], self.input_dim_A)</a>
+      data_B = self.load_img(self.B[index], self.input_dim_B)
+    return data_A, data_B
+
+  def load_img(self, img_name, input_dim):</code></pre>

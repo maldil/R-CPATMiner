@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    rvs, crvs, rv_mode = normalize_rvs(dist, rvs, crvs, rv_mode)
+
+    <a id="change">one = sum([H(dist, rv, crvs, rv_mode=rv_mode) for rv in rvs])</a>
+    two = H(dist, set().union(*rvs), crvs, rv_mode=rv_mode)
+    <a id="change">T = one - two</a>
+
+    return T
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        b = entropy(dist, crvs=crvs)
+        return a - b
+
+    <a id="change">J = min( I_P(p) for p in partitions(map(tuple, rvs)) if len(p) &gt; 1 )</a>
+
+    return J
+</code></pre>

@@ -1,0 +1,41 @@
+<html><h3>a092a5612c48a8a61c7d3deadf3749338ea4b64d,tests/test_regression.py,,check_linear_models,#,160
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 catastrophic happened. Note though that we cannot
+    &#47&#47 test feature weights if we are using feature hashing
+    &#47&#47 since model_params is not defined with a featurehasher.
+    <a id="change">if not use_feature_hashing:
+
+        &#47&#47 get the weights for this trained model
+        learned_weights = learner.model_params[0]
+
+        for feature_name in learned_weights:
+            learned_w = math.ceil(learned_weights[feature_name])
+            given_w = math.ceil(weightdict[feature_name])
+            eq_(learned_w, given_w)
+
+    &#47&#47 now generate the predictions on the test FeatureSet
+   </a> predictions = learner.predict(test_fs)
+
+    &#47&#47 now make sure that the predictions are close to
+    &#47&#47 the actual test FeatureSet labels that we generated</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 get the weights for this trained model
+    learned_weights = learner.model_params[0]
+
+    <a id="change">for feature_name in learned_weights:
+        learned_w_ceil = math.ceil(learned_weights[feature_name])
+        given_w_ceil = math.ceil(weightdict[feature_name])
+        learned_w_round = round(learned_weights[feature_name], 0)
+        given_w_round = round(weightdict[feature_name], 0)
+        ceil_equal = learned_w_ceil == given_w_ceil
+        round_equal = learned_w_round == given_w_round
+        either_equal = ceil_equal or round_equal
+        assert either_equal
+
+    &#47&#47 now generate the predictions on the test FeatureSet
+   </a> predictions = learner.predict(test_fs)
+
+    &#47&#47 now make sure that the predictions are close to
+    &#47&#47 the actual test FeatureSet labels that we generated</code></pre><img src="13704405.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EducationalTestingService/skll/commit/a092a5612c48a8a61c7d3deadf3749338ea4b64d#diff-6edc05e4134fe68983d08319a22f62d5e4efdd829656595282cf6ef97011c13aL192' target='_blank'>Link</a></div><div id='project'> Project Name: EducationalTestingService/skll</div><div id='commit'> Commit Name: a092a5612c48a8a61c7d3deadf3749338ea4b64d</div><div id='time'> Time: 2019-02-20</div><div id='author'> Author: nmadnani@ets.org</div><div id='file'> File Name: tests/test_regression.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_linear_models</div><BR><BR><div id='link'><a href='https://github.com/open-mmlab/mmdetection/commit/3a0e75b08141bf635e59de571dec190313d3ca60#diff-15467ec1e4efe05dadbd28fcd365ba0171a2f2baa3433e4ce0cbcb9292cb47b4L297' target='_blank'>Link</a></div><div id='project'> Project Name: open-mmlab/mmdetection</div><div id='commit'> Commit Name: 3a0e75b08141bf635e59de571dec190313d3ca60</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: yhcao6@gmail.com</div><div id='file'> File Name: mmdet/datasets/custom.py</div><div id='class'> Class Name: CustomDataset</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/open-mmlab/mmdetection/commit/3a0e75b08141bf635e59de571dec190313d3ca60#diff-631138efc03b7c62a84b92a9ba794cee9975a68bc9390f7b4ee10170000b66c2L62' target='_blank'>Link</a></div><div id='project'> Project Name: open-mmlab/mmdetection</div><div id='commit'> Commit Name: 3a0e75b08141bf635e59de571dec190313d3ca60</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: yhcao6@gmail.com</div><div id='file'> File Name: mmdet/datasets/voc.py</div><div id='class'> Class Name: VOCDataset</div><div id='method'> Method Name: evaluate</div><BR>

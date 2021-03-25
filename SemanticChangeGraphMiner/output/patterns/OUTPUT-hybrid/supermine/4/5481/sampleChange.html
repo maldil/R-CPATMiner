@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                              barcode_info=barcode_info)
+
+    &#47&#47 Initialize per-library metrics
+    lib_metrics = <a id="change">defaultdict(lambda: {
+        cr_mol_counter.USABLE_READS_METRIC: 0
+    })</a>
+
+    &#47&#47 Record read-counts per molecule. Note that UMIs are not contiguous
+    &#47&#47 in the input because no sorting was done after UMI correction.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Initialize per-library metrics
+    lib_metrics = {}
+    <a id="change">for lib_idx in xrange(len(library_info)):
+        lib_metrics[str(lib_idx)] = {}
+        lib_metrics[str(lib_idx)][cr_mol_counter.USABLE_READS_METRIC] = 0
+
+
+    &#47&#47 Record read-counts per molecule. Note that UMIs are not contiguous
+    &#47&#47 in the input because no sorting was done after UMI correction.
+
+   </a> prev_gem_group = None
+    prev_barcode_idx = None
+
+    for (gem_group, barcode_seq), reads_iter in \</code></pre>

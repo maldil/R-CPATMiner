@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ts_data = np.loadtxt(f, delimiter=sep)
+    ts_data = ts_data[:, :3]  &#47&#47 Only using T, M, E
+    for row in ts_data:
+        if <a id="change">len(row)</a> &lt; 2:
+            raise custom_exceptions.DataFormatError(
+                "Incomplete or improperly formatted time "
+                "series data file provided.")</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise custom_exceptions.DataFormatError(Incomplete or improperly
+                                                formatted time series data file
+                                                provided.)
+    elif <a id="change">ts_data</a>.shape[1] == 1:
+        ts_data = np.c_[np.linspace(0, cfg.DEFAULT_MAX_TIME, len(ts_data)),
+                        ts_data,
+                        np.repeat(cfg.DEFAULT_ERROR_VALUE, len(ts_data))]
+    elif ts_data.shape[1] == 2:
+        ts_data = np.c_[ts_data,
+                        <a id="change">np.repeat(cfg.DEFAULT_ERROR_VALUE, len(ts_data))</a>]
+    return ts_data.T
+
+</code></pre>

@@ -1,0 +1,30 @@
+<html><h3>1b92598dbfb489fe0f7a1c9b2015db5d702be948,thinc/layers/embed.py,,Embed,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    attrs: Dict[str, Any] = {"column": column}
+    if dropout is not None:
+        attrs["dropout_rate"] = dropout
+    <a id="change">return Model(
+        "embed",
+        forward,
+        init=partial(init, initializer),
+        attrs=attrs,
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )</a>
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    nV = model.get_dim("nV")</code></pre><h3>After Change</h3><pre><code class='java'>
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )
+    model = model if column is None else <a id="change">chain(ints_getitem(column), model)</a>
+    model.attrs["column"] = column
+    <a id="change">return cast(Model[InT, OutT], model)</a>
+
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:</code></pre><img src="26865563.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1b92598dbfb489fe0f7a1c9b2015db5d702be948#diff-2000e8749a91df13f189f011eef0f2fb64aa34578021a257f7791b78dcdd9a88L24' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1b92598dbfb489fe0f7a1c9b2015db5d702be948</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/embed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Embed</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/97b2ccec94583a7876566a340f06e84a63340272#diff-955d28881832469ea2b02793af25ea54cee186fcbfc2828a65539b6e7f566f00L210' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 97b2ccec94583a7876566a340f06e84a63340272</div><div id='time'> Time: 2015-03-26</div><div id='author'> Author: pratyaksh@me.com</div><div id='file'> File Name: pgmpy/inference/ExactInference.py</div><div id='class'> Class Name: VariableElimination</div><div id='method'> Method Name: induced_graph</div><BR><BR><div id='link'><a href='https://github.com/coala/coala-bears/commit/955d55293e8a2a96b2427af8d2c5de4cba6b1e79#diff-cb84eb3ce6b91f24a9a5832468e88f874ee010ca4b8144d9e3585e3ad3bf02e2L36' target='_blank'>Link</a></div><div id='project'> Project Name: coala/coala-bears</div><div id='commit'> Commit Name: 955d55293e8a2a96b2427af8d2c5de4cba6b1e79</div><div id='time'> Time: 2016-09-08</div><div id='author'> Author: mak95@arcor.de</div><div id='file'> File Name: bears/xml2/XMLBear.py</div><div id='class'> Class Name: XMLBear</div><div id='method'> Method Name: process_output</div><BR>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            input = data[&quotinput&quot]
+            if not args.cpu:
+                input = input.cuda()
+            output = <a id="change">model(input, args.scale).cpu()</a> + data[&quotbicubic&quot]
+            sr_img = tensor2im(output, mean, stddev)
+            toc = time.time()
+            if &quottarget&quot in data:</code></pre><h3>After Change</h3><pre><code class='java'>
+                data_chunks = DataChunks({&quotinput&quot:data[&quotinput&quot]},
+                                         args.max_dimension,
+                                         args.padding,args.scale)
+                <a id="change">for chunk in data_chunks.iter():
+                    input = chunk[&quotinput&quot]
+                    if not args.cpu:
+                        input = input.cuda()
+                    output = model.predict(input,{},args.scale)
+                    data_chunks.gather(output)
+               </a> output = data_chunks.concatenate() + data[&quotbicubic&quot]
+            else:
+                input = data[&quotinput&quot]
+                if not args.cpu:</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>5dd5b8652f28426322309c4e983c94a3caa8fa8e,libact/query_strategies/variance_reduction.py,VarianceReduction,A,#VarianceReduction#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    grad[i*label_count+j] *= (1-pi[c]) * x[i]
+                    &#47&#47grad.append(pi[c] * (1-pi[c]) * x[i])
+                else:
+                    <a id="change">grad[i*label_count+j]</a> *= (-pi[j]) * x[i]
+                    &#47&#47grad.append(-pi[c] * pi[j] * x[i])
+        &#47&#47grad = np.array(grad)
+        &#47&#47print(np.shape(grad))</code></pre><h3>After Change</h3><pre><code class='java'>
+        _pi = -1 * np.array(pi)
+        _pi[c] += 1
+        grad = pi[c] * np.tile(np.array([x]).T, (1, label_count)) *\
+                        <a id="change">np.tile(np.array([_pi]), (feature_count, 1))</a>
+        grad = grad.reshape((feature_count*label_count))
+
+        return np.dot(grad.T, grad)
+</code></pre><img src="39080900.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/5dd5b8652f28426322309c4e983c94a3caa8fa8e#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL20' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 5dd5b8652f28426322309c4e983c94a3caa8fa8e</div><div id='time'> Time: 2014-12-19</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: A</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/c57ce7f891a91592354b1685d37f2aee39f193f2#diff-f9e5477f7d50c535defccb896f3ac5258c8a44c36a055db76696e0c5c585def5L160' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: c57ce7f891a91592354b1685d37f2aee39f193f2</div><div id='time'> Time: 2015-10-07</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/active_learning_by_learning.py</div><div id='class'> Class Name: Exp4P</div><div id='method'> Method Name: exp4p</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/f8df44a7c24038d0fa3d7b0f7dc2d8c5e952c81a#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L217' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: f8df44a7c24038d0fa3d7b0f7dc2d8c5e952c81a</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR>

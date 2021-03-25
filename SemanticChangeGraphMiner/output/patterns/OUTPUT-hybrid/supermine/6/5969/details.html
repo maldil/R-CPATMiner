@@ -1,0 +1,20 @@
+<html><h3>f0c15f219b0761b14329ddd416cda82fa4bae841,deslib/dcs/mcb.py,MCB,estimate_competence,#MCB#,98
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                clf_competence = <a id="change">[self.processed_dsel[sample_idx][clf_index] for sample_idx in selected_idx]</a>
+                <a id="change">competences[clf_index] = np.mean(np.array(clf_competence))</a>
+
+        return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Use the masked array mean to take into account the removed neighbors
+        processed_pred = np.ma.MaskedArray(self.processed_dsel[idx_neighbors, :], mask=~boolean_mask)
+        competences = <a id="change">np.ma.mean(processed_pred, axis=1)</a>
+
+        return competences
+</code></pre><img src="24545911.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/19a796cf092d0b0f88e2919cbee45bb5270835cf#diff-94220af99e7e87e05109cebdfe1bf2795301e457e9a38123b05bd52449dbc2aaL88' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 19a796cf092d0b0f88e2919cbee45bb5270835cf</div><div id='time'> Time: 2017-06-21</div><div id='author'> Author: rob@luminoso.com</div><div id='file'> File Name: conceptnet5/vectors/retrofit.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: retrofit</div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/9ddaacb9e73ac061c08403e16ac1a4d5364dca9b#diff-638c36321ef34f484acec0bff559e378acf8c5631d33b6db465d4121d8f0e358L37' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 9ddaacb9e73ac061c08403e16ac1a4d5364dca9b</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: carlo.deramo@gmail.com</div><div id='file'> File Name: mushroom_rl/algorithms/value/dqn/rainbow.py</div><div id='class'> Class Name: RainbowNetwork</div><div id='method'> Method Name: forward</div><BR>

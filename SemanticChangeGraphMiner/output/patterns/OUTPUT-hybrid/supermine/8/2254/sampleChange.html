@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 A series of functions that should be overridden by child class:
+    def diff_var_to_replace(self, diff_vars):
+        <a id="change">raise NotImplementedError</a>
+    def get_dimension_code(self, diff_num):
+        raise NotImplementedError
+    def yvector_code(self, diff_vars):
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+        return diff_vars
+
+    def diff_var_to_replace(self, diff_vars):
+        <a id="change">variables = self.variables</a>
+        to_replace = {}
+        <a id="change">for var, diff_num in diff_vars.items():
+            lhs = self.diff_var_declaration(var, diff_num)
+            to_replace[lhs] = &quotf[{ind}]&quot.format(ind=diff_num)
+            var_obj = variables[var]
+            array_name = self.generator.get_array_name(var_obj, access_data=True)
+            idx_name = &quot_idx&quot &#47&#47TODO: could be dynamic?
+            replace_what = &quot{var} = {array_name}[{idx_name}]&quot.format(array_name=array_name, idx_name=idx_name, var=var)
+            replace_with = &quot{var} = y[{ind}]&quot.format(ind=diff_num, var=var)
+            to_replace[replace_what] = replace_with
+            replace_what = &quot{array_name}[{idx_name}] = {var}&quot.format(array_name=array_name,
+                                                                     idx_name=idx_name,
+                                                                     var=var)
+            replace_with = &quot&quot
+            to_replace[replace_what] = replace_with
+       </a> return to_replace
+
+    def get_dimension_code(self, diff_num):
+        start_function = self.get_syntax(&quotstart_function&quot)</code></pre>

@@ -1,0 +1,33 @@
+<html><h3>ae0138c4c9921c4280d20c0351d56ad6de448cfb,arviz/data/io_cmdstan.py,CmdStanConverter,_parse_prior,#CmdStanConverter#,150
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for path in paths:
+            parsed_output = _read_output(path)
+            for sample, sample_stats, config, adaptation, timing in parsed_output:
+                <a id="change">chain_data.append(
+                    {
+                        "sample": sample,
+                        "sample_stats": sample_stats,
+                        "configuration_info": config,
+                        "adaptation_info": adaptation,
+                        "timing_info": timing,
+                    }
+                )</a>
+        self.prior = [item["sample"] for item in chain_data]
+        self.sample_stats_prior = [item["sample_stats"] for item in chain_data]
+
+    @requires("posterior")</code></pre><h3>After Change</h3><pre><code class='java'>
+            [item["sample_stats_warmup"] for item in chain_data],
+        )
+
+        <a id="change">attrs = {}</a>
+        for item in chain_data:
+            for key, value in item["configuration_info"].items():
+                <a id="change">if key not in attrs:
+                    attrs[key] = []
+               </a> <a id="change">attrs</a>[<a id="change">key</a>].append(value)
+        self.attrs_prior = attrs
+
+    @requires("posterior")</code></pre><img src="30503969.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL119' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_prior</div><BR><BR><div id='link'><a href='https://github.com/daniellerch/aletheia/commit/e7eefe879b9e5b7a279d80588af59d08f21365a1#diff-555f971aad1d5492df871ebc1a0cc93f7709d804abfbfa0e728690b3a60d112dL133' target='_blank'>Link</a></div><div id='project'> Project Name: daniellerch/aletheia</div><div id='commit'> Commit Name: e7eefe879b9e5b7a279d80588af59d08f21365a1</div><div id='time'> Time: 2020-11-01</div><div id='author'> Author: kevin.clark@gmail.com</div><div id='file'> File Name: aletheialib/attacks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: difference</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/ae0138c4c9921c4280d20c0351d56ad6de448cfb#diff-96adb5b3a05ea38e4d4d6f6ec1d3b334ada21f4b9a31a0ce4724612c85fd871dL128' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: ae0138c4c9921c4280d20c0351d56ad6de448cfb</div><div id='time'> Time: 2020-08-02</div><div id='author'> Author: ahartikainen@users.noreply.github.com</div><div id='file'> File Name: arviz/data/io_cmdstan.py</div><div id='class'> Class Name: CmdStanConverter</div><div id='method'> Method Name: _parse_posterior</div><BR>

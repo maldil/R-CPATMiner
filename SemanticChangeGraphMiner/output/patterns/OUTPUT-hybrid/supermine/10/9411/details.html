@@ -1,0 +1,30 @@
+<html><h3>2ee8ac1546400645908b61ef015cdf5d71aa34cc,utils/datasets.py,,pad_to_square,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    h, w = image_np.shape[:2]
+    dim_diff = np.abs(h - w)
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    new_shape = (max(<a id="change">[h, w]</a>), max([h, w]), 3)
+    <a id="change">padded_image = np.full(new_shape, constant_value, dtype=np.float32)</a>
+    <a id="change">if h &lt; w:
+        padded_image[pad1 : pad1 + h, :] = image_np
+        padding = (0, pad1, 0, pad2)
+    else:
+        padded_image[:, pad1 : pad1 + w] = image_np
+        padding = (pad1, 0, pad2, 0)
+   </a> <a id="change">return padded_image, padding</a>
+
+
+class ImageFolder(Dataset):
+    def __init__(self, folder_path, img_size=416):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Determine padding
+    pad = ((pad1, pad2), (0, 0), (0, 0)) if h &lt;= w else ((0, 0), (pad1, pad2), (0, 0))
+    &#47&#47 Add padding
+    <a id="change">img = np.pad(img, pad, "constant", constant_values=127.5)</a>
+    <a id="change">return img, pad</a>
+
+
+class ImageFolder(Dataset):
+    def __init__(self, folder_path, img_size=416):</code></pre><img src="36090598.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L21' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_to_square</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/a5f32c41b01f8e058c414668d2f9b578300f45b0#diff-10133cae9f65f101264cf256ebafa04b668a1e17b77384144757661748f66624L72' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: a5f32c41b01f8e058c414668d2f9b578300f45b0</div><div id='time'> Time: 2015-03-14</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/multivariate/entropy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: entropy</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/a1890b56835ef626b1a32edcaf28c1e2b10baa48#diff-5913d75d4eab96cbc660dfc90ca14061f7cb87009154c9c3510226fae1c2b4f0L67' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: a1890b56835ef626b1a32edcaf28c1e2b10baa48</div><div id='time'> Time: 2015-03-19</div><div id='author'> Author: chebee7i@gmail.com</div><div id='file'> File Name: dit/algorithms/maxentropyfw.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: isolate_zeros</div><BR>

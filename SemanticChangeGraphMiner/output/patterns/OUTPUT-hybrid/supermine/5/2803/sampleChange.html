@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for node in graph.nodes:
+            output_used = False
+            for _output in node.outputs:
+                if <a id="change">_output in output_names</a> or _output in use_set:
+                    output_used = True
+                    break
+            if not output_used:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if not output_used:
+                &#47&#47 Remove current node
+                <a id="change">for _input in node.inputs:
+                    uses[_input] -= 1
+                    if uses[_input] == 0:
+                        del uses[_input]
+               </a> nodes_to_be_removed.append(node.name)
+                for parent in node.parents:
+                    parent.children.remove(node)
+</code></pre>

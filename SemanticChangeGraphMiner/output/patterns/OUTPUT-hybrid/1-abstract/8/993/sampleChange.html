@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return F.analyse_dataset(ds)
+
+    def get_model_data(self, name, db_fix=True):
+        predictor_record = <a id="change">Predictor.query.filter_by(company_id=self.company_id, name=name)</a>
+        <a id="change">model</a> = predictor_record.data
+
+        &#47&#47 Make some corrections for databases not to break when dealing with empty columns
+        if db_fix:</code></pre><h3>After Change</h3><pre><code class='java'>
+        return F.analyse_dataset(ds)
+
+    def get_model_data(self, name, db_fix=True):
+        predictor_record = <a id="change">Predictor.query.filter_by(company_id=self.company_id, name=name).first()</a>
+        <a id="change">model</a> = predictor_record.data
+        if model is None or model[&quotstatus&quot] == &quottraining&quot:
+            self.fs_store.get(name, f&quotpredictor_{self.company_id}_{name}&quot, self.config[&quotpaths&quot][&quotpredictors&quot])
+            model = mindsdb_native.F.get_model_data(name)</code></pre>

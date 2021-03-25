@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for item in cursor:
+
+            __data.append([str(item[&quotcode&quot]), float(item[&quotopen&quot]), float(item[&quothigh&quot]), float(
+                item[&quotlow&quot]), float(item[&quotclose&quot]), int(item[&quotup_count&quot]), int(item[&quotdown_count&quot]), float(<a id="change">item[&quotvol&quot]</a>), float(item[&quotamount&quot]), item[&quotdate&quot]])
+
+        &#47&#47 多种数据格式
+        if format in [&quotn&quot, &quotN&quot, &quotnumpy&quot]:</code></pre><h3>After Change</h3><pre><code class='java'>
+            return [data for data in cursor]
+        for item in cursor:
+            __data = pd.DataFrame([item for item in cursor])
+            __data = <a id="change">__data.assign(date=pd.to_datetime(__data[&quotdate&quot]))</a>
+            &#47&#47 __data.append([str(item[&quotcode&quot]), float(item[&quotopen&quot]), float(item[&quothigh&quot]), float(
+            &#47&#47     item[&quotlow&quot]), float(item[&quotclose&quot]), int(item[&quotup_count&quot]), int(item[&quotdown_count&quot]), float(item[&quotvol&quot]), float(item[&quotamount&quot]), item[&quotdate&quot]])
+
+        &#47&#47 多种数据格式</code></pre>

@@ -1,0 +1,19 @@
+<html><h3>b25cc3a7e6a560c1fd47f36a43296f62eaaace36,transformer/Translator.py,Translator,__init__,#Translator#,13
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __init__(self, opt):
+        self.opt = opt
+        self.device = torch.device(<a id="change">&quotcuda&quot if opt.cuda else &quotcpu&quot</a>)
+
+        checkpoint = torch.load(opt.model)
+        model_opt = checkpoint[&quotsettings&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.register_buffer(&quotinit_seq&quot, torch.LongTensor([[trg_bos_idx]]))
+        self.register_buffer(
+            &quotblank_seqs&quot, 
+            <a id="change">torch.full((beam_size, max_seq_len), trg_pad_idx, dtype=torch.long)</a>)
+        self.blank_seqs[:, 0] = self.trg_bos_idx
+        self.register_buffer(
+            &quotlen_map&quot, </code></pre><img src="11481166.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/b25cc3a7e6a560c1fd47f36a43296f62eaaace36#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL13' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: b25cc3a7e6a560c1fd47f36a43296f62eaaace36</div><div id='time'> Time: 2019-12-07</div><div id='author'> Author: jadore801120@gmail.com</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/ac16b752e6f3698c2c6ba4c4f581d490526519ef#diff-05f4472f958d4334405830bef52f14fc1b87a1e2c7d93219aab8a6563f2d159eL15' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: ac16b752e6f3698c2c6ba4c4f581d490526519ef</div><div id='time'> Time: 2018-08-25</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Beam.py</div><div id='class'> Class Name: Beam</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/openai/gym/commit/cee92691ad858952b4ed46c08cad6cc682868d22#diff-c5428c538897d1bb4112de295c9e4c8b86c3a4c4ddb62e6a57e07879d2081d1bL20' target='_blank'>Link</a></div><div id='project'> Project Name: openai/gym</div><div id='commit'> Commit Name: cee92691ad858952b4ed46c08cad6cc682868d22</div><div id='time'> Time: 2019-03-24</div><div id='author'> Author: zuoxingdong@users.noreply.github.com</div><div id='file'> File Name: gym/spaces/box.py</div><div id='class'> Class Name: Box</div><div id='method'> Method Name: __init__</div><BR>

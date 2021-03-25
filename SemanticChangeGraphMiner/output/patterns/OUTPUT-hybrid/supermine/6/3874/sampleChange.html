@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 related files are associated with the gc_file
+    temp_dir = Path(tmpdir_factory.mktemp("temp") / "resources")
+    shutil.copytree(RESOURCE_PATH / "complex_tiff", temp_dir)
+    files = <a id="change">[Path(d[0]).joinpath(f) for d in os.walk(temp_dir) for f in d[2]]</a>
+    image_builder_result = image_builder_tiff(files=files)
+
+    assert len(image_builder_result.file_errors_map) == 14
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 related files are associated with the gc_file
+    temp_dir = Path(tmpdir_factory.mktemp("temp") / "resources")
+    shutil.copytree(RESOURCE_PATH / "complex_tiff", temp_dir)
+    files = <a id="change">{Path(d[0]).joinpath(f) for d in os.walk(temp_dir) for f in d[2]}</a>
+    image_builder_result = image_builder_tiff(files=files)
+
+    assert len(image_builder_result.file_errors) == 14
+</code></pre>

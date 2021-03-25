@@ -1,0 +1,45 @@
+<html><h3>eb110220d9a39a294479433cefc274e42506737e,main.py,,main,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        value_loss = (values[:-1] - Variable(returns[:-1])).pow(2).mean()
+
+        advantages = returns[:-1] - <a id="change">values</a>[<a id="change">:-1</a>].data
+        action_loss = -(Variable(advantages) * action_log_probs).mean()
+
+        optimizer.zero_grad()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            episode_rewards *= masks[step].cpu()
+
+        returns[-1] = actor_critic(<a id="change">Variable(states[-1], volatile=True)</a>)[0].data
+
+        <a id="change">for step in reversed(range(args.num_steps)):
+            returns[step] = returns[step + 1] * \
+                args.gamma * masks[step] + rewards[step]
+
+        &#47&#47 Reshape to do in a single forward pass for all steps
+       </a> values, logits = actor_critic(Variable(states[:-1].view(-1, *states.size()[-3:])))
+        log_probs = F.log_softmax(logits)
+        probs = F.softmax(logits)
+
+        &#47&#47 Unreshape
+        logits_size = (args.num_steps, args.num_processes, logits.size(-1))
+
+        log_probs = F.log_softmax(logits).view(logits_size)
+        probs = F.softmax(logits).view(logits_size)
+
+        values = values.view(args.num_steps, args.num_processes, 1)
+        logits = logits.view(logits_size)
+
+        action_log_probs = log_probs.gather(2, Variable(actions.unsqueeze(2)))
+
+        dist_entropy = -(log_probs * probs).sum(-1).mean()
+
+        advantages = Variable(returns[:-1]) - values
+        <a id="change">value_loss = advantages.pow(2).mean()</a>
+
+        action_loss = -(Variable(advantages.data) * action_log_probs).mean()
+
+        optimizer.zero_grad()</code></pre><img src="34337146.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/eb110220d9a39a294479433cefc274e42506737e#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L102' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: eb110220d9a39a294479433cefc274e42506737e</div><div id='time'> Time: 2017-09-16</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/tpu/commit/13765334b366d3f83e5efe6f1feae2203c1b2f63#diff-9340f1e8819dcdb95e97162e1a25d2a47c2c9ac0cae01dc89ea74b75b715aeefL99' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/tpu</div><div id='commit'> Commit Name: 13765334b366d3f83e5efe6f1feae2203c1b2f63</div><div id='time'> Time: 2020-08-20</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: models/official/detection/modeling/retinanet_model.py</div><div id='class'> Class Name: RetinanetModel</div><div id='method'> Method Name: build_losses</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/a4e69725c0fa3d53312f546c185647e49d9e6602#diff-c15be6b74bd1c81f260900f1f434fcf701da815c976f5e162c4ee2aa0f717ad5L42' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: a4e69725c0fa3d53312f546c185647e49d9e6602</div><div id='time'> Time: 2017-07-21</div><div id='author'> Author: Peterche1990@Hotmail.com</div><div id='file'> File Name: time_sequence_prediction/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

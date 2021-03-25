@@ -1,0 +1,24 @@
+<html><h3>f4beaac559e00a3676d942dc7e8fea69efc01cfe,catalyst/metrics/mrr.py,,mrr,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        result (torch.Tensor):
+            The mrr score for each user.
+    
+    <a id="change">k = min(outputs.size(1), k)</a>
+    _, indices_for_sort = outputs.sort(descending=True, dim=-1)
+    true_sorted_by_preds = torch.gather(
+        targets, dim=-1, index=indices_for_sort
+    )</code></pre><h3>After Change</h3><pre><code class='java'>
+        mrr_score (torch.Tensor):
+            The mrr score for each batch.
+    
+    <a id="change">results = []</a>
+    <a id="change">for k in topk:
+        results.append(torch.mean(reciprocal_rank(outputs, targets, k)))
+
+   </a> return results
+
+
+__all__ = ["reciprocal_rank", "mrr"]</code></pre><img src="22833993.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-0d5670c5f2a5fcf1725f9db7564e16eeb4669ea8b33c1560f28c55affc6cf2a3L37' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/mrr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mrr</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/626173412d4281b693244e0705a787c4e7c08031#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L92' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 626173412d4281b693244e0705a787c4e7c08031</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fraction_energy_assigned_correctly</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/a225606e6bb4d402b6000e90b91e7acd8e068f88#diff-0e2538c361780ab4612d01c4acb65fb88dbf8566b4ec3b44e156f83872fc5371L128' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: a225606e6bb4d402b6000e90b91e7acd8e068f88</div><div id='time'> Time: 2018-05-29</div><div id='author'> Author: stefano.cereda@moviri.com</div><div id='file'> File Name: skopt/plots.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_regret</div><BR>

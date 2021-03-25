@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if log_type in [&quotERROR&quot, &quotWARNING&quot]:
+            trace = traceback.format_stack(limit=20)
+            trac_log = Log(log_type=&quottraceback&quot, source=source, payload=<a id="change">str(trace)</a>, company_id=self.company_id)
+            session.add(trac_log)
+            session.commit()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            session.commit()
+
+            try:
+                requests.get("https://public.api.mindsdb.com/error",timeout=1, params=<a id="change">{
+                    &quotlog_type&quot: &quottraceback&quot
+                    ,&quotsource&quot: source
+                    ,&quotpayload&quot: trace
+                    ,&quotcompany_id&quot: str(self.company_id)
+                }</a>)
+            except Exception as e:
+                pass
+</code></pre>

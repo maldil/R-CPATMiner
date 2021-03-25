@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def resolve_env_vars(config):
+  Recursively resolves environment variables in config values.
+  <a id="change">if isinstance(config, str):
+    return string.Template(config).substitute(os.environ)
+  elif isinstance(config, dict):
+    return {k: resolve_env_vars(v) for k, v in config.items()}
+  elif isinstance(config, list):
+    return [resolve_env_vars(i) for i in config]
+  else:
+    return config
+
+
+</a>def merge_dicts(*dicts):
+  Merge dicts (list of dicts) into a new dictionary.
+
+  Args:</code></pre><h3>After Change</h3><pre><code class='java'>
+  if isinstance(config, dict):
+    keys = config.keys()
+  elif isinstance(config, list):
+    keys = <a id="change">range(len(config))</a>
+  else:
+    return
+
+  <a id="change">for k in keys:
+    &#47&#47 Only do substitutions on strings.
+    v = config[k]
+    if isinstance(v, str):
+      config[k] = string.Template(v).substitute(os.environ)
+    else:
+      &#47&#47 Recursively handle lists and dictionaries.
+      resolve_env_vars(v)
+
+
+</a>def merge_config_dicts(root_config, included_configs):
+  Merge config dicts (list of dicts) into a root config dictionary.
+
+  Top-level lists with the same key (e.g. &quotprojects&quot) are concatenated, other</code></pre>

@@ -1,0 +1,37 @@
+<html><h3>aaa6b9c9c0a803153ae26a3b28fe2c7fbf3e75fe,paysage/metrics.py,EnergyGap,update,#EnergyGap#,239
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.norm += 1
+        self.energy_gap += be.mean(update_args.model
+                                   .joint_energy(update_args.minibatch))
+        self.energy_gap -= <a id="change">be.mean(update_args.model
+                                   .joint_energy(update_args.random_samples))</a>
+
+    def value(self):
+        
+        Get the value of the energy gap.</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        self.calc.reset()
+
+    def update(<a id="change">self</a>, update_args: MetricState) -&gt; None:
+        
+        Update the estimate for the energy gap using a batch
+        of observations and a batch of fantasy particles.
+
+        Args:
+            update_args: uses all layers of minibatch and random_samples, and model
+
+        Returns:
+            None
+
+        
+        energy_data = update_args.model.joint_energy(update_args.minibatch)
+        energy_random = <a id="change">update_args.model.joint_energy(update_args.random_samples)</a>
+        self.calc.update(energy_data)
+        <a id="change">self.calc.update(-energy_random)</a>
+
+    def value(self):
+        
+        Get the value of the energy gap.</code></pre><img src="808508.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/drckf/paysage/commit/aaa6b9c9c0a803153ae26a3b28fe2c7fbf3e75fe#diff-35de3a268ba4806a5d1b6d5c31b2b0ebafbaca10064d2ca20d683978a4c3a170L234' target='_blank'>Link</a></div><div id='project'> Project Name: drckf/paysage</div><div id='commit'> Commit Name: aaa6b9c9c0a803153ae26a3b28fe2c7fbf3e75fe</div><div id='time'> Time: 2017-05-19</div><div id='author'> Author: jrwalsh1@gmail.com</div><div id='file'> File Name: paysage/metrics.py</div><div id='class'> Class Name: EnergyGap</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/drckf/paysage/commit/15a58be0f54f22ea43b8db25d11dd0c402acf47f#diff-35de3a268ba4806a5d1b6d5c31b2b0ebafbaca10064d2ca20d683978a4c3a170L323' target='_blank'>Link</a></div><div id='project'> Project Name: drckf/paysage</div><div id='commit'> Commit Name: 15a58be0f54f22ea43b8db25d11dd0c402acf47f</div><div id='time'> Time: 2017-05-19</div><div id='author'> Author: jrwalsh1@gmail.com</div><div id='file'> File Name: paysage/metrics.py</div><div id='class'> Class Name: EnergyZscore</div><div id='method'> Method Name: update</div><BR>

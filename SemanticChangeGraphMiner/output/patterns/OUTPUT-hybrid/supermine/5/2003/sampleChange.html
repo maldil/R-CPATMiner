@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    from .datasets import load_mni152_brain_mask
+    template = load_mni152_brain_mask()
+    dtype = img_data_dtype(target_img)
+    <a id="change">template = new_img_like(template,
+                            get_data(template).astype(dtype))</a>
+
+    from .image.resampling import resample_to_img
+    resampled_template = cache(resample_to_img, memory)(template, target_img)
+
+    mask = get_data(resampled_template) &gt;= threshold
+
+    mask, affine = _post_process_mask(mask, target_img.affine, opening=opening,
+                                      connected=connected,
+                                      warning_msg="Gray matter mask is empty, "
+                                                  "lower the threshold or "
+                                                  "check your input FOV")
+
+    <a id="change">return new_img_like(target_img, mask, affine)</a>
+
+
+def compute_multi_gray_matter_mask(target_imgs, threshold=.5,
+                                   connected=True, opening=2,</code></pre><h3>After Change</h3><pre><code class='java'>
+    mask : nibabel.Nifti1Image
+        The brain mask (3D image)
+    
+    <a id="change">return compute_brain_mask(target_img=target_img, threshold=threshold,
+                              connected=connected, opening=opening,
+                              memory=memory, verbose=verbose)</a>
+
+
+def compute_brain_mask(target_img, threshold=.5, connected=True,
+                       opening=2, memory=None, verbose=0):</code></pre>

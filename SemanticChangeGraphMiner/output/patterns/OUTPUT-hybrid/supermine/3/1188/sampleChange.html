@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+building = dataset.buildings[1]
+electric = building.utility.electric
+top_k = top_k_appliances(electric, k=5)
+<a id="change">fracs = (top_k.values * 100).tolist()</a>
+labels = pretty_name_appliance_names(top_k.index.tolist())
+ax = axes[count]
+ax.pie(fracs,  labels=labels,
+       autopct=&quot%1.1f%%&quot, shadow=True, startangle=90)</code></pre><h3>After Change</h3><pre><code class='java'>
+    electric = electric.sum_split_supplies()
+    top_k = top_k_appliances(electric, k=5)
+    fracs = (top_k.values * 100).tolist()
+    <a id="change">fracs.append(100.0 - sum(fracs))</a>
+    labels = pretty_name_appliance_names(top_k.index.tolist())
+    labels.append("Others")
+    explode = (0.03, 0.03, 0.03, 0.03, 0.03, 0.03)
+    ax = axes[count]</code></pre>

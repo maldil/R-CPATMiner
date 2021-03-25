@@ -1,0 +1,26 @@
+<html><h3>b0699b34e2b16cb3abbd22c397077cc6c21ef279,skopt/optimizer/base.py,,base_minimize,#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    <a id="change">x</a>, a, _ = fmin_l_bfgs_b(
+                        gaussian_acquisition_1D, x0,
+                        args=(gp, np.min(yi), acq_func, xi, kappa),
+                        bounds=space.transformed_bounds,</code></pre><h3>After Change</h3><pre><code class='java'>
+                    args=(gp, np.min(yi), acq_func, xi, kappa),
+                    bounds=space.transformed_bounds,
+                    approx_grad=False,
+                    maxiter=20) <a id="change">for</a> x in x0)
+                <a id="change">results = parallel(jobs)</a>
+
+            cand_xs = np.array([r[0] for r in results])
+            <a id="change">cand_acqs = np.array([r[1] for r in results])</a>
+            best_ind = np.argmin(cand_acqs)
+            <a id="change">a = cand_acqs[best_ind]</a>
+            if a &lt; best:
+                next_x, best = cand_xs[best_ind], a
+
+        &#47&#47 lbfg should handle this but just in case there are precision errors.</code></pre><img src="30719184.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b0699b34e2b16cb3abbd22c397077cc6c21ef279#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL265' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b0699b34e2b16cb3abbd22c397077cc6c21ef279</div><div id='time'> Time: 2016-11-30</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/d8e36306e055a69328b67372615b1e05abb298c2#diff-97881f884dd61de4cafa81d99538897be4699e6b7fec1a69dbc2d0e9c06f3ec1L65' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: d8e36306e055a69328b67372615b1e05abb298c2</div><div id='time'> Time: 2019-07-11</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/training_statistics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rotate_psi</div><BR><BR><div id='link'><a href='https://github.com/ina-foss/inaSpeechSegmenter/commit/688e56c09d028c0a956d1434ee16c60aea820de1#diff-c08e2e8722bff2ae0218035fc1de93122ebd6e869bb8ca1ad5f9fa8a0f6036deL162' target='_blank'>Link</a></div><div id='project'> Project Name: ina-foss/inaSpeechSegmenter</div><div id='commit'> Commit Name: 688e56c09d028c0a956d1434ee16c60aea820de1</div><div id='time'> Time: 2018-04-19</div><div id='author'> Author: eliottlechapt@yahoo.fr</div><div id='file'> File Name: inaSpeechSegmenter/segmenter.py</div><div id='class'> Class Name: Segmenter</div><div id='method'> Method Name: __call__</div><BR>

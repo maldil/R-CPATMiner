@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        kwargs = dict()
+        if LooseVersion(sklearn.__version__) &gt;= LooseVersion(&quot0.18&quot):
+            kwargs[&quotgroups&quot] = groups
+        elif <a id="change">scoring is not No</a>ne:
+            <a id="change">warnings.warn(&quotScikit-learn version is too old. &quot
+                          &quotscoring argument ignored&quot, stacklevel=2)</a>
+        par_scores[i] = np.mean(cross_val_score(estimator, X[:, row],
+                                                y, cv=cv, n_jobs=1,
+                                                **kwargs))
+        if verbose &gt; 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+    t0 = time.time()
+    for i, row in enumerate(list_rows):
+        kwargs = dict()
+        <a id="change">kwargs[&quotscoring&quot]</a> = scoring
+        kwargs[&quotgroups&quot] = groups
+        par_scores[i] = np.mean(cross_val_score(estimator, X[:, row],
+                                                y, cv=cv, n_jobs=1,</code></pre>

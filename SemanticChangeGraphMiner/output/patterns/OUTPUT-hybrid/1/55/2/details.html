@@ -1,0 +1,61 @@
+<html><h3>baf8c13aedeb135b38cce9831b1be7034a95d8e9,numerox/report.py,Report,out_of_five,#Report#,157
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cols = [&quotN&quot, &quot0/5&quot, &quot1/5&quot, &quot2/5&quot, &quot3/5&quot, &quot4/5&quot, &quot5/5&quot, &quotmean/5&quot]
+        df = pd.DataFrame(columns=cols)
+        lb = self.lb[round1:round2]
+        <a id="change">rounds</a> = <a id="change">lb[&quotround&quot].unique()</a>
+        nan = np.nan
+        for r in rounds:
+            d = lb[lb[&quotround&quot] == r]
+            if not d[&quotresolved&quot].any():
+                fraction = [0, nan, nan, nan, nan, nan, nan, nan]
+            else:
+                <a id="change">idx</a> = (d.groupby(&quotuser&quot).count()[&quotround&quot] == 5)
+                <a id="change">idx</a> = idx[idx]
+                <a id="change">idx</a> = d.user.isin(idx.index)
+                <a id="change">d</a> = d[idx]
+                d[&quotpass&quot] = d[&quotlive&quot] &lt; LOGLOSS_BENCHMARK
+                <a id="change">s</a> = d.groupby(&quotuser&quot).sum()
+                rep = s.groupby(&quotpass&quot).count()
+                <a id="change">rep</a> = rep[&quotround&quot].to_frame(&quotcount&quot)
+                <a id="change">count</a> = rep[&quotcount&quot].sum()
+                <a id="change">fraction</a> = 1.0 * rep[&quotcount&quot] / count
+                <a id="change">mean</a> = np.dot(fraction, np.array([0, 1, 2, 3, 4, 5]))
+                <a id="change">fraction</a> = fraction.tolist()
+                fraction.insert(0, count)
+                fraction.insert(7, mean)
+            <a id="change">df.loc[r]</a> = fraction
+        df.loc[&quotmean&quot] = df.mean()
+        df[&quotN&quot] = df[&quotN&quot].astype(int)
+        return df</code></pre><h3>After Change</h3><pre><code class='java'>
+        cols = [&quotN&quot, &quot0/5&quot, &quot1/5&quot, &quot2/5&quot, &quot3/5&quot, &quot4/5&quot, &quot5/5&quot, &quotmean/5&quot]
+        df = pd.DataFrame(columns=cols)
+        lb = self.lb[round1:round2]
+        <a id="change">rounds</a> = <a id="change">np.sort(lb[&quotround&quot].unique())</a>
+        nan = np.nan
+        for r in rounds:
+            d = lb[lb[&quotround&quot] == r]
+            if not d[&quotresolved&quot].any():
+                fraction = [0, nan, nan, nan, nan, nan, nan, nan]
+            else:
+                <a id="change">idx</a> = (d.groupby(&quotuser&quot).count()[&quotround&quot] == 5)
+                <a id="change">idx</a> = idx[idx]
+                <a id="change">idx</a> = d.user.isin(idx.index)
+                <a id="change">d</a> = d[idx]
+                d[&quotpass&quot] = d[&quotlive&quot] &lt; LOGLOSS_BENCHMARK
+                <a id="change">s</a> = d.groupby(&quotuser&quot).sum()
+                rep = s.groupby(&quotpass&quot).count()
+                <a id="change">rep</a> = rep[&quotround&quot].to_frame(&quotcount&quot)
+                <a id="change">count</a> = rep[&quotcount&quot].sum()
+                <a id="change">fraction</a> = 1.0 * rep[&quotcount&quot] / count
+                <a id="change">mean</a> = np.dot(fraction, np.array([0, 1, 2, 3, 4, 5]))
+                <a id="change">fraction</a> = fraction.tolist()
+                fraction.insert(0, count)
+                fraction.insert(7, mean)
+            <a id="change">df.loc[r]</a> = fraction
+        df.loc[&quotmean&quot] = df.mean()
+        df[&quotN&quot] = df[&quotN&quot].astype(int)
+        return df</code></pre><img src="22064.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kwgoodman/numerox/commit/baf8c13aedeb135b38cce9831b1be7034a95d8e9#diff-69136a20dfe1d79f024e7aff75b6ff3c7ef28a1f697bc003b468b48de339033aL162' target='_blank'>Link</a></div><div id='project'> Project Name: kwgoodman/numerox</div><div id='commit'> Commit Name: baf8c13aedeb135b38cce9831b1be7034a95d8e9</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: kwgoodman@gmail.com</div><div id='file'> File Name: numerox/report.py</div><div id='class'> Class Name: Report</div><div id='method'> Method Name: out_of_five</div><BR><BR><div id='link'><a href='https://github.com/kwgoodman/numerox/commit/baf8c13aedeb135b38cce9831b1be7034a95d8e9#diff-69136a20dfe1d79f024e7aff75b6ff3c7ef28a1f697bc003b468b48de339033aL96' target='_blank'>Link</a></div><div id='project'> Project Name: kwgoodman/numerox</div><div id='commit'> Commit Name: baf8c13aedeb135b38cce9831b1be7034a95d8e9</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: kwgoodman@gmail.com</div><div id='file'> File Name: numerox/report.py</div><div id='class'> Class Name: Report</div><div id='method'> Method Name: whatif</div><BR><BR><div id='link'><a href='https://github.com/kwgoodman/numerox/commit/baf8c13aedeb135b38cce9831b1be7034a95d8e9#diff-69136a20dfe1d79f024e7aff75b6ff3c7ef28a1f697bc003b468b48de339033aL129' target='_blank'>Link</a></div><div id='project'> Project Name: kwgoodman/numerox</div><div id='commit'> Commit Name: baf8c13aedeb135b38cce9831b1be7034a95d8e9</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: kwgoodman@gmail.com</div><div id='file'> File Name: numerox/report.py</div><div id='class'> Class Name: Report</div><div id='method'> Method Name: pass_rate</div><BR>

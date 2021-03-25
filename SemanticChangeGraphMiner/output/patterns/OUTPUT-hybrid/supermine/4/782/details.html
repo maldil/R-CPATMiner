@@ -1,0 +1,26 @@
+<html><h3>0209a849ef4d520367c2fa880e5605d03106d22d,python/test_scripts/gen_fc.py,,gen_test,#,6
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    w = tf.constant(tf.random.uniform([512,256])).numpy()
+    b = tf.constant(tf.random.uniform([512,1])).numpy()
+    &#47&#47 Combine ops to behave like final kernel
+    out_1 = <a id="change">tf</a>.math.add(tf.linalg.matmul(w, tf.reshape(in1, (-1,1))), b).numpy()
+
+    in_ref_name = "s_ref_in_%d" % test_number
+    w_ref_name = "s_ref_w_%d" % test_number</code></pre><h3>After Change</h3><pre><code class='java'>
+    in0 = tf.constant(tf.random.uniform([1,2,2,64])).numpy()
+    w = tf.constant(tf.random.uniform([512,256])).numpy()
+    if test_number == 0:
+        <a id="change">b = np.zeros([1,512], dtype=np.float32).flatten()</a>
+    else:
+        b = tf.constant(tf.random.uniform([1,512])).numpy().flatten()
+    &#47&#47 Combine ops to behave like final kernel
+    in1 = tf.reshape(in0, (1,-1)).numpy()
+    <a id="change">m = tf.linalg.matmul(in1, w, transpose_b=True)</a>
+    print(m.shape)
+    out_1 = <a id="change">tf</a>.math.add(m, b).numpy()
+    w = np.transpose(w)
+
+    in_ref_name = "s_ref_in_%d" % test_number</code></pre><img src="3740632.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/uTensor/uTensor/commit/0209a849ef4d520367c2fa880e5605d03106d22d#diff-3a237b8bb7a32e2162a09d20615ad1b759bbb4ec4177b85050ccb5ebd023b49bL8' target='_blank'>Link</a></div><div id='project'> Project Name: uTensor/uTensor</div><div id='commit'> Commit Name: 0209a849ef4d520367c2fa880e5605d03106d22d</div><div id='time'> Time: 2020-06-16</div><div id='author'> Author: michael.bartling15@gmail.com</div><div id='file'> File Name: python/test_scripts/gen_fc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gen_test</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/ad8e98817f58c721f7173e188281ccec251ef7a8#diff-caac845e37a00c075a8e44a6a4fca89cceb3027968760da47d4979d6b3f1bfb6L274' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: ad8e98817f58c721f7173e188281ccec251ef7a8</div><div id='time'> Time: 2020-01-06</div><div id='author'> Author: premy.enseirb@gmail.com</div><div id='file'> File Name: tcn/tcn.py</div><div id='class'> Class Name: TCN</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL160' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/ddbcf295c72c5cec7b12d200ff2ca81bcc875d23#diff-75558415b9aa707d5d24ede8a31baf02e545660aa43ce75fcf5a7121c2c727feL16' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: ddbcf295c72c5cec7b12d200ff2ca81bcc875d23</div><div id='time'> Time: 2016-03-13</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tests/core.py</div><div id='class'> Class Name: CoreTestCase</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL120' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/joeddav/devol/commit/139f58d10a5045f304af6eab56405de104a0178a#diff-30c310315b1527a549a9b2af04b7cdb5a290b055133c12ddeb7a00adf3e8c3d4L93' target='_blank'>Link</a></div><div id='project'> Project Name: joeddav/devol</div><div id='commit'> Commit Name: 139f58d10a5045f304af6eab56405de104a0178a</div><div id='time'> Time: 2017-05-26</div><div id='author'> Author: josephddavison@gmail.com</div><div id='file'> File Name: genome_handler.py</div><div id='class'> Class Name: GenomeHandler</div><div id='method'> Method Name: decode</div><BR>

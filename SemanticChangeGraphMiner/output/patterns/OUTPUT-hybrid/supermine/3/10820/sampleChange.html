@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class _TensorFlowBackend(Backend):
+    def __init__(self):
+        if tf is not None:
+            self._session = <a id="change">tf.Session()</a>
+        super().__init__("TensorFlow")
+
+    @staticmethod
+    def is_available():</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.is_available():
+            self._session = kwargs.get("session")
+            if self._session is None:
+                <a id="change">self._own_session = self._session = tf.Session()</a>
+        super().__init__("TensorFlow")
+
+    def __del__(self):
+        if self._own_session is not None:</code></pre>

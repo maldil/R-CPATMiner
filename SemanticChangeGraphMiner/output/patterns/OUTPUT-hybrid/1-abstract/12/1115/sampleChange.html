@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, x):
+        residual = x
+        <a id="change">output</a> = <a id="change">F.relu(self.w_1(x.transpose(1, 2)))</a>
+        output = self.w_2(output).transpose(2, 1)
+        <a id="change">output</a> = self.dropout(output)
+        return self.layer_norm(output + residual)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def forward(self, x):
+        residual = x
+        output = x.transpose(1, 2)
+        <a id="change">output</a> = self.w_2(<a id="change">F.relu(self.w_1(output))</a>)
+        output = output.transpose(1, 2)
+        <a id="change">output</a> = self.dropout(output)
+        output = self.layer_norm(output + residual)
+        return output
+</code></pre>

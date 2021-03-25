@@ -1,0 +1,33 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_thresh = recall_point * n_match
+    tp = 0
+    count = 0
+    <a id="change">for label, score in sorted_scores:
+        count += 1
+        if label == 1:
+            tp += 1
+        if tp &gt;= n_thresh:
+            break
+
+   </a> return float(count - tp) / count
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    distances = 1.0 / (scores + 1e-8)
+    recall_point = 0.95
+    <a id="change">labels = labels[np.argsort(distances)]</a>
+    &#47&#47 Sliding threshold: get first index where recall &gt;= recall_point. 
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    <a id="change">FP = np.sum(labels[:threshold_index] == 0)</a> &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    <a id="change">TN = np.sum(labels[threshold_index:] == 0)</a> &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    return float(FP) / float(FP + TN)
+&quot&quot&quotimport operator
+</code></pre><img src="35616396.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/logpai/loglizer/commit/7c960272c5ab4d25a022538f5849addec3e6bfee#diff-43fc2f56bcafd5edb2c8bf9aa213331585a7f29d8b193e07dfd329e56c95b036L82' target='_blank'>Link</a></div><div id='project'> Project Name: logpai/loglizer</div><div id='commit'> Commit Name: 7c960272c5ab4d25a022538f5849addec3e6bfee</div><div id='time'> Time: 2019-02-25</div><div id='author'> Author: zhujm.home@gmail.com</div><div id='file'> File Name: loglizer/preprocessing.py</div><div id='class'> Class Name: FeatureExtractor</div><div id='method'> Method Name: transform</div><BR><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/a1a430fa42fa58cb3ba9d93f44749319928b78c8#diff-e2f21921d0032c6bf173be2331ad8a5236d2334257dbff2273d7e4018c904aceL93' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: a1a430fa42fa58cb3ba9d93f44749319928b78c8</div><div id='time'> Time: 2018-03-14</div><div id='author'> Author: patricio.cerda@inria.fr</div><div id='file'> File Name: dirty_cat/string_distances.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ngram_similarity</div><BR><BR><div id='link'><a href='https://github.com/MycroftAI/padatious/commit/001010c152897b4f476ca5e435f86c9b75b17078#diff-739e885fa5a89870149bb5e613a30f86ec38cf76e9d7bca1fa65b4e9ec7b4db1L28' target='_blank'>Link</a></div><div id='project'> Project Name: MycroftAI/padatious</div><div id='commit'> Commit Name: 001010c152897b4f476ca5e435f86c9b75b17078</div><div id='time'> Time: 2017-10-11</div><div id='author'> Author: matthew3311999@gmail.com</div><div id='file'> File Name: padatious/train_data.py</div><div id='class'> Class Name: TrainData</div><div id='method'> Method Name: add_lines</div><BR>

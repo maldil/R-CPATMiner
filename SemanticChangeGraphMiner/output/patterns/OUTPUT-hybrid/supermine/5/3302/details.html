@@ -1,0 +1,21 @@
+<html><h3>1b781f694884d17874706dd1a51a36e08240c8c1,tests/depthwise_conv2d.py,,,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        k_model = pytorch_to_keras(model, input_var, (inp, inp, inp,), verbose=True)
+
+        <a id="change">pytorch_output = output.data.numpy()</a>
+        keras_output = k_model.predict(input_np)
+
+        error = np.max(pytorch_output - keras_output)
+        print(error)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 This isn&quott a depthwise convolution, so shouldn&quott be detected as such
+        non_dw_model = TestConv2dNonDepthwise(inp)
+        output = non_dw_model(input_var)
+        <a id="change">k_model = pytorch_to_keras(non_dw_model, input_var, (inp, inp, inp,), verbose=True)</a>
+        check_error(output, k_model, input_np)
+
+    print(&quotMax error: {0}&quot.format(max_error))
+</code></pre><img src="14545070.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nerox8664/pytorch2keras/commit/1b781f694884d17874706dd1a51a36e08240c8c1#diff-156df4ca6107c112f3f95678eeebe4f90901818fddd761127d3094b20c4bc2bfL44' target='_blank'>Link</a></div><div id='project'> Project Name: nerox8664/pytorch2keras</div><div id='commit'> Commit Name: 1b781f694884d17874706dd1a51a36e08240c8c1</div><div id='time'> Time: 2018-09-05</div><div id='author'> Author: sean@wayve.ai</div><div id='file'> File Name: tests/depthwise_conv2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/520e8fb57b890a7249334d9e90c9ad209d0b849f#diff-ae5323d7b76e8ae717b053d5c11b6e16ad4c1cfb3e978c0403a6c6b795078b87L86' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: 520e8fb57b890a7249334d9e90c9ad209d0b849f</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: modules.py</div><div id='class'> Class Name: retina</div><div id='method'> Method Name: extract_patch</div><BR><BR><div id='link'><a href='https://github.com/hassony2/kinetics_i3d_pytorch/commit/1f3da600c20e3376b0bb396bba482b1e90b7883c#diff-a85f429fb89e88d1df3e80fb86b4e70180a6f1fca5c43e04e756965bd6df2aa5L57' target='_blank'>Link</a></div><div id='project'> Project Name: hassony2/kinetics_i3d_pytorch</div><div id='commit'> Commit Name: 1f3da600c20e3376b0bb396bba482b1e90b7883c</div><div id='time'> Time: 2017-11-24</div><div id='author'> Author: yana.hasson@inria.fr</div><div id='file'> File Name: i3nception_tf.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

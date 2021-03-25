@@ -1,0 +1,27 @@
+<html><h3>6abab74f85bf850de55fa9e39ece64b8a9eeff58,tf_unet/unet.py,Unet,__init__,#Unet#,179
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
+            labels = tf.reshape(self.y, [-1, n_class])
+
+            <a id="change">weight_map = tf.mul(labels, class_weights)</a>
+            <a id="change">weight_map = tf.reduce_sum(weight_map, axis=1)</a>
+
+            loss_map = tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), labels)
+            <a id="change">weighted_loss = tf.mul(loss_map, weight_map)</a>
+
+            <a id="change">loss = tf.reduce_mean(weighted_loss)</a>
+            
+        else:
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), 
+                                                                               tf.reshape(self.y, [-1, n_class])))</code></pre><h3>After Change</h3><pre><code class='java'>
+        if class_weights is not None:
+            class_weights = tf.constant(np.array(class_weights, dtype=np.float32))
+            weighted_logits = tf.mul(tf.reshape(logits, [-1, n_class]), class_weights)
+            loss = <a id="change">tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(weighted_logits, tf.reshape(self.y, [-1, n_class])))</a>
+            
+        else:
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(tf.reshape(logits, [-1, n_class]), 
+                                                                               tf.reshape(self.y, [-1, n_class])))</code></pre><img src="33783003.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/6abab74f85bf850de55fa9e39ece64b8a9eeff58#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L192' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 6abab74f85bf850de55fa9e39ece64b8a9eeff58</div><div id='time'> Time: 2016-12-27</div><div id='author'> Author: jakeret@phys.ethz.ch</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Unet</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/31516c4984224611174203a9822e102f94def3ac#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L209' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 31516c4984224611174203a9822e102f94def3ac</div><div id='time'> Time: 2017-01-08</div><div id='author'> Author: jakeret@phys.ethz.ch</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Unet</div><div id='method'> Method Name: _get_cost</div><BR><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/5e039083f5736d9a8f7e060a94e9d3079598acbd#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L192' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 5e039083f5736d9a8f7e060a94e9d3079598acbd</div><div id='time'> Time: 2016-12-19</div><div id='author'> Author: felix.gruen@outlook.de</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Unet</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,48 @@
+<html><h3>7b4291717410b3ce7f0c572481e5de226a76bd9c,perfkitbenchmarker/linux_packages/nvidia_driver.py,,GetGpuType,#,160
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  
+  stdout, _ = vm.RemoteCommand(&quotnvidia-smi -L&quot, should_log=True)
+  try:
+    <a id="change">gpu_types = [line.split(&quot &quot)[3] for line in stdout.splitlines() if line]</a>
+  except:
+    raise NvidiaSmiParseOutputError(&quotUnable to parse gpu type from {}&quot
+                                    .format(stdout))
+  if any(gpu_type != gpu_types[0] for gpu_type in gpu_types):</code></pre><h3>After Change</h3><pre><code class='java'>
+  
+  stdout, _ = vm.RemoteCommand(&quotnvidia-smi -L&quot, should_log=True)
+  try:
+    <a id="change">gpu_types = []</a>
+    for line in stdout.splitlines():
+      if not line:
+        continue
+      splitted = line.split(&quot &quot)
+      if splitted[2] == &quotTesla&quot:
+        gpu_types.append(splitted[3])
+      else:
+        gpu_types.append(splitted[2])
+  except:
+    raise NvidiaSmiParseOutputError(&quotUnable to parse gpu type from {}&quot
+                                    .format(stdout))
+  if any(gpu_type != gpu_types[0] for gpu_type in gpu_types):
+    raise HeterogeneousGpuTypesError(
+        &quotPKB only supports one type of gpu per VM&quot)
+
+  if &quotK80&quot in gpu_types[0]:
+    return NVIDIA_TESLA_K80
+  if &quotP4&quot in gpu_types[0]:
+    return NVIDIA_TESLA_P4
+  if &quotP100&quot in gpu_types[0]:
+    return NVIDIA_TESLA_P100
+  if &quotV100&quot in gpu_types[0]:
+    return NVIDIA_TESLA_V100
+  if &quotT4&quot in gpu_types[0]:
+    return NVIDIA_TESLA_T4
+  <a id="change">if &quotA100&quot in gpu_types[0]:
+    return NVIDIA_TESLA_A100
+ </a> raise UnsupportedClockSpeedError(
+      &quotGpu type {0} is not supported by PKB&quot.format(gpu_types[0]))
+
+</code></pre><img src="36558319.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/PerfKitBenchmarker/commit/7b4291717410b3ce7f0c572481e5de226a76bd9c#diff-7b7762b4a69a079c052907c086470e0615d54f2ead89091a66a886007f8f6670L193' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/PerfKitBenchmarker</div><div id='commit'> Commit Name: 7b4291717410b3ce7f0c572481e5de226a76bd9c</div><div id='time'> Time: 2020-07-06</div><div id='author'> Author: p3rf@google.com</div><div id='file'> File Name: perfkitbenchmarker/linux_packages/nvidia_driver.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: GetGpuType</div><BR><BR><div id='link'><a href='https://github.com/ylongqi/openrec/commit/93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db#diff-0f3db2fab558ccd2f6e7e61206dc20feccc2e48f7f2bf46069ec79ea66e8c2cdL463' target='_blank'>Link</a></div><div id='project'> Project Name: ylongqi/openrec</div><div id='commit'> Commit Name: 93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db</div><div id='time'> Time: 2018-09-26</div><div id='author'> Author: ylongqi@gmail.com</div><div id='file'> File Name: openrec/recommenders/recommender.py</div><div id='class'> Class Name: Recommender</div><div id='method'> Method Name: _optimistic_restore</div><BR><BR><div id='link'><a href='https://github.com/bambinos/bambi/commit/e2502957ebe993c13fd84af53dea1a9e71c0d5ae#diff-1aaef6370fa4f66c64e1552dc9b687aca1d1e7d9c55accee3d1bc8f8e3102c03L789' target='_blank'>Link</a></div><div id='project'> Project Name: bambinos/bambi</div><div id='commit'> Commit Name: e2502957ebe993c13fd84af53dea1a9e71c0d5ae</div><div id='time'> Time: 2020-10-30</div><div id='author'> Author: aloctavodia@gmail.com</div><div id='file'> File Name: bambi/models.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: plot_priors</div><BR>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    try:
+        with transaction.atomic():
+            instance.sound.num_ratings = F(&quotnum_ratings&quot) - 1
+            rating = <a id="change">SoundRating.objects.filter(
+                    sound_id=instance.sound_id).aggregate(Avg(&quotrating&quot)).values()[0]</a>
+            if not rating:
+                rating = 0
+            <a id="change">instance.sound.avg_rating</a> = rating
+            instance.sound.save()
+    except ObjectDoesNotExist:
+        pass</code></pre><h3>After Change</h3><pre><code class='java'>
+    try:
+        with transaction.atomic():
+            instance.sound.num_ratings = F(&quotnum_ratings&quot) - 1
+            avg_rating = <a id="change">SoundRating.objects.filter(
+                    sound_id=instance.sound_id).aggregate(average_rating=Coalesce(Avg(&quotrating&quot), 0))</a>
+            <a id="change">rating = avg_rating[&quotaverage_rating&quot]</a>
+            <a id="change">instance.sound.avg_rating</a> = rating
+            instance.sound.save()
+    except ObjectDoesNotExist:
+        pass</code></pre>

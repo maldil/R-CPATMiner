@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(set(seq.shape[1:] for seq in seqs)) != 1:
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        <a id="change">shapes = [tuple(s.shape) for s in seqs]</a>
+        <a id="change">dim_sizes = zip(*[shape for shape in shapes])</a>
+        max_dims = [max(sizes) for sizes in dim_sizes]
+        final_shape = (len(seqs),) + tuple(max_dims)
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(set(seq.shape[1:] for seq in seqs)) != 1:
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        length = <a id="change">max(len(seq) for seq in seqs)</a>
+        &#47&#47 Round the length
+        <a id="change">length = (length + (round_to-1)) // round_to * round_to</a>
+        final_shape = (len(seqs), length) + seqs[0].shape[1:]
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            output[i, :arr.shape[0]] = arr</code></pre>

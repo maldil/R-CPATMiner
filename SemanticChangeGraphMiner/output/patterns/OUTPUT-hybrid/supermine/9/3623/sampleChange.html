@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sizes = itertools.repeat(size) if isinstance(size, int) else size
+        is_list = isinstance(sequence, list)
+        if isinstance(sequence, list):  &#47&#47 need condition here for type checking
+            <a id="change">sequence = Objects(sequence)</a>
+        indices = numpy.arange(len(sequence))
+        if shuffle:
+            numpy.random.shuffle(indices)
+        i = 0
+        queue = []
+        while i &lt; indices.shape[0]:  &#47&#47 type: ignore
+            batch_size = next(sizes)
+            idx_batch = indices[i : i + batch_size]
+            subseq = sequence[idx_batch]
+            if is_xp_array(subseq):
+                subseq = self.as_contig(cast(Array, subseq))
+            <a id="change">if is_list and isinstance(subseq, Objects):
+                subseq = subseq.data
+           </a> queue.append(subseq)
+            i += batch_size
+        return queue
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if isinstance(sequence, list):
+                subseq = [sequence[i] for i in idx_batch]
+            elif isinstance(sequence, tuple):
+                subseq = tuple(<a id="change">sequence[i]</a> <a id="change">for</a> i in idx_batch)  &#47&#47 type: ignore
+            else:
+                subseq = sequence[idx_batch]  &#47&#47 type: ignore
+            if is_xp_array(subseq):</code></pre>

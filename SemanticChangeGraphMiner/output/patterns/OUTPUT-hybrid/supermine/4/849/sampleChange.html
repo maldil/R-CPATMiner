@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert ws.editors_group is None
+
+    with pytest.raises(ObjectDoesNotExist):
+        <a id="change">assert ws.users_group is None</a>
+
+    &#47&#47 Test group addition
+    call_command("migrate", "workstations", "0003")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    Workstation = new_apps.get_model(app, "Workstation")
+    <a id="change">new_ws = Workstation.objects.get(title="foo")</a>
+
+    assert new_ws.editors_group
+    assert new_ws.users_group
+    assert new_ws.slug == old_ws.slug</code></pre>

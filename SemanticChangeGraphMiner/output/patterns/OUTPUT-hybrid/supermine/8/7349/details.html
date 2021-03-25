@@ -1,0 +1,40 @@
+<html><h3>5c34d497ab32ea731b687c5863f104615f666d06,QUANTAXIS/QAFetch/QAQuery.py,,QA_fetch_index_min,#,286
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        frequence = &quot30min&quot
+    elif frequence in [&quot60min&quot, &quot60m&quot]:
+        frequence = &quot60min&quot
+    __data = <a id="change">[]</a>
+    code = QA_util_code_tolist(code)
+    cursor = collections.find({
+        &quotcode&quot: {&quot$in&quot: code}, "time_stamp": {
+            "$gte": QA_util_time_stamp(start),
+            "$lte": QA_util_time_stamp(end)
+        }, &quottype&quot: frequence
+    }, {"_id": 0}, batch_size=10000)
+    if format in [&quotdict&quot, &quotjson&quot]:
+        return [data for data in cursor]
+    for item in cursor:
+
+        __data.append([str(item[&quotcode&quot]), float(item[&quotopen&quot]), float(item[&quothigh&quot]), float(
+            item[&quotlow&quot]), float(item[&quotclose&quot]), int(item[&quotup_count&quot]), int(item[&quotdown_count&quot]), float(item[&quotvol&quot]), float(item[&quotamount&quot]), item[&quotdatetime&quot], item[&quottime_stamp&quot], item[&quotdate&quot], item[&quottype&quot]])
+
+    __data = <a id="change">DataFrame(__data, columns=[
+        &quotcode&quot, &quotopen&quot, &quothigh&quot, &quotlow&quot, &quotclose&quot, &quotup_count&quot, &quotdown_count&quot, &quotvolume&quot, &quotamount&quot, &quotdatetime&quot, &quottime_stamp&quot, &quotdate&quot, &quottype&quot])</a>
+
+    <a id="change">__data[&quotdatetime&quot] = pd.to_datetime(__data[&quotdatetime&quot])</a>
+    __data = __data.set_index(&quotdatetime&quot, drop=False)
+    if format in [&quotnumpy&quot, &quotnp&quot, &quotn&quot]:
+        return numpy.asarray(__data)
+    elif format in [&quotlist&quot, &quotl&quot, &quotL&quot]:</code></pre><h3>After Change</h3><pre><code class='java'>
+    if format in [&quotdict&quot, &quotjson&quot]:
+        return [data for data in cursor]
+    for item in cursor:
+        <a id="change">__data = pd.DataFrame([item for item in cursor])</a>
+        <a id="change">__data = __data.assign(datetime=pd.to_datetime(__data[&quotdatetime&quot]))</a>
+        &#47&#47 __data.append([str(item[&quotcode&quot]), float(item[&quotopen&quot]), float(item[&quothigh&quot]), float(
+        &#47&#47     item[&quotlow&quot]), float(item[&quotclose&quot]), int(item[&quotup_count&quot]), int(item[&quotdown_count&quot]), float(item[&quotvol&quot]), float(item[&quotamount&quot]), item[&quotdatetime&quot], item[&quottime_stamp&quot], item[&quotdate&quot], item[&quottype&quot]])
+
+    &#47&#47 __data = DataFrame(__data, columns=[</code></pre><img src="28427449.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/QUANTAXIS/QUANTAXIS/commit/5c34d497ab32ea731b687c5863f104615f666d06#diff-7d56f8db284b13496fcb2e2c4509c63ad0f610992658f7def0cf50c4eb0394a8L303' target='_blank'>Link</a></div><div id='project'> Project Name: QUANTAXIS/QUANTAXIS</div><div id='commit'> Commit Name: 5c34d497ab32ea731b687c5863f104615f666d06</div><div id='time'> Time: 2019-02-16</div><div id='author'> Author: yutiansut@qq.com</div><div id='file'> File Name: QUANTAXIS/QAFetch/QAQuery.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QA_fetch_index_min</div><BR><BR><div id='link'><a href='https://github.com/shakedzy/dython/commit/626e587f0d5573ca973a8333cfa7f24cd5b749b7#diff-86e30183f74ad66a786f056e504743afe1a0ace168c60498914a44dabc64d217L42' target='_blank'>Link</a></div><div id='project'> Project Name: shakedzy/dython</div><div id='commit'> Commit Name: 626e587f0d5573ca973a8333cfa7f24cd5b749b7</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: shakedzy@gmail.com</div><div id='file'> File Name: dython/examples.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: associations_example</div><BR><BR><div id='link'><a href='https://github.com/QUANTAXIS/QUANTAXIS/commit/5c34d497ab32ea731b687c5863f104615f666d06#diff-7d56f8db284b13496fcb2e2c4509c63ad0f610992658f7def0cf50c4eb0394a8L257' target='_blank'>Link</a></div><div id='project'> Project Name: QUANTAXIS/QUANTAXIS</div><div id='commit'> Commit Name: 5c34d497ab32ea731b687c5863f104615f666d06</div><div id='time'> Time: 2019-02-16</div><div id='author'> Author: yutiansut@qq.com</div><div id='file'> File Name: QUANTAXIS/QAFetch/QAQuery.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QA_fetch_index_day</div><BR>

@@ -1,0 +1,29 @@
+<html><h3>25508c13627f06510f3cab96d742360b0187640a,tests/windows_aggregator_grid_v2_test.py,GridSamplesAggregatorTest,test_init_2d_mo_3out,#GridSamplesAggregatorTest#,455
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            sampler.set_num_threads(2)
+            while more_batch:
+                out = sess.run(sampler.pop_batch_op())
+                min_val = np.sum(<a id="change">(np.asarray(out[&quotimage&quot]).flatten())</a>)
+                stats_val = <a id="change">[np.min(out[&quotimage&quot]), np.max(out[&quotimage&quot]), np.sum(
+                    out[&quotimage&quot])]</a>
+                more_batch = aggregator.decode_batch(
+                    {&quotwindow_image&quot:out[&quotimage&quot],
+                     &quotcsv_sum&quot:min_val,
+                     &quotcsv_stats&quot:stats_val},</code></pre><h3>After Change</h3><pre><code class='java'>
+            sampler.set_num_threads(2)
+            while more_batch:
+                out = sess.run(sampler.pop_batch_op())
+                <a id="change">out_flatten</a> = np.reshape(<a id="change">np.asarray(out[&quotimage&quot])</a>, <a id="change">[10, -1]</a>)
+                min_val = <a id="change">np.sum(np.reshape(np.asarray(out[&quotimage&quot]),
+                                             [10,-1]),1)</a>
+                <a id="change">stats_val = np.concatenate([np.min(out_flatten,1,
+                                                   keepdims=True), np.max(
+                    out_flatten, 1,keepdims=True), np.sum(
+                    out_flatten,1,keepdims=True)],1)</a>
+                more_batch = aggregator.decode_batch(
+                    {&quotwindow_image&quot:out[&quotimage&quot],
+                     &quotcsv_sum&quot:min_val,
+                     &quotcsv_stats&quot:stats_val},</code></pre><img src="2975983.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 22</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NifTK/NiftyNet/commit/25508c13627f06510f3cab96d742360b0187640a#diff-e723f20bd5097a059db5b74689292cb638bc80bfed1e0dd66d738a48f77e49bfL474' target='_blank'>Link</a></div><div id='project'> Project Name: NifTK/NiftyNet</div><div id='commit'> Commit Name: 25508c13627f06510f3cab96d742360b0187640a</div><div id='time'> Time: 2019-06-29</div><div id='author'> Author: carole.sudre@kcl.ac.uk</div><div id='file'> File Name: tests/windows_aggregator_grid_v2_test.py</div><div id='class'> Class Name: GridSamplesAggregatorTest</div><div id='method'> Method Name: test_init_2d_mo_3out</div><BR><BR><div id='link'><a href='https://github.com/NifTK/NiftyNet/commit/25508c13627f06510f3cab96d742360b0187640a#diff-e723f20bd5097a059db5b74689292cb638bc80bfed1e0dd66d738a48f77e49bfL526' target='_blank'>Link</a></div><div id='project'> Project Name: NifTK/NiftyNet</div><div id='commit'> Commit Name: 25508c13627f06510f3cab96d742360b0187640a</div><div id='time'> Time: 2019-06-29</div><div id='author'> Author: carole.sudre@kcl.ac.uk</div><div id='file'> File Name: tests/windows_aggregator_grid_v2_test.py</div><div id='class'> Class Name: GridSamplesAggregatorTest</div><div id='method'> Method Name: test_init_2d_mo_bidimcsv</div><BR><BR><div id='link'><a href='https://github.com/NifTK/NiftyNet/commit/25508c13627f06510f3cab96d742360b0187640a#diff-e723f20bd5097a059db5b74689292cb638bc80bfed1e0dd66d738a48f77e49bfL378' target='_blank'>Link</a></div><div id='project'> Project Name: NifTK/NiftyNet</div><div id='commit'> Commit Name: 25508c13627f06510f3cab96d742360b0187640a</div><div id='time'> Time: 2019-06-29</div><div id='author'> Author: carole.sudre@kcl.ac.uk</div><div id='file'> File Name: tests/windows_aggregator_grid_v2_test.py</div><div id='class'> Class Name: GridSamplesAggregatorTest</div><div id='method'> Method Name: test_init_3d_mo_bidimcsv</div><BR>

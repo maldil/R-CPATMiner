@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        np.testing.assert_array_equal(N.shape, y.shape)
+
+        inv_link_f2 = np.square(inv_link_f)
+        <a id="change">return 2*y/inv_link_f**3 - 2*(N-y)/(1.-inv_link_f)**3</a>
+
+    def samples(self, gp, Y_metadata=None, **kw):
+        
+        Returns a set of samples of observations based on a given value of the latent variable.</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47inv_link_f2 = np.square(inv_link_f)  &#47&#47TODO Remove. Why is this here?
+        
+        <a id="change">Ny = N-y</a>
+        <a id="change">t1 = np.zeros(y.shape)</a>
+        <a id="change">t2 = np.zeros(y.shape)</a>
+        <a id="change">t1[y&gt;0] = 2*y[y&gt;0]/inv_link_f[y&gt;0]**3</a><a id="change">
+   </a>     <a id="change">t2[Ny&gt;0] = - 2*(Ny[Ny&gt;0])/(1.-inv_link_f[Ny&gt;0])**3
+  </a>      <a id="change">return t1 + t2</a>
+
+    def samples(self, gp, Y_metadata=None, **kw):
+        
+        Returns a set of samples of observations based on a given value of the latent variable.</code></pre>

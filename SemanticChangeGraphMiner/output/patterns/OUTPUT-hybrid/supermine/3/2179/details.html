@@ -1,0 +1,31 @@
+<html><h3>5e76b6981d0b48def00d4fa97caec24accf402fd,contents/5.2_Prioritized_Replay_DQN/RL_brain.py,Memory,sample,#Memory#,116
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.beta = np.min([1, self.beta + self.beta_increment_per_sampling])  &#47&#47 max = 1
+
+        min_prob = np.min(self.tree.tree[-self.tree.capacity:]) / self.tree.root_priority
+        maxiwi = <a id="change">np.power(self.tree.capacity * min_prob, -self.beta)</a>  &#47&#47 for later normalizing ISWeights
+        for i in range(n):
+            a = segment * i
+            b = segment * (i + 1)
+            lower_bound = np.random.uniform(a, b)
+            idx, p, data = self.tree.get_leaf(lower_bound)
+            prob = p / self.tree.root_priority
+            ISWeights.append(self.tree.capacity * prob)
+            batch_idx.append(idx)
+            batch_memory.append(data)
+
+        ISWeights = np.vstack(ISWeights)
+        ISWeights = <a id="change">np.power(ISWeights, -self.beta) / maxiwi</a>  &#47&#47 normalize
+        return batch_idx, np.vstack(batch_memory), ISWeights
+
+    def update(self, idx, error):</code></pre><h3>After Change</h3><pre><code class='java'>
+            v = np.random.uniform(a, b)
+            idx, p, data = self.tree.get_leaf(v)
+            prob = p / self.tree.total_p
+            <a id="change">ISWeights</a>[i, 0] = np.power(prob/min_prob, -self.beta)
+            b_idx[i], b_memory[i, :] = idx, data
+        return b_idx, b_memory, ISWeights
+</code></pre><img src="10241552.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/5e76b6981d0b48def00d4fa97caec24accf402fd#diff-9d552f01d80b1f65edab0c98a58cd9ba3ced98af3f85fa8bb3f07f1b6a76fde2L110' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: 5e76b6981d0b48def00d4fa97caec24accf402fd</div><div id='time'> Time: 2017-08-16</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/5.2_Prioritized_Replay_DQN/RL_brain.py</div><div id='class'> Class Name: Memory</div><div id='method'> Method Name: sample</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/37bcd82863fb96b0350c3a54dda63721784a99f0#diff-2ab15a6873758c753257797ae7e2c0565d7249fa6534b0f8b12cb36baf5029f0L66' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 37bcd82863fb96b0350c3a54dda63721784a99f0</div><div id='time'> Time: 2018-11-06</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/divergences/generalized_divergences.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: double_power_sum</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/f9f4587661731a334408d94a6bb79593a088c444#diff-e4b65b54793ed3faa3a1d90e8965a50ae28b75c34c5b2b0215c9ad0a226b07f0L22' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: f9f4587661731a334408d94a6bb79593a088c444</div><div id='time'> Time: 2019-11-28</div><div id='author'> Author: jadore801120@gmail.com</div><div id='file'> File Name: transformer/Optim.py</div><div id='class'> Class Name: ScheduledOptim</div><div id='method'> Method Name: _get_lr_scale</div><BR>

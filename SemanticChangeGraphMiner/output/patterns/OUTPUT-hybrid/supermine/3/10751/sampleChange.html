@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47                    validation_data=(testX, Y_test),
+&#47&#47                    nb_val_samples=testX.shape[0], verbose=1)
+
+yPreds = <a id="change">model.predict(testX)</a>
+yPred = np.argmax(yPreds, axis=1)
+yTrue = testY
+
+<a id="change">accuracy = metrics.accuracy_score(yTrue, yPred) * 100</a>
+error = 100 - accuracy
+print("Accuracy : ", accuracy)
+print("Error : ", error)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+model.load_weights("weights/DenseNet-40-12-CIFAR10.h5")
+print("Model loaded.")
+
+model.fit_generator(generator.flow(trainX, Y_train, batch_size=batch_size), samples_per_epoch=<a id="change">len(trainX)</a>, nb_epoch=nb_epoch,
+                   callbacks=[ModelCheckpoint("weights/DenseNet-40-12-CIFAR10.h5", monitor="val_acc", save_best_only=True,
+                                              save_weights_only=True)],
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),</code></pre>

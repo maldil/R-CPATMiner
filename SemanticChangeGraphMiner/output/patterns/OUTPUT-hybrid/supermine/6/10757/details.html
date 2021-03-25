@@ -1,0 +1,22 @@
+<html><h3>30d73c7518adcde7ed8340d76e306bd290e0949a,skbio/stats/composition.py,,ancom,#,643
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    cat_values = input_grouping.values
+    cs = np.unique(cat_values)
+    cat_dists = {k: mat[cat_values == k] for k in cs}
+    cat_means = <a id="change">{k: np.mean(v, axis=0) for k, v in cat_dists.items()}</a>
+    cat_means = pd.DataFrame.from_dict(cat_means)
+    cat_means.columns = [&quotMean: %s&quot % e <a id="change">for</a> e in cat_means.columns]
+    cat_stds = {k: np.std(v, axis=0) for k, v in cat_dists.items()}
+    cat_stds = pd.DataFrame.from_dict(cat_stds)
+    cat_stds.columns = [&quotStd: %s&quot % e for e in cat_stds.columns]</code></pre><h3>After Change</h3><pre><code class='java'>
+    cat_values = input_grouping.values
+    cs = np.unique(cat_values)
+    cat_dists = {k: mat[cat_values == k] for k in cs}
+    <a id="change">cat_percentiles = []</a>
+    for percentile in percentiles:
+        data = {k: np.percentile(v, percentile, axis=0)
+                     for k, v in cat_dists.items()}
+        data = pd.DataFrame.from_dict(data)</code></pre><img src="39336472.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/biocore/scikit-bio/commit/30d73c7518adcde7ed8340d76e306bd290e0949a#diff-1475afe11caa9fbbcaa552ffa1c7998339c558a91e64e86e628aa5c70bdb9af9L876' target='_blank'>Link</a></div><div id='project'> Project Name: biocore/scikit-bio</div><div id='commit'> Commit Name: 30d73c7518adcde7ed8340d76e306bd290e0949a</div><div id='time'> Time: 2016-06-07</div><div id='author'> Author: gregcaporaso@gmail.com</div><div id='file'> File Name: skbio/stats/composition.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ancom</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/b5034279b48ae96ffdd4714f96e0f62b0f4807fc#diff-ec89fc16a024e906dde0693b4d8cbc46e946c810a1e9e45c4d8f214b87ba6af9L246' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: b5034279b48ae96ffdd4714f96e0f62b0f4807fc</div><div id='time'> Time: 2018-10-26</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/ordinal.py</div><div id='class'> Class Name: OrdinalEncoder</div><div id='method'> Method Name: ordinal_encoding</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/46324d0e05c679b2cf50b81289fe2886456f6e51#diff-2202c83549e1666b53b7764ad03e0619bf5aca5e6cfbe77e26266babeb35b9dbL22' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 46324d0e05c679b2cf50b81289fe2886456f6e51</div><div id='time'> Time: 2017-09-19</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/pid/ibroja.py</div><div id='class'> Class Name: BROJAOptimizer</div><div id='method'> Method Name: __init__</div><BR>

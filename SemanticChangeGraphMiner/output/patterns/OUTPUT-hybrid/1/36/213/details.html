@@ -1,0 +1,143 @@
+<html><h3>07151a9f75307c7109ffc2bca0aef137a82bcf20,deepBach.py,,skip,#,142
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                                                              left_metas),
+                                                             mode=&quotconcat&quot))
+    predictions_right = TimeDistributed(embedding_right)(<a id="change">merge((right_features,
+
+                                                                right_metas),
+                                                               mode=&quotconcat&quot)</a>)
+
+    predictions_center = merge((central_features,
+                                central_metas), mode=&quotconcat&quot)
+
+    predictions_center = Dense(num_dense, activation=&quotrelu&quot)(predictions_center)
+    predictions_center = Dense(num_dense, activation=&quotrelu&quot)(predictions_center)
+
+    &#47&#47 dropout
+    predictions_left = Dropout(0.2)(predictions_left)
+    predictions_right = Dropout(0.2)(predictions_right)
+    predictions_center = Dropout(0.2)(predictions_center)
+
+    return_sequences = True
+    for k, stack_index in enumerate(range(len(num_units_lstm))):
+        if k == len(num_units_lstm) - 1:
+            return_sequences = False
+
+        if k &gt; 0:
+            &#47&#47 todo difference between concat and sum
+            predictions_left_tmp = merge([Activation(&quotrelu&quot)(predictions_left), predictions_left_old], mode=&quotsum&quot)
+            predictions_right_tmp = merge([Activation(&quotrelu&quot)(predictions_right), predictions_right_old], mode=&quotsum&quot)
+        else:
+            predictions_left_tmp = predictions_left
+            <a id="change">predictions_right_tmp</a> = predictions_right
+
+        predictions_left_old = predictions_left
+        predictions_right_old = predictions_right
+        predictions_left = predictions_left_tmp
+        <a id="change">predictions_right</a> = predictions_right_tmp
+
+        predictions_left = LSTM(num_units_lstm[stack_index],
+                                return_sequences=return_sequences,
+                                name=&quotlstm_left_&quot + str(stack_index)
+                                )(predictions_left)
+
+        <a id="change">predictions_right</a> = LSTM(num_units_lstm[stack_index],
+                                 return_sequences=return_sequences,
+                                 name=&quotlstm_right_&quot + str(stack_index)
+                                 )(predictions_right)
+
+        &#47&#47 todo dropout here?
+        predictions_left = Dropout(0.5)(predictions_left)
+        <a id="change">predictions_right</a> = Dropout(0.5)(predictions_right)
+
+    &#47&#47 retain only last input for skip connections
+    predictions_left_old = Lambda(lambda t: t[:, -1, :],
+                                  output_shape=lambda input_shape: (input_shape[0], input_shape[-1])
+                                  )(predictions_left_old)
+    <a id="change">predictions_right_old</a> = Lambda(lambda t: t[:, -1, :],
+                                   output_shape=lambda input_shape: (input_shape[0], input_shape[-1],)
+                                   )(predictions_right_old)
+    &#47&#47 concat or sum
+    predictions_left = merge([Activation(&quotrelu&quot)(predictions_left), predictions_left_old], mode=&quotconcat&quot)
+    predictions_right = merge([Activation(&quotrelu&quot)(predictions_right), predictions_right_old], mode=&quotconcat&quot)
+
+    <a id="change">predictions</a> = merge([predictions_left, predictions_center, predictions_right],
+                        mode=&quotconcat&quot)
+    <a id="change">predictions</a> = Dense(num_dense, activation=&quotrelu&quot)(predictions)
+    <a id="change">pitch_prediction</a> = Dense(num_pitches, activation=&quotsoftmax&quot,
+                             name=&quotpitch_prediction&quot)(predictions)
+
+    model = Model(input=[left_features, central_features, right_features,</code></pre><h3>After Change</h3><pre><code class='java'>
+    predictions_left = Dropout(0.2)(TimeDistributed(embedding_left)(Dropout(0.2)(merge((left_features,
+                                                                           left_metas),
+                                                                          mode=&quotconcat&quot))))
+    predictions_right = <a id="change">Dropout(0.2)(TimeDistributed(embedding_right)(Dropout(0.2)(merge((right_features,
+                                                                             right_metas),
+                                                                            mode=&quotconcat&quot))))</a>
+
+    predictions_center = Dropout(0.2)(merge((central_features,
+                                             central_metas), mode=&quotconcat&quot))
+
+    predictions_center = Dense(num_dense, activation=&quotrelu&quot)(predictions_center)
+    &#47&#47 dropout center
+    predictions_center = Dropout(0.2)(predictions_center)
+    predictions_center = Dense(num_dense, activation=&quotrelu&quot)(predictions_center)
+
+    &#47&#47 dropout
+
+    return_sequences = True
+    for k, stack_index in enumerate(range(len(num_units_lstm))):
+        if k == len(num_units_lstm) - 1:
+            return_sequences = False
+
+        if k &gt; 0:
+            &#47&#47 todo difference between concat and sum
+            predictions_left_tmp = merge([Activation(&quotrelu&quot)(predictions_left), predictions_left_old], mode=&quotsum&quot)
+            predictions_right_tmp = merge([Activation(&quotrelu&quot)(predictions_right), predictions_right_old], mode=&quotsum&quot)
+        else:
+            predictions_left_tmp = predictions_left
+            <a id="change">predictions_right_tmp</a> = predictions_right
+
+        predictions_left_old = predictions_left
+        predictions_right_old = predictions_right
+        predictions_left = predictions_left_tmp
+        <a id="change">predictions_right</a> = predictions_right_tmp
+
+        predictions_left = LSTM(num_units_lstm[stack_index],
+                                return_sequences=return_sequences,
+                                name=&quotlstm_left_&quot + str(stack_index)
+                                )(predictions_left)
+
+        <a id="change">predictions_right</a> = LSTM(num_units_lstm[stack_index],
+                                 return_sequences=return_sequences,
+                                 name=&quotlstm_right_&quot + str(stack_index)
+                                 )(predictions_right)
+
+        &#47&#47 todo dropout here?
+        predictions_left = Dropout(0.5)(predictions_left)
+        <a id="change">predictions_right</a> = Dropout(0.5)(predictions_right)
+
+    &#47&#47 retain only last input for skip connections
+    predictions_left_old = Lambda(lambda t: t[:, -1, :],
+                                  output_shape=lambda input_shape: (input_shape[0], input_shape[-1])
+                                  )(predictions_left_old)
+    <a id="change">predictions_right_old</a> = Lambda(lambda t: t[:, -1, :],
+                                   output_shape=lambda input_shape: (input_shape[0], input_shape[-1],)
+                                   )(predictions_right_old)
+    &#47&#47 todo concat or sum
+    predictions_left = merge([Activation(&quotrelu&quot)(predictions_left), predictions_left_old], mode=&quotsum&quot)
+    predictions_right = merge([Activation(&quotrelu&quot)(predictions_right), predictions_right_old], mode=&quotsum&quot)
+
+    <a id="change">predictions</a> = merge([predictions_left, predictions_center, predictions_right],
+                        mode=&quotconcat&quot)
+    <a id="change">predictions</a> = Dense(num_dense, activation=&quotrelu&quot)(predictions)
+    &#47&#47 todo dropout here ?
+    predictions = Dropout(0.2)(predictions)
+    <a id="change">pitch_prediction</a> = Dense(num_pitches, activation=&quotsoftmax&quot,
+                             name=&quotpitch_prediction&quot)(predictions)
+
+    model = Model(input=[left_features, central_features, right_features,</code></pre><img src="1278867.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Ghadjeres/DeepBach/commit/07151a9f75307c7109ffc2bca0aef137a82bcf20#diff-b33dc6965489140dac66353e5541b8e84a93ec1534e1f0ed551d202c06ba1891L167' target='_blank'>Link</a></div><div id='project'> Project Name: Ghadjeres/DeepBach</div><div id='commit'> Commit Name: 07151a9f75307c7109ffc2bca0aef137a82bcf20</div><div id='time'> Time: 2017-01-09</div><div id='author'> Author: hadjeres.g@gmail.com</div><div id='file'> File Name: deepBach.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: skip</div><BR>

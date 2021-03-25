@@ -1,0 +1,32 @@
+<html><h3>46413ee98f44a9b83231bebdae0bdd535f42f6c7,librosa/filters.py,,constantq,#,147
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 Place a log-normal window around center_freq
+        &#47&#47 We skip the sigma*sqrt(2*pi) normalization because it will wash out below anyway
+        C[i, 1:] = np.exp(-0.5 * ((<a id="change">np.log2(fftfreqs[1:])</a> - np.log2(center_freq)) /sigma)**2) / fftfreqs[1:]
+                                  
+        <a id="change">c_norm</a> = np.sqrt(np.sum(C[i]**2))
+        &#47&#47 Normalize each filter
+        if c_norm &gt; 0:
+            C[i] = C[i] / c_norm</code></pre><h3>After Change</h3><pre><code class='java'>
+    C = np.zeros( (n_filters, n_fft /2  + 1) )
+    
+    &#47&#47 Get log frequencies of bins
+    log_freqs = <a id="change">np.log2(librosa.fft_freq(sr, n_fft)[1:])</a>
+                                
+    for i in range(n_filters):
+        &#47&#47 What&quots the center (median) frequency of this filter?
+        center_freq = correction * fmin * (2.0**(float(i)/bins_per_octave))
+        
+        &#47&#47 Place a log-normal window around center_freq
+        &#47&#47 We skip the sqrt(2*pi) normalization because it will wash out below anyway
+        C[i, 1:] = np.exp(-0.5 * ((log_freqs - np.log2(center_freq)) /sigma)**2 - <a id="change">np.log2(sigma)</a> - log_freqs)
+                                  
+        &#47&#47 Normalize each filter
+        <a id="change">c_norm</a> = np.sqrt(np.sum(C[i]**2))
+        if c_norm &gt; 0:
+            C[i] = C[i] / c_norm
+        </code></pre><img src="3152720.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/46413ee98f44a9b83231bebdae0bdd535f42f6c7#diff-260ae01b06042016564c9ee1694681c899dffdcb1452b5b2c2ee8217066b3cf0L192' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 46413ee98f44a9b83231bebdae0bdd535f42f6c7</div><div id='time'> Time: 2013-11-22</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/filters.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: constantq</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/c5d2c23110586075a1ad6721dd9a74064111b595#diff-33ed63a42e365ade60abd769575eefc0ed4ff819f4977c26b6fc2a53af90d9e7L350' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: c5d2c23110586075a1ad6721dd9a74064111b595</div><div id='time'> Time: 2015-03-18</div><div id='author'> Author: chebee7i@gmail.com</div><div id='file'> File Name: dit/math/aitchison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ilr</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/c5d2c23110586075a1ad6721dd9a74064111b595#diff-33ed63a42e365ade60abd769575eefc0ed4ff819f4977c26b6fc2a53af90d9e7L310' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: c5d2c23110586075a1ad6721dd9a74064111b595</div><div id='time'> Time: 2015-03-18</div><div id='author'> Author: chebee7i@gmail.com</div><div id='file'> File Name: dit/math/aitchison.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: alr</div><BR>

@@ -1,0 +1,24 @@
+<html><h3>725fdaf504237190f6787dda3d72c39010a4c574,src/python/pants/engine/collection.py,Collection,__getitem__,#Collection#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __getitem__(self, index: Union[int, slice]) -&gt; Union[T, "Collection[T]"]:  &#47&#47 noqa: F811
+        if isinstance(index, int):
+            <a id="change">return self.dependencies[index]</a>
+        return self.__class__(self.dependencies[index])
+
+    def __len__(self) -&gt; int:
+        return len(self.dependencies)</code></pre><h3>After Change</h3><pre><code class='java'>
+        ...
+
+    def __getitem__(self, index: Union[int, slice]) -&gt; Union[T, "Collection[T]"]:  &#47&#47 noqa: F811
+        <a id="change">result = super().__getitem__(index)</a>
+        if isinstance(index, int):
+            return cast(T, result)
+        <a id="change">return self.__class__(cast(Tuple[T, ...], result))</a>
+
+    def __eq__(self, other: Any) -&gt; bool:
+        return type(self) == type(other) and super().__eq__(other)
+</code></pre><img src="24791530.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/725fdaf504237190f6787dda3d72c39010a4c574#diff-70ffe31afc58c6967a7f13575f6a2840aca2edc88995579beab414d4a217e13dL34' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: 725fdaf504237190f6787dda3d72c39010a4c574</div><div id='time'> Time: 2020-07-26</div><div id='author'> Author: john.sirois@gmail.com</div><div id='file'> File Name: src/python/pants/engine/collection.py</div><div id='class'> Class Name: Collection</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/3c7d4d1240103e4c06a0110b00e11b7e1002dd0e#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L62' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 3c7d4d1240103e4c06a0110b00e11b7e1002dd0e</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: LSTM</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1b92598dbfb489fe0f7a1c9b2015db5d702be948#diff-2000e8749a91df13f189f011eef0f2fb64aa34578021a257f7791b78dcdd9a88L24' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1b92598dbfb489fe0f7a1c9b2015db5d702be948</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/embed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Embed</div><BR>

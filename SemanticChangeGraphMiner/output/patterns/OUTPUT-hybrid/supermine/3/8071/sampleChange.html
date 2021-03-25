@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        a = np.random.random(shape)
+        for axis in (None, 0):
+            for ddof in (0, 1):
+                yield <a id="change">(check_mean_sigma, a, axis, ddof)</a>
+
+
+&#47&#47---------------------------------------------------------------------------
+&#47&#47 Check that the keepdims argument works as expected</code></pre><h3>After Change</h3><pre><code class='java'>
+                             ddof=ddof)
+
+    mu2 = np.mean(a, axis=axis)
+    sigma2 = <a id="change">np.std(a, axis=axis, ddof=ddof)</a>
+
+    assert_array_almost_equal(mu1, mu2)
+    assert_array_almost_equal(sigma1, sigma2)
+</code></pre>

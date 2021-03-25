@@ -1,0 +1,21 @@
+<html><h3>07e464d81392c4e918e8c0f394793449866b0166,tensorpack/models/layer_norm.py,,InstanceNorm,#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mean, var = tf.nn.moments(x, axis, keep_dims=True)
+
+    if not use_affine:
+        <a id="change">return tf.divide(x - mean, tf.sqrt(var + epsilon), name=&quotoutput&quot)</a>
+
+    beta = tf.get_variable(&quotbeta&quot, [ch], initializer=tf.constant_initializer())
+    beta = tf.reshape(beta, new_shape)
+    if gamma_init is None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        gamma = tf.get_variable(&quotgamma&quot, [ch], initializer=gamma_initializer)
+        gamma = tf.reshape(gamma, new_shape)
+    else:
+        <a id="change">gamma = tf.ones([1, 1, 1, 1], name=&quotgamma&quot, dtype=x.dtype)</a>
+    ret = tf.nn.batch_normalization(x, mean, var, beta, gamma, epsilon, name=&quotoutput&quot)
+
+    vh = ret.variables = VariableHolder()
+    if scale:</code></pre><img src="8424210.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorpack/tensorpack/commit/07e464d81392c4e918e8c0f394793449866b0166#diff-015352482dc875bea11e6bd395f24f4489ac02c7cdb58bf11933c01636706bf4L94' target='_blank'>Link</a></div><div id='project'> Project Name: tensorpack/tensorpack</div><div id='commit'> Commit Name: 07e464d81392c4e918e8c0f394793449866b0166</div><div id='time'> Time: 2020-03-08</div><div id='author'> Author: ppwwyyxx@users.noreply.github.com</div><div id='file'> File Name: tensorpack/models/layer_norm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: InstanceNorm</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/deepinsight/insightface/commit/79aacd2bb3323fa50a125b828bb1656166604487#diff-784578277f3a429d828c3828b6c6c9341067de5a78e344af1e64c78ad97dd45fL333' target='_blank'>Link</a></div><div id='project'> Project Name: deepinsight/insightface</div><div id='commit'> Commit Name: 79aacd2bb3323fa50a125b828bb1656166604487</div><div id='time'> Time: 2021-01-27</div><div id='author'> Author: guojia@gmail.com</div><div id='file'> File Name: tools/onnx2caffe/onnx2caffe/_operators.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _convert_resize</div><BR>

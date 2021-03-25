@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_interval(start, end, interval, desc):
+
+    <a id="change">print(start, end, interval)</a>
+    if interval == &quotsec&quot:
+        delta = datetime.timedelta(seconds=1)
+    elif interval == &quotmin&quot:
+        delta = datetime.timedelta(minutes=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if interval[0].isdigit():
+        import re
+        <a id="change">match = re.match(&quot(\d+)(.+)&quot, interval)</a>
+        <a id="change">mult = int(match.group(1))</a>
+        <a id="change">interval = match.group(2)</a>
+    else:
+        mult = 1
+
+    if interval == &quotsec&quot:</code></pre>

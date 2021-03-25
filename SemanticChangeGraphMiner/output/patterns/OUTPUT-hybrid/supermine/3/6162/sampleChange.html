@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    blacklist_ids = list(chain(*hetatm_residues.values()))
+    protein_amap = np.array([i for i in range(mol.GetNumAtoms())
+                             if i not in blacklist_ids])
+    protein_coords = np.array(<a id="change">mol</a>.GetConformer().GetPositions())[protein_amap]
+
+    &#47&#47 Pocket selection based on cutoff
+    mask = (cdist(protein_coords, ligand_coords) &lt;= cutoff).any(axis=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    blacklist_ids = list(chain(*hetatm_residues.values()))
+    protein_amap = np.array([i for i in range(mol.GetNumAtoms())
+                             if i not in blacklist_ids])
+    <a id="change">conf = mol.GetConformer()</a>
+    protein_coords = np.array([conf.GetAtomPosition(i)
+                              for i in range(mol.GetNumAtoms())])[protein_amap]
+
+    &#47&#47 Pocket selection based on cutoff</code></pre>

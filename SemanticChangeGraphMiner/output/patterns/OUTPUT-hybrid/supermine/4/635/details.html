@@ -1,0 +1,28 @@
+<html><h3>e81142f0869321cd8792e13bfc4f6fb85d9f1efc,libact/query_strategies/uncertainty_sampling.py,UncertaintySampling,make_query,#UncertaintySampling#,62
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    ask_id = j
+
+        else:
+            <a id="change">raise ValueError(
+                "Invalid method &quot%s&quot (available choices: (&quotlc&quot, &quotsm&quot, &quotle&quot)"
+                % self.method
+                )</a>
+
+        return unlabeled_entry_ids[ask_id]
+
+    def get_model(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif self.method == &quotsm&quot:  &#47&#47 smallest margin
+            dvalue = self.model.predict_real(X_pool)
+            if np.shape(dvalue)[1] == 2:
+                <a id="change">ind = [0, 1]</a>
+            else:
+                &#47&#47 Find 2 largest decision values
+                ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]
+            margin = <a id="change">np.abs(np.abs(dvalue[:, ind[0]]) - np.abs(dvalue[:, ind[1]]))</a>
+            ask_id = np.argmin(margin)
+
+        return unlabeled_entry_ids[ask_id]
+</code></pre><img src="3065214.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e81142f0869321cd8792e13bfc4f6fb85d9f1efc#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L59' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e81142f0869321cd8792e13bfc4f6fb85d9f1efc</div><div id='time'> Time: 2015-12-22</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/86d19f6048a17e2ae37fecd1f862e828da20d47a#diff-a29898982d28a257f6562829f917315b5de02fbf1ebe755422e01c86339472cbL108' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 86d19f6048a17e2ae37fecd1f862e828da20d47a</div><div id='time'> Time: 2007-11-30</div><div id='author'> Author: bryanv@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco2/label.py</div><div id='class'> Class Name: Label</div><div id='method'> Method Name: get_bounding_box</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/d1073f91087194855dd1f02f7016888634d247b7#diff-321a7efb4c6e7aabc58cc89bf75590db0bd4536ad538ba9ecba3caf5d967530fL142' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: d1073f91087194855dd1f02f7016888634d247b7</div><div id='time'> Time: 2020-01-20</div><div id='author'> Author: sofie.vanlandeghem@gmail.com</div><div id='file'> File Name: thinc/loss.py</div><div id='class'> Class Name: CosineDistance</div><div id='method'> Method Name: get_loss</div><BR>

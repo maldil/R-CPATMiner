@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+for content_path in content_paths:
+    for style_path in style_paths:
+        content = <a id="change">content_transform(Image.open(content_path)).unsqueeze(0)</a>
+        style = style_transform(Image.open(style_path)).unsqueeze(0)
+        if args.gpu:
+            style = style.cuda()
+            content = content.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+    for style_path in style_paths:
+        content = content_transform(Image.open(content_path))
+        style = style_transform(Image.open(style_path))
+        <a id="change">if args.preserve_color:
+            style = coral(style, content)
+       </a> if args.gpu:
+            style = style.cuda()
+            content = content.cuda()
+        content = Variable(content.unsqueeze(0), volatile=True)</code></pre>

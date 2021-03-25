@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		self.epsilon = epsilon
+
+		with nn.parameter_scope(scope_name):
+			self.embedding_weight = nn.parameter.get_parameter_or_create(&quotW&quot, shape=<a id="change">(self.num_embedding, self.embedding_dim)</a>,
+			initializer=I.NormalInitializer(rng=self.rng), need_grad=True)
+
+			self.ema_cluster_size = nn.parameter.get_parameter_or_create(&quotema_cluster_size&quot, shape = (self.num_embedding,), </code></pre><h3>After Change</h3><pre><code class='java'>
+		&#47&#47 with nn.parameter_scope(scope_name):
+			&#47&#47 self.embedding_weight = nn.parameter.get_parameter_or_create(&quotemb/W&quot, shape=(self.num_embedding, self.embedding_dim),
+			&#47&#47 initializer=I.NormalInitializer(rng=self.rng), need_grad=True)
+		self.embedding_weight = nn.Variable.from_numpy_array(<a id="change">np</a>.random.randn(self.num_embedding, self.embedding_dim))
+		self.embedding_weight.need_grad = True
+		self.ema_cluster_size = nn.Variable.from_numpy_array(np.zeros(self.num_embedding,))
+		self.ema_cluster_size.need_grad = False
+		self.ema_w = nn.Variable.from_numpy_array(<a id="change">np.random.randn(self.num_embedding, self.embedding_dim)</a>)
+		self.ema_w.need_grad = True
+
+			&#47&#47 self.ema_cluster_size = nn.parameter.get_parameter_or_create(&quotema_cluster_size&quot, shape = (self.num_embedding,), </code></pre>

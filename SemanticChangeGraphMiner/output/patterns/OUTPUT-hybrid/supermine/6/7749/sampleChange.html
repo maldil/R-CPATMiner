@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del <a id="change">state[&quot_remote_environment&quot]</a>
+        del state[&quot_remote_path&quot]
+
+        return state
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return diagnostics
+
+    def __getstate__(self):
+        <a id="change">super_state = super(RemoteSampler, self).__getstate__()</a>
+        <a id="change">state = {
+            key: value for key, value in super_state
+            if key not in (&quot_remote_environment&quot, &quot_remote_path&quot)
+        }</a>
+
+        return state
+
+    def __setstate__(self, state):</code></pre>

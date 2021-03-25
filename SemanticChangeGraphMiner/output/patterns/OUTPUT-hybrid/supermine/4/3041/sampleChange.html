@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def resize(image, new_shape, interpolation="continuous"):
+    input_shape = np.asarray(image.shape, dtype=np.float16)
+    ras_image = reorder_img(image, resample=interpolation)
+    <a id="change">output_shape = np.asarray(new_shape)</a>
+    new_spacing = input_shape/output_shape
+    new_affine = np.copy(ras_image.affine)
+    new_affine[:3, :3] = ras_image.affine[:3, :3] * np.diag(new_spacing)
+    <a id="change">return resample_img(ras_image, target_affine=new_affine, target_shape=output_shape, interpolation=interpolation)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def resize(image, new_shape, interpolation="continuous"):
+    image = reorder_img(image, resample=interpolation)
+    zoom_level = np.divide(new_shape, image.shape)
+    <a id="change">new_diagonal = (image.affine.diagonal()[:3] / zoom_level).tolist() + [1]</a>
+    new_affine = np.copy(image.affine)
+    np.fill_diagonal(new_affine, new_diagonal)
+    new_data = zoom(image.get_data(), zoom_level)
+    return new_img_like(image, new_data, affine=new_affine)</code></pre>

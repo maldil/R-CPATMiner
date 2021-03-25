@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Set the remaining config parameters based on the loaded dataset
+    config["model"]["*"]["with_array"]["layer"]["nV"] = len(vocab)
+    <a id="change">config["model"]["*"]["softmax"]["nO"]</a> = nr_class
+
+    &#47&#47 Load the config
+    loaded_config = thinc.registry.make_from_config(config)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Here we have the model and optimizer, built for us by the registry.
+    model = loaded_config["model"]
+    model.get_ref("embed").set_dim("nV", len(vocab))
+    <a id="change">model.initialize(X=train_X, Y=train_y)</a>
+
+    optimizer = loaded_config["optimizer"]
+
+    &#47&#47 Get training parameters from config</code></pre>

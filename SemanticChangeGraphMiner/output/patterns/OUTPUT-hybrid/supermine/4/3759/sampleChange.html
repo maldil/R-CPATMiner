@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+streamlines = Streamlines(pft_streamline_generator)
+save_trk("pft_streamline.trk", streamlines, affine, shape)
+
+<a id="change">renderer.clear()</a>
+renderer.add(actor.line(streamlines, cmap.line_colors(streamlines)))
+window.record(renderer, out_path=&quotpft_streamlines.png&quot, size=(600, 600))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+streamlines = Streamlines(prob_streamline_generator)
+save_trk("tractogram_probabilistic_cmc.trk", streamlines, affine, shape)
+
+<a id="change">if have_fury:
+    r = window.Renderer()
+    r.add(actor.line(streamlines, colormap.line_colors(streamlines)))
+    window.record(r, out_path=&quottractogram_probabilistic_cmc.png&quot,
+                  size=(800, 800))
+    if interactive:
+        window.show(r)
+
+</a>
+.. figure:: tractogram_probabilistic_cmc.png
+ :align: center
+</code></pre>

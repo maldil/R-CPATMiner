@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 Main inference function
+def inference(question, include_blacklisted = True):
+    answers = inference_helper(tokenize(question))[0]
+    <a id="change">answers = detokenize(answers)</a>
+    <a id="change">answers = replace_in_answers(answers, &quotanswers&quot)</a>
+    <a id="change">answers_score = score_answers(answers, &quotanswers&quot)</a>
+
+    best_index, best_score = get_best_score(answers_score, include_blacklisted)
+
+    return {&quotanswers&quot: answers, &quotscores&quot: answers_score, &quotbest_index&quot: best_index, &quotbest_score&quot: best_score}</code></pre><h3>After Change</h3><pre><code class='java'>
+def inference(questions, include_blacklisted = True):
+
+    &#47&#47 Process questions
+    answers_list = <a id="change">process_questions(questions, include_blacklisted)</a>
+
+    &#47&#47 Return (one or more?)
+    if len(answers_list) == 1:
+        return answers_list[0]</code></pre>

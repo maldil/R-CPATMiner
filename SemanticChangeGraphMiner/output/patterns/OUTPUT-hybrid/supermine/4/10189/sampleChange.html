@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError(
+                "`y0` elements should be scalars")
+
+        for i, (x, y) in <a id="change">enumerate(zip(x0, y0))</a>:
+            &#47&#47 on the last iteration fit a model so we can start predicting
+            &#47&#47 unless there are random points to be evaluated next
+            fit_model = i == len(x0) - 1 and n_random_starts == 0</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 User suggested points at which to evaluate the objective first
+    if x0 and y0 is None:
+        y0 = list(map(func, x0))
+        <a id="change">if not all(map(np.isscalar, y0)):
+            raise ValueError(
+                "`y0` elements should be scalars")
+       </a> optimizer.tell(x0, y0)
+
+        if callbacks:
+            result = create_result(optimizer.Xi, optimizer.yi,</code></pre>

@@ -1,0 +1,29 @@
+<html><h3>7c960272c5ab4d25a022538f5849addec3e6bfee,loglizer/preprocessing.py,FeatureExtractor,transform,#FeatureExtractor#,71
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for i in range(X_seq.shape[0]):
+            X_df.loc[i, :] = [0] * len(self.events)
+            event_counts = Counter(X_seq[i])
+            <a id="change">for event, count in event_counts.items():
+                if event in self.events:
+                    X_df.loc[i, event] = count
+       </a> X = X_df.fillna(0).values
+        
+        num_instance, num_event = X.shape
+        if self.term_weighting == &quottf-idf&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+            X_new: The transformed data matrix
+        
+        print(&quot====== Transformed test data summary ======&quot)
+        <a id="change">X_counts = []</a>
+        for i in range(X_seq.shape[0]):
+            event_counts = Counter(X_seq[i])
+            X_counts.append(event_counts)
+        X_df = <a id="change">pd.DataFrame(X_counts)</a>
+        X_df = X_df.fillna(0)
+        <a id="change">empty_events = set(self.events) - set(X_df.columns)</a>
+        for event in empty_events:
+            X_df[event] = [0] * len(X_df)
+        X = X_df[self.events].values
+        if self.oov:</code></pre><img src="30964889.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/logpai/loglizer/commit/7c960272c5ab4d25a022538f5849addec3e6bfee#diff-43fc2f56bcafd5edb2c8bf9aa213331585a7f29d8b193e07dfd329e56c95b036L82' target='_blank'>Link</a></div><div id='project'> Project Name: logpai/loglizer</div><div id='commit'> Commit Name: 7c960272c5ab4d25a022538f5849addec3e6bfee</div><div id='time'> Time: 2019-02-25</div><div id='author'> Author: zhujm.home@gmail.com</div><div id='file'> File Name: loglizer/preprocessing.py</div><div id='class'> Class Name: FeatureExtractor</div><div id='method'> Method Name: transform</div><BR><BR><div id='link'><a href='https://github.com/Vaibhav/Stock-Analysis/commit/ded118ad8554f0faedc61193e60fb9bbde026a4d#diff-5255f03d66205a0ada7e6c7d4693b823d28890ca401aa0a91b64ca14bbcc521eL77' target='_blank'>Link</a></div><div id='project'> Project Name: Vaibhav/Stock-Analysis</div><div id='commit'> Commit Name: ded118ad8554f0faedc61193e60fb9bbde026a4d</div><div id='time'> Time: 2018-08-15</div><div id='author'> Author: ishuvaibhav@gmail.com</div><div id='file'> File Name: Screener/QMAScreener.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/fc4917ae8a7320fc9a258b50d82a177ed2124a91#diff-05d63b12eb3eb6efd83de505bdcfde65379308fc9566eb16fa22e312439e31c0L152' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: fc4917ae8a7320fc9a258b50d82a177ed2124a91</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/basen.py</div><div id='class'> Class Name: BaseNEncoder</div><div id='method'> Method Name: fit_base_n_encoding</div><BR>

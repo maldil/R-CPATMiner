@@ -1,0 +1,45 @@
+<html><h3>e2f021a5e4444befdb9e5926b96bc96c408faa85,examples/cross_validation.py,,,#,30
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 -----------------------------------------------------------------------------
+data = load_diabetes()
+
+<a id="change">icp</a> = IcpRegressor(RegressorNc(<a id="change">RandomForestRegressor(n_estimators=100)</a>,
+                               SignErrorErrFunc()))
+<a id="change">icp_cv</a> = RegIcpCvHelper(icp)
+
+<a id="change">scores</a> = cross_val_score(icp_cv,
+                         data.data,
+                         data.target,
+                         iterations=10,
+                         folds=10,
+                         scoring_funcs=[reg_mean_errors, reg_median_size],
+                         significance_levels=[0.05, 0.1, 0.2])
+
+print(&quotSigned error regression: diabetes&quot)
+<a id="change">scores</a> = scores.drop([&quotfold&quot, &quotiter&quot], axis=1)
+print(scores.groupby([&quotsignificance&quot]).mean())
+
+&#47&#47 -----------------------------------------------------------------------------</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 -----------------------------------------------------------------------------
+data = load_diabetes()
+
+<a id="change">icp</a> = IcpRegressor(RegressorNc(<a id="change">RegressorAdapter(RandomForestRegressor(n_estimators=100))</a>,
+                               SignErrorErrFunc()))
+<a id="change">icp_cv</a> = RegIcpCvHelper(icp)
+
+<a id="change">scores</a> = cross_val_score(icp_cv,
+                         data.data,
+                         data.target,
+                         iterations=5,
+                         folds=5,
+                         scoring_funcs=[reg_mean_errors, reg_median_size],
+                         significance_levels=[0.05, 0.1, 0.2])
+
+print(&quotSigned error regression: diabetes&quot)
+<a id="change">scores</a> = scores.drop([&quotfold&quot, &quotiter&quot], axis=1)
+print(scores.groupby([&quotsignificance&quot]).mean())
+
+&#47&#47 -----------------------------------------------------------------------------</code></pre><img src="1047823.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/donlnz/nonconformist/commit/e2f021a5e4444befdb9e5926b96bc96c408faa85#diff-b8e1515f57a8d1ead9d72d9f046c86d28b8bb813e5662b57b91aa7df304b5f97L32' target='_blank'>Link</a></div><div id='project'> Project Name: donlnz/nonconformist</div><div id='commit'> Commit Name: e2f021a5e4444befdb9e5926b96bc96c408faa85</div><div id='time'> Time: 2016-09-09</div><div id='author'> Author: henrik.linusson@gmail.com</div><div id='file'> File Name: examples/cross_validation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

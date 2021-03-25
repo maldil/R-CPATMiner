@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @pytest.mark.parametrize("batch_shape", [(1, 1, 10, 16), (2, 4, 8, 15)])
+    def test_ssim(self, device, batch_shape, window_size, reduction_type):
+        &#47&#47 input data
+        img = <a id="change">torch.rand(batch_shape).to(device)</a>
+
+        ssim = kornia.losses.SSIM(window_size, reduction_type)
+        assert_allclose(ssim(img, img).item(), 0.0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        ssim = kornia.losses.SSIM(window_size, reduction_type)
+        loss = ssim(img, img)
+
+        tol_val: <a id="change">float = utils._get_precision_by_name(device, &quotxla&quot, 1e-1, 1e-4)</a>
+        assert_allclose(loss.item(), 0.0, rtol=tol_val, atol=tol_val)
+
+    def test_gradcheck(self, device, dtype):
+        &#47&#47 input data</code></pre>

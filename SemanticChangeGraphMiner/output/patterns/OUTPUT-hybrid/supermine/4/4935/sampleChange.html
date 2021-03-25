@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Process inputs
+        [x_hat, y] = self._autoencoder(x_in)
+        &#47&#47 Outputs
+        x_diff = <a id="change">merge([x_hat, x_pred],
+                       mode=lambda a, b: a - b,
+                       output_shape=lambda L: L[1])</a>
+
+        &#47&#47 Objectives
+        def weighted_mse_x(y_true, y_pred):
+            &quot&quot&quot Hack: This fn doesn&quott accept additional arguments.
+                      We use y_true to pass them.
+                y_pred: Contains x_hat - x_pred
+                y_true: Contains b
+            &quot&quot&quot
+            return KBack.sum(
+                KBack.square(y_pred * y_true[:, 0:self._node_num]),
+                axis=-1
+            )
+
+        &#47&#47 Model
+        <a id="change">self._model</a> = Model(input=[x_in, x_pred], output=x_diff)
+        sgd = SGD(lr=self._xeta, decay=1e-5, momentum=0.99, nesterov=True)
+        adam = Adam(lr=self._xeta, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+        self._model.compile(optimizer=adam, loss=weighted_mse_x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Process inputs
+        [x_hat, y] = self._autoencoder(x_in)
+        &#47&#47 Outputs
+        x_diff = <a id="change">Subtract()([x_hat, x_in])</a> 
+&#47&#47         x_diff = merge([x_hat, x_pred],
+&#47&#47                        mode=lambda a, b: a - b,
+&#47&#47                        output_shape=lambda L: L[1])
+
+        &#47&#47 Objectives
+        def weighted_mse_x(y_true, y_pred):
+            &quot&quot&quot Hack: This fn doesn&quott accept additional arguments.
+                      We use y_true to pass them.
+                y_pred: Contains x_hat - x_pred
+                y_true: Contains b
+            &quot&quot&quot
+            return KBack.sum(
+                KBack.square(y_pred * y_true[:, 0:self._node_num]),
+                axis=-1
+            )
+
+        &#47&#47 Model
+        <a id="change">self._model</a> = Model(input=[x_in, x_pred], output=x_diff)
+        sgd = SGD(lr=self._xeta, decay=1e-5, momentum=0.99, nesterov=True)
+        adam = Adam(lr=self._xeta, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+        self._model.compile(optimizer=adam, loss=weighted_mse_x)</code></pre>

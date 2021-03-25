@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def forward(model, Xs, is_train):
+    l2r, r2l = model.layers
+    nO = model.get_dim("nO")
+    <a id="change">reverse_Xs = [l2r.ops.xp.ascontiguousarray(X[::-1]) for X in Xs]</a>
+    l2r_Zs, bp_l2r_Zs = l2r(Xs, is_train)
+    r2l_Zs, bp_r2l_Zs = r2l(reverse_Xs, is_train)
+
+    def backprop(dZs, sgd=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+    Xs_rev = _reverse(model.ops, Xs)
+    l2r_Zs, bp_l2r_Zs = l2r(Xs, is_train)
+    r2l_Zs, bp_r2l_Zs = r2l(Xs_rev, is_train)
+    <a id="change">Zs</a>, split = _concatenate(l2r_Zs, r2l_Zs)
+
+    def backprop(dZs, sgd=None):
+        d_l2r_Zs, d_r2l_Zs = split(dZs)</code></pre>

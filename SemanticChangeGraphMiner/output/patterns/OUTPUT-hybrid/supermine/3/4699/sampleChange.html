@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for node in self.nodes():
+            markov_blanket = set(self.markov_blanket(node))
+            rest = all_vars - set([node]) - markov_blanket
+            print(<a id="change">list(markov_blanket)</a>, list(rest))
+            local_independencies.add_assertions([node, list(rest), list(markov_blanket)])
+
+        local_independencies.reduce()</code></pre><h3>After Change</h3><pre><code class='java'>
+        for node in self.nodes():
+            markov_blanket = set(self.markov_blanket(node))
+            rest = all_vars - set([node]) - markov_blanket
+            <a id="change">try:
+                local_independencies.add_assertions([node, list(rest), list(markov_blanket)])
+            except RequiredError:
+                pass
+
+       </a> local_independencies.reduce()
+
+        if latex:
+            return local_independencies.latex_string()</code></pre>

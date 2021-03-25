@@ -1,0 +1,38 @@
+<html><h3>8abc4a03c82104f694b4340715e558708a873984,inputs/Cifar100.py,Cifar100,_read,#Cifar100#,61
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 The first byte represent the coarse-label.
+        &#47&#47 Extract the second byte that&quots the fine-label and convert it from uint8-&gt;int32.
+        result["label"] = <a id="change">tf.cast(
+            tf.slice(record_bytes, [1], [label_bytes - 1]), tf.int32)</a>
+
+        &#47&#47 The remaining bytes after the label represent the image, which we reshape
+        &#47&#47 from [depth * height * width] to [depth, height, width].
+        depth_major = tf.reshape(
+            tf.slice(record_bytes, [label_bytes], [image_bytes]),
+            [result["depth"], result["height"], result["width"]])
+
+        &#47&#47 Convert from [depth, height, width] to [height, width, depth].
+        <a id="change">image</a> = tf.cast(tf.transpose(depth_major, [1, 2, 0]), tf.float32)
+
+        &#47&#47 Convert from [0, 255] -&gt; [0, 1]
+        image = tf.divide(image, 255.0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 The first byte represent the coarse-label.
+        &#47&#47 Extract the second byte that&quots the fine-label and convert it from uint8-&gt;int32.
+        result["label"] = tf.squeeze(
+            <a id="change">tf.cast(tf.slice(record_bytes, [1], [label_bytes - 1]), tf.int32)</a>)
+
+        &#47&#47 The remaining bytes after the label represent the image, which we reshape
+        &#47&#47 from [depth * height * width] to [depth, height, width].
+        depth_major = tf.reshape(
+            tf.slice(record_bytes, [label_bytes], [image_bytes]),
+            [result["depth"], result["height"], result["width"]])
+
+        &#47&#47 Convert from [depth, height, width] to [height, width, depth].
+        <a id="change">image</a> = tf.cast(tf.transpose(depth_major, [1, 2, 0]), tf.float32)
+
+        &#47&#47 Convert from [0, 255] -&gt; [0, 1]
+        image = tf.divide(image, 255.0)</code></pre><img src="872637.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/8abc4a03c82104f694b4340715e558708a873984#diff-9e879669670263b63549597af5d204b8babed619ac640716c552f15710a673caL111' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 8abc4a03c82104f694b4340715e558708a873984</div><div id='time'> Time: 2017-02-01</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: inputs/Cifar100.py</div><div id='class'> Class Name: Cifar100</div><div id='method'> Method Name: _read</div><BR><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/8abc4a03c82104f694b4340715e558708a873984#diff-9e879669670263b63549597af5d204b8babed619ac640716c552f15710a673caL111' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 8abc4a03c82104f694b4340715e558708a873984</div><div id='time'> Time: 2017-02-01</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: inputs/Cifar100.py</div><div id='class'> Class Name: Cifar100</div><div id='method'> Method Name: _read</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/cb93c20504c41b63bf29ca6df5a576ee81c3728b#diff-52a49ba971e0fdd7f14b5abaca1f84e1c5aa68e172ad97a88b24a2b74511eb81L370' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: cb93c20504c41b63bf29ca6df5a576ee81c3728b</div><div id='time'> Time: 2020-10-13</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: official/vision/beta/modeling/heads/instance_heads.py</div><div id='class'> Class Name: MaskHead</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/8abc4a03c82104f694b4340715e558708a873984#diff-1c298a2134e3d9a3a16acb151d80041c5bcf8abeb7dc06758202cab3b33671c6L108' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 8abc4a03c82104f694b4340715e558708a873984</div><div id='time'> Time: 2017-02-01</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: inputs/Cifar10.py</div><div id='class'> Class Name: Cifar10</div><div id='method'> Method Name: _read</div><BR><BR><div id='link'><a href='https://github.com/IndicoDataSolutions/finetune/commit/98c6d3bc803e5d04be425e6b2eabca3ea707ed0e#diff-21532e7250473b772d47e723fd7b913e73d1ec3010a88371c9fe974bd8aa641eL140' target='_blank'>Link</a></div><div id='project'> Project Name: IndicoDataSolutions/finetune</div><div id='commit'> Commit Name: 98c6d3bc803e5d04be425e6b2eabca3ea707ed0e</div><div id='time'> Time: 2020-08-24</div><div id='author'> Author: madison@indico.io</div><div id='file'> File Name: finetune/nn/target_blocks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _apply_class_weight</div><BR>

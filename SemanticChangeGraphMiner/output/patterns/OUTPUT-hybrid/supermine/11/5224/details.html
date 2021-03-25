@@ -1,0 +1,48 @@
+<html><h3>6c89ec0f602e12acb0efe50d7eb626f781e911bf,nara_wpe/wpe.py,,wpe_v8,#,377
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47         iterations=iterations,
+    &#47&#47         neighborhood=neighborhood,
+    &#47&#47     )
+    <a id="change">assert Y.ndim == 3, Y.shape</a>
+
+    F = Y.shape[batch_axis]
+    index = [slice(None)] * Y.ndim
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def wpe_v8(Y, K=10, delay=3, iterations=3, neighborhood=0):
+    <a id="change">if Y.ndim == 2:
+        return wpe_v6(
+            Y,
+            K=K,
+            delay=delay,
+            iterations=iterations,
+            neighborhood=neighborhood,
+        )
+    elif Y.ndim == 3:
+        batch_axis = 0
+        F = Y.shape[batch_axis]
+        index = [slice(None)] * Y.ndim
+
+        out = []
+        for f in range(F):
+            index[batch_axis] = f
+            out.append(wpe_v6(
+                Y=Y[index],
+                K=K,
+                delay=delay,
+                iterations=iterations,
+                neighborhood=neighborhood,
+            ))
+        return np.stack(out, axis=batch_axis)
+    else:
+        raise NotImplementedError(&quotInput shape is to be (F, D, T) or (D, T).&quot)
+
+
+</a>wpe = wpe_v7
+
+def abs_square(x: np.ndarray):
+    </code></pre><img src="22897916.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/fgnt/nara_wpe/commit/6c89ec0f602e12acb0efe50d7eb626f781e911bf#diff-b5d67ad6d85b5e35a1f8351a839b625f84b35b3d8964d5ea0978b9dfb4006b1dL378' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/nara_wpe</div><div id='commit'> Commit Name: 6c89ec0f602e12acb0efe50d7eb626f781e911bf</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: nara_wpe/wpe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wpe_v8</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/139259ac8ac83160502cbb896371ce4fa4027361#diff-3f83b448acd932f72eef9b1ae710db293b42fd4a4faa1c4d2b0ce4530c020fd1L74' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: 139259ac8ac83160502cbb896371ce4fa4027361</div><div id='time'> Time: 2019-10-10</div><div id='author'> Author: ml.smiley3@gmail.com</div><div id='file'> File Name: primelib/primelib.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: isPrime</div><BR><BR><div id='link'><a href='https://github.com/fgnt/nara_wpe/commit/ab6b42b73b4d8fed909b041966bebe8b025889e2#diff-b5d67ad6d85b5e35a1f8351a839b625f84b35b3d8964d5ea0978b9dfb4006b1dL378' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/nara_wpe</div><div id='commit'> Commit Name: ab6b42b73b4d8fed909b041966bebe8b025889e2</div><div id='time'> Time: 2018-05-28</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: nara_wpe/wpe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wpe_v8</div><BR>

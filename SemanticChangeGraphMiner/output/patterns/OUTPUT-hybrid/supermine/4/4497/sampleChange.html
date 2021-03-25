@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        logits = layers.nn.linear(outputs[:, -1, :], tgt_vocab_size, True,
+                                  scope="softmax")
+
+        <a id="change">return logits</a>
+
+    &#47&#47 Prediction
+    logits = layers.nn.linear(outputs, tgt_vocab_size, True, scope="softmax")
+    logits = tf.reshape(logits, [-1, tgt_vocab_size])</code></pre><h3>After Change</h3><pre><code class='java'>
+        logits = layers.nn.linear(outputs[:, -1, :], tgt_vocab_size, True,
+                                  scope="softmax")
+
+        <a id="change">return tf.nn.log_softmax(logits)</a>
+
+    &#47&#47 Prediction
+    logits = layers.nn.linear(outputs, tgt_vocab_size, True, scope="softmax")
+    logits = tf.reshape(logits, [-1, tgt_vocab_size])</code></pre>

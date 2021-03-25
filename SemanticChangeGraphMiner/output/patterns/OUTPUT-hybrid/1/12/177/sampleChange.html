@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  def __init__(self, inplanes, planes, stride=1, dropout=0.0):
+    super(INSResBlock, self).__init__()
+    model = []
+    model += <a id="change">[self.conv3x3(inplanes, planes, stride)]</a>
+    model += [nn.InstanceNorm2d(planes)]
+    <a id="change">model</a> += [nn.ReLU(inplace=True)]
+    <a id="change">model</a> += [self.conv3x3(planes, planes)]
+    model += [nn.InstanceNorm2d(planes)]
+    if dropout &gt; 0:
+      model += [nn.Dropout(p=dropout)]</code></pre><h3>After Change</h3><pre><code class='java'>
+  def __init__(self, inplanes, planes, stride=1, dropout=0.0):
+    super(INSResBlock, self).__init__()
+    model = []
+    model += <a id="change">self.conv3x3(inplanes, planes, stride)</a>
+    model += [nn.InstanceNorm2d(planes)]
+    <a id="change">model</a> += [nn.ReLU(inplace=True)]
+    <a id="change">model</a> += self.conv3x3(planes, planes)
+    model += [nn.InstanceNorm2d(planes)]
+    if dropout &gt; 0:
+      model += [nn.Dropout(p=dropout)]</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            super(GSLCythonCodeObject, self).compile()
+        except RuntimeError as err:
+            print(&quotRuntimeErrorrrrrr&quot)
+            <a id="change">raise</a>
+        except CompileError as err:
+            print(&quotCompileErrorrrrrr&quot)
+            raise
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            super(GSLCythonCodeObject, self).compile()
+        except CompileError as err:
+            <a id="change">raise GSLCompileError(("\nCompilation of files generated for integration with GSL has failed."
+                                   "\nOne cause for this could be incorrect installation of GSL itself."
+                                   "\nIf GSL is installed but Python cannot find the correct files, it is "
+                                   "also possible to give the gsl directory manually by specifying "
+                                   "prefs.GSL.directory = ..."))</a>
+</code></pre>

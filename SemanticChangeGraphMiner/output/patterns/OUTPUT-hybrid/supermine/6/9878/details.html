@@ -1,0 +1,29 @@
+<html><h3>f87d98c6aa5a8dd8958c8b9e3ec6262c091acd28,PyInstaller/loader/rthooks/pyi_rth_qt5.py,,,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+qt_module_obj = __import__(&quotPyQt5.Qt&quot).__dict__[&quotQt&quot]
+
+for module_name in PYQT_MODULES:
+    <a id="change">try:
+        &#47&#47 This is always the top-level &quotPyQt5&quot module.
+        top_level_module_obj = __import__(PYQT_PACKAGE + &quot.&quot + module_name)
+
+        &#47&#47 Grab the module we are interested in from the top-level module
+        module_obj = top_level_module_obj.__dict__[module_name]
+
+        &#47&#47 Merge symbols exported by the module with PyQt5.Qt
+        qt_module_obj.__dict__.update(module_obj.__dict__)
+    except ImportError:
+        &#47&#47 It is OK if some module is missing. E.g.: QtMacExtras is built only on
+        &#47&#47 OS X and QtWinExtras is built only on Windows.
+        pass</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 The path to Qt&quots components may not default to the wheel layout for
+&#47&#47 self-compiled PyQt5 installations. Mandate the wheel layout. See
+&#47&#47 ``utils/hooks/qt.py`` for more details.
+<a id="change">pyqt_path = os.path.join(sys._MEIPASS, &quotPyQt5&quot, &quotQt&quot)</a>
+os.environ[&quotQT_PLUGIN_PATH&quot] = os.path.join(pyqt_path, &quotplugins&quot)
+os.environ[&quotQML2_IMPORT_PATH&quot] = <a id="change">os.path.join(pyqt_path, &quotqml&quot)</a>
+</code></pre><img src="37570429.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/f87d98c6aa5a8dd8958c8b9e3ec6262c091acd28#diff-832cb3901a30c7c0bbcfd6354e648b4041992ef5de92c85d945e90511cfdd587L16' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: f87d98c6aa5a8dd8958c8b9e3ec6262c091acd28</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: bjones@ece.msstate.edu</div><div id='file'> File Name: PyInstaller/loader/rthooks/pyi_rth_qt5.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL377' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: unpack_namespace</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL350' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR>

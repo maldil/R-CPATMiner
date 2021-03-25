@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self: object
+            Returns a copy of the estimator
+        
+        <a id="change">subset_files = os.listdir(self.subset_dir)</a>
+        self.subset_i = self.subset_dir + "/" + self.sel_subset_fname
+        features_i_df = pd.read_csv(self.subset_i, sep=&quot\t&quot, header=0)
+        if isinstance(X, pd.DataFrame): &#47&#47 use columns&quot names
+            self.feature_names = list(X.columns.values)</code></pre><h3>After Change</h3><pre><code class='java'>
+        else: &#47&#47 self.sel_subset is a string
+            self.sel_subset_name = self.sel_subset
+
+        <a id="change">sel_features = subset_df.loc[self.sel_subset_name, &quotFeatures&quot]</a>
+        if not isinstance(sel_features, str):
+            sel_features = ";".join(sel_features.tolist())
+
+        sel_uniq_features = set(sel_features.split(&quot;&quot))</code></pre>

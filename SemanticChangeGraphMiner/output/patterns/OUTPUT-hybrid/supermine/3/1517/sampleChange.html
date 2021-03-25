@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for mask, output in zip(masks, outputs):
+            prediction = output.detach()
+            iou.add(mask.float(), <a id="change">prediction.max(0)[1].float()</a>)
+
+    assert num_samples &gt; 0, "dataset contains training images and labels"
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for mask, output in zip(masks, outputs):
+            prediction = output.detach()
+            <a id="change">metrics.add(mask, prediction)</a>
+
+    assert num_samples &gt; 0, "dataset contains training images and labels"
+
+    return {"loss": running_loss / num_samples, "iou": metrics.get_iou(), "acc": metrics.get_acc()}</code></pre>

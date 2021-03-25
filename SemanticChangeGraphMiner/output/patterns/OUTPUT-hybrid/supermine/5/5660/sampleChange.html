@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError("Cannot plot priors until model is built!")
+
+        if var_names is None:
+            <a id="change">unobserved_rvs_names = [v.name for v in self.backend.model.unobserved_RVs]</a>
+            var_names = pm.util.get_default_varnames(
+                unobserved_rvs_names, include_transformed=False
+            )
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            var_names = [vn for vn in var_names if vn not in flat_rvs]
+
+        if flat_rvs:
+            <a id="change">warnings.warn(
+                f"Variables {&quot, &quot.join(flat_rvs)} have flat priors, and hence they are not plotted",
+            )</a>
+
+        axes = None
+        if var_names:
+            pps = self.prior_predictive(draws=draws, var_names=var_names, random_seed=random_seed)</code></pre>

@@ -1,0 +1,54 @@
+<html><h3>df00aa16a20b8502a9b4b2ec7783316370f53e18,comet.py,,,#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+if __name__ == &quot__main__&quot:
+    if <a id="change">len(sys.argv) &lt; 2:
+    </a>    Usage()
+    if sys.argv[1] == &quot-h&quot or sys.argv[1] == &quot--help&quot:
+        Usage()
+
+    if len(sys.argv) &gt; 2:
+        pdate = dateutil.parser.parse(<a id="change">sys.argv[2]</a>)
+        if not pdate.tzinfo:
+            &#47&#47 interpret it locally by default
+            pdate = pdate.astimezone()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+if __name__ == &quot__main__&quot:
+    <a id="change">parser = argparse.ArgumentParser(
+        description="Look up a comet and compute its position.")</a>
+    parser.add_argument(&quot-t&quot, action="store", dest="time",
+                        help=&quotTime (any format dateutil.parser handles)&quot)
+    <a id="change">parser.add_argument(&quot-c&quot, action="store", dest="coords",
+                        nargs=2, type=float,
+                        help="Observer&quots Latitude and longitude (degrees)")</a>
+    <a id="change">parser.add_argument(&quot-e&quot, action="store", dest="elev", type=float,
+                        help="Observer&quots elevation (meters)")</a>
+    parser.add_argument("cometname",
+                        help="Name (full or partial) of a comet")
+    args = <a id="change">parser.parse_args(sys.argv[1:])</a>
+    &#47&#47 print(args)
+
+    if args.time:
+        pdate = dateutil.parser.parse(args.time)
+        if not pdate.tzinfo:
+            &#47&#47 interpret it locally by default
+            pdate = pdate.astimezone()
+        &#47&#47 skyfield Time seems to handle aware datetimes okay,
+        &#47&#47 so even though this says utc it will handle the given tzinfo.
+        t = ts.utc(pdate)
+    else:
+        t = ts.now()
+
+    if args.coords and args.elev:
+        args.coords.append(args.elev)
+
+    <a id="change">comet_df = comet_by_name(args.cometname)</a>
+
+    if comet_df is not None:
+        print(comet_df[&quotdesignation&quot], "    ", t.utc_iso())
+        calc_comet(comet_df, t, args.coords)</code></pre><img src="35739745.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/df00aa16a20b8502a9b4b2ec7783316370f53e18#diff-ca0ccd01a18bc1298d5cd35ed7e5972d3fefce8ab516ed354113df15ef382887L69' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: df00aa16a20b8502a9b4b2ec7783316370f53e18</div><div id='time'> Time: 2020-07-10</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: comet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/df00aa16a20b8502a9b4b2ec7783316370f53e18#diff-ca0ccd01a18bc1298d5cd35ed7e5972d3fefce8ab516ed354113df15ef382887L69' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: df00aa16a20b8502a9b4b2ec7783316370f53e18</div><div id='time'> Time: 2020-07-10</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: comet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/githubharald/SimpleHTR/commit/617e9e28a7c5ae3892043d79da55dfc86435f56b#diff-2e5ad92c43aa96cc3a9cef6c6aec998b216f1379c43b1f651013d25e55989312L94' target='_blank'>Link</a></div><div id='project'> Project Name: githubharald/SimpleHTR</div><div id='commit'> Commit Name: 617e9e28a7c5ae3892043d79da55dfc86435f56b</div><div id='time'> Time: 2018-07-24</div><div id='author'> Author: harald_scheidl@hotmail.com</div><div id='file'> File Name: src/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/f2e989565ab89af58dff63ab3cf89fe63af38327#diff-5435677dac91293689eab6cb0ec809ef0498f0f2f0b2b518ef5b81cb7297943eL67' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: f2e989565ab89af58dff63ab3cf89fe63af38327</div><div id='time'> Time: 2020-06-02</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: examples/raytracing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,26 @@
+<html><h3>b2002a8ef80ecbecee09fd61b910c987648455c7,torch_geometric/datasets/karate.py,KarateClub,__init__,#KarateClub#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        col = torch.from_numpy(adj.col.astype(np.int64)).to(torch.long)
+        edge_index = torch.stack([row, col], dim=0)
+        data = Data(edge_index=edge_index)
+        <a id="change">data.num_nodes = edge_index.max().item() + 1</a>
+        data.x = torch.eye(data.num_nodes, dtype=torch.float)
+        y = [0 if G.nodes[i][&quotclub&quot] == &quotMr. Hi&quot else 1 for i in G.nodes]
+        data.y = torch.tensor(y)
+        self.data, self.slices = self.collate([data])</code></pre><h3>After Change</h3><pre><code class='java'>
+        edge_index = torch.stack([row, col], dim=0)
+
+        &#47&#47 Compute communities.
+        <a id="change">partition = community_louvain.best_partition(G)</a>
+        y = torch.tensor([partition[i] <a id="change">for</a> i in range(G.number_of_nodes())])
+
+        &#47&#47 Select a single training node for each community
+        &#47&#47 (we just use the first one).
+        <a id="change">train_mask = torch.zeros(y.size(0), dtype=torch.bool)</a>
+        for i in range(int(y.max()) + 1):
+            train_mask[(y == i).nonzero(as_tuple=False)[0]] = True
+
+        data = Data(x=x, edge_index=edge_index, y=y, train_mask=train_mask)</code></pre><img src="23172275.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/b2002a8ef80ecbecee09fd61b910c987648455c7#diff-83c104d783654fcf8ee4ba1ecdcc2aee2736bb58a760dc4c994315fac78313b3L23' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: b2002a8ef80ecbecee09fd61b910c987648455c7</div><div id='time'> Time: 2020-08-26</div><div id='author'> Author: matthias.fey@tu-dortmund.de</div><div id='file'> File Name: torch_geometric/datasets/karate.py</div><div id='class'> Class Name: KarateClub</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Shawn1993/cnn-text-classification-pytorch/commit/5c177f3d9a29fc7737bd4734315820d1c11c7e87#diff-c23d1e90f297ba698c11e950c0f34312a7bad7915cd6562b5eea91c120825403L156' target='_blank'>Link</a></div><div id='project'> Project Name: Shawn1993/cnn-text-classification-pytorch</div><div id='commit'> Commit Name: 5c177f3d9a29fc7737bd4734315820d1c11c7e87</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: rriva002@ucr.edu</div><div id='file'> File Name: cnn_text_classification.py</div><div id='class'> Class Name: CNNClassifier</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/2eef369b7ac92e38f81819307a4af4238fd953ee#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L184' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 2eef369b7ac92e38f81819307a4af4238fd953ee</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: JaxOps</div><div id='method'> Method Name: pad</div><BR>

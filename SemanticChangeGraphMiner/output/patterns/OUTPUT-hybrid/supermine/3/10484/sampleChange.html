@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nx.set_node_attributes(g_nx, dic_signal, "signal1")
+        g = graphs.Graph.from_networkx(g_nx)
+
+        <a id="change">for i, node in enumerate(g_nx.node):
+            self.assertEqual(g.signals["signal1"][i],
+                             nx.get_node_attributes(g_nx, "signal1")[node])
+
+   </a> def test_no_weights(self):
+
+        adjacency = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def test_networkx_signal_import(self):
+        graph_nx = nx.Graph()
+        graph_nx.add_nodes_from(range(2, 5))
+        <a id="change">graph_nx.add_edges_from([(3, 4), (2, 4), (3, 5)])</a>
+        nx.set_node_attributes(graph_nx, {2: 4, 3: 5, 5: 2.3}, "s")
+        graph_pg = graphs.Graph.from_networkx(graph_nx)
+        np.testing.assert_allclose(graph_pg.signals["s"], [4, 5, np.nan, 2.3])
+</code></pre>

@@ -1,0 +1,54 @@
+<html><h3>4179b7f166ba980ed226cdbe52984965f1b335c4,enthought/chaco/tools/toolbars/plot_toolbar.py,PlotToolbar,overlay,#PlotToolbar#,133
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        gc.arc_to(x, y + height,
+                x, y,
+                self.end_radius)
+        <a id="change">gc.arc_to(x, y,
+                x + self.width + self.end_radius,
+                y, self.end_radius)</a>
+
+        if self.location in [&quottop&quot,&quotbottom&quot]:
+            gc.linear_gradient(x, y, x, y+100,
+                    numpy.array([starting_color, ending_color]),</code></pre><h3>After Change</h3><pre><code class='java'>
+        y = self.y
+        height = self.height
+        
+        <a id="change">with gc:
+            gc.begin_path()
+            gc.move_to(x + self.end_radius, y)
+            gc.arc_to(x + self.width, y,
+                    x + self.width,
+                    y + self.end_radius, self.end_radius)
+            gc.arc_to(x + self.width,
+                    y + height,
+                    x + self.width - self.end_radius,
+                    y + height, self.end_radius)
+            gc.arc_to(x, y + height,
+                    x, y,
+                    self.end_radius)
+            gc.arc_to(x, y,
+                    x + self.width + self.end_radius,
+                    y, self.end_radius)
+
+            if self.location in [&quottop&quot,&quotbottom&quot]:
+                gc.linear_gradient(x, y, x, y+100,
+                        numpy.array([starting_color, ending_color]),
+                        "")
+            else:
+                gc.linear_gradient(x, y, x+100, y,
+                        numpy.array([starting_color, ending_color]),
+                        "")
+
+            gc.draw_path()
+
+            if not self.hiding:
+                for button in self.components:
+                    button.draw(gc)
+
+   </a> def is_in(self, x, y):
+        if (x &gt;= self.x and x &lt;= self.x2) and (y &gt;= self.y and y &lt;= self.y2):
+            return True
+        return False</code></pre><img src="3017422.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/4179b7f166ba980ed226cdbe52984965f1b335c4#diff-45ce353901dddac916af8aa7bb516da22bba6b8b38ad6519558cc2f2e312213bL144' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 4179b7f166ba980ed226cdbe52984965f1b335c4</div><div id='time'> Time: 2010-12-19</div><div id='author'> Author: warren.weckesser@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/tools/toolbars/plot_toolbar.py</div><div id='class'> Class Name: PlotToolbar</div><div id='method'> Method Name: overlay</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/4179b7f166ba980ed226cdbe52984965f1b335c4#diff-45ce353901dddac916af8aa7bb516da22bba6b8b38ad6519558cc2f2e312213bL144' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 4179b7f166ba980ed226cdbe52984965f1b335c4</div><div id='time'> Time: 2010-12-19</div><div id='author'> Author: warren.weckesser@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/tools/toolbars/plot_toolbar.py</div><div id='class'> Class Name: PlotToolbar</div><div id='method'> Method Name: overlay</div><BR>

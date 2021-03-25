@@ -1,0 +1,32 @@
+<html><h3>7c960272c5ab4d25a022538f5849addec3e6bfee,loglizer/preprocessing.py,FeatureExtractor,transform,#FeatureExtractor#,71
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for i in range(X_seq.shape[0]):
+            X_df.loc[i, :] = [0] * len(self.events)
+            event_counts = Counter(X_seq[i])
+            <a id="change">for event, count in event_counts.items():
+                if event in self.events:
+                    X_df.loc[i, event] = count
+       </a> X = X_df.fillna(0).values
+        
+        num_instance, num_event = X.shape
+        if self.term_weighting == &quottf-idf&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+            X_new: The transformed data matrix
+        
+        print(&quot====== Transformed test data summary ======&quot)
+        X_counts = <a id="change">[]</a>
+        for i in range(X_seq.shape[0]):
+            event_counts = Counter(X_seq[i])
+            X_counts.append(event_counts)
+        X_df = pd.DataFrame(X_counts)
+        X_df = X_df.fillna(0)
+        empty_events = set(self.events) - set(X_df.columns)
+        for event in empty_events:
+            X_df[event] = [0] * len(X_df)
+        <a id="change">X = X_df[self.events].values</a>
+        if self.oov:
+            oov_vec = np.sum(X_df[X_df.columns.difference(self.events)].values &gt; 0, axis=1)
+            X = np.hstack([X, oov_vec.reshape(X.shape[0], 1)])
+        </code></pre><img src="20070786.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/logpai/loglizer/commit/7c960272c5ab4d25a022538f5849addec3e6bfee#diff-43fc2f56bcafd5edb2c8bf9aa213331585a7f29d8b193e07dfd329e56c95b036L82' target='_blank'>Link</a></div><div id='project'> Project Name: logpai/loglizer</div><div id='commit'> Commit Name: 7c960272c5ab4d25a022538f5849addec3e6bfee</div><div id='time'> Time: 2019-02-25</div><div id='author'> Author: zhujm.home@gmail.com</div><div id='file'> File Name: loglizer/preprocessing.py</div><div id='class'> Class Name: FeatureExtractor</div><div id='method'> Method Name: transform</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/ad110e020cbae062ba024d91223df519af3adc96#diff-a9ca9750e32c19fcb2178c5828746404974143c6ebc85000ca28298608e93c2cL74' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: ad110e020cbae062ba024d91223df519af3adc96</div><div id='time'> Time: 2011-07-12</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/template.py</div><div id='class'> Class Name: TemplateDebugPanel</div><div id='method'> Method Name: content</div><BR><BR><div id='link'><a href='https://github.com/MTG/freesound/commit/a8b4719cd6deb77674a7ca7c442926c6770d2911#diff-9eeeba34635768073be067ca63f4fa3a1378af66fab6953cd5eb80705ab69003L462' target='_blank'>Link</a></div><div id='project'> Project Name: MTG/freesound</div><div id='commit'> Commit Name: a8b4719cd6deb77674a7ca7c442926c6770d2911</div><div id='time'> Time: 2019-05-07</div><div id='author'> Author: frederic.font@upf.edu</div><div id='file'> File Name: utils/audioprocessing/processing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_to_pcm</div><BR>

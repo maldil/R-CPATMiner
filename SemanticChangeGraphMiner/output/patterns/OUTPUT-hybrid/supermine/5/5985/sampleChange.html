@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            rvs = list(range(dist.outcome_length()))
+            rv_mode = RV_MODES.INDICES
+        if crvs is None:
+            <a id="change">crvs = []</a>
+    else:
+        return shannon_entropy(dist)
+
+    <a id="change">return conditional_entropy(dist, rvs, crvs, rv_mode=rv_mode)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if dist.is_joint():
+        rvs, crvs, rv_mode = normalize_rvs(dist, rvs, crvs, rv_mode)
+        rvs = list(<a id="change">flatten(rvs)</a>)
+        <a id="change">H = conditional_entropy(dist, rvs, crvs, rv_mode=rv_mode)</a>
+    else:
+        H = shannon_entropy(dist)
+
+    <a id="change">return H</a>
+</code></pre>

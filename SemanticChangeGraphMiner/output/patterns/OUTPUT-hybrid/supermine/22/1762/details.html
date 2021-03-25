@@ -1,0 +1,32 @@
+<html><h3>677e510defc66f33a7e6cfd3c4289c745ebe1964,tests/links_tests/readout_tests/test_set2set.py,,check_backward,#,57
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        atom_data:
+        y_grad:
+    
+    <a id="change">atom = chainer.Variable(atom_data)</a>
+    readout.reset_state()
+    <a id="change">y = readout(atom)</a>
+    <a id="change">y.grad = y_grad</a>
+    <a id="change">y.backward()</a>
+
+    def f():
+        readout.reset_state()
+        return readout(atom_data).data,
+
+    <a id="change">gx, = gradient_check.numerical_grad(f, (atom.data, ), (y.grad, ))</a>
+    numpy.testing.assert_allclose(cuda.to_cpu(gx), cuda.to_cpu(atom.grad),
+                                  atol=1e-2, rtol=1e-2)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        readout.reset_state()
+        return readout(atom_data),
+
+    <a id="change">gradient_check.check_backward(
+        f, (atom_data), y_grad, atol=1e-1, rtol=1e-1)</a>
+
+    &#47&#47 gx, = gradient_check.numerical_grad(f, (atom.data, ), (y.grad, ))
+    &#47&#47 numpy.testing.assert_allclose(cuda.to_cpu(gx), cuda.to_cpu(atom.grad),
+    &#47&#47                               atol=1e-2, rtol=1e-2)</code></pre><img src="8760453.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 20</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pfnet-research/chainer-chemistry/commit/677e510defc66f33a7e6cfd3c4289c745ebe1964#diff-fc434de5a51a8014e37c2f7ca8364394b5bcf224046b540936d37ccd4af1231aL70' target='_blank'>Link</a></div><div id='project'> Project Name: pfnet-research/chainer-chemistry</div><div id='commit'> Commit Name: 677e510defc66f33a7e6cfd3c4289c745ebe1964</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: acc1ssnn9terias@gmail.com</div><div id='file'> File Name: tests/links_tests/readout_tests/test_set2set.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_backward</div><BR><BR><div id='link'><a href='https://github.com/pfnet-research/chainer-chemistry/commit/677e510defc66f33a7e6cfd3c4289c745ebe1964#diff-8f8ff6da4b3fcdcb51dbc2e697c687ebee42dbf1d5cd154ee3306299c2d25ae9L101' target='_blank'>Link</a></div><div id='project'> Project Name: pfnet-research/chainer-chemistry</div><div id='commit'> Commit Name: 677e510defc66f33a7e6cfd3c4289c745ebe1964</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: acc1ssnn9terias@gmail.com</div><div id='file'> File Name: tests/links_tests/update_tests/test_ggnn_update.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_backward</div><BR><BR><div id='link'><a href='https://github.com/pfnet-research/chainer-chemistry/commit/677e510defc66f33a7e6cfd3c4289c745ebe1964#diff-fc434de5a51a8014e37c2f7ca8364394b5bcf224046b540936d37ccd4af1231aL70' target='_blank'>Link</a></div><div id='project'> Project Name: pfnet-research/chainer-chemistry</div><div id='commit'> Commit Name: 677e510defc66f33a7e6cfd3c4289c745ebe1964</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: acc1ssnn9terias@gmail.com</div><div id='file'> File Name: tests/links_tests/readout_tests/test_set2set.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_backward</div><BR><BR><div id='link'><a href='https://github.com/pfnet-research/chainer-chemistry/commit/677e510defc66f33a7e6cfd3c4289c745ebe1964#diff-d37eca978d08872a80046ce6e6a42df716cbdbd422298a7bb6cb60fbb916ee58L125' target='_blank'>Link</a></div><div id='project'> Project Name: pfnet-research/chainer-chemistry</div><div id='commit'> Commit Name: 677e510defc66f33a7e6cfd3c4289c745ebe1964</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: acc1ssnn9terias@gmail.com</div><div id='file'> File Name: tests/links_tests/update_tests/test_mpnn_update.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_backward</div><BR>

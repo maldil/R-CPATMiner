@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    results0, results1, results2, results3 = keras_rcnn.backend.common._whctrs(
+        anchor)
+    results = numpy.array(
+        [keras.backend.eval(results0), <a id="change">keras.backend.eval(results1)</a>,
+         keras.backend.eval(results2), keras.backend.eval(results3)])
+    expected = numpy.expand_dims([1, 1, 0, 0], 1)
+    numpy.testing.assert_array_equal(results, expected)</code></pre><h3>After Change</h3><pre><code class='java'>
+    results = numpy.array(
+        [keras.backend.eval(results0), keras.backend.eval(results1),
+         keras.backend.eval(results2), keras.backend.eval(results3)])
+    expected = numpy.expand_dims(<a id="change">[16, 16, 8, 8]</a>, 1)
+    numpy.testing.assert_array_equal(results, expected)
+
+</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    
+
+    <a id="change">if isinstance(y, list):
+        y_ary = np.array(y)
+    else:
+        y_ary = y
+   </a> for a in (X, y_ary):
+        if not isinstance(a, np.ndarray):
+            raise ValueError(&quot%s must be a NumPy array.&quot % a.__name__)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    &#47&#47 Check types
+    <a id="change">if not isinstance(X, np.ndarray):
+        raise ValueError(&quotX must be a 2D NumPy array&quot)
+   </a> if not isinstance(y, np.ndarray):
+        <a id="change">raise ValueError(&quoty must be a 1D NumPy array&quot)</a>
+    if not np.issubdtype(y.dtype, np.integer):
+        raise ValueError(&quoty must have be an integer array. &quot
+                         &quotTry passing the array as y.astype(np.integer)&quot)
+</code></pre>

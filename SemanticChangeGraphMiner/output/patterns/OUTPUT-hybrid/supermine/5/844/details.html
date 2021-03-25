@@ -1,0 +1,37 @@
+<html><h3>66584dea87782aed5509e4269a9f015002e1f5c1,pytext/torchscript/module.py,PyTextEmbeddingModuleWithDense,forward,#PyTextEmbeddingModuleWithDense#,1232
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        sentence_embedding = self._forward(inputs, dense_tensor)
+        if self.concat_dense:
+            return <a id="change">torch.cat([sentence_embedding, dense_tensor], 1)</a>
+        else:
+            return sentence_embedding
+
+    @torch.jit.script_method</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        result = self.forward_impl(texts[:max_batch], dense_feat[:max_batch])
+
+        <a id="change">if input_len &gt; max_batch:
+            texts = texts[max_batch:]
+            dense_feat = dense_feat[max_batch:]
+
+            while len(texts) &gt; 0:
+                result_extension = self.forward_impl(
+                    texts[:max_batch], dense_feat[:max_batch]
+                )
+                &#47&#47 the result of forward is either a torch.Tensor or a List[Any]
+                if isinstance(result, torch.Tensor):
+                    result = torch.cat([result, result_extension], dim=0)
+                else:
+                    result.extend(result_extension)
+
+                texts = texts[max_batch:]
+                dense_feat = dense_feat[max_batch:]
+
+       </a> return result
+
+    @torch.jit.script_method
+    def make_prediction(</code></pre><img src="3935052.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/66584dea87782aed5509e4269a9f015002e1f5c1#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL1233' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 66584dea87782aed5509e4269a9f015002e1f5c1</div><div id='time'> Time: 2021-02-23</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: PyTextEmbeddingModuleWithDense</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/f777522e67b57d55d8c138c8a91fa24e18453894#diff-8eb919479e57e9f5f7b4ed7c36c35e9687bbd38600c5193281eb41468be9d056L170' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: f777522e67b57d55d8c138c8a91fa24e18453894</div><div id='time'> Time: 2018-12-14</div><div id='author'> Author: you@example.com</div><div id='file'> File Name: models/accelerated_shift_net/accelerated_shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_gt_latent</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/df863b1326a1d174c64a4ca9fac997c4ceb56583#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L155' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: df863b1326a1d174c64a4ca9fac997c4ceb56583</div><div id='time'> Time: 2018-12-23</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_gt_latent</div><BR>

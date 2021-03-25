@@ -1,0 +1,24 @@
+<html><h3>0db665e29744767c24b40e0d71be830d1079e5ec,librosa/core/constantq.py,,__fft_filters,#,462
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        return_lengths=True)
+
+    &#47&#47 FFT the filters
+    min_filter_length = <a id="change">np.min(lengths)</a>
+
+    &#47&#47 Filters are padded up to the nearest integral power of 2
+    n_fft = basis.shape[1]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_fft = basis.shape[1]
+
+    if hop_length is not None and n_fft &lt; 2 * hop_length:
+        <a id="change">n_fft = int(2.0 ** (np.ceil(np.log2(2 * hop_length))))</a>
+
+    &#47&#47 normalize by inverse length to compensate for phase invariance
+    basis *= <a id="change">lengths.reshape((-1, 1)) / n_fft</a>
+
+    &#47&#47 FFT and retain only the non-negative frequencies
+    fft_basis = np.fft.fft(basis, n=n_fft, axis=1)[:, :(n_fft / 2)+1]
+</code></pre><img src="14337449.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/0db665e29744767c24b40e0d71be830d1079e5ec#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL460' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 0db665e29744767c24b40e0d71be830d1079e5ec</div><div id='time'> Time: 2015-01-27</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: __fft_filters</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-activations/commit/8a5a6993cec37c98e823d251febcd0b91089bd44#diff-08595bd03226a58c24c3b1826a02f1ca92ab5ade2632fade9a6ba21702339868L93' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-activations</div><div id='commit'> Commit Name: 8a5a6993cec37c98e823d251febcd0b91089bd44</div><div id='time'> Time: 2019-03-17</div><div id='author'> Author: 28253514+Stochastic13@users.noreply.github.com</div><div id='file'> File Name: keract/keract.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: display_heatmaps</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/ea80e4bf2033628822e2b0f92e2e373d1b3c147b#diff-83cd2c284bdf77410841a666a70420264e8942e5ea6c8e4af7871ec51a5ee037L193' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: ea80e4bf2033628822e2b0f92e2e373d1b3c147b</div><div id='time'> Time: 2015-12-31</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/auto_encoder.py</div><div id='class'> Class Name: AutoEncoder</div><div id='method'> Method Name: complete</div><BR>

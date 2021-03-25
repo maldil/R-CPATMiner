@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rng = check_random_state(random_state)
+
+    &#47&#47 Bounds
+    <a id="change">num_params = len(bounds)</a>
+    lower_bounds, upper_bounds = extract_bounds(bounds)
+
+    &#47&#47 Default estimator
+    if base_estimator is None:
+        base_estimator = GradientBoostingQuantileRegressor(random_state=rng)
+
+    &#47&#47 Record the points and function values evaluated as part of
+    &#47&#47 the minimization
+    Xi = np.zeros((maxiter, num_params))
+    yi = np.zeros(maxiter)
+
+    &#47&#47 Initialize with random points
+    if n_start == 0:
+        raise ValueError("Need at least one starting point.")
+
+    if maxiter == 0:
+        raise ValueError("Need to perform at least one iteration.")
+
+    n_start = min(n_start, maxiter)
+
+    Xi[:n_start] = _random_points(
+        lower_bounds, upper_bounds, n_points=n_start, random_state=rng)
+    best_x = Xi[:n_start].ravel()
+    yi[:n_start] = [func(xi) for xi in Xi[:n_start]]
+    best_y = np.min(yi[:n_start])
+
+    models = []
+
+    for i in range(n_start, maxiter):
+        rgr = clone(base_estimator)
+        &#47&#47 only the first i points are meaningful
+        rgr.fit(Xi[:i, :], yi[:i])
+        models.append(rgr)
+
+        &#47&#47 `rgr` predicts constants for each leaf which means that the EI
+        &#47&#47 has zero gradient over large distances. As a result we can not
+        &#47&#47 use gradient based optimisers like BFGS, use random sampling
+        &#47&#47 for the moment.
+        x0 = _random_points(lower_bounds, upper_bounds,
+                            n_points=n_points,
+                            random_state=rng)
+        best = np.argmax(gaussian_ei(x0, rgr, best_y))
+
+        Xi[i] = <a id="change">x0[best].ravel()</a>
+        yi[i] = func(x0[best])
+
+        if yi[i] &lt; best_y:
+            best_y = yi[i]</code></pre><h3>After Change</h3><pre><code class='java'>
+        x0 = space.transform(space.rvs(n_samples=n_points, random_state=rng))
+        best = np.argmax(gaussian_ei(x0, rgr, best_y))
+
+        Xi[i] = <a id="change">space.inverse_transform(x0[best:best+1])[0]</a>
+        yi[i] = func(Xi[i])
+
+        if yi[i] &lt; best_y:
+            best_y = yi[i]</code></pre>

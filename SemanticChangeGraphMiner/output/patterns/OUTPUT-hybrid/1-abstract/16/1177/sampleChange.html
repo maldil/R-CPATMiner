@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n, c, h, w = img.size()
+        count += n
+        print(count)
+        ff = <a id="change">torch.FloatTensor(n,512).zero_()</a>
+
+        if opt.PCB:
+            ff = torch.FloatTensor(n,2048,6).zero_() &#47&#47 we have six parts
+        for i in range(2):
+            if(i==1):
+                img = fliplr(img)
+            input_img = Variable(img.cuda())
+            &#47&#47if opt.fp16:
+            &#47&#47    input_img = input_img.half()
+            outputs = model(input_img) 
+            f = outputs.data.cpu().float()
+            ff = ff+f
+        &#47&#47 norm feature
+        if opt.PCB:
+            &#47&#47 feature size (n,2048,6)
+            &#47&#47 1. To treat every part equally, I calculate the norm for every 2048-dim part feature.
+            &#47&#47 2. To keep the cosine score==1, sqrt(6) is added to norm the whole feature (2048*6).
+            fnorm = torch.norm(ff, p=2, dim=1, keepdim=True) * np.sqrt(6) 
+            <a id="change">ff</a> = ff.div(fnorm.expand_as(ff))
+            ff = ff.view(ff.size(0), -1)
+        else:
+            <a id="change">fnorm</a> = torch.norm(ff, p=2, dim=1, keepdim=True)
+            ff = ff.div(fnorm.expand_as(ff))
+
+        <a id="change">features</a> = torch.cat((features,ff), 0)
+    return features
+
+def get_id(img_path):</code></pre><h3>After Change</h3><pre><code class='java'>
+        n, c, h, w = img.size()
+        count += n
+        print(count)
+        ff = <a id="change">torch.FloatTensor(n,512).zero_().cuda()</a>
+        if opt.PCB:
+            ff = torch.FloatTensor(n,2048,6).zero_().cuda() &#47&#47 we have six parts
+
+        for i in range(2):
+            if(i==1):
+                img = fliplr(img)
+            input_img = Variable(img.cuda())
+            for scale in ms:
+                if scale != 1:
+                    &#47&#47 bicubic is only  available in pytorch&gt; 1.1
+                    input_img = nn.functional.interpolate(input_img, scale_factor=scale, mode=&quotbicubic&quot, align_corners=False)
+                outputs = model(input_img) 
+                ff += outputs
+        &#47&#47 norm feature
+        if opt.PCB:
+            &#47&#47 feature size (n,2048,6)
+            &#47&#47 1. To treat every part equally, I calculate the norm for every 2048-dim part feature.
+            &#47&#47 2. To keep the cosine score==1, sqrt(6) is added to norm the whole feature (2048*6).
+            fnorm = torch.norm(ff, p=2, dim=1, keepdim=True) * np.sqrt(6) 
+            <a id="change">ff</a> = ff.div(fnorm.expand_as(ff))
+            ff = ff.view(ff.size(0), -1)
+        else:
+            <a id="change">fnorm</a> = torch.norm(ff, p=2, dim=1, keepdim=True)
+            ff = ff.div(fnorm.expand_as(ff))
+
+        <a id="change">features</a> = torch.cat((features,ff.data.cpu()), 0)
+    return features
+
+def get_id(img_path):</code></pre>

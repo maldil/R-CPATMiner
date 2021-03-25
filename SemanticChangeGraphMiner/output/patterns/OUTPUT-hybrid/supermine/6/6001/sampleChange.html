@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __getitem__(self, index: Union[int, slice]) -&gt; Union[T, "Collection[T]"]:  &#47&#47 noqa: F811
+        if isinstance(index, int):
+            <a id="change">return self.dependencies[index]</a>
+        return self.__class__(self.dependencies[index])
+
+    def __len__(self) -&gt; int:
+        return len(self.dependencies)</code></pre><h3>After Change</h3><pre><code class='java'>
+        ...
+
+    def __getitem__(self, index: Union[int, slice]) -&gt; Union[T, "Collection[T]"]:  &#47&#47 noqa: F811
+        <a id="change">result = super().__getitem__(index)</a>
+        if isinstance(index, int):
+            return cast(T, result)
+        <a id="change">return self.__class__(cast(Tuple[T, ...], result))</a>
+
+    def __eq__(self, other: Any) -&gt; bool:
+        return type(self) == type(other) and super().__eq__(other)
+</code></pre>

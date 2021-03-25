@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            preds = self.svm_model.predict_proba([face_encoding])[0]
+
+            print (preds, self.svm_model.classes_)
+            best_pred_ndx = <a id="change">np.argmax(preds)</a>
+            best_pred = preds[best_pred_ndx]
+            loc = face_locations[idx]
+
+            if best_pred &gt;= g.config[&quotface_recog_min_confidence&quot]:</code></pre><h3>After Change</h3><pre><code class='java'>
+        face_encodings = face_recognition.face_encodings(rgb_image, known_face_locations=face_locations, num_jitters=self.num_jitters)
+
+        &#47&#47 Use the KNN model to find the best matches for the test face
+        <a id="change">closest_distances = self.knn.kneighbors(face_encodings, n_neighbors=1)</a>
+        <a id="change">are_matches = [closest_distances[0][i][0] &lt;= g.config[&quotface_recog_dist_threshold&quot] for i in range(len(face_locations))]</a>
+
+        matched_face_names = []
+        matched_face_rects = []
+
+        <a id="change">for pred, loc, rec in zip(self.knn.predict(face_encodings), face_locations, are_matches):
+            label = pred if rec else g.config[&quotunknown_face_name&quot]
+            matched_face_rects.append((loc[3], loc[0], loc[1], loc[2]))
+            matched_face_names.append(label)
+            conf.append(1)
+
+       </a> return matched_face_rects, matched_face_names, conf
+</code></pre>

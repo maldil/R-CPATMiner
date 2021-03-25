@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    R1R2Z  =  X_X1*Y_Y2 - Y_Y1*X_X2
+    SQUARE = R1R2X*R1R2X + R1R2Y*R1R2Y + R1R2Z*R1R2Z
+    SQUARE[SQUARE==0] = 1e-32
+    R1     = np.sqrt(<a id="change">X_X1*X_X1 + Y_Y1*Y_Y1 + Z_Z1*Z_Z1</a>) 
+    R2     = np.sqrt(<a id="change">X_X2*X_X2 + Y_Y2*Y_Y2 + Z_Z2*Z_Z2</a>) 
+    R0R1   = X2_X1*X_X1 + Y2_Y1*Y_Y1 + Z2_Z1*Z_Z1
+    R0R2   = X2_X1*X_X2 + Y2_Y1*Y_Y2 + Z2_Z1*Z_Z2
+    RVEC   = np.array([R1R2X,R1R2Y,R1R2Z])
+    COEF   = (1/(4*np.pi))*(RVEC/SQUARE) * (R0R1/R1 - R0R2/R2)
+
+    <a id="change">if np.isnan(COEF).any():
+        print(&quotNaN!&quot)       
+
+   </a> return COEF
+
+def vortex_leg_from_A_to_inf(X,Y,Z,X1,Y1,Z1,tw): 
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    R1R2X  = Y_Y1*Z_Z2 - Z_Z1*Y_Y2 
+    R1R2Y  = Z_Z1*X_X2 - X_X1*Z_Z2
+    R1R2Z  = X_X1*Y_Y2 - Y_Y1*X_X2
+    <a id="change">SQUARE = np.square(R1R2X) + np.square(R1R2Y) + np.square(R1R2Z)</a>
+    SQUARE[SQUARE==0] = 1e-32
+    R1     = np.sqrt(<a id="change">np.square(X_X1) + np.square(Y_Y1) + np.square(Z_Z1)</a>) 
+    R2     = np.sqrt(np.square(X_X2) + np.square(Y_Y2) + np.square(Z_Z2)) 
+    R0R1   = X2_X1*X_X1 + Y2_Y1*Y_Y1 + Z2_Z1*Z_Z1
+    R0R2   = X2_X1*X_X2 + Y2_Y1*Y_Y2 + Z2_Z1*Z_Z2</code></pre>

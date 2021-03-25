@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        neg_item_embedding = tf.nn.embedding_lookup(Q, self.neg_item_id)
+
+        self.pred_distance = tf.reduce_sum(tf.squared_difference(user_embedding, item_embedding), 1)
+        self.pred_distance_neg = tf.reduce_sum(<a id="change">tf.squared_difference(user_embedding, neg_item_embedding)</a>, 1)
+
+
+        self.loss = tf.reduce_sum(tf.maximum(self.pred_distance - self.pred_distance_neg + margin, 0))</code></pre><h3>After Change</h3><pre><code class='java'>
+        neg_item_embedding = tf.nn.embedding_lookup(Q, self.neg_item_id)
+
+        self.pred_distance = tf.reduce_sum(tf.nn.dropout(tf.squared_difference(user_embedding, item_embedding),self.keep_rate), 1)
+        self.pred_distance_neg = tf.reduce_sum(tf.nn.dropout(<a id="change">tf.squared_difference(user_embedding, neg_item_embedding)</a>,self.keep_rate), 1)
+
+
+        self.loss = tf.reduce_sum(tf.maximum(self.pred_distance - self.pred_distance_neg + margin, 0))</code></pre>

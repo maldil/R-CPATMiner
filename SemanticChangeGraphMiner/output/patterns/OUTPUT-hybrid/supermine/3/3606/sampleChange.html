@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  &#47&#47 Compute the PDF and CDF for each weight vector.
+  pdf = weights / weight_sum
+  cdf = <a id="change">jnp.cumsum(pdf, axis=-1)</a>
+  cdf = jnp.concatenate([jnp.zeros(list(cdf.shape[:-1]) + [1]), cdf], axis=-1)
+
+  &#47&#47 Take uniform samples
+  if randomized:</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Compute the PDF and CDF for each weight vector, while ensuring that the CDF
+  &#47&#47 starts with exactly 0 and ends with exactly 1.
+  pdf = weights / weight_sum
+  cdf = jnp.minimum(1, <a id="change">jnp.cumsum(pdf[Ellipsis, :-1], axis=-1)</a>)
+  cdf = jnp.concatenate([
+      jnp.zeros(list(cdf.shape[:-1]) + [1]), cdf,
+      jnp.ones(<a id="change">list(cdf.shape[:-1]) + [1]</a>)
+  ],
+                        axis=-1)
+</code></pre>

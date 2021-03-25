@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if len(iwarpfns) == 0:
+                    iwarpfns = &quot&quot
+
+                <a id="change">alltx</a> = <a id="change">glob.glob(outprefix+&quot*&quot+&quot[0-9]*&quot)</a>
+                findinv = np.where([re.search(&quot[0-9]InverseWarp.nii.gz&quot,ff) for ff in alltx])[0]
+                <a id="change">findfwd</a> = np.where([re.search(&quot[0-9]Warp.nii.gz&quot, ff) for ff in alltx])[0]
+                if len(findinv) &gt; 0:
+                    <a id="change">fwdtransforms</a> = list(reversed([ff for idx,ff in enumerate(alltx) if idx !=findinv[0]]))
+                    invtransforms = [ff for idx,ff in enumerate(alltx) if idx!=findfwd[0]]
+                else:
+                    fwdtransforms = list(reversed(alltx))</code></pre><h3>After Change</h3><pre><code class='java'>
+                if len(iwarpfns) == 0:
+                    iwarpfns = &quot&quot
+
+                <a id="change">alltx</a> = sorted(<a id="change">glob.glob(outprefix+&quot*&quot+&quot[0-9]*&quot)</a>)
+                findinv = np.where([re.search(&quot[0-9]InverseWarp.nii.gz&quot,ff) for ff in alltx])[0]
+                <a id="change">findfwd</a> = np.where([re.search(&quot[0-9]Warp.nii.gz&quot, ff) for ff in alltx])[0]
+                if len(findinv) &gt; 0:
+                    <a id="change">fwdtransforms</a> = list(reversed([ff for idx,ff in enumerate(alltx) if idx !=findinv[0]]))
+                    invtransforms = [ff for idx,ff in enumerate(alltx) if idx!=findfwd[0]]
+                else:
+                    fwdtransforms = list(reversed(alltx))</code></pre>

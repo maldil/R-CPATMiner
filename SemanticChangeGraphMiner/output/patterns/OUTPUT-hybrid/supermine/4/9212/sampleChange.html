@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        best_ac_type = select_best_ac_type(self.available_ac_types(),
+                                           measurement_ac_type_prefs)
+        <a id="change">return self.store.load(key=self.key, cols=[best_ac_type], **load_kwargs)</a>
+
+    def voltage_series(self):
+        Returns a generator of pd.Series of voltage, if available.
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+        nominal_voltage : float
+        
+        measurement_ac_type_prefs = kwargs.pop(&quotmeasurement_ac_type_prefs&quot, None)
+        preprocessing = <a id="change">kwargs.pop(&quotpreprocessing&quot, [])</a>
+
+        &#47&#47 Select power column:
+        if not kwargs.has_key(&quotcols&quot):
+            best_ac_type = select_best_ac_type(self.available_power_ac_types(),
+                                               measurement_ac_type_prefs)
+            kwargs[&quotcols&quot] = [(&quotpower&quot, best_ac_type)]
+
+        &#47&#47 Get source node
+        generator = self.store.load(key=self.key, **kwargs)
+        last_node = Node(self, generator=generator)
+
+        &#47&#47 Connect together all preprocessing nodes
+        for node in preprocessing:
+            node.upstream = last_node
+            last_node = node
+            generator = last_node.process()
+
+        &#47&#47 Pull data through preprocessing pipeline
+        <a id="change">for chunk in generator:
+            yield chunk
+
+   </a> def voltage_series(self):
+        Returns a generator of pd.Series of voltage, if available.
+        raise NotImplementedError
+</code></pre>

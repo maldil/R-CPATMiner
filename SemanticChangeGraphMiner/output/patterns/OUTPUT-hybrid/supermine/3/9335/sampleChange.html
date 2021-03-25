@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    plot_dist(val, textsize=xt_labelsize, rotated=rotate, ax=ax_, **marginal_kwargs)
+
+                ax_hist_x.set_xlim(ax.get_xlim())
+                <a id="change">ax_hist_y.set_ylim(ax.get_ylim())</a>
+
+                &#47&#47 Personalize axes
+                ax_hist_x.tick_params(labelleft=False, labelbottom=False)
+                ax_hist_y.tick_params(labelleft=False, labelbottom=False)</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            if diagonal:
+                assert ax.shape == (numvars, numvars)
+                <a id="change">if ax[0, 1] is not None and ax[0, 1].get_figure() is not None:
+                    ax[0, 1].remove()
+               </a> ax_return = ax
+                ax_hist_x = ax[0, 0]
+                ax_hist_y = ax[1, 1]
+                ax = ax[1, 0]</code></pre>

@@ -1,0 +1,35 @@
+<html><h3>22c3895c7ede3cbeaee16c15e2ee430c2c6ede42,app/tests/cases_tests/test_background_tasks.py,,test_staged_uploaded_file_cleanup_interferes_with_image_build,#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.mark.django_db
+def test_staged_uploaded_file_cleanup_interferes_with_image_build():
+    <a id="change">task_collector = CeleryTaskCollector(signals.build_images)</a>
+    <a id="change">with replace_var(signals, "build_images", task_collector):
+        images = [
+            "image10x10x10.zraw",
+            "image10x10x10.mhd",
+        ]
+        session, uploaded_images = create_raw_upload_image_session(images)
+        StagedAjaxFile(uploaded_images["image10x10x10.zraw"].staged_file_id).delete()
+        task_collector.execute_calls()
+
+        session.refresh_from_db()
+        assert session.session_state == UPLOAD_SESSION_STATE.stopped
+        assert session.error_message is not None
+
+
+</a>@pytest.mark.django_db
+def test_no_convertible_file():
+    task_collector = CeleryTaskCollector(signals.build_images)
+    with replace_var(signals, "build_images", task_collector):</code></pre><h3>After Change</h3><pre><code class='java'>
+        images, delete_file=True
+    )
+
+    <a id="change">session.refresh_from_db()</a>
+    assert session.session_state == UPLOAD_SESSION_STATE.stopped
+    assert session.error_message is not None
+
+</code></pre><img src="8612704.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/22c3895c7ede3cbeaee16c15e2ee430c2c6ede42#diff-d3b89bd629e3a053ff4dc3607a0b078fd14735f4ac35e38e9f4b234b42108faaL82' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 22c3895c7ede3cbeaee16c15e2ee430c2c6ede42</div><div id='time'> Time: 2018-08-15</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/tests/cases_tests/test_background_tasks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_staged_uploaded_file_cleanup_interferes_with_image_build</div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/22c3895c7ede3cbeaee16c15e2ee430c2c6ede42#diff-d3b89bd629e3a053ff4dc3607a0b078fd14735f4ac35e38e9f4b234b42108faaL128' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 22c3895c7ede3cbeaee16c15e2ee430c2c6ede42</div><div id='time'> Time: 2018-08-15</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/tests/cases_tests/test_background_tasks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_errors_on_files_with_duplicate_file_names</div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/22c3895c7ede3cbeaee16c15e2ee430c2c6ede42#diff-d3b89bd629e3a053ff4dc3607a0b078fd14735f4ac35e38e9f4b234b42108faaL48' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 22c3895c7ede3cbeaee16c15e2ee430c2c6ede42</div><div id='time'> Time: 2018-08-15</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/tests/cases_tests/test_background_tasks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_mhd_file_creation</div><BR>

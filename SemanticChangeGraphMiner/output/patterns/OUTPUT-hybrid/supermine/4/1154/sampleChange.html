@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for i in range(len(data_iter) // opt.n_critic):
+        &#47&#47 Train discriminator for n_critic times
+        for _ in range(opt.n_critic):
+            <a id="change">(imgs, _) = data_iter.next()</a>
+
+            &#47&#47 Configure input
+            real_imgs = Variable(imgs.type(Tensor))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            p.data.clamp_(-opt.clip_value, opt.clip_value)
+
+        &#47&#47 Train the generator every n_critic iterations
+        <a id="change">if i % opt.n_critic == 0:
+
+            &#47&#47 -----------------
+            &#47&#47  Train Generator
+            &#47&#47 -----------------
+
+            optimizer_G.zero_grad()
+
+            &#47&#47 Generate a batch of images
+            gen_imgs = generator(z)
+            &#47&#47 Adversarial loss
+            loss_G = -torch.mean(discriminator(gen_imgs))
+
+            loss_G.backward()
+            optimizer_G.step()
+
+            print ("[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]" % (epoch, opt.n_epochs,
+                                                            batches_done % len(dataloader), len(dataloader),
+                                                            loss_D.item(), loss_G.item()))
+
+       </a> if batches_done % opt.sample_interval == 0:
+            save_image(gen_imgs.data[:25], &quotimages/%d.png&quot % batches_done, nrow=5, normalize=True)
+        batches_done += 1
+</code></pre>

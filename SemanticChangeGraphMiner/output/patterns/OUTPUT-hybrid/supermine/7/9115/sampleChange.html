@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            self.inverse_covariance = inverse_covariance
+        &#47&#47 estimate of the parameters
+        self.beta_estimate = np.dot(<a id="change">np.dot(self.inverse_covariance, X_ones.T)</a>, y)        
+        &#47&#47 now we need the estimate of the noise variance
+        &#47&#47 reference: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+        residuals_sqr = (y - self.predict(X)) ** 2</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                lambda_reg = self.lambda_reg
+
+            <a id="change">for i in range(d - 1):
+                &#47&#47 Replacing `outer_product + lambda_reg * eye(d)` with
+                &#47&#47 a direct modification of the outer_product matrix
+                &#47&#47
+                &#47&#47 We&quotre trading a little more time spent in the Python
+                &#47&#47 interpreter with a savings of allocated arrays.
+                outer_product[i, i] += lambda_reg
+
+           </a> self.inverse_covariance = inv(outer_product)
+        else:
+            self.inverse_covariance = inverse_covariance
+        &#47&#47 estimate of the parameters</code></pre>

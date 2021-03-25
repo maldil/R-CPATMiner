@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 calculation
+
+    for row in count_matrix:
+        word_z_score_dict = <a id="change">_z_test_word_list_(word_list_i=row,
+                                               word_list_j=count_matrix)</a>
+        sorted_list = sorted(
+            list(word_z_score_dict.items()),
+            key=lambda item: abs(item[1]),
+            reverse=True</code></pre><h3>After Change</h3><pre><code class='java'>
+    assert np.size(count_matrix) &gt; 0, EMPTY_LIST_MESSAGE
+    &#47&#47 initialize
+    all_results = []  &#47&#47 the value to return
+    <a id="change">total_sum = np.sum(count_matrix).item()</a>
+    <a id="change">count_matrix_sum = np.sum(count_matrix, axis=0)</a>
+    &#47&#47 Generate data
+    for row in count_matrix:
+        word_z_score_dict = <a id="change">_z_test_word_list_(
+            count_list_i=row, count_list_j=count_matrix_sum,
+            row_sum=np.sum(row).item(), total_sum=total_sum, words=words)</a>
+        sorted_list = sorted(list(word_z_score_dict.items()),
+                             key=lambda item: abs(item[1]),
+                             reverse=True)
+        all_results.append(sorted_list)</code></pre>

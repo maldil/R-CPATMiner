@@ -1,0 +1,31 @@
+<html><h3>98d8f98800a76e6809c5ac43245bfe685a5cf436,mir_eval/structure.py,,pairwise,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_agree_ref = 0.0
+    n_agree_est = 0.0
+    for i in xrange(len(y_ref)):
+        <a id="change">for j in xrange(i + 1, len(y_ref)):
+            &#47&#47 Do i and j match in reference?
+            ref_match = (y_ref[i] == y_ref[j])
+            n_agree_ref += ref_match
+
+            &#47&#47 Or in estimate?
+            est_match = (y_est[i] == y_est[j])
+            n_agree_est += est_match
+
+            &#47&#47 If both, we have agreement
+            matches += (ref_match & est_match)
+            
+   </a> precision   = matches / n_agree_est
+    recall      = matches / n_agree_ref
+    f_measure   = util.f_measure(precision, recall, beta=beta)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Repeat for estimate
+    agree_est   = np.equal.outer(y_est, y_est)
+    n_agree_est = (agree_est.sum() - <a id="change">len(y_est)</a>) / 2.0
+
+    &#47&#47 Find where they agree
+    matches     = np.logical_and(agree_ref, agree_est)</code></pre><img src="33619859.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/98d8f98800a76e6809c5ac43245bfe685a5cf436#diff-ac3cd9932247d77a7924972f2e60cb3e82354ab76c063b4638c9ab20a6dff247L126' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 98d8f98800a76e6809c5ac43245bfe685a5cf436</div><div id='time'> Time: 2014-04-17</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: mir_eval/structure.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pairwise</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/ec01f586b20cc3e9e15146e71d9248301ba277ae#diff-8a38dc0f58c29d4066f37a4649bddd620f2139bc7272bb5e2b07fd502edb75a3L250' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: ec01f586b20cc3e9e15146e71d9248301ba277ae</div><div id='time'> Time: 2014-07-02</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank.py</div><div id='class'> Class Name: PerceptronRanker</div><div id='method'> Method Name: _get_rival_candidates</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/lightning/commit/1c1b85686b9744f988d05ecdbaca20c198488e7b#diff-3642767e76dd64ef8aa72daf38b96471855ba6bcd3c7950b0c00c3f912dc4927L73' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/lightning</div><div id='commit'> Commit Name: 1c1b85686b9744f988d05ecdbaca20c198488e7b</div><div id='time'> Time: 2014-06-20</div><div id='author'> Author: mathieu@mblondel.org</div><div id='file'> File Name: lightning/impl/prank.py</div><div id='class'> Class Name: PRank</div><div id='method'> Method Name: predict</div><BR>

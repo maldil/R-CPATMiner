@@ -1,0 +1,56 @@
+<html><h3>66756de12d3f76d48774434bb210cab39a9590c0,graphbrain/agents/txt_parser.py,TxtParser,input_file,#TxtParser#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def input_file(self, file_name):
+        pos = 0
+        <a id="change">with open(file_name, &quotr&quot) as f:
+            text = f.read().replace(&quot\n&quot, &quot &quot)
+            parses = self.parser.parse(text)
+            for parse in parses:
+                main_edge = parse[&quotmain_edge&quot]
+
+                &#47&#47 add main edge
+                if main_edge:
+                    self.hg.add_to_sequence(self.sequence, pos, main_edge)
+                    self.edges += 1
+                    pos += 1
+
+                    &#47&#47 attach text to edge
+                    self.hg.set_attribute(main_edge, &quottext&quot, parse[&quottext&quot])
+
+                    &#47&#47 add extra edges
+                    for edge in parse[&quotextra_edges&quot]:
+                        self.add(edge)
+
+   </a> def report(self):
+        rep_str = (&quotedges found: {}&quot.format(self.edges))
+        return &quot{}\n\n{}&quot.format(rep_str, super().report())
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def input_file(self, file_name):
+        pos = 0
+        <a id="change">for paragraph in paragraphs(file_name):
+            parses = self.parser.parse(paragraph)
+            for parse in parses:
+                main_edge = parse[&quotmain_edge&quot]
+
+                &#47&#47 add main edge
+                if main_edge:
+                    self.hg.add_to_sequence(self.sequence, pos, main_edge)
+                    self.edges += 1
+                    pos += 1
+
+                    &#47&#47 attach text to edge
+                    self.hg.set_attribute(main_edge, &quottext&quot, parse[&quottext&quot])
+
+                    &#47&#47 add extra edges
+                    for edge in parse[&quotextra_edges&quot]:
+                        self.add(edge)
+
+   </a> def report(self):
+        rep_str = (&quotedges found: {}&quot.format(self.edges))
+        return &quot{}\n\n{}&quot.format(rep_str, super().report())
+</code></pre><img src="32696307.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/graphbrain/graphbrain/commit/66756de12d3f76d48774434bb210cab39a9590c0#diff-aa929934d8bea60863432edd1bd623ed30f1f2741c482c50b41b5c6b8560c4d0L26' target='_blank'>Link</a></div><div id='project'> Project Name: graphbrain/graphbrain</div><div id='commit'> Commit Name: 66756de12d3f76d48774434bb210cab39a9590c0</div><div id='time'> Time: 2020-01-15</div><div id='author'> Author: telmo@telmomenezes.net</div><div id='file'> File Name: graphbrain/agents/txt_parser.py</div><div id='class'> Class Name: TxtParser</div><div id='method'> Method Name: input_file</div><BR><BR><div id='link'><a href='https://github.com/ufoym/deepo/commit/6dae167d1ae86dbc6c9da47447fc15b411d3aa5a#diff-c7df6fbc614ecd4f44efdbd59154a7a9746d4d59829dcd63f34f09b72a660f71L37' target='_blank'>Link</a></div><div id='project'> Project Name: ufoym/deepo</div><div id='commit'> Commit Name: 6dae167d1ae86dbc6c9da47447fc15b411d3aa5a</div><div id='time'> Time: 2017-12-03</div><div id='author'> Author: a@ufoym.com</div><div id='file'> File Name: scripts/make-gen-docker.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/f3f4bf67ad87c4d30e3694e251d274c3b85c81da#diff-05abbf979b603c9f7886825f111ab3a03de0ef9926bea937cc8f92eadb92332dL44' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: f3f4bf67ad87c4d30e3694e251d274c3b85c81da</div><div id='time'> Time: 2015-11-09</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/graphbrain/graphbrain/commit/02de60b01b016be9806d939fb642d365bac94627#diff-33b68008d4d0034da2b4345e1f231eecdae1d3ea8dbe7b34482fbecf532d30efL10' target='_blank'>Link</a></div><div id='project'> Project Name: graphbrain/graphbrain</div><div id='commit'> Commit Name: 02de60b01b016be9806d939fb642d365bac94627</div><div id='time'> Time: 2020-12-21</div><div id='author'> Author: telmo@telmomenezes.net</div><div id='file'> File Name: graphbrain/parsers/alpha.py</div><div id='class'> Class Name: Alpha</div><div id='method'> Method Name: __init__</div><BR>

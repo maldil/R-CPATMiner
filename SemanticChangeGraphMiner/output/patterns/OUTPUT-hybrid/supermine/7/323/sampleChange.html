@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Make a copy of old coords and overwrite with result
+        &#47&#47 In this way any extra columns from previous_coords are preserved
+        <a id="change">new_coords = coords.copy()</a>
+        for column in result.index.tolist():
+            &#47&#47 make a new column if necessary, otherwise overwrite
+            new_coords[column] = result.get(column)
+        refined[i] = new_coords</code></pre><h3>After Change</h3><pre><code class='java'>
+        warnings.warn("No particles found in the image before refinement.")
+        return coords_df
+
+    <a id="change">if not pool:
+        refined = map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+    else:
+        refined = pool.map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+
+   </a> refined = [ref for ref in refined if ref is not None]
+
+    columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:</code></pre>

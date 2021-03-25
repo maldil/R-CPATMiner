@@ -1,0 +1,34 @@
+<html><h3>33a33b24185e45478c4758ac14cab8ae5234c44b,pgmpy/inference/base_continuous.py,GradientLogPDF,__init__,#GradientLogPDF#,112
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, theta, model):
+        &#47&#47 TODO: Take model as parameter instead of precision_matrix
+
+        <a id="change">if not isinstance(theta, np.matrix):
+            if isinstance(theta, (np.ndarray, list, tuple, set, frozenset)):
+                length = len(theta)
+                theta = np.matrix(theta)
+                theta = np.reshape(theta, (1, length))
+            else:
+                raise TypeError("theta should be a 1d array type object")
+            theta = np.reshape(theta, (len(theta), 1))
+
+       </a> if theta.shape[1] != model.precision_matrix.shape[0]:
+            raise ValueError("shape of theta vector should be 1 X d if shape" +
+                             " of precision matrix of model is d X d")
+        self.theta = theta</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, theta, model):
+        &#47&#47 TODO: Take model as parameter instead of precision_matrix
+
+        <a id="change">if isinstance(theta, (np.matrix, np.ndarray, list, tuple, set, frozenset)):
+            theta = np.array(theta).flatten()
+            theta = np.matrix(np.reshape(theta, (len(theta), 1)))
+        else:
+            raise TypeError("theta should be a 1d array type object")
+
+       </a> if theta.shape[0] != model.precision_matrix.shape[0]:
+            raise ValueError("shape of theta vector should be 1 X d if shape" +
+                             " of precision matrix of model is d X d")
+        self.theta = theta</code></pre><img src="3846810.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L111' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: GradientLogPDF</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L26' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: AbstractGaussian</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/33a33b24185e45478c4758ac14cab8ae5234c44b#diff-2c3193f27348e79bf68bbde79b9b94b3f43609071813f7bc8cba37c7c1e34bf7L62' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 33a33b24185e45478c4758ac14cab8ae5234c44b</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: utkarsh.gupta550@gmail.com</div><div id='file'> File Name: pgmpy/inference/base_continuous.py</div><div id='class'> Class Name: AbstractGaussian</div><div id='method'> Method Name: get_val</div><BR>

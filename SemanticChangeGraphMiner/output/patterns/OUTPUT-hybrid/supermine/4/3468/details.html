@@ -1,0 +1,20 @@
+<html><h3>26359ff3da29f088976a5bb4d6c67abe84b8b983,thinc/backends/jax_ops.py,,backprop_lstm_stepper,#,720
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def backprop_lstm_stepper(t, state):
+    (dW, db, dX), (dY, dCt3), (G, C, S), (W, b) = state
+    &#47&#47 TODO: I think I&quotm ignoring the sequence grads here?
+    <a id="change">(dAt2, dYt2, dCt2)</a> = backprop_lstm_gates(dCt3, dY[t+1], G[t], C[t+1], C[t])
+    dX3, dY_prev, dW3, db3 = backprop_lstm_weights(dAt, (S[t], W, b))
+    dX = index_update(dX, index[t], dX3)
+    return (dW+dW3, db+db3, dX), (dY, dC), (G, C, X), (W, b)</code></pre><h3>After Change</h3><pre><code class='java'>
+    dAt3, dCt2 = backprop_lstm_gates(dCt3, dYt3, Gt3, Ct3, Ct2)
+    dXt3, dYt2, dW3, db3 = backprop_lstm_weights(dAt3, (St3, W, b))
+    dX = index_update(dX, index[t], dX3)
+    <a id="change">dY = index_update(dY, index[t], dYt2)</a>
+    return (dW+dW3, db+db3, dX), (dY, dCt2), (G, C, X), (W, b)
+
+
+@jax_jit()</code></pre><img src="15049572.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/26359ff3da29f088976a5bb4d6c67abe84b8b983#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L723' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 26359ff3da29f088976a5bb4d6c67abe84b8b983</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: backprop_lstm_stepper</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1c02a7df353ab5e66b73565d204d51b03bd0d65b#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L632' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1c02a7df353ab5e66b73565d204d51b03bd0d65b</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: recurrent_lstm</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1c02a7df353ab5e66b73565d204d51b03bd0d65b#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L643' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1c02a7df353ab5e66b73565d204d51b03bd0d65b</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _lstm_stepper</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out3d = unitpy(input_3d_var)
+        filter_idx = 5
+        py_out = py_to_tf_reshape(
+            out3d.data.numpy())[0][0][<a id="change">:, :, filter_idx</a>].copy()
+        tf_out = tf_out3dsample[0][0][:, :, filter_idx].copy()
+        import pdb
+        pdb.set_trace()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Get output
+        tf_out3dsample = sess.run(rgb_logits, feed_dict=feed_dict)
+        <a id="change">out_tf_np = tf_out3dsample.transpose((0, 4, 1, 2, 3))</a>
+        out_tf = torch.from_numpy(out_tf_np)
+
+        unit_name_tf = &quotRGB/inception_i3d/Conv3d_1a_7x7/&quot
+</code></pre>

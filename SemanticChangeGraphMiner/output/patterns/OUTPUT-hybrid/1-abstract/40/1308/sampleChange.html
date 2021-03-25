@@ -1,0 +1,132 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Find plateaus in ifgram - stretches where delta IF is &lt; thr:
+    &#47&#47 ie, places where the same frequency is spread across adjacent bins
+    idx_above = range(1, max_bin) + [max_bin - 1]
+    idx_below = [0] + <a id="change">range(0, max_bin - 1)</a>
+
+    &#47&#47 expected increment per bin = sr/w, threshold at 3/4 that
+    <a id="change">matches</a> = (abs(if_gram[idx_above] - if_gram[idx_below])
+               &lt; (threshold * fft_res))
+
+    &#47&#47 mask out any singleton bins (where both above and below are zero)
+    matches = matches * ((matches[idx_above] &gt; 0) | (matches[idx_below] &gt; 0))
+
+    pitches = np.zeros_like(matches, dtype=float)
+    magnitudes = np.zeros_like(matches, dtype=float)
+
+    &#47&#47 For each frame, extract all harmonic freqs & magnitudes
+    for t in range(matches.shape[1]):
+
+        &#47&#47 find nonzero regions in this vector
+        &#47&#47 The mask selects out constant regions + active borders
+        <a id="change">mask</a> = ~np.pad(matches[:, t], 1, mode=&quotconstant&quot)
+
+        <a id="change">starts</a> = np.argwhere(matches[:, t] & mask[:-2]).astype(int)
+        ends = 1 + np.argwhere(matches[:, t] & mask[2:]).astype(int)
+
+        &#47&#47 Set up inner loop
+        <a id="change">frqs</a> = np.zeros_like(starts, dtype=float)
+        mags = np.zeros_like(starts, dtype=float)
+
+        for i, (start_i, end_i) in enumerate(zip(starts, ends)):
+
+            <a id="change">start_i</a> = np.asscalar(start_i)
+            end_i = np.asscalar(end_i)
+
+            &#47&#47 Weight frequencies by energy
+            weights = np.abs(D[start_i:end_i, t])
+            mags[i] = weights.sum()
+
+            &#47&#47 Compute the weighted average frequency.
+            &#47&#47 FIXME: is this the right thing to do?
+            &#47&#47 These are frequencies... shouldn&quott this be a
+            &#47&#47 weighted geometric average?
+            frqs[i] = weights.dot(if_gram[start_i:end_i, t])
+            if mags[i] &gt; 0:
+                frqs[i] /= mags[i]
+
+        &#47&#47 Clip outside the ramp zones
+        <a id="change">idx</a> = (fmax[-1] &lt; frqs) | (frqs &lt; fmin[0])
+        mags[idx] = 0
+        frqs[idx] = 0
+
+        &#47&#47 Ramp down at the high end
+        <a id="change">idx</a> = (fmax[-1] &gt; frqs) & (frqs &gt; fmax[0])
+        mags[idx] *= (fmax[-1] - frqs[idx]) / (fmax[-1] - fmax[0])
+
+        &#47&#47 Ramp up from the bottom end
+        <a id="change">idx</a> = (fmin[-1] &gt; frqs) & (frqs &gt; fmin[0])
+        mags[idx] *= (frqs[idx] - fmin[0]) / (fmin[-1] - fmin[0])
+
+        &#47&#47 Assign pitch and magnitude to their center bin
+        <a id="change">bins</a> = (starts + ends) / 2
+        pitches[bins, t] = frqs
+        magnitudes[bins, t] = mags
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Find plateaus in ifgram - stretches where delta IF is &lt; thr:
+    &#47&#47 ie, places where the same frequency is spread across adjacent bins
+    idx_above = list(range(1, max_bin)) + [max_bin - 1]
+    idx_below = [0] + <a id="change">list(range(0, max_bin - 1))</a>
+
+    &#47&#47 expected increment per bin = sr/w, threshold at 3/4 that
+    <a id="change">matches</a> = (abs(if_gram[idx_above] - if_gram[idx_below])
+               &lt; (threshold * fft_res))
+
+    &#47&#47 mask out any singleton bins (where both above and below are zero)
+    matches = matches * ((matches[idx_above] &gt; 0) | (matches[idx_below] &gt; 0))
+
+    pitches = np.zeros_like(matches, dtype=float)
+    magnitudes = np.zeros_like(matches, dtype=float)
+
+    &#47&#47 For each frame, extract all harmonic freqs & magnitudes
+    for t in range(matches.shape[1]):
+
+        &#47&#47 find nonzero regions in this vector
+        &#47&#47 The mask selects out constant regions + active borders
+        <a id="change">mask</a> = ~np.pad(matches[:, t], 1, mode=&quotconstant&quot)
+
+        <a id="change">starts</a> = np.argwhere(matches[:, t] & mask[:-2]).astype(int)
+        ends = 1 + np.argwhere(matches[:, t] & mask[2:]).astype(int)
+
+        &#47&#47 Set up inner loop
+        <a id="change">frqs</a> = np.zeros_like(starts, dtype=float)
+        mags = np.zeros_like(starts, dtype=float)
+
+        for i, (start_i, end_i) in enumerate(zip(starts, ends)):
+
+            <a id="change">start_i</a> = np.asscalar(start_i)
+            end_i = np.asscalar(end_i)
+
+            &#47&#47 Weight frequencies by energy
+            weights = np.abs(D[start_i:end_i, t])
+            mags[i] = weights.sum()
+
+            &#47&#47 Compute the weighted average frequency.
+            &#47&#47 FIXME: is this the right thing to do?
+            &#47&#47 These are frequencies... shouldn&quott this be a
+            &#47&#47 weighted geometric average?
+            frqs[i] = weights.dot(if_gram[start_i:end_i, t])
+            if mags[i] &gt; 0:
+                frqs[i] /= mags[i]
+
+        &#47&#47 Clip outside the ramp zones
+        <a id="change">idx</a> = (fmax[-1] &lt; frqs) | (frqs &lt; fmin[0])
+        mags[idx] = 0
+        frqs[idx] = 0
+
+        &#47&#47 Ramp down at the high end
+        <a id="change">idx</a> = (fmax[-1] &gt; frqs) & (frqs &gt; fmax[0])
+        mags[idx] *= (fmax[-1] - frqs[idx]) / (fmax[-1] - fmax[0])
+
+        &#47&#47 Ramp up from the bottom end
+        <a id="change">idx</a> = (fmin[-1] &gt; frqs) & (frqs &gt; fmin[0])
+        mags[idx] *= (frqs[idx] - fmin[0]) / (fmin[-1] - fmin[0])
+
+        &#47&#47 Assign pitch and magnitude to their center bin
+        <a id="change">bins</a> = (starts + ends) / 2
+        pitches[bins, t] = frqs
+        magnitudes[bins, t] = mags
+</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                                                                        self.seen)
+
+
+            nProposals = int(<a id="change">(conf &gt; 0.25).sum().data[0]</a>)
+
+            tx    = Variable(tx.type(FloatTensor), requires_grad=False)
+            ty    = Variable(ty.type(FloatTensor), requires_grad=False)</code></pre><h3>After Change</h3><pre><code class='java'>
+        FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
+        LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
+
+        <a id="change">if x.is_cuda:
+            self.mse_loss = self.mse_loss.cuda()
+            self.ce_loss = self.ce_loss.cuda()
+
+       </a> prediction = x.view(bs, self.bbox_attrs * self.num_anchors, g_dim * g_dim)
+        prediction = prediction.transpose(1, 2).contiguous()
+        prediction = prediction.view(bs, g_dim * g_dim * self.num_anchors, self.bbox_attrs)
+</code></pre>

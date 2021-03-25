@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    ask_id = j
+
+        else:
+            <a id="change">raise ValueError(
+                "Invalid method &quot%s&quot (available choices: (&quotlc&quot, &quotsm&quot, &quotle&quot)"
+                % self.method
+                )</a>
+
+        return unlabeled_entry_ids[ask_id]
+
+    def get_model(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif self.method == &quotsm&quot:  &#47&#47 smallest margin
+            dvalue = self.model.predict_real(X_pool)
+            if np.shape(dvalue)[1] == 2:
+                <a id="change">ind = [0, 1]</a>
+            else:
+                &#47&#47 Find 2 largest decision values
+                ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]
+            margin = <a id="change">np.abs(np.abs(dvalue[:, ind[0]]) - np.abs(dvalue[:, ind[1]]))</a>
+            ask_id = np.argmin(margin)
+
+        return unlabeled_entry_ids[ask_id]
+</code></pre>

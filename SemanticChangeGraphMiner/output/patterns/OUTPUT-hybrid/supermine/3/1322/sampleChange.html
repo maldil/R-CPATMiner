@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    center = (max_size / 2) - 0.5
+
+    coords = np.stack((np.meshgrid(*L)))
+    coords[0, ...] = np.sqrt(<a id="change">((coords - center) ** 2).sum(axis=0)</a>) + center
+    coords[1:, ...] = 0
+
+    if warp_kwargs is None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        g -= center
+        dist = dist + g * g
+    dist = np.sqrt(dist)
+    coords = <a id="change">np.zeros((ndim,) + dist.shape, dtype=np.float32)</a>
+    <a id="change">coords[0]</a> = dist + center
+
+    if warp_kwargs is None:
+        warp_kwargs = {}</code></pre>

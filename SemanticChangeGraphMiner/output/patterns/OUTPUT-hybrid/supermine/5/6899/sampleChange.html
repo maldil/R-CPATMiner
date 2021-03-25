@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        tensor = cv2.flip(tensor, 1).reshape(tensor.shape)
+    if was_squeezed:
+        tensor = np.expand_dims(tensor, axis=0)
+    <a id="change">return torch.from_numpy(tensor)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if was_squeezed:
+        tensor = np.expand_dims(tensor, axis=0)
+    tensor = torch.from_numpy(tensor)
+    <a id="change">if was_cuda:
+       tensor = tensor.cuda()
+   </a> return tensor
+</code></pre>

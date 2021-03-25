@@ -1,0 +1,50 @@
+<html><h3>9e62f772ee6e7e1b346640533f5122154f102b5a,code/traditional/TCA/TCA.py,TCA,fit,#TCA#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :return: Xs_new and Xt_new after TCA
+        &quot&quot&quot
+        X = np.hstack((self.Xs.T, self.Xt.T))
+        <a id="change">X = np.dot(X, np.diag(1 / (np.sum(X ** 2, axis=0) ** 0.5)))</a>
+        m, n = X.shape
+        ns, nt = len(self.Xs), len(self.Xt)
+        e = np.vstack((1 / ns * np.ones((ns, 1)), -1 / nt * np.ones((nt, 1))))
+        M = e * e.T
+        M = M / np.linalg.norm(M, &quotfro&quot)
+        H = np.eye(n) - 1 / n * np.ones((n, n))
+        K = kernel(self.kernel_type, X, None, gamma=self.gamma)
+        n_eye = m if self.kernel_type == &quotprimal&quot else n
+        a, b = np.linalg.multi_dot([K, M, K.T]) + self.lamb * np.eye(n_eye), np.linalg.multi_dot([K, H, K.T])
+        w, V = scipy.linalg.eig(a, b)
+        ind = np.argsort(w)
+        A = V[:, ind[:self.dim]]
+        <a id="change">Z</a> = np.dot(A.T, K)
+        <a id="change">Z = np.dot(Z, np.diag(1 / (np.sum(Z ** 2, axis=0) ** 0.5)))</a>
+        Xs_new, Xt_new = Z[:, :ns].T, Z[:, ns:].T
+        return Xs_new, Xt_new
+
+    def fit_predict(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        :param Xt: nt * n_feature, target feature
+        :return: Xs_new and Xt_new after TCA
+        &quot&quot&quot
+        <a id="change">X</a> = np.hstack((Xs.T, Xt.T))
+        <a id="change">X /= np.linalg.norm(X, axis=0)</a>
+        m, n = X.shape
+        ns, nt = len(Xs), len(Xt)
+        e = np.vstack((1 / ns * np.ones((ns, 1)), -1 / nt * np.ones((nt, 1))))
+        M = e * e.T
+        M = M / np.linalg.norm(M, &quotfro&quot)
+        H = np.eye(n) - 1 / n * np.ones((n, n))
+        K = kernel(self.kernel_type, X, None, gamma=self.gamma)
+        n_eye = m if self.kernel_type == &quotprimal&quot else n
+        a, b = np.linalg.multi_dot([K, M, K.T]) + self.lamb * np.eye(n_eye), np.linalg.multi_dot([K, H, K.T])
+        w, V = scipy.linalg.eig(a, b)
+        ind = np.argsort(w)
+        A = V[:, ind[:self.dim]]
+        <a id="change">Z</a> = np.dot(A.T, K)
+        <a id="change">Z /= np.linalg.norm(Z, axis=0)</a>
+        Xs_new, Xt_new = Z[:, :ns].T, Z[:, ns:].T
+        return Xs_new, Xt_new
+
+    def fit_predict(self, Xs, Ys, Xt, Yt):</code></pre><img src="1205426.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 22</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/9e62f772ee6e7e1b346640533f5122154f102b5a#diff-b2f0725bce1a0b5b15f8976a2de8c164eb377f8f9ccf34c1e7aec64665c758dfL58' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 9e62f772ee6e7e1b346640533f5122154f102b5a</div><div id='time'> Time: 2018-11-15</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/traditional/TCA/TCA.py</div><div id='class'> Class Name: TCA</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/9e62f772ee6e7e1b346640533f5122154f102b5a#diff-78e05f2588dc7edea58503c5f06ef58cc5539052b00ffc4bc7c94b6acd012184L112' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 9e62f772ee6e7e1b346640533f5122154f102b5a</div><div id='time'> Time: 2018-11-15</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/traditional/BDA/BDA.py</div><div id='class'> Class Name: BDA</div><div id='method'> Method Name: fit_predict</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/9e62f772ee6e7e1b346640533f5122154f102b5a#diff-f0c3b3696634f94001778f30397877909e01331126fffbf78becbee62967efccL67' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 9e62f772ee6e7e1b346640533f5122154f102b5a</div><div id='time'> Time: 2018-11-15</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/traditional/JDA/JDA.py</div><div id='class'> Class Name: JDA</div><div id='method'> Method Name: fit_predict</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/9e62f772ee6e7e1b346640533f5122154f102b5a#diff-b2f0725bce1a0b5b15f8976a2de8c164eb377f8f9ccf34c1e7aec64665c758dfL58' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 9e62f772ee6e7e1b346640533f5122154f102b5a</div><div id='time'> Time: 2018-11-15</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/traditional/TCA/TCA.py</div><div id='class'> Class Name: TCA</div><div id='method'> Method Name: fit</div><BR>

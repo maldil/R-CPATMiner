@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Create the outputs
+        F                                           = num_engines* F * [np.cos(self.thrust_angle),0,-np.sin(self.thrust_angle)]      
+        mdot                                        = np.zeros_like(F) 
+        F_mag                                       = np.atleast_2d(<a id="change">np.linalg.norm(F, axis=1)/Units.lbs</a>) &#47&#47 lb   
+        <a id="change">conditions.propulsion.disc_loading</a>          = (F_mag.T)/ (num_engines*np.pi*<a id="change">(R/Units.feet)**2</a>) &#47&#47 lb/ft^2                     
+        <a id="change">conditions.propulsion.power_loading</a>         = (F_mag.T)/<a id="change">(P/Units.hp)</a>                &#47&#47 lb/hp 
+        
+        results = Data()
+        results.thrust_force_vector = F</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Create the outputs
+        F                                           = num_engines* F * [np.cos(self.thrust_angle),0,-np.sin(self.thrust_angle)]      
+        mdot                                        = np.zeros_like(F) 
+        F_mag                                       = np.atleast_2d(<a id="change">np.linalg.norm(F, axis=1)</a>)  
+        <a id="change">conditions.propulsion.disc_loading</a>          = (F_mag.T)/ (num_engines*np.pi*<a id="change">(R)**2</a>) &#47&#47 N/m^2                  
+        <a id="change">conditions.propulsion.power_loading</a>         = (F_mag.T)/(P)                         &#47&#47 N/W 
+        
+        results = Data()
+        results.thrust_force_vector = F</code></pre>

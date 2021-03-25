@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      t_loop_start = time.time()
+      rays_per_sec = FLAGS.batch_size * steps_per_sec
+      summary_writer.scalar("steps_per_sec", steps_per_sec, step)
+      <a id="change">summary_writer.scalar("rays_per_sec", rays_per_sec, step)</a>
+      precision = int(np.ceil(np.log10(FLAGS.max_steps))) + 1
+      print(("{:" + "{:d}".format(precision) + "d}").format(step) +
+            f"/{FLAGS.max_steps:d}: " + f"i_loss={stats.loss[0]:0.5f}, " +
+            f"avg_loss={avg_loss:0.5f}, " +</code></pre><h3>After Change</h3><pre><code class='java'>
+        eval_time = time.time() - t_eval_start
+        num_rays = jnp.prod(jnp.array(test_case["rays"].directions.shape[:-1]))
+        rays_per_sec = num_rays / eval_time
+        <a id="change">summary_writer.scalar("test_rays_per_sec", rays_per_sec, step)</a>
+        print(f"Eval {step}: {eval_time:0.3f}s., {rays_per_sec:0.0f} rays/sec")
+        summary_writer.scalar("test_psnr", psnr, step)
+        summary_writer.scalar("test_ssim", ssim, step)
+        summary_writer.image("test_pred_color", pred_color, step)</code></pre>

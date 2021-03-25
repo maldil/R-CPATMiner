@@ -1,0 +1,20 @@
+<html><h3>48d178cfbb60e5b0004f63b2eca37b2449bb6c67,a2c/a2c.py,Model,__init__,#Model#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    train_loss = pg_loss + vf_coef * vf_loss
+
+    <a id="change">self.grads_check = grads = tf.gradients(train_loss, params_pi1)</a>
+    grads = list(zip(grads, params_pi1))
+    trainer = tf.train.RMSPropOptimizer(learning_rate=lr, decay=alpha, epsilon=epsilon)
+    _train = trainer.apply_gradients(grads)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    params = find_trainable_variables("model")
+    grads = tf.gradients(loss, params)
+    if max_grad_norm is not None:
+      <a id="change">grads</a>, _ = tf.clip_by_global_norm(grads, max_grad_norm)
+    grads = list(zip(grads, params))
+    trainer = tf.train.RMSPropOptimizer(learning_rate=lr, decay=alpha, epsilon=epsilon)
+    _train = trainer.apply_gradients(grads)</code></pre><img src="33794322.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chris-chris/pysc2-examples/commit/48d178cfbb60e5b0004f63b2eca37b2449bb6c67#diff-b23290c5a5b8fd8a0e0b906a3bffc5ff6930e5dff2799638f9170c94d742e120L26' target='_blank'>Link</a></div><div id='project'> Project Name: chris-chris/pysc2-examples</div><div id='commit'> Commit Name: 48d178cfbb60e5b0004f63b2eca37b2449bb6c67</div><div id='time'> Time: 2017-10-31</div><div id='author'> Author: sjhshy@gmail.com</div><div id='file'> File Name: a2c/a2c.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Bihaqo/t3f/commit/fec458e78428cdf828701d5233107aac3664b3cf#diff-d6d1275d9d6d622ca4bb4f761e2b5f9cb0abe47c35a6eaeda5a88a8431ea8b87L97' target='_blank'>Link</a></div><div id='project'> Project Name: Bihaqo/t3f</div><div id='commit'> Commit Name: fec458e78428cdf828701d5233107aac3664b3cf</div><div id='time'> Time: 2019-11-21</div><div id='author'> Author: sasha.v.novikov@gmail.com</div><div id='file'> File Name: t3f/autodiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gradients</div><BR><BR><div id='link'><a href='https://github.com/Bihaqo/t3f/commit/fec458e78428cdf828701d5233107aac3664b3cf#diff-d6d1275d9d6d622ca4bb4f761e2b5f9cb0abe47c35a6eaeda5a88a8431ea8b87L156' target='_blank'>Link</a></div><div id='project'> Project Name: Bihaqo/t3f</div><div id='commit'> Commit Name: fec458e78428cdf828701d5233107aac3664b3cf</div><div id='time'> Time: 2019-11-21</div><div id='author'> Author: sasha.v.novikov@gmail.com</div><div id='file'> File Name: t3f/autodiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hessian_vector_product</div><BR><BR><div id='link'><a href='https://github.com/marcoancona/DeepExplain/commit/83796ff9a1dcae49dd13f3ce67157f756d28803e#diff-48bd2d333953b4e63b7e8b8c2933842fbdfb9b560748ff0a6d819e3f7dcc2a05L144' target='_blank'>Link</a></div><div id='project'> Project Name: marcoancona/DeepExplain</div><div id='commit'> Commit Name: 83796ff9a1dcae49dd13f3ce67157f756d28803e</div><div id='time'> Time: 2017-11-02</div><div id='author'> Author: marco.ancona@inf.ethz.ch</div><div id='file'> File Name: example_tf.py</div><div id='class'> Class Name: DeepExplain</div><div id='method'> Method Name: explain</div><BR>

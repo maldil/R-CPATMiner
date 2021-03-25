@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        "../../data/mnist",
+        train=True,
+        download=True,
+        transform=transforms.Compose([transforms.ToTensor(), transforms.Normalize(<a id="change">(0.5, 0.5, 0.5)</a>, <a id="change">(0.5, 0.5, 0.5)</a>)]),
+    ),
+    batch_size=opt.batch_size,
+    shuffle=True,
+)
+
+&#47&#47 Optimizers
+optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+
+Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
+
+&#47&#47 ----------
+&#47&#47  Training
+&#47&#47 ----------
+
+batches_done = 0
+for epoch in range(opt.n_epochs):
+    for i, (imgs, _) in enumerate(dataloader):
+
+        &#47&#47 Configure input
+        real_imgs = Variable(imgs.type(Tensor),requires_grad=True)
+
+        &#47&#47 ---------------------
+        &#47&#47  Train Discriminator
+        &#47&#47 ---------------------
+
+        optimizer_D.zero_grad()
+
+        &#47&#47 Sample noise as generator input
+        z = Variable(Tensor(np.random.normal(0, 1, (imgs.shape[0], opt.latent_dim))))
+
+        &#47&#47 Generate a batch of images
+        fake_imgs = generator(z)
+
+        &#47&#47 Real images
+        real_validity = discriminator(real_imgs)
+        &#47&#47 Fake images
+        fake_validity = discriminator(fake_imgs)
+
+        &#47&#47 Compute W-div gradient penalty
+        real_grad_out = Variable(Tensor(real_imgs.size(0), 1).fill_(1.0),requires_grad=False)
+        real_grad = autograd.grad(real_validity,
+                                  real_imgs,
+                                  real_grad_out,
+                                  create_graph=True,
+	 		          retain_graph=True,
+				  only_inputs=True)[0]
+        real_grad_norm = real_grad.view(real_grad.size(0),-1).pow(2).sum(1)**(p/2)
+
+        fake_grad_out = Variable(Tensor(fake_imgs.size(0), 1).fill_(1.0),requires_grad=False)
+        fake_grad = autograd.grad(fake_validity,
+                                  fake_imgs,
+                                  fake_grad_out,
+                                  create_graph=True,
+ 				  retain_graph=True,
+   				  only_inputs=True)[0]
+        <a id="change">fake_grad_norm</a> = fake_grad.view(fake_grad.size(0),-1).pow(2).sum(1)**(p/2)
+
+        div_gp = torch.mean(real_grad_norm + fake_grad_norm) * k / 2
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        train=True,
+        download=True,
+        transform=transforms.Compose(
+            [<a id="change">transforms.Resize(opt.img_size)</a>, transforms.ToTensor(), transforms.Normalize(<a id="change">[0.5]</a>, <a id="change">[0.5]</a>)]
+        ),
+    ),
+    batch_size=opt.batch_size,
+    shuffle=True,
+)
+
+&#47&#47 Optimizers
+optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+
+Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
+
+&#47&#47 ----------
+&#47&#47  Training
+&#47&#47 ----------
+
+batches_done = 0
+for epoch in range(opt.n_epochs):
+    for i, (imgs, _) in enumerate(dataloader):
+
+        &#47&#47 Configure input
+        real_imgs = Variable(imgs.type(Tensor), requires_grad=True)
+
+        &#47&#47 ---------------------
+        &#47&#47  Train Discriminator
+        &#47&#47 ---------------------
+
+        optimizer_D.zero_grad()
+
+        &#47&#47 Sample noise as generator input
+        z = Variable(Tensor(np.random.normal(0, 1, (imgs.shape[0], opt.latent_dim))))
+
+        &#47&#47 Generate a batch of images
+        fake_imgs = generator(z)
+
+        &#47&#47 Real images
+        real_validity = discriminator(real_imgs)
+        &#47&#47 Fake images
+        fake_validity = discriminator(fake_imgs)
+
+        &#47&#47 Compute W-div gradient penalty
+        real_grad_out = Variable(Tensor(real_imgs.size(0), 1).fill_(1.0), requires_grad=False)
+        real_grad = autograd.grad(
+            real_validity, real_imgs, real_grad_out, create_graph=True, retain_graph=True, only_inputs=True
+        )[0]
+        real_grad_norm = real_grad.view(real_grad.size(0), -1).pow(2).sum(1) ** (p / 2)
+
+        fake_grad_out = Variable(Tensor(fake_imgs.size(0), 1).fill_(1.0), requires_grad=False)
+        fake_grad = autograd.grad(
+            fake_validity, fake_imgs, fake_grad_out, create_graph=True, retain_graph=True, only_inputs=True
+        )[0]
+        <a id="change">fake_grad_norm</a> = fake_grad.view(fake_grad.size(0), -1).pow(2).sum(1) ** (p / 2)
+
+        div_gp = torch.mean(real_grad_norm + fake_grad_norm) * k / 2
+</code></pre>

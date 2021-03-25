@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        seq_len = input.size(0)
+        &#47&#47 pad the 0th dimension (T/sequence) with zeroes whose number = context
+        &#47&#47 Once pytorch&quots padding functions have settled, should move to those.
+        <a id="change">padding = torch.zeros(self.context, *(input.size()[1:])).type_as(input)</a>
+        x = torch.cat((input, padding), 0)
+
+        &#47&#47 add lookahead windows (with context+1 width) as a fourth dimension
+        &#47&#47 for each seq-batch-feature combination
+        <a id="change">x = [x[i:i + self.context + 1] for i in range(seq_len)]</a>  &#47&#47 TxLxNxH - sequence, context, batch, feature
+        x = torch.stack(x)
+        x = x.permute(0, 2, 3, 1)  &#47&#47 TxNxHxL - sequence, batch, feature, context
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = x.transpose(0, 1).transpose(1, 2)
+        x = F.pad(x, pad=self.pad, value=0)
+        x = self.conv(x)
+        <a id="change">x = x.transpose(1, 2).transpose(0, 1).contiguous()</a>
+        return x
+
+    def __repr__(self):
+        return self.__class__.__name__ + &quot(&quot \</code></pre>

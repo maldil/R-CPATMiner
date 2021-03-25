@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rb = geometry.unsqueeze(1)  &#47&#47 [batch, 1, b, xyz]
+        ra = geometry.unsqueeze(2)  &#47&#47 [batch, a, 1, xyz]
+        k = self.kernel(rb - ra)  &#47&#47 [batch, a, b, 6 * i, j]
+        <a id="change">return torch.einsum("zabij,zacij,zadij,zbcij,zbdij,zcdij,zcdj-&gt;zabi",
+                            (*k.split(k.size(3) // 6, 3), features))</a>  &#47&#47 [batch, a, b, channel]
+
+
+class ApplyKernel(torch.nn.Module):</code></pre><h3>After Change</h3><pre><code class='java'>
+        out += torch.einsum("zbcij,zcdj-&gt;zabi", (k4, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zbdij,zcdj-&gt;zabi", (k5, features))  &#47&#47 [batch, a, b, channel]
+        out += torch.einsum("zcdij,zcdj-&gt;zabi", (k6, features))  &#47&#47 [batch, a, b, channel]
+        <a id="change">return out</a>
+
+
+class ApplyKernel(torch.nn.Module):
+    def __init__(self, Kernel, Rs_in, Rs_out):</code></pre>

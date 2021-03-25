@@ -1,0 +1,21 @@
+<html><h3>b2002a8ef80ecbecee09fd61b910c987648455c7,torch_geometric/datasets/karate.py,KarateClub,__init__,#KarateClub#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        data = Data(edge_index=edge_index)
+        data.num_nodes = edge_index.max().item() + 1
+        data.x = torch.eye(data.num_nodes, dtype=torch.float)
+        y = [0 if <a id="change">G.nodes[i][&quotclub&quot]</a> == &quotMr. Hi&quot else 1 for i in G.nodes]
+        data.y = torch.tensor(y)
+        self.data, self.slices = self.collate([data])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        edge_index = torch.stack([row, col], dim=0)
+
+        &#47&#47 Compute communities.
+        <a id="change">partition = community_louvain.best_partition(G)</a>
+        <a id="change">y = torch.tensor([partition[i] for i in range(G.number_of_nodes())])</a>
+
+        &#47&#47 Select a single training node for each community
+        &#47&#47 (we just use the first one).
+        train_mask = torch.zeros(y.size(0), dtype=torch.bool)</code></pre><img src="36007153.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/b2002a8ef80ecbecee09fd61b910c987648455c7#diff-83c104d783654fcf8ee4ba1ecdcc2aee2736bb58a760dc4c994315fac78313b3L23' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: b2002a8ef80ecbecee09fd61b910c987648455c7</div><div id='time'> Time: 2020-08-26</div><div id='author'> Author: matthias.fey@tu-dortmund.de</div><div id='file'> File Name: torch_geometric/datasets/karate.py</div><div id='class'> Class Name: KarateClub</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pytorch/tutorials/commit/69d978ed497856d05730c05564597e604713f5c4#diff-ac8c33f7f434713f5870ff7c602e80620c1d0d8b8631edb84c0e5c2ed03ec384L1266' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tutorials</div><div id='commit'> Commit Name: 69d978ed497856d05730c05564597e604713f5c4</div><div id='time'> Time: 2018-09-16</div><div id='author'> Author: minkawhich@fb.com</div><div id='file'> File Name: beginner_source/chatbot_tutorial.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/pytorch/tutorials/commit/a61996ae5406ddfee4ac65ab647ebe858fc16260#diff-ac8c33f7f434713f5870ff7c602e80620c1d0d8b8631edb84c0e5c2ed03ec384L1266' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tutorials</div><div id='commit'> Commit Name: a61996ae5406ddfee4ac65ab647ebe858fc16260</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: matthewinkawhich@gmail.com</div><div id='file'> File Name: beginner_source/chatbot_tutorial.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR>

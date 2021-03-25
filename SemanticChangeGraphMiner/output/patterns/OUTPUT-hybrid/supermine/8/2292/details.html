@@ -1,0 +1,31 @@
+<html><h3>618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d,pymanopt/core/problem.py,Problem,backend,#Problem#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                  self._arg):
+                    self._backend = backend_autograd
+            if self._backend is None:
+                <a id="change">raise ValueError(
+                    "Cannot identify an autodiff backend from cost "
+                    "function that also was successfully imported. "
+                    "TheanoBackend was%s successfully imported. " %
+                    ("" if backend_theano.is_available() else " not") +
+                    "AutogradBackend was%s successfully imported. " %
+                    ("" if backend_autograd.is_available() else " not")
+                    )</a>
+        return self._backend
+
+    @property
+    def cost(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+                    break
+            else:
+                backend_names = [backend.name for backend in self._backends]
+                <a id="change">raise ValueError(
+                    "Cannot determine autodiff backend from cost function. "
+                    "Available backends are: {:s}".format(
+                        ", ".join(backend_names)))</a>
+        return self._backend
+
+    @property
+    def cost(self):</code></pre><img src="10581835.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d#diff-10bc586d29b8b9c65fb4096cb073f599dd8e9bde81918e6753ac3f861ac91a7fL75' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 618c1cac7908e5aa61fd95e0d1c6c1f31a2db95d</div><div id='time'> Time: 2016-02-19</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/core/problem.py</div><div id='class'> Class Name: Problem</div><div id='method'> Method Name: backend</div><BR><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/2e72671b414efc9da2d6bb713bc90dc4a194fb63#diff-3948ef8cecdf97181e8b1d10a64432dd55757d923d13ee733abb0002b4c2a643L38' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 2e72671b414efc9da2d6bb713bc90dc4a194fb63</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: delavega@utexas.edu</div><div id='file'> File Name: pliers/extractors/api.py</div><div id='class'> Class Name: IndicoAPIExtractor</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/9b4586ce59176cafce433b315feffb1ff60b7722#diff-3948ef8cecdf97181e8b1d10a64432dd55757d923d13ee733abb0002b4c2a643L37' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 9b4586ce59176cafce433b315feffb1ff60b7722</div><div id='time'> Time: 2017-03-08</div><div id='author'> Author: delavega@utexas.edu</div><div id='file'> File Name: pliers/extractors/api.py</div><div id='class'> Class Name: IndicoAPIExtractor</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        conv_block = []
+        p = 0
+        &#47&#47 TODO: support padding types
+        <a id="change">assert(padding_type == &quotzero&quot)</a>
+        p = 1
+
+        &#47&#47 TODO: InstanceNorm
+        conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p),</code></pre><h3>After Change</h3><pre><code class='java'>
+            conv_block += [nn.Dropout(0.5)]
+
+        p = 0
+        <a id="change">if padding_type == &quotreflect&quot:
+            conv_block += [nn.ReflectionPad2d(1)]
+        elif padding_type == &quotreplicate&quot:
+            conv_block += [nn.ReplicationPad2d(1)]
+        elif padding_type == &quotzero&quot:
+            p = 1
+        else:
+            raise NotImplementedError(&quotpadding [%s] is not implemented&quot % padding_type)
+       </a> conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p),
+                       norm_layer(dim)]
+
+        return nn.Sequential(*conv_block)</code></pre>

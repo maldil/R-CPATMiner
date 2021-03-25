@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            api = censys.certificates.CensysCertificates(api_id=self.api_id, api_secret=self.secret)
+            fields = [&quotparsed.subject_dn&quot, &quotparsed.fingerprint_sha256&quot, &quotparsed.validity&quot]
+            for cert in api.search(&quottags: trusted and parsed.names: {}&quot.format(fqdn), fields=fields):
+                self.utility.print_message(OK, <a id="change">&quotCertification info: {}&quot.format(cert)</a>)
+
+        self.utility.write_log(20, &quot[Out] Search Censys [{}].&quot.format(self.file_name))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    self.utility.print_message(WARNING, &quotCommon Name {}: {}&quot.format(idx+1, common_name))
+                self.utility.print_message(WARNING, &quotValidity Start: {}&quot.format(cert[&quotparsed.validity.start&quot]))
+                self.utility.print_message(WARNING, &quotValidity End  : {}&quot.format(cert[&quotparsed.validity.end&quot]))
+                <a id="change">for idx, org_name in enumerate(cert[&quotparsed.subject.organization&quot]):
+                    self.utility.print_message(WARNING, &quotOrganization {}: {}&quot.format(idx+1, org_name))
+
+       </a> self.utility.write_log(20, &quot[Out] Search Censys [{}].&quot.format(self.file_name))
+</code></pre>

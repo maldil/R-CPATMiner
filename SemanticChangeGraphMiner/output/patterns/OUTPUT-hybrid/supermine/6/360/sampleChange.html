@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_float_haralick():
+    A = np.zeros((5,5), np.float32)
+    A[2,2]=12
+    <a id="change">texture.haralick(A)</a>
+
+def test_haralick3d():
+    np.random.seed(22)
+    img = mahotas.stretch(255*np.random.rand(20,20,4))</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_float_haralick():
+    A = np.zeros((5,5), np.float32)
+    A[2,2]=12
+    <a id="change">with pytest.raises(TypeError):
+        texture.haralick(A)
+
+</a>def test_haralick3d():
+    np.random.seed(22)
+    img = mahotas.stretch(255*np.random.rand(20,20,4))
+    features = texture.haralick(img)</code></pre>

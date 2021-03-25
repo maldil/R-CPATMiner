@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Clean up to remove redundant lines
+        &#47&#47 Section 1
+        col1 = my_data[1:,:1]
+        <a id="change">col2 = my_data[1:,1:2]</a>
+        col3 = my_data[1:,2:3]
+        for ii in xrange(0, len(col1)-1):
+            if (col1[ii] == col1[ii+1])&(col2[ii] == col2[ii+1])&(col3[ii] == col3[ii+1]):
+                np.delete(my_data,(ii), axis=0)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47if (col1[ii] == col1[ii+1])&(col2[ii] == col2[ii+1])&(col3[ii] == col3[ii+1]):
+                &#47&#47np.delete(my_data,(ii), axis=0)
+
+        <a id="change">b = np.ascontiguousarray(my_data).view(np.dtype((np.void, my_data.dtype.itemsize * my_data.shape[1])))</a>
+        <a id="change">_, idx = np.unique(b, return_index=True)</a>
+        
+        my_data = my_data[idx]                
+                
+    </code></pre>

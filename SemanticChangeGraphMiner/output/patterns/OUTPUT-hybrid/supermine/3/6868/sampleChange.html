@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    stream = pa.open(format=pyaudio.paInt16, channels=1, rate=SAMPLING_RATE,
+                     input=True, frames_per_buffer=NUM_SAMPLES)
+    audio_data  = fromstring(stream.read(NUM_SAMPLES), dtype=short)
+    <a id="change">stream.close()</a>
+    normalized_data = audio_data / 32768.0
+    return (abs(fft(normalized_data))[:NUM_SAMPLES/2], normalized_data)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+_stream = None
+def get_audio_data():
+    global _stream
+    <a id="change">if _stream is None:
+        pa = pyaudio.PyAudio()
+        _stream = pa.open(format=pyaudio.paInt16, channels=1, rate=SAMPLING_RATE,
+                     input=True, frames_per_buffer=NUM_SAMPLES)
+   </a> audio_data  = fromstring(_stream.read(NUM_SAMPLES), dtype=short)
+    normalized_data = audio_data / 32768.0
+    return (abs(fft(normalized_data))[:NUM_SAMPLES/2], normalized_data)
+</code></pre>

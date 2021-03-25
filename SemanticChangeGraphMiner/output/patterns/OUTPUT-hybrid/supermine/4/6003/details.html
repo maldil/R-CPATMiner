@@ -1,0 +1,22 @@
+<html><h3>738c8758e30c6f8bdf9155529aeb431547af65d6,python/caffe/pycaffe.py,,_Net_set_mean,#,184
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise Exception(&quotInput not in {}&quot.format(self.inputs))
+    mean = np.load(mean_f)
+    if mode == &quotelementwise&quot:
+        <a id="change">if mean.shape != self.input.data.shape[1:]:
+            raise Exception(&quotThe mean shape does not match the input shape.&quot)
+       </a> self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = mean.mean(1).mean(1)
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                    in_shape[2:]).transpose((2,0,1))
+        self.mean[input_] = mean
+    elif mode == &quotchannel&quot:
+        self.mean[input_] = <a id="change">mean.mean(1).mean(1).reshape((in_shape[1], 1, 1))</a>
+    else:
+        raise Exception(&quotMode not in {}&quot.format([&quotelementwise&quot, &quotchannel&quot]))
+
+</code></pre><img src="24791786.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/738c8758e30c6f8bdf9155529aeb431547af65d6#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L196' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 738c8758e30c6f8bdf9155529aeb431547af65d6</div><div id='time'> Time: 2014-05-19</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_set_mean</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/dcd7ce51473d875401d39cd0bc1c3c1cdc2023e1#diff-8a5881aff282ecc639c86d7f6770a562ccc6a1c7f3348c5eb679675d58117469L41' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: dcd7ce51473d875401d39cd0bc1c3c1cdc2023e1</div><div id='time'> Time: 2015-05-08</div><div id='author'> Author: ajc.atwork@gmail.com</div><div id='file'> File Name: astroML/resample.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bootstrap</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras-preprocessing/commit/75c9e8cbcd9da21591cd5f8aaaa99205f48fa606#diff-15425a54e76054c2a35e9730b611f796a672782baf61b63638841c5dcb8d66e3L943' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras-preprocessing</div><div id='commit'> Commit Name: 75c9e8cbcd9da21591cd5f8aaaa99205f48fa606</div><div id='time'> Time: 2021-01-19</div><div id='author'> Author: eli.osherovich@gmail.com</div><div id='file'> File Name: keras_preprocessing/image/image_data_generator.py</div><div id='class'> Class Name: ImageDataGenerator</div><div id='method'> Method Name: fit</div><BR>

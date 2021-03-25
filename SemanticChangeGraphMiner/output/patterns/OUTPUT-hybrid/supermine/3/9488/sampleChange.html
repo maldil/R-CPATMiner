@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    confidences = logits_to_confidences(
+      bicycle_logits=logits[:, BICYCLE_IDX],
+      bird_logits=<a id="change">logits[:, BIRD_IDX]</a>)
+
+    coverages, cov_to_confident_error_idxs = get_coverage_to_confident_error_idxs(
+      preds, confidences, labels)</code></pre><h3>After Change</h3><pre><code class='java'>
+    confidences = np.max(logits, axis=1)
+
+    &#47&#47 We will plot accuracy at various coverages
+    coverages = <a id="change">np.linspace(0.01, .99, 99)</a>
+
+    cov_to_confident_error_idxs = get_coverage_to_confident_error_idxs(
+      coverages, preds, confidences, labels, )
+</code></pre>

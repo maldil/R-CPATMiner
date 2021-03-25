@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        get_response = self._uri_opener.GET(path, cache=False)
+
+        if not is_404(get_response) and self._has_no_bug(mutant):
+            <a id="change">desc</a> = <a id="change">&quotA file upload to a directory inside the webroot&quot \
+                   &quot was found at: %s&quot % mutant.found_at()</a>
+            
+            <a id="change">v</a> = Vuln.from_mutant(&quotInsecure file upload&quot, desc, severity.HIGH,
+                                 [http_response.id, get_response.id],
+                                 self.get_name(), mutant)
+            </code></pre><h3>After Change</h3><pre><code class='java'>
+            return
+
+        desc = &quotA file upload to a directory inside the webroot was found at: %s&quot
+        <a id="change">desc</a> %= <a id="change">mutant.found_at()</a>
+
+        <a id="change">v</a> = Vuln.from_mutant(&quotInsecure file upload&quot, desc, severity.HIGH,
+                             [http_response.id, get_response.id],
+                             self.get_name(), mutant)
+</code></pre>

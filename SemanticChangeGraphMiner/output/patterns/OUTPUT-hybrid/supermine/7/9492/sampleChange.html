@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 loss
+    self.loss = self.params.get(&quotloss&quot,&quotpoisson&quot)
+    if <a id="change">self.loss.lower()</a> == &quotmse&quot:
+      self.loss_fn = tf.keras.losses.MSE
+    else:
+      self.loss_fn = tf.keras.losses.Poisson()</code></pre><h3>After Change</h3><pre><code class='java'>
+    self.loss = self.params.get(&quotloss&quot,&quotpoisson&quot).lower()
+    if self.loss == &quotmse&quot:
+      self.loss_fn = tf.keras.losses.MSE
+    elif <a id="change">self.loss == &quotbce&quot:</a>
+      <a id="change">self.loss_fn = tf.keras.losses.BinaryCrossentropy()</a>
+    else:
+      self.loss_fn = tf.keras.losses.Poisson()
+
+    &#47&#47 optimizer</code></pre>

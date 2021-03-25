@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return imresize(image_array, size)
+
+def split_data(ground_truth_data, training_ratio=.8, do_shuffle=False):
+    <a id="change">ground_truth_keys = sorted(ground_truth_data.keys())</a>
+    if do_shuffle == True:
+        shuffle(ground_truth_keys)
+    <a id="change">num_train = int(round(training_ratio * len(ground_truth_keys)))</a>
+    train_keys = ground_truth_keys[:num_train]
+    validation_keys = ground_truth_keys[num_train:]
+    return train_keys, validation_keys
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def split_data(x, y, validation_split=.2):
+    num_samples = len(x)
+    num_train_samples = int((1 - validation_split)*num_samples)
+    <a id="change">train_x = x[:num_train_samples]</a>
+    <a id="change">train_y = y[:num_train_samples]</a>
+    val_x = x[num_train_samples:]
+    val_y = y[num_train_samples:]
+    train_data = <a id="change">(train_x, train_y)</a>
+    val_data = (val_x, val_y)
+    return train_data, val_data
+
+</code></pre>

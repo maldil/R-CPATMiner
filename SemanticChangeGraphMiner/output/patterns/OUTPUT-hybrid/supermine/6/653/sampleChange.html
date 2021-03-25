@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            continue
+        if socketserver_path in s_path:
+            continue
+        trace.append(<a id="change">(s[0], s[1], s[2], s[3])</a>)
+    return trace
+
+def get_template_info(source, context_lines=3):</code></pre><h3>After Change</h3><pre><code class='java'>
+    ``stack`` should be a list of frame tuples from ``inspect.stack()``
+    
+    trace = []
+    <a id="change">for frame, path, line_no, func_name, text in (f[:5] for f in stack):
+        s_path = os.path.realpath(path)
+        &#47&#47 Support hiding of frames -- used in various utilities that provide
+        &#47&#47 inspection.
+        if &quot__traceback_hide__&quot in frame.f_locals:
+            continue
+        if getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}).get(&quotHIDE_DJANGO_SQL&quot, True) \
+            and django_path in s_path and not &quotdjango/contrib&quot in s_path:
+            continue
+        if socketserver_path in s_path:
+            continue
+        trace.append((path, line_no, func_name, text))
+   </a> return trace
+
+def get_template_info(source, context_lines=3):
+    line = 0</code></pre>

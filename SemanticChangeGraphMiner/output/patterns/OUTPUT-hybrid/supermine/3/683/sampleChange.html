@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                lt = self.lazy_tensor.to(torch.double)
+                dlt = self.diag_tensor.to(torch.double)
+
+                <a id="change">KDinv = KroneckerProductLazyTensor(
+                    *[tfull.matmul(tdiag.inverse()) for tfull, tdiag in zip(lt.lazy_tensors, dlt.lazy_tensors)]
+                )</a>
+                &#47&#47 TODO: Figure out how to cache the decompositon for use in later solves
+                Lambda, S = KDinv.symeig(eigenvectors=True)
+                LambdaI = DiagLazyTensor(Lambda + 1)
+                tmp_term = S.matmul(LambdaI.inv_matmul(S._transpose_nonbatch().matmul(rhs)))</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 K^{-1} b - K^{-1} (S (Lambda + I)^{-1} S^T b).
+                &#47&#47 Each sub-matrix D_i^{-1} has constant diagonal, so we may scale the eigenvalues of the
+                &#47&#47 eigendecomposition of K_i by its inverse to get an eigendecomposition of K_i D_i^{-1}.
+                <a id="change">sub_evals</a>, sub_evecs = [], []
+                for lt_, dlt_ in zip(lt.lazy_tensors, dlt.lazy_tensors):
+                    evals_, evecs_ = lt_.symeig(eigenvectors=True)
+                    sub_evals.append(DiagLazyTensor(evals_ / dlt_.diag_values))</code></pre>

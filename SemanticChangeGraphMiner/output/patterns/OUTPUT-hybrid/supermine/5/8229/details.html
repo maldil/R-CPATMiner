@@ -1,0 +1,35 @@
+<html><h3>70fcd3094baba3139afcda727683d58c2928261f,lexos/processors/analyze/similarity.py,,similarity_maker,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    docs_score = np.round(sorted_docs_np[:, 1].astype(float), decimals=4)
+
+    &#47&#47 pack the scores and names in data_frame
+    score_name_data_frame = pd.DataFrame(<a id="change">docs_score.reshape(
+        docs_score.size, 1)</a>, index=docs_name, columns=["Cosine similarity"])
+
+    return score_name_data_frame
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    dist = 1 - cosine_similarity(final_matrix)
+
+    &#47&#47 get an array of file index in filemanager.files
+    num_row = <a id="change">len(dtm_data_frame.index)</a>
+    other_file_indexes = np.asarray([file_index for file_index in range(
+        num_row)if file_index != comp_file_index])
+
+    &#47&#47 construct an array of scores
+    docs_score_array = np.asarray([dist[file_index, comp_file_index]
+                                   for file_index in other_file_indexes])
+    &#47&#47 construct an array of names
+    docs_name_array = np.asarray([temp_labels[i] for i in other_file_indexes])
+
+    &#47&#47 sort the score array
+    <a id="change">sorted_score_array = np.sort(docs_score_array)</a>
+
+    &#47&#47 round the score array to 4 decimals
+    <a id="change">final_score_array = np.round(sorted_score_array, decimals=4)</a>
+
+    &#47&#47 sort the
+    final_name_array = docs_name_array[docs_score_array.argsort()]
+</code></pre><img src="31898342.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/70fcd3094baba3139afcda727683d58c2928261f#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 70fcd3094baba3139afcda727683d58c2928261f</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/robertmartin8/PyPortfolioOpt/commit/9cf7514b2e13eba47d78e2965220aabe6804d183#diff-45b2a218c52440bc455110a909110c7773b5de012f52a7555bdaccbeefce5157L211' target='_blank'>Link</a></div><div id='project'> Project Name: robertmartin8/PyPortfolioOpt</div><div id='commit'> Commit Name: 9cf7514b2e13eba47d78e2965220aabe6804d183</div><div id='time'> Time: 2020-06-07</div><div id='author'> Author: martin.robertandrew@gmail.com</div><div id='file'> File Name: pypfopt/black_litterman.py</div><div id='class'> Class Name: BlackLittermanModel</div><div id='method'> Method Name: _parse_views</div><BR>

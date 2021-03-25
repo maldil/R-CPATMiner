@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        images = [img1, img2]
+        if self.is_cropped:
+            <a id="change">cropper = StaticRandomCrop(self.crop_size)</a>
+            <a id="change">images = map(cropper, images)</a>
+            flow = cropper(flow)
+        else:
+            cropper = StaticCenterCrop(self.render_size)
+            images = map(cropper, images)</code></pre><h3>After Change</h3><pre><code class='java'>
+        flow = frame_utils.read_gen(self.flow_list[index])
+
+        images = [img1, img2]
+        <a id="change">image_size = img1.shape[:2]</a>
+
+        if self.is_cropped:
+            <a id="change">cropper = StaticRandomCrop(image_size, self.crop_size)</a>
+        else:
+            cropper = StaticCenterCrop(image_size, self.render_size)
+        images = map(cropper, images)
+        flow = cropper(flow)</code></pre>

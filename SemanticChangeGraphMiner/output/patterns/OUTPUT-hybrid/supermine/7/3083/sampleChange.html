@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise
+
+    &#47&#47 Register the callback and wait on the event.
+    <a id="change">subscription.open(callback)</a>
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print(&quotNo event received before the timeout. Please verify that the &quot
+              &quotsubscription provided is subscribed to the topic provided.&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
+    <a id="change">try:
+        subscription.result(timeout=timeout)
+    except TimeoutError:
+        print(&quotNo event received before the timeout. Please verify that the &quot
+              &quotsubscription provided is subscribed to the topic provided.&quot)
+        subscription.close()
+&#47&#47 [END dlp_k_map]
+
+
+</a>if __name__ == &quot__main__&quot:
+    parser = argparse.ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(
+        dest=&quotcontent&quot, help=&quotSelect how to submit content to the API.&quot)</code></pre>

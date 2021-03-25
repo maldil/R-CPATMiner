@@ -1,0 +1,72 @@
+<html><h3>585303417c3f4641f61ac5a916a51505a67cc507,example/mpii.py,,validate,#,207
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        output = model(input)
+        score_map = output[-1].cpu()
+        if flip:
+            <a id="change">flip_input</a> = torch.autograd.Variable(
+                    <a id="change">torch.from_numpy(fliplr(input.clone().numpy())).float().to(device)</a>,
+                    volatile=True
+                )
+            flip_output_var = model(flip_input)
+            <a id="change">flip_output</a> = flip_back(flip_output_var[-1].cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target)
+        <a id="change">acc</a> = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            <a id="change">predictions[meta[&quotindex&quot][n], :, :]</a> = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(input, target)
+            <a id="change">pred_batch_img</a> = batch_with_heatmap(input, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                <a id="change">pred_win</a> = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)</code></pre><h3>After Change</h3><pre><code class='java'>
+        output = model(input)[-1]
+        score_map = output[-1].cpu()
+        if flip:
+            <a id="change">flip_input</a> = <a id="change">torch.from_numpy(fliplr(input.clone().numpy())).float().to(device)</a>
+            flip_output_var = model(flip_input)
+            <a id="change">flip_output</a> = flip_back(flip_output_var[-1].cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target)
+        <a id="change">acc</a> = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            <a id="change">predictions[meta[&quotindex&quot][n], :, :]</a> = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(input, target)
+            <a id="change">pred_batch_img</a> = batch_with_heatmap(input, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                <a id="change">pred_win</a> = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)</code></pre><img src="1025615.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/585303417c3f4641f61ac5a916a51505a67cc507#diff-6da4f16e5d214b553c1e56ae7a915dfde240f02def5e33970b302775f3eb314aL232' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 585303417c3f4641f61ac5a916a51505a67cc507</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mpii.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/nicola-decao/s-vae-pytorch/commit/4537298ec78fbf30cd4fe914e9668cd3445373b2#diff-4c830d3b49fd552d6ab0904cb4b61f8d31d5a72f28fdc732520a1e5160c45803L54' target='_blank'>Link</a></div><div id='project'> Project Name: nicola-decao/s-vae-pytorch</div><div id='commit'> Commit Name: 4537298ec78fbf30cd4fe914e9668cd3445373b2</div><div id='time'> Time: 2018-07-28</div><div id='author'> Author: nicola.decao@student.uva.nl</div><div id='file'> File Name: hyperspherical_vae/distributions/von_mises_fisher.py</div><div id='class'> Class Name: VonMisesFisher</div><div id='method'> Method Name: __while_loop</div><BR><BR><div id='link'><a href='https://github.com/nicola-decao/s-vae-pytorch/commit/3a3916adbe18066f8fdf854ae1c9edbb28103ec3#diff-4c830d3b49fd552d6ab0904cb4b61f8d31d5a72f28fdc732520a1e5160c45803L76' target='_blank'>Link</a></div><div id='project'> Project Name: nicola-decao/s-vae-pytorch</div><div id='commit'> Commit Name: 3a3916adbe18066f8fdf854ae1c9edbb28103ec3</div><div id='time'> Time: 2018-07-28</div><div id='author'> Author: nicola.decao@student.uva.nl</div><div id='file'> File Name: hyperspherical_vae/distributions/von_mises_fisher.py</div><div id='class'> Class Name: VonMisesFisher</div><div id='method'> Method Name: __while_loop</div><BR>

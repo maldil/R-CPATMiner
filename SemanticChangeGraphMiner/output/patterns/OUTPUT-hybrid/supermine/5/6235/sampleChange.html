@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            PrejudiceRemover: Returns self.
+                
+
+        data = np.column_stack(<a id="change">[dataset.features, dataset.labels]</a>)
+        columns = dataset.feature_names + dataset.label_names
+        train_df = pd.DataFrame(data=data, columns=columns)
+
+
+        x_train = dataset.features
+        &#47&#47print([dataset.favorable_label])
+        y_train = np.array([1 if y == [dataset.favorable_label] else -1 for y in dataset.labels])
+        <a id="change">x_control_train = np.array(train_df[self.sensitive_attr])</a>
+        &#47&#47print(x_train, y_train, x_control_train)
+
+        all_sensitive_attributes = dataset.protected_attribute_names
+
+        if not self.sensitive_attr:
+            self.sensitive_attr = all_sensitive_attributes[0]
+
+        model_name = self.obj.getModel(self.tau, x_train, y_train, x_control_train)
+
+
+        <a id="change">self.model_name</a> = model_name
+        return self
+
+    def predict(self, dataset):</code></pre><h3>After Change</h3><pre><code class='java'>
+        x_train = dataset.features
+        y_train = np.array([1 if y == [dataset.favorable_label] else
+                           -1 for y in dataset.labels])
+        <a id="change">x_control_train = x_train[:, sens_index].copy()</a>
+
+        self.model = self.obj.getModel(self.tau, x_train, y_train,
+            x_control_train)
+</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>f96176e2ebabf3a976e0f890b93f10ace7c14f5a,train.py,,,#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+maintain_averages_op = tf.group(ema.apply(all_params))
+
+&#47&#47 sample from the model
+x_sample = tf.placeholder(tf.float32, shape=<a id="change">(args.sample_batch_size, 32, 32, 3)</a>)
+gen_par = model(x_sample, ema=ema, dropout_p=0, **model_opt)
+new_x_gen = nn.sample_from_discretized_mix_logistic(gen_par, args.nr_logistic_mix)
+def sample_from_model(sess):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 initialize data loaders for train/test splits
+DataLoader = {&quotcifar&quot:cifar10_data.DataLoader, &quotimagenet&quot:imagenet_data.DataLoader}[args.data_set]
+<a id="change">train_data = DataLoader(args.data_dir, &quottrain&quot, args.batch_size * args.nr_gpu, rng=rng, shuffle=True)</a>
+test_data = DataLoader(args.data_dir, &quottest&quot, args.batch_size * args.nr_gpu, shuffle=False)
+obs_shape = train_data.get_observation_size() &#47&#47 e.g. a tuple (32,32,3)
+
+&#47&#47 create the model</code></pre><img src="32628961.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/f96176e2ebabf3a976e0f890b93f10ace7c14f5a#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L26' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: f96176e2ebabf3a976e0f890b93f10ace7c14f5a</div><div id='time'> Time: 2016-11-01</div><div id='author'> Author: andrej.karpathy@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/yhenon/pytorch-retinanet/commit/b6443232013e8d248fe26f59630d43bc9688df06#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L27' target='_blank'>Link</a></div><div id='project'> Project Name: yhenon/pytorch-retinanet</div><div id='commit'> Commit Name: b6443232013e8d248fe26f59630d43bc9688df06</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/caec2c73aad40c0e632e978964ec5c3cf4773c9e#diff-db5a7f5a14989ba9efae4850bc1e7fbbda365e77a2f05c57aa4685ea6debe4dbL47' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: caec2c73aad40c0e632e978964ec5c3cf4773c9e</div><div id='time'> Time: 2019-06-02</div><div id='author'> Author: theodore.danka@gmail.com</div><div id='file'> File Name: examples/pytorch_integration.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,33 @@
+<html><h3>d061a0083e3b4a0275cadd9f7e1bdbd8b0132182,nilearn/plotting/tests/test_surf_plotting.py,,test_load_surf_data_file_freesurfer,#,70
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    filename_thick = tempfile.mktemp(suffix=&quot.thickness&quot)
+    nb.freesurfer.io.write_morph_data(filename_thick, data)
+    assert_array_equal(load_surf_data(filename_thick), np.zeros((20, )))
+    <a id="change">os.remove(filename_thick)</a>
+
+    &#47&#47 test loading of data from real label and annot files
+    label_start = np.array([5900, 5899, 5901, 5902, 2638])
+    label_end = np.array([8756, 6241, 8757, 1896, 6243])</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 We test load_surf_data by creating fake data with function
+    &#47&#47 &quotwrite_morph_data&quot that works only if nibabel
+    &#47&#47 version is recent with nibabel &gt;= 2.1.0
+    <a id="change">if LooseVersion(nb.__version__) &gt;= LooseVersion(&quot2.1.0&quot):
+        data = np.zeros((20, ))
+        filename_sulc = tempfile.mktemp(suffix=&quot.sulc&quot)
+        nb.freesurfer.io.write_morph_data(filename_sulc, data)
+        assert_array_equal(load_surf_data(filename_sulc), np.zeros((20, )))
+        os.remove(filename_sulc)
+
+        filename_thick = tempfile.mktemp(suffix=&quot.thickness&quot)
+        nb.freesurfer.io.write_morph_data(filename_thick, data)
+        assert_array_equal(load_surf_data(filename_thick), np.zeros((20, )))
+        os.remove(filename_thick)
+
+    &#47&#47 test loading of data from real label and annot files
+   </a> label_start = np.array([5900, 5899, 5901, 5902, 2638])
+    label_end = np.array([8756, 6241, 8757, 1896, 6243])
+    label = load_surf_data(os.path.join(datadir, &quottest.label&quot))
+    assert_array_equal(label[:5], label_start)</code></pre><img src="23516772.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/d061a0083e3b4a0275cadd9f7e1bdbd8b0132182#diff-6b04a6e2bdfb6fdcc634b05ed8ec3c9a02e6e05b71866f7e3d4660c5111e9782L72' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: d061a0083e3b4a0275cadd9f7e1bdbd8b0132182</div><div id='time'> Time: 2017-02-23</div><div id='author'> Author: dkamalakarreddy@gmail.com</div><div id='file'> File Name: nilearn/plotting/tests/test_surf_plotting.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_load_surf_data_file_freesurfer</div><BR><BR><div id='link'><a href='https://github.com/epfl-lts2/pygsp/commit/87aeb436f2376af1fd2bb9b4fc048bdb7e7eb66b#diff-02e4006c7693c1a29a50c7f673b3b7bdce80e235b989ae6c5fc9eb2c5e1e4a84L771' target='_blank'>Link</a></div><div id='project'> Project Name: epfl-lts2/pygsp</div><div id='commit'> Commit Name: 87aeb436f2376af1fd2bb9b4fc048bdb7e7eb66b</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: michael.defferrard@epfl.ch</div><div id='file'> File Name: pygsp/tests/test_graphs.py</div><div id='class'> Class Name: TestImportExport</div><div id='method'> Method Name: test_break_join_signals</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/1b2ecdd33090c5a9c726d6d3b3c365d5db56f272#diff-2b0297facd796066c377b2a4fa6421be7f69f8180b7a47698aa113c60411f897L81' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: 1b2ecdd33090c5a9c726d6d3b3c365d5db56f272</div><div id='time'> Time: 2020-04-05</div><div id='author'> Author: oriol.abril.pla@gmail.com</div><div id='file'> File Name: arviz/plots/backends/matplotlib/pairplot.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_pair</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/5c2e78cca50eb862cbaf1701ae2cf291c78ff9cd#diff-67b91b7f9b51297d5ef0b16dc0951c26992a24caaf125c2b242e9c4308667cdfL190' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 5c2e78cca50eb862cbaf1701ae2cf291c78ff9cd</div><div id='time'> Time: 2014-12-17</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/results.py</div><div id='class'> Class Name: Results</div><div id='method'> Method Name: _columns_with_end_removed</div><BR>

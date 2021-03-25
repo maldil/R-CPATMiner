@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 If the file is in a totally different tree from the cwd,
+        &#47&#47 then leave the path as absolute.  Otherwise, override with the relative path.
+        <a id="change">if relPath is not None and len(os.path.commonprefix([cwd, absPath])) &gt; 1:
+            data_path = relPath
+            
+       </a> if DatasetInfo.fileHasInternalPaths(data_path):
+            datasetNames = DatasetInfo.getPossibleInternalPathsFor(absPath)
+            if len(datasetNames) == 0:
+                raise RuntimeError(f"{file_extension} file {data_path} has no image datasets")</code></pre><h3>After Change</h3><pre><code class='java'>
+        roi may be None, in which case it is ignored.
+        
+        cwd = self.topLevelOperator.WorkingDirectory.value
+        <a id="change">try:
+            data_path = filePath.absolute().relative_to(cwd)
+        except ValueError:
+            data_path = filePath.absolute()
+
+       </a> if DatasetInfo.fileHasInternalPaths(data_path):
+            datasetNames = DatasetInfo.getPossibleInternalPathsFor(absPath)
+            if len(datasetNames) == 0:
+                raise RuntimeError(f"{file_extension} file {data_path} has no image datasets")</code></pre>

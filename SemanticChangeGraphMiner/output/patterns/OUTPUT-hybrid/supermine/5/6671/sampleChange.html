@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    points = map_coordinates(image, coordinates.reshape((2,-1)), order=1).reshape((image.size, -1))
+    codes = (points.T &gt; image.ravel()).sum(0)
+    codes = mahotas._lbp.map(codes.astype(np.uint32), 8)
+    <a id="change">return fullhistogram(codes)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    mahotas._lbp.map(codes.astype(np.uint32), points)
+    final = fullhistogram(codes.astype(np.uint32))
+
+    <a id="change">codes = np.arange(2**points, dtype=np.uint32)</a>
+    iters = <a id="change">codes.copy()</a>
+    mahotas._lbp.map(codes.astype(np.uint32), points)
+    pivots = (codes == iters)
+    npivots = np.sum(pivots)
+    <a id="change">compressed = final[pivots[:len(final)]]</a>
+    compressed = np.concatenate((compressed, [0]*(npivots - len(compressed))))
+    <a id="change">return compressed</a>
+</code></pre>

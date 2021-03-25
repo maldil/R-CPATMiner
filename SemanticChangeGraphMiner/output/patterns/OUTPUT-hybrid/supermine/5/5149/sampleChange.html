@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def read_data(scandir, imgname):
+
+    raw = np.fromfile(os.path.join(scandir, imgname), np.float32, -1)
+    <a id="change">bil_rcb = raw.reshape(1704, 978, 1600).transpose((0, 2, 1))</a>
+    return bil_rcb</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    raw_data = np.fromfile(filename, np.float32, -1)
+
+    <a id="change">headername = filename + ".hdr"</a>
+    header = open(headername)
+
+    &#47&#47 Loop through and create a dictonary from the header file
+    for i, string in enumerate(header):
+        if &quot=&quot in string:
+            header_data = header[i].split(" = ")
+            header_dict.update({<a id="change">header_data[0]</a>: header_data[1].rstrip()})
+
+    bands = header_dict["bands"]
+</code></pre>

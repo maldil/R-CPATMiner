@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    training_df = pd.read_csv("./training.log").set_index(&quotepoch&quot)
+
+    <a id="change">plt.plot(training_df[&quotloss&quot].values, label=&quottraining loss&quot)</a>
+    plt.plot(training_df[&quotval_loss&quot].values, label=&quotvalidation loss&quot)
+    plt.ylabel(&quotLoss&quot)
+    <a id="change">plt.xlabel(&quotEpoch&quot)</a>
+    plt.xlim((0, len(training_df.index)))
+    plt.legend(loc=&quotupper right&quot)
+    plt.savefig(&quotloss_graph.png&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    plt.savefig("validation_scores_boxplot.png")
+    plt.close()
+
+    <a id="change">if os.path.exists("./training.log"):
+        training_df = pd.read_csv("./training.log").set_index(&quotepoch&quot)
+
+        plt.plot(training_df[&quotloss&quot].values, label=&quottraining loss&quot)
+        plt.plot(training_df[&quotval_loss&quot].values, label=&quotvalidation loss&quot)
+        plt.ylabel(&quotLoss&quot)
+        plt.xlabel(&quotEpoch&quot)
+        plt.xlim((0, len(training_df.index)))
+        plt.legend(loc=&quotupper right&quot)
+        plt.savefig(&quotloss_graph.png&quot)
+
+
+</a>if __name__ == "__main__":
+    main()
+</code></pre>

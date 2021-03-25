@@ -1,0 +1,22 @@
+<html><h3>fc0f28ef337bb7b087fbba43fb085af27d34d846,torchsample/transforms/image_transforms.py,Contrast,__call__,#Contrast#,220
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        channel_means = x.mean(1)
+        <a id="change">for i in range(2,x.dim()):
+            channel_means = channel_means.mean(i)
+       </a> channel_means = channel_means.expand_as(x)
+
+        x = (x - channel_means) * self.var + channel_means
+        if y is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = th.clamp((x - channel_means) * self.value + channel_means,0,1)
+
+        if y is not None:
+            <a id="change">channel_means = y.mean(1).mean(2).expand_as(y)</a>
+            y = th.clamp((y - channel_means) * self.value + channel_means,0,1)       
+            return x, y
+        return x
+</code></pre><img src="15119654.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/fc0f28ef337bb7b087fbba43fb085af27d34d846#diff-511bc83b5412852ac488cc24e3fbc230b0233c39c7a7f05216bee4ec132395e0L161' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: fc0f28ef337bb7b087fbba43fb085af27d34d846</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/image_transforms.py</div><div id='class'> Class Name: Contrast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/85d5c30d2186d07857d1f0fb7c269eb08d2b7d79#diff-8f7a6bbb5cc4b2c27507b741ab3849957f6e35ee2de8ef4d6566aaa92617c5c8L96' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 85d5c30d2186d07857d1f0fb7c269eb08d2b7d79</div><div id='time'> Time: 2018-04-07</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_clustering.py</div><div id='class'> Class Name: DESClustering</div><div id='method'> Method Name: fit</div><BR>

@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        next_value_batch = self.target_value(state1_batch)
+        softq_targets = reward_batch + (1 - terminal1_batch) * \
+            self.config["gamma"] * tf.reshape(next_value_batch, [-1])
+        <a id="change">softq_targets</a> = tf.cast(<a id="change">tf.reshape(softq_targets, [self.config["batch_size"], 1])</a>, tf.float32)
+
+        actions, action_logprob = self.actor_network(state0_batch)
+        new_softq = self.softq_network(state0_batch, actions)
+
+        with tf.GradientTape() as softq_tape:
+            softq = self.softq_network(state0_batch, action_batch)
+            <a id="change">softq_loss</a> = tf.reduce_mean(tf.square(softq - softq_targets))
+        value_target = tf.stop_gradient(new_softq - action_logprob)
+        with tf.GradientTape() as value_tape:
+            values = self.value_network(state0_batch)
+            value_loss = tf.reduce_mean(tf.square(values - value_target))
+        advantage = tf.stop_gradient(action_logprob - new_softq + values)
+        with tf.GradientTape() as actor_tape:
+            _, action_logprob = self.actor_network(state0_batch)
+            actor_loss = tf.reduce_mean(action_logprob * advantage)
+
+        actor_gradients = actor_tape.gradient(actor_loss, self.actor_network.trainable_weights)
+        <a id="change">softq_gradients</a> = softq_tape.gradient(softq_loss, self.softq_network.trainable_weights)
+        value_gradients = value_tape.gradient(value_loss, self.value_network.trainable_weights)
+
+        self.actor_optimizer.apply_gradients(zip(actor_gradients, self.actor_network.trainable_weights))</code></pre><h3>After Change</h3><pre><code class='java'>
+        next_value_batch = self.target_value(state1_batch)
+        softq_targets = reward_batch + (1 - terminal1_batch) * \
+            self.config["gamma"] * tf.reshape(next_value_batch, [-1])
+        <a id="change">softq_targets</a> = <a id="change">tf.reshape(softq_targets, [self.config["batch_size"], 1])</a>
+
+        with tf.GradientTape() as softq_tape:
+            softq = self.softq_network(state0_batch, action_batch)
+            <a id="change">softq_loss</a> = tf.reduce_mean(tf.square(softq - softq_targets))
+        with tf.GradientTape() as value_tape:
+            values = self.value_network(state0_batch)
+        with tf.GradientTape() as actor_tape:
+            actions, action_logprob = self.actor_network(state0_batch)
+            new_softq = self.softq_network(state0_batch, actions)
+            advantage = tf.stop_gradient(action_logprob - new_softq + values)
+            actor_loss = tf.reduce_mean(action_logprob * advantage)
+        value_target = tf.stop_gradient(new_softq - action_logprob)
+        with value_tape:
+            value_loss = tf.reduce_mean(tf.square(values - value_target))
+
+        actor_gradients = actor_tape.gradient(actor_loss, self.actor_network.trainable_weights)
+        <a id="change">softq_gradients</a> = softq_tape.gradient(softq_loss, self.softq_network.trainable_weights)
+        value_gradients = value_tape.gradient(value_loss, self.value_network.trainable_weights)
+
+        self.actor_optimizer.apply_gradients(zip(actor_gradients, self.actor_network.trainable_weights))</code></pre>

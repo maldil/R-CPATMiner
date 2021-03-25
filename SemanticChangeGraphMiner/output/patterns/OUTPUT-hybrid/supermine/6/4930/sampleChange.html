@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self._check_input(user_ids, item_ids)
+
+        <a id="change">user_ids = torch.from_numpy(user_ids.reshape(-1, 1).astype(np.int64))</a>
+        item_ids = torch.from_numpy(item_ids.reshape(-1, 1).astype(np.int64))
+
+        <a id="change">user_var = Variable(gpu(user_ids, self._use_cuda))</a>
+        item_var = Variable(gpu(item_ids, self._use_cuda))
+
+        out = self._net(user_var, item_var)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        self._check_input(user_ids, item_ids, allow_items_none=True)
+        <a id="change">self._net.train(False)</a>
+
+        user_ids, item_ids = _predict_process_ids(user_ids, item_ids,
+                                                  self._num_items,
+                                                  self._use_cuda)</code></pre>

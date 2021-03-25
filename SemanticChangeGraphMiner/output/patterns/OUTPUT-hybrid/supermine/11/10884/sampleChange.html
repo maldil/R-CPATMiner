@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    W = weight("W", shape)
+    b = bias("b", [shape[1]])
+    &#47&#47 Add weight decay to W
+    <a id="change">weight_decay = tf.multiply(tf.nn.l2_loss(W), wd, name=&quotweight_loss&quot)</a>
+    <a id="change">tf.add_to_collection(LOSSES_COLLECTION, weight_decay)</a>
+    return activation(tf.nn.bias_add(tf.matmul(input_x, W), b))
+
+
+def batch_norm(layer_output, is_training_, decay=0.9):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    W = weight("W", shape, wd=wd)
+    result = tf.matmul(input_x, W)
+    <a id="change">if bias_term:
+        b = bias("b", [shape[1]])
+        result = tf.nn.bias_add(result, b)
+
+   </a> return activation(result)
+
+
+def batch_norm(layer_output, is_training_, decay=0.9):</code></pre>

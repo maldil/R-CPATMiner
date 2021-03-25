@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ind = knn.kneighbors(return_distance=False)
+        _count = np.zeros(shape=(ind.shape[0], self.ref_set_), dtype=np.uint16)
+        &#47&#47 Count the distance
+        <a id="change">for i in range(ind.shape[0]):
+            temp = np.sum(np.isin(ind, ind[i]), axis=1).ravel()
+            temp[i] = np.iinfo(np.uint16).max
+            _count[i] = np.argsort(temp)[::-1][1:self.ref_set_ + 1]
+
+       </a> return _count
+
+    def _sod(self, X):
+        This function is called internally to perform subspace outlier </code></pre><h3>After Change</h3><pre><code class='java'>
+        knn.fit(X)
+        &#47&#47 Get the knn index
+        ind = knn.kneighbors(return_distance=False)
+        <a id="change">return _snn_imp(ind, self.ref_set_)</a>
+
+    def _sod(self, X):
+        This function is called internally to perform subspace outlier 
+        detection algorithm.</code></pre>

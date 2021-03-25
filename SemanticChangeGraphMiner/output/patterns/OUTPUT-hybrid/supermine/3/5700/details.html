@@ -1,0 +1,23 @@
+<html><h3>d5b0cd8e7960c247bb7c5b7c832358f8831780fb,ch15/03_train_trpo.py,,,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = Variable(<a id="change">torch.from_numpy(np.array(traj_states, dtype=np.float32))</a>)
+            traj_actions_v = Variable(torch.from_numpy(np.array(traj_actions, dtype=np.float32)))
+            if args.cuda:
+                <a id="change">traj_states_v = traj_states_v.cuda()</a>
+                traj_actions_v = traj_actions_v.cuda()
+
+            traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, cuda=args.cuda)
+            mu_v = net_act(traj_states_v)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 critic step
+            opt_crt.zero_grad()
+            value_v = net_crt(traj_states_v)
+            loss_value_v = F.mse_loss(<a id="change">value_v.squeeze(-1)</a>, traj_ref_v)
+            loss_value_v.backward()
+            opt_crt.step()
+</code></pre><img src="24009000.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-76ef45280999506380a1cd22adfc9b9fd61476500ae25b7339a77ddf0a7423ffL91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/03_train_trpo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/82c6a31ddcd1ced474c5d6620b2053f9db600e5e#diff-4a926d0cbdda462a0dd36f99d9c1170115d5c1e97b7fedeb6799ba5de255259fL43' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 82c6a31ddcd1ced474c5d6620b2053f9db600e5e</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: edouard.oyallon@ens.fr</div><div id='file'> File Name: examples/1d/plot_real_signal.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/b591a7aecce5b8de42a0dd7bba62780675d34fce#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L39' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: b591a7aecce5b8de42a0dd7bba62780675d34fce</div><div id='time'> Time: 2019-04-30</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: ImageFolder</div><div id='method'> Method Name: __getitem__</div><BR>

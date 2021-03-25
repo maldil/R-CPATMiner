@@ -1,0 +1,49 @@
+<html><h3>7b34113cc3b5529a127bd02667de9de0b5b75df9,models/dist_model.py,,score_jnd_dataset,#,301
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    gts = []
+
+    for data in tqdm(data_loader.load_data(), desc=name):
+        <a id="change">ds</a>+=<a id="change">func</a>(data[&quotp0&quot],data[&quotp1&quot]).tolist()
+        gts+=data[&quotsame&quot].cpu().numpy().flatten().tolist()
+
+    sames = np.array(gts)
+    ds = np.array(ds)
+
+    sorted_inds = np.argsort(ds)
+    <a id="change">ds_sorted</a> = ds[sorted_inds]
+    sames_sorted = sames[sorted_inds]
+
+    TPs = np.cumsum(sames_sorted)
+    <a id="change">FPs</a> = np.cumsum(1-sames_sorted)
+    FNs = np.sum(sames_sorted)-TPs
+
+    precs = TPs/(TPs+FPs)
+    <a id="change">recs</a> = TPs/(TPs+FNs)
+    score = util.voc_ap(recs,precs)
+
+    return(score, dict(ds=ds,sames=sames))</code></pre><h3>After Change</h3><pre><code class='java'>
+    gts = []
+
+    for data in tqdm(data_loader.load_data(), desc=name):
+        <a id="change">ds</a>+=<a id="change">func</a>(data[&quotp0&quot],data[&quotp1&quot]).data.cpu().numpy().tolist()
+        gts+=data[&quotsame&quot].cpu().numpy().flatten().tolist()
+
+    sames = np.array(gts)
+    ds = np.array(ds)
+
+    sorted_inds = np.argsort(ds)
+    <a id="change">ds_sorted</a> = ds[sorted_inds]
+    sames_sorted = sames[sorted_inds]
+
+    TPs = np.cumsum(sames_sorted)
+    <a id="change">FPs</a> = np.cumsum(1-sames_sorted)
+    FNs = np.sum(sames_sorted)-TPs
+
+    precs = TPs/(TPs+FPs)
+    <a id="change">recs</a> = TPs/(TPs+FNs)
+    score = util.voc_ap(recs,precs)
+
+    return(score, dict(ds=ds,sames=sames))</code></pre><img src="2694601.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/PerceptualSimilarity/commit/7b34113cc3b5529a127bd02667de9de0b5b75df9#diff-f2bd440c99129b1684dd75b1b6ea098a17438497d05c33b143e69cc279d35120L266' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/PerceptualSimilarity</div><div id='commit'> Commit Name: 7b34113cc3b5529a127bd02667de9de0b5b75df9</div><div id='time'> Time: 2019-07-26</div><div id='author'> Author: rich.zhang@eecs.berkeley.edu</div><div id='file'> File Name: models/dist_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: score_jnd_dataset</div><BR><BR><div id='link'><a href='https://github.com/rodluger/starry/commit/938d743069a6fdcbb9818f334ab6b7e282d1340a#diff-fbdaa944a577698ce110a7c87110e5dd9869a54830ec5f9e1048a611f3e958d3L77' target='_blank'>Link</a></div><div id='project'> Project Name: rodluger/starry</div><div id='commit'> Commit Name: 938d743069a6fdcbb9818f334ab6b7e282d1340a</div><div id='time'> Time: 2020-09-12</div><div id='author'> Author: rodluger@gmail.com</div><div id='file'> File Name: starry/_core/ops/polybasis.py</div><div id='class'> Class Name: pTGradientOp</div><div id='method'> Method Name: perform</div><BR><BR><div id='link'><a href='https://github.com/Bihaqo/t3f/commit/fb43d1f4a64b77f8b64134460b0c77cb5f79e185#diff-d6d1275d9d6d622ca4bb4f761e2b5f9cb0abe47c35a6eaeda5a88a8431ea8b87L115' target='_blank'>Link</a></div><div id='project'> Project Name: Bihaqo/t3f</div><div id='commit'> Commit Name: fb43d1f4a64b77f8b64134460b0c77cb5f79e185</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: sasha.v.novikov@gmail.com</div><div id='file'> File Name: t3f/autodiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hessian_vector_product</div><BR>

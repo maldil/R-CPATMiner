@@ -1,0 +1,41 @@
+<html><h3>52dd8f17b382dea2ddaf3b4054d7845c8c3b4f72,pycorrector/seq2seq/fce_reader.py,FCEReader,read_samples_by_string,#FCEReader#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def read_samples_by_string(self, path):
+        for tokens in self.read_tokens(path):
+            source = []
+            <a id="change">target = []</a>
+            for token in tokens:
+                <a id="change">target.append(token)</a>
+                if self.config.enable_data_dropout:
+                    &#47&#47 Random dropout words from the input
+                    dropout_token = (token in FCEReader.DROPOUT_TOKENS and random.random() &lt; self.dropout_prob)
+                    replace_token = (token in FCEReader.REPLACEMENTS and random.random() &lt; self.replacement_prob)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.UNKNOWN_ID = self.token_2_id[FCEReader.UNKNOWN_TOKEN]
+
+    def read_samples_by_string(self, path):
+        <a id="change">with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            line_src = f.readline()
+            line_dst = f.readline()
+            if line_src and line_dst:
+                source = line_src.lower()[5:].strip().split()
+                target = line_dst.lower()[5:].strip().split()
+                if self.config.enable_data_dropout:
+                    new_source = []
+                    for token in source:
+                        &#47&#47 Random dropout words from the input
+                        dropout_token = (token in FCEReader.DROPOUT_TOKENS and random.random() &lt; self.dropout_prob)
+                        replace_token = (token in FCEReader.REPLACEMENTS and random.random() &lt; self.replacement_prob)
+                        if replace_token:
+                            new_source.append(FCEReader.REPLACEMENTS[source])
+                        elif not dropout_token:
+                            new_source.append(token)
+                    source = new_source
+                yield source, target
+
+   </a> def unknown_token(self):
+        return FCEReader.UNKNOWN_TOKEN
+
+    def read_tokens(self, path):</code></pre><img src="21602091.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shibing624/pycorrector/commit/52dd8f17b382dea2ddaf3b4054d7845c8c3b4f72#diff-cda3c4b6d844cd89b867149f9188164396051e9587aa88c57224370948133051L26' target='_blank'>Link</a></div><div id='project'> Project Name: shibing624/pycorrector</div><div id='commit'> Commit Name: 52dd8f17b382dea2ddaf3b4054d7845c8c3b4f72</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: 507153809@qq.com</div><div id='file'> File Name: pycorrector/seq2seq/fce_reader.py</div><div id='class'> Class Name: FCEReader</div><div id='method'> Method Name: read_samples_by_string</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/b60c2b7edaac23593f3ea59bbe91b7b10a864ec9#diff-7ebc965c4d422105fa089a9ae3c0706bf222c6e45f42640161b1d228a2948425L9' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: b60c2b7edaac23593f3ea59bbe91b7b10a864ec9</div><div id='time'> Time: 2015-03-07</div><div id='author'> Author: tmomose@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/AVL/write_input_deck.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: write_input_deck</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/03c767ba99ab2e46e97dc5c27a133fa2c3830aaa#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L179' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 03c767ba99ab2e46e97dc5c27a133fa2c3830aaa</div><div id='time'> Time: 2015-03-14</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

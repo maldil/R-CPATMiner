@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Zmu, Zlen = kern.slice(feat.Z(), feat.scales())
+    idlengthscales2 = tf.square(kern.lengthscales() + Zlen)
+    sc = tf.sqrt(
+        <a id="change">tf.expand_dims(idlengthscales2, 0)</a> + tf.expand_dims(idlengthscales2, 1) - tf.square(
+            kern.lengthscales()))
+    d = feat._cust_square_dist(Zmu, Zmu, sc)
+    Kzz = kern.variance() * tf.exp(-d / 2) * tf.reduce_prod(kern.lengthscales() / sc, 2)</code></pre><h3>After Change</h3><pre><code class='java'>
+def _Kuu(feat: Multiscale, kern: RBF, *, jitter=0.0):
+    Zmu, Zlen = kern.slice(feat.Z(), feat.scales())
+    idlengthscales2 = tf.square(kern.lengthscales() + Zlen)
+    sc = tf.sqrt(idlengthscales2[None, ...] + <a id="change">idlengthscales2[:, None, ...]</a>
+                 - kern.lengthscales() ** 2)
+    d = feat._cust_square_dist(Zmu, Zmu, sc)
+    Kzz = kern.variance() * tf.exp(-d / 2) * tf.reduce_prod(kern.lengthscales() / sc, 2)
+    Kzz += jitter * tf.eye(len(feat), dtype=Kzz.dtype)</code></pre>

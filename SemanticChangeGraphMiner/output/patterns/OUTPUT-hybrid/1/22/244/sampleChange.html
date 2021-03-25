@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    else:
+        &#47&#47 FIXME:   2012-10-20 18:58:56 by Brian McFee &lt;brm2132@columbia.edu&gt;
+        &#47&#47      there&quots a magic number 2/3 in istft.m ... not sure about this one
+        <a id="change">window</a> = <a id="change">pad(scipy.signal.hanning(hann_w), n_fft)</a> * 2.0 / 3
+        pass
+
+    &#47&#47 Set the default hop, if it&quots not already specified
+    if hop is None:
+        hop = int(window.shape[0] / 2 )
+        pass
+
+    <a id="change">x_length</a>    = n_fft + (num_frames - 1) * hop
+    x           = numpy.zeros((x_length,))
+
+    for b in xrange(0, hop * (num_frames), hop):
+        <a id="change">ft</a>              = d[:, b/hop]
+        <a id="change">ft</a>              = numpy.concatenate((ft, numpy.conj(ft[(n_fft/2 -1):0:-1])), 0)
+        px              = numpy.real(scipy.ifft(ft))
+        x[b:(b+n_fft)] += px * window
+        pass</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        &#47&#47 FIXME:   2012-10-20 18:58:56 by Brian McFee &lt;brm2132@columbia.edu&gt;
+        &#47&#47      there&quots a magic number 2/3 in istft.m ... not sure about this one
+        <a id="change">window</a> = <a id="change">pad(scipy.signal.hanning(hann_w) * 2.0 / 3, n_fft)</a>
+        pass
+
+    &#47&#47 Set the default hop, if it&quots not already specified
+    if hop is None:
+        hop = int(window.shape[0] / 2 )
+        pass
+
+    <a id="change">x_length</a>    = n_fft + (num_frames - 1) * hop
+    x           = numpy.zeros((x_length,))
+
+    for b in xrange(0, hop * (num_frames), hop):
+        <a id="change">ft</a>              = d[:, b/hop]
+        <a id="change">ft</a>              = numpy.concatenate((ft, numpy.conj(ft[(n_fft/2 -1):0:-1])), 0)
+        px              = numpy.real(scipy.ifft(ft))
+        x[b:(b+n_fft)] += px * window
+        pass</code></pre>

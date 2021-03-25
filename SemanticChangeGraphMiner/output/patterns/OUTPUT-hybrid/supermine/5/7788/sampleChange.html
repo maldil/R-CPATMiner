@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        iterator = dataset.make_one_shot_iterator()
+        image, width, label, length, text, filename, get_input = iterator.get_next()
+
+        <a id="change">label = tf.deserialize_many_sparse(label, tf.int64)</a> &#47&#47 post-batching...
+        label = tf.cast(label, tf.int32) &#47&#47 for ctc_loss
+        
+    <a id="change">return image, width, label, length, text, filename</a>
+
+def threaded_input_pipeline(base_dir,file_patterns,
+                            num_threads=4,
+                            batch_size=32,</code></pre><h3>After Change</h3><pre><code class='java'>
+        dataset = dataset.apply(tf.contrib.data.shuffle_and_repeat(batch_size, 
+                                                                   count=num_epoch))
+
+        <a id="change">dataset = dataset.map(lambda image, 
+                              width, label, 
+                              length, text, 
+                              filename, get_input: 
+                              (image, width, 
+                              tf.cast(tf.deserialize_many_sparse(label, tf.int64), tf.int32),
+                              length, text, filename, get_input))</a>
+
+    return dataset
+
+def threaded_input_pipeline(base_dir,file_patterns,</code></pre>

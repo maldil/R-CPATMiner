@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if config[&quotcuda&quot] and not torch.cuda.is_available():
+            self.logger.warning(&quotWarning: There\&quots no GPU available on this machine, &quot
+                                &quottraining will be performed on CPU.&quot)
+        self.device = torch.device(<a id="change">&quotcuda:&quot + str(config[&quotgpu&quot]) if self.with_cuda else &quotcpu&quot</a>)
+        self.model = model.to(self.device)
+
+        self.loss = loss</code></pre><h3>After Change</h3><pre><code class='java'>
+            n_gpu_use = n_gpu
+        self.device = torch.device(&quotcuda:0&quot if n_gpu_use &gt; 0 else &quotcpu&quot)
+        self.model = model.to(self.device)
+        <a id="change">if n_gpu_use &gt; 1:
+            self.model = torch.nn.DataParallel(model, device_ids=list(range(n_gpu_use)))
+
+       </a> self.loss = loss
+        self.metrics = metrics
+        self.optimizer = optimizer
+</code></pre>

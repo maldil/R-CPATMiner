@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if downsample is None and stride == 1:
+            gm = BasicBlockSub(inplanes // 2, planes // 2, stride, noactivation)
+            fm = BasicBlockSub(inplanes // 2, planes // 2, stride, noactivation)
+            self.revblock = <a id="change">ReversibleBlock(gm, fm)</a>
+        else:
+            self.basicblock_sub = BasicBlockSub(inplanes, planes, stride, noactivation)
+        self.downsample = downsample
+        self.stride = stride</code></pre><h3>After Change</h3><pre><code class='java'>
+        if downsample is None and stride == 1:
+            gm = BasicBlockSub(inplanes // 2, planes // 2, stride, noactivation)
+            fm = BasicBlockSub(inplanes // 2, planes // 2, stride, noactivation)
+            <a id="change">coupling = create_coupling(Fm=fm, Gm=gm, coupling=&quotadditive&quot)</a>
+            self.revblock = <a id="change">ReversibleModule(fn=coupling, keep_input=False)</a>
+        else:
+            self.basicblock_sub = BasicBlockSub(inplanes, planes, stride, noactivation)
+        self.downsample = downsample
+        self.stride = stride</code></pre>

@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        alpha_eps = alpha * eps
+        js = []
+        <a id="change">vals = []</a>
+        for inode in range(len(out_degree)):
+            p = {inode: 0.0}
+            r = {}
+            r[inode] = alpha
+            q = [inode]
+            while len(q) &gt; 0:
+                unode = q.pop()
+
+                res = r[unode] if unode in r else 0
+                if unode in p:
+                    p[unode] += res
+                else:
+                    p[unode] = res
+                r[unode] = 0
+                for vnode in indices[indptr[unode]:indptr[unode + 1]]:
+                    _val = (1 - alpha) * res / out_degree[unode]
+                    if vnode in r:
+                        r[vnode] += _val
+                    else:
+                        r[vnode] = _val
+
+                    res_vnode = r[vnode] if vnode in r else 0
+                    if res_vnode &gt;= alpha_eps * out_degree[vnode]:
+                        if vnode not in q:
+                            q.append(vnode)
+            js.append(list(p.keys()))
+            <a id="change">vals.append(list(p.values()))</a>
+        return js, vals
+
+    def __repr__(self):
+        return &quot{}()&quot.format(self.__class__.__name__)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        alpha_eps = alpha * eps
+        js = [[0]] * len(out_degree)
+        <a id="change">vals = [[0.]] * len(out_degree)</a>
+        for inode_uint in numba.prange(len(out_degree)):
+            inode = numba.int64(inode_uint)
+            p = {inode: 0.0}
+            r = {}</code></pre>

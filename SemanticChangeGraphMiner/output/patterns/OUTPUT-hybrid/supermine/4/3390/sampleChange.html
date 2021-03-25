@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    bn_running_var = torch.from_numpy(weights[ptr: ptr + num_bn_biases])
+                    ptr  += num_bn_biases
+                    &#47&#47 Cast the loaded weights into dims of model weights.
+                    <a id="change">bn_biases = bn_biases.view_as(bn_layer.bias.data)</a>
+                    bn_weights = bn_weights.view_as(bn_layer.weight.data)
+                    bn_running_mean = bn_running_mean.view_as(bn_layer.running_mean)
+                    bn_running_var = bn_running_var.view_as(bn_layer.running_var)
+                    &#47&#47 Copy the data to model
+                    <a id="change">bn_layer.bias.data.copy_(bn_biases)</a>
+                    bn_layer.weight.data.copy_(bn_weights)
+                    bn_layer.running_mean.copy_(bn_running_mean)
+                    bn_layer.running_var.copy_(bn_running_var)
+                else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                    &#47&#47 Number of biases
+                    num_b = bn_layer.bias.numel()
+                    &#47&#47 Bias
+                    <a id="change">bn_b = torch.from_numpy(weights[ptr:ptr + num_b]).view_as(bn_layer.bias)</a>
+                    <a id="change">bn_layer.bias.data.copy_(bn_b)</a>
+                    ptr += num_b
+                    &#47&#47 Weight
+                    bn_w = torch.from_numpy(weights[ptr:ptr + num_b]).view_as(bn_layer.weight)
+                    bn_layer.weight.data.copy_(bn_w)</code></pre>

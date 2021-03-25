@@ -1,0 +1,29 @@
+<html><h3>699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046,skgenome/tabio/gff.py,,read_gff,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &quotstr&quot, &quotstr&quot, &quotstr&quot, &quotstr&quot]
+    dframe = pd.read_table(infile, comment=&quot&#47&#47&quot, header=None, na_filter=False,
+                           names=colnames, dtype=dict(zip(colnames, coltypes)))
+    <a id="change">return (dframe
+            .assign(start=dframe.start - 1,
+                    score=dframe.score.replace(&quot.&quot, &quotnan&quot).astype(&quotfloat&quot),
+                    gene=dframe.attribute.apply(_parse_name))
+            .sort_values([&quotchromosome&quot, &quotstart&quot, &quotend&quot])
+            .reset_index(drop=True))</a>
+
+
+def _parse_name(text, default=&quot-&quot):
+    Extract name from the &quotattributes&quot field, if present.</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            &#47&#47 Default to a set of likely relevant tags
+            rx = re.compile(r&quot(Name|gene_id|gene_name|gene)[= ]"?(\S+?)"?(;|$)&quot)
+            <a id="change">matches = dframe[&quotattribute&quot].str.extractall(rx)</a>
+            if len(matches):
+                dframe[&quotgene&quot] = matches.xs(0, level=1)[1]
+    if &quotgene&quot in dframe.columns:
+        dframe[&quotgene&quot] = <a id="change">dframe</a>[&quotgene&quot].fillna(&quot-&quot).astype(&quotstr&quot)
+    else:
+        dframe[&quotgene&quot] = [&quot-&quot] * len(dframe)
+    return dframe</code></pre><img src="19763727.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046#diff-eeb862d955b4c5988d3a131dd121169465d90f5ddaf5ec62f9ccd57cc882a4e9L32' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: 699cb4d8ab7365b3a20ddd3de56a2a0ecc8b0046</div><div id='time'> Time: 2018-02-14</div><div id='author'> Author: eric.talevich@gmail.com</div><div id='file'> File Name: skgenome/tabio/gff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_gff</div><BR><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/119b63f218edec8f3fecee295fbe3462f5c32ee7#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L430' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: 119b63f218edec8f3fecee295fbe3462f5c32ee7</div><div id='time'> Time: 2018-04-05</div><div id='author'> Author: vandesande.bram@gmail.com</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: InvertedRankingDatabase</div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/2c16357cf3b2a5b1265caf7d89703ef253e39df3#diff-91d53a3411e771b51fd7b1b0cb2fff4d4b5990c2b5cb37b9b959c655dd4db268L266' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 2c16357cf3b2a5b1265caf7d89703ef253e39df3</div><div id='time'> Time: 2014-01-07</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/stats/electricity/single.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: missing_samples_per_period</div><BR>

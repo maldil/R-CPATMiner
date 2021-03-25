@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        c = args[-1]
+        f = x.shape[-1].value // c
+        g = f // c
+        x = tf.reshape(x, tf.concat(<a id="change">[tf.shape(x)[:-1],
+                                     tf.constant([g, c, c])]</a>, axis=0))
+        <a id="change">x = tf.reduce_sum(x, axis=-2)</a>
+        x = reshape(x, tf.concat([tf.shape(x)[:-2],
+                                  tf.constant([f])], axis=0), name=&quotgconv&quot)
+        return batch_norm(x)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        f = x.shape[-1].value // c
+        g = f // c
+        kernel = np.zeros((1, 1, f * c, f), np.float32)
+        <a id="change">for i in range(f):
+            start = (i // c) * c * c + i % c
+            end = start + c * c
+            kernel[:, :, start:end:c, i] = 1.
+       </a> x = conv2d_primitive(x, tf.constant(kernel), strides=[1, 1, 1, 1],
+                             padding=&quotVALID&quot, name=&quotgconv&quot)
+        return batch_norm(x)
+</code></pre>

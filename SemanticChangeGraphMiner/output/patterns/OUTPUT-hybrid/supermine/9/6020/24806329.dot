@@ -1,0 +1,26 @@
+digraph G {
+subgraph cluster0 {
+1 [label="_flatten_spatial_dimensions" a="32" s="6489,6535" l="28,1" shape="box"];
+7 [label="FieldAccess" a="22" s="6517" l="18" shape="box"];
+9 [label="Assignment:=" a="7" s="6488" l="1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="reshape" a="32" s="6782,6841" l="8,1" shape="box"];
+3 [label="FieldAccess" a="22" s="6761" l="10" shape="box"];
+4 [label="{}" a="4" s="6495,6638" l="1,1" shape="box"];
+5 [label="PrefixExpression:-" a="38" s="6580" l="1" shape="box"];
+6 [label="NumberLiteral" a="34" s="6581" l="1" shape="ellipse"];
+8 [label="Assignment:=" a="7" s="6760" l="1" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 9 [label="_para_"];
+2 -> 8 [label="_para_"];
+3 -> 2 [label="_recv_"];
+4 -> 2 [label="_para_"];
+5 -> 4 [label="_para_"];
+6 -> 5 [label="_para_"];
+7 -> 1 [label="_para_"];
+}

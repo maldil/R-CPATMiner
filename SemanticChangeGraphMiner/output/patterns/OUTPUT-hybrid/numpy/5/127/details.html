@@ -1,0 +1,28 @@
+<html><h3>1cdfcfa8a884ffb5f670812ee4b528a76f367be9,librosa/core/constantq.py,,__fft_filters,#,524
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_fft = basis.shape[1]
+
+    if hop_length is not None and n_fft &lt; 2 * hop_length:
+        n_fft = int(2.0 ** (np.ceil(<a id="change">np.log2(2 * hop_length)</a>)))
+
+    &#47&#47 normalize by inverse length to compensate for phase invariance
+    basis *= lengths.reshape((-1, 1)) / n_fft
+
+    &#47&#47 FFT and retain only the non-negative frequencies
+    fft_basis = fft.fft(basis, n=n_fft, axis=1)[:, :(n_fft // 2)+1]
+
+    &#47&#47 normalize as in Parseval&quots relation, and sparsify the basis
+    fft_basis = util.sparsify_rows(<a id="change">fft_basis / n_fft</a>, quantile=sparsity)
+
+    return fft_basis, n_fft, lengths
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Filters are padded up to the nearest integral power of 2
+    n_fft = basis.shape[1]
+
+    if hop_length is not None and n_fft &lt; 2.0**<a id="change">(1 + np.ceil(np.log2(hop_length)))</a>:
+        n_fft = int(2.0 ** (1 + np.ceil(np.log2(hop_length))))
+
+    &#47&#47 normalize by inverse length to compensate for phase invariance</code></pre><img src="9352718.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/1cdfcfa8a884ffb5f670812ee4b528a76f367be9#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL504' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 1cdfcfa8a884ffb5f670812ee4b528a76f367be9</div><div id='time'> Time: 2016-05-07</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: __fft_filters</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/48a579ae1638f5c60e62d8f5c3bad35e0dcef249#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L158' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 48a579ae1638f5c60e62d8f5c3bad35e0dcef249</div><div id='time'> Time: 2013-03-23</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: onset_estimate_bpm</div><BR><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/51ace7a3322c10b68fa1509a674115a28c5c82ea#diff-27d95221d96023520660c6071b403ffbe4b334983a9d8c84d1642d333bfd0788L107' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 51ace7a3322c10b68fa1509a674115a28c5c82ea</div><div id='time'> Time: 2014-07-04</div><div id='author'> Author: craffel@gmail.com</div><div id='file'> File Name: mir_eval/melody.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hz2cents</div><BR>

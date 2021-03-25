@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self._backward()
+
+    &#47&#47 Unpack diffs to extract
+    outs = <a id="change">{out: self.blobs[out].diff for out in set(self.inputs + diffs)}</a>
+    return outs
+
+
+def _Net_forward_all(self, blobs=None, **kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if end is not None:
+        end_ind = [lr.name for lr in self.layers].index(end)
+        <a id="change">outputs = set([end] + diffs)</a>
+    else:
+        end_ind = 0
+        <a id="change">outputs = set(self.inputs + diffs)</a>
+
+    if kwargs:
+        if set(kwargs.keys()) != set(self.outputs):
+            raise Exception(&quotTop diff arguments do not match net outputs.&quot)
+        &#47&#47 Set top diffs according to defined shapes and make arrays single and
+        &#47&#47 C-contiguous as Caffe expects.
+        for top, diff in kwargs.iteritems():
+            if diff.shape[0] != self.blobs[top].num:
+                raise Exception(&quotDiff is not batch sized&quot)
+            if diff.ndim != 4:
+                raise Exception(&quot{} diff is not 4-d&quot.format(top))
+            self.blobs[top].diff[...] = diff
+
+    self._backward(start_ind, end_ind)
+
+    &#47&#47 Unpack diffs to extract
+    return <a id="change">{out: self.blobs[out].diff for out in outputs}</a>
+
+
+def _Net_forward_all(self, blobs=None, **kwargs):
+    </code></pre>

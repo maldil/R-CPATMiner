@@ -1,0 +1,21 @@
+<html><h3>fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4,implementations/bicyclegan/bicyclegan.py,,sample_images,#,112
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        real_A = Variable(real_A.type(Tensor))
+        &#47&#47 Get interpolated noise [-1, 1]
+        sampled_z = np.repeat(np.linspace(-1, 1, 8)[:, np.newaxis], opt.latent_dim, 1)
+        <a id="change">sampled_z = Variable(Tensor(sampled_z))</a>
+        &#47&#47 Generator samples
+        fake_B = generator(real_A, sampled_z)
+        &#47&#47 Concatenate samples horisontally
+        fake_B = torch.cat([x for x in fake_B.data.cpu()], -1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        real_A = img_A.view(1, *img_A.shape).repeat(opt.latent_dim, 1, 1, 1)
+        real_A = Variable(real_A.type(Tensor))
+        &#47&#47 Sample latent representations
+        <a id="change">sampled_z = Variable(Tensor(np.random.normal(0, 1, (opt.latent_dim, opt.latent_dim))))</a>
+        &#47&#47 Generate samples
+        fake_B = generator(real_A, sampled_z)
+        &#47&#47 Concatenate samples horisontally
+        fake_B = torch.cat([x for x in fake_B.data.cpu()], -1)</code></pre><img src="7057851.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4#diff-d3e1c4411b6f580293411b1726cd987c27fcb1ea04379afb16679af9a663983bL104' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4</div><div id='time'> Time: 2019-04-02</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/bicyclegan/bicyclegan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_images</div><BR><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/f3c5b75e59717c017fa3779b3f29b725e4ac6d9b#diff-be3351c473e54dc72763c578c658b9df43fc09acd0abad8b638fc4242582942cL48' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: f3c5b75e59717c017fa3779b3f29b725e4ac6d9b</div><div id='time'> Time: 2018-01-24</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: tests/test_retina.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/f90d49b9dbb6944693844d9bba22678420452596#diff-f1b3b38acfe5d6663d33cff865e58722c2f457c43847c36bf9bc70b34089b88aL111' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: f90d49b9dbb6944693844d9bba22678420452596</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: 574819595@qq.com</div><div id='file'> File Name: models/InnerShiftTripleFunction.py</div><div id='class'> Class Name: InnerShiftTripleFunction</div><div id='method'> Method Name: backward</div><BR>

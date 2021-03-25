@@ -1,0 +1,26 @@
+<html><h3>cb413bcf7b58223c6c4335f2eaaf3dc53c0b0c53,train.py,,main,#,190
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    device = torch.device(&quotcuda&quot if opt.cuda else &quotcpu&quot)
+    &#47&#47========= Loading Dataset =========&#47&#47
+    <a id="change">data = pickle.load(open(opt.data, &quotrb&quot))</a>
+    opt.max_token_seq_len = data[&quotsettings&quot].max_len
+    opt.src_pad_idx = data[&quotvocab&quot][&quotsrc&quot].vocab.stoi[Constants.PAD_WORD]
+    opt.trg_pad_idx = data[&quotvocab&quot][&quottrg&quot].vocab.stoi[Constants.PAD_WORD]
+
+    opt.src_vocab_size = len(data[&quotvocab&quot][&quotsrc&quot].vocab)
+    <a id="change">opt.trg_vocab_size = len(data[&quotvocab&quot][&quottrg&quot].vocab)</a>
+    training_data, validation_data = prepare_dataloaders(data, device, opt.batch_size)
+
+    &#47&#47========= Preparing Model =========&#47&#47
+    if opt.embs_share_weight:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if opt.data_pkl:
+        training_data, validation_data = prepare_dataloaders(opt, device)
+    elif all(<a id="change">(opt.train_path, opt.val_path)</a>):
+        training_data, validation_data = prepare_dataloaders_from_bpe_files(opt, device)
+    else:
+        raise</code></pre><img src="14600927.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/cb413bcf7b58223c6c4335f2eaaf3dc53c0b0c53#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L1' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: cb413bcf7b58223c6c4335f2eaaf3dc53c0b0c53</div><div id='time'> Time: 2019-12-05</div><div id='author'> Author: jadore801120@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/0134a038d242a57e765de9f7288b974ff72646f0#diff-d20483e5b205ece067cd147db281e9fd3ed787a063fd57872ce2b4f7c080cf21L19' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 0134a038d242a57e765de9f7288b974ff72646f0</div><div id='time'> Time: 2019-06-02</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/data/LRHR_dataset.py</div><div id='class'> Class Name: LRHRDataset</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/b25cc3a7e6a560c1fd47f36a43296f62eaaace36#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL13' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: b25cc3a7e6a560c1fd47f36a43296f62eaaace36</div><div id='time'> Time: 2019-12-07</div><div id='author'> Author: jadore801120@gmail.com</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: __init__</div><BR>

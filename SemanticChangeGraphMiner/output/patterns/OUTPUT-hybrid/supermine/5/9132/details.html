@@ -1,0 +1,62 @@
+<html><h3>2bfe5bfcec7759ae022b1a479411aa7d1b8401f1,example/example7.py,,,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+pool_layer = 1
+subset_vec_all_layers = []
+
+<a id="change">common = {
+    &quotmodel_dir&quot: &quot//data/cips/data/lab/data/model/uncased_L-12_H-768_A-12&quot,
+    &quotnum_worker&quot: 2,
+    &quotnum_repeat&quot: 5,
+    &quotport&quot: 6006,
+    &quotport_out&quot: 6007,
+    &quotmax_seq_len&quot: 20,
+    &quotclient_batch_size&quot: 2048,
+    &quotmax_batch_size&quot: 256,
+    &quotnum_client&quot: 1,
+    &quotpooling_strategy&quot: PoolingStrategy.REDUCE_MEAN,
+    &quotpooling_layer&quot: [-2],
+    &quotgpu_memory_fraction&quot: 0.5,
+    &quotxla&quot: False,
+    &quotcpu&quot: False,
+    &quotverbose&quot: False,
+    &quotdevice_map&quot: []
+}</a>
+args = namedtuple(&quotargs_namedtuple&quot, &quot,&quot.join(<a id="change">common.keys()</a>))
+for k, v in common.items():
+    setattr(args, k, v)
+
+for pool_layer in range(1, 13):
+    setattr(args, &quotpooling_layer&quot, [-pool_layer])
+    server = BertServer(args)
+    server.start()
+    print(&quotwait until server is ready...&quot)
+    time.sleep(15)
+    print(&quotencoding...&quot)
+    bc = BertClient(port=<a id="change">common[&quotport&quot]</a>, port_out=common[&quotport_out&quot], show_server_config=True)
+    subset_vec_all_layers.append(bc.encode(subset_text))
+    bc.close()
+    server.close()</code></pre><h3>After Change</h3><pre><code class='java'>
+port = 6006
+port_out = 6007
+
+common = <a id="change">[
+    &quot-model_dir&quot, &quot/bert_model/chinese_L-12_H-768_A-12/&quot,
+    &quot-num_worker&quot, &quot2&quot,
+    &quot-port&quot, str(port),
+    &quot-port_out&quot, str(port_out),
+    &quot-max_seq_len&quot, &quot20&quot,
+    &#47&#47 &quot-client_batch_size&quot, &quot2048&quot,
+    &quot-max_batch_size&quot, &quot256&quot,
+    &#47&#47 &quot-num_client&quot, &quot1&quot,
+    &quot-pooling_strategy&quot, &quotREDUCE_MEAN&quot,
+    &quot-pooling_layer&quot, &quot-2&quot,
+    &quot-gpu_memory_fraction&quot, &quot0.2&quot,
+    &quot-device&quot,&quot3&quot,
+]</a>
+args = get_args_parser().parse_args(common)
+
+for pool_layer in range(1, 13):
+    setattr(args, &quotpooling_layer&quot, [-pool_layer])</code></pre><img src="35536830.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hanxiao/bert-as-service/commit/2bfe5bfcec7759ae022b1a479411aa7d1b8401f1#diff-1952d8eaead7f712e29f5645e63c4a4f431806db0ce05a06c187bbc81f72b592L26' target='_blank'>Link</a></div><div id='project'> Project Name: hanxiao/bert-as-service</div><div id='commit'> Commit Name: 2bfe5bfcec7759ae022b1a479411aa7d1b8401f1</div><div id='time'> Time: 2019-05-06</div><div id='author'> Author: zyn2122@gmail.com</div><div id='file'> File Name: example/example7.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/60c2e01bfc93bc01da21b79ebe9f222e601e1931#diff-35c177116306959429a401a00a1fc3a638f7c1d77a19d7b93feda9ae6eb3480dL12' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 60c2e01bfc93bc01da21b79ebe9f222e601e1931</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering2d/core/scattering2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scattering2d</div><BR><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/ac532f8ee44d044696a5d6142c3070194a73d3cb#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L24' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: ac532f8ee44d044696a5d6142c3070194a73d3cb</div><div id='time'> Time: 2016-07-01</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

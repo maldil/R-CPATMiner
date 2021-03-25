@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.session.run([self.training, self.summaries["train"]], {self.voxels: voxels, self.labels: labels, self.is_training: True})
+
+    def evaluate(self, dataset, voxels, labels):
+        <a id="change">accuracy</a>, _ = self.session.run([self.accuracy, self.summaries[dataset]], {self.voxels: voxels, self.labels: labels, self.is_training: False})
+        return accuracy
+
+    def predict(self, voxels):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def evaluate(self, dataset_name, dataset, batch_size):
+        loss, accuracy = 0, 0
+
+        <a id="change">while not dataset.epoch_finished():
+            batch_voxels, batch_labels = dataset.next_batch(batch_size)
+            batch_loss, batch_accuracy = self.session.run(
+                [self.loss, self.accuracy], {self.voxels: batch_voxels, self.labels: batch_labels, self.is_training: False})
+            loss += batch_loss * len(batch_labels) / len(dataset.voxels)
+            accuracy += batch_accuracy * len(batch_labels) / len(dataset.voxels)
+       </a> self.session.run(self.summaries[dataset_name], {self.given_loss: loss, self.given_accuracy: accuracy})
+
+        return accuracy
+</code></pre>

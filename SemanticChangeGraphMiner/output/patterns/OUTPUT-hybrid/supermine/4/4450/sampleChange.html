@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        target = Variable(ToTensor()(target))
+        if torch.cuda.is_available():
+            image = image.unsqueeze(0).cuda()
+            <a id="change">target = target.unsqueeze(0).cuda()</a>
+
+        out = model(image)
+        mse = ((target - out) ** 2).mean()
+        psnr = 10 * log10(1 / mse.data.cpu().numpy())</code></pre><h3>After Change</h3><pre><code class='java'>
+        image = Image.open(data_path + image_name)
+        image = Variable(ToTensor()(image)).unsqueeze(0)
+        target = Image.open(target_path + image_name)
+        target = <a id="change">Variable(ToTensor()(target)).unsqueeze(0)</a>
+        if torch.cuda.is_available():
+            image.cuda()
+            target.cuda()
+</code></pre>

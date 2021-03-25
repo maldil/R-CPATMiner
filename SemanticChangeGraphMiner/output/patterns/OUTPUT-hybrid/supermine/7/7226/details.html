@@ -1,0 +1,45 @@
+<html><h3>c9fd2c425cb873508ba16221819574400ad2443e,dask_image/ndmeasure/__init__.py,,extrema,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        extrema_lbl[pos_key] = pos_nd
+
+    result = (
+        <a id="change">extrema_lbl["min_val"]</a>,
+        extrema_lbl["max_val"],
+        extrema_lbl["min_pos"],
+        extrema_lbl["max_pos"]</code></pre><h3>After Change</h3><pre><code class='java'>
+    default_1d = numpy.zeros((1,), dtype=out_dtype)
+
+    func = functools.partial(_utils._extrema, dtype=out_dtype)
+    <a id="change">extrema_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )</a>
+
+    extrema_lbl = collections.OrderedDict(<a id="change">[
+        (k, extrema_lbl[k]) for k in type_mapping.keys()
+    ]</a>)
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = tuple(extrema_lbl.values())</a>
+
+    return result
+
+</code></pre><img src="28053519.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/c9fd2c425cb873508ba16221819574400ad2443e#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L101' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: c9fd2c425cb873508ba16221819574400ad2443e</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extrema</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/186d078f6f9de9d7f50da14b29166b77290b93ca#diff-928dab88356139e093d7ed427aae4b2a0c5bf8f64352c36574d0e6e814e0be5aL239' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 186d078f6f9de9d7f50da14b29166b77290b93ca</div><div id='time'> Time: 2020-03-29</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/ml/networks/modules.py</div><div id='class'> Class Name: Embedding</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/e5fcf030fb2683e7b286b22cde44e3bce2d98229#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L281' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: e5fcf030fb2683e7b286b22cde44e3bce2d98229</div><div id='time'> Time: 2014-05-23</div><div id='author'> Author: jamt9000@gmail.com</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_deprocess</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/f1a85a3a495b41f0c8ce9ee7e96cfb61cf44c908#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L281' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: f1a85a3a495b41f0c8ce9ee7e96cfb61cf44c908</div><div id='time'> Time: 2014-05-23</div><div id='author'> Author: jamt9000@gmail.com</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_deprocess</div><BR>

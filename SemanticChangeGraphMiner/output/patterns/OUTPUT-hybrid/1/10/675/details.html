@@ -1,0 +1,47 @@
+<html><h3>0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7,transformer/Translator.py,Translator,translate_batch,#Translator#,52
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 -- Preparing decoded data seq -- &#47&#47
+            &#47&#47 size: batch x beam x seq
+            <a id="change">dec_partial_seq</a> = <a id="change">torch.stack([
+                b.get_current_state() for b in beams if not b.done])</a>
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_seq = dec_partial_seq.view(-1, len_dec_seq)
+            &#47&#47 wrap into a Variable
+            dec_partial_seq = Variable(dec_partial_seq, volatile=True)
+
+            &#47&#47 -- Preparing decoded pos seq -- &#47&#47
+            &#47&#47 size: 1 x seq
+            dec_partial_pos = torch.arange(1, len_dec_seq + 1).unsqueeze(0)
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_pos = dec_partial_pos.repeat(n_remaining_sents * beam_size, 1)
+            &#47&#47 wrap into a Variable
+            dec_partial_pos = Variable(dec_partial_pos.type(torch.LongTensor), volatile=True)
+
+            if self.opt.cuda:
+                <a id="change">dec_partial_seq</a> = dec_partial_seq.cuda()
+                dec_partial_pos = dec_partial_pos.cuda()
+
+            &#47&#47 -- Decoding -- &#47&#47</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 -- Preparing decoded data seq -- &#47&#47
+            &#47&#47 size: batch x beam x seq
+            <a id="change">dec_partial_seq</a> = <a id="change">torch</a>.stack([
+                b.get_current_state() for b in beams if not b.done]).to(self.device)
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_seq = dec_partial_seq.view(-1, len_dec_seq)
+
+            &#47&#47 -- Preparing decoded pos seq -- &#47&#47
+            &#47&#47 size: 1 x seq
+            dec_partial_pos = torch.arange(1, len_dec_seq + 1, dtype=torch.long, device=self.device)
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_pos = dec_partial_pos.unsqueeze(0).repeat(n_remaining_sents * sz_beam, 1)
+
+            if self.opt.cuda:
+                <a id="change">dec_partial_seq</a> = dec_partial_seq.cuda()
+                dec_partial_pos = dec_partial_pos.cuda()
+
+            &#47&#47 -- Decoding -- &#47&#47</code></pre><img src="3151893.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL52' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: translate_batch</div><BR><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/80af54aaf660f06a9c1c83eb803abf1ddca9119a#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L719' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: 80af54aaf660f06a9c1c83eb803abf1ddca9119a</div><div id='time'> Time: 2017-08-11</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/08250ae50815b32f868041bc56a6e5a3eca4ef83#diff-efb33bcca64dab5e4915f762715f98acee535a251281448e1f2b269583407d80L369' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: 08250ae50815b32f868041bc56a6e5a3eca4ef83</div><div id='time'> Time: 2019-12-17</div><div id='author'> Author: xwu@enthought.com</div><div id='file'> File Name: skimage/transform/hough_transform.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hough_circle_peaks</div><BR>

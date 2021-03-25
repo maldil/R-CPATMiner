@@ -1,0 +1,26 @@
+<html><h3>fe6cd9a95160fcdda74eec53b17a17800bf00f35,model.py,NoisyLinear,reset_batch_noise,#NoisyLinear#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.bias_epsilon.copy_(self._scale_noise(self.out_features))
+
+  def reset_batch_noise(self):
+    <a id="change">for b in range(self.batch_size):
+      epsilon_in = self._scale_noise(self.in_features)
+      epsilon_out = self._scale_noise(self.out_features)
+      self.weight_epsilon_batch[b].copy_(epsilon_out.ger(epsilon_in))
+      self.bias_epsilon_batch[b].copy_(self._scale_noise(self.out_features))
+
+ </a> def forward(self, input):
+    output = F.linear(input, self.weight_mu, self.bias_mu)
+    if self.training:
+      if input.size(0) &gt; 1:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  def reset_batch_noise(self):
+    epsilon_in = self._scale_noise(self.batch_size * self.in_features).view(self.batch_size, 1, self.in_features)
+    epsilon_out = <a id="change">self._scale_noise(self.batch_size * self.out_features).view(self.batch_size, self.out_features, 1)</a>
+    self.weight_epsilon_batch.copy_(torch.bmm(epsilon_out, epsilon_in))
+    self.bias_epsilon_batch.copy_(self._scale_noise(self.batch_size * self.out_features).view(self.batch_size, self.out_features))
+
+  def forward(self, input):</code></pre><img src="806639.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Kaixhin/Rainbow/commit/fe6cd9a95160fcdda74eec53b17a17800bf00f35#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L46' target='_blank'>Link</a></div><div id='project'> Project Name: Kaixhin/Rainbow</div><div id='commit'> Commit Name: fe6cd9a95160fcdda74eec53b17a17800bf00f35</div><div id='time'> Time: 2018-03-10</div><div id='author'> Author: design@kaixhin.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: NoisyLinear</div><div id='method'> Method Name: reset_batch_noise</div><BR><BR><div id='link'><a href='https://github.com/Kaixhin/Rainbow/commit/fe6cd9a95160fcdda74eec53b17a17800bf00f35#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L46' target='_blank'>Link</a></div><div id='project'> Project Name: Kaixhin/Rainbow</div><div id='commit'> Commit Name: fe6cd9a95160fcdda74eec53b17a17800bf00f35</div><div id='time'> Time: 2018-03-10</div><div id='author'> Author: design@kaixhin.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: NoisyLinear</div><div id='method'> Method Name: reset_batch_noise</div><BR>

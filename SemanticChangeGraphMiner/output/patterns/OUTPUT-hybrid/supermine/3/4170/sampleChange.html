@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+              tf.compat.v1.where(is_clicked, tf.ones_like(prob), prob))
+          for prob in [exam_prob_given_non_clicks, rel_prob_given_non_clicks]
+      ]
+      return <a id="change">exam_prob_given_non_clicks</a>, rel_prob_given_non_clicks
+
+  def compute_unreduced_loss(self, labels, logits):
+    Computes the loss for each element.</code></pre><h3>After Change</h3><pre><code class='java'>
+      exam_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(exam_logits_posterior),
+          tf.sigmoid(exam_logits_posterior))
+      <a id="change">rel_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(rel_logits_posterior),
+          tf.sigmoid(rel_logits_posterior))</a>
+      return tf.stop_gradient(exam_prob_posterior), tf.stop_gradient(
+          rel_prob_posterior)
+
+  def compute_unreduced_loss(self, labels, logits):</code></pre>

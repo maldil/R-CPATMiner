@@ -1,0 +1,27 @@
+<html><h3>0bc1db58d82c2482bfac1e32a3a43cfd5a533da2,utils/google_utils.py,,attempt_download,#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        except Exception as e:  &#47&#47 GCP
+            print(&quotDownload error: %s&quot % e)
+            assert redundant, &quotNo secondary mirror&quot
+            <a id="change">url = &quothttps://storage.googleapis.com/ultralytics/yolov3/ckpt/&quot + file</a>
+            print(&quotDownloading %s to %s...&quot % (url, weights))
+            r = os.system(&quotcurl -L %s -o %s&quot % <a id="change">(url, weights)</a>)  &#47&#47 torch.hub.download_url_to_file(url, weights)
+        finally:
+            if not (os.path.exists(weights) and os.path.getsize(weights) &gt; 1E6):  &#47&#47 check
+                os.remove(weights) if os.path.exists(weights) else None  &#47&#47 remove partial downloads</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def attempt_download(file):
+    &#47&#47 Attempt file download if does not exist
+    file = <a id="change">Path(str(file).strip().replace("&quot", &quot&quot).lower())</a>
+
+    if not file.exists():
+        response = requests.get(&quothttps://api.github.com/repos/ultralytics/yolov3/releases/latest&quot).json()  &#47&#47 github api
+        assets = [x[&quotname&quot] for x in response[&quotassets&quot]]  &#47&#47 release assets [&quotyolov3.pt&quot, &quotyolov3-spp.pt&quot, ...]
+        name = <a id="change">file.name</a>
+
+        if name in assets:
+            msg = f&quot{file} missing, try downloading from https://github.com/ultralytics/yolov3/releases/&quot
+            redundant = False  &#47&#47 second download option</code></pre><img src="21959054.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ultralytics/yolov3/commit/0bc1db58d82c2482bfac1e32a3a43cfd5a533da2#diff-14aa3f6ca8fb175c2b249ec637d89afce517b38ac6f7f72ffda6e85f11095937L21' target='_blank'>Link</a></div><div id='project'> Project Name: ultralytics/yolov3</div><div id='commit'> Commit Name: 0bc1db58d82c2482bfac1e32a3a43cfd5a533da2</div><div id='time'> Time: 2021-01-10</div><div id='author'> Author: glenn.jocher@ultralytics.com</div><div id='file'> File Name: utils/google_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: attempt_download</div><BR><BR><div id='link'><a href='https://github.com/ultralytics/yolov3/commit/0bc1db58d82c2482bfac1e32a3a43cfd5a533da2#diff-14aa3f6ca8fb175c2b249ec637d89afce517b38ac6f7f72ffda6e85f11095937L52' target='_blank'>Link</a></div><div id='project'> Project Name: ultralytics/yolov3</div><div id='commit'> Commit Name: 0bc1db58d82c2482bfac1e32a3a43cfd5a533da2</div><div id='time'> Time: 2021-01-10</div><div id='author'> Author: glenn.jocher@ultralytics.com</div><div id='file'> File Name: utils/google_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gdrive_download</div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/a118c4aa15f23e2efbe5e69f8b254074dc7e6446#diff-7db7ba08e570cd30dfc648fa235ed03f50e118464db5bc6cff37232550f5c1c6L70' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: a118c4aa15f23e2efbe5e69f8b254074dc7e6446</div><div id='time'> Time: 2018-12-05</div><div id='author'> Author: jamesmeakin@gmail.com</div><div id='file'> File Name: app/grandchallenge/core/validators.py</div><div id='class'> Class Name: ExtensionValidator</div><div id='method'> Method Name: _validate_filepath</div><BR>

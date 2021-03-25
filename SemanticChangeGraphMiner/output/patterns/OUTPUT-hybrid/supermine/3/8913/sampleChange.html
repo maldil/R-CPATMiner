@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    X = np.array([&quotaa&quot, &quotaaa&quot, &quotaaab&quot]).reshape(-1, 1)
+    X_test = np.array([[&quotaa&quot, &quotaaa&quot, &quotaaa&quot, &quotaaab&quot, &quotaaac&quot]]).reshape(-1, 1)
+    model.fit(X)
+    <a id="change">encoder = model.transform(X_test)</a>
+    ans = np.zeros((len(X_test), len(X)))
+    for i, x_t in enumerate(X_test.reshape(-1)):
+        for j, x in enumerate(X.reshape(-1)):
+            ans[i, j] = lev.ratio(x_t, x)</code></pre><h3>After Change</h3><pre><code class='java'>
+            for i, x_t in enumerate(X_test.reshape(-1)):
+                for j, x in enumerate(X.reshape(-1)):
+                    ans[i, j] = jaro_distance(x_t, x)
+            <a id="change">assert np.array_equal(encoder, ans)</a>
+</code></pre>

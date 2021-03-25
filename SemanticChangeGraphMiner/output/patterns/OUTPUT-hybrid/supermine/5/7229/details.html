@@ -1,0 +1,24 @@
+<html><h3>a10212a69685b846f0fa45a4458697b3cb55a9b2,rdkit_fixer.py,,PreparePDBMol,#,136
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if visited_bonds:  &#47&#47 probably we dont want to delete all
+        new_mol = Chem.RWMol(new_mol)
+        visited_bonds = set(visited_bonds)
+        for a1_ix, a2_ix in <a id="change">product(range(new_mol.GetNumAtoms()), repeat=2)</a>:
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue</code></pre><h3>After Change</h3><pre><code class='java'>
+        new_mol = Chem.RWMol(new_mol)
+        visited_bonds = set(visited_bonds)
+        bonds_queue = []
+        <a id="change">for bond in new_mol.GetBonds():
+            a1 = bond.GetBeginAtomIdx()
+            a2 = bond.GetEndAtomIdx()
+            if (a1, a2) not in visited_bonds and (a1, a2) not in visited_bonds:
+                bonds_queue.append((a1, a2))
+       </a> for a1_ix, a2_ix in bonds_queue:
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue</code></pre><img src="28054596.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/a10212a69685b846f0fa45a4458697b3cb55a9b2#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L253' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: a10212a69685b846f0fa45a4458697b3cb55a9b2</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/6a8d2f59086e71dc529fb5261eb291cd7f2615a9#diff-93f2971a2ff9793dd049b729417fe7e7de10f39e91e636bea65c67c019a04fe7L65' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: 6a8d2f59086e71dc529fb5261eb291cd7f2615a9</div><div id='time'> Time: 2016-10-05</div><div id='author'> Author: swaroopgj@gmail.com</div><div id='file'> File Name: mvpa2/measures/rsa.py</div><div id='class'> Class Name: CDist</div><div id='method'> Method Name: _call</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca25da7c55ba436ab557410d5f2e2e9b557d2840#diff-054133edc3de05f054f1a2973a5e6b6ad2879baa93dff47418bd49842544ad87L412' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca25da7c55ba436ab557410d5f2e2e9b557d2840</div><div id='time'> Time: 2015-03-02</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/models/MarkovModel.py</div><div id='class'> Class Name: MarkovModel</div><div id='method'> Method Name: to_junction_tree</div><BR>

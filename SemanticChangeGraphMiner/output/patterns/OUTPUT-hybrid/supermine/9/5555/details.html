@@ -1,0 +1,35 @@
+<html><h3>59ec6660464bd378b20d4ae200c7614133a9a38b,pyntcloud/samplers/points.py,FarthestPointsSampler,compute,#FarthestPointsSampler#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.n &gt; len(self.points):
+            raise ValueError("n can&quott be higher than the number of points in the PyntCloud.")
+        remaining_points = self.points.values
+        <a id="change">solution_set = list()</a>
+        solution_set.append(remaining_points.pop(
+            random.randint(0, len(remaining_points) - 1)))
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, solution_set[0]) for p in remaining_points]
+            for i, p in enumerate(remaining_points):
+                <a id="change">for j, s in enumerate(solution_set):
+                    distances[i] = min(distances[i], self.cal_distance(p, s))
+           </a> solution_set.append(remaining_points.pop(distances.index(max(distances))))
+        return pd.DataFrame(solution_set)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+
+        &#47&#47 the sampled points set as the return
+        <a id="change">select_idx = np.random.randint(low=0, high=len(self.points))</a>
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        solution_set = remaining_points[select_idx: select_idx+1]
+        <a id="change">remaining_points = np.delete(remaining_points, select_idx)</a>
+
+        for _ in range(self.n - 1):
+            distance_sum = self.cal_distance(remaining_points, solution_set)
+            select_idx = np.argmax(distance_sum)
+            solution_set = <a id="change">np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)</a>
+            remaining_points = np.delete(remaining_points, select_idx)
+
+        return pd.DataFrame(solution_set, columns=self.points.columns)
+</code></pre><img src="23664936.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/59ec6660464bd378b20d4ae200c7614133a9a38b#diff-1da77a1e515a06956f2402a626f20d1605f6c245dfc6da7a2304fdade3d54125L54' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 59ec6660464bd378b20d4ae200c7614133a9a38b</div><div id='time'> Time: 2019-08-26</div><div id='author'> Author: hc.wang96@gmail.com</div><div id='file'> File Name: pyntcloud/samplers/points.py</div><div id='class'> Class Name: FarthestPointsSampler</div><div id='method'> Method Name: compute</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/b45f35862afbca09ff1c70be1cc4d1d6ca6c9617#diff-73b613902d1c35be5ff198082c22011ed69d2361ea1639a200f2e7a3cb5e9e9bL47' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: b45f35862afbca09ff1c70be1cc4d1d6ca6c9617</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/classification.py</div><div id='class'> Class Name: MDM</div><div id='method'> Method Name: _predict_distances</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR>

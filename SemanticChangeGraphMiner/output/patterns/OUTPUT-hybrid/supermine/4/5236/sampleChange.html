@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    sorted_scores = zip(labels, scores)
+    sorted_scores.sort(key=<a id="change">operator.itemgetter(1)</a>, reverse=False)
+
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    FP = np.sum(<a id="change">labels[:threshold_index]</a> == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    return float(FP) / float(FP + TN)
+&quot&quot&quotimport operator</code></pre>

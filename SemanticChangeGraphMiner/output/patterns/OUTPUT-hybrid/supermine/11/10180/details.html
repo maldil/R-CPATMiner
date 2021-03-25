@@ -1,0 +1,33 @@
+<html><h3>72caa3677f5f9cc09ed98324c76454c38a7e8098,lib/metric.py,MaskLogLossMetric,update,#MaskLogLossMetric#,137
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def update(self, labels, preds):
+        pred = preds[self.pred.index(&quotmask_preds&quot)].asnumpy().reshape(-1)
+        weights = <a id="change">preds[self.pred.index(&quotmask_weights&quot)].asnumpy().reshape(-1)</a>
+        labels = preds[self.pred.index(&quotmask_labels&quot)].asnumpy().reshape(-1)
+        valid_inds = np.where(weights&gt;0)[0]
+
+        labels = labels[valid_inds]</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 label (b, p)
+        label = label.asnumpy().astype(&quotint32&quot).reshape((-1))
+        &#47&#47 pred (b, c, p) or (b, c, h, w) --&gt; (b, p, c) --&gt; (b*p, c)
+        pred = <a id="change">pred</a>.asnumpy().reshape((pred.shape[0], pred.shape[1], -1)).transpose(<a id="change">(0, 2, 1)</a>)
+        pred = pred.reshape(<a id="change">(label.shape[0], -1)</a>)
+
+        &#47&#47 filter with keep_inds
+        keep_inds = np.where(label != <a id="change">-1</a>)[0]
+        label = label[keep_inds]
+        <a id="change">cls = pred[keep_inds, label]</a>
+
+        cls += 1e-14
+        <a id="change">cls_loss = -1 * np.log(cls)</a>
+        cls_loss = np.sum(cls_loss)
+        self.sum_metric += cls_loss
+        self.num_inst += <a id="change">label.shape[0]</a>
+
+class RPNLogLossMetric(mx.metric.EvalMetric):
+    def __init__(self):
+        super(RPNLogLossMetric, self).__init__(&quotRPNLogLoss&quot)</code></pre><img src="38193991.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mahyarnajibi/SNIPER/commit/72caa3677f5f9cc09ed98324c76454c38a7e8098#diff-e08fac7eb9145e7681255f071cce7328388e8c5ec5f3304632c1a2150adc2434L137' target='_blank'>Link</a></div><div id='project'> Project Name: mahyarnajibi/SNIPER</div><div id='commit'> Commit Name: 72caa3677f5f9cc09ed98324c76454c38a7e8098</div><div id='time'> Time: 2018-06-04</div><div id='author'> Author: mahyarnajibi@gmail.com</div><div id='file'> File Name: lib/metric.py</div><div id='class'> Class Name: MaskLogLossMetric</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/acoular/acoular/commit/687bf671460e950f7430296731ba2957da17d9c1#diff-d0088bc5fbf2ae33aba594aff724bce63e342e7a1dfe9d10ba4c269ed4663b0dL737' target='_blank'>Link</a></div><div id='project'> Project Name: acoular/acoular</div><div id='commit'> Commit Name: 687bf671460e950f7430296731ba2957da17d9c1</div><div id='time'> Time: 2020-07-02</div><div id='author'> Author: s.jekosch@tu-berlin.de</div><div id='file'> File Name: acoular/grids.py</div><div id='class'> Class Name: PolySector</div><div id='method'> Method Name: contains</div><BR><BR><div id='link'><a href='https://github.com/acoular/acoular/commit/687bf671460e950f7430296731ba2957da17d9c1#diff-d0088bc5fbf2ae33aba594aff724bce63e342e7a1dfe9d10ba4c269ed4663b0dL331' target='_blank'>Link</a></div><div id='project'> Project Name: acoular/acoular</div><div id='commit'> Commit Name: 687bf671460e950f7430296731ba2957da17d9c1</div><div id='time'> Time: 2020-07-02</div><div id='author'> Author: s.jekosch@tu-berlin.de</div><div id='file'> File Name: acoular/grids.py</div><div id='class'> Class Name: RectGrid</div><div id='method'> Method Name: indices</div><BR>

@@ -1,0 +1,349 @@
+<html><h3>b46114a5b8076c38e765811bd6d55ed2930d9975,lingpy/convert/html.py,,alm2html,#,53
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 open the infile
+    try:
+        data = <a id="change">codecs</a>.open(infile, "r", "utf-8").read()[:-1]
+    except:
+        data = codecs.open(infile+&quot.alm&quot, "r", "utf-8").read()[:-1]
+
+    &#47&#47 create the outfile
+    if not filename:
+        filename = rcParams[&quotfilename&quot]
+    
+    &#47&#47 read in the templates
+    path = os.path.dirname(os.path.realpath(__file__))
+    
+    if main_template:
+        try:
+            html = codecs.open(main_template,&quotr&quot,&quotutf-8&quot).read()
+        except:
+            html = codecs.open(
+                    os.path.join(path,&quottemplates&quot,main_template),
+                    &quotr&quot,
+                    &quotutf-8&quot
+                    ).read()
+    else:
+        html_path = os.path.join(path, &quottemplates&quot, &quotalm2html.html&quot)
+        html = codecs.open(html_path,&quotr&quot,&quotutf-8&quot).read()
+    
+    if table_template:
+        try:
+            table = codecs.open(table_template,&quotr&quot,&quotutf-8&quot).read()
+        except:
+            table = codecs.open(
+                    os.path.join(path,&quottemplates&quot,table_template),
+                    &quotr&quot,
+                    &quotutf-8&quot
+                    ).read()
+    else:
+        table_path = os.path.join(path, &quottemplates&quot, &quotalm2html.table.html&quot)
+        table = codecs.open(table_path,&quotr&quot,&quotutf-8&quot).read()
+
+    &#47&#47 split the data into blocks
+    blocks = data.split(&quot\n\n&quot)
+
+    &#47&#47 retrieve the dataset
+    if not dataset:
+        <a id="change">dataset</a> = blocks[0]
+
+    &#47&#47 iterate over the rest of the blocks and store the data in a dictionary
+    cogs = {}
+    
+    &#47&#47 create the outstring
+    tmp_str = &quot&quot
+
+    for block in blocks[1:]:
+        <a id="change">lines</a> = block.split(&quot\n&quot)
+        
+        m = []
+        for l in lines:
+            m.append(l.split(&quot\t&quot))
+        
+        &#47&#47 create colordict for different colors
+        dc = len(set([l[0] for l in m]))
+        
+        if colored:
+            colors = dict([(a,b) for a,b in zip(
+                sorted(set([int(l[0]) for l in m])),
+                colorRange(
+                    dc,
+                    brightness = 400
+                    ),
+                )])
+        else:
+            colors = []
+            white = True
+            for i in sorted(set([abs(int(l[0])) for l in m])):
+                if white:
+                    colors.append((i,&quotwhite&quot))
+                    white = False
+                else:
+                    colors.append((i,&quotlightgray&quot))
+                    white = True
+            colors = dict(colors)
+        
+        &#47&#47 get the basic item and its id
+        iName = m[0][2]
+        iID = m[0][3]
+
+        &#47&#47 start writing the stuff to string
+        tmp_str += table.format(
+                NAME=iName,
+                ID = iID)
+        &#47&#47 define the basic string for the insertion
+        bas = &quot&lt;tr style="background-color:{0};font-weight:{2}"&gt;\n{1}\n&lt;/tr&gt;&quot
+
+        for tracer,l in enumerate(m):
+            &#47&#47 check whether the current line is a borrowing
+            if int(l[0]) &lt; 0:
+                loan_line = &quotbold&quot
+            else:
+                loan_line = &quotnormal&quot
+
+            &#47&#47 assign the cognate id
+            tmp = &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(l[0])
+            tmp += &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(l[1].strip(&quot.&quot))
+            tmp += &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(&quot&quot.join(l[4:]).replace(&quot-&quot,&quot&quot))
+            tmp += &quot&lt;td style="background-color:{0}"&gt;&quot.format(colors[abs(int(l[0]))])
+            tmp += &quot&lt;table style="background-color:{0}"&gt;\n&quot.format(colors[abs(int(l[0]))])
+            tmp += &quot&lt;tr&gt;\n{0}\n&lt;/tr&gt;\n&lt;/table&gt;\n&quot
+            
+            &#47&#47 check whether another entry follows that is also an alignment,
+            &#47&#47 otherwise, there&quots no need to display a word as an alignment
+            cognate_set = False
+            if tracer &lt; len(m)-1:
+                if abs(int(m[tracer+1][0])) == abs(int(l[0])):
+                    cognate_set = True
+            if tracer &gt; 0:
+                if abs(int(m[tracer-1][0])) == abs(int(l[0])):
+                    cognate_set = True
+
+            if cognate_set: &#47&#47len(l[4:]) &gt; 1:
+                alm = &quot&quot
+                for char in l[4:]:
+                    char = char
+                    error = False
+                    try:
+                        c = rcParams[&quot_color&quot][char]
+                    except:
+                        try:
+                            c = rcParams[&quot_color&quot][char[0]]
+                        except:
+                            c = &quotwhite&quot
+                            error = True
+                    alm += &quot&lt;td style="width:30px;text-align:center;&quot
+                    if error:
+                        alm += &quotbackground-color:{0};color:red;font-weight:bold"&gt;{1}&lt;/td&gt;&quot.format(c,char)
+                       
+                    else:
+                        alm += &quotbackground-color:{0};color:white;font-weight:bold;"&gt;{1}&lt;/td&gt;&quot.format(c,char)
+            else:
+                alm = &quot&lt;td style="border-color:{0};background-color:{1};"&gt;{0}&quot.format(&quot--&quot,colors[abs(int(l[0]))])
+            
+            &#47&#47 format the alignment
+            tmp = tmp.format(alm)
+
+            &#47&#47 check for last line, where a new line should be inserted (not the
+            &#47&#47 fastest solution, but plotting is not a matter of time, and it
+            &#47&#47 suffices it&quots current purpose
+            if tracer &lt; len(m)-1:
+                pass
+            else:
+                tmp += &quot&lt;tr style="background-color:white;"&gt;&lt;td colspan="4"&gt;&quot
+                tmp += &quot&lt;hr style="background-color:white;border-color:white;border:0;height:2pt;"/&gt;\n&quot
+            
+            &#47&#47 format the whole string
+            tmp_str += bas.format(
+                    colors[abs(int(l[0]))],
+                    tmp,
+                    loan_line
+                    )
+
+    if not title:
+        title = "LexStat - Automatic Cognate Judgments"
+    if not shorttitle:
+        shorttitle = "LexStat"
+
+    <a id="change">html</a> = html.format(
+            shorttitle = shorttitle,
+            title = title,
+            table = tmp_str,</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    &#47&#47 open the infile
+    try:
+        data = <a id="change">codecs.open(infile, "r", "utf-8").read()</a>
+    except:
+        data = codecs.open(infile+&quot.alm&quot, "r", "utf-8").read()
+
+    &#47&#47 create the outfile
+    if not filename:
+        filename = rcParams[&quotfilename&quot]
+    
+    &#47&#47 read in the templates
+    path = os.path.join(rcParams[&quot_path&quot],&quotdata&quot,&quottemplates&quot)
+    
+    if main_template:
+        html = codecs.open(main_template,&quotr&quot,&quotutf-8&quot).read()
+    else:
+        html = codecs.open(
+                os.path.join(
+                    rcParams[&quot_path&quot],
+                    &quotdata&quot,
+                    &quottemplates&quot,
+                    &quotalm2html.html&quot
+                    ),
+                &quotr&quot,
+                &quotutf-8&quot
+                ).read()
+    
+    if table_template:
+        table = codecs.open(table_template,&quotr&quot,&quotutf-8&quot).read()
+    else:
+        table = codecs.open(
+                os.path.join(
+                    rcParams[&quot_path&quot],
+                    &quotdata&quot,
+                    &quottemplates&quot,
+                    &quotalm2html.table.html&quot
+                    ),
+                &quotr&quot,
+                &quotutf-8&quot
+                ).read()
+
+
+    &#47&#47 check for windows-compatibility
+    data = data.replace(os.linesep,&quot\n&quot)[:-1]
+
+    &#47&#47 split the data into blocks
+    blocks = data.split(&quot\n\n&quot)
+
+    &#47&#47 retrieve the dataset
+    if not dataset:
+        <a id="change">dataset</a> = blocks[0]
+
+    &#47&#47 iterate over the rest of the blocks and store the data in a dictionary
+    cogs = {}
+    
+    &#47&#47 create the outstring
+    tmp_str = &quot&quot
+
+    for block in blocks[1:]:
+        <a id="change">lines</a> = block.split(&quot\n&quot)
+        
+        m = []
+        for l in lines:
+            m.append(l.split(&quot\t&quot))
+        
+        &#47&#47 create colordict for different colors
+        dc = len(set([l[0] for l in m]))
+        
+        if colored:
+            colors = dict([(a,b) for a,b in zip(
+                sorted(set([int(l[0]) for l in m])),
+                colorRange(
+                    dc,
+                    brightness = 400
+                    ),
+                )])
+        else:
+            colors = []
+            white = True
+            for i in sorted(set([abs(int(l[0])) for l in m])):
+                if white:
+                    colors.append((i,&quotwhite&quot))
+                    white = False
+                else:
+                    colors.append((i,&quotlightgray&quot))
+                    white = True
+            colors = dict(colors)
+        
+        &#47&#47 get the basic item and its id
+        iName = m[0][2]
+        iID = m[0][3]
+
+        &#47&#47 start writing the stuff to string
+        tmp_str += table.format(
+                NAME=iName,
+                ID = iID)
+        &#47&#47 define the basic string for the insertion
+        bas = &quot&lt;tr style="background-color:{0};font-weight:{2}"&gt;\n{1}\n&lt;/tr&gt;&quot
+
+        for tracer,l in enumerate(m):
+            &#47&#47 check whether the current line is a borrowing
+            if int(l[0]) &lt; 0:
+                loan_line = &quotbold&quot
+            else:
+                loan_line = &quotnormal&quot
+
+            &#47&#47 assign the cognate id
+            tmp = &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(l[0])
+            tmp += &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(l[1].strip(&quot.&quot))
+            tmp += &quot&lt;td&gt;{0}&lt;/td&gt;\n&quot.format(&quot&quot.join(l[4:]).replace(&quot-&quot,&quot&quot))
+            tmp += &quot&lt;td style="background-color:{0}"&gt;&quot.format(colors[abs(int(l[0]))])
+            tmp += &quot&lt;table style="background-color:{0}"&gt;\n&quot.format(colors[abs(int(l[0]))])
+            tmp += &quot&lt;tr&gt;\n{0}\n&lt;/tr&gt;\n&lt;/table&gt;\n&quot
+            
+            &#47&#47 check whether another entry follows that is also an alignment,
+            &#47&#47 otherwise, there&quots no need to display a word as an alignment
+            cognate_set = False
+            if tracer &lt; len(m)-1:
+                if abs(int(m[tracer+1][0])) == abs(int(l[0])):
+                    cognate_set = True
+            if tracer &gt; 0:
+                if abs(int(m[tracer-1][0])) == abs(int(l[0])):
+                    cognate_set = True
+
+            if cognate_set: &#47&#47len(l[4:]) &gt; 1:
+                alm = &quot&quot
+                for char in l[4:]:
+                    char = char
+                    error = False
+                    try:
+                        c = rcParams[&quot_color&quot][char]
+                    except:
+                        try:
+                            c = rcParams[&quot_color&quot][char[0]]
+                        except:
+                            c = &quotwhite&quot
+                            error = True
+                    alm += &quot&lt;td style="width:30px;text-align:center;&quot
+                    if error:
+                        alm += &quotbackground-color:{0};color:red;font-weight:bold"&gt;{1}&lt;/td&gt;&quot.format(c,char)
+                       
+                    else:
+                        alm += &quotbackground-color:{0};color:white;font-weight:bold;"&gt;{1}&lt;/td&gt;&quot.format(c,char)
+            else:
+                alm = &quot&lt;td style="border-color:{0};background-color:{1};"&gt;{0}&quot.format(&quot--&quot,colors[abs(int(l[0]))])
+            
+            &#47&#47 format the alignment
+            tmp = tmp.format(alm)
+
+            &#47&#47 check for last line, where a new line should be inserted (not the
+            &#47&#47 fastest solution, but plotting is not a matter of time, and it
+            &#47&#47 suffices it&quots current purpose
+            if tracer &lt; len(m)-1:
+                pass
+            else:
+                tmp += &quot&lt;tr style="background-color:white;"&gt;&lt;td colspan="4"&gt;&quot
+                tmp += &quot&lt;hr style="background-color:white;border-color:white;border:0;height:2pt;"/&gt;\n&quot
+            
+            &#47&#47 format the whole string
+            tmp_str += bas.format(
+                    colors[abs(int(l[0]))],
+                    tmp,
+                    loan_line
+                    )
+
+    if not title:
+        title = "LexStat - Automatic Cognate Judgments"
+    if not shorttitle:
+        shorttitle = "LexStat"
+
+    <a id="change">html</a> = html.format(
+            shorttitle = shorttitle,
+            title = title,
+            table = tmp_str,</code></pre><img src="28800.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/lingpy/lingpy/commit/b46114a5b8076c38e765811bd6d55ed2930d9975#diff-1de7e4cef91e3184c2feb9cef3dce87ffacc36fa588d7d4bd534db4502dc9f36L95' target='_blank'>Link</a></div><div id='project'> Project Name: lingpy/lingpy</div><div id='commit'> Commit Name: b46114a5b8076c38e765811bd6d55ed2930d9975</div><div id='time'> Time: 2013-11-14</div><div id='author'> Author: mattis.list@posteo.de</div><div id='file'> File Name: lingpy/convert/html.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: alm2html</div><BR><BR><div id='link'><a href='https://github.com/rushter/MLAlgorithms/commit/bcf95627fa1ac2d92fa760e8c7db8e4017f8ccf4#diff-c17da086d92e8505b0ad8a7c73c525613de844de58227d04be6a90e5dbfd1dc2L54' target='_blank'>Link</a></div><div id='project'> Project Name: rushter/MLAlgorithms</div><div id='commit'> Commit Name: bcf95627fa1ac2d92fa760e8c7db8e4017f8ccf4</div><div id='time'> Time: 2020-02-23</div><div id='author'> Author: Musketeer.Liu@gmail.com</div><div id='file'> File Name: mla/datasets/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_nietzsche</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/c692164df3d7b1c0a0b0d8a6f8213b68c60797b7#diff-817a9b072d07d0d9576d83d940955a4bdfd4de260a3f060bb8de53cd90b92cadL50' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: c692164df3d7b1c0a0b0d8a6f8213b68c60797b7</div><div id='time'> Time: 2019-03-06</div><div id='author'> Author: Hakuyume@users.noreply.github.com</div><div id='file'> File Name: chainercv/utils/image/read_image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _read_image_cv2</div><BR><BR><div id='link'><a href='https://github.com/graphbrain/graphbrain/commit/0564cfd26ed48de7cc5fd4dd2a23f52f1f405eb0#diff-aa929934d8bea60863432edd1bd623ed30f1f2741c482c50b41b5c6b8560c4d0L27' target='_blank'>Link</a></div><div id='project'> Project Name: graphbrain/graphbrain</div><div id='commit'> Commit Name: 0564cfd26ed48de7cc5fd4dd2a23f52f1f405eb0</div><div id='time'> Time: 2020-01-09</div><div id='author'> Author: telmo@telmomenezes.net</div><div id='file'> File Name: graphbrain/agents/txt_parser.py</div><div id='class'> Class Name: TxtParser</div><div id='method'> Method Name: input_file</div><BR>

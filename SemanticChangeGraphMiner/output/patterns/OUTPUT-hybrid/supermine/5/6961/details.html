@@ -1,0 +1,33 @@
+<html><h3>2bae518e899657e536572fa59df6e1587795e397,librosa/feature.py,,line_features,#,332
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot
+
+    N, K = np.shape(S)
+    freq = <a id="change">np.transpose(np.linspace(0, sr/2, N))</a>
+
+    slope = np.zeros((1, K))
+    intercept = np.zeros((1, K))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 If we don&quott have a spectrogram, build one
+    if S is None:
+        &#47&#47 By default, use a magnitude spectrogram
+        <a id="change">S = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))</a>
+    else:
+        &#47&#47 Infer n_fft from spectrogram shape
+        n_fft = (S.shape[0] - 1) * 2
+
+    &#47&#47 Compute the center frequencies of each bin
+    if freq is None:
+        freq = librosa.core.fft_frequencies(sr=sr, n_fft=n_fft)
+
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        coefficients = np.concatenate(<a id="change">[[np.polyfit(freq_t, S_t, order)]
+                                       for (freq_t, S_t) in zip(freq.T, S.T)]</a>,
+                                      axis=0).T
+
+    return coefficients</code></pre><img src="27503009.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR><BR><div id='link'><a href='https://github.com/THUNLP-MT/THUMT/commit/62d2ea56ae4a090aa68baf133137982a836700bd#diff-5eef6024a4f370219ceb2e55a4599e3a3150ded92a100f9a0640866f7f4594bcL59' target='_blank'>Link</a></div><div id='project'> Project Name: THUNLP-MT/THUMT</div><div id='commit'> Commit Name: 62d2ea56ae4a090aa68baf133137982a836700bd</div><div id='time'> Time: 2018-01-25</div><div id='author'> Author: playinf@stu.xmu.edu.cn</div><div id='file'> File Name: thumt/layers/attention.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: split_heads</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/b39ae1072934ad146759cd1941931433908ed0d7#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L58' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: b39ae1072934ad146759cd1941931433908ed0d7</div><div id='time'> Time: 2015-02-07</div><div id='author'> Author: jwasilkowski@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updatePixels</div><BR>

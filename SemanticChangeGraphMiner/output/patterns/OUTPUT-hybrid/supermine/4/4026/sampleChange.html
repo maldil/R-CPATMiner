@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    writeCorpus(self.tempCorpusPath, {dataFileName : data})
+    writeCorpusLabel(labelsDir01, {"test_data_file.csv": labels01})
+    writeCorpusLabel(labelsDir02, {"test_data_file.csv": labels02})
+    writeCorpusLabel(labelsDir03, <a id="change">{"test_data_file.csv": labels03}</a>)
+
+    corpus = nab.corpus.Corpus(self.tempCorpusPath)
+    labDir = labelsDir01.replace("/label01.json", "")</code></pre><h3>After Change</h3><pre><code class='java'>
+      labelsPath = self.tempCorpusLabelPath.replace(
+        "/label.json", "/raw/label{}.json".format(i))
+      writeCorpusLabel(labelsPath, {"test_data_file.csv": labels})
+    <a id="change">labelsDir = labelsPath.replace("/label{}.json".format(i), "")</a>
+
+    corpus = nab.corpus.Corpus(self.tempCorpusPath)
+    labelCombiner = nab.labeler.LabelCombiner(
+      labelsDir, corpus, 0.5, 0.10, 0.15, 0)</code></pre>

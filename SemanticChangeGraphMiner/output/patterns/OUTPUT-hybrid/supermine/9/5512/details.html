@@ -1,0 +1,32 @@
+<html><h3>b5e848af46b4a6fc21e718803dbf3d7c72afd72a,ch08/lib/common.py,,calc_loss,#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def calc_loss(batch, net, tgt_net, gamma, cuda=False):
+    states, actions, rewards, dones, next_states = unpack_batch(batch)
+
+    states_v = <a id="change">Variable(torch.from_numpy(states))</a>
+    next_states_v = Variable(torch.from_numpy(next_states), volatile=True)
+    actions_v = Variable(torch.from_numpy(actions))
+    rewards_v = Variable(torch.from_numpy(rewards))
+    done_mask = torch.ByteTensor(dones)
+    <a id="change">if cuda:
+        states_v = states_v.cuda()
+        next_states_v = next_states_v.cuda()
+        actions_v = actions_v.cuda()
+        rewards_v = rewards_v.cuda()
+        done_mask = done_mask.cuda()
+
+   </a> state_action_values = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_actions = net(next_states_v).max(1)[1]
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)
+    next_state_values[done_mask] = 0.0</code></pre><h3>After Change</h3><pre><code class='java'>
+def calc_loss(batch, net, tgt_net, gamma, device="cpu"):
+    states, actions, rewards, dones, next_states = unpack_batch(batch)
+
+    states_v = <a id="change">torch.tensor(states).to(device)</a>
+    next_states_v = torch.tensor(next_states).to(device)
+    actions_v = torch.tensor(actions).to(device)
+    rewards_v = torch.tensor(rewards).to(device)
+    done_mask = torch.ByteTensor(dones).to(device)</code></pre><img src="23516222.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/b5e848af46b4a6fc21e718803dbf3d7c72afd72a#diff-0104aecfb85abbde18ab9491b2abc8d61703dbec604fbb2b128d92051baf7519L91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: b5e848af46b4a6fc21e718803dbf3d7c72afd72a</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch08/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_loss</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7a6e3b93fb4b97af7b06244b768b1fee4b547c17#diff-a97264a2619caff50c3f66e47b1cff4677b177df6333811267e3bb7e64cb9846L104' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7a6e3b93fb4b97af7b06244b768b1fee4b547c17</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch12/libbots/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_batch_no_out</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/84e2cf87e0fe23fe3432b74ab484b1b71cd729b3#diff-9b5246fd7025c792195487f5f37ec5e8ce2cd5826504223e636145b51c91ad7bL131' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 84e2cf87e0fe23fe3432b74ab484b1b71cd729b3</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch18/lib/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: state_lists_to_batch</div><BR>

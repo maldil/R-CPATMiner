@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    n_ref, n_est = len(reference_boundaries), len(estimated_boundaries)
+    
+    window_match    = <a id="change">np.abs(np.subtract.outer(reference_boundaries, estimated_boundaries))</a> &lt;= window
+    <a id="change">window_match    = window_match.astype(int)</a>
+    
+    &#47&#47 L. Lovasz On determinants, matchings and random algorithms. 
+    &#47&#47 In L. Budach, editor, Fundamentals of Computation Theory, pages 565-574. Akademie-Verlag, 1979.
+    &#47&#47
+    &#47&#47 If we build the skew-symmetric adjacency matrix 
+    &#47&#47 D[i, n_ref+j] = 1 &lt;=&gt; ref[i] within window of est[j]
+    &#47&#47 D[n_ref + j, i] = -1 &lt;=&gt; same
+    &#47&#47
+    &#47&#47 then rank(D) = 2 * maximum matching
+    &#47&#47
+    &#47&#47 This way, we find the optimal assignment of reference and annotation boundaries.
+    &#47&#47
+    skew_adjacency  = np.zeros((n_ref + n_est, n_ref + n_est), dtype=np.int32)
+    skew_adjacency[:n_ref, n_ref:] = window_match
+    <a id="change">skew_adjacency[n_ref:, :n_ref] = -window_match.T</a>
+    
+    matching_size = np.linalg.matrix_rank(skew_adjacency) / 2.0
+    
+    precision   = matching_size / len(estimated_boundaries)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                    estimated_boundaries, 
+                                    window)
+    
+    precision   = float(<a id="change">len(matching)</a>) / len(estimated_boundaries)
+    recall      = float(len(matching)) / len(reference_boundaries)
+    
+    f_measure   = util.f_measure(precision, recall, beta=beta)</code></pre>

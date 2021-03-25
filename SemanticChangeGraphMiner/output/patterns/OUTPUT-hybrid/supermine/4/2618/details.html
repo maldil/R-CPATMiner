@@ -1,0 +1,25 @@
+<html><h3>0e52f273bc0158e05af766e2d1006b3c5198e9c3,models/densenet.py,_DenseLayer,forward,#_DenseLayer#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.drop_rate = drop_rate
+
+    def forward(self, *prev_features):
+        concated_features = <a id="change">torch.cat(prev_features, 1)</a>
+        <a id="change">bottleneck_output = self.conv1(self.relu1(self.norm1(concated_features)))</a>
+        new_features = self.conv2(self.relu2(self.norm2(bottleneck_output)))
+        if self.drop_rate &gt; 0:
+            new_features = F.dropout(new_features, p=self.drop_rate, training=self.training)
+        return new_features</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, *prev_features):
+        bn_function = _bn_function_factory(self.norm1, self.relu1, self.conv1)
+        <a id="change">if self.efficient and any(prev_feature.requires_grad for prev_feature in prev_features):
+            bottleneck_output = cp.checkpoint(bn_function, *prev_features)
+        else:
+            bottleneck_output = bn_function(*prev_features)
+       </a> new_features = self.conv2(self.relu2(self.norm2(bottleneck_output)))
+        if self.drop_rate &gt; 0:
+            new_features = F.dropout(new_features, p=self.drop_rate, training=self.training)
+        return new_features</code></pre><img src="11647541.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/0e52f273bc0158e05af766e2d1006b3c5198e9c3#diff-d32400b8322081615f7340002308d44791e0202d325f89fe3e59cb36ffda21d1L24' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: 0e52f273bc0158e05af766e2d1006b3c5198e9c3</div><div id='time'> Time: 2018-04-26</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: models/densenet.py</div><div id='class'> Class Name: _DenseLayer</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL250' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 9b0a0dd6fe7b4ac021d91acc6b4f96b403dd6b67</div><div id='time'> Time: 2019-04-26</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/012daf57ac31d82366323e7ec27ab7c2cb678a09#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL49' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 012daf57ac31d82366323e7ec27ab7c2cb678a09</div><div id='time'> Time: 2018-05-27</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_max_suppression</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/142bc348f80ae6c1f6ede5b598b0443af8048717#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL153' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 142bc348f80ae6c1f6ede5b598b0443af8048717</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR>

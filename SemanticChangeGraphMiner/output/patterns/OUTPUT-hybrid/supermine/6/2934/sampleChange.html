@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if len(np.shape(A)) == 2:
+        return np.dot(A, B)
+
+    <a id="change">a = A.reshape(np.hstack([np.shape(A), [1]]))</a>
+    <a id="change">b = B.reshape(np.hstack([[np.shape(B)[0]], [1], np.shape(B)[1:]]))</a>
+    <a id="change">return np.sum(a * b, axis=2)</a>
+
+
+def multitransp(A):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47return np.sum(a * b, axis=2)
+
+    &#47&#47 Approx 5x faster, only supported by numpy version &gt;= 1.6:
+    <a id="change">return np.einsum(&quotijk,ikl-&gt;ijl&quot, A, B)</a>
+
+
+def multitransp(A):
+    </code></pre>

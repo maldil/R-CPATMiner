@@ -1,0 +1,131 @@
+<html><h3>bbeebd26abdd2ca6f03bcde5c4045b0b74e3821e,kmodes/kprototypes.py,,k_prototypes,#,122
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise TypeError("k-prototypes does not support sparse data.")
+
+    if categorical is None or not categorical and verbose:
+        <a id="change">print("No categorical data selected, effectively doing k-means.")</a>
+    if isinstance(categorical, int):
+        categorical = [categorical]
+    assert len(categorical) != X.shape[1], \
+        "All columns are categorical, use k-modes instead of k-prototypes."</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise TypeError("k-prototypes does not support sparse data.")
+
+    if categorical is None or not categorical:
+        <a id="change">raise NotImplementedError(
+            "No categorical data selected, effectively doing k-means. "
+            "Present a list of categorical columns, or use scikit-learn&quots "
+            "KMeans instead."
+        )</a>
+    if isinstance(categorical, int):
+        categorical = [categorical]
+    assert len(categorical) != X.shape[1], \
+        "All columns are categorical, use k-modes instead of k-prototypes."
+    assert max(categorical) &lt; X.shape[1], \
+        "Categorical index larger than number of columns."
+
+    ncatattrs = len(categorical)
+    nnumattrs = X.shape[1] - ncatattrs
+    npoints = X.shape[0]
+    assert n_clusters &lt; npoints, "More clusters than data points?"
+
+    Xnum, Xcat = _split_num_cat(X, categorical)
+    Xnum, Xcat = check_array(Xnum), check_array(Xcat, dtype=None)
+
+    &#47&#47 Convert the categorical values in Xcat to integers for speed.
+    &#47&#47 Based on the unique values in Xcat, we can make a mapping to achieve this.
+    Xcat, enc_map = encode_features(Xcat)
+
+    &#47&#47 Estimate a good value for gamma, which determines the weighing of
+    &#47&#47 categorical values in clusters (see Huang [1997]).
+    if gamma is None:
+        gamma = 0.5 * Xnum.std()
+
+    all_centroids = []
+    all_labels = []
+    all_costs = []
+    all_n_iters = []
+    for init_no in range(n_init):
+
+        &#47&#47 For numerical part of initialization, we don&quott have a guarantee
+        &#47&#47 that there is not an empty cluster, so we need to retry until
+        &#47&#47 there is none.
+        init_tries = 0
+        while True:
+            init_tries += 1
+            &#47&#47 _____ INIT _____
+            if verbose:
+                print("Init: initializing centroids")
+            if isinstance(init, str) and init == &quotHuang&quot:
+                centroids = kmodes.init_huang(Xcat, n_clusters)
+            elif isinstance(init, str) and init == &quotCao&quot:
+                centroids = kmodes.init_cao(Xcat, n_clusters)
+            elif isinstance(init, str) and init == &quotrandom&quot:
+                seeds = np.random.choice(range(npoints), n_clusters)
+                centroids = Xcat[seeds]
+            elif isinstance(init, list):
+                assert init[0].shape[0] == n_clusters, \
+                    "Incorrect number of initial numerical centroids in init."
+                assert init[0].shape[1] == nnumattrs, \
+                    "Incorrect number of numerical attributes in init"
+                assert init[1].shape[0] == n_clusters, \
+                    "Incorrect number of initial categorical centroids in init."
+                assert init[1].shape[1] == ncatattrs, \
+                    "Incorrect number of categorical attributes in init"
+                centroids = [np.asarray(init[0], dtype=np.float64),
+                             np.asarray(init[1], dtype=np.uint8)]
+            else:
+                raise NotImplementedError("Initialization method not supported.")
+
+            if not isinstance(init, list):
+                &#47&#47 Numerical is initialized by drawing from normal distribution,
+                &#47&#47 categorical following the k-modes methods.
+                meanx = np.mean(Xnum, axis=0)
+                stdx = np.std(Xnum, axis=0)
+                centroids = [
+                    meanx + np.random.randn(n_clusters, nnumattrs) * stdx,
+                    centroids
+                ]
+
+            if verbose:
+                print("Init: initializing clusters")
+            membship = np.zeros((n_clusters, npoints), dtype=np.uint8)
+            &#47&#47 Keep track of the sum of attribute values per cluster so that we
+            &#47&#47 can do k-means on the numerical attributes.
+            cl_attr_sum = np.zeros((n_clusters, nnumattrs), dtype=np.float64)
+            &#47&#47 cl_attr_freq is a list of lists with dictionaries that contain
+            &#47&#47 the frequencies of values per cluster and attribute.
+            cl_attr_freq = [[defaultdict(int) for _ in range(ncatattrs)]
+                            for _ in range(n_clusters)]
+            for ipoint in range(npoints):
+                &#47&#47 Initial assignment to clusters
+                clust = np.argmin(
+                    euclidean_dissim(centroids[0], Xnum[ipoint]) +
+                    gamma * matching_dissim(centroids[1], Xcat[ipoint])
+                )
+                membship[clust, ipoint] = 1
+                &#47&#47 Count attribute values per cluster.
+                for iattr, curattr in enumerate(Xnum[ipoint]):
+                    cl_attr_sum[clust, iattr] += curattr
+                for iattr, curattr in enumerate(Xcat[ipoint]):
+                    cl_attr_freq[clust][iattr][curattr] += 1
+
+            &#47&#47 If no empty clusters, then consider initialization finalized.
+            if membship.sum(axis=1).min() &gt; 0:
+                break
+
+            if init_tries == MAX_INIT_TRIES:
+                &#47&#47 Could not get rid of empty clusters. Randomly
+                &#47&#47 initialize instead.
+                init = &quotrandom&quot
+            elif <a id="change">init_tries</a> == RAISE_INIT_TRIES:
+                <a id="change">raise ValueError(
+                    "Clustering algorithm could not initialize. "
+                    "Consider assigning the initial clusters manually."
+                )</a>
+
+        &#47&#47 Perform an initial centroid update.
+        for ik in range(n_clusters):
+            for iattr in range(nnumattrs):</code></pre><img src="29030987.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nicodv/kmodes/commit/bbeebd26abdd2ca6f03bcde5c4045b0b74e3821e#diff-802c36fc58a6fd57cb252e3f8c558d16edd0889748150f071055dcbf74b5f56eL129' target='_blank'>Link</a></div><div id='project'> Project Name: nicodv/kmodes</div><div id='commit'> Commit Name: bbeebd26abdd2ca6f03bcde5c4045b0b74e3821e</div><div id='time'> Time: 2016-06-16</div><div id='author'> Author: nico.devos@autogrid.com</div><div id='file'> File Name: kmodes/kprototypes.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: k_prototypes</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/d000d0750c958e2ec1b3d9eb3c9ea9cf63ab14f0#diff-1f15354413d5070ac268298fc3d3b25747e4f4c1307e5b9b70b9f7587d6b4681L60' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: d000d0750c958e2ec1b3d9eb3c9ea9cf63ab14f0</div><div id='time'> Time: 2017-07-07</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/main.py</div><div id='class'> Class Name: MagpieModel</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/d000d0750c958e2ec1b3d9eb3c9ea9cf63ab14f0#diff-1f15354413d5070ac268298fc3d3b25747e4f4c1307e5b9b70b9f7587d6b4681L119' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: d000d0750c958e2ec1b3d9eb3c9ea9cf63ab14f0</div><div id='time'> Time: 2017-07-07</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/main.py</div><div id='class'> Class Name: MagpieModel</div><div id='method'> Method Name: batch_train</div><BR>

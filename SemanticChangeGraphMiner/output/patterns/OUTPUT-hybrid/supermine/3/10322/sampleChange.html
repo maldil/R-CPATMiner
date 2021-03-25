@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      checkpoint_interval = self.checkpoint_manager.checkpoint_interval
+      restored_path = self.restore_checkpoint()
+      if restored_path:
+        <a id="change">logging.info("Restored from checkpoint: %s", restored_path)</a>
+
+  def train(self, steps: int, checkpoint_at_completion: bool = True):
+    Runs training.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+              f"`summary interval` ({summary_interval}) must be a multiple "
+              f"of `steps_per_loop` ({steps_per_loop}).")
+
+    <a id="change">if global_step is None:
+      raise ValueError("`global_step` is required.")
+    elif not isinstance(global_step, tf.Variable):
+      raise ValueError("`global_step` must be a `tf.Variable`.")
+
+   </a> self.trainer = trainer
+    self.evaluator = evaluator
+
+    self.strategy = strategy or tf.distribute.get_strategy()</code></pre>

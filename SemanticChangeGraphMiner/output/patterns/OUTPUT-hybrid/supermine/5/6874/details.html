@@ -1,0 +1,42 @@
+<html><h3>f90efe38fb0b1019e5bdc06b8a325aefe44893ea,face_alignment/detection/sfd/sfd_detector.py,SFDDetector,__init__,#SFDDetector#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, device, path_to_detector=None, verbose=False):
+        super(SFDDetector, self).__init__(device, verbose)
+
+        <a id="change">base_path = os.path.join(appdata_dir(&quotface_alignment&quot), "data")</a>
+
+        &#47&#47 Initialise the face detector
+        if path_to_detector is None:
+            path_to_detector = os.path.join(
+                base_path, "s3fd_convert.pth")
+
+            if not os.path.isfile(path_to_detector):
+                print("Downloading the face detection CNN. Please wait...")
+
+                path_to_temp_detector = os.path.join(
+                    base_path, "s3fd_convert.pth.download")
+
+                if os.path.isfile(path_to_temp_detector):
+                    os.remove(os.path.join(path_to_temp_detector))
+
+                request_file.urlretrieve(
+                    "https://www.adrianbulat.com/downloads/python-fan/s3fd_convert.pth",
+                    os.path.join(path_to_temp_detector))
+
+                os.rename(os.path.join(path_to_temp_detector), os.path.join(path_to_detector))
+
+        self.face_detector = s3fd()
+        <a id="change">self.face_detector.load_state_dict(torch.load(path_to_detector))</a>
+        self.face_detector.to(device)
+        self.face_detector.eval()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Initialise the face detector
+        if path_to_detector is None:
+            model_weights = load_url(<a id="change">models_urls[&quots3fd&quot]</a>)
+        else:
+            model_weights = torch.load(path_to_detector)
+</code></pre><img src="27009012.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/1adrianb/face-alignment/commit/f90efe38fb0b1019e5bdc06b8a325aefe44893ea#diff-67132db17272c51c4cc0e4ab48a7e307faebdba19b9fc973e14580c92c02cf62L21' target='_blank'>Link</a></div><div id='project'> Project Name: 1adrianb/face-alignment</div><div id='commit'> Commit Name: f90efe38fb0b1019e5bdc06b8a325aefe44893ea</div><div id='time'> Time: 2018-12-19</div><div id='author'> Author: bulat.adrian@gmail.com</div><div id='file'> File Name: face_alignment/detection/sfd/sfd_detector.py</div><div id='class'> Class Name: SFDDetector</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pytorch/tutorials/commit/2f5299a546fe23e2fff46630fc319387724b9aa5#diff-ac8c33f7f434713f5870ff7c602e80620c1d0d8b8631edb84c0e5c2ed03ec384L1341' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tutorials</div><div id='commit'> Commit Name: 2f5299a546fe23e2fff46630fc319387724b9aa5</div><div id='time'> Time: 2018-08-29</div><div id='author'> Author: minkawhich@fb.com</div><div id='file'> File Name: beginner_source/chatbot_tutorial.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/32888a145806398b00f7629bc448d6b855d0ae45#diff-2c141dbeb0245c3bdd811ab51fd96ea2b88ac04bfc8603d45b6a9acbde99277bL77' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 32888a145806398b00f7629bc448d6b855d0ae45</div><div id='time'> Time: 2018-06-22</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/AlexNet_ResNet/AlexNet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: alexnet</div><BR>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+CONFIG = {}
+CONFIG.update(CONFIG_DEFAULTS)
+<a id="change">CONFIG.update(getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}))</a>
+
+
+PANELS_DEFAULTS = [
+    &quotdebug_toolbar.panels.versions.VersionsPanel&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+    &quotROOT_TAG_ATTRS&quot: &quotROOT_TAG_EXTRA_ATTRS&quot,
+    &quotHIDDEN_STACKTRACE_MODULES&quot: &quotHIDE_IN_STACKTRACES&quot
+}
+for old_name, new_name in <a id="change">_RENAMED_CONFIG.items()</a>:
+    if old_name in USER_CONFIG:
+        warnings.warn(
+            "%r was renamed to %r. Update your DEBUG_TOOLBAR_CONFIG "
+            "setting." % (old_name, new_name), DeprecationWarning)
+        <a id="change">USER_CONFIG[new_name] = USER_CONFIG.pop(old_name)</a>
+if &quotTAG&quot in USER_CONFIG:
+     warnings.warn(
+        "TAG was replaced by INSERT_BEFORE. Update your "
+        "DEBUG_TOOLBAR_CONFIG setting.", DeprecationWarning)</code></pre>

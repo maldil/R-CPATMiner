@@ -1,0 +1,25 @@
+<html><h3>ba256835a4f33d9139a70b6440c3223123132bc8,torchnet/meter/confusionmeter.py,ConfusionMeter,add,#ConfusionMeter#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            assert (target.sum(1) == 1).all(), \
+                    &quotmulti-label setting is not supported&quot
+ 
+        <a id="change">pred = output.argmax(1)</a>
+        <a id="change">for i,n in enumerate(pred):
+            pos = onehot and target[i].argmax(0) or int(target[i])
+            self.conf[pos][n] += 1
+
+   </a> def value(self):
+        if self.normalized:
+            conf = self.conf.astype(np.float32)
+            return conf / conf.sum(1).clip(min=1e-12)[:,None]</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = predicted + self.k * target
+        bincount_2d = np.bincount(x.astype(np.int32),
+                                  minlength=self.k ** 2)
+        <a id="change">assert bincount_2d.size == self.k ** 2</a>
+        conf = bincount_2d.reshape((self.k, self.k))
+
+        self.conf += conf
+</code></pre><img src="35396044.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/tnt/commit/ba256835a4f33d9139a70b6440c3223123132bc8#diff-b0fefc107703573331e0796b347c2dd79a8b764065b45683dce317a53d0ea0f1L28' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tnt</div><div id='commit'> Commit Name: ba256835a4f33d9139a70b6440c3223123132bc8</div><div id='time'> Time: 2017-08-24</div><div id='author'> Author: swetha.tanamala@gmail.com</div><div id='file'> File Name: torchnet/meter/confusionmeter.py</div><div id='class'> Class Name: ConfusionMeter</div><div id='method'> Method Name: add</div><BR><BR><div id='link'><a href='https://github.com/osmr/imgclsmob/commit/6058fa28029c4cb4934cae5da594c828a1abcca1#diff-8d731ff0e6ff6a67e4d9f918f60b0c47d03aa2ea268c5b6e223fcd459e6489b2L381' target='_blank'>Link</a></div><div id='project'> Project Name: osmr/imgclsmob</div><div id='commit'> Commit Name: 6058fa28029c4cb4934cae5da594c828a1abcca1</div><div id='time'> Time: 2021-02-15</div><div id='author'> Author: osemery@gmail.com</div><div id='file'> File Name: pytorch/pytorchcv/models/others/_espnet.py</div><div id='class'> Class Name: ESPNet</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/4f496868c6aa7f50db99229847285efbe50040c2#diff-eec560f40db581f37059395f4ae5eaaf30ffaccaa5c6c118f712087cd1ccedaaL659' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 4f496868c6aa7f50db99229847285efbe50040c2</div><div id='time'> Time: 2020-08-03</div><div id='author'> Author: 34657725+jeremiedbb@users.noreply.github.com</div><div id='file'> File Name: sklearn/cluster/tests/test_k_means.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_n_init</div><BR>

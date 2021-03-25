@@ -1,0 +1,21 @@
+<html><h3>190d9b204a1a4798f0723c8d8d37ac5ac950909e,pycox/models/deephit.py,DeepHitSingle,predict_survival_function,#DeepHitSingle#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+               .cumsum(1)
+               .cpu()
+               .numpy())
+        <a id="change">return 1 - cdf.transpose()</a>
+
+
+def make_loss_deephit(alpha, sigma):
+    Loss for deephit (single risk) model.</code></pre><h3>After Change</h3><pre><code class='java'>
+                                  num_workers=0):
+        Might need to set to_cpu to true if too large dataset.
+        pmf = self.predict_pmf(input, batch_size, eval_, to_cpu, num_workers, False)
+        <a id="change">surv = 1 - pmf.cumsum(0)</a>
+        if tuplefy(input).type() is np.ndarray:
+            surv = surv.cpu().numpy()
+        return surv
+</code></pre><img src="3169409.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/190d9b204a1a4798f0723c8d8d37ac5ac950909e#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL37' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 190d9b204a1a4798f0723c8d8d37ac5ac950909e</div><div id='time'> Time: 2019-05-08</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHitSingle</div><div id='method'> Method Name: predict_survival_function</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L10' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR>

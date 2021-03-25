@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    assert np.size(count_matrix) &gt; 0, EMPTY_NP_ARRAY_MESSAGE
+
+    &#47&#47 initialize the value to return
+    <a id="change">all_results = []</a>
+    count_matrix_sum = np.sum(count_matrix, axis=0)
+
+    &#47&#47 generate data
+    <a id="change">for _, row in enumerate(count_matrix):
+        &#47&#47 get analysis result
+        word_z_score_dict = _z_test_word_list_(count_list_i=row,
+                                               count_list_j=count_matrix_sum,
+                                               words=words)
+
+        &#47&#47 sort result and put into result list
+        sorted_list = sorted(list(word_z_score_dict.items()),
+                             key=lambda item: abs(item[1]),
+                             reverse=True)
+        all_results.append(sorted_list)
+
+   </a> return all_results
+
+
+def analyze_para_to_group(group_values: List[np.ndarray], words: np.ndarray) \</code></pre><h3>After Change</h3><pre><code class='java'>
+    count_matrix_sum = np.sum(count_matrix, axis=0)
+
+    &#47&#47 generate data
+    <a id="change">all_results = [_z_test_word_list_(count_list_i=row,
+                                      count_list_j=count_matrix_sum,
+                                      words=words)
+                   for _, row in enumerate(count_matrix)]</a>
+
+    return all_results
+
+</code></pre>

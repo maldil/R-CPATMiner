@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def predict_proba(self, devX):
+        self.model.eval()
+        probas = []
+        <a id="change">for i in range(0, len(devX), self.batch_size):
+            Xbatch = Variable(devX[i:i + self.batch_size], volatile=True)
+            if len(probas) == 0:
+                probas = self.model(Xbatch).data.cpu().numpy()
+            else:
+                probas = np.concatenate((probas,
+                    self.model(Xbatch).data.cpu().numpy()), axis=0)
+       </a> return probas
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def predict_proba(self, devX):
+        self.model.eval()
+        probas = []
+        <a id="change">with torch.no_grad():
+            for i in range(0, len(devX), self.batch_size):
+                Xbatch = devX[i:i + self.batch_size]
+                if len(probas) == 0:
+                    probas = self.model(Xbatch).data.cpu().numpy()
+                else:
+                    probas = np.concatenate((probas,
+                        self.model(Xbatch).data.cpu().numpy()), axis=0)
+       </a> return probas
+</code></pre>

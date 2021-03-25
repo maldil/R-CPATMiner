@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return map(self._quote_expr, params)
+
+    def _decode(self, param):
+        <a id="change">if isinstance(param, unicode):
+            return param.decode(&quotutf-8&quot, &quotignore&quot)
+       </a> <a id="change">return param</a>
+
+    def execute(self, sql, params=()):
+        start = datetime.now()
+        try:</code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            return force_unicode(param, strings_only=True)
+        except UnicodeDecodeError:
+            <a id="change">return &quot(encoded string)&quot</a>
+
+    def execute(self, sql, params=()):
+        start = datetime.now()
+        try:</code></pre>

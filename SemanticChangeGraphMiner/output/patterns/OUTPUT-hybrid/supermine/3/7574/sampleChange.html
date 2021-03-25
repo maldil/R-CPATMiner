@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if done:
+        obs = env.reset()
+        actor_critic = torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))
+        <a id="change">actor_critic.eval()</a>
+
+    update_current_obs(obs)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Obser reward and next obs
+    obs, reward, done, _ = env.step(cpu_actions)
+
+    masks.fill_(<a id="change">0.0 if done else 1.0</a>)
+
+    if current_obs.dim() == 4:
+        current_obs *= masks.unsqueeze(2).unsqueeze(2)</code></pre>

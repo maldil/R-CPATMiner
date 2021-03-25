@@ -1,0 +1,22 @@
+<html><h3>91a9437c8c6ed68d14884cc040c988301a7430ea,src/graph_transpiler/webdnn/frontend/chainer/functions/normalization.py,,_convert_normalize_l2,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+@ChainerConverter.register_handler("NormalizeL2")
+def _convert_normalize_l2(converter: ChainerConverter, c_op: "chainer.functions.NormalizeL2"):
+    &#47&#47 TODO
+    <a id="change">raise NotImplementedError("[ChainerConverter] NormalizeL2 is not supported")</a>
+
+
+@ChainerConverter.register_handler("LocalResponseNormalization")
+def _convert_local_response_normalization(converter: ChainerConverter,</code></pre><h3>After Change</h3><pre><code class='java'>
+def _convert_normalize_l2(converter: ChainerConverter, c_op: "chainer.functions.NormalizeL2"):
+    x = converter.get_variable(c_op.inputs[0])
+
+    <a id="change">if len(c_op.axis) &gt; 1:  &#47&#47 c_op.axis: tuple
+        raise ValueError("The number of axis for NormalizeL2 must be 1.")
+   </a> y, = Normalize(None, axis=x.order.axes[c_op.axis[0]], eps=c_op.eps)(x)
+
+    converter.set_variable(c_op.outputs[0](), y)
+</code></pre><img src="12137883.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mil-tokyo/webdnn/commit/91a9437c8c6ed68d14884cc040c988301a7430ea#diff-5a055fa2bd35f55275002101240697e645818431b99ba5f1d029dd63d11d8f71L13' target='_blank'>Link</a></div><div id='project'> Project Name: mil-tokyo/webdnn</div><div id='commit'> Commit Name: 91a9437c8c6ed68d14884cc040c988301a7430ea</div><div id='time'> Time: 2019-06-25</div><div id='author'> Author: hidaka@mi.t.u-tokyo.ac.jp</div><div id='file'> File Name: src/graph_transpiler/webdnn/frontend/chainer/functions/normalization.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _convert_normalize_l2</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/0d65a28dfb42b229e71f63e606e78b36bf2e42d3#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL1483' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 0d65a28dfb42b229e71f63e606e78b36bf2e42d3</div><div id='time'> Time: 2014-12-21</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: plot_multiple</div><BR><BR><div id='link'><a href='https://github.com/quantumlib/Cirq/commit/451b2f16acd7dcc8a38cddeff9383143184906fc#diff-49aa0b3666b200620d5b38be19ffce1583cb48e6072772302426313a92aad514L208' target='_blank'>Link</a></div><div id='project'> Project Name: quantumlib/Cirq</div><div id='commit'> Commit Name: 451b2f16acd7dcc8a38cddeff9383143184906fc</div><div id='time'> Time: 2021-02-08</div><div id='author'> Author: smitsanghavi@users.noreply.github.com</div><div id='file'> File Name: cirq/circuits/circuit_operation.py</div><div id='class'> Class Name: CircuitOperation</div><div id='method'> Method Name: repeat</div><BR>

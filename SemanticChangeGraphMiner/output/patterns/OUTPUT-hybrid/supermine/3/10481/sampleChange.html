@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      current_cycle_last_train_step = ((cycle + 1)
+                                       * params.eval.num_steps_per_eval)
+      executor.train(train_input_fn, current_cycle_last_train_step)
+      <a id="change">executor.evaluate(
+          eval_input_fn,
+          params.eval.eval_samples // params.eval.eval_batch_size)</a>
+  else:
+    logging.info(&quotMode not found.&quot)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        params.eval.eval_file_pattern, params, mode=ModeKeys.PREDICT_WITH_GT,
+        dataset_type=params.eval.eval_dataset_type)
+
+  <a id="change">if params.eval.eval_samples:
+    eval_times = params.eval.eval_samples // params.eval.eval_batch_size
+  else:
+    eval_times = None
+
+  &#47&#47 Runs the model.
+ </a> if FLAGS.mode == &quottrain&quot:
+    config_utils.save_config(params, params.model_dir)
+    executor.train(train_input_fn, params.train.total_steps)
+    if FLAGS.eval_after_training:</code></pre>

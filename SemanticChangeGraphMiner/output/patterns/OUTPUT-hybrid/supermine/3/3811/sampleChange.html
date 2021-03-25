@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    with tempdir() as tmpdir, \
+         cd(tmpdir), \
+         <a id="change">named_tempfile</a>(dir=tmpdir, suffix=&quot.tex&quot) as latexfobj:
+
+        &#47&#47 Write the latex file
+        latexfobj.write(latex)</code></pre><h3>After Change</h3><pre><code class='java'>
+    fline = line.format(to_latex(a, decimals=3))
+    latex = template.format(fline)
+
+    with <a id="change">ExitStack()</a> as stack:
+        EC = stack.enter_context
+        <a id="change">tmpdir = EC(tempdir())</a>
+        EC(cd(tmpdir))
+        latexfobj = EC(named_tempfile(dir=tmpdir, suffix=&quot.tex&quot))
+
+        &#47&#47 Write the latex file</code></pre>

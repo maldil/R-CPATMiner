@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ax = fig.add_subplot(111)
+
+    plt.plot(coverages, [float(len(idxs)) / num_examples
+                         <a id="change">for</a> idxs in cov_to_confident_error_idxs])
+    plt.title(title.format(attack_name=attack_name))
+    plt.ylabel("Risk \n (error rate on covered data)")
+    plt.xlabel("Coverage \n (fraction of points not abstained on)")</code></pre><h3>After Change</h3><pre><code class='java'>
+  fig = plt.figure()
+  ax = fig.add_subplot(111)
+
+  <a id="change">cov_to_num_covered_examples = [
+    num_examples * coverage for coverage in coverages
+  ]</a>
+
+  risk_on_covered_data = [
+    float(len(error_idxs)) / num_covered_examples
+    <a id="change">for</a> error_idxs, num_covered_examples in
+    <a id="change">zip(cov_to_confident_error_idxs, cov_to_num_covered_examples)</a>]
+
+  plt.plot(coverages, risk_on_covered_data)
+  plt.title(title.format(attack_name=attack_name))</code></pre>

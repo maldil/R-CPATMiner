@@ -1,0 +1,20 @@
+<html><h3>1880e8fb67b7cbcb6e75c743d45cebf7cba3f876,contents/9_Deep_Deterministic_Policy_Gradient_DDPG/DDPG_update.py,DDPG,__init__,#DDPG#,36
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.ct_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=&quotCritic/target&quot)
+
+        &#47&#47 target net replacement
+        self.soft_replace = [[tf.assign(ta, (1 - TAU) * ta + TAU * ea), <a id="change">tf.assign(tc, (1 - TAU) * tc + TAU * ec)</a>]
+                             for ta, ea, tc, ec in zip(self.at_params, self.ae_params, self.ct_params, self.ce_params)]
+
+        q_target = self.R + GAMMA * q_</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.ct_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=&quotCritic/target&quot)
+
+        &#47&#47 target net replacement
+        self.soft_replace = [<a id="change">tf.assign(t, (1 - TAU) * t + TAU * e)</a>
+                             for t, e in zip(self.at_params + self.ct_params, self.ae_params + self.ce_params)]
+
+        q_target = self.R + GAMMA * q_
+        &#47&#47 in the feed_dic for the td_error, the self.a should change to actions in memory</code></pre><img src="1206755.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/1880e8fb67b7cbcb6e75c743d45cebf7cba3f876#diff-c8d9a4151f46d184f1a1a13fc0de053637ab353bea767a034260d1fc3249c61aL56' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: 1880e8fb67b7cbcb6e75c743d45cebf7cba3f876</div><div id='time'> Time: 2018-11-16</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/9_Deep_Deterministic_Policy_Gradient_DDPG/DDPG_update.py</div><div id='class'> Class Name: DDPG</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/QUANTAXIS/QUANTAXIS/commit/94db34e6f69f7874cb47b9a08a2a2ccbd6ac9079#diff-626d6a0128609f7b71f8c8b6d3c49ee5286917f7a2a64814a950399b4caf37c0L1101' target='_blank'>Link</a></div><div id='project'> Project Name: QUANTAXIS/QUANTAXIS</div><div id='commit'> Commit Name: 94db34e6f69f7874cb47b9a08a2a2ccbd6ac9079</div><div id='time'> Time: 2019-02-09</div><div id='author'> Author: yutiansut@qq.com</div><div id='file'> File Name: QUANTAXIS/QAARP/QARisk.py</div><div id='class'> Class Name: QA_Performance</div><div id='method'> Method Name: pnl_fifo</div><BR><BR><div id='link'><a href='https://github.com/datascienceinc/Skater/commit/2ae494d00ce9fcf11fe85517c7136d205be4d545#diff-8617490ec49d27286192534236ed7620591bb71879c15e88f9a23e446a69feacL111' target='_blank'>Link</a></div><div id='project'> Project Name: datascienceinc/Skater</div><div id='commit'> Commit Name: 2ae494d00ce9fcf11fe85517c7136d205be4d545</div><div id='time'> Time: 2018-02-18</div><div id='author'> Author: pramitchoudhary@ip-172-30-0-2.us-west-2.compute.internal</div><div id='file'> File Name: skater/core/global_interpretation/interpretable_models/rule_lists.py</div><div id='class'> Class Name: BayesianRuleLists</div><div id='method'> Method Name: fit</div><BR>

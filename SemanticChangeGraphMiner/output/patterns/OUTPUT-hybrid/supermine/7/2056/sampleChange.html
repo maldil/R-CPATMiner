@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            assert (target.sum(1) == 1).all(), \
+                    &quotmulti-label setting is not supported&quot
+ 
+        <a id="change">pred = output.argmax(1)</a>
+        <a id="change">for i,n in enumerate(pred):
+            pos = onehot and target[i].argmax(0) or int(target[i])
+            self.conf[pos][n] += 1
+
+   </a> def value(self):
+        if self.normalized:
+            conf = self.conf.astype(np.float32)
+            return conf / conf.sum(1).clip(min=1e-12)[:,None]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if np.ndim(predicted) != 1:
+            assert predicted.shape[1] == self.k, \
+                &quotnumber of predictions does not match size of confusion matrix&quot
+            <a id="change">predicted = np.argmax(predicted, 1)</a>
+        else:
+            assert (predicted.max() &lt; self.k) and (predicted.min() &gt;= 0), \
+                &quotpredicted values are not between 1 and k&quot
+
+        onehot_target = np.ndim(target) != 1
+        if onehot_target:
+            assert target.shape[1] == self.k, \
+                &quotOnehot target does not match size of confusion matrix&quot
+            assert (target &gt;= 0).all() and (target &lt;= 1).all(), \
+                &quotin one-hot encoding, target values should be 0 or 1&quot
+            assert (target.sum(1) == 1).all(), \
+                &quotmulti-label setting is not supported&quot
+            target = np.argmax(target, 1)
+        else:
+            assert (predicted.max() &lt; self.k) and (predicted.min() &gt;= 0), \
+                &quotpredicted values are not between 1 and k&quot
+
+        &#47&#47 hack for bincounting 2 arrays together
+        x = predicted + self.k * target
+        bincount_2d = np.bincount(<a id="change">x.astype(np.int32)</a>,
+                                  minlength=self.k ** 2)
+        assert bincount_2d.size == self.k ** 2
+        <a id="change">conf = bincount_2d.reshape((self.k, self.k))</a>
+
+        self.conf += conf
+
+    def value(self):</code></pre>

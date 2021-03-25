@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            gc.save_state()
+            gc.translate_ctm(x, y)
+            self._label.draw(gc)
+            <a id="change">gc.restore_state()</a>
+
+            &#47&#47 draw the line
+            slope, y0 = selection.fit_params
+            f = lambda x: slope*x + y0
+            cx, cy = c.map_screen([selection.centroid])[0]
+            left = c.x
+            right = c.x2
+
+            left_x = c.map_data([left, c.y])[0]
+            right_x = c.map_data([right, c.y])[0]
+            left_y = f(left_x)
+            right_y = f(right_x)
+
+            left_pt, right_pt = c.map_screen([[left_x, left_y], [right_x, right_y]])
+
+            <a id="change">gc.save_state()</a>
+            try:
+                gc.set_line_dash(self.line_style_)
+                gc.set_stroke_color(self.line_color_)
+                gc.set_line_width(self.line_width)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            left_pt, right_pt = c.map_screen([[left_x, left_y], [right_x, right_y]])
+
+            <a id="change">with gc:
+                gc.set_line_dash(self.line_style_)
+                gc.set_stroke_color(self.line_color_)
+                gc.set_line_width(self.line_width)
+                gc.move_to(*left_pt)
+                gc.line_to(*right_pt)
+                gc.stroke_path()
+
+       </a> return
+</code></pre>

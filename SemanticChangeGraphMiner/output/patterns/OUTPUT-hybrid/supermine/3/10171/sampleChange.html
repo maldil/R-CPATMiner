@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif init_type == &quotxavier&quot:
+        net.apply(weights_init_xavier)
+    elif init_type == &quotkaiming&quot:
+        <a id="change">net.apply(weights_init_kaiming)</a>
+    elif init_type == &quotorthogonal&quot:
+        net.apply(weights_init_orthogonal)
+    else:
+        raise NotImplementedError(&quotinitialization method [%s] is not implemented&quot % init_type)</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif classname.find(&quotBatchNorm2d&quot) != -1:
+            init.normal(m.weight.data, 1.0, 0.02)
+            init.constant(m.bias.data, 0.0)
+    <a id="change">return init_func</a>
+
+
+def init_net(net, init_type=&quotnormal&quot, gpu_ids=[]):
+    print(&quotinitialization method [%s]&quot % init_type)</code></pre>

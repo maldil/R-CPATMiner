@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def experiment(variant):
+    eval_env = <a id="change">gym.make(&quotFetchReach-v1&quot)</a>
+    expl_env = gym.make(&quotFetchReach-v1&quot)
+
+    observation_key = &quotobservation&quot
+    desired_goal_key = &quotdesired_goal&quot
+
+    achieved_goal_key = desired_goal_key.replace("desired", "achieved")
+    <a id="change">replay_buffer</a> = ObsDictRelabelingBuffer(
+        env=eval_env,
+        observation_key=observation_key,
+        desired_goal_key=desired_goal_key,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def experiment(variant):
+    &#47&#47 unwrap the TimeLimitEnv wrapper since we manually termiante after 50 steps
+    eval_env = <a id="change">gym.make(&quotFetchReach-v1&quot).env</a>
+    expl_env = gym.make(&quotFetchReach-v1&quot).env
+
+    observation_key = &quotobservation&quot
+    desired_goal_key = &quotdesired_goal&quot
+
+    achieved_goal_key = desired_goal_key.replace("desired", "achieved")
+    <a id="change">replay_buffer</a> = ObsDictRelabelingBuffer(
+        env=eval_env,
+        observation_key=observation_key,
+        desired_goal_key=desired_goal_key,</code></pre>

@@ -1,0 +1,19 @@
+<html><h3>e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f,cesium/featurize.py,,load_featureset,#,367
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    channels = [int(c) if c != &quot&quot else &quot&quot for c in data.pop(&quotchannels&quot)]
+    columns = pd.MultiIndex.from_tuples(list(zip(features, channels)),
+                                        names=[&quotfeature&quot, &quotchannel&quot])
+    <a id="change">fset = pd.DataFrame(data.pop(&quotvalues&quot), index=data.pop(&quotindex&quot),
+                        columns=columns)</a>
+    return fset, data
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Transpose to properly handle MultiIndex columns
+    fset = pd.DataFrame.from_records(data.pop(&quotfeatures&quot),
+                                     index=[&quotfeature&quot, &quotchannel&quot]).T
+    <a id="change">features</a>, channels = zip(*fset.columns)
+    channels = [int(c) if c != &quot&quot else &quot&quot for c in channels]
+    fset.columns = pd.MultiIndex.from_tuples(list(zip(features, channels)),
+                                             names=[&quotfeature&quot, &quotchannel&quot])</code></pre><img src="37277802.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL387' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_featureset</div><BR><BR><div id='link'><a href='https://github.com/ina-foss/inaSpeechSegmenter/commit/4396573e860d553825702006aa335989356b45c8#diff-c08e2e8722bff2ae0218035fc1de93122ebd6e869bb8ca1ad5f9fa8a0f6036deL319' target='_blank'>Link</a></div><div id='project'> Project Name: ina-foss/inaSpeechSegmenter</div><div id='commit'> Commit Name: 4396573e860d553825702006aa335989356b45c8</div><div id='time'> Time: 2020-05-10</div><div id='author'> Author: ddoukhan@ina.fr</div><div id='file'> File Name: inaSpeechSegmenter/segmenter.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: featGenerator</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/259010ab242cc109b2b8dfbb20812d27b812dd14#diff-d95d5473b44e296bd1476d2ac188fbfee5a9556665f7813510bcf18c29bb443aL139' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: 259010ab242cc109b2b8dfbb20812d27b812dd14</div><div id='time'> Time: 2020-06-01</div><div id='author'> Author: aloctavodia@gmail.com</div><div id='file'> File Name: arviz/plots/loopitplot.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_loo_pit</div><BR>

@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                 max_repeating_frames=None, high_pass_cutoff=None, do_mono=False,
+                 use_librosa_stft=constants.USE_LIBROSA_STFT, matlab_fidelity=False,
+                 mask_type=mask_separation_base.MaskSeparationBase.SOFT_MASK, mask_threshold=0.5):
+        <a id="change">super(RepetSim, self).__init__(input_audio_signal=input_audio_signal, mask_type=mask_type,
+                                       mask_threshold=mask_threshold)</a>
+
+        self.high_pass_cutoff = 100 if high_pass_cutoff is None else high_pass_cutoff
+        self.similarity_threshold = 0 if similarity_threshold is None else similarity_threshold
+        self.min_distance_between_frames = 1 if min_distance_between_frames is None else min_distance_between_frames
+        self.max_repeating_frames = 100 if max_repeating_frames is None else max_repeating_frames
+
+        self._min_distance_converted_to_hops = False
+
+        <a id="change">self.verbose</a> = False
+        self.similarity_matrix = None
+        self.background = None
+        self.foreground = None
+        self.similarity_indices = None
+        <a id="change">self.magnitude_spectrogram</a> = None
+        <a id="change">self.stft</a> = None
+        self.result_masks = None
+        <a id="change">self.use_librosa_stft = use_librosa_stft</a>
+        <a id="change">self.matlab_fidelity</a> = matlab_fidelity
+
+        if self.matlab_fidelity:
+            <a id="change">self.use_librosa_stft</a> = False
+
+        <a id="change">self.do_mono = do_mono</a>
+
+        if self.do_mono:
+            <a id="change">self</a>.audio_signal.to_mono(overwrite=True)
+
+    def run(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, input_audio_signal, similarity_threshold=0, 
+                 min_distance_between_frames=1, max_repeating_frames=100, 
+                 high_pass_cutoff=100, mask_type=&quotsoft&quot, mask_threshold=0.5):
+        <a id="change">super().__init__(
+            input_audio_signal=input_audio_signal, 
+            mask_type=mask_type,
+            mask_threshold=mask_threshold)</a>
+
+        self.high_pass_cutoff = high_pass_cutoff
+        self.similarity_threshold = similarity_threshold
+        self.min_distance_between_frames = min_distance_between_frames</code></pre>

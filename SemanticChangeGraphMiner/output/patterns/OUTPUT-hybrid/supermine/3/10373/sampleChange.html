@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if frame1.shape[3] == 3:
+        frame1 = rgb2gray(frame1)
+    if frame2.shape[3] == 3:
+        <a id="change">frame2 = rgb2gray(frame2)</a>
+    frame1 = frame1[0, ..., 0]
+    frame2 = frame2[0, ..., 0]
+
+    if frame1.dtype != np.bool:</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    assert(frame1.shape == frame2.shape)
+
+    <a id="change">T</a>, M, N, C = frame1.shape
+
+    assert C == 1, "called with frames having %d channels. Please supply only the luminance channel." % (C,)
+    &#47&#47 if type bool, then these are edge maps. No need to convert them</code></pre>

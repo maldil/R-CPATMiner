@@ -1,0 +1,42 @@
+<html><h3>a908909495f00c61b52dd184a6275dd25abd0818,networkml/featurizers/funcs/host.py,HostBase,_tshark_ports,#HostBase#,120
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        mac_row_ports = {}
+        def port_priv(port):
+            return port &lt; 1024
+        <a id="change">for ip_proto in (&quotudp&quot, &quottcp&quot):
+            lowest_ports = self._lowest_ip_proto_port(mac_df, ip_proto)
+            for field_name, ports, wk_ports in (
+                    (&quotpriv&quot, {port for port in lowest_ports if port_priv(port)}, self.WK_PRIV_TCPUDP_PORTS),
+                    (&quotnonpriv&quot, {port for port in lowest_ports if not port_priv(port)}, self.WK_NONPRIV_TCPUDP_PORTS),
+                ):
+                port_flags = {port: int(port in ports) for port in wk_ports}
+                port_flags.update({&quotother&quot: int(bool(lowest_ports) and not ports.issubset(wk_ports))})
+                mac_row_ports.update({
+                    &quottshark_%s_%s_port_%s_%s&quot % (ip_proto, field_name, port, suffix): present for port, present in port_flags.items()})
+       </a> return mac_row_ports
+
+    def _tshark_ipversions(self, mac_df):
+        try:</code></pre><h3>After Change</h3><pre><code class='java'>
+        mac_row_ports = {}
+        def port_priv(port):
+            return port &lt; 1024
+        <a id="change">for ip_proto_num, proto_df in mac_df.groupby(&quotip.proto&quot):
+            ip_proto = TCP_UDP_PROTOS.get(ip_proto_num)
+            if ip_proto is None:
+                continue
+            lowest_ports = self._lowest_ip_proto_port(proto_df, ip_proto)
+            for field_name, ports, wk_ports in (
+                    (&quotpriv&quot, {port for port in lowest_ports if port_priv(port)}, self.WK_PRIV_TCPUDP_PORTS),
+                    (&quotnonpriv&quot, {port for port in lowest_ports if not port_priv(port)}, self.WK_NONPRIV_TCPUDP_PORTS),
+                ):
+                port_flags = {port: int(port in ports) for port in wk_ports}
+                port_flags.update({&quotother&quot: int(bool(lowest_ports) and not ports.issubset(wk_ports))})
+                mac_row_ports.update({
+                    &quottshark_%s_%s_port_%s_%s&quot % (ip_proto, field_name, port, suffix): present for port, present in port_flags.items()})
+       </a> return mac_row_ports
+
+    def _tshark_ratio_ports(self, mac_df):
+        mac_row_ports = {}</code></pre><img src="1855773.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/CyberReboot/NetworkML/commit/a908909495f00c61b52dd184a6275dd25abd0818#diff-477d45e6b6b61cb022c4b2b8ef0640f9ceb3e09a5e7f72ba603fe5b9a1f8b8c2L123' target='_blank'>Link</a></div><div id='project'> Project Name: CyberReboot/NetworkML</div><div id='commit'> Commit Name: a908909495f00c61b52dd184a6275dd25abd0818</div><div id='time'> Time: 2020-04-08</div><div id='author'> Author: josh@vandervecken.com</div><div id='file'> File Name: networkml/featurizers/funcs/host.py</div><div id='class'> Class Name: HostBase</div><div id='method'> Method Name: _tshark_ports</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/9514b001889e7331d80cc8c4f168b284a27825e0#diff-9b4c7846941b17ffb06861d2e040f4525889c8320a4c730af077fc74ed1c624aL25' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 9514b001889e7331d80cc8c4f168b284a27825e0</div><div id='time'> Time: 2011-05-10</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/utils/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: tidy_stacktrace</div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/09f8d5539312770efbaa87eb6e0b9b150973abc7#diff-eee67d44760cdb7d2d677250e7c6f08386f02a9ea8f4848f0ec6dd4f751d2cd8L9' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: 09f8d5539312770efbaa87eb6e0b9b150973abc7</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: angelica.perez37@gmail.com</div><div id='file'> File Name: riot_neuralnet/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: prepare_training_data</div><BR>

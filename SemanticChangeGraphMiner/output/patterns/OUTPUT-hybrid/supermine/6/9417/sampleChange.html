@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            X_df.loc[i, :] = [0] * len(self.events)
+            event_counts = Counter(X_seq[i])
+            for event, count in event_counts.items():
+                <a id="change">if event in self.events:
+                    X_df.loc[i, event] = count
+       </a> X = X_df.fillna(0).values
+        
+        num_instance, num_event = X.shape
+        if self.term_weighting == &quottf-idf&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for i in range(X_seq.shape[0]):
+            event_counts = Counter(X_seq[i])
+            X_counts.append(event_counts)
+        X_df = <a id="change">pd.DataFrame(X_counts)</a>
+        X_df = X_df.fillna(0)
+        empty_events = set(self.events) - set(X_df.columns)
+        for event in empty_events:
+            X_df[event] = [0] * len(X_df)
+        <a id="change">X = X_df[self.events].values</a>
+        if self.oov:
+            oov_vec = np.sum(X_df[X_df.columns.difference(self.events)].values &gt; 0, axis=1)
+            X = np.hstack([X, oov_vec.reshape(<a id="change">X</a>.shape[0], 1)])
+        
+        num_instance, num_event = X.shape
+        if self.term_weighting == &quottf-idf&quot:</code></pre>

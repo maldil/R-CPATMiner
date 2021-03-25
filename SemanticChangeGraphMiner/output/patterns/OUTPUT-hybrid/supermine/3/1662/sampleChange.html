@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if hidden_norms.data.max() &gt; max_norm:
+                logger.info(f&quotclipping {hidden_norms.max()} to {max_norm}&quot)
+                norm = hidden[hidden_norms &gt; max_norm].norm(dim=-1)
+                norm = <a id="change">norm.unsqueeze(-1)</a>
+                detached_norm = torch.autograd.Variable(norm.data,
+                                                        requires_grad=False)
+                hidden[hidden_norms &gt; max_norm] *= max_norm/detached_norm
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                clip_select = hidden_norms &gt; max_norm
+                clip_norms = hidden_norms[clip_select]
+
+                <a id="change">mask = np.ones(hidden.size())</a>
+                normalizer = max_norm/clip_norms
+                normalizer = normalizer[:, np.newaxis]
+
+                mask[clip_select] = normalizer</code></pre>

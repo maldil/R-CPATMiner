@@ -1,0 +1,21 @@
+<html><h3>012daf57ac31d82366323e7ec27ab7c2cb678a09,utils.py,,non_max_suppression,#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Get index of image
+            image_index = max_detections.new(max_detections.size(0), 1).fill_(image_i)
+            &#47&#47 Repeat the batch_id for as many detections of the class cls in the image
+            max_detections = <a id="change">torch.cat((image_index, max_detections), 1)</a>
+            &#47&#47 Add max detections to outputs
+            output = max_detections if output is None else torch.cat((output, max_detections))
+
+    return output</code></pre><h3>After Change</h3><pre><code class='java'>
+    box_corner[:, :, 3] = prediction[:, :, 1] + prediction[:, :, 3] / 2
+    prediction[:, :, :4] = box_corner[:, :, :4]
+
+    output = <a id="change">[None for _ in range(len(prediction))]</a>
+    for image_i, image_pred in enumerate(prediction):
+        &#47&#47 Filter out confidence scores below threshold
+        conf_mask = (image_pred[:, 4] &gt;= conf_thres).squeeze()
+        image_pred = image_pred[conf_mask]</code></pre><img src="11817813.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/012daf57ac31d82366323e7ec27ab7c2cb678a09#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL49' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 012daf57ac31d82366323e7ec27ab7c2cb678a09</div><div id='time'> Time: 2018-05-27</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_max_suppression</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/142bc348f80ae6c1f6ede5b598b0443af8048717#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL153' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 142bc348f80ae6c1f6ede5b598b0443af8048717</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: Darknet</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/9991d432372b304f84b67cc60027e92f4ce2273a#diff-4f05d3cbbef8dafc1eafbee4f7925072d4eee33e7ed57bb498df598fd6f0ae4fL337' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 9991d432372b304f84b67cc60027e92f4ce2273a</div><div id='time'> Time: 2018-12-16</div><div id='author'> Author: eickenberg@users.noreply.github.com</div><div id='file'> File Name: kymatio/scattering3d/scattering3d.py</div><div id='class'> Class Name: Scattering3D</div><div id='method'> Method Name: forward</div><BR>

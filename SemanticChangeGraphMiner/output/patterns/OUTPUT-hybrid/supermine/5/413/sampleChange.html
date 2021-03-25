@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    cpu_info = subprocess.check_output([&quotcat&quot, &quot/proc/cpuinfo&quot]).decode()
+
+    <a id="change">hardware_info = [x for x in cpu_info.split(&quot\n&quot) if &quotHardware&quot in x][0]</a>
+    model_info = [x for x in cpu_info.split(&quot\n&quot) if &quotmodel name&quot in x][0]
+
+    <a id="change">if &quotBCM&quot in hardware_info:
+        if &quotrev 7&quot in model_info:
+            return &quotarm11&quot
+        elif &quotrev 5&quot in model_info:
+            return &quotcortex-a7&quot
+        elif &quotrev 4&quot in model_info:
+            return &quotcortex-a53&quot
+        elif &quotrev 3&quot in model_info:
+            return &quotcortex-a72&quot
+    elif &quotAM33&quot in hardware_info:
+        return &quotbeaglebone&quot
+    else:
+        raise NotImplementedError(&quotUnsupported CPU.&quot)
+
+
+</a>def _pv_platform():
+    pv_system = platform.system()
+    if pv_system not in {&quotDarwin&quot, &quotLinux&quot, &quotWindows&quot}:
+        raise ValueError("Unsupported system &quot%s&quot." % pv_system)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if &quotARM1176&quot == model_info: 
+        return &quotarm11&quot + arch_info
+    elif &quotCortex-A53&quot == model_info:
+        <a id="change">return &quotcortex-a53&quot + arch_info</a>
+    elif &quotCortex-A72&quot == model_info:
+        return &quotcortex-a72&quot + arch_info
+    elif &quotCortex-A7&quot == model_info:
+        return &quotcortex-a7&quot + arch_info</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if X.size()[0] != config.batch_size:
+            continue  &#47&#47 Drop those data, if not enough for a batch
+        &#47&#47 Send Tensors to GPU if available
+        <a id="change">if use_GPU:
+            X = X.cuda()
+            S1 = S1.cuda()
+            S2 = S2.cuda()
+            labels = labels.cuda()
+        &#47&#47 Wrap to autograd.Variable
+       </a> X, S1, S2 = Variable(X), Variable(S1), Variable(S2)
+        &#47&#47 Forward pass
+        outputs, predictions = net(X, S1, S2, config)
+        &#47&#47 Select actions with max scores(logits)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if X.size()[0] != config.batch_size:
+            continue  &#47&#47 Drop those data, if not enough for a batch
+        &#47&#47 automaticlly select device, device agnostic 
+        device = <a id="change">torch.device("cuda:0" if torch.cuda.is_available() else "cpu")</a>
+        X = X.to(device)
+        S1 = S1.to(device)
+        S2 = S2.to(device)
+        labels = labels.to(device)
+        <a id="change">net = net.to(device)</a>
+        &#47&#47 Forward pass
+        outputs, predictions = net(X, S1, S2, config)
+        &#47&#47 Select actions with max scores(logits)
+        _, predicted = torch.max(outputs, dim=1, keepdim=True)</code></pre>

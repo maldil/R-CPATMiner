@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            n_missing_for_this_col = n_missing_for_each_column[col_idx]
+            if n_missing_for_this_col &gt; 0:  &#47&#47 if we have any missing data at all
+                observed_row_mask_for_col = observed_mask[:, col_idx]
+                <a id="change">other_cols = np.array(list(range(0, col_idx)) + list(range(col_idx + 1, n_cols)))</a>
+                output = X_filled[observed_row_mask_for_col, col_idx]
+                if (n_cols - int(self.add_ones) &gt; self.n_nearest_columns):
+                    &#47&#47 probability of column draw is proportional to absolute 
+                    &#47&#47 pearson correlation</code></pre><h3>After Change</h3><pre><code class='java'>
+            abs_correlation_matrix = np.abs(np.corrcoef(X_filled.T))
+
+        n_missing_for_each_column = missing_mask.sum(axis=0)
+        <a id="change">ordered_column_indices = np.arange(n_cols)</a>
+        for col_idx in visit_indices:
+            missing_mask_col = missing_mask[:, col_idx]  &#47&#47 missing mask for this column
+            n_missing_for_this_col = n_missing_for_each_column[col_idx]
+            if n_missing_for_this_col &gt; 0:  &#47&#47 if we have any missing data at all
+                observed_row_mask_for_col = observed_mask[:, col_idx]
+                output = X_filled[observed_row_mask_for_col, col_idx]
+
+                <a id="change">other_cols = np.concatenate([
+                    ordered_column_indices[:col_idx],
+                    ordered_column_indices[col_idx + 1:]
+                ])</a>
+
+                if n_original_cols &gt; self.n_nearest_columns:
+                    &#47&#47 probability of column draw is proportional to absolute
+                    &#47&#47 pearson correlation</code></pre>

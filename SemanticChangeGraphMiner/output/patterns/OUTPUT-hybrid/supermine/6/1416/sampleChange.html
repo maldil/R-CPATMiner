@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    normalize = get_normalize_method(opt.mean, opt.std, opt.no_mean_norm,
+                                     opt.no_std_norm)
+
+    spatial_transform = <a id="change">[Resize(opt.sample_size)]</a>
+    if opt.test_crop == &quotcenter&quot:
+        spatial_transform.append(CenterCrop(opt.sample_size))
+    <a id="change">spatial_transform += [ToTensor(), ScaleValue(opt.value_scale), normalize]</a>
+    spatial_transform = Compose(spatial_transform)
+
+    temporal_transform = LoopPadding(opt.sample_duration)
+    target_transform = TargetCompose([VideoID(), Segment()])</code></pre><h3>After Change</h3><pre><code class='java'>
+    if opt.test_crop == &quotcenter&quot:
+        temporal_transform = LoopPadding(opt.sample_duration)
+    else:
+        <a id="change">del spatial_transform[1]</a>  &#47&#47remove CenterCrop
+        <a id="change">temporal_transform = SlidingWindow(opt.sample_duration, opt.test_stride)</a>
+
+    target_transform = TargetCompose([VideoID(), Segment()])
+
+    test_data, collate_fn = get_test_set(</code></pre>

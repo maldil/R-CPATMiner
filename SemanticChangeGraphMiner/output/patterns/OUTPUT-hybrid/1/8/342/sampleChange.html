@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    print(net_i2a)
+
+    obs = envs[0].reset()
+    obs_v = <a id="change">ptan.agent.default_states_preprocessor([obs], cuda=args.cuda)</a>
+    <a id="change">res</a> = net_i2a(obs_v)
+
+    optimizer = optim.RMSprop(net_i2a.parameters(), lr=LEARNING_RATE, eps=1e-5)
+    policy_opt = optim.Adam(net_policy.parameters(), lr=POLICY_LR)</code></pre><h3>After Change</h3><pre><code class='java'>
+    print(net_i2a)
+
+    obs = envs[0].reset()
+    obs_v = <a id="change">ptan.agent.default_states_preprocessor([obs]).to(device)</a>
+    <a id="change">res</a> = net_i2a(obs_v)
+
+    optimizer = optim.RMSprop(net_i2a.parameters(), lr=LEARNING_RATE, eps=1e-5)
+    policy_opt = optim.Adam(net_policy.parameters(), lr=POLICY_LR)</code></pre>

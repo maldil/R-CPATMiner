@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if np.sum(weights) == 0:
+            weights = np.ones(self.n_classifiers, dtype=int)
+
+        <a id="change">votes = np.array([], dtype=int)</a>
+        for clf_idx, clf in enumerate(self.pool_classifiers):
+            votes = np.hstack((votes, np.ones(weights[clf_idx], dtype=int) * clf.predict(query)[0]))
+
+        return votes</code></pre><h3>After Change</h3><pre><code class='java'>
+        votes : the number of votes for each class
+        &#47&#47 
+        &#47&#47 Select classifier if it correctly classified at least one sample
+        <a id="change">indices = (competence &gt; 0)</a><a id="change">
+
+   </a>     &#47&#47 For the rows that are all False (i.e., no base classifier was selected, select all classifiers (set all True)
+        <a id="change">indices[~np.any(indices, axis=1), :] = True</a>
+
+        &#47&#47 weights = self.estimate_competence(query)
+        &#47&#47 if np.sum(weights) == 0:
+        &#47&#47     weights = np.ones(self.n_classifiers, dtype=int)</code></pre>

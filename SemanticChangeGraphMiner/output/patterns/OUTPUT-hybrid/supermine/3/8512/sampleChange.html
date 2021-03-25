@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        model = [   nn.Upsample(scale_factor=2),
+                    nn.Conv2d(in_size, out_size, 3, stride=1, padding=1),
+                    nn.LeakyReLU(0.2, inplace=True),
+                    <a id="change">nn.InstanceNorm2d(out_size)</a> ]
+
+        if dropout:
+            <a id="change">model += [nn.Dropout(dropout)]</a>
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, x, skip_input):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, in_size, out_size, dropout=0.0):
+        super(UNetUp, self).__init__()
+        layers = [  nn.ConvTranspose2d(in_size, out_size, 4, 2, 1),
+                    <a id="change">nn.InstanceNorm2d(out_size)</a>,
+                    nn.ReLU(inplace=True)]
+        if dropout:
+            layers.append(nn.Dropout(dropout))</code></pre>

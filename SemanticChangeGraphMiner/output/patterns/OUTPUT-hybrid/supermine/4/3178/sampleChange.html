@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+if os.path.exists(&quottcn.npz&quot):
+    &#47&#47 Load checkpoint if file exists.
+    <a id="change">w = np.load(&quottcn.npz&quot, allow_pickle=True)[&quotw&quot]</a>
+    print(&quotModel reloaded.&quot)
+    model.set_weights(w.tolist())
+else:
+    &#47&#47 Save the checkpoint.</code></pre><h3>After Change</h3><pre><code class='java'>
+                           TCN(nb_filters=12,
+                               dropout_rate=0.5,
+                               kernel_size=6,
+                               dilations=<a id="change">[1, 2, 4]</a>),
+                           Dropout(0.5),
+                           Dense(units=1, activation=&quotsigmoid&quot)])
+
+&#47&#47 get model as json string and save to file
+<a id="change">model_as_json = model.to_json()</a>
+with open(r&quotmodel.json&quot, "w") as json_file:
+    json_file.write(model_as_json)
+&#47&#47 save weights to file (for this format, need h5py installed)
+model.save_weights(&quotweights.h5&quot)</code></pre>

@@ -1,0 +1,53 @@
+<html><h3>cbcc3f315c653706ceded6ba42f222616322a3f2,ch03/03_atari_gan.py,,,#,132
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    net_discr = Discriminator(input_shape=input_shape)
+    net_gener = Generator(output_shape=input_shape)
+    <a id="change">if args.cuda:
+        net_discr.cuda()
+        net_gener.cuda()
+
+   </a> objective = nn.BCELoss()
+    gen_optimizer = optim.Adam(params=net_gener.parameters(), lr=LEARNING_RATE, betas=(0.5, 0.999))
+    dis_optimizer = optim.Adam(params=net_discr.parameters(), lr=LEARNING_RATE, betas=(0.5, 0.999))
+    writer = SummaryWriter()
+
+    gen_losses = []
+    dis_losses = []
+    iter_no = 0
+
+    true_labels_v = Variable(torch.FloatTensor([1.0] * BATCH_SIZE))
+    fake_labels_v = Variable(torch.FloatTensor([0.0] * BATCH_SIZE))
+    <a id="change">if args.cuda:
+        true_labels_v = true_labels_v.cuda()
+        fake_labels_v = fake_labels_v.cuda()
+
+   </a> for batch_v in iterate_batches(envs):
+        &#47&#47 generate extra fake samples, input is 4D: batch, filters, x, y
+        gen_input_v = Variable(torch.FloatTensor(BATCH_SIZE, LATENT_VECTOR_SIZE, 1, 1).normal_(0, 1))
+        if args.cuda:
+            batch_v = batch_v.cuda()
+            gen_input_v = gen_input_v.cuda()
+        gen_output_v = net_gener(gen_input_v)
+
+        &#47&#47 train discriminator
+        dis_optimizer.zero_grad()
+        dis_output_true_v = net_discr(batch_v)
+        dis_output_fake_v = net_discr(gen_output_v.detach())
+        dis_loss = objective(dis_output_true_v, true_labels_v) + objective(dis_output_fake_v, fake_labels_v)
+        dis_loss.backward()
+        dis_optimizer.step()
+        dis_losses.append(<a id="change">dis_loss.data.cpu().numpy()</a>)
+
+        &#47&#47 train generator
+        gen_optimizer.zero_grad()</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument("--cuda", default=False, action=&quotstore_true&quot, help="Enable cuda computation")
+    args = parser.parse_args()
+
+    device = torch.device(<a id="change">"cuda" if args.cuda else "cpu"</a>)
+    envs = [InputWrapper(gym.make(name)) for name in (&quotBreakout-v0&quot, &quotAirRaid-v0&quot, &quotPong-v0&quot)]
+    input_shape = envs[0].observation_space.shape
+</code></pre><img src="21145571.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 15</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7a6e3b93fb4b97af7b06244b768b1fee4b547c17#diff-67c7be1e7c26487e70450e11ed1a97f95dee1feb27d72923a87ab3a3764cb99eL49' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7a6e3b93fb4b97af7b06244b768b1fee4b547c17</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch12/train_crossent.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-76ef45280999506380a1cd22adfc9b9fd61476500ae25b7339a77ddf0a7423ffL91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/03_train_trpo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

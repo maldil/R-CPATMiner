@@ -1,0 +1,33 @@
+<html><h3>43a50ab6a3f717c738c8abba16779be59878bf4b,src/fonduer/parser/preprocessors/hocr_doc_preprocessor.py,HOCRDocPreprocessor,_parse_file,#HOCRDocPreprocessor#,45
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    word.unwrap()
+            for parent in root.find_all(attrs={"fonduer": "1"}):
+                if self.space:
+                    parent.string.replace_with(<a id="change">" ".join(parent.stripped_strings)</a>)
+                else:
+                    parent.string.replace_with("".join(parent.stripped_strings))
+                &#47&#47 Rmove the mark</code></pre><h3>After Change</h3><pre><code class='java'>
+                    word.unwrap()
+
+            &#47&#47 Clean-up
+            for i, parent in <a id="change">enumerate(root.find_all(attrs={"fonduer": "1"}))</a>:
+                &#47&#47 Concat consecutive NavigableString
+                parent.smooth()  &#47&#47 beautifulsoup4 &gt;= 4.8.0
+
+                &#47&#47 Remove linebreaks and excess spaces
+                &#47&#47 in reverse order b/c removing element from list in loop
+                <a id="change">for child in reversed(parent.contents):
+                    if isinstance(child, NavigableString):
+                        if child.strip() == "":  &#47&#47 remove if space or linebreak
+                            child.extract()
+                        else:
+                            tmp = re.sub(r"[\n\s]+", " " if self.space else "", child)
+                            n = NavigableString(tmp.strip())
+                            child.replace_with(n)
+               </a> del parent["fonduer"]
+
+        name = os.path.basename(fp)[: os.path.basename(fp).rfind(".")]
+        stable_id = self._get_stable_id(name)</code></pre><img src="38970274.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/43a50ab6a3f717c738c8abba16779be59878bf4b#diff-ee6c7623d427949f9a92df60c7d00cde83146c5f2e7dcba6947cc93fc1aaf85bL119' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 43a50ab6a3f717c738c8abba16779be59878bf4b</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/parser/preprocessors/hocr_doc_preprocessor.py</div><div id='class'> Class Name: HOCRDocPreprocessor</div><div id='method'> Method Name: _parse_file</div><BR><BR><div id='link'><a href='https://github.com/daniel-kukiela/nmt-chatbot/commit/4aafb1f432f7622bec2cb35b9d6a6165babd44d9#diff-6bb87854f62182076b9d47e5a3fa17d5fb46826b979e3292b7ae7bef07022cf4L174' target='_blank'>Link</a></div><div id='project'> Project Name: daniel-kukiela/nmt-chatbot</div><div id='commit'> Commit Name: 4aafb1f432f7622bec2cb35b9d6a6165babd44d9</div><div id='time'> Time: 2017-11-23</div><div id='author'> Author: daniel@kukiela.pl</div><div id='file'> File Name: inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/danforthcenter/plantcv/commit/ee7dc09812df5dded34adcde4267d9c754e3b655#diff-6deec1fc57d65cd4462ea88407ba222103689492a46804c64d01ad9b814c6dadL12' target='_blank'>Link</a></div><div id='project'> Project Name: danforthcenter/plantcv</div><div id='commit'> Commit Name: ee7dc09812df5dded34adcde4267d9c754e3b655</div><div id='time'> Time: 2019-09-11</div><div id='author'> Author: haleyschuhl@gmail.com</div><div id='file'> File Name: plantcv/plantcv/hyperspectral/read_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_data</div><BR>

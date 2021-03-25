@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    lattices.extend(args.lattice_list.readlines())
+    lattices = [path.strip() for path in lattices]
+    &#47&#47 Ignore empty lines in the lattice list.
+    lattices = <a id="change">filter(None, lattices)</a>
+    &#47&#47 Pick every Ith lattice, if --num-jobs is specified and &gt; 1.
+    if args.num_jobs &lt; 1:
+        print("Invalid number of jobs specified:", args.num_jobs)
+        sys.exit(1)
+    if (args.job &lt; 0) or (args.job &gt; args.num_jobs - 1):
+        print("Invalid job specified:", args.job)
+        sys.exit(1)
+    lattices = lattices[args.job::args.num_jobs]
+
+    file_type = TextFileType(&quotr&quot)
+    for index, path in enumerate(lattices):
+        logging.info("Reading word lattice: %s", path)
+        lattice_file = file_type(path)
+        <a id="change">lattice</a> = SLFLattice(lattice_file)
+
+        if not lattice.utterance_id is None:
+            utterance_id = lattice.utterance_id</code></pre><h3>After Change</h3><pre><code class='java'>
+    lattices.extend(args.lattice_list.readlines())
+    lattices = [path.strip() for path in lattices]
+    &#47&#47 Ignore empty lines in the lattice list.
+    lattices = list(<a id="change">filter(None, lattices)</a>)
+    &#47&#47 Pick every Ith lattice, if --num-jobs is specified and &gt; 1.
+    if args.num_jobs &lt; 1:
+        print("Invalid number of jobs specified:", args.num_jobs)
+        sys.exit(1)
+    if (args.job &lt; 0) or (args.job &gt; args.num_jobs - 1):
+        print("Invalid job specified:", args.job)
+        sys.exit(1)
+    lattices = lattices[args.job::args.num_jobs]
+
+    file_type = TextFileType(&quotr&quot)
+    for index, path in enumerate(lattices):
+        logging.info("Reading word lattice: %s", path)
+        lattice_file = file_type(path)
+        <a id="change">lattice</a> = SLFLattice(lattice_file)
+
+        if not lattice.utterance_id is None:
+            utterance_id = lattice.utterance_id</code></pre>

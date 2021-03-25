@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		maxval=np.sqrt(6.0*initialization_factor/(num_features+2.0*num_cells))
+	)
+)
+<a id="change">b_a = tf.Variable(tf.zeros([num_cells]))</a>
+
+W_o = tf.Variable(
+	tf.random_uniform(
+		[num_cells, num_classes],
+		minval=-np.sqrt(6.0*initialization_factor/(num_cells+num_classes)),
+		maxval=np.sqrt(6.0*initialization_factor/(num_cells+num_classes))
+	)
+)
+b_o = tf.Variable(tf.zeros([num_classes]))
+
+&#47&#47 Internal states
+&#47&#47
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+h = tf.zeros([batch_size, num_cells])
+a_max = tf.fill([batch_size, num_cells], -1E38)	&#47&#47 Start off with lowest number possible
+
+&#47&#47 Define model
+&#47&#47
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = <a id="change">tf.matmul(xh_join, W_a)+b_a</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	a_newmax = tf.maximum(a_max, a)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = <a id="change">tf.matmul(xh_join, W_a)</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	a_newmax = tf.maximum(a_max, a)</code></pre>

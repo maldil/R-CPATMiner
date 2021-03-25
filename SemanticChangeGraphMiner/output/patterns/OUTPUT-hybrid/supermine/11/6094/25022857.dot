@@ -1,0 +1,32 @@
+digraph G {
+subgraph cluster0 {
+1 [label="backward" a="32" s="7647,7660" l="9,1" shape="box"];
+7 [label="half" a="32" s="6498" l="6" shape="box"];
+8 [label="FieldAccess" a="22" s="6464" l="4" shape="box"];
+9 [label="IfStatement" a="25" s="6460,6468" l="4,2" shape="diamond"];
+11 [label="Assignment:=" a="7" s="6490" l="1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="backward" a="32" s="7835" l="10" shape="box"];
+3 [label="Assignment:=" a="7" s="7794" l="11" shape="box"];
+4 [label="scale_loss" a="32" s="7744,7769" l="11,1" shape="box"];
+5 [label="PyWithStatement" a="104" s="7730,7770" l="10,2" shape="diamond"];
+6 [label="SimpleName" a="42" s="" l="" shape="ellipse"];
+10 [label="Assignment:=" a="7" s="5001" l="3" shape="box"];
+label = "New";
+style="dotted";
+}
+3 -> 2 [label="_recv_"];
+4 -> 6 [label="_def_"];
+5 -> 2 [label="_control_"];
+5 -> 3 [label="_control_"];
+6 -> 5 [label="_cond_"];
+7 -> 11 [label="_para_"];
+8 -> 9 [label="_cond_"];
+9 -> 7 [label="_control_"];
+9 -> 11 [label="_control_"];
+10 -> 4 [label="_recv_"];
+11 -> 1 [label="_para_"];
+}

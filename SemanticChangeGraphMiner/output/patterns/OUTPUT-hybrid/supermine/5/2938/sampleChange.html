@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            S_2_r = fft(S_2_c, &quotC2R&quot, inverse=True)
+            S_2_r = unpad(S_2_r)
+
+            S[<a id="change">(n1, n2)</a>] = S_2_r
+
+    if vectorize:
+        sorted_keys = sorted(S.keys(), key=lambda x: (len(x),) + x)
+
+        <a id="change">S = [S[key] for key in sorted_keys]</a>
+
+        <a id="change">S = concatenate(S)</a>
+
+    return S
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    concatenate = backend.concatenate
+
+    &#47&#47 Define lists for output.
+    out_S_0, out_S_1, out_S_2 = [], <a id="change">[]</a>, []
+
+    U_r = pad(x)
+</code></pre>

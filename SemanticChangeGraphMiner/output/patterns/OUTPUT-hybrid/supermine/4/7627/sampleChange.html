@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if flag == 0:
+            tmp.append(train_samples[i])
+    z_samples = torch.zeros(len(tmp), num_visible, dtype=torch.double)
+    <a id="change">for i in range(len(tmp)):
+        for j in range(num_visible):
+            z_samples[i][j] = tmp[i][j]
+   </a> return z_samples
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    :rtype: torch.Tensor
+    
+    idx = (
+        <a id="change">torch</a>.tensor(train_bases == "Z", dtype=torch.uint8)
+        .all(dim=1)
+        .to(train_samples.device)
+    )</code></pre>

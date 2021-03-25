@@ -1,0 +1,41 @@
+<html><h3>1002cfbcc9f8182404fb058f959d625de2eabbfc,deslib/des/knora_e.py,KNORAE,estimate_competence,#KNORAE#,66
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier in the pool
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">competences = np.zeros(self.n_classifiers)</a>
+
+        <a id="change">for clf_index in range(self.n_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                results_neighbors = self.processed_dsel[idx_neighbors, clf_index]
+                indices_errors = np.where(results_neighbors == 0)[0]
+                if indices_errors.size != 0:
+                    competences[clf_index] = np.min(indices_errors)
+                else:
+                    competences[clf_index] = self.k
+       </a> return competences
+
+    def select(self, competences):
+        Selects all base classifiers that obtained a local accuracy of 100% in the region of competence</code></pre><h3>After Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier in the pool
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        results_neighbors = self.processed_dsel[idx_neighbors, :]
+
+        &#47&#47 Get the shape of the vector in order to know the number of samples, base classifiers and neighbors considered.
+        shape = results_neighbors.shape
+
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        <a id="change">competences = np.argmax(results_neighbors == 0, axis=1)</a>
+
+        &#47&#47 indices_errors = np.where(results_neighbors == 0)[0]
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47</code></pre><img src="658346.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 15</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-a4c99e88559f2f315192602a7e9754a6a9fdc70bc862629ea4ce273e92a11a21L66' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_e.py</div><div id='class'> Class Name: KNORAE</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-418b7e06c6963d234362daf596e7ecf369548db4acebef3dd2ed15c37ac1c1eeL68' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_u.py</div><div id='class'> Class Name: KNORAU</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-28b93bfe6b1142a40b9d900bbc57b3c332b5b2722d4b2696e6ef6ab2086818e0L69' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_p.py</div><div id='class'> Class Name: DESP</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-ba834480b14dcff5ca2fb081794cbf6a7a702949b4cf8ed0adaaab2a97994b32L81' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/ola.py</div><div id='class'> Class Name: OLA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-a4c99e88559f2f315192602a7e9754a6a9fdc70bc862629ea4ce273e92a11a21L66' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_e.py</div><div id='class'> Class Name: KNORAE</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-4aa9336c477916c68a0a0c1dd39a6df0343168ed578ac17b07ab57957c50d302L106' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knop.py</div><div id='class'> Class Name: KNOP</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/44bdf9be3b913a1a0e90115e45edbee192d01b90#diff-5f145097b3c169665a4c5d428644b451215257f8a1696f5227500aaa04f4bcfaL113' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 44bdf9be3b913a1a0e90115e45edbee192d01b90</div><div id='time'> Time: 2018-03-31</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/probabilistic.py</div><div id='class'> Class Name: Probabilistic</div><div id='method'> Method Name: estimate_competence</div><BR>

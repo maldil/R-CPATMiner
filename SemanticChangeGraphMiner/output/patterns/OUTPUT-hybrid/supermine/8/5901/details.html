@@ -1,0 +1,41 @@
+<html><h3>2bae518e899657e536572fa59df6e1587795e397,librosa/feature.py,,line_features,#,332
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      - 
+    &quot&quot&quot
+
+    <a id="change">N</a>, K = np.shape(S)
+    freq = np.transpose(np.linspace(0, sr/2, N))
+
+    <a id="change">slope = np.zeros((1, K))</a>
+    <a id="change">intercept = np.zeros((1, K))</a>
+
+    for k in range(0, K):
+        p = np.polyfit(freq, S[:, k], order)
+        slope[:, k] = <a id="change">p[0]</a>
+        intercept[:, k] = p[1]
+
+    return (slope, intercept)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 If we don&quott have a spectrogram, build one
+    if S is None:
+        &#47&#47 By default, use a magnitude spectrogram
+        S = <a id="change">np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))</a>
+    else:
+        &#47&#47 Infer n_fft from spectrogram shape
+        n_fft = (S.shape[0] - 1) * 2
+
+    &#47&#47 Compute the center frequencies of each bin
+    if freq is None:
+        freq = librosa.core.fft_frequencies(sr=sr, n_fft=n_fft)
+
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        coefficients = np.concatenate([[np.polyfit(freq_t, S_t, order)]
+                                       <a id="change">for</a> (freq_t, S_t) in zip(freq.T, S.T)],
+                                      axis=0).T
+
+    return coefficients</code></pre><img src="24477109.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/240d23ec41ee51c72a69fda93148cb534a6688ec#diff-204a1dcf58987e8bcf6c3f1bbb97de34573fc93748bbd8fd5310e35f8af61b31L95' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: 240d23ec41ee51c72a69fda93148cb534a6688ec</div><div id='time'> Time: 2020-08-05</div><div id='author'> Author: hoffman.sc@gmail.com</div><div id='file'> File Name: aif360/algorithms/inprocessing/celisMeta/StatisticalRate.py</div><div id='class'> Class Name: StatisticalRate</div><div id='method'> Method Name: getFuncValue</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/d8ab8131e19498c2b9bed8d218e4e46eedc7cf21#diff-af9205dff8054388c5cc5df35f98fcb9c7d49ace38c5ac9cf0b864cb00a37d6eL131' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: d8ab8131e19498c2b9bed8d218e4e46eedc7cf21</div><div id='time'> Time: 2012-10-20</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/tf_agc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: tf_agc</div><BR>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        )
+        &#47&#47 call model
+        dense_feat = self.normalizer.normalize(dense_feat)
+        <a id="change">dense_tensor = torch.tensor(dense_feat, dtype=torch.float)</a>
+        if self.tensorizer.device != "":
+            dense_tensor = dense_tensor.to(self.tensorizer.device)
+
+        sentence_embedding = self._forward(inputs, dense_tensor)
+        if self.concat_dense:
+            <a id="change">return torch.cat([sentence_embedding, dense_tensor], 1)</a>
+        else:
+            return sentence_embedding
+
+    @torch.jit.script_method</code></pre><h3>After Change</h3><pre><code class='java'>
+                if isinstance(result, torch.Tensor):
+                    result = torch.cat([result, result_extension], dim=0)
+                else:
+                    <a id="change">result.extend(result_extension)</a>
+
+                texts = texts[max_batch:]
+                dense_feat = dense_feat[max_batch:]
+</code></pre>

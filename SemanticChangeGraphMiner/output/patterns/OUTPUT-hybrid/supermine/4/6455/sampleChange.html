@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      file_pattern = os.path.join(image_dir, &quotpart-*&quot)
+      files = tf.gfile.Glob(file_pattern)
+
+      parse_fn = <a id="change">_parse_tfr if args.format == &quottfr&quot else _parse_csv</a>
+      ds = tf.data.TextLineDataset(files).map(parse_fn).batch(args.batch_size)
+      iterator = ds.make_initializable_iterator()
+      x, y_, y_val = iterator.get_next()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        ds = tf.data.TFRecordDataset(files)
+        parse_fn = _parse_tfr
+
+      <a id="change">ds = ds.shard(num_workers, task_index).repeat(args.epochs).shuffle(args.shuffle_size)</a>
+      ds = ds.map(parse_fn).batch(args.batch_size)
+      iterator = ds.make_initializable_iterator()
+      x, y_ = iterator.get_next()
+</code></pre>

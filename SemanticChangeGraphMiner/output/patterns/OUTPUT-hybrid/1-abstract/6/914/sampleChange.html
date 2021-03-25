@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 optimizer
+    self.disA_opt.load_state_dict(checkpoint[&quotdisA_opt&quot])
+    self.disA2_opt.load_state_dict(checkpoint[&quotdisA2_opt&quot])
+    <a id="change">self.disB_opt.load_state_dict(checkpoint[&quotdisB_opt&quot])</a>
+    self.disB2_opt.load_state_dict(checkpoint[&quotdisB2_opt&quot])
+    self.disContent_opt.load_state_dict(checkpoint[&quotdisContent_opt&quot])
+    self.enc_c_opt.load_state_dict(checkpoint[&quotenc_c_opt&quot])
+    <a id="change">self.enc_a_opt.load_state_dict(checkpoint[&quotenc_a_opt&quot])</a>
+    self.gen_opt.load_state_dict(checkpoint[&quotgen_opt&quot])
+    return checkpoint[&quotep&quot], checkpoint[&quottotal_it&quot]
+
+  def save(self, filename, ep, total_it):</code></pre><h3>After Change</h3><pre><code class='java'>
+    self.enc_a.load_state_dict(checkpoint[&quotenc_a&quot])
+    self.gen.load_state_dict(checkpoint[&quotgen&quot])
+    &#47&#47 optimizer
+    <a id="change">if train:
+      self.disA_opt.load_state_dict(checkpoint[&quotdisA_opt&quot])
+      self.disA2_opt.load_state_dict(checkpoint[&quotdisA2_opt&quot])
+      self.disB_opt.load_state_dict(checkpoint[&quotdisB_opt&quot])
+      self.disB2_opt.load_state_dict(checkpoint[&quotdisB2_opt&quot])
+      self.disContent_opt.load_state_dict(checkpoint[&quotdisContent_opt&quot])
+      self.enc_c_opt.load_state_dict(checkpoint[&quotenc_c_opt&quot])
+      self.enc_a_opt.load_state_dict(checkpoint[&quotenc_a_opt&quot])
+      self.gen_opt.load_state_dict(checkpoint[&quotgen_opt&quot])
+   </a> return checkpoint[&quotep&quot], checkpoint[&quottotal_it&quot]
+
+  def save(self, filename, ep, total_it):
+    state = {</code></pre>

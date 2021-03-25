@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Finally, we set all the mutants to the request in order to return it
+        new_url = request.url_object.copy()
+        new_url.set_path(path)
+        <a id="change">new_req = HTTPRequest(new_url, request.get_data(),
+                              request.headers, request.get_origin_req_host(),
+                              retries=request.retries_left)</a>
+
+        return new_req
+
+    def get_priority(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        new_url = request.url_object.copy()
+        new_url.set_path(path)
+
+        <a id="change">new_req = request.copy()</a>
+        <a id="change">new_req.set_uri(new_url)</a>
+
+        return new_req
+
+    def get_priority(self):</code></pre>

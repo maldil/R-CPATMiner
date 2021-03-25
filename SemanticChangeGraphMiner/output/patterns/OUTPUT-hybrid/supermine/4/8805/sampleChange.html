@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        keep_input = _get_input_filter(width, width_threshold,
+                                       length, length_threshold)
+        data_tuple = <a id="change">[image, label, length, text, filename]</a>
+        width,data_tuple = tf.contrib.training.bucket_by_sequence_length(
+            input_length=width,
+            tensors=data_tuple,
+            bucket_boundaries=boundaries,</code></pre><h3>After Change</h3><pre><code class='java'>
+                              (element, width_threshold, length_threshold, training, data_tuples), 
+                              num_parallel_calls=num_threads)
+        
+        <a id="change">dataset = dataset.filter(lambda image, 
+                                 width, 
+                                 label, 
+                                 length, 
+                                 text, 
+                                 filename, 
+                                 get_input: 
+                                 get_input != None)</a>
+
+        dataset = dataset.apply(tf.contrib.data.bucket_by_sequence_length
+                                (element_length_func=_element_length_fn,
+                                 bucket_batch_sizes=np.full
+                                 (len(boundaries) + 1, batch_size),
+                                 bucket_boundaries=boundaries))
+
+        <a id="change">iterator = dataset.make_one_shot_iterator()</a>
+        image, width, label, length, text, filename, get_input = iterator.get_next()
+
+        label = tf.deserialize_many_sparse(label, tf.int64) &#47&#47 post-batching...
+        label = tf.cast(label, tf.int32) &#47&#47 for ctc_loss</code></pre>

@@ -1,0 +1,19 @@
+<html><h3>78f46822aec6cea5e216e1f7404d351835c54346,yarll/agents/sac.py,SAC,train,#SAC#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            values = self.value_network(state0_batch)
+            value_loss = tf.reduce_mean(tf.square(values - value_target))
+        advantage = tf.stop_gradient(action_logprob - new_softq + values)
+        with <a id="change">tf.GradientTape()</a> as actor_tape:
+            _, action_logprob = self.actor_network(state0_batch)
+            actor_loss = tf.reduce_mean(action_logprob * advantage)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        with tf.GradientTape() as softq_tape:
+            softq = self.softq_network(state0_batch, action_batch)
+            softq_loss = tf.reduce_mean(tf.square(softq - softq_targets))
+        with <a id="change">tf.GradientTape()</a> as value_tape:
+            values = self.value_network(state0_batch)
+        with tf.GradientTape() as actor_tape:
+            actions, action_logprob = self.actor_network(state0_batch)</code></pre><img src="798596.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/78f46822aec6cea5e216e1f7404d351835c54346#diff-6b52b386c0b630c9582cbe2d41fb4eee1eb7f2ab2cec377dd486b5406f4ccb8dL90' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 78f46822aec6cea5e216e1f7404d351835c54346</div><div id='time'> Time: 2019-06-10</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/sac.py</div><div id='class'> Class Name: SAC</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/78f46822aec6cea5e216e1f7404d351835c54346#diff-6b52b386c0b630c9582cbe2d41fb4eee1eb7f2ab2cec377dd486b5406f4ccb8dL92' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 78f46822aec6cea5e216e1f7404d351835c54346</div><div id='time'> Time: 2019-06-10</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/sac.py</div><div id='class'> Class Name: SAC</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/85f529286a472d3be2aff4e70551829252dd6ac4#diff-f9a4db9024a5de5f0b6c85e0f102ab2ffe5c1654df513ae6002de90064a9bec1L68' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 85f529286a472d3be2aff4e70551829252dd6ac4</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: dan.anghel@gmail.com</div><div id='file'> File Name: research/delf/delf/python/training/model/delf_model_test.py</div><div id='class'> Class Name: DelfTest</div><div id='method'> Method Name: test_train_step</div><BR>

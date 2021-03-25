@@ -1,0 +1,25 @@
+<html><h3>f4beaac559e00a3676d942dc7e8fea69efc01cfe,catalyst/metrics/hitrate.py,,hitrate,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    k = min(outputs.size(1), k)
+
+    _, indices_for_sort = <a id="change">outputs.sort(descending=True, dim=-1)</a>
+    true_sorted_by_preds = torch.gather(
+        targets, dim=-1, index=indices_for_sort
+    )
+    true_sorted_by_pred_shrink = true_sorted_by_preds[:, :k]</code></pre><h3>After Change</h3><pre><code class='java'>
+    results = []
+
+    targets_sort_by_outputs = process_recsys_components(outputs, targets)
+    <a id="change">for k in topk:
+        k = min(outputs.size(1), k)
+        hits_score = torch.sum(targets_sort_by_outputs[:, :k], dim=1) / k
+        results.append(torch.mean(hits_score))
+
+   </a> return results
+
+
+__all__ = ["hitrate"]</code></pre><img src="39168277.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7a8383a84dc1ce059b7395fab2e50c85cdfa42ef4fb635e1a1cf4b4905f4c682L39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/hitrate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hitrate</div><BR><BR><div id='link'><a href='https://github.com/ANTsX/ANTsPy/commit/6286ba014120ce05b49302007a0a28feed6d98c4#diff-491a136485a82a1ec087158a1811d7c5c7706538d84208ad6fc61f4079a9299cL136' target='_blank'>Link</a></div><div id='project'> Project Name: ANTsX/ANTsPy</div><div id='commit'> Commit Name: 6286ba014120ce05b49302007a0a28feed6d98c4</div><div id='time'> Time: 2020-09-10</div><div id='author'> Author: stnava@gmail.com</div><div id='file'> File Name: ants/segmentation/joint_label_fusion.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: joint_label_fusion</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/f74a4a251d395b3e175f99845b01ece0e50a79c3#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL834' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: f74a4a251d395b3e175f99845b01ece0e50a79c3</div><div id='time'> Time: 2014-08-24</div><div id='author'> Author: nipunreddevil@gmail.com</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: select_top_k</div><BR>

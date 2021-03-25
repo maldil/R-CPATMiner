@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    value_losses_clipped = (value_pred_clipped - return_batch).pow(2)
+                    value_loss = .5 * torch.max(value_losses, value_losses_clipped).mean()
+                else:
+                    value_loss = 0.5 * <a id="change">F.mse_loss(return_batch, values)</a>
+
+                self.optimizer.zero_grad()
+                (value_loss * self.value_loss_coef + action_loss -
+                 dist_entropy * self.entropy_coef).backward()</code></pre><h3>After Change</h3><pre><code class='java'>
+                    value_losses_clipped = (value_pred_clipped - return_batch).pow(2)
+                    value_loss = 0.5 * torch.max(value_losses, value_losses_clipped).mean()
+                else:
+                    value_loss = 0.5 * <a id="change">(return_batch - values).pow(2).mean()</a>
+
+                self.optimizer.zero_grad()
+                (value_loss * self.value_loss_coef + action_loss -
+                 dist_entropy * self.entropy_coef).backward()</code></pre>

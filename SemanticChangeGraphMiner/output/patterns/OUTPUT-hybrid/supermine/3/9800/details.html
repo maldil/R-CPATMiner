@@ -1,0 +1,21 @@
+<html><h3>835ebfd174f6930ecce3a687bc6de852a4910f98,contents/12_Proximal_Policy_Optimization/simply_PPO.py,PPO,__init__,#PPO#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            surr = ratio * self.tfadv
+        if METHOD[&quotname&quot] == &quotkl_pen&quot:
+            self.tflam = tf.placeholder(tf.float32, None, &quotlambda&quot)
+            with <a id="change">tf.variable_scope(&quotloss&quot)</a>:
+                kl = tf.stop_gradient(kl_divergence(oldpi, pi))
+                self.kl_mean = tf.reduce_mean(kl)
+                self.aloss = -(tf.reduce_mean(surr - self.tflam * kl))</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 actor
+        pi, pi_params = self._build_anet(&quotpi&quot, trainable=True)
+        oldpi, oldpi_params = self._build_anet(&quotoldpi&quot, trainable=False)
+        <a id="change">with tf.variable_scope(&quotsample_action&quot):
+            self.sample_op = tf.squeeze(pi.sample(1), axis=0)       &#47&#47 choosing action
+       </a> with tf.variable_scope(&quotupdate_oldpi&quot):
+            self.update_oldpi_op = [oldp.assign(p) for p, oldp in zip(pi_params, oldpi_params)]
+
+        self.tfa = tf.placeholder(tf.float32, [None, A_DIM], &quotaction&quot)</code></pre><img src="37441866.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/835ebfd174f6930ecce3a687bc6de852a4910f98#diff-b95bec85d7f391cc72b54deb2fdaefe11a67fdc9337ad847a713aa804ab6d4eaL37' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: 835ebfd174f6930ecce3a687bc6de852a4910f98</div><div id='time'> Time: 2017-08-13</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/12_Proximal_Policy_Optimization/simply_PPO.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/asyml/texar/commit/ebec86aebcbe1a0044cb0991c964f95eae3f752c#diff-c82e6c302f9b5d252dc3ac3d384b072601eefb515472856740bf0a217f992757L188' target='_blank'>Link</a></div><div id='project'> Project Name: asyml/texar</div><div id='commit'> Commit Name: ebec86aebcbe1a0044cb0991c964f95eae3f752c</div><div id='time'> Time: 2019-11-16</div><div id='author'> Author: pengzhi.gao@petuum.com</div><div id='file'> File Name: texar/tf/modules/decoders/dynamic_decode.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dynamic_decode</div><BR><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/1a292afa66250814e3fa3fab26e4f7e5140baf31#diff-b95bec85d7f391cc72b54deb2fdaefe11a67fdc9337ad847a713aa804ab6d4eaL36' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: 1a292afa66250814e3fa3fab26e4f7e5140baf31</div><div id='time'> Time: 2017-08-10</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/12_Proximal_Policy_Optimization/simply_PPO.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: __init__</div><BR>

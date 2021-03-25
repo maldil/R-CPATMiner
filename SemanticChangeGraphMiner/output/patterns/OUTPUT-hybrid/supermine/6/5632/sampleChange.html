@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if is_list and isinstance(subseq, Objects):
+                    subseq = subseq.data
+                subseqs.append(subseq)
+            queue.append(<a id="change">tuple(subseqs)</a>)
+            i += batch_size
+        return queue
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            subseqs = []
+            for sequence in sequences:
+                if isinstance(sequence, list):
+                    <a id="change">subseq = [sequence[i] for i in idx_batch]</a>
+                elif isinstance(sequence, tuple):
+                    subseq = tuple(sequence[i] for i in idx_batch)  &#47&#47 type: ignore
+                else:
+                    subseq = sequence[idx_batch]  &#47&#47 type: ignore</code></pre>

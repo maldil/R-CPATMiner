@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def generate(self, dataset):
+        from itertools import product, chain
+
+        <a id="change">for part in dataset.parts():
+            part.edges = []
+
+            for ann_1, ann_2 in product(
+                    (ann for ann in chain(part.annotations, part.predicted_annotations) if ann.class_id == self.entity1_class),
+                    (ann for ann in chain(part.annotations, part.predicted_annotations) if ann.class_id == self.entity2_class)):
+
+                index_1 = part.get_sentence_index_for_annotation(ann_1)
+                index_2 = part.get_sentence_index_for_annotation(ann_2)
+
+                if index_1 == index_2 and index_1 is not None:
+                    part.edges.append(
+                        Edge(ann_1, ann_2, self.relation_type, index_1, part))
+
+
+</a>class WordFilterEdgeGenerator(EdgeGenerator):
+    
+    Simple implementation of generating edges between the two entities
+    if they are contained in the same sentence AND the sentence</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def generate(self, dataset):
+        import warnings
+        <a id="change">warnings.warn(&quotUse `SentenceDistanceEdgeGenerator` directly. This will be deleted&quot, DeprecationWarning)</a>
+
+        super().generate(dataset)
+
+</code></pre>

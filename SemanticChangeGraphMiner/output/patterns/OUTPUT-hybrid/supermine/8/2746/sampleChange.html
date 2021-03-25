@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    @audio_data.setter
+    def audio_data(self, value):
+        <a id="change">assert isinstance(value, np.ndarray), &quotType of self.audio_data must be np.ndarray!&quot</a>
+
+        if value.ndim &gt; 1 and value.shape[constants.CHAN_INDEX] &gt; value.shape[constants.LEN_INDEX]:
+            warnings.warn(&quotself.audio_data is not as we expect it. Transposing signal...&quot)
+            value = value.T</code></pre><h3>After Change</h3><pre><code class='java'>
+        if value is None:
+            self._audio_data = None
+
+        <a id="change">if not isinstance(value, np.ndarray):
+            raise ValueError(&quotType of self.audio_data must be of type np.ndarray!&quot)
+
+       </a> if value.ndim &gt; 1 and value.shape[constants.CHAN_INDEX] &gt; value.shape[constants.LEN_INDEX]:
+            warnings.warn(&quotself.audio_data is not as we expect it. Transposing signal...&quot)
+            value = value.T
+</code></pre>

@@ -1,0 +1,21 @@
+<html><h3>de00082780be884fc90e0113d323bfd63006ffba,app/datasets/wsj0.py,Wsj0Dataset,epoch,#Wsj0Dataset#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            examples=indices, batch_size=batch_size).get_request_iterator()
+        for req in req_itor:
+            data_pt = dataset.get_data(handle, req)
+            <a id="change">yield data_pt</a>
+        dataset.close(handle)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for req in req_itor:
+            data_pt = dataset.get_data(handle, req)
+            max_len = max(map(len, data_pt[0]))
+            spectra_li = <a id="change">[np.pad(
+                x, [(0, max_len - len(x)), (0, 0)],
+                mode=&quotconstant&quot) for x in data_pt[0]]</a>
+            spectra = np.stack(spectra_li)
+            spectra = np.reshape(
+                spectra, [
+                    hparams.BATCH_SIZE,</code></pre><img src="747979.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-d990b775bef0165c6a1d51f35d1a6e2b2a721ef0521b384f742dc55d986bac60L50' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: app/datasets/wsj0.py</div><div id='class'> Class Name: Wsj0Dataset</div><div id='method'> Method Name: epoch</div><BR><BR><div id='link'><a href='https://github.com/foxbook/atap/commit/fcbec86ccf658ad53011666497bb1c9bb943cf0d#diff-adb96641bb4a2e6baebb3589fd84a2ec83e522d2bcd1371915f3198f823ccd44L117' target='_blank'>Link</a></div><div id='project'> Project Name: foxbook/atap</div><div id='commit'> Commit Name: fcbec86ccf658ad53011666497bb1c9bb943cf0d</div><div id='time'> Time: 2018-10-29</div><div id='author'> Author: benjamin@bengfort.com</div><div id='file'> File Name: snippets/ch03/preprocess.py</div><div id='class'> Class Name: Preprocessor</div><div id='method'> Method Name: transform</div><BR><BR><div id='link'><a href='https://github.com/janfreyberg/superintendent/commit/b43b46e835c403a752286ca2c612891d345045db#diff-6e90e1f5662c0f8e5e07a055f15cf93a259569cf14d675b5f392b8e2c010700fL9' target='_blank'>Link</a></div><div id='project'> Project Name: janfreyberg/superintendent</div><div id='commit'> Commit Name: b43b46e835c403a752286ca2c612891d345045db</div><div id='time'> Time: 2018-05-09</div><div id='author'> Author: jan.freyberg@gmail.com</div><div id='file'> File Name: superintendent/iterator_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _default_data_iterator</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/59a4736028fea991396643e361d0488c7c96736d#diff-a971749d15e3650612d931071655e1aaa68f3744097600135ec5c2b5fe3f0732L313' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 59a4736028fea991396643e361d0488c7c96736d</div><div id='time'> Time: 2014-12-02</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/elecmeter.py</div><div id='class'> Class Name: ElecMeter</div><div id='method'> Method Name: power_series</div><BR>

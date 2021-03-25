@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                  "series file in the uploaded archive, and "
+                                  "that the file names match the first column "
+                                  "of the header.")
+    <a id="change">if &quottarget&quot in header:
+        targets = header[&quottarget&quot]
+    elif &quotclass&quot in header:
+        targets = header[&quotclass&quot]
+    else:
+        targets = pd.Series([None], index=header.index)
+   </a> feature_data = header.drop([&quottarget&quot, &quotclass&quot], axis=1, errors=&quotignore&quot)
+    return targets, feature_data
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                                &quotclass_label&quot]}, inplace=True)
+    labels = (header.label if &quotlabel&quot in header
+              else pd.Series([None], index=header.index))
+    feature_data = <a id="change">header.drop([&quotlabel&quot, &quotclass&quot], axis=1, errors=&quotignore&quot)</a>
+    return labels, feature_data
+
+
+def parse_and_store_ts_data(data_path, output_dir, header_path=None,</code></pre>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_download_file(tmpdir):
+    with requests_mock.mock() as m:
+        m.get(requests_mock.ANY, text="")
+        path = <a id="change">os.path.join(tmpdir, "somefilepath")</a>
+        utils.download_file("https://someurl", path)
+        assert os.path.exists(path)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    with requests_mock.mock() as m:
+        m.get(requests_mock.ANY, text="")
+        &#47&#47 convert to string to make python&lt;3.6 happy
+        path = <a id="change">str(tmpdir.join("somefilepath"))</a>
+        utils.download_file("https://someurl", path)
+        assert os.path.exists(path)
+</code></pre>

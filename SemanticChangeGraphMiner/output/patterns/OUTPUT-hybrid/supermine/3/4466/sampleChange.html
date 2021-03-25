@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	model = Model(loader.charList, useBeamSearch)
+
+	&#47&#47 save characters of model for inference mode
+	<a id="change">open(fnCharList, &quotw&quot).write(str().join(loader.charList))</a>
+
+	print(&quotValidate NN&quot)
+	loader.validationSet()
+	numOK = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+		for i in range(len(recognized)):
+			dist = editdistance.eval(recognized[i], batch.gtTexts[i])
+			numErr += dist
+			<a id="change">numTotal += len(batch.gtTexts[i])</a>
+			print(&quot[OK]&quot if dist==0 else &quot[ERR:%d]&quot % dist,&quot"&quot + batch.gtTexts[i] + &quot"&quot, &quot-&gt;&quot, &quot"&quot + recognized[i] + &quot"&quot)
+	
+	&#47&#47 print validation result
+	charErrorRate = numErr / numTotal
+	<a id="change">print(&quotCharacter error rate: %f%%&quot % (charErrorRate*100.0))</a>
+	return charErrorRate
+
+
+def infer(model, fnImg):</code></pre>

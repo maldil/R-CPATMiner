@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  def initialize(self):
+    &#47&#47 Get config params, setting the RDSE resolution
+    modelParams = getScalarMetricWithTimeOfDayAnomalyParams(
+      <a id="change">self.dataSet.data["value"]</a>, minResolution=0.001)["modelConfig"]
+
+    self._setupEncoderParams(
+      modelParams["modelParams"]["sensorParams"]["encoders"])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  def initialize(self):
+    &#47&#47 Get config params, setting the RDSE resolution
+    <a id="change">rangePadding = abs(self.inputMax - self.inputMin) * 0.2</a>
+
+    modelParams = getScalarMetricWithTimeOfDayAnomalyParams(
+      metricData=[0],
+      minVal=self.inputMin-rangePadding,
+      maxVal=<a id="change">self.inputMax+rangePadding</a>,
+      minResolution=0.001
+    )["modelConfig"]
+</code></pre>

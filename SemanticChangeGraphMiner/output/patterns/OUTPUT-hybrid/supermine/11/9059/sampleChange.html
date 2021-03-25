@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            mu, std = model.predict(X, return_std=True)
+
+    &#47&#47 make sure mu and std have the same shape so we can divide them below
+    <a id="change">std = std.reshape(mu.shape)</a>
+
+    values = np.zeros_like(mu)
+    mask = std &gt; 0
+    improve = y_opt - xi - mu[mask]</code></pre><h3>After Change</h3><pre><code class='java'>
+            mu, std = model.predict(X, return_std=True)
+
+    &#47&#47 check dimensionality of mu, std so we can divide them below
+    <a id="change">if (mu.ndim != 1) or (std.ndim != 1):
+        raise ValueError("mu and std are {}-dimensional and {}-dimensional, "
+                         "however both must be 1-dimensional. Did you train "
+                         "your model with an (N, 1) vector instead of an "
+                         "(N,) vector?"
+                         .format(mu.ndim, std.ndim))
+
+   </a> values = np.zeros_like(mu)
+    mask = std &gt; 0
+    improve = y_opt - xi - mu[mask]
+    scaled = improve / std[mask]</code></pre>

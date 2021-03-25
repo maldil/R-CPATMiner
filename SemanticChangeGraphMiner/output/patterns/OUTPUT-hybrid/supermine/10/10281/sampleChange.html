@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      number of boxes detected for each sample in the batch.
+
+  
+  <a id="change">_, _, width, _ = _get_shape(height_width_predictions, 4)</a>
+
+  peak_spatial_indices = flattened_indices_from_row_col_indices(
+      y_indices, x_indices, width)
+  y_indices = _to_float32(y_indices)</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 tf_gather_nd instead and here we prepare the indices for that.
+  combined_indices = tf.stack([
+      _multi_range(batch_size, value_repetitions=num_boxes),
+      tf.reshape(y_indices, <a id="change">[-1]</a>),
+      tf.reshape(x_indices, [-1])
+  ], axis=1)
+  new_height_width = tf.gather_nd(height_width_predictions, combined_indices)
+  new_height_width = tf.reshape(new_height_width, [batch_size, num_boxes, -1])
+
+  new_offsets = tf.gather_nd(offset_predictions, combined_indices)
+  <a id="change">offsets = tf.reshape(new_offsets, [batch_size, num_boxes, -1])</a>
+
+  y_indices = _to_float32(y_indices)
+  x_indices = _to_float32(x_indices)
+</code></pre>

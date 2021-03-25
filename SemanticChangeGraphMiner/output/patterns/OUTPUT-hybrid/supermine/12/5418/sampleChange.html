@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __init__(self, mean_vec, cov_matrix):
+
+        <a id="change">if not isinstance(mean_vec, np.matrix):
+            if isinstance(mean_vec, (np.ndarray, list, tuple, set, frozenset)):
+                length = len(mean_vec)
+                mean_vec = np.matrix(mean_vec)
+                mean_vec = np.reshape(mean_vec, (1, length))
+            else:
+                raise TypeError("mean_vec should be a 1d array type object")
+       </a> mean_vec = np.reshape(mean_vec, (len(mean_vec), 1))
+        if not isinstance(cov_matrix, np.matrix):
+            raise TypeError(
+                "cov_matrix must be numpy.matrix type object")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def __init__(self, mean_vec, cov_matrix):
+
+        <a id="change">if isinstance(mean_vec, (np.matrix, np.ndarray, list, tuple, set, frozenset)):
+            mean_vec = np.array(mean_vec).flatten()
+        else:
+            raise TypeError("mean_vec should be a 1d array type object")
+       </a> mean_vec = np.matrix(np.reshape(mean_vec, (len(mean_vec), 1)))
+
+        if not isinstance(cov_matrix, np.matrix):
+            raise TypeError(</code></pre>

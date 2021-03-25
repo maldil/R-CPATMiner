@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+kernel_integrations_var = os.getenv("KAGGLE_KERNEL_INTEGRATIONS")
+
+def init():
+    bq_user_jwt = <a id="change">os.getenv("KAGGLE_USER_SECRETS_TOKEN")</a>
+    if kaggle_proxy_token or bq_user_jwt:
+        from google.auth import credentials, environment_vars
+        from google.cloud import bigquery
+        from google.cloud.bigquery._http import Connection</code></pre><h3>After Change</h3><pre><code class='java'>
+kernel_integrations_var = os.getenv("KAGGLE_KERNEL_INTEGRATIONS")
+
+def init():
+    is_jwe_set = <a id="change">"KAGGLE_USER_SECRETS_TOKEN" in os.environ</a>
+    if kaggle_proxy_token or is_jwe_set:
+        init_bigquery()
+    <a id="change">if is_jwe_set:
+        if get_integrations().has_gcs():
+            init_gcs()
+
+
+</a>def init_bigquery():
+    from google.auth import credentials, environment_vars
+    from google.cloud import bigquery
+    from google.cloud.bigquery._http import Connection</code></pre>

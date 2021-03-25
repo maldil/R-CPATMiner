@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            tf.nn.sigmoid_cross_entropy_with_logits(h, self.Y)
+        )
+        self.train_fn = tf.train.ProximalGradientDescentOptimizer(
+            learning_rate=<a id="change">tf.cast(self.lr, dtype=tf.float32)</a>,
+            l1_regularization_strength=<a id="change">tf.cast(self.l1_penalty, tf.float32)</a>,
+            l2_regularization_strength=tf.cast(self.l2_penalty, tf.float32),
+        ).minimize(self.loss)
+        self.prediction = tf.nn.sigmoid(h)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Define training variables
+        sparse_ids = tf.SparseTensor(self.indices, self.ids, self.shape)
+        sparse_vals = tf.SparseTensor(self.indices, self.weights, self.shape)
+        s1, s2 = <a id="change">self</a>.seed, <a id="change">self.seed + 1</a>
+        w = tf.Variable(tf.random_normal((self.d, 1), stddev=0.01, seed=s1))
+        b = tf.Variable(tf.random_normal((1, 1), stddev=0.01, seed=s2))
+        z = tf.nn.embedding_lookup_sparse(
+            params=w, sp_ids=sparse_ids, sp_weights=sparse_vals, combiner=&quotsum&quot</code></pre>

@@ -1,0 +1,45 @@
+<html><h3>1e9c3ee592be5e11dcce932a73009488d6f85474,ch17/02_imag.py,,,#,78
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    net_em = i2a.EnvironmentModel(envs[0].observation_space.shape, envs[0].action_space.n)
+    net.load_state_dict(torch.load(args.model, map_location=lambda storage, loc: storage))
+    if args.cuda:
+        <a id="change">net.cuda()</a>
+        net_em.cuda()
+    print(net_em)
+    optimizer = optim.Adam(net_em.parameters(), lr=LEARNING_RATE)
+
+    step_idx = 0
+    best_loss = np.inf
+    with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+        for mb_obs, mb_obs_next, mb_actions, mb_rewards, done_rewards, done_steps in iterate_batches(envs, net, cuda=args.cuda):
+            if len(done_rewards) &gt; 0:
+                m_reward = np.mean(done_rewards)
+                m_steps = np.mean(done_steps)
+                print("%d: done %d episodes, mean reward=%.2f, steps=%.2f" % (
+                    step_idx, len(done_rewards), m_reward, m_steps))
+                tb_tracker.track("total_reward", m_reward, step_idx)
+                tb_tracker.track("total_steps", m_steps, step_idx)
+
+            obs_v = <a id="change">Variable(torch.from_numpy(mb_obs))</a>
+            obs_next_v = Variable(torch.from_numpy(mb_obs_next))
+            actions_t = torch.LongTensor(mb_actions.tolist())
+            rewards_v = <a id="change">Variable(torch.from_numpy(mb_rewards))</a>
+            if <a id="change">args</a>.cuda:
+                <a id="change">obs_v = obs_v.cuda()</a>
+                actions_t = actions_t.cuda()
+                obs_next_v = <a id="change">obs_next_v.cuda()</a>
+                <a id="change">rewards_v = rewards_v.cuda()</a>
+
+            optimizer.zero_grad()
+            out_obs_next_v, out_reward_v = net_em(obs_v.float()/255, actions_t)
+            loss_obs_v = F.mse_loss(out_obs_next_v, obs_next_v)</code></pre><h3>After Change</h3><pre><code class='java'>
+            optimizer.zero_grad()
+            out_obs_next_v, out_reward_v = net_em(obs_v.float()/255, actions_t)
+            loss_obs_v = F.mse_loss(out_obs_next_v.squeeze(-1), obs_next_v)
+            loss_rew_v = F.mse_loss(<a id="change">out_reward_v.squeeze(-1)</a>, rewards_v)
+            loss_total_v = OBS_WEIGHT * loss_obs_v + REWARD_WEIGHT * loss_rew_v
+            loss_total_v.backward()
+            optimizer.step()</code></pre><img src="12331197.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/1e9c3ee592be5e11dcce932a73009488d6f85474#diff-4167e56f1146ee4586776221565ff5ec0cdeed70670f15816d5f232f757fbd6aL81' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 1e9c3ee592be5e11dcce932a73009488d6f85474</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch17/02_imag.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-76ef45280999506380a1cd22adfc9b9fd61476500ae25b7339a77ddf0a7423ffL91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/03_train_trpo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/1e9c3ee592be5e11dcce932a73009488d6f85474#diff-f0bf571463d6a24e7ec7c08e3b48b5dea2f2559833e5c8491ce3a32a1e0aab1bL154' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 1e9c3ee592be5e11dcce932a73009488d6f85474</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch17/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_a2c</div><BR>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    with open(log_file_path, "r") as f:
+        log_file_tail = f.read().splitlines()[log_line_num]
+    top5_err = re.findall(r"\d+\.\d+", <a id="change">re</a>.findall(r", err-top5=\d+\.\d+", log_file_tail)[0])[0].split(".")[1]
+
+    sha1_value = calc_sha1(model_file_path)
+
+    <a id="change">dst_model_file_name</a> = "{}-{}-{}.{}".format(model_name, top5_err, sha1_value[:8], dst_model_file_ext)
+    dst_model_file_path = os.path.join(dst_dir_path, dst_model_file_name)
+    os.rename(model_file_path, dst_model_file_path)
+    os.rename(log_file_path, dst_model_file_path + ".log")</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    with open(log_file_path, "r") as f:
+        log_file_tail = f.read().splitlines()[log_line_num]
+    err5_str = <a id="change">re.findall(r", err-top5=\d+\.\d+", log_file_tail)</a>
+    if len(err5_str) != 0:
+        top5_err = re.findall(r"\d+\.\d+", err5_str[0])[0].split(".")[1]
+    else:
+        with open(log_file_path, "r") as f:
+            log_file_tail = f.read().splitlines()[log_line_num - 1]
+        err5_str = re.findall(r", err-top5=\d+\.\d+", log_file_tail)
+        top5_err = re.findall(r"\d+\.\d+", err5_str[0])[0].split(".")[1]
+
+    sha1_value = calc_sha1(model_file_path)
+
+    <a id="change">dst_model_file_name</a> = "{}-{}-{}.{}".format(model_name, top5_err, sha1_value[:8], dst_model_file_ext)
+    dst_model_file_path = os.path.join(dst_dir_path, dst_model_file_name)
+    os.rename(model_file_path, dst_model_file_path)
+    os.rename(log_file_path, dst_model_file_path + ".log")</code></pre>

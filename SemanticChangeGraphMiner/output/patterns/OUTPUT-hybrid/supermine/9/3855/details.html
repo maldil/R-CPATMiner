@@ -1,0 +1,35 @@
+<html><h3>90b78b1379b3423aa3b4b5d0de7313f88bda23ab,chainercv/utils/mask/mask_to_bbox.py,,mask_to_bbox,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mask = cuda.to_cpu(mask)
+
+    bbox = []
+    <a id="change">for msk in mask:
+        where = np.argwhere(msk)
+        if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+        bbox.append((y_min, x_min, y_max, x_max))
+   </a> if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    instance_index, ys, xs = xp.nonzero(mask)
+    bbox = xp.zeros((R, 4), dtype=np.float32)
+    <a id="change">for i in range(R):
+        ys_i = ys[instance_index == i]
+        xs_i = xs[instance_index == i]
+        if len(ys_i) == 0:
+            continue
+        y_min = ys_i.min()
+        x_min = xs_i.min()
+        y_max = ys_i.max() + 1
+        x_max = xs_i.max() + 1
+        bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)
+   </a> return bbox
+</code></pre><img src="17032337.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/6e6c12425a787d8c954ce5c31ceed59cdd531001#diff-3896ce7d43d89b990c72bafaf6d1ee3dcea25d3ff78eb238ad6423daf5cd74feL67' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 6e6c12425a787d8c954ce5c31ceed59cdd531001</div><div id='time'> Time: 2018-05-20</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/ctc_decoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: greedy_decoder</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR>

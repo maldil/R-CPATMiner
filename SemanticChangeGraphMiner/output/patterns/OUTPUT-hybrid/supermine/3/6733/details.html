@@ -1,0 +1,23 @@
+<html><h3>83d80c5a19326a516b4ab54339c27f8cac349693,data_utils/lazy_loader.py,,make_lazy,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    lenpath = os.path.join(lazypath, data_type+&quot.len.pkl&quot)
+    if not torch.distributed._initialized or torch.distributed.get_rank() == 0:
+        with open(datapath, &quotw&quot) as f:
+            f.write(<a id="change">&quot&quot.join(strs)</a>)
+        str_ends = list(accumulate(map(len, strs)))
+        pkl.dump(str_ends, open(lenpath, &quotwb&quot))
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        with open(datapath, &quotwb&quot) as f:
+            str_ends = []
+            str_cnt = 0
+            <a id="change">for s in strs:
+                f.write(s.encode(&quotutf-8&quot))
+                str_cnt += len(s)
+                str_ends.append(str_cnt)
+       </a> pkl.dump(str_ends, open(lenpath, &quotwb&quot))
+    else:
+        while not os.path.exists(lenpath):
+            time.sleep(1)</code></pre><img src="26509895.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NVIDIA/sentiment-discovery/commit/83d80c5a19326a516b4ab54339c27f8cac349693#diff-6fc3374fcee26481b869b10321daa5f595daab615a8d88db1e972df655748bc8L32' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/sentiment-discovery</div><div id='commit'> Commit Name: 83d80c5a19326a516b4ab54339c27f8cac349693</div><div id='time'> Time: 2018-06-14</div><div id='author'> Author: raulpuric@berkeley.edu</div><div id='file'> File Name: data_utils/lazy_loader.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: make_lazy</div><BR><BR><div id='link'><a href='https://github.com/yangyanli/PointCNN/commit/632ffd19e4edb2077b2c27a50f1654b7453797e6#diff-5cc3f96e614281a5a614c06547d169d46007e86499d10bfbd30d89ed61f9ee9fL21' target='_blank'>Link</a></div><div id='project'> Project Name: yangyanli/PointCNN</div><div id='commit'> Commit Name: 632ffd19e4edb2077b2c27a50f1654b7453797e6</div><div id='time'> Time: 2019-03-28</div><div id='author'> Author: burui11087@gmail.com</div><div id='file'> File Name: data_conversions/prepare_semantic3d_filelists.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/hunkim/PyTorchZeroToAll/commit/55b880469ced115de9949d5d25ff835dabbb2caa#diff-cf9203a373ac95a34d2c5a85a3dcbf82dd624c18ffe224417c50c1fae10206eaL65' target='_blank'>Link</a></div><div id='project'> Project Name: hunkim/PyTorchZeroToAll</div><div id='commit'> Commit Name: 55b880469ced115de9949d5d25ff835dabbb2caa</div><div id='time'> Time: 2017-11-08</div><div id='author'> Author: hunkim@gmail.com</div><div id='file'> File Name: 12_2_hello_rnn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

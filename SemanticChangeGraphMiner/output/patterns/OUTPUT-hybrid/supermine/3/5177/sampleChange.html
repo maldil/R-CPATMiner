@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+model = load_model(trained_model_weights)
+
+&#47&#47 Use Loss=categorical_crossentropy.
+<a id="change">print(&quotCompile model.&quot)</a>
+model.compile(loss=&quotcategorical_crossentropy&quot,
+              optimizer=&quotadam&quot,
+              metrics=[&quotaccuracy&quot])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Prediction.
+        preds = model.predict(x)[0]
+        predict_idx = <a id="change">np.argmax(preds)</a>
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot
+        prob = <a id="change">preds[predict_idx]</a> * 100
+        if prob &gt; THRESHOLD:
+            judge = &quotUnlock&quot
+        msg = &quot{} ({:.1f}%). res="{}"&quot.format(classes[predict_idx], prob, judge)</code></pre>

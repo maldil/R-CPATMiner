@@ -1,0 +1,35 @@
+<html><h3>7e786cbaa2af5a666a3957b11d9621ae9f34a883,test.py,,,#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        image = Image.open(data_path + image_name)
+        image = Variable(ToTensor()(image))
+        target = Image.open(target_path + image_name)
+        target = <a id="change">Variable(ToTensor()(target))</a>
+        if torch.cuda.is_available():
+            image = image.unsqueeze(0).cuda()
+            target = <a id="change">target.unsqueeze(0).cuda()</a>
+
+        out = model(image)
+        <a id="change">mse</a> = ((target - out) ** 2).mean()
+        <a id="change">psnr</a> = 10 * log10(1 / mse.data.cpu().numpy())
+        <a id="change">ssim</a> = pytorch_ssim.ssim(out, target).data.cpu().numpy()
+        out_img = ToPILImage()(out[0].data.cpu())
+        out_img.save(out_path + &quotpsnr_%.4f_ssim_%.4f_&quot % (psnr, ssim) + image_name)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        image = Image.open(data_path + image_name)
+        image = Variable(ToTensor()(image)).unsqueeze(0)
+        target = Image.open(target_path + image_name)
+        target = <a id="change">Variable</a>(ToTensor()(target)).unsqueeze(0)
+        if torch.cuda.is_available():
+            image.cuda()
+            target.cuda()
+
+        out = model(image)
+        <a id="change">mse</a> = ((target - out) ** 2).mean()
+        <a id="change">psnr</a> = 10 * log10(1 / mse.data.cpu().numpy())
+        <a id="change">ssim</a> = pytorch_ssim.ssim(out, target).data.cpu().numpy()
+        out_img = ToPILImage()(out[0].data.cpu())
+        out_img.save(out_path + &quotpsnr_%.4f_ssim_%.4f_&quot % (psnr, ssim) + image_name)
+</code></pre><img src="3830435.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/7e786cbaa2af5a666a3957b11d9621ae9f34a883#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL31' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 7e786cbaa2af5a666a3957b11d9621ae9f34a883</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/55268ace0817879ace07b73e223c3a6db79a3180#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L96' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: 55268ace0817879ace07b73e223c3a6db79a3180</div><div id='time'> Time: 2017-12-06</div><div id='author'> Author: kwk236@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Seq2Seq</div><div id='method'> Method Name: forward</div><BR>

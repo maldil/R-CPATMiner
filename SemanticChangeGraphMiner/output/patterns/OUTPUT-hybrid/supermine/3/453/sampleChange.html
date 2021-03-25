@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47read in the label bed file 
+        data=pd.read_csv(data_path,header=0,sep=&quot\t&quot,index_col=[0,1,2])
+        <a id="change">if tasks!=None:
+            data=data[tasks]
+       </a> self.data=data
+        
+        self.indices=np.arange(self.data.shape[0])
+        num_indices=self.indices.shape[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.pos_indices=np.repeat(self.pos_indices,num_pos_wraps)[0:num_indices]
+            np.random.shuffle(self.pos_indices)
+            self.neg_indices=np.repeat(self.neg_indices,num_neg_wraps)[0:num_indices]
+            <a id="change">np.random.shuffle(self.neg_indices)</a>
+            
+    def __len__(self):
+        return math.floor(self.data.shape[0]/self.batch_size)
+</code></pre>

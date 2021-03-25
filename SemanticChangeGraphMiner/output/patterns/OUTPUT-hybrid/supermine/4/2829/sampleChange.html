@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    t1c_image = read_image(os.path.join(folder, "T1c.nii.gz"), image_shape=image_shape, crop=crop)
+    truth_image = read_image(os.path.join(folder, "truth.nii.gz"), image_shape=image_shape,
+                             interpolation="nearest", crop=crop)
+    return np.asarray([<a id="change">t1_image.get_data()</a>, t1c_image.get_data(), flair_image.get_data(), truth_image.get_data()])
+
+
+def read_image(in_file, image_shape, interpolation=&quotcontinuous&quot, crop=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def read_subject_folder(folder, image_shape, crop=None):
+    data_list = list()
+    <a id="change">for modality in config["training_modalities"]:
+        data_list.append(read_image(os.path.join(folder, modality + ".nii.gz"), image_shape=image_shape,
+                                    crop=crop)).get_data()
+   </a> data_list.append(read_image(os.path.join(folder, "truth.nii.gz"), image_shape=image_shape, interpolation="nearest",
+                                crop=crop))
+    return np.asarray(data_list)
+</code></pre>

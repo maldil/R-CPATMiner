@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 backward pass with loss scaling
+        optimizer.zero_grad()
+
+        <a id="change">if amp is not None:
+            with amp.scale_loss(loss, optimizer) as scaled_loss:
+                scaled_loss.backward()
+        else:
+            loss.backward()
+
+       </a> if c.clip_grad &gt; 0:
+            grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           c.clip_grad)
+        optimizer.step()</code></pre><h3>After Change</h3><pre><code class='java'>
+            scaler.update()
+        else:
+            loss.backward()
+            <a id="change">grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           c.clip_grad)</a>
+            optimizer.step()
+
+
+</code></pre>

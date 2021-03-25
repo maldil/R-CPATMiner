@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                self._primary_parameter_name: primary_columns,
+                self._ancillary_parameter_name: ancillary_df.columns.tolist(),
+            }
+            df = <a id="change">pd.concat([df, ancillary_df[ancillary_df.columns.difference(df.columns)]], axis=1)</a>
+
+        elif (ancillary_df is True) or self.model_ancillary:
+            self.model_ancillary = True
+            regressors = {</code></pre><h3>After Change</h3><pre><code class='java'>
+            ancillary_cols_to_consider = ancillary_df.columns.difference(df.columns).difference(
+                [self.lower_bound_col, self.upper_bound_col, event_col]
+            )
+            df = pd.concat([df, <a id="change">ancillary_df[ancillary_cols_to_consider]</a>], axis=1)
+
+        elif (ancillary_df is True) or self.model_ancillary:
+            self.model_ancillary = True</code></pre>

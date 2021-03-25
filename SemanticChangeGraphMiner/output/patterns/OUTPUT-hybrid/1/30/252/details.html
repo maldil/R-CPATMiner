@@ -1,0 +1,95 @@
+<html><h3>3f36b6c07ecac99da35de25ec0632d99c286f9b4,dipy/denoise/gibbs.py,,_gibbs_removal_1d,#,60
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if axis:
+        xs = x.copy()
+    else:
+        <a id="change">xs</a> = <a id="change">x.T.copy()</a>
+
+    &#47&#47 TV for shift zero (baseline)
+    tvr, tvl = _image_tv(xs, axis=1, n_points=n_points)
+    tvp = np.minimum(tvr, tvl)
+    tvn = tvp.copy()
+
+    &#47&#47 Find optimal shift for gibbs removal
+    <a id="change">isp</a> = xs.copy()
+    <a id="change">isn</a> = xs.copy()
+    <a id="change">sp</a> = np.zeros(xs.shape)
+    sn = np.zeros(xs.shape)
+    N = xs.shape[1]
+    c = np.fft.fftshift(np.fft.fft2(xs))
+    <a id="change">k</a> = np.linspace(-N/2, N/2-1, num=N)
+    k = (2.0j * np.pi * k) / N
+    for s in ssamp:
+        &#47&#47 Access positive shift for given s
+        img_p = abs(np.fft.ifft2(np.fft.fftshift(c * np.exp(k*s))))
+        tvsr, tvsl = _image_tv(img_p, axis=1, n_points=n_points)
+        tvs_p = np.minimum(tvsr, tvsl)
+
+        &#47&#47 Access negative shift for given s
+        <a id="change">img_n</a> = abs(np.fft.ifft2(np.fft.fftshift(c * np.exp(-k*s))))
+        tvsr, tvsl = _image_tv(img_n, axis=1, n_points=n_points)
+        tvs_n = np.minimum(tvsr, tvsl)
+
+        &#47&#47 Update positive shift params
+        isp[tvp &gt; tvs_p] = img_p[tvp &gt; tvs_p]
+        sp[tvp &gt; tvs_p] = s
+        tvp[tvp &gt; tvs_p] = tvs_p[tvp &gt; tvs_p]
+
+        &#47&#47 Update negative shift params
+        isn[tvn &gt; tvs_n] = img_n[tvn &gt; tvs_n]
+        sn[tvn &gt; tvs_n] = s
+        tvn[tvn &gt; tvs_n] = tvs_n[tvn &gt; tvs_n]
+
+    &#47&#47 check non-zero sub-voxel shifts
+    <a id="change">idx</a> = np.nonzero(sp + sn)
+
+    &#47&#47 use positive and negative optimal sub-voxel shifts to interpolate to
+    &#47&#47 original grid points</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    ssamp = np.linspace(0.02, 0.9, num=45)
+
+    <a id="change">xs</a> = x.copy() if axis else <a id="change">x.T.copy()</a>
+
+    &#47&#47 TV for shift zero (baseline)
+    tvr, tvl = _image_tv(xs, axis=1, n_points=n_points)
+    tvp = np.minimum(tvr, tvl)
+    tvn = tvp.copy()
+
+    &#47&#47 Find optimal shift for gibbs removal
+    <a id="change">isp</a> = xs.copy()
+    <a id="change">isn</a> = xs.copy()
+    <a id="change">sp</a> = np.zeros(xs.shape)
+    sn = np.zeros(xs.shape)
+    N = xs.shape[1]
+    c = np.fft.fftshift(np.fft.fft2(xs))
+    <a id="change">k</a> = np.linspace(-N/2, N/2-1, num=N)
+    k = (2.0j * np.pi * k) / N
+    for s in ssamp:
+        &#47&#47 Access positive shift for given s
+        img_p = abs(np.fft.ifft2(np.fft.fftshift(c * np.exp(k*s))))
+        tvsr, tvsl = _image_tv(img_p, axis=1, n_points=n_points)
+        tvs_p = np.minimum(tvsr, tvsl)
+
+        &#47&#47 Access negative shift for given s
+        <a id="change">img_n</a> = abs(np.fft.ifft2(np.fft.fftshift(c * np.exp(-k*s))))
+        tvsr, tvsl = _image_tv(img_n, axis=1, n_points=n_points)
+        tvs_n = np.minimum(tvsr, tvsl)
+
+        &#47&#47 Update positive shift params
+        isp[tvp &gt; tvs_p] = img_p[tvp &gt; tvs_p]
+        sp[tvp &gt; tvs_p] = s
+        tvp[tvp &gt; tvs_p] = tvs_p[tvp &gt; tvs_p]
+
+        &#47&#47 Update negative shift params
+        isn[tvn &gt; tvs_n] = img_n[tvn &gt; tvs_n]
+        sn[tvn &gt; tvs_n] = s
+        tvn[tvn &gt; tvs_n] = tvs_n[tvn &gt; tvs_n]
+
+    &#47&#47 check non-zero sub-voxel shifts
+    <a id="change">idx</a> = np.nonzero(sp + sn)
+
+    &#47&#47 use positive and negative optimal sub-voxel shifts to interpolate to
+    &#47&#47 original grid points</code></pre><img src="1450006.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nipy/dipy/commit/3f36b6c07ecac99da35de25ec0632d99c286f9b4#diff-b514525d47153f063ef1ec4586ef04a44bada756422f2d9b73ad8ef49353b51bL78' target='_blank'>Link</a></div><div id='project'> Project Name: nipy/dipy</div><div id='commit'> Commit Name: 3f36b6c07ecac99da35de25ec0632d99c286f9b4</div><div id='time'> Time: 2019-07-15</div><div id='author'> Author: rafaelnh21@gmail.com</div><div id='file'> File Name: dipy/denoise/gibbs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gibbs_removal_1d</div><BR><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/7d911ceb43845a72edf84b502fa948c68792e517#diff-2262fbeb3e1f0aa450ec33c90fa5a9c360361d54004cd569f9377c8cfe02b41fL94' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: 7d911ceb43845a72edf84b502fa948c68792e517</div><div id='time'> Time: 2018-08-12</div><div id='author'> Author: dannyofig@gmail.com</div><div id='file'> File Name: modAL/batch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ranked_batch</div><BR><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/8a21bc14380cd31d7b514701cf3fc5829f27f3f4#diff-2262fbeb3e1f0aa450ec33c90fa5a9c360361d54004cd569f9377c8cfe02b41fL172' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: 8a21bc14380cd31d7b514701cf3fc5829f27f3f4</div><div id='time'> Time: 2018-08-13</div><div id='author'> Author: theodore.danka@gmail.com</div><div id='file'> File Name: modAL/batch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ranked_batch</div><BR>

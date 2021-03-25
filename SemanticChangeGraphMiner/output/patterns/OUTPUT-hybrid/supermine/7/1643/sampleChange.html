@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 it has the max possible value: 65535 (max unsigned int16)
+            &#47&#47 so it&quotll be always as first index
+            _count[i:, range(i+1)] = list(_count[range(i), i]) + [np.iinfo(np.uint16).max]
+            <a id="change">for j in range(i+1, n):
+                _count[i, j] = _dist(ind[i], ind[j])
+
+       </a> return np.flip(np.argsort(_count), axis=1)[:, range(1, self.ref_set+1)]
+
+    def _sod(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 but we need it temporarily to maintain indices order,
+            &#47&#47 it has the max possible value: 65535 (max unsigned int16)
+            &#47&#47 so it&quotll be always as first index
+            <a id="change">temp = np.sum(np.isin(ind, ind[i]), axis=1).ravel()</a>
+            temp[i] = np.iinfo(np.uint16).max
+            _count[i] = temp
+
+        return np.flip(np.argsort(_count), axis=1)[:, range(1, self.ref_set + 1)]</code></pre>

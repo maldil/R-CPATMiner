@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        
+        if not (isinstance(a, Distribution) and isinstance(b, Distribution)):
+            <a id="change">raise ValueError("Given inputs should be `pixyz.Distribution`, got {} and {}.".format(type(a), type(b)))</a>
+
+        &#47&#47 Check parent-child relationship between two distributions.
+        &#47&#47 If inherited variables (`_inh_var`) are exist (e.g. c in p(e|c)p(c|a,b)),
+        &#47&#47 then p(e|c) is a child and p(c|a,b) is a parent, otherwise it is opposite.</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Set variables.
+        _var = _child.var + _parent.var
+        if len(_var) != len(set(_var)):  &#47&#47 e.g. p(x|z)p(x|y)
+            <a id="change">raise ValueError(f"Variables of two distributionsl,"
+                             f" {_child.prob_text} and {_parent.prob_text}, are conflicted.")</a>
+
+        &#47&#47 Set conditional variables.
+        _cond_var = _child.cond_var + _parent.cond_var
+        _cond_var = sorted(set(_cond_var), key=_cond_var.index)</code></pre>

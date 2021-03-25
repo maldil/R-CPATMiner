@@ -1,0 +1,149 @@
+<html><h3>21a70686e7023743c5cae3fe6660c8782b8300fc,keyword_spotting_data_generator/evaluation/evaluation_data_generator.py,,main,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    continuing = args.continue_from != None
+
+    for i in range(args.size):
+        url = <a id="change">url_fetcher</a>.next()[0]
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        if not url:
+            cp.print_warning("there are no more urls to process")
+
+        cp.print_progress(i + 1, " / ", args.size, " - ", url)
+
+        try:
+            video = PyTube(utils.get_youtube_url(url))
+        except Exception as exception:
+            cp.print_error("failed to generate PyTube representation for vidoe ", url)
+            continue
+
+        if int(video.length) &gt; args.video_length:
+            continue
+
+        <a id="change">caption</a> = video.captions.get_by_language_code(&quoten&quot)
+        if not caption:
+            cp.print_warning("no caption available for video - ", url)
+            continue
+
+        try:
+            srt_captions = caption.generate_srt_captions().split(&quot\n\n&quot)
+        except Exception as exception:
+            cp.print_error("failed to retrieve for vidoe - ", url)
+            continue
+
+        translator = str.maketrans(&quot&quot, &quot&quot, string.punctuation) &#47&#47 to remove punctuation
+        srt_tag_re = re.compile(r"&lt;.*?&gt;|\(.*?\)|\[.*?\]")
+
+        keyword_exist = False
+        for captions in srt_captions:
+            if keyword in captions or plural.plural(keyword) in captions:
+                keyword_exist = True
+                break
+
+        if not keyword_exist:
+            cp.print_warning("keywords never appear in the video - ", url)
+            continue
+
+        try:
+            crawler = YoutubeCrawler(url)
+            <a id="change">audio_data</a> = crawler.get_audio()
+        except Exception as exception:
+            cp.print_warning(exception)
+            continue
+
+        collected_data = []
+        video_cc_count = 0
+        video_audio_count = 0
+
+        for captions in srt_captions:
+            <a id="change">cc_split</a> = captions.split(&quot\n&quot)
+            if len(cc_split) == 4 and cc_split[0] == &quot&quot:
+                cc_split = (cc_split[1], cc_split[2], cc_split[3])
+            elif len(cc_split) != 3:</code></pre><h3>After Change</h3><pre><code class='java'>
+    url_set = set()
+
+    for i in range(args.size):
+        url = <a id="change">url_fetcher.next()</a>
+
+        if not url:
+            cp.print_warning("there are no more urls to process")
+            break
+
+        url = url[0]
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        cp.print_progress(i + 1, " / ", args.size, " - ", url)
+
+        if url in url_set:
+            cp.print_warning("video is already processed", url)
+            continue
+
+        url_set.add(url)
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        try:
+            video = PyTube(utils.get_youtube_url(url))
+        except Exception as exception:
+            cp.print_error("failed to generate PyTube representation for vidoe ", url)
+            continue
+        if int(video.length) &gt; args.video_length:
+            continue
+
+        <a id="change">caption</a> = video.captions.get_by_language_code(&quoten&quot)
+        if not caption:
+            cp.print_warning("no caption available for video - ", url)
+            continue
+
+        try:
+            srt_captions = caption.generate_srt_captions().split(&quot\n\n&quot)
+        except Exception as exception:
+            cp.print_error("failed to retrieve for vidoe - ", url)
+            continue
+
+        translator = str.maketrans(&quot&quot, &quot&quot, string.punctuation) &#47&#47 to remove punctuation
+        srt_tag_re = re.compile(r"&lt;.*?&gt;|\(.*?\)|\[.*?\]")
+
+        keyword_exist = False
+        for captions in srt_captions:
+            if keyword in captions or plural.plural(keyword) in captions:
+                keyword_exist = True
+                break
+
+        if not keyword_exist:
+            cp.print_warning("keywords never appear in the video - ", url)
+            continue
+
+        try:
+            crawler = YoutubeCrawler(url)
+            <a id="change">audio_data</a> = crawler.get_audio()
+        except Exception as exception:
+            cp.print_warning(exception)
+            continue
+
+        collected_data = []
+        video_cc_count = 0
+        video_audio_count = 0
+
+        for captions in srt_captions:
+            <a id="change">cc_split</a> = captions.split(&quot\n&quot)
+            if len(cc_split) == 4 and cc_split[0] == &quot&quot:
+                cc_split = (cc_split[1], cc_split[2], cc_split[3])
+            elif len(cc_split) != 3:</code></pre><img src="3579958.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/castorini/honk/commit/21a70686e7023743c5cae3fe6660c8782b8300fc#diff-4f55b2ca8bbd51bdb1cf79ceb1c657582f4e943fd93a30ef48db64c99f5c3615L69' target='_blank'>Link</a></div><div id='project'> Project Name: castorini/honk</div><div id='commit'> Commit Name: 21a70686e7023743c5cae3fe6660c8782b8300fc</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: ljj7975@gmail.com</div><div id='file'> File Name: keyword_spotting_data_generator/evaluation/evaluation_data_generator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/castorini/honk/commit/26e1bc63f306324e6689f30f0d33f5859a00a6ce#diff-6f973519bce92a4b7ab75e52f435d4e96ffc2f68d7129515f9d51c570f99c2e1L189' target='_blank'>Link</a></div><div id='project'> Project Name: castorini/honk</div><div id='commit'> Commit Name: 26e1bc63f306324e6689f30f0d33f5859a00a6ce</div><div id='time'> Time: 2020-02-23</div><div id='author'> Author: ljj7975@gmail.com</div><div id='file'> File Name: keyword_spotting_data_generator/keyword_data_generator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_dataset</div><BR><BR><div id='link'><a href='https://github.com/acoular/acoular/commit/3b01007e668a7902b467978be69b1dd1f19108a9#diff-1a1500535be9353ac24c51aafa03023a018f8607aa7b43ae8e21e4d6ae1346c7L1004' target='_blank'>Link</a></div><div id='project'> Project Name: acoular/acoular</div><div id='commit'> Commit Name: 3b01007e668a7902b467978be69b1dd1f19108a9</div><div id='time'> Time: 2020-03-31</div><div id='author'> Author: kujawski.ad@gmail.com</div><div id='file'> File Name: acoular/tbeamform.py</div><div id='class'> Class Name: BeamformerCleantTraj</div><div id='method'> Method Name: result</div><BR><BR><div id='link'><a href='https://github.com/raghakot/keras-vis/commit/7a37bd0716fcb11047a2ae9d7ee32c6d75a48efc#diff-091b2c23e21fbaf5887eb01ca339efb20787a699b85f44b0a6345c2d10733f3dL81' target='_blank'>Link</a></div><div id='project'> Project Name: raghakot/keras-vis</div><div id='commit'> Commit Name: 7a37bd0716fcb11047a2ae9d7ee32c6d75a48efc</div><div id='time'> Time: 2017-07-16</div><div id='author'> Author: ragha@outlook.com</div><div id='file'> File Name: vis/backend/tensorflow_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: modify_model_backprop</div><BR>

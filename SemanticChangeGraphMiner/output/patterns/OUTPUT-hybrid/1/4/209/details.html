@@ -1,0 +1,22 @@
+<html><h3>1da20c693ac9f4cf345ddd795d99aa028e011ee8,model/uisrnn.py,UISRNN,__init__,#UISRNN#,49
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                 args.rnn_depth, args.rnn_dropout,
+                                 observation_dim)
+      self.rnn_init_hidden = nn.Parameter(torch.zeros(1, args.rnn_hidden_size))
+      self.sigma2 = <a id="change">nn.Parameter(sigma2 * torch.ones(observation_dim))</a>
+    self.transition_bias = transition_bias
+
+  def save(self, filepath):
+    Save the model to a file.</code></pre><h3>After Change</h3><pre><code class='java'>
+    self.rnn_init_hidden = nn.Parameter(
+        torch.zeros(1, args.rnn_hidden_size).to(self.device))
+    sigma2 = .1 if args.sigma2 is None else args.sigma2
+    self.sigma2 = <a id="change">nn.Parameter(
+        sigma2 * torch.ones(observation_dim).to(self.device))</a>
+    self.transition_bias = transition_bias
+
+  def save(self, filepath):
+    Save the model to a file.</code></pre><img src="1258545.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/google/uis-rnn/commit/1da20c693ac9f4cf345ddd795d99aa028e011ee8#diff-4e29e99c93f91b56a7e9059323f4504b7356abadd2c703113f3863911328bda3L49' target='_blank'>Link</a></div><div id='project'> Project Name: google/uis-rnn</div><div id='commit'> Commit Name: 1da20c693ac9f4cf345ddd795d99aa028e011ee8</div><div id='time'> Time: 2018-10-25</div><div id='author'> Author: aonan@aonan.nyc.corp.google.com</div><div id='file'> File Name: model/uisrnn.py</div><div id='class'> Class Name: UISRNN</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/google/uis-rnn/commit/ac1f07e722b1117642774b04d96e7174751e325c#diff-4e29e99c93f91b56a7e9059323f4504b7356abadd2c703113f3863911328bda3L47' target='_blank'>Link</a></div><div id='project'> Project Name: google/uis-rnn</div><div id='commit'> Commit Name: ac1f07e722b1117642774b04d96e7174751e325c</div><div id='time'> Time: 2018-10-18</div><div id='author'> Author: aonan@aonan.nyc.corp.google.com</div><div id='file'> File Name: model/uisrnn.py</div><div id='class'> Class Name: UISRNN</div><div id='method'> Method Name: __init__</div><BR>

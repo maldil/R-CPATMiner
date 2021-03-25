@@ -1,0 +1,24 @@
+<html><h3>5726675a25fd1e2a15bf879de4d00d6025923ae0,models/base_model.py,BaseModel,load_networks,#BaseModel#,118
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                state_dict = torch.load(load_path, map_location=str(self.device))
+                <a id="change">del state_dict._metadata</a>
+
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+                for key in list(state_dict.keys()):  &#47&#47 need to copy keys here because we mutate in loop
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                state_dict = torch.load(load_path, map_location=str(self.device))
+                <a id="change">if hasattr(state_dict, &quot_metadata&quot):
+                    del state_dict._metadata
+
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+               </a> for key in list(state_dict.keys()):  &#47&#47 need to copy keys here because we mutate in loop
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))
+                net.load_state_dict(state_dict)
+</code></pre><img src="12775830.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/commit/5726675a25fd1e2a15bf879de4d00d6025923ae0#diff-7c1ece53a18959b293126dd93f3cf0f768220f50d2c1201e1601681873e6f6e4L129' target='_blank'>Link</a></div><div id='project'> Project Name: junyanz/pytorch-CycleGAN-and-pix2pix</div><div id='commit'> Commit Name: 5726675a25fd1e2a15bf879de4d00d6025923ae0</div><div id='time'> Time: 2018-07-25</div><div id='author'> Author: taesung89@gmail.com</div><div id='file'> File Name: models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_networks</div><BR><BR><div id='link'><a href='https://github.com/lmcinnes/pynndescent/commit/3452cdbe9f0a964f22c5c4ea6aeb8c026af040d3#diff-db9824f558d2d2dff121f6cf56c63a5d019a6bb2e7388f2f0089e1b2d77d50e9L1456' target='_blank'>Link</a></div><div id='project'> Project Name: lmcinnes/pynndescent</div><div id='commit'> Commit Name: 3452cdbe9f0a964f22c5c4ea6aeb8c026af040d3</div><div id='time'> Time: 2020-09-07</div><div id='author'> Author: leland.mcinnes@gmail.com</div><div id='file'> File Name: pynndescent/pynndescent_.py</div><div id='class'> Class Name: NNDescent</div><div id='method'> Method Name: compress_index</div><BR><BR><div id='link'><a href='https://github.com/lmcinnes/pynndescent/commit/c1c31db36facdf8d557f4dcc69866ac86814b83f#diff-db9824f558d2d2dff121f6cf56c63a5d019a6bb2e7388f2f0089e1b2d77d50e9L900' target='_blank'>Link</a></div><div id='project'> Project Name: lmcinnes/pynndescent</div><div id='commit'> Commit Name: c1c31db36facdf8d557f4dcc69866ac86814b83f</div><div id='time'> Time: 2020-09-01</div><div id='author'> Author: leland.mcinnes@gmail.com</div><div id='file'> File Name: pynndescent/pynndescent_.py</div><div id='class'> Class Name: NNDescent</div><div id='method'> Method Name: _init_search_graph</div><BR>

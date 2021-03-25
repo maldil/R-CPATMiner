@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if &quotBCM&quot in hardware_info:
+        if &quotrev 7&quot in model_info:
+            return &quotarm11&quot
+        elif <a id="change">&quotrev 5&quot in model_info</a>:
+            return &quotcortex-a7&quot
+        elif &quotrev 4&quot in model_info:
+            return &quotcortex-a53&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+        arch_info = &quot&quot
+
+    cpu_info = subprocess.check_output([&quotlscpu&quot]).decode()
+    model_info = <a id="change">[x for x in cpu_info.split(&quot\n&quot) if &quotModel name&quot in x][0].split(&quot &quot)[-1]</a>
+
+    if &quotARM1176&quot == model_info: 
+        return &quotarm11&quot + arch_info
+    elif &quotCortex-A53&quot == model_info:</code></pre>

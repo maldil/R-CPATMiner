@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    expect_weights = np.array([-2.73e-04, 2.40e-01, 3.53e-01])
+
+    np.testing.assert_almost_equal(lr.w_, expect_weights, 2)
+    acc = sum(y_pred == y) / <a id="change">float(len(y))</a>
+
+    assert(acc == 0.97)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    np.testing.assert_almost_equal(lr.w_, expect_weights, 2)
+    y_pred = lr.predict(X)
+    acc = np.sum(y == y_pred, axis=0) / <a id="change">float(X.shape[0])</a>
+    assert acc == 0.97, "Acc: %s" % acc
+
+
+def test_ary_persistency_in_shuffling():</code></pre>

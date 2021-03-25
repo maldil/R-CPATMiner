@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        targets = Variable(targets.type(Tensor), requires_grad=False)
+        optimizer.zero_grad()
+
+        <a id="change">loss = model(imgs, targets)</a>
+
+        loss.backward()
+        optimizer.step()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Get hyper parameters
+hyperparams     = parse_model_config(opt.model_config_path)[0]
+batch_size      = int(hyperparams[&quotbatch&quot])
+subdivisions    = int(<a id="change">hyperparams[&quotsubdivisions&quot]</a>)
+sub_batch       = batch_size // subdivisions
+learning_rate   = float(hyperparams[&quotlearning_rate&quot])
+momentum        = float(hyperparams[&quotmomentum&quot])</code></pre>

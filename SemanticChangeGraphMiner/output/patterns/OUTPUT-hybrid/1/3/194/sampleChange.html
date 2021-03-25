@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.ct_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=&quotCritic/target&quot)
+
+        &#47&#47 target net replacement
+        self.soft_replace = [[tf.assign(ta, (1 - TAU) * ta + TAU * ea), <a id="change">tf.assign(tc, (1 - TAU) * tc + TAU * ec)</a>]
+                             for ta, ea, tc, ec in zip(self.at_params, self.ae_params, self.ct_params, self.ce_params)]
+
+        q_target = self.R + GAMMA * q_</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.ct_params = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope=&quotCritic/target&quot)
+
+        &#47&#47 target net replacement
+        self.soft_replace = [<a id="change">tf.assign(t, (1 - TAU) * t + TAU * e)</a>
+                             for t, e in zip(self.at_params + self.ct_params, self.ae_params + self.ce_params)]
+
+        q_target = self.R + GAMMA * q_
+        &#47&#47 in the feed_dic for the td_error, the self.a should change to actions in memory</code></pre>

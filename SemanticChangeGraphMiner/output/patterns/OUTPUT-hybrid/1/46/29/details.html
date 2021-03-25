@@ -1,0 +1,53 @@
+<html><h3>fc4917ae8a7320fc9a258b50d82a177ed2124a91,category_encoders/backward_difference.py,BackwardDifferenceEncoder,fit_backward_difference_coding,#,216
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(values) &lt; 2:
+            return pd.DataFrame()
+
+        backwards_difference_matrix = Diff().code_without_intercept(<a id="change">values.get_values()</a>)
+        <a id="change">df</a> = pd.DataFrame(data=backwards_difference_matrix.matrix, columns=<a id="change">backwards_difference_matrix.column_suffixes</a>)
+        df.index += 1
+
+        if handle_unknown == &quotreturn_nan&quot:
+            df.loc[-1] = np.nan
+        elif handle_unknown == &quotvalue&quot:
+            <a id="change">df.loc[-1]</a> = <a id="change">np.zeros(len(values) - 1)</a>
+
+        if handle_missing == &quotreturn_nan&quot:
+            df.loc[values.loc[np.nan]] = np.nan
+        elif handle_missing == &quotvalue&quot:
+            <a id="change">df.loc[-2]</a> = <a id="change">np.zeros(len(values) - 1)</a>
+
+        return df
+
+    @staticmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+        if handle_missing == &quotvalue&quot:
+            values = values[values &gt; 0]
+
+        <a id="change">values_to_encode</a> = <a id="change">values.get_values()</a>
+
+        if len(values) &lt; 2:
+            return pd.DataFrame(index=values_to_encode)
+
+        <a id="change">if handle_unknown == &quotindicator&quot:
+            values_to_encode = np.append(values_to_encode, -1)
+
+       </a> backwards_difference_matrix = Diff().code_without_intercept(values_to_encode)
+        <a id="change">df</a> = pd.DataFrame(data=backwards_difference_matrix.matrix, index=values_to_encode,
+                          columns=<a id="change">[str(col) + &quot_%d&quot % (i, ) for i in range(len(backwards_difference_matrix.column_suffixes))]</a>)
+
+        if handle_unknown == &quotreturn_nan&quot:
+            df.loc[-1] = np.nan
+        elif handle_unknown == &quotvalue&quot:
+            <a id="change">df.loc[-1]</a> = <a id="change">np.zeros(len(values_to_encode) - 1)</a>
+
+        if handle_missing == &quotreturn_nan&quot:
+            df.loc[values.loc[np.nan]] = np.nan
+        elif handle_missing == &quotvalue&quot:
+            <a id="change">df.loc[-2]</a> = <a id="change">np.zeros(len(values_to_encode) - 1)</a>
+
+        return df
+
+    @staticmethod</code></pre><img src="174850.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 25</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/fc4917ae8a7320fc9a258b50d82a177ed2124a91#diff-e63e79d3956b4c30ab7b8d9e4f43c7b2cdc62a695323a28a0e119a2034511af5L218' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: fc4917ae8a7320fc9a258b50d82a177ed2124a91</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/backward_difference.py</div><div id='class'> Class Name: BackwardDifferenceEncoder</div><div id='method'> Method Name: fit_backward_difference_coding</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/4e1bb8d51e8b01c22cf52a0a5a8d7466083dd2da#diff-b9b216c67f0aeb6870ac294f7004005656c6a866d5ca961e563da19191cefc9aL216' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 4e1bb8d51e8b01c22cf52a0a5a8d7466083dd2da</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/polynomial.py</div><div id='class'> Class Name: PolynomialEncoder</div><div id='method'> Method Name: fit_polynomial_coding</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/bdc3fe70d33b85cfdaa5ed02ccfd60807ae4f1da#diff-663da4b826492aa08822db4f90a8e1ba638dac8a38fb9b090b524f33ffa8cee7L215' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: bdc3fe70d33b85cfdaa5ed02ccfd60807ae4f1da</div><div id='time'> Time: 2018-12-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/helmert.py</div><div id='class'> Class Name: HelmertEncoder</div><div id='method'> Method Name: fit_helmert_coding</div><BR>

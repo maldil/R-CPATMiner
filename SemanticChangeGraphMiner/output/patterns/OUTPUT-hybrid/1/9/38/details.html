@@ -1,0 +1,26 @@
+<html><h3>70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54,app/api/tests/test_api.py,TestDocumentListAPI,test_returns_docs_to_project_member_filtered_to_completed,#TestDocumentListAPI#,434
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.assertEqual(len(response.json().get(&quotresults&quot)), 1)
+
+    def test_returns_docs_to_project_member_filtered_to_completed(self):
+        <a id="change">self.client.login(username=self.project_member_name,
+                          password=self.project_member_pass)</a>
+        response = <a id="change">self.client.get(&quot{}?doc_annotations__isnull=false&quot.format(self.url), format=&quotjson&quot)</a>
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json().get(&quotresults&quot)), 2)
+
+    def test_returns_docs_in_consistent_order_for_all_users(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+                        expected_num_results=1)
+
+    def test_returns_docs_to_project_member_filtered_to_completed(self):
+        <a id="change">self._test_list(&quot{}?doc_annotations__isnull=false&quot.format(self.url),
+                        username=self.project_member_name,
+                        password=self.project_member_pass,
+                        expected_num_results=2)</a>
+
+    def test_returns_docs_in_consistent_order_for_all_users(self):
+        self.client.login(username=self.project_member_name, password=self.project_member_pass)
+        user1_documents = self.client.get(self.url, format=&quotjson&quot).json().get(&quotresults&quot)</code></pre><img src="731031.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chakki-works/doccano/commit/70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54#diff-498675fe3c602b3c139696ef8967fb5921b4733738b605d50fff5557c2462bb7L434' target='_blank'>Link</a></div><div id='project'> Project Name: chakki-works/doccano</div><div id='commit'> Commit Name: 70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54</div><div id='time'> Time: 2020-01-06</div><div id='author'> Author: clewolff@microsoft.com</div><div id='file'> File Name: app/api/tests/test_api.py</div><div id='class'> Class Name: TestDocumentListAPI</div><div id='method'> Method Name: test_returns_docs_to_project_member_filtered_to_completed</div><BR><BR><div id='link'><a href='https://github.com/chakki-works/doccano/commit/70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54#diff-498675fe3c602b3c139696ef8967fb5921b4733738b605d50fff5557c2462bb7L427' target='_blank'>Link</a></div><div id='project'> Project Name: chakki-works/doccano</div><div id='commit'> Commit Name: 70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54</div><div id='time'> Time: 2020-01-06</div><div id='author'> Author: clewolff@microsoft.com</div><div id='file'> File Name: app/api/tests/test_api.py</div><div id='class'> Class Name: TestDocumentListAPI</div><div id='method'> Method Name: test_returns_docs_to_project_member_filtered_to_active</div><BR><BR><div id='link'><a href='https://github.com/chakki-works/doccano/commit/70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54#diff-498675fe3c602b3c139696ef8967fb5921b4733738b605d50fff5557c2462bb7L474' target='_blank'>Link</a></div><div id='project'> Project Name: chakki-works/doccano</div><div id='commit'> Commit Name: 70b63b68ee62d5c4815d321d4e1b2a8f1c5fed54</div><div id='time'> Time: 2020-01-06</div><div id='author'> Author: clewolff@microsoft.com</div><div id='file'> File Name: app/api/tests/test_api.py</div><div id='class'> Class Name: TestDocumentListAPI</div><div id='method'> Method Name: test_do_not_return_docs_of_other_projects</div><BR>

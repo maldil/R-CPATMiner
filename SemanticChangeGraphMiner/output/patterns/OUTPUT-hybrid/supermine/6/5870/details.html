@@ -1,0 +1,48 @@
+<html><h3>c8e736abf951301a28c2cd6f2c5a80b370c31e59,torch_geometric/transforms/gdc.py,GDC,__calc_ppr__,#,499
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        alpha_eps = alpha * eps
+        js = []
+        <a id="change">vals = []</a>
+        for inode in range(len(out_degree)):
+            p = {inode: 0.0}
+            r = {}
+            r[inode] = alpha
+            q = [inode]
+            while len(q) &gt; 0:
+                unode = q.pop()
+
+                res = r[unode] if unode in r else 0
+                if unode in p:
+                    p[unode] += res
+                else:
+                    p[unode] = res
+                r[unode] = 0
+                for vnode in indices[indptr[unode]:indptr[unode + 1]]:
+                    _val = (1 - alpha) * res / out_degree[unode]
+                    if vnode in r:
+                        r[vnode] += _val
+                    else:
+                        r[vnode] = _val
+
+                    res_vnode = r[vnode] if vnode in r else 0
+                    if res_vnode &gt;= alpha_eps * out_degree[vnode]:
+                        if vnode not in q:
+                            q.append(vnode)
+            js.append(list(p.keys()))
+            <a id="change">vals.append(list(p.values()))</a>
+        return js, vals
+
+    def __repr__(self):
+        return &quot{}()&quot.format(self.__class__.__name__)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        alpha_eps = alpha * eps
+        js = [[0]] * len(out_degree)
+        <a id="change">vals = [[0.]] * len(out_degree)</a>
+        for inode_uint in numba.prange(len(out_degree)):
+            inode = numba.int64(inode_uint)
+            p = {inode: 0.0}
+            r = {}</code></pre><img src="24316563.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/c8e736abf951301a28c2cd6f2c5a80b370c31e59#diff-1fcf23ea69bddad26c577c8e2e35060907f8c89108e06c7b295e0c6954a94716L517' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: c8e736abf951301a28c2cd6f2c5a80b370c31e59</div><div id='time'> Time: 2020-08-20</div><div id='author'> Author: klicpera@in.tum.de</div><div id='file'> File Name: torch_geometric/transforms/gdc.py</div><div id='class'> Class Name: GDC</div><div id='method'> Method Name: __calc_ppr__</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L68' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/vitchyr/rlkit/commit/9bdbb11cf27060e7847a87dcdf691dd6b96ce6df#diff-2178a345f4deabd282ac87d8dcb0e8ccc6d47221247628b8dbc0938f186b7b3aL171' target='_blank'>Link</a></div><div id='project'> Project Name: vitchyr/rlkit</div><div id='commit'> Commit Name: 9bdbb11cf27060e7847a87dcdf691dd6b96ce6df</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 38036768+YangRui2015@users.noreply.github.com</div><div id='file'> File Name: rlkit/data_management/obs_dict_replay_buffer.py</div><div id='class'> Class Name: ObsDictRelabelingBuffer</div><div id='method'> Method Name: random_batch</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/a2afaa41a13548806ef624f1530d2ae8912bb818#diff-5a98c0afe1e879153edea5fc928e4c3c319c3152afa0d8b9e9dd26e6dbc4dc66L155' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: a2afaa41a13548806ef624f1530d2ae8912bb818</div><div id='time'> Time: 2018-02-12</div><div id='author'> Author: john.gray.14@ucl.ac.uk</div><div id='file'> File Name: opt_einsum/paths.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: greedy</div><BR>

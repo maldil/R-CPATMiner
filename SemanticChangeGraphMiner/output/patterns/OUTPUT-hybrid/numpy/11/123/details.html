@@ -1,0 +1,27 @@
+<html><h3>934f26003a1b794a3a03ca824817fb1252dff270,hmmlearn/hmm.py,GMMHMM,_compute_log_likelihood,#GMMHMM#,574
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            g.fit(X)
+
+    def _compute_log_likelihood(self, X):
+        <a id="change">return np.array([g.score(X) for g in self.gmms_]).T</a>
+
+    def _generate_sample_from_state(self, state, random_state=None):
+        return self.gmms_[state].sample(1, random_state=random_state).flatten()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _compute_log_likelihood(self, X):
+        n_samples, _ = X.shape
+        <a id="change">res = np.zeros((n_samples, self.n_components))</a>
+
+        for i in range(self.n_components):
+            <a id="change">log_denses = self._compute_log_weighted_gaussian_densities(X, i)</a>
+            <a id="change">res[:, i]</a> = logsumexp(log_denses, axis=1)
+
+        <a id="change">return res</a>
+
+    def _initialize_sufficient_statistics(self):
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()
+        stats[&quotn_samples&quot] = 0</code></pre><img src="9229822.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hmmlearn/hmmlearn/commit/934f26003a1b794a3a03ca824817fb1252dff270#diff-8d808ca467b022712fa56520d9a7604edbb74b948a536318d7086ed1915fc0fdL574' target='_blank'>Link</a></div><div id='project'> Project Name: hmmlearn/hmmlearn</div><div id='commit'> Commit Name: 934f26003a1b794a3a03ca824817fb1252dff270</div><div id='time'> Time: 2016-07-09</div><div id='author'> Author: yanenkoalexandr@gmail.com</div><div id='file'> File Name: hmmlearn/hmm.py</div><div id='class'> Class Name: GMMHMM</div><div id='method'> Method Name: _compute_log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/hmmlearn/hmmlearn/commit/934f26003a1b794a3a03ca824817fb1252dff270#diff-8d808ca467b022712fa56520d9a7604edbb74b948a536318d7086ed1915fc0fdL574' target='_blank'>Link</a></div><div id='project'> Project Name: hmmlearn/hmmlearn</div><div id='commit'> Commit Name: 934f26003a1b794a3a03ca824817fb1252dff270</div><div id='time'> Time: 2016-07-09</div><div id='author'> Author: yanenkoalexandr@gmail.com</div><div id='file'> File Name: hmmlearn/hmm.py</div><div id='class'> Class Name: GMMHMM</div><div id='method'> Method Name: _compute_log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f88ec970f95c3b1fb1f0d72ccf0069732e4a0510#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f88ec970f95c3b1fb1f0d72ccf0069732e4a0510</div><div id='time'> Time: 2019-06-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f5b2d7fecaea7886cc527ee16c292e1cd4bb736a#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f5b2d7fecaea7886cc527ee16c292e1cd4bb736a</div><div id='time'> Time: 2019-05-29</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR>

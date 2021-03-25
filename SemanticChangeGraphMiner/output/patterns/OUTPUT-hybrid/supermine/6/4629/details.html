@@ -1,0 +1,24 @@
+<html><h3>6a8d2f59086e71dc529fb5261eb291cd7f2615a9,mvpa2/measures/rsa.py,CDist,_call,#CDist#,65
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                       **self.params.pairwise_metric_kwargs)
+        &#47&#47 Make target pairs
+        distds = Dataset(samples=distds.ravel()[:, None],
+                         sa=<a id="change">{&quotpairs&quot: list(product(self._train_ds.T,
+                                                   test_ds.T))}</a>)
+        return distds
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _call(self, ds):
+        test_ds = self._prepare_ds(ds)
+        <a id="change">if test_ds.nsamples != self._train_ds.nsamples:
+            raise ValueError(&quotDataset should have same sample size for dissimilarity.&quot\
+                             &quottrain: %d, test: %d&quot%(self._train_ds.nsamples, test_ds.nsamples))
+        &#47&#47 Call actual distance metric
+       </a> distds = cdist(self._train_ds.samples, test_ds.samples,
+                       metric=self.params.pairwise_metric,
+                       **self.params.pairwise_metric_kwargs)
+        &#47&#47 Make target pairs</code></pre><img src="19818566.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/6a8d2f59086e71dc529fb5261eb291cd7f2615a9#diff-93f2971a2ff9793dd049b729417fe7e7de10f39e91e636bea65c67c019a04fe7L65' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: 6a8d2f59086e71dc529fb5261eb291cd7f2615a9</div><div id='time'> Time: 2016-10-05</div><div id='author'> Author: swaroopgj@gmail.com</div><div id='file'> File Name: mvpa2/measures/rsa.py</div><div id='class'> Class Name: CDist</div><div id='method'> Method Name: _call</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec#diff-ff911c1c91b963203f3c1d08913155f86610ed2c7e1749752fc192293666c778L49' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: sebastian.bullinger@iosb.fraunhofer.de</div><div id='file'> File Name: pyntcloud/io/las.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_las</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/254c997f8d3d2b35b12537dbd542fa51a137fe82#diff-e8d4c137f258d2970dd742729ee7db7875ceb3e80c36d2cf003d42db807fbc18L89' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 254c997f8d3d2b35b12537dbd542fa51a137fe82</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: stephenhbach@gmail.com</div><div id='file'> File Name: snorkel/models/candidate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: candidate_subclass</div><BR>

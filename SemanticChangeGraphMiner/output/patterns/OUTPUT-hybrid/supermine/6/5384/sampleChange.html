@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return os.path.join(storage_dir(), &quotmodels&quot, model_name+".pt")
+
+def load_model(observation_space, action_space, from_path):
+    <a id="change">if from_path == None or not(os.path.exists(from_path)):
+        policy_net = Policy(observation_space, action_space)
+        value_net = Value(observation_space)
+    else:
+        policy_net, value_net = pickle.load(open(from_path, "rb"))
+
+   </a> if ac_rl.use_gpu:
+        policy_net = policy_net.cuda()
+        value_net = value_net.cuda()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def load_model(observation_space, action_space, from_path):
+    acmodel = ACModel(observation_space, action_space)
+    <a id="change">if from_path != None and os.path.exists(from_path):
+        acmodel.load_state_dict(torch.load(from_path))
+   </a> return acmodel
+
+def save_model(acmodel, to_path):
+    dirname = os.path.dirname(to_path)</code></pre>

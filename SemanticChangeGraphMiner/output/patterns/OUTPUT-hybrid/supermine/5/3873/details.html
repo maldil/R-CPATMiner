@@ -1,0 +1,38 @@
+<html><h3>641621bc7cf7a8140642bd068040cf1b397f2205,theanolm/commands/score.py,,_score_text,#,78
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        perplexity = numpy.exp(cross_entropy)
+        output_file.write("Cross entropy (base e): {0}\n".format(cross_entropy))
+        if not log_base is None:
+            <a id="change">cross_entropy /= numpy.log(log_base)</a>
+            output_file.write("Cross entropy (base {1}): {0}\n".format(
+                cross_entropy, log_base))
+        output_file.write("Perplexity: {0}\n".format(perplexity))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    validation_iter = theanolm.BatchIterator(input_file, dictionary)
+    base_conversion = 1 if log_base is None else <a id="change">numpy.log(log_base)</a>
+
+    total_logprob = 0
+    num_words = 0
+    num_sentences = 0
+    for word_ids, membership_probs, mask in validation_iter:
+        logprobs = scorer.score_batch(word_ids, membership_probs, mask)
+        for seq_index, seq_logprobs in enumerate(logprobs):
+            seq_logprob = sum(seq_logprobs)
+            seq_length = len(seq_logprobs)
+            total_logprob += seq_logprob
+            num_words += seq_length
+            num_sentences += 1
+            if not word_level:
+                continue
+
+            seq_word_ids = word_ids[:, seq_index]
+            <a id="change">seq_logprobs = [x / base_conversion for x in seq_logprobs]</a>
+            seq_logprob /= base_conversion
+            seq_details = [str(word_id) + ":" + str(logprob)
+                for word_id, logprob in zip(seq_word_ids, seq_logprobs)]
+            output_file.write("&#47&#47 Sentence {0}\n".format(num_sentences))</code></pre><img src="17053686.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/641621bc7cf7a8140642bd068040cf1b397f2205#diff-1684412900a6792c6d1de8adc4c32e299bb18365b9e088e9a64a91b2dba0c66eL107' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: 641621bc7cf7a8140642bd068040cf1b397f2205</div><div id='time'> Time: 2015-11-25</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/commands/score.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _score_text</div><BR><BR><div id='link'><a href='https://github.com/mahyarnajibi/SNIPER/commit/72caa3677f5f9cc09ed98324c76454c38a7e8098#diff-e08fac7eb9145e7681255f071cce7328388e8c5ec5f3304632c1a2150adc2434L137' target='_blank'>Link</a></div><div id='project'> Project Name: mahyarnajibi/SNIPER</div><div id='commit'> Commit Name: 72caa3677f5f9cc09ed98324c76454c38a7e8098</div><div id='time'> Time: 2018-06-04</div><div id='author'> Author: mahyarnajibi@gmail.com</div><div id='file'> File Name: lib/metric.py</div><div id='class'> Class Name: MaskLogLossMetric</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/be44976b8ea94ca38942370935c360fd22d7871b#diff-1684412900a6792c6d1de8adc4c32e299bb18365b9e088e9a64a91b2dba0c66eL107' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: be44976b8ea94ca38942370935c360fd22d7871b</div><div id='time'> Time: 2015-11-25</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/commands/score.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _score_text</div><BR>

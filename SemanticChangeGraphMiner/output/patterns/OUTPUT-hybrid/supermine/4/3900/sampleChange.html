@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i, (serie_label, serie_fmt) in enumerate(series_fmt.items()):
+
+            <a id="change">if serie_fmt.format(metric) in logs[0]:
+                serie_metric_name = serie_fmt.format(metric)
+                serie_metric_logs = [log[serie_metric_name] for log in logs]
+                plt.plot(range(1, len(logs) + 1),
+                         serie_metric_logs,
+                         label=serie_label)
+
+       </a> plt.title(metric2title.get(metric, metric))
+        plt.xlabel(&quotepoch&quot)
+        plt.legend(loc=&quotcenter right&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            serie_metric_name = serie_fmt.format(metric)
+            serie_metric_logs = [(i, log[serie_metric_name])
+                                 <a id="change">for</a> i, log in enumerate(logs)
+                                 if serie_metric_name in log]
+
+            if <a id="change">len(serie_metric_logs)</a> &gt; 0:
+                xs, ys = zip(*serie_metric_logs)
+                plt.plot(xs, ys, label=serie_label)
+</code></pre>

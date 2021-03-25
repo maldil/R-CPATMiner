@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        numba.set_num_threads(self._original_num_threads)
+
+    def __getstate__(self):
+        <a id="change">self._init_search_graph()</a>
+        self._init_search_function()
+        result = self.__dict__.copy()
+        result["_search_forest"] = tuple(
+            [denumbaify_tree(tree) for tree in self._search_forest]</code></pre><h3>After Change</h3><pre><code class='java'>
+        numba.set_num_threads(self._original_num_threads)
+
+    def __getstate__(self):
+        <a id="change">if not hasattr(self, "_search_graph"):
+            self._init_search_graph()
+       </a> <a id="change">if not hasattr(self, "_search_function"):
+            self._init_search_function()
+       </a> result = self.__dict__.copy()
+        if hasattr(self, "_rp_forest"):
+            del result["_rp_forest"]
+        result["_search_forest"] = tuple(</code></pre>

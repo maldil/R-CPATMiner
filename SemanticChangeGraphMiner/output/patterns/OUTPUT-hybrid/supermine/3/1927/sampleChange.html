@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def prep_net(self, gpu_id=None, path=&quot&quot, dist=False):
+        import torch
+        import models.pytorch.model as model
+        device = torch.device(&quotcuda:{}&quot.format(gpu_id)) if gpu_id != -1 else <a id="change">torch.device(&quotcpu&quot)</a>
+        print(&quotpath = %s, device = %s&quot % (path, device))
+        print(&quotModel set! dist mode? &quot, dist)
+        self.net = model.SIGGRAPHGenerator(dist=dist)
+        state_dict = torch.load(path, map_location=str(device))</code></pre><h3>After Change</h3><pre><code class='java'>
+        for key in list(state_dict.keys()):  &#47&#47 need to copy keys here because we mutate in loop
+            self.__patch_instance_norm_state_dict(state_dict, self.net, key.split(&quot.&quot))
+        self.net.load_state_dict(state_dict)
+        <a id="change">if gpu_id != -1:
+            self.net.cuda()
+       </a> self.net.eval()
+        self.net_set = True
+
+    def __patch_instance_norm_state_dict(self, state_dict, module, keys, i=0):</code></pre>

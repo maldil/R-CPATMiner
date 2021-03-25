@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    sorted_docs_np = docs_np[docs_np[:, 1].argsort()]
+
+    &#47&#47 extract the array of name and score out from sorted_docs_list
+    docs_name = sorted_docs_np[<a id="change">:, 0</a>]
+    docs_score = np.round(sorted_docs_np[:, 1].astype(float), decimals=4)
+
+    &#47&#47 pack the scores and names in data_frame</code></pre><h3>After Change</h3><pre><code class='java'>
+    dist = 1 - cosine_similarity(final_matrix)
+
+    &#47&#47 get an array of file index in filemanager.files
+    <a id="change">num_row = len(dtm_data_frame.index)</a>
+    other_file_indexes = np.asarray([file_index for file_index in range(
+        num_row)if file_index != comp_file_index])
+
+    &#47&#47 construct an array of scores
+    docs_score_array = np.asarray([dist[file_index, comp_file_index]
+                                   for file_index in other_file_indexes])
+    &#47&#47 construct an array of names
+    docs_name_array = np.asarray([temp_labels[i] for i in other_file_indexes])
+
+    &#47&#47 sort the score array
+    sorted_score_array = np.sort(docs_score_array)
+
+    &#47&#47 round the score array to 4 decimals
+    <a id="change">final_score_array = np.round(sorted_score_array, decimals=4)</a>
+
+    &#47&#47 sort the
+    final_name_array = docs_name_array[docs_score_array.argsort()]
+</code></pre>

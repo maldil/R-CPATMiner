@@ -1,0 +1,38 @@
+<html><h3>70fcd3094baba3139afcda727683d58c2928261f,lexos/processors/analyze/similarity.py,,similarity_maker,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 extract the array of name and score out from sorted_docs_list
+    docs_name = sorted_docs_np[:, 0]
+    docs_score = <a id="change">np.round(sorted_docs_np[:, 1].astype(float), decimals=4)</a>
+
+    &#47&#47 pack the scores and names in data_frame
+    score_name_data_frame = pd.DataFrame(docs_score.reshape(
+        docs_score.size, 1), index=docs_name, columns=["Cosine similarity"])</code></pre><h3>After Change</h3><pre><code class='java'>
+    dist = 1 - cosine_similarity(final_matrix)
+
+    &#47&#47 get an array of file index in filemanager.files
+    <a id="change">num_row = len(dtm_data_frame.index)</a>
+    other_file_indexes = np.asarray([file_index for file_index in range(
+        num_row)if file_index != comp_file_index])
+
+    &#47&#47 construct an array of scores
+    docs_score_array = np.asarray([dist[file_index, comp_file_index]
+                                   for file_index in other_file_indexes])
+    &#47&#47 construct an array of names
+    docs_name_array = np.asarray([temp_labels[i] for i in other_file_indexes])
+
+    &#47&#47 sort the score array
+    sorted_score_array = np.sort(docs_score_array)
+
+    &#47&#47 round the score array to 4 decimals
+    final_score_array = <a id="change">np.round(sorted_score_array, decimals=4)</a>
+
+    &#47&#47 sort the
+    final_name_array = <a id="change">docs_name_array[docs_score_array.argsort()]</a>
+
+    &#47&#47 pack the scores and names in data_frame
+    score_name_data_frame = pd.DataFrame(final_score_array,
+                                         index=final_name_array,</code></pre><img src="2020159.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/70fcd3094baba3139afcda727683d58c2928261f#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 70fcd3094baba3139afcda727683d58c2928261f</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/AxeldeRomblay/MLBox/commit/f04634f2d427763d3b51af4ad6213fe5ad37fbf7#diff-1e15f05f18b005b7bcc56bb87ff24fa869b6fa772a441dab6c1a13a9aafcffd8L418' target='_blank'>Link</a></div><div id='project'> Project Name: AxeldeRomblay/MLBox</div><div id='commit'> Commit Name: f04634f2d427763d3b51af4ad6213fe5ad37fbf7</div><div id='time'> Time: 2017-07-21</div><div id='author'> Author: axelderomblay@gmail.com</div><div id='file'> File Name: python-package/mlbox/preprocessing/reader.py</div><div id='class'> Class Name: Reader</div><div id='method'> Method Name: train_test_split</div><BR>

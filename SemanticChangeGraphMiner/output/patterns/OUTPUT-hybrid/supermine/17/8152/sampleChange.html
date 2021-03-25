@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47         diff_potential = X
+
+        if verbose:
+            <a id="change">print("Calculated diffusion potential in "
+                  "{:.2f} seconds.".format(time.time() - tic))</a>
+    &#47&#47 if diffusion potential is precomputed (i.e. &quotmds&quot or &quotmds_dist&quot has
+    &#47&#47 changed on PHATE object)
+    else:
+        if verbose:
+            print("Using precomputed diffusion potential...")
+
+    <a id="change">tic = time.time()</a>
+    if verbose:
+        print("Embedding data using {} MDS...".format(mds))
+    if embedding is None:
+        embedding = embed_MDS(diff_potential, ndim=n_components, how=mds,
+                              distance_metric=mds_dist, n_jobs=n_jobs,
+                              seed=random_state)
+        if landmark_transitions is not None:
+            &#47&#47 return to ambient space
+            embedding = landmark_transitions.dot(embedding)
+        <a id="change">if verbose:
+            print("Embedded data in {:.2f} seconds.".format(time.time() - tic))
+   </a> else:
+        if verbose:
+            print("Using precomputed embedding...")
+    return embedding, diff_potential</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47         &#47&#47 gamma = -1 is just MDS on DM
+        &#47&#47         diff_potential = X
+
+        <a id="change">log_complete("diffusion potential")</a>
+    &#47&#47 if diffusion potential is precomputed (i.e. &quotmds&quot or &quotmds_dist&quot has
+    &#47&#47 changed on PHATE object)
+    else:
+        log_info("Using precomputed diffusion potential...")</code></pre>

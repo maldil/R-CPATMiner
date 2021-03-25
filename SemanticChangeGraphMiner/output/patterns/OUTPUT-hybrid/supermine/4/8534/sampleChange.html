@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            next_observations=next_observation)
+
+        if terminal or self._path_length &gt;= self._max_path_length:
+            <a id="change">last_path = self.pool.last_n_batch(
+                self._path_length,
+                observation_keys=getattr(self.env, &quotobservation_keys&quot, None))</a>
+            last_path.update({&quotinfos&quot: self._infos})
+            self._last_n_paths.appendleft(last_path)
+
+            self.policy.reset()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self._current_path[&quotobservations&quot].append(self._current_observation)
+        self._current_path[&quotactions&quot].append(action)
+        self._current_path[&quotrewards&quot].append(<a id="change">[reward]</a>)
+        self._current_path[&quotterminals&quot].append([terminal])
+        self._current_path[&quotnext_observations&quot].append(next_observation)
+        self._current_path[&quotinfos&quot].append(info)</code></pre>

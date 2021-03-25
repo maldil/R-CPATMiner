@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ValueError(
+            "Number of rows in counts must be equal to number of provided "
+            "ids.")
+    <a id="change">if metric in _skbio_metrics:
+        metric = _skbio_metrics[metric]
+
+   </a> if callable(metric):
+        metric = partial(metric, **kwargs)
+
+    distances = pdist(counts, metric)</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(
+            "Number of rows in counts must be equal to number of provided "
+            "ids.")
+    <a id="change">if metric in _skbio_metrics:
+        if metric == &quotunweighted_unifrac&quot:
+            metric, counts, _ = _unweighted_unifrac_pdist_f(
+                counts, otu_ids=kwargs[&quototu_ids&quot], tree=kwargs[&quottree&quot])
+        elif metric == &quotweighted_unifrac&quot:
+            try:
+                normalized = kwargs[&quotnormalized&quot]
+            except KeyError:
+                normalized=False
+            metric, counts, _ = _weighted_unifrac_pdist_f(
+                counts, otu_ids=kwargs[&quototu_ids&quot], tree=kwargs[&quottree&quot],
+                normalized=normalized)
+        else:
+            metric = _skbio_metrics[metric]
+    elif callable(metric):
+        metric = partial(metric, **kwargs)
+    else:
+        pass
+
+   </a> distances = pdist(counts, metric)
+    return DistanceMatrix(distances, ids)
+
+pw_distances_from_table_deprecation_reason = (</code></pre>

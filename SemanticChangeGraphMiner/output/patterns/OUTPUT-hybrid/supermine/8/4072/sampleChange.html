@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        grad_mu = _grad_mu(distr, z, eta)
+        hess_mu = np.exp(-z)/expit(z)**2
+
+        partial_beta_a =<a id="change">hess_mu * (1 + np.log(mu + r))</a>
+        partial_beta_b = grad_mu ** 2 / (mu + r)
+        partial_beta_c =  y * (hess_mu / mu - (grad_mu) ** 2 / mu ** 2)
+
+        gk = -np.sum(partial_beta_a+partial_beta_b+partial_beta_c)
+        <a id="change">hk = -np.sum(np.dot(partial_beta_a.T, xk)+np.dot(partial_beta_b.T, xk)+np.dot(partial_beta_c.T, xk))</a>
+
+    elif distr == &quotgamma&quot:
+        raise NotImplementedError(&quotcdfast is not implemented for Gamma &quot
+                                  &quotdistribution&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        hess_mu = np.exp(-z)*expit(z)**2
+
+        partial_beta_0_1 = hess_mu*((r+y)/(r+mu)-(y/mu))
+        partial_beta_0_2 = grad_mu**2 * (y/mu**2 - <a id="change">(r+y)</a>/(r+mu)**2)
+        partial_beta_0 = partial_beta_0_1+partial_beta_0_2
+        gk = <a id="change">np.sum(partial_beta_0)</a>
+        hk = np.dot(partial_beta_0.T, xk**2)
+
+    elif distr == &quotgamma&quot:
+        raise NotImplementedError(&quotcdfast is not implemented for Gamma &quot</code></pre>

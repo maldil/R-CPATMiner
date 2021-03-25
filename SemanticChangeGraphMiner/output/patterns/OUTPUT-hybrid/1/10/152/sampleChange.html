@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    path = get_file(path,
+                    origin=&quothttps://s3.amazonaws.com/keras-datasets/boston_housing.npz&quot,
+                    file_hash=&quotf553886a1f8d56431e820c5b82552d9d95cfcb96d1e678153f8839538947dff5&quot)
+    f = <a id="change">np.load(path)</a>
+    x = f[&quotx&quot]
+    y = f[&quoty&quot]
+    f.close()
+
+    np.random.seed(seed)
+    indices = np.arange(len(x))
+    np.random.shuffle(indices)
+    <a id="change">x</a> = x[indices]
+    y = y[indices]
+
+    x_train = np.array(x[:int(len(x) * (1 - test_split))])
+    y_train = np.array(y[:int(len(x) * (1 - test_split))])
+    <a id="change">x_test</a> = np.array(x[int(len(x) * (1 - test_split)):])
+    y_test = np.array(y[int(len(x) * (1 - test_split)):])
+    return (x_train, y_train), (x_test, y_test)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    path = get_file(path,
+                    origin=&quothttps://s3.amazonaws.com/keras-datasets/boston_housing.npz&quot,
+                    file_hash=&quotf553886a1f8d56431e820c5b82552d9d95cfcb96d1e678153f8839538947dff5&quot)
+    with <a id="change">np.load(path)</a> as f:
+        x = f[&quotx&quot]
+        y = f[&quoty&quot]
+
+    np.random.seed(seed)
+    indices = np.arange(len(x))
+    np.random.shuffle(indices)
+    <a id="change">x</a> = x[indices]
+    y = y[indices]
+
+    x_train = np.array(x[:int(len(x) * (1 - test_split))])
+    y_train = np.array(y[:int(len(x) * (1 - test_split))])
+    <a id="change">x_test</a> = np.array(x[int(len(x) * (1 - test_split)):])
+    y_test = np.array(y[int(len(x) * (1 - test_split)):])
+    return (x_train, y_train), (x_test, y_test)
+</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if normalize_factors:
+                weights = tl.norm(factor, order=2, axis=0)
+                weights = tl.where(tl.abs(weights) &lt;= tl.eps(tensor.dtype), 
+                                   tl.ones(<a id="change">tl.shape(weights)</a>, **tl.context(factors[0])),
+                                   weights)
+                factor = factor/<a id="change">(tl.reshape(weights, (1, -1)))</a>
+
+            factors[mode] = factor
+
+        if tol:</code></pre><h3>After Change</h3><pre><code class='java'>
+            factors[mode] = factor
+
+        if normalize_factors:
+            <a id="change">weights, factors = kruskal_normalise((weights, factors))</a>
+
+        if tol:
+            &#47&#47 ||tensor - rec||^2 = ||tensor||^2 + ||rec||^2 - 2*&lt;tensor, rec&gt;
+            factors_norm = kruskal_norm((weights, factors))</code></pre>

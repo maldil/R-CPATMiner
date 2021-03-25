@@ -1,0 +1,26 @@
+<html><h3>981e4266d4ea816b08a762193bd52f40cd1a3242,examples/mnist/keras/mnist_inference.py,,inference,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      &#47&#47 note that we feed directly into the graph tensors (bypassing the exported signatures)
+      &#47&#47 these tensors will be shown in the "name" field of the signature definitions
+
+      <a id="change">outputs = sess.run([&quotdense_2/Softmax:0&quot], feed_dict={&quotPlaceholder:0&quot: img})</a>
+      for p in outputs[0]:
+        output_file.write("{}\n".format(np.argmax(p)))
+    except tf.errors.OutOfRangeError:
+      break</code></pre><h3>After Change</h3><pre><code class='java'>
+  output_file = tf.io.gfile.GFile("{}/part-{:05d}".format(args.output, worker_num), mode=&quotw&quot)
+
+  for batch in ds:
+    <a id="change">predictions = predict(conv2d_input=batch[0])</a>
+    labels = np.reshape(batch[1], -1).astype(np.int)
+    <a id="change">preds = np.argmax(predictions[&quotdense_1&quot], axis=1)</a>
+    <a id="change">for x in zip(labels, preds):
+      output_file.write("{} {}\n".format(x[0], x[1]))
+
+ </a> output_file.close()
+
+
+if __name__ == &quot__main__&quot:</code></pre><img src="7335150.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/8da4857396fcedb1abd19a08cd4de40d16c7bc50#diff-5daaabb2051c9bd20f18a49d0777bbff5e224b60e3f4c53441eca2bec7678258L40' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 8da4857396fcedb1abd19a08cd4de40d16c7bc50</div><div id='time'> Time: 2020-08-17</div><div id='author'> Author: 30733558+plakal@users.noreply.github.com</div><div id='file'> File Name: research/audioset/yamnet/yamnet_test.py</div><div id='class'> Class Name: YAMNetTest</div><div id='method'> Method Name: clip_test</div><BR><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL123' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/d6d7cb7db51776b026514a1a2caa4073b9e998ad#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L124' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: d6d7cb7db51776b026514a1a2caa4073b9e998ad</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: pad</div><BR>

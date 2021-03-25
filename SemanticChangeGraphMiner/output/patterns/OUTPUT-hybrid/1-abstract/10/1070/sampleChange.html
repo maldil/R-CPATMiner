@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.norm += 1
+        self.energy_gap += be.mean(update_args.model
+                                   .joint_energy(update_args.minibatch))
+        self.energy_gap -= <a id="change">be.mean(update_args.model
+                                   .joint_energy(update_args.random_samples))</a>
+
+    def value(self):
+        
+        Get the value of the energy gap.</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        self.calc.reset()
+
+    def update(<a id="change">self</a>, update_args: MetricState) -&gt; None:
+        
+        Update the estimate for the energy gap using a batch
+        of observations and a batch of fantasy particles.
+
+        Args:
+            update_args: uses all layers of minibatch and random_samples, and model
+
+        Returns:
+            None
+
+        
+        energy_data = update_args.model.joint_energy(update_args.minibatch)
+        energy_random = <a id="change">update_args.model.joint_energy(update_args.random_samples)</a>
+        self.calc.update(energy_data)
+        <a id="change">self.calc.update(-energy_random)</a>
+
+    def value(self):
+        
+        Get the value of the energy gap.</code></pre>

@@ -1,0 +1,24 @@
+<html><h3>8da4857396fcedb1abd19a08cd4de40d16c7bc50,research/audioset/yamnet/yamnet_test.py,YAMNetTest,clip_test,#YAMNetTest#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  def clip_test(self, waveform, expected_class_name, top_n=10):
+    Run the model on the waveform, check that expected class is in top-n.
+    with YAMNetTest._yamnet_graph.as_default():
+      <a id="change">prediction = np.mean(YAMNetTest._yamnet.predict(
+        np.reshape(waveform, [1, -1]), steps=1)[0], axis=0)</a>
+      top_n_class_names = YAMNetTest._yamnet_classes[
+        np.argsort(prediction)[-top_n:]]
+      self.assertIn(expected_class_name, top_n_class_names)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    top_n_scores = clip_predictions[top_n_indices]
+    top_n_class_names = YAMNetTest._yamnet_classes[top_n_indices]
+    top_n_predictions = list(zip(top_n_class_names, top_n_scores))
+    <a id="change">self.assertIn(expected_class_name, top_n_class_names,
+                  &quotDid not find expected class {} in top {} predictions: {}&quot.format(
+                      expected_class_name, top_n, top_n_predictions))</a>
+
+  def testZeros(self):
+    self.clip_test(
+        waveform=np.zeros((int(3 * YAMNetTest._params.sample_rate),)),</code></pre><img src="9778565.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/8da4857396fcedb1abd19a08cd4de40d16c7bc50#diff-5daaabb2051c9bd20f18a49d0777bbff5e224b60e3f4c53441eca2bec7678258L40' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 8da4857396fcedb1abd19a08cd4de40d16c7bc50</div><div id='time'> Time: 2020-08-17</div><div id='author'> Author: 30733558+plakal@users.noreply.github.com</div><div id='file'> File Name: research/audioset/yamnet/yamnet_test.py</div><div id='class'> Class Name: YAMNetTest</div><div id='method'> Method Name: clip_test</div><BR><BR><div id='link'><a href='https://github.com/GPflow/GPflow/commit/deb4508578f7223fa1ad5e3b6458626c4b41ef09#diff-88efb534a914efb382ee238df8d25bd030268d084f589d787c4c9dae507a954eL102' target='_blank'>Link</a></div><div id='project'> Project Name: GPflow/GPflow</div><div id='commit'> Commit Name: deb4508578f7223fa1ad5e3b6458626c4b41ef09</div><div id='time'> Time: 2019-10-17</div><div id='author'> Author: 6815729+condnsdmatters@users.noreply.github.com</div><div id='file'> File Name: tests/test_methods.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sgpr_qu</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/d2e27ac0d17c3550ab03162daa01fb6cfdf54294#diff-df18707a57851294a4b669b3b1acc4bc205dd4a2f7be58df6b67853cca505389L70' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: d2e27ac0d17c3550ab03162daa01fb6cfdf54294</div><div id='time'> Time: 2017-10-10</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: tests/test_fingerprints.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sparse_densify</div><BR>

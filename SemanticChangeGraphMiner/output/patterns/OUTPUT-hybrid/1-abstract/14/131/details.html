@@ -1,0 +1,43 @@
+<html><h3>3bda5520b787f84f687bb116c460f3aedada039b,examples/pretrained_word_embeddings.py,,,#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+print(&quotPreparing embedding matrix.&quot)
+
+&#47&#47 prepare embedding matrix
+<a id="change">num_words</a> = min(MAX_NUM_WORDS, <a id="change">len(word_index)</a>) + 1
+<a id="change">embedding_matrix</a> = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i &gt; MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        &#47&#47 words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
+
+&#47&#47 load pre-trained word embeddings into an Embedding layer
+&#47&#47 note that we set trainable = False so as to keep the embeddings fixed
+<a id="change">embedding_layer</a> = Embedding(num_words,
+                            EMBEDDING_DIM,
+                            embeddings_initializer=Constant(embedding_matrix),
+                            input_length=MAX_SEQUENCE_LENGTH,</code></pre><h3>After Change</h3><pre><code class='java'>
+print(&quotPreparing embedding matrix.&quot)
+
+&#47&#47 prepare embedding matrix
+<a id="change">num_words</a> = min(MAX_NUM_WORDS, <a id="change">len(word_index)</a> + 1)
+<a id="change">embedding_matrix</a> = np.zeros((num_words, EMBEDDING_DIM))
+for word, i in word_index.items():
+    if i &gt;= MAX_NUM_WORDS:
+        continue
+    embedding_vector = embeddings_index.get(word)
+    if embedding_vector is not None:
+        &#47&#47 words not found in embedding index will be all-zeros.
+        embedding_matrix[i] = embedding_vector
+
+&#47&#47 load pre-trained word embeddings into an Embedding layer
+&#47&#47 note that we set trainable = False so as to keep the embeddings fixed
+<a id="change">embedding_layer</a> = Embedding(num_words,
+                            EMBEDDING_DIM,
+                            embeddings_initializer=Constant(embedding_matrix),
+                            input_length=MAX_SEQUENCE_LENGTH,</code></pre><img src="122099.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/3bda5520b787f84f687bb116c460f3aedada039b#diff-f4c7ccd4c776ce6db4bca7c4c59a7f45f733278c29ef22ddf69a56c67b2bc1faL104' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 3bda5520b787f84f687bb116c460f3aedada039b</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: 47491248+abhipn@users.noreply.github.com</div><div id='file'> File Name: examples/pretrained_word_embeddings.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

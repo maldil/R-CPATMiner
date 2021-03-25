@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            output = prefix+&quotedges/%s%s_flat_%s.msgpack&quot%(style, style, i)
+            add_dep(lines, &quotparse&quot, input, output, params={&quotfiletype&quot:&quotconceptnet4&quot})
+
+    <a id="change">return lines</a>
+
+
+def parse_ptt_petgame(prefix):
+    lines = []</code></pre><h3>After Change</h3><pre><code class='java'>
+def parse_conceptnet4(deps):
+    for type in [&quotconceptnet4&quot, &quotconceptnet4_nadya&quot, &quotconceptnet_zh&quot]:
+        for input in in_tar[type]:
+            output = <a id="change">input.replace(&quotjsons&quot, &quotmsgpack&quot)\
+                        .replace(&quottxt&quot, &quotmsgpack&quot)\
+                        .replace(&quotraw&quot, &quotedges&quot)</a>
+            parser = type if not type.endswith(&quotzh&quot) else &quotptt_petgame&quot
+            <a id="change">deps[&quotparse %s&quot%type] = Dep(
+                [input],
+                [output],
+                &quotparse&quot,
+                {&quotparser&quot: parser})</a>
+
+
+def extract_wiktionary(deps):
+    for lang in wiktionary_langs:</code></pre>

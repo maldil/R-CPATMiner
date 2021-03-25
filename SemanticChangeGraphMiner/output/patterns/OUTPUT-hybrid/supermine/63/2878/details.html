@@ -1,0 +1,38 @@
+<html><h3>4d444c8d8824fd460034e04e75e4270734ec96fe,implementations/discogan/models.py,Discriminator,__init__,#Discriminator#,154
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            return layers
+
+        <a id="change">layers = []</a>
+        <a id="change">in_filters = in_channels</a>
+        <a id="change">for out_filters, stride, normalize in [ (64, 2, False),
+                                                (128, 2, True),
+                                                (256, 2, True),
+                                                (512, 2, True)]:
+            layers.extend(discriminator_block(in_filters, out_filters, stride, normalize))
+            in_filters = out_filters
+
+       </a> <a id="change">layers.append(nn.Conv2d(out_filters, 1, 3, 1, 1))</a>
+
+        <a id="change">self.model = nn.Sequential(*layers)</a>
+
+    def forward(self, img):
+        return self.model(img)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            return layers
+
+        <a id="change">self.model = nn.Sequential(
+            *discriminator_block(in_channels, 64, 2, False),
+            *discriminator_block(64, 128, 2, True),
+            *discriminator_block(128, 256, 2, True),
+            *discriminator_block(256, 512, 2, True),
+            nn.Conv2d(512, 1, 3, 1, 1)
+        )</a>
+
+    def forward(self, img):
+        return self.model(img)
+</code></pre><img src="12770754.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 32</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/4d444c8d8824fd460034e04e75e4270734ec96fe#diff-e0bfef5d3f1652dbb7b4effdf1e88e499b91b97706cb0b6720c431c9aba01d05L165' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 4d444c8d8824fd460034e04e75e4270734ec96fe</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/discogan/models.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/d63b5f9934bbc6a01ea16a10bae56f0fc19736c1#diff-ffdd6394ed91df17f77e7cb4635d49da497fee944c66f6f528ef73ec872930c5L161' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: d63b5f9934bbc6a01ea16a10bae56f0fc19736c1</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cyclegan/models.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/4d444c8d8824fd460034e04e75e4270734ec96fe#diff-e0bfef5d3f1652dbb7b4effdf1e88e499b91b97706cb0b6720c431c9aba01d05L165' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 4d444c8d8824fd460034e04e75e4270734ec96fe</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/discogan/models.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/d63b5f9934bbc6a01ea16a10bae56f0fc19736c1#diff-9903008c4dd9e13a11faec769eb2a60eec5ea5c9267151d03f6d0a59a11a90a6L165' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: d63b5f9934bbc6a01ea16a10bae56f0fc19736c1</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/pix2pix/models.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR>

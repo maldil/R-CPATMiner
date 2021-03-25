@@ -1,0 +1,22 @@
+<html><h3>6bf3f51cd0a312da842157665663c2dad9983248,tensorflow_ranking/python/losses_impl.py,ClickEMLoss,_compute_latent_prob,#ClickEMLoss#,914
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+              tf.compat.v1.where(is_clicked, tf.ones_like(prob), prob))
+          for prob in [exam_prob_given_non_clicks, rel_prob_given_non_clicks]
+      ]
+      return <a id="change">exam_prob_given_non_clicks</a>, rel_prob_given_non_clicks
+
+  def compute_unreduced_loss(self, labels, logits):
+    Computes the loss for each element.</code></pre><h3>After Change</h3><pre><code class='java'>
+      exam_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(exam_logits_posterior),
+          tf.sigmoid(exam_logits_posterior))
+      <a id="change">rel_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(rel_logits_posterior),
+          tf.sigmoid(rel_logits_posterior))</a>
+      return tf.stop_gradient(exam_prob_posterior), tf.stop_gradient(
+          rel_prob_posterior)
+
+  def compute_unreduced_loss(self, labels, logits):</code></pre><img src="18448249.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/ranking/commit/6bf3f51cd0a312da842157665663c2dad9983248#diff-ac0a8b23265c0fdd56da5d2709bf0e7dfce716e2713c8c9fd8d44f4fd9461ff7L930' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/ranking</div><div id='commit'> Commit Name: 6bf3f51cd0a312da842157665663c2dad9983248</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: xuanhui@google.com</div><div id='file'> File Name: tensorflow_ranking/python/losses_impl.py</div><div id='class'> Class Name: ClickEMLoss</div><div id='method'> Method Name: _compute_latent_prob</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/fcd690b14b04c11e7f25b9d473db056c4b7947b3#diff-683f3a61c691f4d1b70bb9c802575c24964a15b08d724888f509afcb579cff8eL143' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: fcd690b14b04c11e7f25b9d473db056c4b7947b3</div><div id='time'> Time: 2020-09-30</div><div id='author'> Author: tanzheny@google.com</div><div id='file'> File Name: official/vision/beta/ops/anchor.py</div><div id='class'> Class Name: AnchorLabeler</div><div id='method'> Method Name: label_anchors</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/0a7bbb0f733a33a072aa1327dc4699d317d4ce56#diff-e430e1a11a526cc036c7b56cb23f373a279d805dd95e540859ad0bcf3df32275L159' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 0a7bbb0f733a33a072aa1327dc4699d317d4ce56</div><div id='time'> Time: 2015-09-21</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Optimization/Nexus.py</div><div id='class'> Class Name: Nexus</div><div id='method'> Method Name: finite_difference</div><BR>

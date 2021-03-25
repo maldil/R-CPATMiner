@@ -1,0 +1,27 @@
+<html><h3>1cc277630f2381f2ba0f01dcf833801a830f5c3b,skimage/metrics/_contingency_table.py,,contingency_table,#,7
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    im_test_r = im_test.ravel()
+    im_true_r = im_true.ravel()
+    <a id="change">ignored = np.zeros(im_true_r.shape, np.bool)</a>
+    <a id="change">for label in ignore_labels:
+        ignored[im_true_r == label] = True
+   </a> data = np.ones(im_true_r.shape)
+    data[ignored] = 0
+    if normalize:
+        data = data / im_true.size</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    if ignore_labels is None:
+        ignore_labels = <a id="change">[]</a>
+    im_test_r = im_test.reshape(-1)
+    im_true_r = im_true.reshape(-1)
+    data = np.isin(im_true_r, ignore_labels, invert=True).astype(float)
+    if normalize:
+        <a id="change">data /= np.count_nonzero(data)</a>
+    cont = sparse.coo_matrix((data, (im_true_r, im_test_r))).tocsr()
+    return cont
+</code></pre><img src="38390683.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/1cc277630f2381f2ba0f01dcf833801a830f5c3b#diff-3c2b3d2b56479c4810e482c85db39f28695d489ec00754cb5f5672687eae3b95L30' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: 1cc277630f2381f2ba0f01dcf833801a830f5c3b</div><div id='time'> Time: 2020-08-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/metrics/_contingency_table.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: contingency_table</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/4af750bec058da0cf5d4a3245a443549b9d7fd33#diff-b664a3975b355614eb5080a28622c74841ee57034e3aa7ccb00c1cb7ff75b571L46' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 4af750bec058da0cf5d4a3245a443549b9d7fd33</div><div id='time'> Time: 2016-04-05</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/dummy_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dummy_minimize</div><BR><BR><div id='link'><a href='https://github.com/jacobgil/pytorch-grad-cam/commit/5890d98d650b9bf3c1824f48fec96ad90c94fbbb#diff-7fda75229a47e6a71b8c687309e62bd5b666bee239f88e71db1bfa9912c6b657L236' target='_blank'>Link</a></div><div id='project'> Project Name: jacobgil/pytorch-grad-cam</div><div id='commit'> Commit Name: 5890d98d650b9bf3c1824f48fec96ad90c94fbbb</div><div id='time'> Time: 2020-01-11</div><div id='author'> Author: jacob.gildenblat@gmail.com</div><div id='file'> File Name: grad-cam.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,24 @@
+<html><h3>76b2432b1c1ee03c80895a5c7d49cde485323102,qucumber/nn_states/complex_wavefunction.py,ComplexWaveFunction,rotated_gradient,#ComplexWaveFunction#,163
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 since grad_vp0/1 are real, can just treat the scalar multiplication
+        &#47&#47  and addition as a matrix multiplication
+        torch.matmul(Upsi_v, grad_vp0, out=rotated_grad[0])
+        torch.matmul(Upsi_v, grad_vp1, out=<a id="change">rotated_grad[1]</a>)
+
+        grad = [
+            cplx.real(cplx.scalar_divide(rotated_grad[0], Upsi)),  &#47&#47 Real</code></pre><h3>After Change</h3><pre><code class='java'>
+        )
+
+        vr = v.reshape(-1, v.shape[-1])
+        <a id="change">raw_grads = [
+            self.am_grads(vr).reshape(2, *v.shape[:-1], -1),
+            self.ph_grads(vr).reshape(2, *v.shape[:-1], -1),
+        ]</a>
+
+        rotated_grad = [<a id="change">cplx.einsum("s...,s...g-&gt;...g", Upsi_v, g)</a> for g in raw_grads]
+
+        grad = [
+            cplx.real(cplx.scalar_divide(rotated_grad[0], Upsi)),</code></pre><img src="31321597.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/76b2432b1c1ee03c80895a5c7d49cde485323102#diff-a7c4852f6776d3a559654457c3fed955ad1aa9efb93ce4fbe9a274cc691d60a4L163' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 76b2432b1c1ee03c80895a5c7d49cde485323102</div><div id='time'> Time: 2019-12-22</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/complex_wavefunction.py</div><div id='class'> Class Name: ComplexWaveFunction</div><div id='method'> Method Name: rotated_gradient</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/d1dc3a229f48d677dac83fb13eef84145cd640ea#diff-a7c4852f6776d3a559654457c3fed955ad1aa9efb93ce4fbe9a274cc691d60a4L188' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: d1dc3a229f48d677dac83fb13eef84145cd640ea</div><div id='time'> Time: 2019-12-22</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/complex_wavefunction.py</div><div id='class'> Class Name: ComplexWaveFunction</div><div id='method'> Method Name: rotated_gradient</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/960f18e759ac0ed76bb9193f29527a209bfd2b1a#diff-e75fa6c3e5ee13c1b0bd17be17e91157dfaeedec8e137c8c0d60b962ff53bb50L319' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 960f18e759ac0ed76bb9193f29527a209bfd2b1a</div><div id='time'> Time: 2019-12-19</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/density_matrix.py</div><div id='class'> Class Name: DensityMatrix</div><div id='method'> Method Name: rotated_gradient</div><BR>

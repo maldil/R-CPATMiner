@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      &#47&#47 only record failed step if project was undeployed, an update can always
+      &#47&#47 start from the beginning
+      if not deployed:
+        <a id="change">field_generation</a>.get_generated_fields_ref(
+            project_id, <a id="change">config.root</a>)[&quotfailed_step&quot] = step_num
+        field_generation.rewrite_generated_fields_back(project_yaml,
+                                                       config.root)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  project_generated_fields = config.generated_fields[&quotprojects&quot].get(project_id)
+  if not project_generated_fields:
+    project_generated_fields = {}
+    <a id="change">config.generated_fields[&quotprojects&quot][project_id]</a> = project_generated_fields
+    deployed = False
+  else:
+    deployed = &quotfailed_step&quot not in project_generated_fields</code></pre>

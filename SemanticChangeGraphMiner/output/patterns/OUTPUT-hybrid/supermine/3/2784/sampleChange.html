@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    model = rnn_crf(X_train, y_train, X_test, y_test, batch_size, word_ids_dict, label_ids_dict,
+                    embedding_dim, rnn_hidden_dim, epoch)
+    &#47&#47 predict
+    <a id="change">y_test_pred = model.predict(word_seq).argmax(-1)</a>
+    &#47&#47 save predict file
+
+
+    logger.info("Training has finished.")</code></pre><h3>After Change</h3><pre><code class='java'>
+    model.fit(X_train, y_train,
+              batch_size=batch_size,
+              epochs=epoch,
+              validation_data=<a id="change">[X_test, y_test]</a>)
+    &#47&#47 save model
+    save_model(model, save_model_path)
+    logger.info("model saved: %s" % save_model_path)</code></pre>

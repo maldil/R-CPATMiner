@@ -1,0 +1,21 @@
+<html><h3>f37d0f2da815d3674dbba5ef1d8711357348c94f,implementations/wgan/wgan.py,,,#,88
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            real_validity = discriminator(real_imgs)
+            real_validity.backward(valid)
+            &#47&#47 Train on fake images
+            fake_validity = <a id="change">discriminator(fake_imgs)</a>
+            fake_validity.backward(fake)
+
+            d_loss = real_validity - fake_validity
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Generate a batch of images
+            fake_imgs = generator(z)
+            &#47&#47 Adversarial loss
+            loss_D = -torch.mean(discriminator(real_imgs)) + <a id="change">torch.mean(discriminator(fake_imgs))</a>
+
+            loss_D.backward()
+            optimizer_D.step()
+</code></pre><img src="1844607.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/f37d0f2da815d3674dbba5ef1d8711357348c94f#diff-9df98e359c24f57c3269f94141cb3fdc5fa2aab477eefcdcd916bf977153f125L131' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: f37d0f2da815d3674dbba5ef1d8711357348c94f</div><div id='time'> Time: 2018-05-07</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/wgan/wgan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

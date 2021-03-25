@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        read_input = True
+
+        while read_input:
+            <a id="change">for i in range(0, opts.batch_size):
+                raw_image = pipe_in.stdout.read(width * height * 3)
+
+                if len(raw_image) != nbytes:
+                    read_input = False
+                    break
+
+                image = numpy.fromstring(raw_image, dtype=&quotuint8&quot)
+                image = image.reshape((height, width, 3))
+                X[i] = image
+
+           </a> if read_input:
+                _preds = sess.run(preds, feed_dict={img_placeholder: X})
+
+                for i in range(0, opts.batch_size):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        while read_input:
+            count = 0
+            <a id="change">while count &lt; opts.batch_size:
+                raw_image = pipe_in.stdout.read(width * height * 3)
+
+                if len(raw_image) != nbytes:
+                    last = True
+                    X = X[:count]
+                    batch_shape = (count, height, width, 3)
+                    img_placeholder = tf.placeholder(tf.float32, shape=batch_shape,
+                                                     name=&quotimg_placeholder&quot)
+                    preds = transform.net(img_placeholder)
+                    break
+
+                image = numpy.fromstring(raw_image, dtype=&quotuint8&quot)
+                image = image.reshape((height, width, 3))
+                X[count] = image
+                count += 1
+
+           </a> if read_input:
+                if last:
+                    read_input = False
+                _preds = sess.run(preds, feed_dict={img_placeholder: X})</code></pre>

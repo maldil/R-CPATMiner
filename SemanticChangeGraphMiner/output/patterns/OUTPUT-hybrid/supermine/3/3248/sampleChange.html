@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Ct1: Previous cells (i.e. C_{t-1}
+    &#47&#47 Xt: Current inputs.
+    &#47&#47 hf, hi, ho, hc: Forget, input, output, cell gates.
+    <a id="change">At_hf</a>, At_hi, At_ho, At_hc = xp.split(At, 4, axis=-1)
+    &#47&#47 Number the steps here, to refer back for backward pass.
+    &#47&#47 1. Activations
+    hf = sigmoid(At_hf) &#47&#47 1a</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    Ct3 = hf * Ct2 &#47&#47 2a
+    Ct3 += hi * hc &#47&#47 2b
+    <a id="change">tanhCt3 = tanh(Ct3)</a> &#47&#47 3a
+    Yt3 = tanhCt3 * ho &#47&#47 3b
+    &#47&#47 We don&quott need the gradient for this, it&quots just for backprop calculation.
+    Gt3 = xp.concatenate((hf, hi, ho, hc), axis=-1)</code></pre>

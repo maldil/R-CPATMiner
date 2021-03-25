@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 The actual image img is embedded into a larger image by
+        &#47&#47 adding vertical space on top and at the bottom (padding)
+        hpadding = r &#47&#47 this is large enough
+        <a id="change">padded = np.vstack([cval * np.ones((hpadding, w)), img, cval * np.ones((hpadding, w))])</a>
+        center = center + hpadding
+        dewarped = [padded[center[i] - r:center[i]+r, i] for i in range(w)]
+        dewarped = np.array(dewarped, dtype=dtype).T
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Empty image
+            return img
+
+        <a id="change">if img.ndim &gt; 2:
+            temp = (cv.cvtColor(img, cv.COLOR_BGR2GRAY) / 255).astype(dtype)
+        else:
+            temp = (img / 255).astype(dtype)
+       </a> temp = np.amax(temp) - (temp)
+        amax = np.amax(temp)
+        if amax == 0:
+            &#47&#47 white image</code></pre>

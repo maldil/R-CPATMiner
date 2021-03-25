@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for instance in cls._instances:
+                if instance().mu == mu and instance().sigma == sigma:
+                    return instance()
+        o = <a id="change">super(Prior, cls).__new__(cls, mu, sigma)</a>
+        cls._instances.append(weakref.ref(o))
+        return cls._instances[-1]()
+
+    def __init__(self, mu, sigma):</code></pre><h3>After Change</h3><pre><code class='java'>
+            for instance in cls._instances:
+                if instance().mu == mu and instance().sigma == sigma:
+                    return instance()
+        <a id="change">newfunc</a> = <a id="change">super(Prior, cls).__new__</a>
+        <a id="change">if newfunc is object.__new__:
+            o = newfunc(cls)  
+        else:
+            o = newfunc(cls, mu, sigma)            
+       </a> cls._instances.append(weakref.ref(o))
+        return cls._instances[-1]()
+
+    def __init__(self, mu, sigma):</code></pre>

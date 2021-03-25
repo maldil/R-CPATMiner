@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not isdir(val):
+        raise PreferenceError((&quotIllegal value for GSL directory: %s, &quot
+                                &quothas to be existing directory&quot%(val)))
+    <a id="change">if not exists(val+&quotgsl/gsl_odeiv2.h&quot) or not exists(val+&quotgsl/gsl_errno.h&quot) \
+            or not exists(val+&quotgsl/gsl_matrix.h&quot):
+        raise PreferenceError((&quotIllegal value for GSL directory: %s, &quot
+                               &quothas to contain gsl_odeiv2.h, gsl_errno.h &quot
+                               &quotand gsl_matrix.h&quot%(val)))
+   </a> return True
+
+prefs.register_preferences(
+    &quotGSL&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not os.path.isdir(val):
+        raise PreferenceError((&quotIllegal value for GSL directory: %s, &quot
+                                &quothas to be existing directory&quot % (val)))
+    if any(not os.path.isfile(<a id="change">os.path.join(val, &quotgsl&quot, filename)</a>)
+           for filename in [&quotgsl_odeiv2.h&quot, &quotgsl_errno.h&quot, &quotgsl_matrix.h&quot]):
+        raise PreferenceError((&quotIllegal value for GSL directory: %s, &quot
+                               &quothas to contain gsl_odeiv2.h, gsl_errno.h &quot</code></pre>

@@ -1,0 +1,41 @@
+<html><h3>6bf3f51cd0a312da842157665663c2dad9983248,tensorflow_ranking/python/losses_impl.py,ClickEMLoss,_compute_latent_prob,#ClickEMLoss#,914
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      P(examination | click) and P(relevance | click).
+    
+    with tf.compat.v1.name_scope(name=&quotcompute_latent_prob&quot):
+      <a id="change">exam_prob = tf.math.sigmoid(tf.cast(exam_logits, tf.float32))</a>
+      <a id="change">rel_prob = tf.math.sigmoid(tf.cast(rel_logits, tf.float32))</a>
+      is_clicked = tf.greater_equal(tf.cast(clicks, tf.float32), 1.0)
+
+      prob_non_clicks = 1 - exam_prob * rel_prob + 1e-6
+      exam_prob_given_non_clicks = exam_prob * (1 - rel_prob) / prob_non_clicks
+      rel_prob_given_non_clicks = (1 - exam_prob) * rel_prob / prob_non_clicks
+
+      exam_prob_given_non_clicks, rel_prob_given_non_clicks = [
+          tf.stop_gradient(
+              tf.compat.v1.where(is_clicked, tf.ones_like(prob), prob))
+          for prob in [exam_prob_given_non_clicks, rel_prob_given_non_clicks]
+      ]
+      <a id="change">return exam_prob_given_non_clicks, rel_prob_given_non_clicks</a>
+
+  def compute_unreduced_loss(self, labels, logits):
+    Computes the loss for each element.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+      is_clicked = tf.greater_equal(tf.cast(clicks, tf.float32), 1.0)
+      exam_logits_posterior = exam_logits - tf.math.softplus(rel_logits)
+      rel_logits_posterior = rel_logits - tf.math.softplus(exam_logits)
+      <a id="change">exam_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(exam_logits_posterior),
+          tf.sigmoid(exam_logits_posterior))</a>
+      <a id="change">rel_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(rel_logits_posterior),
+          tf.sigmoid(rel_logits_posterior))</a>
+      <a id="change">return tf.stop_gradient(exam_prob_posterior), tf.stop_gradient(
+          rel_prob_posterior)</a>
+
+  def compute_unreduced_loss(self, labels, logits):
+    Computes the loss for each element.
+</code></pre><img src="25315714.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/ranking/commit/6bf3f51cd0a312da842157665663c2dad9983248#diff-ac0a8b23265c0fdd56da5d2709bf0e7dfce716e2713c8c9fd8d44f4fd9461ff7L930' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/ranking</div><div id='commit'> Commit Name: 6bf3f51cd0a312da842157665663c2dad9983248</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: xuanhui@google.com</div><div id='file'> File Name: tensorflow_ranking/python/losses_impl.py</div><div id='class'> Class Name: ClickEMLoss</div><div id='method'> Method Name: _compute_latent_prob</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/privacy/commit/cec011e2a797a32a9b102a69d2d799256de7ca98#diff-6bb4054fcc7bc7877de8f352e1ba4de7aa820fded20889f265d9d91e122f6276L118' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/privacy</div><div id='commit'> Commit Name: cec011e2a797a32a9b102a69d2d799256de7ca98</div><div id='time'> Time: 2020-06-08</div><div id='author'> Author: galenandrew@google.com</div><div id='file'> File Name: tensorflow_privacy/privacy/dp_query/quantile_adaptive_clip_sum_query.py</div><div id='class'> Class Name: QuantileAdaptiveClipSumQuery</div><div id='method'> Method Name: initial_global_state</div><BR><BR><div id='link'><a href='https://github.com/thunlp/OpenKE/commit/0ab6621dcd3e9cd97a257ea2d8d05b23bfba8609#diff-b7f2501397dc967cd8ac17366f90ef9d1c91d27747b515d4cea1730d233973a4L22' target='_blank'>Link</a></div><div id='project'> Project Name: thunlp/OpenKE</div><div id='commit'> Commit Name: 0ab6621dcd3e9cd97a257ea2d8d05b23bfba8609</div><div id='time'> Time: 2020-04-08</div><div id='author'> Author: thu.hanxu13@gmail.com</div><div id='file'> File Name: openke/module/model/HolE.py</div><div id='class'> Class Name: HolE</div><div id='method'> Method Name: _ccorr</div><BR>

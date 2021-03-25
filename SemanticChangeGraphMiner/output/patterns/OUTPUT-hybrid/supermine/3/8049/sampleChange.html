@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Complexity
+    processed_ecg["ECG"]["Complexity"] = {}
+    chaos = complexity(rri, lyap_r=False, lyap_e=False, emb_dim=2, k_max=8)
+    chaos = <a id="change">pd.Series(chaos)</a>
+    chaos.index = ["ECG_Complexity_" + s <a id="change">for</a> s in chaos.index]
+    processed_ecg["ECG"]["Complexity"] = chaos.to_dict()
+
+    return(processed_ecg)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 HRV
+    hrv = ecg_hrv(rri, sampling_rate, segment_length=hrv_segment_length)
+    <a id="change">if age is not None and sex is not None and position is not None:
+        hrv_adjusted = ecg_hrv_assessment(hrv, age, sex, position)
+
+    &#47&#47 Waves
+   </a> waves = ecg_wave_detector(ecg_df["ECG_Filtered"], biosppy_ecg["rpeaks"])
+
+    &#47&#47 Systole
+    ecg_df["ECG_Systole"] = ecg_systole(ecg_df["ECG_Filtered"], biosppy_ecg["rpeaks"], waves["T_Waves"])</code></pre>

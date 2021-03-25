@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Init.
+        
+        if random_state is None:
+            self.random_state = <a id="change">np</a>.random.randint(<a id="change">0</a>, 1000, 1)[0]
+        self.n_jobs = n_jobs
+
+    @abstractmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+        if datasets is None:
+            datasets = self.paradigm.datasets
+
+        <a id="change">if not isinstance(datasets, list):
+            if isinstance(datasets, BaseDataset):
+                datasets = [datasets]
+            else:
+                raise(ValueError("datasets must be a list or a dataset "
+                                 "instance"))
+
+       </a> for dataset in datasets:
+            if not(isinstance(dataset, BaseDataset)):
+                raise(ValueError("datasets must only contains dataset "
+                                 "instance"))</code></pre>

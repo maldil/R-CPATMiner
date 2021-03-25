@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    backend = _CURRENT_BACKEND[0]
+    cache = _SHARING_STACK[-1]
+    cache[&quottensor&quot, id(x)] = x
+    <a id="change">cache[&quottensor&quot, id(y)] = y</a>
+
+    if isinstance(axes, numbers.Number):
+        axes = list(range(len(x.shape)))[len(x.shape) - axes:], list(range(len(y.shape)))[:axes]
+    axes = tuple(axes[0]), tuple(axes[1])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def tensordot(x, y, axes=2):
+    <a id="change">_save_tensors(x, y)</a>
+
+    &#47&#47 hash based on the (axes_x,axes_y) form of axes
+    if isinstance(axes, numbers.Number):
+        axes = list(range(len(x.shape)))[len(x.shape) - axes:], list(range(len(y.shape)))[:axes]</code></pre>

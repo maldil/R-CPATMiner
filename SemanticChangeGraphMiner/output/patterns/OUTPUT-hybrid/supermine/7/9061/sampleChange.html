@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    numerator = {}
+    denominator = {}
+
+    <a id="change">for appliance in predicted_power:
+        numerator[appliance] = np.sum(np.abs(predicted_power[appliance] -
+                                             df_appliances_ground_truth[appliance].values))
+        denominator[appliance] = np.sum(
+            df_appliances_ground_truth[appliance].values)
+        mne[appliance] = numerator[appliance] * 1.0 / denominator[appliance]
+   </a> return mne
+
+
+def rms_error_power(predicted_power, df_appliances_ground_truth):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 TODO: need to resample to keep things in step
+    mne = {}
+    <a id="change">for meter in predictions.submeters():
+        ground_truth_meter_identifier = meter.identifier._replace(
+            dataset=ground_truth.dataset())
+        ground_truth_meter = ground_truth[ground_truth_meter_identifier]
+        sections = meter.good_sections()
+        sample_period = meter.sample_period()
+        period_alias = &quot{:d}S&quot.format(sample_period)
+
+        &#47&#47 TODO: preprocessing=[Resample(sample_period)])
+        pred_generator = meter.power_series(periods=sections)
+        total_diff = 0
+        sum_of_ground_truth_power = 0
+        while True:
+            try:
+                pred_chunk = next(pred_generator)
+            except StopIteration:
+                break
+            else:
+                truth_generator = ground_truth_meter.power_series(
+                    periods=[pred_chunk.timeframe], chunksize=1E9)
+                truth_chunk = next(truth_generator)
+                
+                &#47&#47 TODO: do this resampling in the pipeline?
+                truth_chunk = truth_chunk.resample(period_alias)
+                pred_chunk = pred_chunk.resample(period_alias)
+
+                diff = (pred_chunk.icol(0) - truth_chunk.icol(0)).dropna() 
+                total_diff += sum(abs(diff))
+                sum_of_ground_truth_power += truth_chunk.icol(0).dropna().sum()
+
+        mne[meter.instance()] = total_diff / sum_of_ground_truth_power
+
+   </a> return pd.Series(mne)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47 FUNCTIONS BELOW THIS LINE HAVE NOT YET CONVERTED TO NILMTK v0.2 &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+</code></pre>

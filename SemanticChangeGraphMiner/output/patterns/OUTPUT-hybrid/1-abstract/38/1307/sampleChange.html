@@ -1,0 +1,88 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Auto calculate max_bin if set
+    if type(max_bin) is str and (max_bin.upper() == "AUTO"):
+        <a id="change">maxval</a> = <a id="change">round(observed_max, 8)</a>  &#47&#47 Auto bins will detect maxval to use for calculating labels/bins
+    if type(min_bin) is str and (min_bin.upper() == "AUTO"):
+        b = round(observed_min, 8) &#47&#47 If bin_min is auto then overwrite starting value
+
+    &#47&#47 Print a warning if observed min/max outside user defined range
+    if observed_max &gt; maxval or observed_min &lt; b:
+        print("WARNING!!! The observed range of pixel values in your masked index provided is [" + str(observed_min) +
+              ", " + str(observed_max) + "] but the user defined range of bins for pixel frequencies is [" + str(b) +
+              ", " + str(maxval) + "]. Adjust min_bin and max_bin in order to avoid cutting off data being collected.")
+
+    &#47&#47 Calculate histogram
+    <a id="change">hist_val</a> = [float(l[0]) for <a id="change">l</a> in cv2.calcHist([masked_array.astype(np.float32)], [0], None, [bins], [b, maxval])]
+    <a id="change">bin_width</a> = (maxval - b) / float(bins)
+    bin_labels = [float(b)]
+    plotting_labels = [float(b)]
+    for i in range(bins - 1):
+        b += bin_width
+        bin_labels.append(b)
+        plotting_labels.append(round(b, 2))
+
+    &#47&#47 Make hist percentage for plotting
+    pixels = cv2.countNonZero(mask)
+    <a id="change">hist_percent</a> = [(p / float(pixels)) * 100 for <a id="change">p</a> in hist_val]
+
+    params.debug = debug
+
+    if histplot is True:
+        <a id="change">dataset</a> = pd.DataFrame({&quotIndex Reflectance&quot: bin_labels,
+                                &quotProportion of pixels (%)&quot: hist_percent})
+        <a id="change">fig_hist</a> = (ggplot(data=dataset,
+                           mapping=aes(x=&quotIndex Reflectance&quot,
+                                       y=&quotProportion of pixels (%)&quot))
+                    + geom_line(color=&quotred&quot)
+                    + scale_x_continuous(breaks=bin_labels, labels=plotting_labels))
+        <a id="change">analysis_image</a> = fig_hist
+        if params.debug == &quotprint&quot:
+            fig_hist.save(os.path.join(params.debug_outdir, str(params.device) +
+                                                            index_array.array_type + "hist.png"))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Auto calculate max_bin if set
+    if type(max_bin) is str and (max_bin.upper() == "AUTO"):
+        <a id="change">maxval</a> = float(<a id="change">round(observed_max, 8)</a>)  &#47&#47 Auto bins will detect maxval to use for calculating labels/bins
+    if type(min_bin) is str and (min_bin.upper() == "AUTO"):
+        b = float(round(observed_min, 8))  &#47&#47 If bin_min is auto then overwrite starting value
+
+
+    &#47&#47 Print a warning if observed min/max outside user defined range
+    if observed_max &gt; maxval or observed_min &lt; b:
+        print("WARNING!!! The observed range of pixel values in your masked index provided is [" + str(observed_min) +
+              ", " + str(observed_max) + "] but the user defined range of bins for pixel frequencies is [" + str(b) +
+              ", " + str(maxval) + "]. Adjust min_bin and max_bin in order to avoid cutting off data being collected.")
+
+
+    &#47&#47 Calculate histogram
+    <a id="change">hist_val</a> = [float(l[0]) for <a id="change">l</a> in cv2.calcHist([masked_array.astype(np.float32)], [0], None, [bins], [b, maxval])]
+    <a id="change">bin_width</a> = (maxval - b) / float(bins)
+    bin_labels = [float(b)]
+    plotting_labels = [float(b)]
+    for i in range(bins - 1):
+        b += bin_width
+        bin_labels.append(b)
+        plotting_labels.append(round(b, 2))
+
+    &#47&#47 Make hist percentage for plotting
+    pixels = cv2.countNonZero(mask)
+    <a id="change">hist_percent</a> = [(p / float(pixels)) * 100 for <a id="change">p</a> in hist_val]
+
+    params.debug = debug
+
+    if histplot is True:
+        <a id="change">dataset</a> = pd.DataFrame({&quotIndex Reflectance&quot: bin_labels,
+                                &quotProportion of pixels (%)&quot: hist_percent})
+        <a id="change">fig_hist</a> = (ggplot(data=dataset,
+                           mapping=aes(x=&quotIndex Reflectance&quot,
+                                       y=&quotProportion of pixels (%)&quot))
+                    + geom_line(color=&quotred&quot)
+                    + scale_x_continuous(breaks=bin_labels, labels=plotting_labels))
+        <a id="change">analysis_image</a> = fig_hist
+        if params.debug == &quotprint&quot:
+            fig_hist.save(os.path.join(params.debug_outdir, str(params.device) +
+                                                            index_array.array_type + "hist.png"))</code></pre>

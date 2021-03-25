@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Predict
+    for (i, c) in enumerate(clients):
+        print(&quotTrain&quot, mean_square_error(<a id="change">c.predict(X[i])</a>, y[i]))
+        print(&quotTest&quot, mean_square_error(c.predict(X_test), y_test))
+
+    &#47&#47 Each client sends its own model to the next one, in a RING protocol,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 We need a baseline to understand how good is any future prediction
+    print(&quotCompute a baseline: the mean of all training data&quot)
+    <a id="change">for i in range(n_clients):
+        print(&quotBaseline at test time:&quot, mean_square_error(np.mean(y[i]), y_test))
+
+    &#47&#47 Instantiate Alice, Bob and Carol.
+    &#47&#47 Each client gets the public key at creation
+   </a> clients = []
+    for i in range(n_clients):
+        clients.append(Client(names[i], X[i], y[i], server.pubkey))
+</code></pre>

@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        segment_ids: Dict[str, Tensor],
+    ) -&gt; Tensor:
+        list_embeddings = []
+        <a id="change">for modality in self.model_config.modalities:
+            total_embedding = getattr(self, modality.key + "_embedding")(
+                input_ids[modality.key]
+            )
+            if modality.key not in position_ids:
+                total_embedding += getattr(self, modality.key + "_pos_embedding")(
+                    position_ids[modality.key]
+                )
+
+            if modality.key in segment_ids:
+                total_embedding += self.token_type_embeddings(segment_ids[modality.key])
+
+            layer_norm_layer = getattr(self, modality.key + "_layer_norm")
+            dropout_layer = getattr(self, modality.key + "_dropout")
+            list_embeddings.append(dropout_layer(layer_norm_layer(total_embedding)))
+
+       </a> return torch.cat(list_embeddings, dim=1)
+
+
+@registry.register_model("mmf_transformer")</code></pre><h3>After Change</h3><pre><code class='java'>
+        segment_ids: Dict[str, Tensor],
+    ) -&gt; Tensor:
+        list_embeddings = []
+        <a id="change">for idx, (token_emb, pos_emb, layer_norm, dropout) in enumerate(
+            zip(
+                self.token_embeddings,
+                self.pos_embeddings,
+                self.layer_norms,
+                self.dropouts,
+            )
+        ):
+            modality_name = self.modality_keys[idx]
+            total_embedding = token_emb(input_ids[modality_name])
+            if modality_name in position_ids:
+                total_embedding += pos_emb(position_ids[modality_name])
+
+            if modality_name in segment_ids:
+                total_embedding += self.token_type_embeddings(
+                    segment_ids[modality_name]
+                )
+
+            list_embeddings.append(dropout(layer_norm(total_embedding)))
+
+       </a> return torch.cat(list_embeddings, dim=1)
+
+
+@registry.register_model("mmf_transformer")</code></pre>

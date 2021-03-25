@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        featureExtractor = FeatureExtractor(self.train_images, return_2d_array=True)
+        featureExtractor.add_feature(&quothog&quot, {&quotorientations&quot: 8, &quotpixels_per_cell&quot: (4, 4), &quotcells_per_block&quot: (1, 1)})
+        raw_features = featureExtractor.extract()
+        features = <a id="change">list()</a>
+        for feature in raw_features:
+            features.append([[feature]])
+        <a id="change">self.x_train = np.array(features)</a>
+        if self.verbose:
+            print(&quotfeature shape: &quot + str(self.x_train.shape))
+            print(&quotlabel shape: &quot + str(self.y_train.shape))</code></pre><h3>After Change</h3><pre><code class='java'>
+        featureExtractor = FeatureExtractor(self.train_images, return_2d_array=True)
+        featureExtractor.add_feature(&quothog&quot, {&quotorientations&quot: 8, &quotpixels_per_cell&quot: (4, 4), &quotcells_per_block&quot: (1, 1)})
+        raw_features = featureExtractor.extract()
+        <a id="change">self.x_train = np.array([[np.array([feature]).reshape(list(self.target_dimensions)+[self.channels])] for feature in raw_features])</a>
+
+        print(&quotFormatting image data...&quot)
+
+        if self.verbose:</code></pre>

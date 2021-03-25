@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if f2a is None: 
+                &#47&#47 initialize the mel filter bank after grabbing the first frame
+                f2a = melfb(sample_rate, len(frame), num_frequency_bands, mel_filter_width)
+                f2a = f2a[<a id="change">:,:</a>(round(len(frame)/2) + 1)]
+
+                n   = f2a.shape[0]
+                </code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Iterate over frames
+        for frame in frame_iterator:
+            <a id="change">frame = numpy.frombuffer(frame, &quoth&quot)</a>
+
+            if f2a is None: 
+                &#47&#47 initialize the mel filter bank after grabbing the first frame
+
+                f2a = melfb(sample_rate, len(frame), num_frequency_bands, mel_filter_width)
+&#47&#47                 f2a = f2a[:,:(round(len(frame)/2) + 1)]
+                
+
+                &#47&#47% map back to FFT grid, flatten bark loop gain
+                &#47&#47sf2a = sum(f2a);
+
+                normalize_f2a                       = numpy.sum(f2a, axis=0)
+                normalize_f2a[normalize_f2a == 0]   = 1.0
+                <a id="change">normalize_f2a                       = 1.0 / normalize_f2a</a>
+
+                &#47&#47 initialze the state vector
+                state   = numpy.zeros( (num_frequency_bands, 1) )[0]
+
+                pass
+
+            &#47&#47 FFT each frame
+            D = scipy.fft(frame)
+
+            &#47&#47 multiply by f2a
+            audiogram = numpy.dot(f2a, numpy.abs(D))
+
+            &#47&#47&#47&#47 DPWE
+            &#47&#47             state = max([alpha*state,audgram(:,i)],[],2);
+            &#47&#47             fbg(:,i) = state;
+            &#47&#47 ...
+            &#47&#47
+            state = <a id="change">numpy.maximum(alpha * state, audiogram)</a>
+
+            &#47&#47E = diag(1./(sf2a+(sf2a==0))) * f2a&quot * fbg;
+            E   = normalize_f2a * numpy.dot(f2a.T, state);
+</code></pre>

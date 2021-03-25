@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        loss, x_dict = self.forward(x_dict, **kwargs)
+
+        if return_dict:
+            return <a id="change">loss</a>, x_dict
+
+        return loss
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if return_dict:
+            output_dict = x_dict.copy() if return_all else {}
+            <a id="change">output_dict.update(eval_dict)</a>
+            return loss, output_dict
+
+        return loss
+</code></pre>

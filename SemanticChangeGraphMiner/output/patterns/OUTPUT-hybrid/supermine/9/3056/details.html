@@ -1,0 +1,32 @@
+<html><h3>8182ea386e6529a1a2294d8e2d33fc040d0cbfb2,deepctr/inputs.py,,get_linear_logit,#,153
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if len(linear_emb_list[0]) &gt; 1:
+        linear_term = concat_fun([add(linear_emb) for linear_emb in linear_emb_list])
+    elif len(linear_emb_list[0]) == 1:
+        <a id="change">linear_term = concat_fun([linear_emb[0] for linear_emb in linear_emb_list])</a>
+    else:
+        linear_term = None
+
+    if len(dense_input_list) &gt; 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+    linear_logit_list = []
+    for i in range(units):
+
+        <a id="change">if len(linear_emb_list[0])&gt;0 and len(dense_input_list) &gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=2)([sparse_input,dense_input])
+        elif len(linear_emb_list[0])&gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            linear_logit = Linear(l2_reg,mode=0)(sparse_input)
+        elif len(dense_input_list) &gt;0:
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=1)(dense_input)
+        else:
+            raise NotImplementedError
+       </a> linear_logit_list.append(linear_logit)
+
+    return concat_fun(linear_logit_list)
+</code></pre><img src="13673680.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR><BR><div id='link'><a href='https://github.com/has2k1/plotnine/commit/26e44fb488bd8ab2c504f39e2ca0eeba93329763#diff-6e1c1b32da3f84e1c387b7f9507195377bbd245a3771a554aeb517584be56631L102' target='_blank'>Link</a></div><div id='project'> Project Name: has2k1/plotnine</div><div id='commit'> Commit Name: 26e44fb488bd8ab2c504f39e2ca0eeba93329763</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: has2k1@gmail.com</div><div id='file'> File Name: plotnine/geoms/geom_map.py</div><div id='class'> Class Name: geom_map</div><div id='method'> Method Name: draw_panel</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9b95e0f07b60b6a144893dcc506dfaf90db61c95#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL223' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9b95e0f07b60b6a144893dcc506dfaf90db61c95</div><div id='time'> Time: 2020-05-18</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stack_memory</div><BR>

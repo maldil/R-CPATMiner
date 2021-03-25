@@ -1,0 +1,22 @@
+<html><h3>20ea228773616f824fa5099d0a6e51b7f829d094,tfdeploy.py,Operation,get,#Operation#,303
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Returns a tensor given by *name* using a deep lookup within this op. *None* is returned when
+        no tensor was found.
+        
+        <a id="change">return reduce(lambda t1,t2: t1 or t2.get(name), self.inputs, None)</a>
+
+    def eval(self, feed_dict, _uuid):
+         eval(feed_dict=None)
+        Returns the value of the output tensor. See :py:meth:`Tensor.eval` for more info.</code></pre><h3>After Change</h3><pre><code class='java'>
+        Returns one or more tensors given by *names* using a deep lookup within this op. *None* is
+        returned when no tensor was found.
+        
+        <a id="change">tensors = tuple(self._get(name) for name in names)</a>
+        <a id="change">return tensors[0] if len(names) == 1 else tensors</a>
+
+    def _get(self, name):
+        return reduce(lambda t1,t2: t1 or t2.get(name), self.inputs, None)
+</code></pre><img src="7487586.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/20ea228773616f824fa5099d0a6e51b7f829d094#diff-27b4f5af4fd243c13cbea81d5dc3eb8d49e670f7a02f5cbfdaa140d3c25508bbL303' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: 20ea228773616f824fa5099d0a6e51b7f829d094</div><div id='time'> Time: 2016-03-10</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tfdeploy.py</div><div id='class'> Class Name: Operation</div><div id='method'> Method Name: get</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/20ea228773616f824fa5099d0a6e51b7f829d094#diff-27b4f5af4fd243c13cbea81d5dc3eb8d49e670f7a02f5cbfdaa140d3c25508bbL181' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: 20ea228773616f824fa5099d0a6e51b7f829d094</div><div id='time'> Time: 2016-03-10</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tfdeploy.py</div><div id='class'> Class Name: Tensor</div><div id='method'> Method Name: get</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/20ea228773616f824fa5099d0a6e51b7f829d094#diff-27b4f5af4fd243c13cbea81d5dc3eb8d49e670f7a02f5cbfdaa140d3c25508bbL72' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: 20ea228773616f824fa5099d0a6e51b7f829d094</div><div id='time'> Time: 2016-03-10</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tfdeploy.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: get</div><BR>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    pkgname = &quotlingpy2&quot
+    &#47&#47 replace manifest path
+
+<a id="change">if this_version == &quot2&quot:
+    f = open(&quotMANIFEST.in&quot).read()
+    if not &quotlingpy2&quot in f:
+        out = open(&quotMANIFEST.in&quot,&quotw&quot)
+        out.write(f.replace(&quotlingpy&quot,&quotlingpy2&quot))
+        out.close()
+else:
+    f = open(&quotMANIFEST.in&quot).read()
+    if &quotlingpy2&quot in f:
+        out = open(&quotMANIFEST.in&quot,&quotw&quot)
+        out.write(f.replace(&quotlingpy2&quot,&quotlingpy&quot))
+        out.close()
+
+
+&#47&#47 set up extension modules
+</a>if &quotinstall&quot in sys.argv or &quotbdist_egg&quot in sys.argv:
+    if this_version == "3":
+
+        if with_c: &#47&#47"--with-c" in sys.argv or &quot--with-C&quot in sys.argv in sys.argv:</code></pre><h3>After Change</h3><pre><code class='java'>
+    pkg_dir = {&quot&quot:&quotlingpy_build&quot}
+
+    &#47&#47 import lingpy2 to compile the data
+    sys.path = <a id="change">[&quotlingpy_build/&quot]</a> + sys.path
+    from lingpy import *
+
+&#47&#47 set up extension modules</code></pre>

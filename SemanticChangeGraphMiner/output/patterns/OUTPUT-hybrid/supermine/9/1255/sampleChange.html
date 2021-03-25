@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bnds = [(lb,ub)]
+    
+    &#47&#47 constraints 
+    <a id="change">cons = ({&quottype&quot: &quotineq&quot, &quotfun&quot: lambda x: ((v-omeg/x[0])*(1.-etam*v*x[0]/omeg))/io - 0.001})</a> &#47&#47 Added a tolerance on resistance, cant be less than 0.001 ohms  
+    
+    &#47&#47 solve 
+    sol  = minimize(objective,(0.5), method = &quotSLSQP&quot,bounds = bnds, constraints = cons ) </code></pre><h3>After Change</h3><pre><code class='java'>
+    cons1 = [{&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_1,&quotargs&quot: args},
+            {&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_2,&quotargs&quot: args}]
+    
+    <a id="change">cons2 = [{&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_2,&quotargs&quot: args}]</a> 
+    
+    bnds = ((0.001, 100), (0.001, 10))
+    sol = minimize(objective, [0.5, 0.1], args=(v , omeg,  etam , Q , io) , method=&quotSLSQP&quot, bounds=bnds, tol=1e-6, constraints=cons1) 
+    
+    if sol.success == False:
+        <a id="change">sol = minimize(objective, [0.5, 0.1], args=(v , omeg,  etam , Q , io) , method=&quotSLSQP&quot, bounds=bnds, tol=1e-6, constraints=cons2)</a>         
+    
+    return sol.x   
+  </code></pre>

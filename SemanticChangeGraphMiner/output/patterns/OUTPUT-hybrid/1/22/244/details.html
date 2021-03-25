@@ -1,0 +1,45 @@
+<html><h3>ade60fc6489a1ffd02836d773356088dd229d97a,librosa/__init__.py,,istft,#,81
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    else:
+        &#47&#47 FIXME:   2012-10-20 18:58:56 by Brian McFee &lt;brm2132@columbia.edu&gt;
+        &#47&#47      there&quots a magic number 2/3 in istft.m ... not sure about this one
+        <a id="change">window</a> = <a id="change">pad(scipy.signal.hanning(hann_w), n_fft)</a> * 2.0 / 3
+        pass
+
+    &#47&#47 Set the default hop, if it&quots not already specified
+    if hop is None:
+        hop = int(window.shape[0] / 2 )
+        pass
+
+    <a id="change">x_length</a>    = n_fft + (num_frames - 1) * hop
+    x           = numpy.zeros((x_length,))
+
+    for b in xrange(0, hop * (num_frames), hop):
+        <a id="change">ft</a>              = d[:, b/hop]
+        <a id="change">ft</a>              = numpy.concatenate((ft, numpy.conj(ft[(n_fft/2 -1):0:-1])), 0)
+        px              = numpy.real(scipy.ifft(ft))
+        x[b:(b+n_fft)] += px * window
+        pass</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        &#47&#47 FIXME:   2012-10-20 18:58:56 by Brian McFee &lt;brm2132@columbia.edu&gt;
+        &#47&#47      there&quots a magic number 2/3 in istft.m ... not sure about this one
+        <a id="change">window</a> = <a id="change">pad(scipy.signal.hanning(hann_w) * 2.0 / 3, n_fft)</a>
+        pass
+
+    &#47&#47 Set the default hop, if it&quots not already specified
+    if hop is None:
+        hop = int(window.shape[0] / 2 )
+        pass
+
+    <a id="change">x_length</a>    = n_fft + (num_frames - 1) * hop
+    x           = numpy.zeros((x_length,))
+
+    for b in xrange(0, hop * (num_frames), hop):
+        <a id="change">ft</a>              = d[:, b/hop]
+        <a id="change">ft</a>              = numpy.concatenate((ft, numpy.conj(ft[(n_fft/2 -1):0:-1])), 0)
+        px              = numpy.real(scipy.ifft(ft))
+        x[b:(b+n_fft)] += px * window
+        pass</code></pre><img src="1398805.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/ade60fc6489a1ffd02836d773356088dd229d97a#diff-3cb8a08f8ebafdecd7c0436b39b9b3907f40055b6f0c13c431b3585fbf29b3a8L101' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: ade60fc6489a1ffd02836d773356088dd229d97a</div><div id='time'> Time: 2012-11-27</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: istft</div><BR><BR><div id='link'><a href='https://github.com/fgnt/nara_wpe/commit/ff9161da3c8c0868dc4b7a9ea88aa115ecc59be7#diff-b5d67ad6d85b5e35a1f8351a839b625f84b35b3d8964d5ea0978b9dfb4006b1dL255' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/nara_wpe</div><div id='commit'> Commit Name: ff9161da3c8c0868dc4b7a9ea88aa115ecc59be7</div><div id='time'> Time: 2018-09-26</div><div id='author'> Author: cbj@mail.uni-paderborn.de</div><div id='file'> File Name: nara_wpe/wpe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_y_tilde</div><BR><BR><div id='link'><a href='https://github.com/pytorch/audio/commit/c92392fc7cedd6ed958745e82ab6233b59c993ef#diff-a0af7f64b4bdb629a4e4f8d623898cf06c1f7f02b59ff173e939f4a8caae827aL576' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/audio</div><div id='commit'> Commit Name: c92392fc7cedd6ed958745e82ab6233b59c993ef</div><div id='time'> Time: 2020-10-13</div><div id='author'> Author: 35951198+lawlict@users.noreply.github.com</div><div id='file'> File Name: torchaudio/compliance/kaldi.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fbank</div><BR>

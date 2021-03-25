@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.ops = [model.probabilities, model.state]
+
+    def initial_state(self):
+        rnn_state = <a id="change">self.model.initial_state.eval(session=self.session)</a>
+        return SpeechModelState(rnn_state)
+
+    def propagate_packet(self, packet, sample_rate, state):
+        model = self.model</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.ops = [model.probabilities, model.state]
+
+    def initial_state(self):
+        rnn_state = (<a id="change">i.eval(session=self.session)</a>
+                        <a id="change">for</a> i in self.model.initial_state)
+        return SpeechModelState(rnn_state)
+
+    def propagate_packet(self, packet, sample_rate, state):</code></pre>

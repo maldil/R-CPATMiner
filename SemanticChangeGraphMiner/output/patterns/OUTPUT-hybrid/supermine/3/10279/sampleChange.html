@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ctx.num_bwd_passes = num_bwd_passes
+
+        with torch.no_grad():
+            x = <a id="change">input_t.detach()</a>  &#47&#47 Makes a detached copy which shares the storage
+            output = ctx.fn(x)
+
+        detached_output = output.detach_()  &#47&#47 Detaches y in-place (inbetween computations can now be discarded)</code></pre><h3>After Change</h3><pre><code class='java'>
+        ctx.num_bwd_passes = num_bwd_passes
+        ctx.num_inputs = num_inputs
+
+        <a id="change">input_t = inputs_and_weights[:num_inputs]</a>
+        ctx.input_requires_grad = [element.requires_grad for element in input_t]
+
+        with torch.no_grad():
+            &#47&#47 Makes a detached copy which shares the storage</code></pre>

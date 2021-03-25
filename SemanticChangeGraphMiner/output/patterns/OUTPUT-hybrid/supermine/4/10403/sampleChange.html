@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def array_to_datum(arr):
+  if arr.ndim != 3:
+    raise ValueError(&quotIncorrect array shape.&quot)
+  <a id="change">if arr.dtype != np.uint8:
+    raise TypeError(&quotInput array has to be of type uint8.&quot)
+ </a> datum = caffe_pb2.Datum()
+  datum.channels, datum.height, datum.width = arr.shape
+  datum.data = arr.tostring()
+  return datum</code></pre><h3>After Change</h3><pre><code class='java'>
+  if arr.dtype == np.uint8:
+    datum.data = arr.tostring()
+  else:
+    <a id="change">datum.float_data.extend(arr.flat)</a>
+  return datum
+</code></pre>

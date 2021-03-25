@@ -1,0 +1,27 @@
+<html><h3>f4beaac559e00a3676d942dc7e8fea69efc01cfe,catalyst/metrics/hitrate.py,,hitrate,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        targets, dim=-1, index=indices_for_sort
+    )
+    true_sorted_by_pred_shrink = true_sorted_by_preds[:, :k]
+    <a id="change">hits = torch.sum(true_sorted_by_pred_shrink, dim=1) / k</a>
+    return hits
+
+
+__all__ = ["hitrate"]</code></pre><h3>After Change</h3><pre><code class='java'>
+        hitrate_at_k (List[torch.Tensor]):
+            the hit rate score
+    
+    <a id="change">results = []</a>
+
+    targets_sort_by_outputs = process_recsys_components(outputs, targets)
+    for k in topk:
+        k = min(outputs.size(1), k)
+        hits_score = <a id="change">torch.sum(targets_sort_by_outputs[:, :k], dim=1) / k</a>
+        <a id="change">results.append(torch.mean(hits_score))</a>
+
+    return results
+
+</code></pre><img src="30100202.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7a8383a84dc1ce059b7395fab2e50c85cdfa42ef4fb635e1a1cf4b4905f4c682L39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/hitrate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hitrate</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/ca907342507c1139696f542de0a3351d7a382eee#diff-53b9a2ef1cbf4f635a82cfa98660cd9381d6080847046c9145884c6796b877c5L61' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: ca907342507c1139696f542de0a3351d7a382eee</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: sgross@fb.com</div><div id='file'> File Name: reinforcement_learning/reinforce.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/ca907342507c1139696f542de0a3351d7a382eee#diff-5a9b3c72d798ab16737a14c4e24fee71dd6b5dff1d075679591993b742acc0b8L68' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: ca907342507c1139696f542de0a3351d7a382eee</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: sgross@fb.com</div><div id='file'> File Name: reinforcement_learning/actor_critic.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR>

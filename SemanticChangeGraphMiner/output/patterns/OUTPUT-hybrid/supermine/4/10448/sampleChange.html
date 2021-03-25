@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    sig_nans = np.isnan(sig)
+    sig_removed = sig[np.where(~<a id="change">np.isnan(sig)</a>)]
+
+    return sig_removed, sig_nans
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if sig.ndim == 1:
+        sig_removed = sig[np.where(~sig_nans)]
+    elif sig.ndim == 2:
+        sig_removed = sig[~sig_nans].reshape(<a id="change">sig_nans.shape[0]</a>, sum(~sig_nans[0, :]))
+        sig_nans = sig_nans[0, :]
+    else:
+        raise ValueError(&quotOnly 1d or 2d arrays supported.&quot)</code></pre>

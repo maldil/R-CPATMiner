@@ -1,0 +1,47 @@
+<html><h3>f9aea094643fb3240193b0bc0f1908d5b84d82ab,dask_image/ndmeasure/__init__.py,,center_of_mass,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    input_mtch_sum = <a id="change">sum(input, labels, index)</a>
+
+    input_wt_mtch_sum = []
+    for i in _pycompat.irange(input.ndim):
+        sl = input.ndim * [None]
+        sl[i] = slice(None)
+        sl = tuple(sl)
+
+        input_i = dask.array.arange(input.shape[i], chunks=input.chunks[i])
+        input_wt = input * input_i[sl]
+
+        input_wt_mtch_sum.append(sum(input_wt, labels, index))
+
+    input_wt_mtch_sum = dask.array.stack(input_wt_mtch_sum, axis=-1)
+
+    <a id="change">com_lbl = input_wt_mtch_sum / input_mtch_sum[..., None]</a>
+
+    return com_lbl
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    type_mapping = collections.OrderedDict([
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ])
+    <a id="change">out_dtype = numpy.dtype(list(type_mapping.items()))</a>
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+
+    com_lbl = dask.array.stack([<a id="change">com_lbl[k]</a> for k in type_mapping], axis=-1)
+
+    return com_lbl
+</code></pre><img src="24555319.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b46c893e2c0f9cd505b597c2ff215a0df04b6050#diff-05a01ce0503407dc9169caee0a0fdf0a97d6724ba90ef37b32beff27304e65fbL173' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b46c893e2c0f9cd505b597c2ff215a0df04b6050</div><div id='time'> Time: 2020-05-19</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/b3256666df69e645159c8ef91fb3e4bfd826b8de#diff-a9d3bfb3cacb0995519ef579c7a2c201219a9b886dcc825bd6cb580ee3c63de4L91' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: b3256666df69e645159c8ef91fb3e4bfd826b8de</div><div id='time'> Time: 2018-06-05</div><div id='author'> Author: lwgray@gmail.com</div><div id='file'> File Name: yellowbrick/classifier/classification_report.py</div><div id='class'> Class Name: ClassificationReport</div><div id='method'> Method Name: score</div><BR>

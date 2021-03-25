@@ -1,0 +1,126 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if input_nc is None:
+            input_nc = outer_nc
+
+        downconv = <a id="change">nn.Conv2d(input_nc, inner_nc, kernel_size=4,
+                             stride=2, padding=1)</a>
+        downrelu = nn.LeakyReLU(0.2, True)
+        downnorm = norm_layer(inner_nc)
+        uprelu = nn.ReLU(True)
+        upnorm = norm_layer(outer_nc)
+
+        &#47&#47 As the downconv layer is outer_nc in and inner_nc out.
+        &#47&#47 So the shift define like this:
+        shift = InnerSoftShiftTriple(opt.shift_sz, opt.stride, opt.mask_thred, opt.triple_weight)
+
+        shift.set_mask(mask_global, 3)
+        shift_list.append(shift)
+
+        &#47&#47 Add latent constraint
+        &#47&#47 Then add the constraint to the constrain layer list!
+        innerCosBefore = InnerCos(strength=opt.strength, skip=opt.skip)
+        innerCosBefore.set_mask(mask_global, 3)  &#47&#47 Here we need to set mask for innerCos layer too.
+        innerCos_list.append(innerCosBefore)
+
+        &#47&#47 Different position only has differences in `upconv`
+            &#47&#47 for the outermost, the special is `tanh`
+        if outermost:
+            upconv = <a id="change">nn.ConvTranspose2d(inner_nc * 2, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            down = [downconv]
+            up = [uprelu, upconv, nn.Tanh()]
+            model = down + [submodule] + up
+            &#47&#47 for the innermost, the special is `inner_nc` instead of `inner_nc*2`
+        elif innermost:
+            upconv = <a id="change">nn.ConvTranspose2d(inner_nc, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            down = [downrelu, downconv]  &#47&#47 for the innermost, no submodule, and delete the bn
+            up = [uprelu, upconv, upnorm]
+            model = down + up
+            &#47&#47 else, the normal
+        else:
+            &#47&#47 shift triple differs in here. It is `*3` not `*2`.
+            upconv = <a id="change">nn.ConvTranspose2d(inner_nc * 3, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1)</a>
+            down = [downrelu, downconv, downnorm]
+            &#47&#47 shift should be placed after uprelu
+            &#47&#47 NB: innerCos are placed before shift. So need to add the latent gredient to
+            &#47&#47 to former part.
+            up = [uprelu, innerCosBefore, shift, upconv, upnorm]
+
+            if use_dropout:
+                model = down + [submodule] + up + [nn.Dropout(0.5)]
+            else:
+                model = down + [submodule] + up
+
+        <a id="change">self.model</a> = nn.Sequential(*model)
+
+    def forward(self, x):
+        if self.outermost:  &#47&#47 if it is the outermost, directly pass the input in.</code></pre><h3>After Change</h3><pre><code class='java'>
+        if input_nc is None:
+            input_nc = outer_nc
+
+        downconv = <a id="change">spectral_norm(nn.Conv2d(input_nc, inner_nc, kernel_size=4,
+                             stride=2, padding=1), use_spectral_norm)</a>
+        downrelu = nn.LeakyReLU(0.2, True)
+        downnorm = norm_layer(inner_nc)
+        uprelu = nn.ReLU(True)
+        upnorm = norm_layer(outer_nc)
+
+        &#47&#47 As the downconv layer is outer_nc in and inner_nc out.
+        &#47&#47 So the shift define like this:
+        shift = InnerSoftShiftTriple(opt.shift_sz, opt.stride, opt.mask_thred, opt.triple_weight)
+
+        shift.set_mask(mask_global, 3)
+        shift_list.append(shift)
+
+        &#47&#47 Add latent constraint
+        &#47&#47 Then add the constraint to the constrain layer list!
+        innerCos = InnerCos(strength=opt.strength, skip=opt.skip)
+        innerCos.set_mask(mask_global, 3)  &#47&#47 Here we need to set mask for innerCos layer too.
+        innerCos_list.append(innerCos)
+
+        &#47&#47 Different position only has differences in `upconv`
+        &#47&#47 for the outermost, the special is `tanh`
+        if outermost:
+            upconv = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc * 2, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            down = [downconv]
+            up = [uprelu, upconv, nn.Tanh()]
+            model = down + [submodule] + up
+            &#47&#47 for the innermost, the special is `inner_nc` instead of `inner_nc*2`
+        elif innermost:
+            upconv = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            down = [downrelu, downconv]  &#47&#47 for the innermost, no submodule, and delete the bn
+            up = [uprelu, upconv, upnorm]
+            model = down + up
+            &#47&#47 else, the normal
+        else:
+            &#47&#47 shift triple differs in here. It is `*3` not `*2`.
+            upconv = <a id="change">use_spectral_norm(nn.ConvTranspose2d(inner_nc * 3, outer_nc,
+                                        kernel_size=4, stride=2,
+                                        padding=1), use_spectral_norm)</a>
+            down = [downrelu, downconv, downnorm]
+            &#47&#47 shift should be placed after uprelu
+            &#47&#47 NB: innerCos are placed before shift. So need to add the latent gredient to
+            &#47&#47 to former part.
+            up = [uprelu, innerCos, shift, upconv, upnorm]
+
+            if use_dropout:
+                model = down + [submodule] + up + [nn.Dropout(0.5)]
+            else:
+                model = down + [submodule] + up
+
+        <a id="change">self.model</a> = nn.Sequential(*model)
+
+    def forward(self, x):
+        if self.outermost:  &#47&#47 if it is the outermost, directly pass the input in.</code></pre>

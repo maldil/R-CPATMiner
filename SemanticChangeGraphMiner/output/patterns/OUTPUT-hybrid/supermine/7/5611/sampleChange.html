@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+zip_dir = "data/dataset"
+zip_files = ["train-clean-100.zip", "train-clean-360.zip", "train-clean-500.zip"]
+zip_files = ["%s/%s" % (zip_dir, fn) for fn in zip_files]
+<a id="change">assert all([os.path])</a>
+
+for fn in sorted(glob("train-*/*/*/*.trans.txt")):
+    for l in open(fn).read().splitlines():
+        seq_name, txt = l.split(" ", 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+for zip_file in zip_files:
+  assert zip_file.filelist
+  assert zip_file.filelist[0].filename.startswith("LibriSpeech/")
+  <a id="change">for info in zip_file.filelist:
+    assert isinstance(info, ZipInfo)
+    path = info.filename.split("/")
+    assert path[0] == "LibriSpeech", "does not expect %r (%r)" % (info, info.filename)
+    if path[1].startswith("train-"):
+      subdir = path[1]  &#47&#47 e.g. "train-clean-100"
+      if path[-1].endswith(".trans.txt"):
+        for l in zip_file.read(info).decode("utf8").splitlines():
+          seq_name, txt = l.split(" ", 1)
+          print(txt)</a>
+</code></pre>

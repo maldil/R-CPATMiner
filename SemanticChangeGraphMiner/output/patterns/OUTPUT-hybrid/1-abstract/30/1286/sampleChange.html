@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return None
+
+    def __call__(self, states, agent_states):
+        <a id="change">states_v</a> = <a id="change">ptan.agent.float32_preprocessor(states, cuda=self.cuda)</a>
+        <a id="change">mu_v</a> = self.net(states_v)
+        <a id="change">actions</a> = mu_v.data.cpu().numpy()
+
+        if self.ou_enabled and self.ou_epsilon &gt; 0:
+            new_a_states = []
+            for a_state, action in zip(agent_states, actions):
+                if a_state is None:
+                    a_state = np.zeros(shape=action.shape, dtype=np.float32)
+                <a id="change">a_state</a> += self.ou_teta * (self.ou_mu - a_state)
+                a_state += self.ou_sigma * np.random.normal(size=action.shape)
+
+                action += self.ou_epsilon * a_state</code></pre><h3>After Change</h3><pre><code class='java'>
+        return None
+
+    def __call__(self, states, agent_states):
+        <a id="change">states_v</a> = <a id="change">ptan.agent.float32_preprocessor(states).to(self.device)</a>
+        <a id="change">mu_v</a> = self.net(states_v)
+        <a id="change">actions</a> = mu_v.data.cpu().numpy()
+
+        if self.ou_enabled and self.ou_epsilon &gt; 0:
+            new_a_states = []
+            for a_state, action in zip(agent_states, actions):
+                if a_state is None:
+                    a_state = np.zeros(shape=action.shape, dtype=np.float32)
+                <a id="change">a_state</a> += self.ou_teta * (self.ou_mu - a_state)
+                a_state += self.ou_sigma * np.random.normal(size=action.shape)
+
+                action += self.ou_epsilon * a_state</code></pre>

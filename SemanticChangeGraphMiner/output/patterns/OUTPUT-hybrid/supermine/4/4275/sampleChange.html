@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 the .intersection preserves order, important!
+            self.regressors = {name: list(df.columns.intersection(cols)) for name, cols in sorted(regressors.items())}
+        else:
+            <a id="change">self.regressors = {name: df.columns.tolist() for name in sorted(self._fitted_parameter_names)}</a>
+        assert all(
+            len(cols) &gt; 0 for cols in self.regressors.values()
+        ), "All parameters must have at least one column associated with it. Did you mean to include a constant column?"
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            df = self._filter_dataframe_to_covariates(df).astype(float)
+            
+
+        <a id="change">self</a>.regressors, Xs = self._create_design_matrices(regressors)
+
+        _index = pd.MultiIndex.from_tuples(
+            sum(([(name, col) for col in columns] for name, columns in self.regressors.items()), [])</code></pre>

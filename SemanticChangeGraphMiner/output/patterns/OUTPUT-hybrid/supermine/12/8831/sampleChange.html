@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with shape (..., sensors, sensors)
+    :return: Set of beamforming vectors with shape (..., sensors)
+    
+    <a id="change">return get_pca(target_psd_matrix)[0]</a>
+
+
+&#47&#47 TODO: Possible test case: Assert W^H * H = 1.
+&#47&#47 TODO: Make function more stable for badly conditioned noise matrices.</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    eigenvectors, eigenvalues = get_pca(target_psd_matrix)
+    if scaling is None:
+        <a id="change">scale = 1</a>
+    elif <a id="change">scaling == &quottrace</a>&quot:
+        &#47&#47 ToDo: check whether this improves bf results
+        scale = <a id="change">np.sqrt(
+            np.trace(target_psd_matrix, axis1=-1, axis2=-2)
+        ) / np.linalg.norm(eigenvectors, axis=-1)</a>
+        <a id="change">scale = scale[..., None]</a>
+        print(scale.shape)
+    elif scaling == &quoteigenvalue&quot:
+        &#47&#47 ToDo: check whether this improves bf results
+        <a id="change">scale = eigenvalues / np.linalg.norm(
+            eigenvectors, axis=-1)</a>
+        scale = scale[..., None]
+    else:
+        raise ValueError
+    <a id="change">return eigenvectors * scale</a>
+
+
+&#47&#47 TODO: Possible test case: Assert W^H * H = 1.
+&#47&#47 TODO: Make function more stable for badly conditioned noise matrices.</code></pre>

@@ -1,0 +1,44 @@
+<html><h3>18165030cc755a82e0500250bde33d978507dedc,pykrige/uk3d.py,UniversalKriging3D,update_variogram_model,#UniversalKriging3D#,396
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.verbose:
+            print("Updating variogram mode...")
+
+        <a id="change">if variogram_parameters is None:
+            vp_temp = None
+        elif use_psill:
+            vp_temp = variogram_parameters
+        else:
+            if self.variogram_model in [&quotgaussian&quot, &quotspherical&quot, &quotexponential&quot, &quothole-effect&quot]:
+                vp_temp = [variogram_parameters[0] - variogram_parameters[2],
+                           variogram_parameters[1], variogram_parameters[2]]
+            else:
+                vp_temp = variogram_parameters
+       </a> self.lags, self.semivariance, self.variogram_model_parameters = \
+            initialize_variogram_model(np.vstack((self.X_ADJUSTED, self.Y_ADJUSTED, self.Z_ADJUSTED)).T, self.VALUES,
+                                       self.variogram_model, vp_temp, self.variogram_function,
+                                       nlags, weight, &quoteuclidean&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                      [self.anisotropy_scaling_y, self.anisotropy_scaling_z],
+                                      [self.anisotropy_angle_x, self.anisotropy_angle_y, self.anisotropy_angle_z]).T
+
+        <a id="change">self.variogram_model</a> = variogram_model
+        if self.variogram_model not in self.variogram_dict.keys() and self.variogram_model != &quotcustom&quot:
+            raise ValueError("Specified variogram model &quot%s&quot is not supported." % variogram_model)
+        elif self.variogram_model == &quotcustom&quot:
+            if variogram_function is None or not callable(variogram_function):
+                raise ValueError("Must specify callable function for custom variogram model.")
+            else:
+                self.variogram_function = variogram_function
+        else:
+            self.variogram_function = self.variogram_dict[self.variogram_model]
+        if self.verbose:
+            print("Updating variogram mode...")
+
+        <a id="change">vp_temp = _make_variogram_parameter_list(self.variogram_model,
+                                                 variogram_parameters)</a>
+        self.lags, self.semivariance, self.variogram_model_parameters = \
+            initialize_variogram_model(np.vstack((self.X_ADJUSTED,
+                                                  self.Y_ADJUSTED,
+                                                  self.Z_ADJUSTED)).T,</code></pre><img src="10544032.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 8</div><BR><div id='size'>Non-data size: 32</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-7d67ca97ecd88027d2599a539e71c8db52595633606a955757531a6891dc7ae1L414' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/uk3d.py</div><div id='class'> Class Name: UniversalKriging3D</div><div id='method'> Method Name: update_variogram_model</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-e334a81dcccccdc6f792740bb531faec878be158c77a6e051fa6f636ea3cb7a1L290' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/uk.py</div><div id='class'> Class Name: UniversalKriging</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-01c90052987e24246d6f303d6c527393a293f7d8e23df0ffe214377150c4be01L256' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/ok3d.py</div><div id='class'> Class Name: OrdinaryKriging3D</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-01c90052987e24246d6f303d6c527393a293f7d8e23df0ffe214377150c4be01L338' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/ok3d.py</div><div id='class'> Class Name: OrdinaryKriging3D</div><div id='method'> Method Name: update_variogram_model</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-7d67ca97ecd88027d2599a539e71c8db52595633606a955757531a6891dc7ae1L290' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/uk3d.py</div><div id='class'> Class Name: UniversalKriging3D</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-7d67ca97ecd88027d2599a539e71c8db52595633606a955757531a6891dc7ae1L414' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/uk3d.py</div><div id='class'> Class Name: UniversalKriging3D</div><div id='method'> Method Name: update_variogram_model</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-45487a2d7871556973ef5928122f3938e02c5cbb861c0d36b4bb1e1bbee15043L357' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/ok.py</div><div id='class'> Class Name: OrdinaryKriging</div><div id='method'> Method Name: update_variogram_model</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-e334a81dcccccdc6f792740bb531faec878be158c77a6e051fa6f636ea3cb7a1L549' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/uk.py</div><div id='class'> Class Name: UniversalKriging</div><div id='method'> Method Name: update_variogram_model</div><BR><BR><div id='link'><a href='https://github.com/bsmurphy/PyKrige/commit/18165030cc755a82e0500250bde33d978507dedc#diff-45487a2d7871556973ef5928122f3938e02c5cbb861c0d36b4bb1e1bbee15043L267' target='_blank'>Link</a></div><div id='project'> Project Name: bsmurphy/PyKrige</div><div id='commit'> Commit Name: 18165030cc755a82e0500250bde33d978507dedc</div><div id='time'> Time: 2017-03-06</div><div id='author'> Author: bscott.murphy@gmail.com</div><div id='file'> File Name: pykrige/ok.py</div><div id='class'> Class Name: OrdinaryKriging</div><div id='method'> Method Name: __init__</div><BR>

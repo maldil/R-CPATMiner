@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        target = target.cuda(async=True)
+
+        <a id="change">input_var = torch.autograd.Variable(inputs.cuda(), volatile=True)</a>
+        target_var = <a id="change">torch</a>.autograd.Variable(target, volatile=True)
+
+        &#47&#47 compute output
+        output = model(input_var)
+        score_map = output[-1].data.cpu()
+        if flip:
+            flip_input_var = torch.autograd.Variable(
+                    torch.from_numpy(fliplr(inputs.clone().numpy())).float().cuda(), 
+                    volatile=True
+                )
+            flip_output_var = model(flip_input_var)
+            flip_output = flip_back(flip_output_var[-1].data.cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target_var)
+        acc = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            predictions[meta[&quotindex&quot][n], :, :] = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(inputs, target)
+            pred_batch_img = batch_with_heatmap(inputs, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                pred_win = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)
+            plt.pause(.05)
+            plt.draw()
+
+        &#47&#47 measure accuracy and record loss
+        losses.update(<a id="change">loss.data[0]</a>, inputs.size(0))
+        acces.update(acc[0], inputs.size(0))
+
+        &#47&#47 measure elapsed time</code></pre><h3>After Change</h3><pre><code class='java'>
+            plt.draw()
+
+        &#47&#47 measure accuracy and record loss
+        losses.update(<a id="change">loss.item()</a>, input.size(0))
+        acces.update(acc[0], input.size(0))
+
+        &#47&#47 measure elapsed time</code></pre>

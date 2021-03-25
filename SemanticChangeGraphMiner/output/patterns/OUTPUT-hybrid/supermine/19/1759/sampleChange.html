@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert f"{tmpdir_relative}/dir" in no_ignore_result.stdout
+
+    def test_build_ignore_dependency(self) -&gt; None:
+        with <a id="change">temporary_dir(root_dir=get_buildroot())</a> as tmpdir:
+            <a id="change">tmpdir_relative = Path(tmpdir).relative_to(get_buildroot())</a>
+            <a id="change">Path(tmpdir, "dir1").mkdir()</a>
+            <a id="change">Path(tmpdir, "dir1", "BUILD").write_text("files(sources=[])")</a>
+            Path(tmpdir, "dir2").mkdir()
+            Path(tmpdir, "dir2", "BUILD").write_text(
+                f"files(sources=[], dependencies=[&quot{tmpdir_relative}/dir1&quot])"
+            )</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert f"{tmpdir}/dir" in no_ignore_result.stdout
+
+    def test_build_ignore_dependency(self) -&gt; None:
+        sources = <a id="change">{
+            "dir1/BUILD": "files(sources=[])",
+            "dir2/BUILD": "files(sources=[], dependencies=[&quot{tmpdir}/dir1&quot])",
+        }</a>
+        with <a id="change">self.setup_tmpdir(sources)</a> as tmpdir:
+            ignore_result = self.run_pants(
+                [f"--build-ignore={tmpdir}/dir1", "dependencies", f"{tmpdir}/dir2"]
+            )</code></pre>

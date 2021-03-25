@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 initialize all by CMDS
+    Y = cmdscale_fast(X_dist, ndim)
+    <a id="change">if how in [&quotmetric&quot, &quotnonmetric&quot]:
+        _logger.debug("Performing metric MDS on "
+                             "{} of shape {}...".format(type(X_dist),
+                                                        X_dist.shape))
+        &#47&#47 Metric MDS from sklearn
+        Y, _ = manifold.smacof(X_dist, n_components=ndim, metric=True, max_iter=3000,
+                               eps=1e-6, random_state=seed, n_jobs=n_jobs,
+                               n_init=1, init=Y, verbose=verbose)
+   </a> if how == &quotnonmetric&quot:
+        _logger.debug(
+            "Performing non-metric MDS on "
+            "{} of shape {}...".format(type(X_dist),</code></pre><h3>After Change</h3><pre><code class='java'>
+        return Y
+
+    &#47&#47 metric is next fastest
+    <a id="change">try:
+        &#47&#47 use sgd2 if it is available
+        Y = sgd(X_dist, n_components=ndim, random_state=seed, init=Y)
+    except NotImplementedError:
+        &#47&#47 sgd2 currently only supports n_components==2
+        Y = smacof(X_dist, n_components=ndim, random_state=seed, init=Y, metric=True)
+   </a> if how == "metric":
+        return Y
+    &#47&#47 nonmetric is slowest
+    Y = smacof(X_dist, n_components=ndim, random_state=seed, init=Y, metric=False)</code></pre>

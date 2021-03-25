@@ -1,0 +1,25 @@
+<html><h3>504f7b18fe1037bf79da0119329f2aafdee4703a,thinc/initializers.py,,normal_init,#,52
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def normal_init(ops: Ops, shape: Shape, *, fan_in: int = -1) -&gt; FloatsXd:
+    if fan_in == -1:
+        fan_in = shape[1]
+    <a id="change">scale</a> = <a id="change">ops.xp.sqrt(1.0 / fan_in)</a>
+    size = int(ops.xp.prod(ops.xp.asarray(shape)))
+    <a id="change">inits</a> = numpy.random.normal(scale=scale, size=size).astype("float32")
+    <a id="change">inits</a> = ops.reshape_f(inits, shape)
+    return ops.asarray_f(inits)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def normal_init(ops: Ops, shape: Shape, *, fan_in: int = -1) -&gt; FloatsXd:
+    if fan_in == -1:
+        fan_in = shape[1]
+    <a id="change">scale</a> = float(<a id="change">ops.xp.sqrt(1.0 / fan_in)</a>)
+    size = int(ops.xp.prod(ops.xp.asarray(shape)))
+    <a id="change">inits</a> = numpy.random.normal(scale=scale, size=size).astype("float32")
+    <a id="change">inits</a> = ops.reshape_f(inits, shape)
+    return ops.asarray_f(inits)
+
+</code></pre><img src="3880247.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/504f7b18fe1037bf79da0119329f2aafdee4703a#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L55' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 504f7b18fe1037bf79da0119329f2aafdee4703a</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: adrianeboyd@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: normal_init</div><BR>

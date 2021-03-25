@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+data_loader = DataLoader(from_csv=False, datapath=directory_path, time_delay=3)
+dataset = data_loader.get_data()
+<a id="change">labels = dataset.get_labels()</a>
+<a id="change">images = dataset.get_images()</a>
+
+if verbose:
+    <a id="change">print(&quotraw image data shape: &quot + str(images.shape))</a>
+label_count = len(labels[0])
+
+print(&quotCreating training/testing data...&quot)
+<a id="change">validation_split = 0.25</a>
+<a id="change">X_train, X_test, y_train, y_test = train_test_split(images, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)</a>
+train_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(X_train, y_train)
+test_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(X_test, y_test)
+
+print(&quotTraining net...&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+from src.dataloader import DataLoader
+from src.neuralnets import TimeDelayConvNN
+
+<a id="change">validation_split = 0.25</a>
+
+target_dimensions = (64, 64)
+channels = 1
+verbose = True
+
+print(&quot--------------- Time-Delay Convolutional Model -------------------&quot)
+print(&quotLoading data...&quot)
+directory_path = "image_data/sample_image_series_directory"
+data_loader = DataLoader(from_csv=False, datapath=directory_path, validation_split=validation_split, time_delay=3)
+<a id="change">dataset</a> = data_loader.load_data()
+
+if verbose:
+    <a id="change">dataset.print_data_details()</a>
+
+print(&quotPreparing training/testing data...&quot)
+<a id="change">train_images, train_labels = dataset.get_training_data()</a>
+train_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(train_images, train_labels)
+<a id="change">test_images, test_labels = dataset.get_test_data()</a>
+test_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(test_images, test_labels)
+
+print(&quotTraining net...&quot)
+model = TimeDelayConvNN(target_dimensions, channels, emotion_map=dataset.get_emotion_index_map(), time_delay=dataset.get_time_delay())</code></pre>

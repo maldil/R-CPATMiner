@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if niter == 0: fitold = fit               
+            
+            <a id="change">fitchange = abs(fitold - fit)</a>
+            fitold = fit
+            
+            if verbose == True:
+                print(&quotIteration: %s fit: %s, fitchange: %s&quot %(niter, fit, fitchange))        </code></pre><h3>After Change</h3><pre><code class='java'>
+    fit = []
+    
+    for niter in range(maxiter):
+        <a id="change">violation = 0.0</a>
+
+        &#47&#47 Pointer to updated factor matrix 
+        if niter != 0: W = Wtemp    
+
+        &#47&#47 Update factor matrix H
+        WtW = W.T.dot(W)
+        AtW = A.T.dot(W)
+        
+        violation += _rfhals_update(Ht, WtW, AtW)                        
+        Ht /= sci.maximum(epsi, sci.linalg.norm(Ht, axis=0))
+
+        &#47&#47 Update factor matrix W
+        HHt = Ht.T.dot(Ht)
+        AHt = Q.dot(A.dot(Ht)) &#47&#47 Rotate AHt back to high-dimensional space
+
+        W = Q.dot(W) &#47&#47 Rotate W back to high-dimensional space
+        violation += _rfhals_update(W, HHt, AHt)
+        <a id="change">print(violation)</a>
+        
+        &#47&#47 Project W to low-dimensional space
+        Wtemp = Q.T.dot(W)  
+        </code></pre>

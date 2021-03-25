@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, *args, **kwargs):
+         Assemble Neural network using sklearn pipeline 
+        &#47&#47 Cherrypick arguments for model. Exclude &quotsteps&quot, which is pipeline argument
+        local_kwargs = {key: kwargs.pop(key) for key in <a id="change">kwargs.keys()</a> if key != &quotsteps&quot and len(key.split(&quot__&quot, 1)) == 1}
+        <a id="change">self.pipeline</a> = Pipeline([(&quotempty_dims_remover&quot, VarianceThreshold()),
+                                  (&quotscaler&quot, StandardScaler()),
+                                  (&quotneural_network&quot, MLPClassifier(*args, **local_kwargs))
+                                 ]).set_params(**kwargs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, *args, **kwargs):
+         Assemble Neural network using sklearn pipeline 
+        &#47&#47 Cherrypick arguments for model. Exclude &quotsteps&quot, which is pipeline argument
+        local_kwargs = {key: kwargs.pop(key) for key in <a id="change">list(kwargs.keys())</a> if key != &quotsteps&quot and len(key.split(&quot__&quot, 1)) == 1}
+        <a id="change">self.pipeline</a> = Pipeline([(&quotempty_dims_remover&quot, VarianceThreshold()),
+                                  (&quotscaler&quot, StandardScaler()),
+                                  (&quotneural_network&quot, MLPClassifier(*args, **local_kwargs))
+                                 ]).set_params(**kwargs)</code></pre>

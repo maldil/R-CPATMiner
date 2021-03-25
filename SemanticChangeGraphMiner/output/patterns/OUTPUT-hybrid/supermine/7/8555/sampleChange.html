@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        log("Installing Python dependencies")
+        reqFilePath = os.path.join(setupHome, "requirements.txt")
+        if os.path.isfile(reqFilePath):
+            reqItems = [line.strip() <a id="change">for</a> line in open(reqFilePath)]
+            for r in reqItems:
+                log("Installing package: {0}".format(r))
+                subprocess.call([pipExePath, &quotinstall&quot, &quot-U&quot, &quot--upgrade&quot, r])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    pipExePath = os.path.join(os.path.dirname(sys.executable), r"Scripts\pip.exe")
+    setupHome = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scripts")
+    distHome = os.path.join(<a id="change">os.path.abspath(os.path.dirname(__file__))</a>, "dist")
+
+    try:
+        arcpy = __import__(&quotarcpy&quot)
+        info = arcpy.GetInstallInfo()
+        if tuple(map(int, (info[&quotVersion&quot].split(".")))) &lt; tuple(map(int, ("10.3.1".split(".")))):
+            raise Exception("No ArcGIS")
+    except:
+        die("Unable to find ArcGIS 10.3.1 or above. Cannot proceed.", 99)
+
+    try:
+        log("Installing PIP")
+        pipPyPath = os.path.join(setupHome, "get-pip.py")
+        locateFile(pipURL, pipPyPath)
+        subprocess.call([sys.executable, pipPyPath])
+
+        if os.path.isfile(pipExePath):
+            log("PIP installed successfully")
+        else:
+            raise Exception("PIP failed")
+
+        subprocess.call([pipExePath, "install", "--upgrade", "pip"])
+        subprocess.call([pipExePath, "install", "--upgrade", "wheel"])
+    except:
+        die("PIP installation failed!", 1)
+    
+    try:           
+        if sys.version_info[0] == 2:
+            log("Installing Microsoft Visual C++ Compiler")
+            vcSetupPath = <a id="change">os</a>.path.join(distHome, "VCForPython27.msi")
+            locateFile(vcURL, vcSetupPath)
+            <a id="change">c = ["msiexec", "/i", vcSetupPath, "/qb-"]</a>
+            log("Executing: {0}".format(" ".join(c)))
+            subprocess.call(c)
+            log("C++ Compiler for Python installed successfully")</code></pre>

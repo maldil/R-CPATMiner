@@ -1,0 +1,21 @@
+<html><h3>6a4fa82792bddc6126eaf944956f49f0a0cb7ca7,test/filters/test_sobel.py,TestSpatialGradient3d,test_jit,#TestSpatialGradient3d#,240
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        @torch.jit.script
+        def op_script(input):
+            return kornia.filters.spatial_gradient(input)
+        img = <a id="change">torch.rand(2, 3, 4, 5).to(device)</a>
+        actual = op_script(img)
+        expected = kornia.filters.spatial_gradient(img)
+        assert_allclose(actual, expected)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @pytest.mark.skip("issue with device in kernel generation")
+    def test_jit(self, device, dtype):
+        img = <a id="change">torch.rand(2, 3, 1, 4, 5, device=device, dtype=dtype)</a>
+        op = kornia.filters.spatial_gradient3d
+        op_script = torch.jit.script(op)
+        expected = op(img)
+        actual = op_script(img)</code></pre><img src="13635796.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/6a4fa82792bddc6126eaf944956f49f0a0cb7ca7#diff-b5854f9a9082cf6e6ef034c391102fdc664f0edd9253f56d3e1d8f29d6925fa3L244' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 6a4fa82792bddc6126eaf944956f49f0a0cb7ca7</div><div id='time'> Time: 2020-12-22</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: test/filters/test_sobel.py</div><div id='class'> Class Name: TestSpatialGradient3d</div><div id='method'> Method Name: test_jit</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/6a4fa82792bddc6126eaf944956f49f0a0cb7ca7#diff-b5854f9a9082cf6e6ef034c391102fdc664f0edd9253f56d3e1d8f29d6925fa3L233' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 6a4fa82792bddc6126eaf944956f49f0a0cb7ca7</div><div id='time'> Time: 2020-12-22</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: test/filters/test_sobel.py</div><div id='class'> Class Name: TestSpatialGradient3d</div><div id='method'> Method Name: test_gradcheck</div><BR><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/7634391b070859dc1c11b092fde754dbc7911d4a#diff-22a2166015214e391b6481095d536c0d98ea246b44518da4e1b03beeac6d8f1dL253' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 7634391b070859dc1c11b092fde754dbc7911d4a</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: test/test_losses.py</div><div id='class'> Class Name: TestDepthSmoothnessLoss</div><div id='method'> Method Name: test_gradcheck</div><BR>

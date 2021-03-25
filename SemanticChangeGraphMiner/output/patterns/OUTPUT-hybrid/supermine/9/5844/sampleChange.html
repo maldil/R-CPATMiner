@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    output = coord
+    <a id="change">if len(coord):
+        &#47&#47 Use KDtree to find the peaks that are too close to each other
+        tree = cKDTree(coord)
+
+        indices = tree.query_ball_point(coord, r=spacing, p=p_norm)
+        rejected_peaks_indices = set()
+        for idx, candidates in enumerate(indices):
+            if idx not in rejected_peaks_indices:
+                &#47&#47 keep current point and the points at exactly spacing from it
+                candidates.remove(idx)
+                dist = distance.cdist([coord[idx]],
+                                      coord[candidates],
+                                      distance.minkowski,
+                                      p=p_norm).reshape(-1)
+                candidates = [c for c, d in zip(candidates, dist)
+                              if d &lt; spacing]
+
+                &#47&#47 candidates.remove(keep)
+                rejected_peaks_indices.update(candidates)
+
+        &#47&#47 Remove the peaks that are too close to each other
+        output = np.delete(coord, tuple(rejected_peaks_indices), axis=0)
+
+   </a> return output
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    output = coords
+    <a id="change">if len(coords):
+
+        coords = np.atleast_2d(coords)
+        if batch_size is None:
+            batch_list = [coords]
+        else:
+            batch_list = np.array_split(coords, batch_size)
+
+        output = np.zeros((0, coords.shape[1]))
+        for batch in batch_list:
+            output = _ensure_spacing(np.vstack([output, batch]),
+                                     spacing, p_norm)
+
+   </a> return output
+</code></pre>

@@ -1,0 +1,29 @@
+<html><h3>12b309342f718da259eabd189b74269932f485fa,nilmtk/stats/goodsectionsresults.py,GoodSectionsResults,import_from_cache,#GoodSectionsResults#,109
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def import_from_cache(self, cached_stat, sections):
+        usable_sections_from_cache = pd.DataFrame()
+        for section in sections:
+            <a id="change">try:
+                row = cached_stat.loc[section.start]
+            except KeyError:
+                pass
+            else:
+                end_time = row[&quotend&quot]
+                if end_time == section.end:
+                    usable_sections_from_cache = (
+                        usable_sections_from_cache.append(row))
+
+       </a> grouped_by_index = usable_sections_from_cache.groupby(level=0)
+        for name, group in grouped_by_index:
+            assert group[&quotend&quot].unique().size == 1
+            timeframes = [TimeFrame(row[&quotsection_start&quot], row[&quotsection_end&quot])</code></pre><h3>After Change</h3><pre><code class='java'>
+        for name, group in grouped_by_index:
+            assert group[&quotend&quot].unique().size == 1
+            timeframe = TimeFrame(name, group[&quotend&quot].iloc[0])
+            if <a id="change">timeframe in sections</a>:
+                timeframes = [TimeFrame(row[&quotsection_start&quot], row[&quotsection_end&quot])
+                              for _, row in group.iterrows()]
+                self.append(timeframe, {&quotsections&quot: [timeframes]})</code></pre><img src="35744865.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/12b309342f718da259eabd189b74269932f485fa#diff-91001190861f89addbaeca9a02d527bfa1d9a0f914066cc103472991b461c5f7L110' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 12b309342f718da259eabd189b74269932f485fa</div><div id='time'> Time: 2014-11-26</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/stats/goodsectionsresults.py</div><div id='class'> Class Name: GoodSectionsResults</div><div id='method'> Method Name: import_from_cache</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/6c67a2e0031876c73f3251f3e4a4cfea67313085#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL197' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 6c67a2e0031876c73f3251f3e4a4cfea67313085</div><div id='time'> Time: 2017-07-18</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: find_used_variables</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/e513867ab755ede81a4a33b125d902bc49b51d13#diff-34e80b66b4f94c40da7a98714b0679b8e2f46c749a89574d45dbd6bb5b1331ddL19' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: e513867ab755ede81a4a33b125d902bc49b51d13</div><div id='time'> Time: 2017-02-17</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/io/npz.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_npz</div><BR>

@@ -1,0 +1,27 @@
+<html><h3>a81db6daadd1304e96916c34a894d83dd4dc75bd,skopt/wrappers/scikit_learn.py,SkoptSearchCV,step,#SkoptSearchCV#,248
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cv = skms.check_cv(self.cv, y, classifier=skms.is_classifier(self.estimator))
+        self.scorer_ = skms.check_scoring(self.estimator, scoring=self.scoring)
+
+        <a id="change">pd = self.param_distributions</a>
+
+        if self.optimizer is None:
+            dimensions = [pd[k] for k in <a id="change">sorted(pd.keys())</a>]
+            <a id="change">self.optimizer = Optimizer(dimensions, GaussianProcessRegressor())</a>
+
+        <a id="change">params = self.optimizer.ask()</a>
+        params_dict = {k: v for k,v in zip(sorted(pd.keys()), params)}
+
+        cv_iter = list(cv.split(X, y, groups))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if key not in self.optimizer:
+            self.optimizer[key] =  self._make_optimizer(param_space)
+
+        <a id="change">optimizer = self.optimizer[key]</a>
+
+        params = optimizer.ask()
+        params_dict = self._skopt_to_dict(param_space, params)
+</code></pre><img src="37428923.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/a81db6daadd1304e96916c34a894d83dd4dc75bd#diff-e30d05af267fcba64311305c2241bcd4145c104c9cce44d7753bba6e949f1c71L248' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: a81db6daadd1304e96916c34a894d83dd4dc75bd</div><div id='time'> Time: 2017-06-28</div><div id='author'> Author: iaroslav.email@gmail.com</div><div id='file'> File Name: skopt/wrappers/scikit_learn.py</div><div id='class'> Class Name: SkoptSearchCV</div><div id='method'> Method Name: step</div><BR><BR><div id='link'><a href='https://github.com/Pinafore/qb/commit/e79449afe45f4da6f1756a7d92bdd3cd6618c638#diff-7e15b33db3b6f9648258b62d3596ca5a06838eb71e92e5cc78acf6d6e1d3a7c4L87' target='_blank'>Link</a></div><div id='project'> Project Name: Pinafore/qb</div><div id='commit'> Commit Name: e79449afe45f4da6f1756a7d92bdd3cd6618c638</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: sjtufs@gmail.com</div><div id='file'> File Name: qanta/buzzer/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: process_question</div><BR><BR><div id='link'><a href='https://github.com/ylongqi/openrec/commit/93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db#diff-0f3db2fab558ccd2f6e7e61206dc20feccc2e48f7f2bf46069ec79ea66e8c2cdL463' target='_blank'>Link</a></div><div id='project'> Project Name: ylongqi/openrec</div><div id='commit'> Commit Name: 93f84bee4d0c9e082c5ef04fa5f4a0886cdad2db</div><div id='time'> Time: 2018-09-26</div><div id='author'> Author: ylongqi@gmail.com</div><div id='file'> File Name: openrec/recommenders/recommender.py</div><div id='class'> Class Name: Recommender</div><div id='method'> Method Name: _optimistic_restore</div><BR>

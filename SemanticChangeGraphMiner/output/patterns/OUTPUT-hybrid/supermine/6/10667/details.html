@@ -1,0 +1,21 @@
+<html><h3>2ab1119596b420cc696a783271d617562ccf7e28,cesium/featurize.py,,featurize_single_ts,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        channel) as values.
+    
+    &#47&#47 Initialize empty feature array for all channels
+    <a id="change">all_feature_lists = {feature: [0.] * ts.n_channels
+                         for feature in features_to_use}</a>
+    for (t_i, m_i, e_i), i in zip(ts.channels(), range(ts.n_channels)):
+        feature_graph = generate_dask_graph(t_i, m_i, e_i)
+        feature_graph.update(ts.meta_features)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 series in serial.
+        feature_values[:, i] = dask.async.get_sync(feature_graph, features_to_use)
+
+    index = pd.MultiIndex.from_product(<a id="change">(features_to_use, range(ts.n_channels))</a>,
+                                       names=(&quotfeature&quot, &quotchannel&quot))
+    return pd.Series(feature_values.ravel(), index=index)
+</code></pre><img src="39167478.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL46' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: featurize_single_ts</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-8900c0e1cb75b4171b1763d7502f4de71e92505ef8ff8b757c282336313e84aeL44' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/fixtures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_featureset</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b682d1f8b0e32517805828c8dc15e933d0057335#diff-ede743a710e4aa76e1b885075a8330acffdd55b1b59f01d4abffa19d85bf6439L1633' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b682d1f8b0e32517805828c8dc15e933d0057335</div><div id='time'> Time: 2020-07-11</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/__init__.py</div><div id='class'> Class Name: ParametricRegressionFitter</div><div id='method'> Method Name: _fit</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/46324d0e05c679b2cf50b81289fe2886456f6e51#diff-2202c83549e1666b53b7764ad03e0619bf5aca5e6cfbe77e26266babeb35b9dbL22' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 46324d0e05c679b2cf50b81289fe2886456f6e51</div><div id='time'> Time: 2017-09-19</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/pid/ibroja.py</div><div id='class'> Class Name: BROJAOptimizer</div><div id='method'> Method Name: __init__</div><BR>

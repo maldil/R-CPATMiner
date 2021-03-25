@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+csv_file_path = "image_data/sample.csv"
+imageProcessor = ImageProcessor(from_csv=True, target_labels=target_labels, datapath=csv_file_path, target_dimensions=target_dimensions, raw_dimensions=raw_dimensions, csv_label_col=0, csv_image_col=1)
+
+features, labels = <a id="change">imageProcessor.get_training_data()</a>
+
+print(&quot--------------- Inception-V3 Model -------------------&quot)
+print(&quotInitializing neural network with InceptionV3 base model...&quot)
+model = TransferLearningNN(model_name=model_name, target_labels=target_labels)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+print(&quotProcessing data...&quot)
+imageProcessor = ImageProcessor(images, target_dimensions=target_dimensions)
+<a id="change">images = imageProcessor.process_training_data()</a>
+<a id="change">if verbose:
+    print (&quotprocessed image shape: &quot + str(images.shape))
+
+</a>print(&quot--------------- Inception-V3 Model -------------------&quot)
+print(&quotInitializing neural network with InceptionV3 base model...&quot)
+model = TransferLearningNN(model_name=model_name, target_labels=target_labels)
+</code></pre>

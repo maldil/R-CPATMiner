@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        print(f"using style noise seed {args.seed_mix} for layers {args.mix_after}-{num_layers}.")
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        <a id="change">style_noises = [nn.Variable((batch_size, 512)).apply(d=z)
+                        for _ in range(args.mix_after)]</a>
+        style_noises += [nn.Variable((batch_size, 512)).apply(d=z2)
+                         for _ in range(num_layers - args.mix_after)]
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")
+        style_noise = nn.Variable((batch_size, 512)).apply(d=z)
+        style_noises = [style_noise for _ in range(num_layers)]
+
+    nn.load_parameters("styleGAN2_G_params.h5")
+    rgb_output = generate(batch_size, style_noises,
+                          args.stochastic_seed, args.truncation_psi)
+    rgb_output.forward()
+
+    &#47&#47 convert to uint8 to save an image file
+    image = convert_images_to_uint8(rgb_output, drange=[-1, 1])
+    if args.output_filename is None:
+        if not args.mixing:
+            filename = f"seed{args.seed}.png"
+        else:
+            filename = f"seed{args.seed}_{args.seed_mix}.png"
+    else:
+        filename = args.output_filename
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    filepath = os.path.join(args.output_dir, filename)
+    <a id="change">imsave(filepath, image, channel_first=True)</a>
+    print(f"Genetation completed. Saved {filepath}.")
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    os.makedirs(args.output_dir, exist_ok=True)
+
+    <a id="change">for i in range(batch_size):
+        filepath = os.path.join(args.output_dir, f&quot{filename}_{i}.png&quot)
+        imsave(filepath, image[i], channel_first=True)
+        print(f"Genetation completed. Saved {filepath}.")
+
+
+</a>if __name__ == &quot__main__&quot:
+    main()
+</code></pre>

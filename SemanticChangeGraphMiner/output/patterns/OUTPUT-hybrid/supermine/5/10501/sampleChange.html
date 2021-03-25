@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    sys.stdout.flush()
+            output_power = self._predict_one(mgc[mgc_index], runtime=False)
+            &#47&#47 print(np.abs(signal_fft[mgc_index]))
+            fft_pow = 20 * np.log10(np.maximum(1e-5, <a id="change">np.abs(signal_fft[mgc_index])</a>))  &#47&#47 np.abs(signal_fft[mgc_index])
+            min_level_db = -100.0
+            <a id="change">fft_pow = np.clip((fft_pow - min_level_db) / -min_level_db, 0, 1)</a>
+            &#47&#47 print (fft_pow)
+            &#47&#47 print (fft_angle)
+            &#47&#47 print("")
+            losses.append(dy.binary_log_loss(output_power, dy.inputVector(fft_pow)))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            pred_output = self._predict_one(mgc[mgc_index], runtime=False)
+
+            <a id="change">if mgc_index != len(mgc) - 1:
+                losses.append(dy.squared_distance(pred_output, dy.inputVector(
+                    wave[mgc_index * self.UPSAMPLE_COUNT:mgc_index * self.UPSAMPLE_COUNT + self.UPSAMPLE_COUNT])))
+
+           </a> if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()
+                loss.backward()</code></pre>

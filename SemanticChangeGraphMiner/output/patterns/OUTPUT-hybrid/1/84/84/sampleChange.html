@@ -1,0 +1,196 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		maxval=np.sqrt(6.0*initialization_factor/(num_features+2.0*num_cells))
+	)
+)
+<a id="change">b_a</a> = <a id="change">tf.Variable(tf.zeros([num_cells]))</a>
+
+W_o = tf.Variable(
+	tf.random_uniform(
+		[num_cells, num_classes],
+		minval=-np.sqrt(6.0*initialization_factor/(num_cells+num_classes)),
+		maxval=np.sqrt(6.0*initialization_factor/(num_cells+num_classes))
+	)
+)
+b_o = tf.Variable(tf.zeros([num_classes]))
+
+&#47&#47 Internal states
+&#47&#47
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+h = tf.zeros([batch_size, num_cells])
+a_max = tf.fill([batch_size, num_cells], -1E38)	&#47&#47 Start off with lowest number possible
+
+&#47&#47 Define model
+&#47&#47
+error = tf.zeros([batch_size])
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	<a id="change">a</a> = <a id="change">tf.matmul(xh_join, W_a)+b_a</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	<a id="change">a_newmax</a> = tf.maximum(a_max, a)
+	<a id="change">exp_diff</a> = tf.exp(a_max-a_newmax)
+	<a id="change">exp_scaled</a> = tf.exp(a-a_newmax)
+
+	<a id="change">n</a> = tf.mul(n, exp_diff)+tf.mul(z, exp_scaled)	&#47&#47 Numerically stable update of numerator
+	<a id="change">d</a> = tf.mul(d, exp_diff)+exp_scaled	&#47&#47 Numerically stable update of denominator
+	<a id="change">h_new</a> = activation(tf.div(n, d))
+	<a id="change">a_max</a> = a_newmax
+
+	<a id="change">h</a> = tf.select(tf.greater(l, i), h_new, h)	&#47&#47 Use new hidden state only if the sequence length has not been exceeded
+
+<a id="change">ly</a> = tf.matmul(h, W_o)+b_o
+<a id="change">ly_flat</a> = tf.reshape(ly, [batch_size])
+<a id="change">py</a> = tf.nn.sigmoid(ly_flat)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Optimizer/Analyzer
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Cost function and optimizer
+&#47&#47
+<a id="change">cost</a> = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(ly_flat, y))	&#47&#47 Cross-entropy cost function
+<a id="change">optimizer</a> = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+&#47&#47 Evaluate performance
+&#47&#47
+<a id="change">correct</a> = tf.equal(tf.round(py), tf.round(y))
+<a id="change">accuracy</a> = 100.0*tf.reduce_mean(tf.cast(correct, tf.float32))
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Train
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Operation to initialize session
+&#47&#47
+initializer = tf.global_variables_initializer()
+
+&#47&#47 Open session
+&#47&#47
+with tf.Session() as session:
+
+	&#47&#47 Initialize variables
+	&#47&#47
+	session.run(initializer)
+
+	&#47&#47 Each training session represents one batch
+	&#47&#47
+	for iteration in range(num_iterations):
+
+		&#47&#47 Grab a batch of training data
+		&#47&#47
+		xs, ls, ys = dp.train.batch(batch_size)
+		feed = {x: xs, l: ls, y: ys}
+
+		&#47&#47 Update parameters
+		&#47&#47
+		<a id="change">out</a> = session.run((cost, accuracy, optimizer), feed_dict=feed)
+		print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottrain&quot, &quotCost:&quot, out[0]/np.log(2.0), &quotAccuracy:&quot, out[1])
+
+		&#47&#47 Periodically run model on test data
+		&#47&#47
+		if iteration%100 == 0:
+
+			&#47&#47 Grab a batch of test data
+			&#47&#47
+			xs, ls, ys = dp.test.batch(batch_size)
+			feed = {x: xs, l: ls, y: ys}
+
+			&#47&#47 Run model
+			&#47&#47
+			<a id="change">out</a> = session.run((cost, accuracy), feed_dict=feed)
+			print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottest&quot, &quotCost:&quot, out[0]/np.log(2.0), &quotAccuracy:&quot, out[1])
+
+	&#47&#47 Save the trained model</code></pre><h3>After Change</h3><pre><code class='java'>
+
+	u = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	<a id="change">a</a> = <a id="change">tf.matmul(xh_join, W_a)</a>
+
+	z = tf.mul(u, tf.nn.tanh(g))
+
+	<a id="change">a_newmax</a> = tf.maximum(a_max, a)
+	<a id="change">exp_diff</a> = tf.exp(a_max-a_newmax)
+	<a id="change">exp_scaled</a> = tf.exp(a-a_newmax)
+
+	<a id="change">n</a> = tf.mul(n, exp_diff)+tf.mul(z, exp_scaled)	&#47&#47 Numerically stable update of numerator
+	<a id="change">d</a> = tf.mul(d, exp_diff)+exp_scaled	&#47&#47 Numerically stable update of denominator
+	<a id="change">h_new</a> = activation(tf.div(n, d))
+	<a id="change">a_max</a> = a_newmax
+
+	<a id="change">h</a> = tf.select(tf.greater(l, i), h_new, h)	&#47&#47 Use new hidden state only if the sequence length has not been exceeded
+
+<a id="change">ly</a> = tf.matmul(h, W_o)+b_o
+<a id="change">ly_flat</a> = tf.reshape(ly, [batch_size])
+<a id="change">py</a> = tf.nn.sigmoid(ly_flat)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Optimizer/Analyzer
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Cost function and optimizer
+&#47&#47
+<a id="change">cost</a> = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(ly_flat, y))	&#47&#47 Cross-entropy cost function
+<a id="change">optimizer</a> = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+&#47&#47 Evaluate performance
+&#47&#47
+<a id="change">correct</a> = tf.equal(tf.round(py), tf.round(y))
+<a id="change">accuracy</a> = 100.0*tf.reduce_mean(tf.cast(correct, tf.float32))
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Train
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Operation to initialize session
+&#47&#47
+initializer = tf.global_variables_initializer()
+
+&#47&#47 Open session
+&#47&#47
+with tf.Session() as session:
+
+	&#47&#47 Initialize variables
+	&#47&#47
+	session.run(initializer)
+
+	&#47&#47 Each training session represents one batch
+	&#47&#47
+	for iteration in range(num_iterations):
+
+		&#47&#47 Grab a batch of training data
+		&#47&#47
+		xs, ls, ys = dp.train.batch(batch_size)
+		feed = {x: xs, l: ls, y: ys}
+
+		&#47&#47 Update parameters
+		&#47&#47
+		<a id="change">out</a> = session.run((cost, accuracy, optimizer), feed_dict=feed)
+		print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottrain&quot, &quotCost:&quot, out[0]/np.log(2.0), &quotAccuracy:&quot, out[1])
+
+		&#47&#47 Periodically run model on test data
+		&#47&#47
+		if iteration%100 == 0:
+
+			&#47&#47 Grab a batch of test data
+			&#47&#47
+			xs, ls, ys = dp.test.batch(batch_size)
+			feed = {x: xs, l: ls, y: ys}
+
+			&#47&#47 Run model
+			&#47&#47
+			<a id="change">out</a> = session.run((cost, accuracy), feed_dict=feed)
+			print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottest&quot, &quotCost:&quot, out[0]/np.log(2.0), &quotAccuracy:&quot, out[1])
+
+	&#47&#47 Save the trained model</code></pre>

@@ -1,0 +1,61 @@
+<html><h3>3210d75451d5d78ebe884c712f31800ca1ccd0b3,train.py,,,#,577
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Train!
+    try:
+        <a id="change">train(model, data_loader, optimizer, writer,
+              init_lr=hparams.initial_learning_rate,
+              checkpoint_dir=checkpoint_dir,
+              checkpoint_interval=hparams.checkpoint_interval,
+              nepochs=hparams.nepochs,
+              clip_thresh=hparams.clip_thresh,
+              )</a>
+    except KeyboardInterrupt:
+        save_checkpoint(
+            model, optimizer, global_step, checkpoint_dir, global_epoch)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Dataset and Dataloader setup
+    data_loaders = {}
+    <a id="change">for phase in ["train", "test"]:
+        train = phase == "train"
+        X = FileSourceDataset(RawAudioDataSource(data_root, speaker_id=speaker_id,
+                                                 train=train,
+                                                 test_size=hparams.test_size,
+                                                 random_state=hparams.random_state))
+        if local_conditioning:
+            Mel = FileSourceDataset(MelSpecDataSource(data_root, speaker_id=speaker_id,
+                                                      train=train,
+                                                      test_size=hparams.test_size,
+                                                      random_state=hparams.random_state))
+            assert len(X) == len(Mel)
+            print("Local conditioning enabled. Shape of a sample: {}.".format(
+                Mel[0].shape))
+        else:
+            Mel = None
+        print("[{}]: length of the dataset is {}".format(phase, len(X)))
+
+        if train:
+            lengths = np.array(X.file_data_source.lengths)
+            &#47&#47 Prepare sampler
+            sampler = PartialyRandomizedSimilarTimeLengthSampler(
+                lengths, batch_size=hparams.batch_size)
+        else:
+            sampler = None
+
+        dataset = PyTorchDataset(X, Mel)
+        data_loader = data_utils.DataLoader(
+            dataset, batch_size=hparams.batch_size,
+            num_workers=hparams.num_workers, sampler=sampler,
+            collate_fn=collate_fn, pin_memory=hparams.pin_memory)
+
+        data_loaders[phase] = data_loader
+
+    &#47&#47 Model
+   </a> model = build_model()
+    print(model)
+    if use_cuda:
+        model = model.cuda()</code></pre><img src="36024501.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/3210d75451d5d78ebe884c712f31800ca1ccd0b3#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L580' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 3210d75451d5d78ebe884c712f31800ca1ccd0b3</div><div id='time'> Time: 2018-01-03</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/49a2ea975624090307c652e91258e5b6f02cda41#diff-5c1154b57add4d948f5a5f8a259a66e5985b65af1de26d3677517c07960e9fdeL183' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 49a2ea975624090307c652e91258e5b6f02cda41</div><div id='time'> Time: 2018-10-25</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: examples/tetris.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/a243ad678a264c898e133bb1f97efed72703ee06#diff-bb98a17644462e8a72b15ac374b816e4939981f51f0fbc728b95f583b0abc8e6L81' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: a243ad678a264c898e133bb1f97efed72703ee06</div><div id='time'> Time: 2016-10-02</div><div id='author'> Author: matteo.visconti.gr@dartmouth.edu</div><div id='file'> File Name: mvpa2/tests/test_rsa.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_CDist</div><BR>

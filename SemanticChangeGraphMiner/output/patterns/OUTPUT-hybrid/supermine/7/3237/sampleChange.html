@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    channels = arr[..., :-1]
+    out = np.empty_like(channels)
+
+    <a id="change">for ichan in range(channels.shape[-1]):
+        out[..., ichan] = np.clip(
+            (1 - alpha) * background[ichan] + alpha * channels[..., ichan],
+            a_min=0, a_max=1)
+   </a> return out
+
+
+def rgb2hsv(rgb):</code></pre><h3>After Change</h3><pre><code class='java'>
+    if len(background) != 3:
+        raise ValueError(&quotbackground must be an array-like containing 3 RGB &quot
+                         f&quotvalues. Got {len(background)} items&quot)
+    if np.any(background &lt; 0) or <a id="change">np.any(background &gt; 1):
+   </a>     raise ValueError(&quotbackground RGB values must be floats between &quot
+                         &quot0 and 1.&quot)
+
+    background = background[np.newaxis, ...]</code></pre>

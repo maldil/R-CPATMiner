@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            axes.set_xlabel("Number of trees")
+            axes.legend(performance.coords[&quotmodel&quot].values)
+
+            <a id="change">plt.tight_layout()</a>
+
+
+def plot_query_wise_performance(performance, compare="model"):
+    for dataset in performance.coords[&quotdataset&quot].values:</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        for i, model in enumerate(performance.coords[&quotmodel&quot].values):
+            k_values = performance.sel(dataset=dataset, model=model)
+            <a id="change">axes</a>[i, <a id="change">0</a>].plot(k_values.values)
+            axes[i, 0].legend((model,), loc=&quotupper center&quot)
+
+        axes[i, 0].set_xlabel("Number of trees")</code></pre>

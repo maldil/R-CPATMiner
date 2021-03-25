@@ -1,0 +1,38 @@
+<html><h3>a456f784eda6257b73b25fc6c4ee5682dc1341f2,hpsklearn/components.py,,svc_linear,#,96
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    rval = scope.sklearn_SVC(
+        kernel=&quotlinear&quot,
+        C=<a id="change">hp.lognormal(
+            _name(&quotC&quot),
+            np.log(1.0),
+            np.log(4.0))</a> if C is None else C,
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=scope.inv_patience_param(
+            <a id="change">hp.lognormal(
+                _name(&quottol&quot),
+                np.log(1e-3),
+                np.log(10))</a>) if tol is None else tol,
+        &#47&#47 -- this is basically only here to prevent
+        &#47&#47    an infinite loop in libsvm&quots solver.
+        &#47&#47    A more useful control mechanism might be a timer
+        &#47&#47    or a kill msg to a sub-process or something...
+        max_iter=scope.patience_param(scope.int(
+            hp.qloguniform(
+                _name(&quotmax_iter&quot),
+                <a id="change">np.log(100)</a>,
+                <a id="change">np.log(10000)</a>,
+                q=10,
+                ))) if max_iter is None else max_iter,
+        verbose=verbose,</code></pre><h3>After Change</h3><pre><code class='java'>
+        C=_svc_C(name) if C is None else C,
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=<a id="change">_svc_tol(name)</a> if tol is None else tol,
+        max_iter=_svc_max_iter(name) if max_iter is None else max_iter,
+        verbose=verbose,
+        cache_size=cache_size,</code></pre><img src="3390923.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hyperopt/hyperopt-sklearn/commit/a456f784eda6257b73b25fc6c4ee5682dc1341f2#diff-099ab890c4dc48370ab60d4dd83f0b701442a96e23fb61b1720bf6068bdafd59L112' target='_blank'>Link</a></div><div id='project'> Project Name: hyperopt/hyperopt-sklearn</div><div id='commit'> Commit Name: a456f784eda6257b73b25fc6c4ee5682dc1341f2</div><div id='time'> Time: 2014-02-06</div><div id='author'> Author: james.bergstra@gmail.com</div><div id='file'> File Name: hpsklearn/components.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: svc_linear</div><BR><BR><div id='link'><a href='https://github.com/hyperopt/hyperopt-sklearn/commit/a456f784eda6257b73b25fc6c4ee5682dc1341f2#diff-099ab890c4dc48370ab60d4dd83f0b701442a96e23fb61b1720bf6068bdafd59L253' target='_blank'>Link</a></div><div id='project'> Project Name: hyperopt/hyperopt-sklearn</div><div id='commit'> Commit Name: a456f784eda6257b73b25fc6c4ee5682dc1341f2</div><div id='time'> Time: 2014-02-06</div><div id='author'> Author: james.bergstra@gmail.com</div><div id='file'> File Name: hpsklearn/components.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: svc_sigmoid</div><BR><BR><div id='link'><a href='https://github.com/hyperopt/hyperopt-sklearn/commit/a456f784eda6257b73b25fc6c4ee5682dc1341f2#diff-099ab890c4dc48370ab60d4dd83f0b701442a96e23fb61b1720bf6068bdafd59L205' target='_blank'>Link</a></div><div id='project'> Project Name: hyperopt/hyperopt-sklearn</div><div id='commit'> Commit Name: a456f784eda6257b73b25fc6c4ee5682dc1341f2</div><div id='time'> Time: 2014-02-06</div><div id='author'> Author: james.bergstra@gmail.com</div><div id='file'> File Name: hpsklearn/components.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: svc_poly</div><BR>

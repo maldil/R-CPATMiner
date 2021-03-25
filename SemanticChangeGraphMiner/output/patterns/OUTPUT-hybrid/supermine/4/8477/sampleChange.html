@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    similarities.append(source_hash.jaccard(target_hash))
+
+  avg_similarity = sum(similarities) / len(similarities)
+  <a id="change">print("average similarity: " + str(avg_similarity))</a>
+  source_file.close()
+  target_file.close()
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  avg_similarity = sum(similarities) / len(similarities)
+  sim_std = math.sqrt(
+      <a id="change">sum([(x - avg_similarity) ** 2 for x in similarities])</a> /
+      (len(similarities) - 1))
+
+  sim = "average similarity: " + str(avg_similarity) + <a id="change">" (%f)"</a> % (sim_std)
+  print(sim)
+  output.write(sim + "\n")
+</code></pre>

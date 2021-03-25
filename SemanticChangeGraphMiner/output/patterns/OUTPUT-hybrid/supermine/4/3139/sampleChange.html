@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        style_noises = [nn.Variable((batch_size, 512)).apply(d=z)
+                        for _ in range(args.mix_after)]
+        style_noises += [nn.Variable((batch_size, 512)).apply(d=z2)
+                         <a id="change">for</a> _ in range(num_layers - args.mix_after)]
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")</code></pre><h3>After Change</h3><pre><code class='java'>
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        style_noises = [nn.NdArray.from_numpy_array(z)]
+        <a id="change">style_noises += [nn.NdArray.from_numpy_array(z2)]</a>
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")
+        style_noises = [nn.NdArray.from_numpy_array(z) for _ in range(2)]</code></pre>

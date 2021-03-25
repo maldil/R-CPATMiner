@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for clf_index in range(self.n_classifiers):
+            supports = self._get_scores_dsel(clf_index)
+            support_correct = [supports[sample_idx, i] for sample_idx, i in enumerate(self.DSEL_target)]
+            <a id="change">support_correct = np.array(support_correct)</a>
+            <a id="change">C_src[:, clf_index]</a> = log_func(self.n_classes, support_correct)
+
+        return C_src
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        C_src = np.zeros((self.n_samples, self.n_classifiers))
+        for clf_index in range(self.n_classifiers):
+            supports = self.dsel_scores[:, clf_index, :]
+            support_correct = supports[<a id="change">np.arange(self.n_samples)</a>, self.DSEL_target]
+
+            <a id="change">C_src[:, clf_index]</a> = log_func(self.n_classes, support_correct)
+
+        return C_src
+</code></pre>

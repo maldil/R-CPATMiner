@@ -1,0 +1,35 @@
+digraph G {
+subgraph cluster0 {
+1 [label="load_state_dict" a="32" s="3270,3307" l="16,1" shape="box"];
+9 [label="load" a="32" s="3292,3306" l="5,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="split" a="32" s="4055,4064" l="6,1" shape="box"];
+3 [label="EnhancedForStatement" a="70" s="3903,3984" l="61,2" shape="diamond"];
+4 [label="SimpleName" a="42" s="3968" l="3" shape="ellipse"];
+5 [label="String" a="32" s="3873,3891" l="7,1" shape="box"];
+6 [label="StringLiteral" a="45" s="4061" l="3" shape="ellipse"];
+7 [label="__patch_instance_norm_state_dict" a="32" s="4003,4065" l="33,1" shape="box"];
+8 [label="load" a="32" s="3858,3892" l="5,1" shape="box"];
+10 [label="Assignment:=" a="7" s="3903,3984" l="61,2" shape="box"];
+11 [label="Assignment:=" a="7" s="3851" l="1" shape="box"];
+12 [label="SimpleName" a="42" s="4051" l="3" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+2 -> 7 [label="_para_"];
+3 -> 2 [label="_control_"];
+3 -> 7 [label="_control_"];
+4 -> 3 [label="_cond_"];
+4 -> 12 [label="_ref_"];
+5 -> 8 [label="_para_"];
+6 -> 2 [label="_para_"];
+8 -> 11 [label="_para_"];
+9 -> 1 [label="_para_"];
+10 -> 4 [label="_def_"];
+10 -> 7 [label="_para_"];
+11 -> 10 [label="_para_"];
+12 -> 2 [label="_recv_"];
+}

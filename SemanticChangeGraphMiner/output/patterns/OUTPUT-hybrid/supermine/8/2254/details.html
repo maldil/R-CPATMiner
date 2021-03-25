@@ -1,0 +1,36 @@
+<html><h3>e22ec775fbde41968ca64ba2ed0e09e8f5cf687d,brian2/codegen/generators/GSL_generator.py,GSLCodeGenerator,diff_var_to_replace,#GSLCodeGenerator#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 A series of functions that should be overridden by child class:
+    def diff_var_to_replace(self, diff_vars):
+        <a id="change">raise NotImplementedError</a>
+    def get_dimension_code(self, diff_num):
+        raise NotImplementedError
+    def yvector_code(self, diff_vars):
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+        return diff_vars
+
+    def diff_var_to_replace(self, diff_vars):
+        <a id="change">variables = self.variables</a>
+        to_replace = {}
+        <a id="change">for var, diff_num in diff_vars.items():
+            lhs = self.diff_var_declaration(var, diff_num)
+            to_replace[lhs] = &quotf[{ind}]&quot.format(ind=diff_num)
+            var_obj = variables[var]
+            array_name = self.generator.get_array_name(var_obj, access_data=True)
+            idx_name = &quot_idx&quot &#47&#47TODO: could be dynamic?
+            replace_what = &quot{var} = {array_name}[{idx_name}]&quot.format(array_name=array_name, idx_name=idx_name, var=var)
+            replace_with = &quot{var} = y[{ind}]&quot.format(ind=diff_num, var=var)
+            to_replace[replace_what] = replace_with
+            replace_what = &quot{array_name}[{idx_name}] = {var}&quot.format(array_name=array_name,
+                                                                     idx_name=idx_name,
+                                                                     var=var)
+            replace_with = &quot&quot
+            to_replace[replace_what] = replace_with
+       </a> return to_replace
+
+    def get_dimension_code(self, diff_num):
+        start_function = self.get_syntax(&quotstart_function&quot)</code></pre><img src="10447740.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/e22ec775fbde41968ca64ba2ed0e09e8f5cf687d#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL68' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: e22ec775fbde41968ca64ba2ed0e09e8f5cf687d</div><div id='time'> Time: 2017-07-10</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: diff_var_to_replace</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/478d440f0902562314e6780f1b694ae48084f002#diff-542891d1156706136e4c0299fe5d844ae0079f4f4860f05e5b4fc3d5c8d90ad0L857' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 478d440f0902562314e6780f1b694ae48084f002</div><div id='time'> Time: 2020-04-23</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/datasets/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _pitch_shift</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/ae454df2f747d1a630a70a7d1fb528f927b29ea4#diff-542891d1156706136e4c0299fe5d844ae0079f4f4860f05e5b4fc3d5c8d90ad0L856' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: ae454df2f747d1a630a70a7d1fb528f927b29ea4</div><div id='time'> Time: 2020-05-14</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/datasets/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _pitch_shift</div><BR>

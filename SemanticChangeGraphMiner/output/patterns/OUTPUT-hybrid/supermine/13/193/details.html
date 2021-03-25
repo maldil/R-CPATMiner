@@ -1,0 +1,32 @@
+<html><h3>6f32626effedfaeba3c51debb39d556302922728,Python/phate/phate.py,,calculate_kernel,#,35
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if knn_dist != &quotprecomputed&quot and ndim &lt; data.shape[1]:
+        if verbose:
+            print("Calculating PCA...")
+            <a id="change">start = time.time()</a>
+        if sparse.issparse(data):
+            _, _, VT = randomized_svd(data, ndim,
+                                      random_state=random_state)
+            data = data.dot(VT.T)
+        else:
+            pca = PCA(ndim, svd_solver=&quotrandomized&quot,
+                      random_state=random_state)
+            data = pca.fit_transform(data)
+            <a id="change">if verbose:
+                print("PCA complete in {:.2f} seconds".format(
+                    time.time() - start))
+   </a> if verbose:
+        start = time.time()
+        print("Calculating KNN...")
+    &#47&#47 kernel includes self as connection but not in k</code></pre><h3>After Change</h3><pre><code class='java'>
+            knn = NearestNeighbors(n_neighbors=k,
+                                   n_jobs=n_jobs).fit(data)
+            kernel = knn.kneighbors_graph(data, mode=&quotconnectivity&quot)
+    <a id="change">log_complete("KNN search")</a>
+    kernel = kernel + kernel.T  &#47&#47 symmetrization
+    return kernel
+
+</code></pre><img src="1255635.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L84' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_kernel</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L171' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_landmark_operator</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L770' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: fit_transform</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/6f32626effedfaeba3c51debb39d556302922728#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L84' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: 6f32626effedfaeba3c51debb39d556302922728</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calculate_kernel</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/be95ff167e1ea0195e32beb0618228d18a4098eb#diff-f38fcabfd87d0d0ac5479472d035b3adbb050bc19dba576721c444153ee89d09L603' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: be95ff167e1ea0195e32beb0618228d18a4098eb</div><div id='time'> Time: 2018-05-28</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/phate.py</div><div id='class'> Class Name: PHATE</div><div id='method'> Method Name: calculate_potential</div><BR>

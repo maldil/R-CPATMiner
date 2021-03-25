@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rpn_features, roi_features = self.light_head_rcnn.extractor(imgs)
+        rpn_locs, rpn_scores, rois, roi_indices, anchor = \
+            self.light_head_rcnn.rpn(rpn_features, img_size, scales)
+        <a id="change">rpn_locs = F.concat(rpn_locs, axis=0)</a>
+        rpn_scores = F.concat(rpn_scores, axis=0)
+
+        gt_rpn_locs = []
+        gt_rpn_labels = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        rpn_features, roi_features = self.light_head_rcnn.extractor(imgs)
+        rpn_locs, rpn_scores, rois, roi_indices, anchor = \
+            self.light_head_rcnn.rpn(rpn_features, img_size, scales)
+        rpn_locs = <a id="change">rpn_locs.reshape((-1, rpn_locs.shape[2]))</a>
+        rpn_scores = rpn_scores.reshape((-1, rpn_scores.shape[2]))
+
+        gt_rpn_locs = []
+        gt_rpn_labels = []</code></pre>

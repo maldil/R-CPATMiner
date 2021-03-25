@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 dimension? One way, involving names, would be to name the ``per_batch_scale``
+&#47&#47 tensor such that it matches ``imgs.names``, as shown below.
+
+<a id="change">imgs = torch.randn(6, 6, 6, 6, names=(&quotN&quot, &quotC&quot, &quotH&quot, &quotW&quot))</a>
+per_batch_scale_4d = torch.rand(6, 1, 1, 1, names=(&quotN&quot, &quotC&quot, &quotH&quot, &quotW&quot))
+print((imgs * per_batch_scale_4d).names)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+loss.backward(grad_loss)
+
+correct_grad = weight.grad.clone()
+<a id="change">print(correct_grad)</a>  &#47&#47 Unnamed for now. Will be named in the future
+
+weight.grad.zero_()
+grad_loss = grad_loss.refine_names(&quotC&quot)</code></pre>

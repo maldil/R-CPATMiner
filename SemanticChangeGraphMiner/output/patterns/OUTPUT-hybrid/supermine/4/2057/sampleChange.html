@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+final_by_ind = final_by_ind.add_suffix(&quot_sum&quot).reset_index()
+
+final_by_ind[&quotPredictedLogRevenue&quot] = np.log1p(<a id="change">final_by_ind[&quottrain_yht_sum&quot]</a>)
+
+&#47&#47submit
+final_by_ind.to_csv(&quotcam_pred1.csv&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+final_by_ind = final_by_ind.reset_index()
+
+&#47&#47merge the predictions with the sample sub
+submission = <a id="change">submission.merge(final_by_ind, on = &quotfullVisitorId&quot, how = &quotleft&quot)</a>
+&#47&#47fill nas and move to right column name
+submission[&quotPredictedLogRevenue&quot] = submission[&quottest_pred&quot].fillna(0.0)
+submission = <a id="change">submission.drop([&quottest_pred&quot], axis = 1)</a>
+
+&#47&#47submit the output
+submission.to_csv(&quotcam_lightgbm_pred2.csv&quot, index = False)
+&#47&#471.78 first go</code></pre>

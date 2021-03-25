@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for meter in self.meters: &#47&#47 TODO: write unit tests for this
+                if isinstance(meter, MeterGroup):
+                    metergroup = meter
+                    meter_ids = <a id="change">set([m.identifier for m in metergroup.meters
+                                     if isinstance(m, ElecMeter)])</a>
+                    if meter_ids == set(key):
+                        return meter
+            raise KeyError(key)
+        elif isinstance(key, tuple):</code></pre><h3>After Change</h3><pre><code class='java'>
+                        group.building() == key.building and
+                        group.dataset() == key.dataset):
+                        return group
+            elif <a id="change">key</a>.instance == 0:
+                metergroup_of_building = nilmtk.global_meter_group.select(
+                    building=key.building, dataset=key.dataset)
+                <a id="change">return metergroup_of_building.mains()</a>
+            else:
+                for meter in self.meters:
+                    if meter.identifier == key:
+                        return meter</code></pre>

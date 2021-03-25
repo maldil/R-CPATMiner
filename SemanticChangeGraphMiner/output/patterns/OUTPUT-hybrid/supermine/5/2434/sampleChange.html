@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            create_label = ((self.fake_label_var is None) or
+                            (self.fake_label_var.numel() != input.numel()))
+            if create_label:
+                <a id="change">fake_tensor = self.Tensor(input.size()).fill_(self.fake_label)</a>
+                <a id="change">self.fake_label_var = Variable(fake_tensor, requires_grad=False)</a>
+            target_tensor = self.fake_label_var
+        return target_tensor
+
+    def __call__(self, input, target_is_real):</code></pre><h3>After Change</h3><pre><code class='java'>
+            target_tensor = self.real_label
+        else:
+            target_tensor = self.fake_label
+        <a id="change">return target_tensor.expand_as(input)</a>
+
+    def __call__(self, input, target_is_real):
+        target_tensor = self.get_target_tensor(input, target_is_real)
+        return self.loss(input, target_tensor)</code></pre>

@@ -1,0 +1,26 @@
+<html><h3>246152b8d459bb331f904b330e57311d3bf54672,cube/models/vocoder.py,BeeCoder,learn,#BeeCoder#,98
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 fft_pred = torch.rfft(y_pred, 1)
+            loss = self._get_loss(batch_y, y_pred, len(x))
+            loss.backward()
+            <a id="change">self.trainer.step()</a>
+            total_loss += loss
+            num_batches += 1
+
+        total_loss = total_loss.item()</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 fft_orig = torch.rfft(batch_y, 1)
+            &#47&#47 fft_pred = torch.rfft(y_pred, 1)
+            loss = self._get_loss(batch_y, y_pred, len(x))
+            <a id="change">if loss is not None:
+                loss.backward()
+                self.trainer.step()
+                total_loss += loss
+                num_batches += 1
+
+       </a> total_loss = total_loss.item()
+        return total_loss / num_batches
+
+</code></pre><img src="38074005.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/246152b8d459bb331f904b330e57311d3bf54672#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L121' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 246152b8d459bb331f904b330e57311d3bf54672</div><div id='time'> Time: 2018-11-09</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/pytorch/tutorials/commit/1bc0efeae8590fb153bf3d2d7c4ee9a2958c7f42#diff-57f9963b154b967a6289dfaa8a5d812736fe75c7bf04442a2633bf2514ef63f6L183' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tutorials</div><div id='commit'> Commit Name: 1bc0efeae8590fb153bf3d2d7c4ee9a2958c7f42</div><div id='time'> Time: 2019-09-04</div><div id='author'> Author: lazToum@users.noreply.github.com</div><div id='file'> File Name: beginner_source/transfer_learning_tutorial.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_model</div><BR><BR><div id='link'><a href='https://github.com/inferno-pytorch/inferno/commit/ed2a46e8c254dde364b760de8357ebf46fe392b6#diff-cbae65762fdb06cb28aff71301bedc7a6c51787e9637fc43418e3fe7bbfb3f2eL1454' target='_blank'>Link</a></div><div id='project'> Project Name: inferno-pytorch/inferno</div><div id='commit'> Commit Name: ed2a46e8c254dde364b760de8357ebf46fe392b6</div><div id='time'> Time: 2020-03-17</div><div id='author'> Author: valentyna.zinchenko@embl.de</div><div id='file'> File Name: inferno/trainers/basic.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: train_for</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/2f6a851417385f156df3ca8da4dcb042a7fef661#diff-ad5bf6326f546d8291f6908ed420fa31b6f472002bcd658803d287894e7795c4L441' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 2f6a851417385f156df3ca8da4dcb042a7fef661</div><div id='time'> Time: 2017-07-26</div><div id='author'> Author: anastasiya.mishchuk@gmail.com</div><div id='file'> File Name: HardNetClassicalHardNegMining.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def make_dataset(dir, split, dataset_type=&quotclean&quot):
+    training_dir = <a id="change">os.path.join(dir,&quottraining&quot)</a>
+    flow_dir = &quotflow&quot
+    assert(os.path.isdir(os.path.join(training_dir,flow_dir)))
+    img_dir = dataset_type
+    assert(os.path.isdir(os.path.join(training_dir,img_dir)))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        scene_dir, filename = os.path.split(flow_map)
+        no_ext_filename = os.path.splitext(filename)[0]
+        <a id="change">prefix, frame_nb = no_ext_filename.split(&quot_&quot)</a>
+        frame_nb = int(frame_nb)
+        img1 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb))
+        img2 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb + 1))
+        flow_map = os.path.join(flow_dir,flow_map)</code></pre>

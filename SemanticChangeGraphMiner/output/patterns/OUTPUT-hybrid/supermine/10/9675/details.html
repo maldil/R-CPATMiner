@@ -1,0 +1,31 @@
+<html><h3>59ec6660464bd378b20d4ae200c7614133a9a38b,pyntcloud/samplers/points.py,FarthestPointsSampler,compute,#FarthestPointsSampler#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        solution_set.append(remaining_points.pop(
+            random.randint(0, len(remaining_points) - 1)))
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, solution_set[0]) <a id="change">for</a> p in remaining_points]
+            for i, p in enumerate(remaining_points):
+                for j, s in enumerate(solution_set):
+                    <a id="change">distances[i] = min(distances[i], self.cal_distance(p, s))</a>
+            solution_set.append(remaining_points.pop(distances.index(max(distances))))
+        return pd.DataFrame(solution_set)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+
+        &#47&#47 the sampled points set as the return
+        <a id="change">select_idx = np.random.randint(low=0, high=len(self.points))</a>
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        solution_set = remaining_points[select_idx: select_idx+1]
+        <a id="change">remaining_points = np.delete(remaining_points, select_idx)</a>
+
+        for _ in range(self.n - 1):
+            <a id="change">distance_sum = self.cal_distance(remaining_points, solution_set)</a>
+            <a id="change">select_idx = np.argmax(distance_sum)</a>
+            <a id="change">solution_set = np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)</a>
+            remaining_points = np.delete(remaining_points, select_idx)
+
+        return pd.DataFrame(solution_set, columns=self.points.columns)
+</code></pre><img src="37211012.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/59ec6660464bd378b20d4ae200c7614133a9a38b#diff-1da77a1e515a06956f2402a626f20d1605f6c245dfc6da7a2304fdade3d54125L54' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 59ec6660464bd378b20d4ae200c7614133a9a38b</div><div id='time'> Time: 2019-08-26</div><div id='author'> Author: hc.wang96@gmail.com</div><div id='file'> File Name: pyntcloud/samplers/points.py</div><div id='class'> Class Name: FarthestPointsSampler</div><div id='method'> Method Name: compute</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L208' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L179' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: common_ancestor</div><BR>

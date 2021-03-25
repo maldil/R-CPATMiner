@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+stimulus_information = haxby_dataset.stimuli
+
+for stim_type in sorted(stimulus_information.keys()):
+    <a id="change">if stim_type == b&quotcontrols&quot:
+        &#47&#47 skip control images, there are too many
+        continue
+
+   </a> file_names = stimulus_information[stim_type]
+
+    plt.figure()
+    for i in range(48):
+        <a id="change">plt.subplot(6, 8, i + 1)</a>
+        try:
+            plt.imshow(plt.imread(file_names[i]), cmap=plt.cm.gray)
+        except Exception:
+            &#47&#47 just go to the next one if the file is not present</code></pre><h3>After Change</h3><pre><code class='java'>
+
+for stim_type in stimulus_information:
+    &#47&#47 skip control images, there are too many
+    <a id="change">if stim_type != &quotcontrols&quot:
+
+        file_names = stimulus_information[stim_type]
+
+        fig, axes = plt.subplots(6, 8)
+        fig.suptitle(stim_type)
+
+        for img_path, ax in zip(file_names, axes.ravel()):
+            ax.imshow(plt.imread(img_path), cmap=plt.cm.gray)
+
+        for ax in axes.ravel():
+            ax.axis("off")
+
+</a>show()
+</code></pre>

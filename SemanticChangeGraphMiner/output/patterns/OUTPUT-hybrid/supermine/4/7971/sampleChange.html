@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+train, test = train_test_split(np.arange(len(eeg["classes"])), random_state=0)
+
+<a id="change">rfc_param_grid = {&quotn_estimators&quot: [8, 16, 32, 64, 128, 256, 512, 1024]}</a>
+model_cesium = build_model_from_featureset(fset_cesium.isel(name=train),
+                                          RandomForestClassifier(max_features=&quotauto&quot,
+                                                                 random_state=0),
+                                          params_to_optimize=rfc_param_grid)</code></pre><h3>After Change</h3><pre><code class='java'>
+model_cesium.fit(fset_cesium.iloc[train], eeg["classes"][train])
+
+model_guo = KNeighborsClassifier(3)
+<a id="change">model_guo.fit(fset_guo.iloc[train], eeg["classes"][train])</a>
+
+model_dwt = KNeighborsClassifier(3)
+model_dwt.fit(fset_dwt.iloc[train], eeg["classes"][train])
+</code></pre>

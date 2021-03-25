@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def get_complete_foreground(subject_folders):
+    for i, subject_folder in enumerate(subject_folders):
+        <a id="change">background_path = os.path.join(subject_folder, "background.nii.gz")</a>
+        image = nib.load(background_path)
+        image_foreground = <a id="change">image.get_data()</a> == 0
+        if i == 0:
+            foreground = image_foreground
+            reference_image = image
+        else:
+            foreground[image_foreground] = 1
+
+    <a id="change">return new_img_like(reference_image, foreground)</a>
+
+
+def normalize_data(data, mean, std):
+    data -= mean[:, np.newaxis, np.newaxis, np.newaxis]</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            foreground[subject_foreground &gt; 0] = 1
+
+    <a id="change">return new_img_like(nib.load(training_data_files[0][-1]), foreground)</a>
+
+
+def get_foreground_from_set_of_files(set_of_files, background_value=0, tolerance=0.00001):
+    for i, image_file in enumerate(set_of_files):</code></pre>

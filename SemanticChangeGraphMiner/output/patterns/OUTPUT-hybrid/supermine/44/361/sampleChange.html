@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                block.append(nn.BatchNorm2d(out_filters, 0.8))
+            return block
+
+        <a id="change">layers = []</a>
+        <a id="change">in_filters = opt.channels</a>
+        <a id="change">for out_filters, bn in [(16, False), (32, True), (64, True), (128, False)]:
+            layers.extend(discriminator_block(in_filters, out_filters, bn))
+            in_filters = out_filters
+
+       </a> <a id="change">self.conv_blocks</a> = <a id="change">nn.Sequential(*layers)</a>
+
+        &#47&#47 The height and width of downsampled image
+        ds_size = opt.img_size // 2**4
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                block.append(nn.BatchNorm2d(out_filters, 0.8))
+            return block
+
+        <a id="change">self.conv_blocks</a> = <a id="change">nn.Sequential(
+            *discrimintor_block(opt.channels, 16, bn=False),
+            *discriminator_block(16, 32),
+            *discriminator_block(32, 64),
+            *discriminator_block(64, 128),
+        )</a>
+
+        &#47&#47 The height and width of downsampled image
+        ds_size = opt.img_size // 2**4
+</code></pre>

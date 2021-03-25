@@ -1,0 +1,27 @@
+<html><h3>5c3f7d5f5cd23ceb70d77ccdde7ee928d59439a9,thinc/backends/jax_ops.py,,forward_lstm_gates,#,725
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 
+    &#47&#47 The batch is (nL, nB, ...)
+    &#47&#47
+    nB, nO = <a id="change">Yt1.shape[0]</a>
+    &#47&#47 Variables:
+    &#47&#47 
+    &#47&#47 At: Activations for this timestep, i.e. output of hstack(Xt, Yt1)@W+b
+    &#47&#47 Yt1: Previous hidden-layer output (i.e. Y_{t-1}</code></pre><h3>After Change</h3><pre><code class='java'>
+    ho = sigmoid(At3_ho) &#47&#47 1c
+    hc = xp.tanh(At3_hc) &#47&#47 1d
+
+    <a id="change">Ct3 = hf * Ct2</a> &#47&#47 2a
+    Ct3 += hi * hc &#47&#47 2b
+    <a id="change">tanhCt3 = tanh(Ct3)</a> &#47&#47 3a
+    Yt3 = tanhCt3 * ho &#47&#47 3b
+    &#47&#47 We don&quott need the gradient for this, it&quots just for backprop calculation.
+    Gt3 = xp.concatenate((hf, hi, ho, hc), axis=-1)
+    <a id="change">return (Yt3, Ct3), Gt3</a>
+
+
+@jax_jit()
+def backprop_lstm_gates(</code></pre><img src="5015604.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/5c3f7d5f5cd23ceb70d77ccdde7ee928d59439a9#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L726' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 5c3f7d5f5cd23ceb70d77ccdde7ee928d59439a9</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward_lstm_gates</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L80' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_epoch</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L43' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_epoch</div><BR>

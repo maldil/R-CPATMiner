@@ -1,0 +1,33 @@
+<html><h3>ad110e020cbae062ba024d91223df519af3adc96,debug_toolbar/panels/template.py,TemplateDebugPanel,content,#TemplateDebugPanel#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                context_list = []
+                for context_layer in context_data.dicts:
+                    <a id="change">if hasattr(context_layer, &quotitems&quot):
+                        for key, value in context_layer.items():
+                            &#47&#47 Replace any request elements - they have a large
+                            &#47&#47 unicode representation and the request data is
+                            &#47&#47 already made available from the Request Vars panel.
+                            if isinstance(value, http.HttpRequest):
+                                context_layer[key] = &quot&lt;&lt;request&gt;&gt;&quot
+                            &#47&#47 Replace the debugging sql_queries element. The SQL
+                            &#47&#47 data is already made available from the SQL panel.
+                            elif key == &quotsql_queries&quot and isinstance(value, list):
+                                context_layer[key] = &quot&lt;&lt;sql_queries&gt;&gt;&quot
+                            &#47&#47 Replace LANGUAGES, which is available in i18n context processor
+                            elif key == &quotLANGUAGES&quot and isinstance(value, tuple):
+                                context_layer[key] = &quot&lt;&lt;languages&gt;&gt;&quot
+                   </a> try:
+                        context_list.append(pformat(context_layer))
+                    except UnicodeEncodeError:
+                        pass</code></pre><h3>After Change</h3><pre><code class='java'>
+            info[&quottemplate&quot] = template
+            &#47&#47 Clean up context for better readability
+            if getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}).get(&quotSHOW_TEMPLATE_CONTEXT&quot, True):
+                context_list = template_data.get(&quotcontext&quot, <a id="change">[]</a>)
+                info[&quotcontext&quot] = &quot\n&quot.join(context_list)
+            template_context.append(info)
+</code></pre><img src="29289886.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/ad110e020cbae062ba024d91223df519af3adc96#diff-a9ca9750e32c19fcb2178c5828746404974143c6ebc85000ca28298608e93c2cL74' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: ad110e020cbae062ba024d91223df519af3adc96</div><div id='time'> Time: 2011-07-12</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/template.py</div><div id='class'> Class Name: TemplateDebugPanel</div><div id='method'> Method Name: content</div><BR><BR><div id='link'><a href='https://github.com/tflearn/tflearn/commit/ec14cd301fdb22bd15612796ef28bd1b1a15a7e2#diff-6315143e726aab54738962dcaade4d9974b1a4821e7c4f8ed03bd9e9c2040e4dL223' target='_blank'>Link</a></div><div id='project'> Project Name: tflearn/tflearn</div><div id='commit'> Commit Name: ec14cd301fdb22bd15612796ef28bd1b1a15a7e2</div><div id='time'> Time: 2017-02-22</div><div id='author'> Author: aymeric.damien@gmail.com</div><div id='file'> File Name: tflearn/activations.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: prelu</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/9aea8066d7dd97a6b27f50286adc22fc3c834447#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L34' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 9aea8066d7dd97a6b27f50286adc22fc3c834447</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: AssignPDBResidueBondOrdersFromTemplate</div><BR>

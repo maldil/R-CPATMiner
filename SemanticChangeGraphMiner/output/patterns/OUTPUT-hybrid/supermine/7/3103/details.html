@@ -1,0 +1,20 @@
+<html><h3>117dd25204611382acc7c9f460aeeb3a023ef721,new-tutorial/L4_message_passing.py,,,#,192
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+with tqdm.tqdm(train_dataloader) as tq:
+    for step, (input_nodes, output_nodes, bipartites) in enumerate(tq):
+        bipartites = [b.to(<a id="change">torch.device(&quotcuda&quot)</a>) for b in bipartites]
+        inputs = node_features[input_nodes].cuda()
+        labels = node_labels[output_nodes].cuda()
+        predictions = model(bipartites, inputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+with tqdm.tqdm(train_dataloader) as tq:
+    for step, (input_nodes, output_nodes, bipartites) in enumerate(tq):
+        inputs = bipartites[0].srcdata[&quotfeat&quot]
+        <a id="change">labels = bipartites[-1].dstdata[&quotlabel&quot]</a>
+        predictions = model(bipartites, inputs)
+
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre><img src="13887059.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/117dd25204611382acc7c9f460aeeb3a023ef721#diff-379fdb8daf7e956d23772d19b66e68b1b46d0ca6b77f1bd5a2ad6eb90fc08f27L199' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: 117dd25204611382acc7c9f460aeeb3a023ef721</div><div id='time'> Time: 2021-02-08</div><div id='author'> Author: coin2028@hotmail.com</div><div id='file'> File Name: new-tutorial/L4_message_passing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pytorch/tutorials/commit/2f5299a546fe23e2fff46630fc319387724b9aa5#diff-ac8c33f7f434713f5870ff7c602e80620c1d0d8b8631edb84c0e5c2ed03ec384L1341' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/tutorials</div><div id='commit'> Commit Name: 2f5299a546fe23e2fff46630fc319387724b9aa5</div><div id='time'> Time: 2018-08-29</div><div id='author'> Author: minkawhich@fb.com</div><div id='file'> File Name: beginner_source/chatbot_tutorial.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/117dd25204611382acc7c9f460aeeb3a023ef721#diff-b9434b16ac73fdb83e1dd7680a84482b6ac164a146452d1fd7a6d98e5e51bb0aL190' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: 117dd25204611382acc7c9f460aeeb3a023ef721</div><div id='time'> Time: 2021-02-08</div><div id='author'> Author: coin2028@hotmail.com</div><div id='file'> File Name: new-tutorial/L1_large_node_classification.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

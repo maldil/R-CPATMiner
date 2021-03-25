@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    range_index = new_index % self.dense_layer_size
+                    choice_range = self.dense_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+                    <a id="change">break</a>
+            else:
+                genome[index] = np.random.choice(self.optimizer.keys())
+                break
+        return genome</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.dense_layer_size = len(self.dense_layer_shape)
+
+    def mutate(self, genome):
+        <a id="change">num_mutations = np.random.choice(range(3))</a>
+        <a id="change">for i in range(num_mutations):
+            index = np.random.choice(range(1, len(genome)))
+            if index &lt; self.convolution_layer_size * self.convolution_layers:
+                if genome[index - index % self.convolution_layer_size]:
+                    range_index = index % self.convolution_layer_size
+                    choice_range = self.convolutional_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+            elif index != len(genome) - 1:
+                offset = self.convolution_layer_size * self.convolution_layers
+                new_index = (index - offset)
+                present_index = new_index - new_index % self.dense_layer_size
+                if genome[present_index + offset]:
+                    range_index = new_index % self.dense_layer_size
+                    choice_range = self.dense_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+            else:
+                genome[index] = np.random.choice(self.optimizer.keys()) 
+       </a> return genome
+
+    def decode(self, genome):
+        model = Sequential()</code></pre>

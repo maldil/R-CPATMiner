@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    from debug_toolbar.panels.sql import reformat_sql
+    sql = request.GET.get(&quotsql&quot, &quot&quot)
+    if sql.lower().startswith(&quotselect&quot):
+        params = <a id="change">simplejson.loads(request.GET.get(&quotparams&quot, &quot&quot))</a>
+        cursor = connection.cursor()
+        cursor.execute("EXPLAIN %s" % (sql,), params)
+        headers = [d[0] for d in cursor.description]
+        result = cursor.fetchall()</code></pre><h3>After Change</h3><pre><code class='java'>
+    sql = request.GET.get(&quotsql&quot, &quot&quot)
+    params = request.GET.get(&quotparams&quot, &quot&quot)
+    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    <a id="change">if hash != request.GET.get(&quothash&quot, &quot&quot):
+        return HttpResponse(&quot&lt;h3&gt;Tamper alert&lt;/h3&gt;&quot) &#47&#47 SQL Tampering alert
+   </a> if sql.lower().startswith(&quotselect&quot):
+        params = simplejson.loads(params)
+        cursor = connection.cursor()
+        cursor.execute("EXPLAIN %s" % (sql,), params)</code></pre>

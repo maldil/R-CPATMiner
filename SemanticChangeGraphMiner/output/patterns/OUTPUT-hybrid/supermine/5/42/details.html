@@ -1,0 +1,25 @@
+<html><h3>e6dc6899d0aa846636c48562c79b161347c35235,autoreject/ransac.py,Ransac,fit,#Ransac#,192
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print(&quotIterating epochs ...&quot)
+        verbose = False if self.n_jobs &gt; 1 else self.verbose
+        corrs = parallel(my_iterator(self, epochs, idxs, verbose)
+                         <a id="change">for</a> idxs in np.array_split(np.arange(n_epochs),
+                         n_jobs))
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quotIterating epochs ...&quot)
+        verbose = False if self.n_jobs &gt; 1 else self.verbose
+        <a id="change">self.ch_subsets_ = [self._get_random_subsets(
+                            epochs.info, self.random_state + random_state)
+                            for random_state in np.arange(0, n_epochs, n_jobs)]</a>
+        epoch_idxs = np.array_split(np.arange(n_epochs), n_jobs)
+        <a id="change">corrs = parallel(my_iterator(self, epochs, idxs, chs, verbose)
+                         for idxs, chs in zip(epoch_idxs, self.ch_subsets_))</a>
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quot[Done]&quot)
+</code></pre><img src="318596.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/autoreject/autoreject/commit/e6dc6899d0aa846636c48562c79b161347c35235#diff-e89b7cc298cd7e026773e1652569566ff747b6c7d2fbbd772c9fa6ecba9f9240L185' target='_blank'>Link</a></div><div id='project'> Project Name: autoreject/autoreject</div><div id='commit'> Commit Name: e6dc6899d0aa846636c48562c79b161347c35235</div><div id='time'> Time: 2019-06-04</div><div id='author'> Author: mainakjas@gmail.com</div><div id='file'> File Name: autoreject/ransac.py</div><div id='class'> Class Name: Ransac</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/statsmodels/statsmodels/commit/72e735a98644b76208d558c0b85150190594c5b1#diff-f59fdaf9522cbeac57510fd4588e8b9e5ef8019b8ef1ad85b53b123ad2c64c3eL319' target='_blank'>Link</a></div><div id='project'> Project Name: statsmodels/statsmodels</div><div id='commit'> Commit Name: 72e735a98644b76208d558c0b85150190594c5b1</div><div id='time'> Time: 2020-06-28</div><div id='author'> Author: kevin.sheppard@gmail.com</div><div id='file'> File Name: statsmodels/tools/tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_constant</div><BR><BR><div id='link'><a href='https://github.com/astorfi/TensorFlow-World/commit/874382bfb96b92dcfdd6326ba83c54ad1e9d42f2#diff-04d86ec35c0f957455c07f04121130a4f7d040801814986bfa89ed7cd0c3cc9dL11' target='_blank'>Link</a></div><div id='project'> Project Name: astorfi/TensorFlow-World</div><div id='commit'> Commit Name: 874382bfb96b92dcfdd6326ba83c54ad1e9d42f2</div><div id='time'> Time: 2017-06-26</div><div id='author'> Author: amirsina.torfi@gmail.com</div><div id='file'> File Name: codes/2-basics_in_machine_learning/linear_regression/code/linear_regression.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = Variable(torch.from_numpy(np.array(traj_states, dtype=np.float32)))
+            traj_actions_v = <a id="change">Variable(torch.from_numpy(np.array(traj_actions, dtype=np.float32)))</a>
+            <a id="change">if args.cuda:
+                traj_states_v = traj_states_v.cuda()
+                traj_actions_v = traj_actions_v.cuda()
+
+           </a> traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, cuda=args.cuda)
+            mu_v = net_act(traj_states_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = <a id="change">torch.FloatTensor(traj_states).to(device)</a>
+            traj_actions_v = torch.FloatTensor(traj_actions).to(device)
+            traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, device=device)
+            mu_v = net_act(traj_states_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)</code></pre>

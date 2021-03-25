@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        mac_row_ports = {}
+        def port_priv(port):
+            return port &lt; 1024
+        <a id="change">for ip_proto in (&quotudp&quot, &quottcp&quot):
+            lowest_ports = self._lowest_ip_proto_port(mac_df, ip_proto)
+            for field_name, ports, wk_ports in (
+                    (&quotpriv&quot, {port for port in lowest_ports if port_priv(port)}, self.WK_PRIV_TCPUDP_PORTS),
+                    (&quotnonpriv&quot, {port for port in lowest_ports if not port_priv(port)}, self.WK_NONPRIV_TCPUDP_PORTS),
+                ):
+                port_flags = {port: int(port in ports) for port in wk_ports}
+                port_flags.update({&quotother&quot: int(bool(lowest_ports) and not ports.issubset(wk_ports))})
+                mac_row_ports.update({
+                    &quottshark_%s_%s_port_%s_%s&quot % (ip_proto, field_name, port, suffix): present for port, present in port_flags.items()})
+       </a> return mac_row_ports
+
+    def _tshark_ipversions(self, mac_df):
+        try:</code></pre><h3>After Change</h3><pre><code class='java'>
+        mac_row_ports = {}
+        def port_priv(port):
+            return port &lt; 1024
+        <a id="change">for ip_proto_num, proto_df in mac_df.groupby(&quotip.proto&quot):
+            ip_proto = TCP_UDP_PROTOS.get(ip_proto_num)
+            if ip_proto is None:
+                continue
+            lowest_ports = self._lowest_ip_proto_port(proto_df, ip_proto)
+            for field_name, ports, wk_ports in (
+                    (&quotpriv&quot, {port for port in lowest_ports if port_priv(port)}, self.WK_PRIV_TCPUDP_PORTS),
+                    (&quotnonpriv&quot, {port for port in lowest_ports if not port_priv(port)}, self.WK_NONPRIV_TCPUDP_PORTS),
+                ):
+                port_flags = {port: int(port in ports) for port in wk_ports}
+                port_flags.update({&quotother&quot: int(bool(lowest_ports) and not ports.issubset(wk_ports))})
+                mac_row_ports.update({
+                    &quottshark_%s_%s_port_%s_%s&quot % (ip_proto, field_name, port, suffix): present for port, present in port_flags.items()})
+       </a> return mac_row_ports
+
+    def _tshark_ratio_ports(self, mac_df):
+        mac_row_ports = {}</code></pre>

@@ -1,0 +1,32 @@
+<html><h3>a4697d7e45e66a3264eb56dcf489d67d4df40d23,implementations/cgan/cgan.py,Discriminator,__init__,#Discriminator#,74
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                block.append(nn.BatchNorm2d(out_filters, 0.8))
+            return block
+
+        <a id="change">layers = []</a>
+        in_filters = opt.channels + 1
+        for out_filters, bn in [(16, False), (32, True), (64, True), (128, False)]:
+            layers.extend(discriminator_block(in_filters, out_filters, bn))
+            in_filters = out_filters</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.label_embedding = nn.Embedding(opt.n_classes, opt.n_classes)
+
+        <a id="change">self.model = nn.Sequential(
+            nn.Linear(opt.n_classes + opt.img_size**2, 512),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 512),
+            nn.Dropout(0.4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 512),
+            nn.Dropout(0.4),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(512, 1),
+            nn.Sigmoid()
+        )</a>
+
+    def forward(self, img, labels):
+        &#47&#47 Concatenate label embedding and image by channels
+        d_input = torch.cat((img.view(img.size(0), -1), self.label_embedding(labels)), -1)</code></pre><img src="1730394.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/a4697d7e45e66a3264eb56dcf489d67d4df40d23#diff-668d03ab9bfb2d3197966aa8eb6543210127e71e057c9c882122994771c9ea99L73' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: a4697d7e45e66a3264eb56dcf489d67d4df40d23</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/cgan/cgan.py</div><div id='class'> Class Name: Discriminator</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14#diff-a1a14690bd4d0db68da6b27026209aa1ee45066f7ce9125d736e3b406d0059ceL10' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: 0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14</div><div id='time'> Time: 2019-11-20</div><div id='author'> Author: premy@cogent.co.jp</div><div id='file'> File Name: tasks/save_reload_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

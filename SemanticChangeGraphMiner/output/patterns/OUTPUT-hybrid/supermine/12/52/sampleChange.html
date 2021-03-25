@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            parsed_output = _read_output(path)
+            for sample, sample_stats, config, adaptation, timing in parsed_output:
+                chain_data.append(
+                    <a id="change">{
+                        "sample": sample,
+                        "sample_stats": sample_stats,
+                        "configuration_info": config,
+                        "adaptation_info": adaptation,
+                        "timing_info": timing,
+                    }</a>
+                )
+        self.posterior = [item["sample"] for item in chain_data]
+        self.sample_stats = [item["sample_stats"] for item in chain_data]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        )
+
+        attrs = {}
+        <a id="change">for item in chain_data:
+            for key, value in item["configuration_info"].items():
+                if key not in attrs:
+                    attrs[key] = []
+                attrs[key].append(value)
+       </a> self.attrs = attrs
+
+    @requires("prior_")
+    def _parse_prior(self):</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if np.random.rand() &lt; self.epsilon:
+            &#47&#47 choose best action
+            state_action = self.q_table.loc[observation, :]
+            state_action = <a id="change">state_action.reindex(np.random.permutation(state_action.index))</a>     &#47&#47 some actions have same value
+            <a id="change">action = state_action.idxmax()</a>
+        else:
+            &#47&#47 choose random action
+            action = np.random.choice(self.actions)
+        return action</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 action selection
+        if np.random.rand() &lt; self.epsilon:
+            &#47&#47 choose best action
+            <a id="change">state_action</a> = self.q_table.loc[observation, :]
+            &#47&#47 some actions may have the same value, randomly choose on in these actions
+            action = <a id="change">np.random.choice(state_action[state_action == np.max(state_action)].index)</a>
+        else:
+            &#47&#47 choose random action
+            action = np.random.choice(self.actions)
+        return action</code></pre>

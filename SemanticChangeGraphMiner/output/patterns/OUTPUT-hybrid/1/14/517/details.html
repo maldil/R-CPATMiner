@@ -1,0 +1,27 @@
+<html><h3>85426e4964fb6ee30ca5b14c5c79f4843e948962,memcnn/models/tests/test_revop.py,,test_normal_vs_revblock,#,215
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            e.train()
+
+        &#47&#47 define an arbitrary reversible function and define graph for model 1
+        <a id="change">Xin</a> = <a id="change">X.clone()</a>
+        fn = ReversibleBlock(c1_2, c2_2, keep_input=False, coupling=coupling, adapter=AffineAdapterNaive,
+                                   implementation_fwd=implementation_fwd, implementation_bwd=implementation_bwd)
+        <a id="change">Y</a> = fn.forward(Xin)
+        <a id="change">loss2</a> = torch.mean(Y)
+
+        &#47&#47 define the reversible function without custom backprop and define graph for model 2
+        XX = X.clone().data</code></pre><h3>After Change</h3><pre><code class='java'>
+            e.train()
+
+        &#47&#47 define an arbitrary reversible function and define graph for model 1
+        <a id="change">Xin</a> = <a id="change">X</a>.clone().requires_grad_()
+        fn = ReversibleBlock(c1_2, c2_2, keep_input=False, coupling=coupling, adapter=AffineAdapterNaive,
+                                   implementation_fwd=implementation_fwd, implementation_bwd=implementation_bwd)
+        <a id="change">Y</a> = fn.forward(Xin)
+        <a id="change">loss2</a> = torch.mean(Y)
+
+        &#47&#47 define the reversible function without custom backprop and define graph for model 2
+        XX = X.clone().detach().requires_grad_()</code></pre><img src="2792800.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/85426e4964fb6ee30ca5b14c5c79f4843e948962#diff-b08004f13dca27c579c0e9f70d9d82b38368e038dbcd92aa19e7ec040898815eL248' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 85426e4964fb6ee30ca5b14c5c79f4843e948962</div><div id='time'> Time: 2019-12-12</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_revop.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_normal_vs_revblock</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/10bdd46d76d35cfba3a484b007ea3e14af801813#diff-213c1ad5e80c9459fcc43ed161689f3598c6fcffd0720363263eeb0d2254caaaL303' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 10bdd46d76d35cfba3a484b007ea3e14af801813</div><div id='time'> Time: 2019-12-09</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/rbm/purification_rbm.py</div><div id='class'> Class Name: PurificationRBM</div><div id='method'> Method Name: gibbs_steps</div><BR><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/2927cfee30239273c0098370b3be54725f10563a#diff-da161560c3836e96cc09d57d04699293bc8033dafb2dab5e776e948fe81556dfL54' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: 2927cfee30239273c0098370b3be54725f10563a</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: theodore.danka@gmail.com</div><div id='file'> File Name: modAL/expected_error.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: expected_error_reduction</div><BR>

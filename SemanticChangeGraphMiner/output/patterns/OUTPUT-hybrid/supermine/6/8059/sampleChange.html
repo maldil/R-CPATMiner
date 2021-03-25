@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Hand-written loading code to avoid too much memory consumption
+    orig_ref_niimg = ref_niimg
+    if (not isinstance(ref_niimg, str)
+            and not <a id="change">hasattr(ref_niimg, &quotget_data&quot)</a>
+            and not hasattr(ref_niimg, &quotget_fdata&quot)
+            and hasattr(ref_niimg, &quot__iter__&quot)):
+        ref_niimg = ref_niimg[0]
+    if not ((hasattr(ref_niimg, &quotget_data&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Hand-written loading code to avoid too much memory consumption
+    orig_ref_niimg = ref_niimg
+    is_str = isinstance(ref_niimg, str)
+    has_get_data = <a id="change">hasattr(ref_niimg, &quotget_data&quot)</a>
+    has_get_fdata = hasattr(ref_niimg, &quotget_fdata&quot)
+    has_iter = hasattr(ref_niimg, &quot__iter__&quot)
+    has_affine = <a id="change">hasattr(ref_niimg, &quotaffine&quot)</a>
+    if has_iter and not any([is_str, has_get_data, has_get_fdata]):
+        ref_niimg = ref_niimg[0]
+        is_str = isinstance(ref_niimg, str)
+        has_get_data = hasattr(ref_niimg, &quotget_data&quot)
+        has_get_fdata = hasattr(ref_niimg, &quotget_fdata&quot)
+        has_iter = hasattr(ref_niimg, &quot__iter__&quot)
+        has_affine = hasattr(ref_niimg, &quotaffine&quot)
+    if not <a id="change">((has_get_data or has_get_fdata) and has_affine)</a>:
+        if is_str:
+            ref_niimg = nibabel.load(ref_niimg)
+        else:</code></pre>

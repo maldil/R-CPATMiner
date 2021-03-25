@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47mutagenize each position
+        temp_batch = []
+        tempbatch_baseposandletter = []
+        for base_pos in <a id="change">range(start_pos,end_pos)</a>:
+            &#47&#47for each position, iterate through the 4 bases
+            for base_letter in range(output_dim[3]):
+                cur_base=np.array(empty_onehot)</code></pre><h3>After Change</h3><pre><code class='java'>
+                Xtmp=np.array(np.expand_dims(X[sample_index],axis=0))
+                Xtmp[0][0][base_pos]=cur_base
+                &#47&#47get the logit of Xtmp
+                <a id="change">Xtmp_logit=np.squeeze(preact_function(Xtmp),axis=0)</a>
+                mutants_expanded[sample_index][0][base_pos][base_letter]=Xtmp_logit[task_index]
+    &#47&#47subtract wt_expanded from mutants_expanded
+    ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values</code></pre>

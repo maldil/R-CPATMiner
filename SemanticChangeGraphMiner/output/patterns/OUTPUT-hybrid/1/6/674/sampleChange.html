@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            c = la.cholesky(x)
+            c_inv = la.inv(c)
+            <a id="change">e</a> = multiexp(multiprod(multiprod(c_inv, u), multitransp(c_inv)),
+                         sym=True)
+            <a id="change">return multiprod(multiprod(c, e), multitransp(c))</a>
+
+    def log(self, x, y):
+        c = la.cholesky(x)
+        c_inv = la.inv(c)</code></pre><h3>After Change</h3><pre><code class='java'>
+                e[i] = sp.linalg.expm(x_inv_u[i])
+        else:
+            e = sp.linalg.expm(x_inv_u)
+        return <a id="change">multiprod(x, e)</a>
+        &#47&#47 This alternative implementation is sometimes faster though less
+        &#47&#47 stable. It can return a matrix with small negative determinant.
+        &#47&#47    c = la.cholesky(x)
+        &#47&#47    c_inv = la.inv(c)</code></pre>

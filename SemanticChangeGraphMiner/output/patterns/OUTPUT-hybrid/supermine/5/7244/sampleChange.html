@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    end = time.time()
+    for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
+        <a id="change">inputs, targets = inputs.cuda(), targets.cuda()</a>
+        inputs, targets = Variable(inputs, volatile=True), Variable(targets)
+        batchSize = inputs.size(0)
+        features = net(inputs)
+        net_time.update(time.time() - end)</code></pre><h3>After Change</h3><pre><code class='java'>
+import numpy as np
+
+def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0):
+    device = <a id="change">&quotcuda&quot if torch.cuda.is_available() else &quotcpu&quot</a>
+
+    net.eval()
+    net_time = AverageMeter()
+    cls_time = AverageMeter()</code></pre>

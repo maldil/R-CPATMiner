@@ -1,0 +1,68 @@
+<html><h3>a3883f16c07fec39a0d7431a16cf018f67723f1d,w3af/core/controllers/profiling/scan_log_analysis.py,,show_queue_size,#,253
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    fig.y_label = &quotItems in Grep queue&quot
+    fig.x_label = &quotTime&quot
+    fig.color_mode = &quotbyte&quot
+    <a id="change">fig.set_x_limits(min_=0, max_=None)</a>
+    fig.set_y_limits(min_=0, max_=None)
+
+    fig.plot(xrange(len(grep_queue_sizes)),
+             grep_queue_sizes,</code></pre><h3>After Change</h3><pre><code class='java'>
+    auditor_queue_timestamps = []
+
+    crawl_queue_sizes = []
+    <a id="change">crawl_queue_timestamps</a> = <a id="change">[]</a>
+
+    for line in scan:
+        match = GREP_DISK_DICT.search(line)
+        if match:
+            grep_queue_sizes.append(int(match.group(1)))
+            grep_queue_timestamps.append(get_line_epoch(line))
+
+        match = AUDITOR_DISK_DICT.search(line)
+        if match:
+            auditor_queue_sizes.append(int(match.group(1)))
+            auditor_queue_timestamps.append(get_line_epoch(line))
+
+        match = CRAWLINFRA_DISK_DICT.search(line)
+        if match:
+            crawl_queue_sizes.append(int(match.group(1)))
+            <a id="change">crawl_queue_timestamps.append(get_line_epoch(line))</a>
+
+    &#47&#47 Get the last timestamp to use as max in the graphs
+    last_timestamp = get_line_epoch(line)
+
+    print(&quotConsumer queue sizes&quot)
+    print(&quot&quot)
+
+    fig = plotille.Figure()
+    fig.width = 90
+    fig.height = 20
+    fig.y_label = &quotItems in Audit queue&quot
+    fig.x_label = &quotTime&quot
+    fig.color_mode = &quotbyte&quot
+    fig.set_x_limits(min_=auditor_queue_timestamps[0], max_=last_timestamp)
+    fig.set_y_limits(min_=0, max_=None)
+
+    fig.plot(auditor_queue_timestamps,
+             auditor_queue_sizes,
+             label=&quotAudit&quot)
+
+    print(fig.show())
+    print(&quot&quot)
+    print(&quot&quot)
+
+    fig = plotille.Figure()
+    fig.width = 90
+    fig.height = 20
+    fig.y_label = &quotItems in CrawlInfra queue&quot
+    fig.x_label = &quotTime&quot
+    fig.color_mode = &quotbyte&quot
+    <a id="change">fig.set_x_limits(min_=crawl_queue_timestamps[0], max_=last_timestamp)</a>
+    fig.set_y_limits(min_=0, max_=None)
+
+    fig.plot(crawl_queue_timestamps,
+             crawl_queue_sizes,</code></pre><img src="2059778.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/a3883f16c07fec39a0d7431a16cf018f67723f1d#diff-4b789596ffc613b35c652b026dd9e5396775c9d6bc3c8054576ef3efe5e89ed8L256' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: a3883f16c07fec39a0d7431a16cf018f67723f1d</div><div id='time'> Time: 2018-01-10</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/controllers/profiling/scan_log_analysis.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: show_queue_size</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/a3883f16c07fec39a0d7431a16cf018f67723f1d#diff-4b789596ffc613b35c652b026dd9e5396775c9d6bc3c8054576ef3efe5e89ed8L256' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: a3883f16c07fec39a0d7431a16cf018f67723f1d</div><div id='time'> Time: 2018-01-10</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/controllers/profiling/scan_log_analysis.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: show_queue_size</div><BR>

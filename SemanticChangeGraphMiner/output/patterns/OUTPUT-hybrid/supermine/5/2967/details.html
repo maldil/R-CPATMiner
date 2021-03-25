@@ -1,0 +1,34 @@
+<html><h3>0bf81caddbc64e81b8b2989e8dbb5a0ec49e489a,Security_and_MachineLearning/src/defensive_chap7/face_auth.py,,,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Prediction.
+        pred = model.predict(array_img)[0]
+        top_indices = <a id="change">pred.argsort()[-1:][::-1]</a>
+        results = [(classes[i], pred[i]) <a id="change">for</a> i in top_indices]
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+        cv2.imwrite(file_name, resized_face_image)
+
+        &#47&#47 Transform image to 4 dimension tensor.
+        img = image.img_to_array(image.load_img(file_name, target_size=<a id="change">(img_width, img_height)</a>))
+        x = image.img_to_array(img)
+        x = np.expand_dims(x, axis=0)
+        x = x / 255.0
+
+        &#47&#47 Prediction.
+        preds = model.predict(x)[0]
+        predict_idx = np.argmax(preds)
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot
+        prob = preds[predict_idx] * 100
+        if prob &gt; THRESHOLD:
+            judge = &quotUnlock&quot
+        msg = &quot{} ({:.1f}%). res="{}"&quot.format(<a id="change">classes[predict_idx]</a>, prob, judge)
+        print(msg)
+
+        &#47&#47 Draw frame to face.</code></pre><img src="12843907.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/13o-bbr-bbq/machine_learning_security/commit/0bf81caddbc64e81b8b2989e8dbb5a0ec49e489a#diff-d105733af391abee5660b463c11bee38d3e1c7cfe5399e1d4f7e1b93ba134201L19' target='_blank'>Link</a></div><div id='project'> Project Name: 13o-bbr-bbq/machine_learning_security</div><div id='commit'> Commit Name: 0bf81caddbc64e81b8b2989e8dbb5a0ec49e489a</div><div id='time'> Time: 2020-01-08</div><div id='author'> Author: takaesu235@gmail.com</div><div id='file'> File Name: Security_and_MachineLearning/src/defensive_chap7/face_auth.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/70fcd3094baba3139afcda727683d58c2928261f#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 70fcd3094baba3139afcda727683d58c2928261f</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR>

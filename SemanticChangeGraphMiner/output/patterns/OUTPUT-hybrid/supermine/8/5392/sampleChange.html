@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  cnt = 0
+  for i in range(np.shape(d)[0]):
+    cnt_i = 0
+    <a id="change">for j in range(k):
+      if y[i] != y[indices[i, j]]:
+        cnt_i += 1
+   </a> if cnt_i &gt;= k / 2.0:
+      cnt += 1
+
+  return float(cnt) / np.shape(d)[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+  for i in range(np.shape(d)[0]):
+
+    &#47&#47 Get max vote
+    <a id="change">labels = y[indices[i, :k]]</a>
+    <a id="change">keys, counts = np.unique(labels, return_counts=True)</a>
+    maxkey = keys[np.argmax(counts)]
+    if y[i] != maxkey:
+      cnt += 1
+</code></pre>

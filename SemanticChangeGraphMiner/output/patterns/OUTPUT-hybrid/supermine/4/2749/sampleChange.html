@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 TODO: Hack!!!
+        try:
+            self.contexts = list(set(c.context <a id="change">for</a> c in <a id="change">self.candidates.union(self.gold)</a>))
+        except:
+            self.contexts = list(set(c.span0.context for c in self.candidates.union(self.gold)))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 We get the sorted candidates and all contexts required, either from unary or binary candidates
+        self.gold = list(gold)
+        try:
+            <a id="change">self.candidates = sorted(list(candidates), key=lambda c : c.char_start)</a>
+            self.contexts   = list(set(c.context <a id="change">for</a> c in self.candidates + self.gold))
+        except:
+            self.candidates = sorted(list(candidates), key=lambda c : c.span0.char_start)
+            self.contexts   = list(set(c.span0.context for c in self.candidates + self.gold))</code></pre>

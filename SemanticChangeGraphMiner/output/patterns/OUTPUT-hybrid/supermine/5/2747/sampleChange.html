@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sys.stdout = open(os.devnull, "w")
+
+    &#47&#47 Spawn new session
+    with <a id="change">tf.Session(graph=infer_model.graph, config=nmt.utils.get_config_proto())</a> as sess:
+
+        &#47&#47 Load model
+        loaded_infer_model = nmt.inference.model_helper.load_model(infer_model.model, flags.ckpt, sess, "infer")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+        &#47&#47 calculate number of translations to be returned
+        <a id="change">if hparams.infer_mode == "greedy":
+            num_translations_per_input = 1
+        elif hparams.infer_mode == "beam_search":
+            num_translations_per_input = min(hparams.num_translations_per_input, hparams.beam_width)
+
+       </a> answers = []
+        while True:
+            try:
+</code></pre>

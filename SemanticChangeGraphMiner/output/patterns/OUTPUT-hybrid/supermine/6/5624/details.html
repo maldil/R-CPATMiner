@@ -1,0 +1,63 @@
+<html><h3>83579d7761d6bc995e1e6e90cd376191e648081e,ristretto/nmf/rnmf_fhals.py,,rnmf_fhals,#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 Compute stopping condition.
+        if niter % 10 == 0 and verbose == True:
+            <a id="change">fit = np.log10(sci.linalg.norm(A - Wtemp.dot( Ht.T )))</a>
+
+            if niter == 0: <a id="change">fitold = fit</a>               
+            
+            fitchange = abs(<a id="change">fitold - fit</a>)
+            fitold = fit
+            
+            if verbose == True:</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        
+        
+        <a id="change">if niter &gt;= 5:
+            &#47&#47 Compute stopping condition.
+            if niter == 5:
+                violation_init = violation
+    
+            if violation_init == 0:
+                break       
+    
+            fitchange = violation / violation_init
+            
+            if verbose == True:
+                print(&quotIteration: %s fit: %s, fitchange: %s&quot %(niter, violation, fitchange))        
+    
+            if fitchange &lt;= tol:
+                break        
+            
+            fit.append(violation)
+        
+        &#47&#47 Compute stopping condition.
+&#47&#47        if niter % 10 == 0 and verbose == True:
+&#47&#47            fit = np.log10(sci.linalg.norm(A - Wtemp.dot( Ht.T )))
+&#47&#47
+&#47&#47            if niter == 0: fitold = fit               
+&#47&#47            
+&#47&#47            fitchange = abs(fitold - fit)
+&#47&#47            fitold = fit
+&#47&#47            
+&#47&#47            if verbose == True:
+&#47&#47                print(&quotIteration: %s fit: %s, fitchange: %s&quot %(niter, fit, fitchange))        
+&#47&#47            &#47&#47End if        
+&#47&#47 
+&#47&#47            if niter &gt; 1 and (fit &lt;= -5 or fitchange &lt;= tol):      
+&#47&#47                break       
+            &#47&#47End if 
+        &#47&#47End if                  
+    &#47&#47End for
+
+    &#47&#47~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                            
+    &#47&#47 Return factor matrices
+    &#47&#47~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+   </a> if verbose == True:
+        fit_final = sci.linalg.norm(A - (Q.T.dot(W)).dot( Ht.T))
+        print(&quotFinal Iteration: %s fit: %s&quot %(niter, fit_final)) 
+        </code></pre><img src="23744506.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/83579d7761d6bc995e1e6e90cd376191e648081e#diff-a7485c17070a9cba432799a84a959a871b5269d32890cf9c10cee5ddf32a2f9bL136' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: 83579d7761d6bc995e1e6e90cd376191e648081e</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: Benli11@users.noreply.github.com</div><div id='file'> File Name: ristretto/nmf/rnmf_fhals.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnmf_fhals</div><BR><BR><div id='link'><a href='https://github.com/carpedm20/ENAS-pytorch/commit/f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7#diff-b02f719a0cadd35d51b5f18576fb2e3122a29a3f0a9ed03e6733db2b4851c2abL213' target='_blank'>Link</a></div><div id='project'> Project Name: carpedm20/ENAS-pytorch</div><div id='commit'> Commit Name: f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7</div><div id='time'> Time: 2018-03-11</div><div id='author'> Author: dukebw@mcmaster.ca</div><div id='file'> File Name: models/shared_rnn.py</div><div id='class'> Class Name: RNN</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/5f078112011a66a93432cb6d38c03935a10f382e#diff-62ccdba6294fdae2d58d248d4af399f9c0fcd90f6fa3626059a71f2e728eb196L486' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: 5f078112011a66a93432cb6d38c03935a10f382e</div><div id='time'> Time: 2020-07-10</div><div id='author'> Author: git@ameyer.me</div><div id='file'> File Name: tensorly/decomposition/candecomp_parafac.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_negative_parafac</div><BR>

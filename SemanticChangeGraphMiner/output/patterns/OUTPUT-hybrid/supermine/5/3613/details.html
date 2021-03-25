@@ -1,0 +1,21 @@
+<html><h3>a5a6e074ed792733fc2547e1544711d52659d3fd,python/tests/transformers/named_image_test.py,NamedImageTransformerBaseTestCase,test_featurization,#NamedImageTransformerBaseTestCase#,131
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        collected = transformed_df.collect()
+        for row in collected:
+            predictions = row[output_col]
+            <a id="change">self.assertEqual(len(predictions), self.appModel.numOutputFeatures())</a>
+            &#47&#47 TODO: actually check the value of the output to see if they are reasonable
+            &#47&#47 e.g. -- compare to just running with keras.
+
+    def test_featurizer_in_pipeline(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Note: keras features may be multi-dimensional np arrays, but transformer features
+        &#47&#47 will be 1-d vectors. Regardless, the dimensions should add up to the same.
+        self.assertEqual(np.prod(self.kerasFeatures.shape), np.prod(features.shape))
+        <a id="change">kerasReshaped = self.kerasFeatures.reshape(self.kerasFeatures.shape[0], -1)</a>
+        np.testing.assert_array_almost_equal(kerasReshaped, features, decimal=6)
+
+    def test_featurizer_in_pipeline(self):
+        </code></pre><img src="15908112.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/databricks/spark-deep-learning/commit/a5a6e074ed792733fc2547e1544711d52659d3fd#diff-4a33f67225bbcc775b0a8660c9cd4eee2ff69ecb77e5788a1c0bbc2073695191L132' target='_blank'>Link</a></div><div id='project'> Project Name: databricks/spark-deep-learning</div><div id='commit'> Commit Name: a5a6e074ed792733fc2547e1544711d52659d3fd</div><div id='time'> Time: 2017-07-11</div><div id='author'> Author: sueann@databricks.com</div><div id='file'> File Name: python/tests/transformers/named_image_test.py</div><div id='class'> Class Name: NamedImageTransformerBaseTestCase</div><div id='method'> Method Name: test_featurization</div><BR><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-fb89829d7674c64c7a68ae657df1dc70c71c35ffb26b03c01decf23a3b5425f2L135' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/misc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _check_inputs</div><BR><BR><div id='link'><a href='https://github.com/bethgelab/foolbox/commit/bf635f90dae66e4ddd3e1f342dca925b3c99faf7#diff-a7a04c81ff322c2d5ba15942841f0d9c820ffd9bf67d26c5c8c243d58b7e0600L35' target='_blank'>Link</a></div><div id='project'> Project Name: bethgelab/foolbox</div><div id='commit'> Commit Name: bf635f90dae66e4ddd3e1f342dca925b3c99faf7</div><div id='time'> Time: 2020-02-11</div><div id='author'> Author: git@jonasrauber.de</div><div id='file'> File Name: foolbox/attacks/binarization.py</div><div id='class'> Class Name: BinarizationRefinementAttack</div><div id='method'> Method Name: __call__</div><BR>

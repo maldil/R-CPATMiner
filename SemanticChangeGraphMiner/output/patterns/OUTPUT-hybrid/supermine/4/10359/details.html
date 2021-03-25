@@ -1,0 +1,25 @@
+<html><h3>a3a539ed60af074ea3459835c788c2e900f3d8c1,mlxtend/classifier/stacking_cv_classification.py,StackingCVClassifier,predict_meta_features,#StackingCVClassifier#,335
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    .reshape(single_model_prediction.shape[0], 1)
+            else:
+                single_model_prediction = model.predict_proba(X)
+            all_model_predictions = np.hstack(<a id="change">(all_model_predictions.
+                                               astype(single_model_prediction
+                                                      .dtype),
+                                               single_model_prediction)</a>)
+        <a id="change">return all_model_predictions</a>
+
+    def predict(self, X):
+         Predict target values for X.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            per_model_preds.append(prediction)
+
+        <a id="change">return np.hstack(per_model_preds)</a>
+
+    def _stack_first_level_features(self, X, meta_features):
+        if sparse.issparse(X):
+            stack_fn = sparse.hstack</code></pre><img src="38603503.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/a3a539ed60af074ea3459835c788c2e900f3d8c1#diff-67be3808e19ca55cb8936dde9a8ac0e5ee9d8d253b85e8f252a2935107160f15L307' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: a3a539ed60af074ea3459835c788c2e900f3d8c1</div><div id='time'> Time: 2019-03-31</div><div id='author'> Author: ackerleytng@gmail.com</div><div id='file'> File Name: mlxtend/classifier/stacking_cv_classification.py</div><div id='class'> Class Name: StackingCVClassifier</div><div id='method'> Method Name: predict_meta_features</div><BR><BR><div id='link'><a href='https://github.com/scikit-video/scikit-video/commit/fe87e2c499d4312656146c33de8c62177944b801#diff-fba9fa82943a666243430122da05cd626677c1e2ad44397dcb120884ae7e22adL129' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-video/scikit-video</div><div id='commit'> Commit Name: fe87e2c499d4312656146c33de8c62177944b801</div><div id='time'> Time: 2017-01-22</div><div id='author'> Author: tgoodall@utexas.edu</div><div id='file'> File Name: skvideo/measure/strred.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: strred</div><BR><BR><div id='link'><a href='https://github.com/Calamari-OCR/calamari/commit/8d0d0c7a6db3904f0222cbe058388a92cf21a548#diff-0f9e8b654a7c46cf2c8ae895263c5fdc34f535cb98ca949da7a7381399c2f52bL35' target='_blank'>Link</a></div><div id='project'> Project Name: Calamari-OCR/calamari</div><div id='commit'> Commit Name: 8d0d0c7a6db3904f0222cbe058388a92cf21a548</div><div id='time'> Time: 2021-02-06</div><div id='author'> Author: ChWick@users.noreply.github.com</div><div id='file'> File Name: calamari_ocr/thirdparty/ocrodeg/degrade.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: transform_image</div><BR>

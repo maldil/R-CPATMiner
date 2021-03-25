@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    with pytest.raises(IndexError):
+        expr(np.random.rand(2, 3))
+    with <a id="change">pytest.raises(ValueError)</a>:
+        expr(np.random.rand(2, 3, 4), np.random.rand(3, 4))
+    with pytest.raises(ValueError):
+        expr(np.random.rand(2, 4), np.random.rand(3, 4, 5))</code></pre><h3>After Change</h3><pre><code class='java'>
+    expr = contract_expression("ab,bc-&gt;ac", (2, 3), (3, 4))
+
+    &#47&#47 too few arguments
+    with <a id="change">pytest.raises(ValueError)</a> as err:
+        expr(np.random.rand(2, 3))
+    assert "`ContractExpression` takes exactly 2" in str(err)
+</code></pre>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 The &quot\&quots are ugly, but parenthesis are not allowed here
+        &#47&#47 fmt: off
+        with \
+            <a id="change">tqdm(unit=&quotB&quot, unit_scale=True, miniters=1, desc=path.name)</a> as t, \
+            path.open("wb") as f, \
+            urlopen(Request(url, headers={"User-agent": "scanpy-user"})) as resp:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        ) as resp:
+            resp.raise_for_status()
+            total = resp.headers.get("content-length", None)
+            with <a id="change">tqdm(
+                unit="B",
+                unit_scale=True,
+                miniters=1,
+                unit_divisor=1024,
+                total=total if total is None else int(total),
+            )</a> as t, path.open("wb") as f:
+                for chunk in resp.iter_content(chunk_size=8 * 1024):
+                    t.update(len(chunk))
+                    f.write(chunk)</code></pre>

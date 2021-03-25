@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Fake loss
+        loss_fake = criterion_GAN(D1(fake_X1.detach()), fake)
+        &#47&#47 Total loss
+        loss_D1 = <a id="change">(loss_real + loss_fake) / 2</a>
+
+        loss_D1.backward()
+        optimizer_D1.step()
+
+        &#47&#47 -----------------------
+        &#47&#47  Train Discriminator B
+        &#47&#47 -----------------------
+
+        optimizer_D2.zero_grad()
+
+        &#47&#47 Real loss
+        loss_real = <a id="change">criterion_GAN(D2(X2), valid)</a>
+        &#47&#47 Fake loss
+        loss_fake = criterion_GAN(D2(fake_X2.detach()), fake)
+        &#47&#47 Total loss
+        loss_D2 = <a id="change">(loss_real + loss_fake) / 2</a>
+
+        loss_D2.backward()
+        optimizer_D2.step()
+
+        loss_D = <a id="change">(loss_D1 + loss_D2) / 2</a>
+
+        &#47&#47 --------------
+        &#47&#47  Log Progress
+        &#47&#47 --------------</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        optimizer_D2.zero_grad()
+
+        loss_D2 =   <a id="change">criterion_GAN(D2(X2), valid) + \
+                    criterion_GAN(D2(fake_X2.detach()), fake)</a>
+
+        loss_D2.backward()
+        optimizer_D2.step()
+</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if obj:
+            return self.get_with_inst(obj, cls)
+        else:
+            <a id="change">return self.get_no_inst(cls)</a>
+
+    def get_with_inst(self, obj, cls):
+
+        overridden = getattr(super(cls, obj), self.name, None)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def __get__(self, obj, cls):
+        for parent in cls.__mro__[1:]:
+            <a id="change">overridden = getattr(parent, self.name, None)</a>
+            <a id="change">if overridden:
+                break
+
+       </a> @wraps(self.mthd, assigned=(&quot__name__&quot, &quot__module__&quot))
+        def f(*args, **kwargs):
+            if obj:
+                return self.mthd(obj, *args, **kwargs)</code></pre>

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    n_samples = len(idx_correct_label)
+    C_src = np.zeros(n_samples)
+    <a id="change">for index in range(n_samples):
+        supports_correct = supports[index][idx_correct_label[index]]
+        &#47&#47 removing index of the correct class
+        difference = supports_correct - supports[index, :]
+        difference = np.delete(difference, idx_correct_label[index])
+        C_src[index] = np.sort(difference)[0]
+   </a> return C_src
+
+
+def softmax(w, theta=1.0):</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    n_samples = len(idx_correct_label)
+    &#47&#47 Boolean mask for the correct class
+    mask = <a id="change">np.zeros(supports.shape, dtype=np.bool)</a>
+    mask[np.arange(n_samples), idx_correct_label] = True
+    &#47&#47 Get supports for the correct class
+    supports_correct = supports[mask]
+    &#47&#47 Get supports for the other classes
+    <a id="change">supports_others = supports[~mask]</a>
+    <a id="change">difference = supports_correct.reshape(-1, 1) - supports_others.reshape(supports_correct.size, -1)</a>
+    C_src = np.sort(difference, axis=1)[:, 0]
+    return C_src
+
+</code></pre>

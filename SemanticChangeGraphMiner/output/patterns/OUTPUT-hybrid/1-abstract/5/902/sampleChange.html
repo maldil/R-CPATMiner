@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    def __call__(self, inputs, target):
+        if random.random() &lt; 0.5:
+            inputs[0] = <a id="change">np.fliplr(inputs[0])</a>
+            inputs[1] = np.fliplr(inputs[1])
+            target = np.fliplr(target)
+            target[:,:,0]*=-1
+        return inputs,target</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def __call__(self, inputs, target):
+        if random.random() &lt; 0.5:
+            inputs[0] = <a id="change">np.copy(np.fliplr(inputs[0]))</a>
+            inputs[1] = np.copy(np.fliplr(inputs[1]))
+            target = np.copy(np.fliplr(target))
+            target[:,:,0]*=-1
+        return inputs,target</code></pre>

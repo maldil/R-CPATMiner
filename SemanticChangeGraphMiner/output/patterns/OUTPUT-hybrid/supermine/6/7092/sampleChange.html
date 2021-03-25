@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            ids.append(instance_id)
+            row = next(features_iter)
+            num_rows += 1
+            <a id="change">if matrix is None:
+                matrix = [row]
+            else:
+                matrix = np.vstack((matrix, row))
+           </a> if num_rows &gt;= stream_batch:
+                ids = instances_ids.get_from_ids(ids)
+                predictions = self._update_streaming_predictions(predictions,
+                                                                 matrix, ids)</code></pre><h3>After Change</h3><pre><code class='java'>
+            predictions = self._update_streaming_predictions(predictions,
+                                                             matrix, ids)
+        if num_remaining &gt; 0:
+            <a id="change">matrix = np.vstack(tuple(next(features_iter)
+                                     for _ in range(num_remaining)))</a>
+            ids = instances_ids.ids[-num_remaining:]
+            ids = instances_ids.get_from_ids(ids)
+            predictions = self._update_streaming_predictions(predictions,
+                                                             matrix, ids)</code></pre>

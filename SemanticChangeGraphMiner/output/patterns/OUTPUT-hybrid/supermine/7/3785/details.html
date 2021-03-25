@@ -1,0 +1,35 @@
+<html><h3>918b07abd405ced498513e874b6fa9e44153aa2b,chaospy/descriptives/quantity_of_interest.py,,QoI_Dist,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47sample from the inumpyut dist
+    samples = dist.sample(sample, **kws)
+
+    <a id="change">qoi_dists = []</a>
+    <a id="change">for i in range(0, len(poly)):
+        &#47&#47sample the polynomial solution
+        if dim == 1:
+            dataset = poly[i](samples)
+        else:
+            dataset = poly[i](*samples)
+
+        lo = dataset.min()
+        up = dataset.max()
+
+        &#47&#47creates qoi_dist
+        qoi_dist = SampleDist(dataset, lo, up)
+        qoi_dists.append(qoi_dist)
+
+    &#47&#47 reshape the qoi_dists to match the shape of the input poly
+   </a> if shape:
+        def reshape(lst, shape):
+            if len(shape) == 1:
+                return lst</code></pre><h3>After Change</h3><pre><code class='java'>
+    dim = len(dist)
+
+    &#47&#47sample from the input dist
+    samples = <a id="change">numpy.atleast_2d(dist.sample(sample, **kws))</a>
+    <a id="change">qoi_dist = chaospy.GaussianKDE(poly(*samples))</a>
+    return qoi_dist
+</code></pre><img src="16698908.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jonathf/chaospy/commit/918b07abd405ced498513e874b6fa9e44153aa2b#diff-ab5ecb191bcb3ce50d6d2791b59da2fb216128c487bbea1389e994055411a3feL44' target='_blank'>Link</a></div><div id='project'> Project Name: jonathf/chaospy</div><div id='commit'> Commit Name: 918b07abd405ced498513e874b6fa9e44153aa2b</div><div id='time'> Time: 2020-10-26</div><div id='author'> Author: jonathf@users.noreply.github.com</div><div id='file'> File Name: chaospy/descriptives/quantity_of_interest.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QoI_Dist</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR>

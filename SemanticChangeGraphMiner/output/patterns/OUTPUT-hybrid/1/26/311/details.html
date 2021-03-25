@@ -1,0 +1,51 @@
+<html><h3>fa6ccd7f25e838d964d3e8249a7d8a2f622581b8,skopt/optimizer/optimizer.py,Optimizer,tell,#Optimizer#,369
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 minimization starts from `n_restarts_optimizer` different
+                &#47&#47 points and the best minimum is used
+                elif self.acq_optimizer == "lbfgs":
+                    <a id="change">x0</a> = X[<a id="change">np.argsort(values)</a>]
+
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        <a id="change">results</a> = Parallel(n_jobs=self.n_jobs)(
+                            delayed(fmin_l_bfgs_b)(
+                                gaussian_acquisition_1D, x,
+                                args=(est, np.min(self.yi), cand_acq_func,
+                                      self.acq_func_kwargs),
+                                bounds=self.space.transformed_bounds,
+                                approx_grad=False,
+                                maxiter=20)
+                            for <a id="change">x</a> in x0)
+
+                    <a id="change">cand_xs</a> = np.array([r[0] for r in results])
+                    <a id="change">cand_acqs</a> = np.array([r[1] for r in results])
+                    <a id="change">next_x</a> = cand_xs[np.argmin(cand_acqs)]
+
+                &#47&#47 lbfgs should handle this but just in case there are
+                &#47&#47 precision errors.</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 minimization starts from `n_restarts_optimizer` different
+                &#47&#47 points and the best minimum is used
+                elif self.acq_optimizer == "lbfgs":
+                    <a id="change">x0</a> = X[<a id="change">np</a>.argsort(values)[:self.n_restarts_optimizer]]
+
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        <a id="change">results</a> = Parallel(n_jobs=self.n_jobs)(
+                            delayed(fmin_l_bfgs_b)(
+                                gaussian_acquisition_1D, x,
+                                args=(est, np.min(self.yi), cand_acq_func,
+                                      self.acq_func_kwargs),
+                                bounds=self.space.transformed_bounds,
+                                approx_grad=False,
+                                maxiter=20)
+                            for <a id="change">x</a> in x0)
+
+                    <a id="change">cand_xs</a> = np.array([r[0] for r in results])
+                    <a id="change">cand_acqs</a> = np.array([r[1] for r in results])
+                    <a id="change">next_x</a> = cand_xs[np.argmin(cand_acqs)]
+
+                &#47&#47 lbfgs should handle this but just in case there are
+                &#47&#47 precision errors.</code></pre><img src="1794587.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/fa6ccd7f25e838d964d3e8249a7d8a2f622581b8#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L369' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: fa6ccd7f25e838d964d3e8249a7d8a2f622581b8</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: tell</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/ff79459931a63a463bbf6defada31d4638918575#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L369' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: ff79459931a63a463bbf6defada31d4638918575</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: tell</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/df338cddc8094bdb226c7ec4cd4233ac5cffa806#diff-72366ea40dee23562110335cfb86095998829e1178c4be79b19c75ca48730732L400' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: df338cddc8094bdb226c7ec4cd4233ac5cffa806</div><div id='time'> Time: 2020-03-05</div><div id='author'> Author: rth.yurchak@pm.me</div><div id='file'> File Name: examples/linear_model/plot_poisson_regression_non_normal_loss.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _cumulated_claims</div><BR>

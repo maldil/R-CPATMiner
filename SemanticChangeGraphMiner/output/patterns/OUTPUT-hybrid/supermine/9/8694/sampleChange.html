@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            c = Counter()
+
+            <a id="change">for results in self.wrapper.query().convert()[&quotresults&quot][&quotbindings&quot]:
+
+                prop = results[&quotp&quot][&quotvalue&quot]
+
+                if &quotwiki&quot not in prop and &quotthumb&quot not in prop:
+
+                    c[prop] += 1
+
+           </a> top_10_prop = sorted(c.items(), key=operator.itemgetter(1), reverse=True)[0:10]
+
+            for p, count in top_10_prop:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        c = Counter()
+
+        <a id="change">for entity in self.entities:
+
+            query = &quotselect distinct ?p &quot \
+                         &quotwhere {{ &lt;{}&gt; ?p ?o. &quot \
+                         &quotFILTER(!isLiteral(?o) && regex(STR(?p),&quot \
+                         &quot"dbpedia.org/ontology") && !regex(STR(?p),&quot \
+                         &quot"wiki") && !regex(STR(?p),"thumb"))}} &quot.format(entity)
+
+            self.wrapper.setQuery(query)
+
+            for results in self.wrapper.query().convert()[&quotresults&quot][&quotbindings&quot]:
+
+                prop = results[&quotp&quot][&quotvalue&quot]
+
+                c[prop] += 1
+
+       </a> top_10_prop = sorted(c.items(), key=operator.itemgetter(1), reverse=True)[0:10]
+
+        for p, count in top_10_prop:
+</code></pre>

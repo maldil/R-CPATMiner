@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if on &lt; 0:
+            on = 0
+        off += border
+        <a id="change">activations.append(chunk.iloc[on:off])</a>
+
+    return activations
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        off += border
+        activation = chunk.iloc[on:off]
+        &#47&#47 throw away any activation with any NaN values
+        <a id="change">if not activation.isnull().values.any():
+            activations.append(activation)
+
+   </a> return activations
+</code></pre>

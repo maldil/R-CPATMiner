@@ -1,0 +1,23 @@
+<html><h3>784586f02d063d39360a287422a6384f30f10d12,liegroups/se3.py,SE3,wedge,#,51
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError("xi must have length 6")
+
+        return np.vstack(
+            [<a id="change">np.hstack([SO3.wedge(xi[3:7]),
+                        np.reshape(xi[0:3], (3, 1))])</a>,
+             [0, 0, 0, 0]]
+        )
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError(
+                "xi must have shape ({},) or (N,{})".format(cls.dof, cls.dof))
+
+        <a id="change">Xi</a> = <a id="change">np.zeros([xi.shape[0], cls.dim, cls.dim])</a>
+        Xi[:, 0:3, 0:3] = SO3.wedge(xi[:, 3:7])
+        <a id="change">Xi[:, 0:3, 3]</a> = <a id="change">xi[:, 0:3]</a>
+        return np.squeeze(Xi)
+
+    @classmethod
+    def vee(cls, Xi):</code></pre><img src="1215779.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-daeb16847a4515f22b7440cee4b42272a8506db0f24cbac5ab9ee347919454bdL56' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se3.py</div><div id='class'> Class Name: SE3</div><div id='method'> Method Name: wedge</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/3faab1936bb843504bf20f9d4011187f9e20cabf#diff-9084413fdb7f2b601429a9dcd0c8ef08fdcabe0d07636ae62a75107bc9ee2bc1L236' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 3faab1936bb843504bf20f9d4011187f9e20cabf</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Analyses/Aerodynamics/AVL_Inviscid.py</div><div id='class'> Class Name: AVL_Inviscid</div><div id='method'> Method Name: sample_training</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-ccc16ee38df5a402e0629acb9b8a425cf4a23d88ce6964decfdffae6ecbbe688L56' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se2.py</div><div id='class'> Class Name: SE2</div><div id='method'> Method Name: wedge</div><BR>

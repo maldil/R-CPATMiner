@@ -1,0 +1,38 @@
+<html><h3>fbec92e2363493126b4927a167039fbd037f17bc,code/deep/DAN/DAN.py,,test,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    test_loss = 0
+    correct = 0
+
+    <a id="change">for data, target in target_test_loader:
+        if cuda:
+            data, target = data.cuda(), target.cuda()
+        data, target = Variable(data, volatile=True), Variable(target)
+        s_output, t_output = model(data, data)
+        test_loss += F.nll_loss(F.log_softmax(s_output, dim = 1), target, size_average=False).data[0] &#47&#47 sum up batch loss
+        pred = s_output.data.max(1)[1] &#47&#47 get the index of the max log-probability
+        correct += pred.eq(target.data.view_as(pred)).cpu().sum()
+
+   </a> test_loss /= len_target_dataset
+    print(&quot\n{} set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n&quot.format(
+        target_name, test_loss, correct, len_target_dataset,
+        100. * correct / len_target_dataset))</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_loss = 0
+    correct = 0
+
+    <a id="change">with torch.no_grad():
+        for tgt_test_data, tgt_test_label in tgt_test_loader:
+            if cuda:
+                tgt_test_data, tgt_test_label = tgt_test_data.cuda(), tgt_test_label.cuda()
+            tgt_test_data, tgt_test_label = Variable(tgt_test_data), Variable(tgt_test_label)
+            tgt_pred, mmd_loss = model(tgt_test_data, tgt_test_data)
+            test_loss += F.nll_loss(F.log_softmax(tgt_pred, dim = 1), tgt_test_label, reduction=&quotsum&quot).item() &#47&#47 sum up batch loss
+            pred = tgt_pred.data.max(1)[1] &#47&#47 get the index of the max log-probability
+            correct += pred.eq(tgt_test_label.data.view_as(pred)).cpu().sum()
+
+   </a> test_loss /= tgt_dataset_len
+    print(&quot\n{} set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n&quot.format(
+        tgt_name, test_loss, correct, tgt_dataset_len,
+        100. * correct / tgt_dataset_len))</code></pre><img src="30725888.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/fbec92e2363493126b4927a167039fbd037f17bc#diff-60a5b36a7867a0d177899c75f4ed9876a0f468ed71674455659c3db4fe0fa752L95' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: fbec92e2363493126b4927a167039fbd037f17bc</div><div id='time'> Time: 2019-10-21</div><div id='author'> Author: 1299192934@qq.com</div><div id='file'> File Name: code/deep/DAN/DAN.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/52e09ed9ba6ce987e08334a73a1656792ef7b564#diff-06491bae57e2a6f015bb3e3139b16af62ca1f924806f91e52098a202dbd3d737L72' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 52e09ed9ba6ce987e08334a73a1656792ef7b564</div><div id='time'> Time: 2018-04-26</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/deep/DaNN/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/a5505747ac8b1f3891a63363a9b86af480452f77#diff-25ee6a30d674d627b7d9e5808b4e89c21eab33da06218734c1d39e17edf1bf3aL115' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: a5505747ac8b1f3891a63363a9b86af480452f77</div><div id='time'> Time: 2018-05-29</div><div id='author'> Author: itsayellow+dev@gmail.com</div><div id='file'> File Name: PyInstaller/building/osx.py</div><div id='class'> Class Name: BUNDLE</div><div id='method'> Method Name: assemble</div><BR>

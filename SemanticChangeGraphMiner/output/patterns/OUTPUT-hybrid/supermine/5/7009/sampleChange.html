@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    if len(sys.argv) != 3:
+        <a id="change">raise ValueError("Usage: python vis_meta.py /path/to/model.meta /path/to/log/directory")</a>
+    &#47&#47 load file
+    visualize(sys.argv[1], sys.argv[2])
+    os.system("tensorboard --logdir=" + sys.argv[2])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    args, unknown_args = parser.parse_known_args()
+
+    if not os.path.isfile(args.ckpt):
+        <a id="change">print(&quotThe checkpoint meta file does not exist.&quot)</a>
+        exit(1)
+
+    if not os.path.isdir(args.logdir):
+        print(&quotThe log directory does not exist.&quot)</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                self.save(ep)
+
+    def save(self, epoch, **kwargs):
+        <a id="change">if self.save_dir:
+            name = f"weight-{epoch}-" + "-".join([f"{k}_{v}" for k, v in kwargs.items()]) + ".pkl"
+            torch.save({"weight": self.model.state_dict()},
+                       os.path.join(self.save_dir, name))
+
+
+&#47&#47 copied from pytorch&quots master
+</a>class _LRScheduler(object):
+    def __init__(self, optimizer, last_epoch=-1):
+        if not isinstance(optimizer, Optimizer):
+            raise TypeError(&quot{} is not an Optimizer&quot.format(</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def save(self, epoch, **kwargs):
+        model_folder = "checkpoints/"
+        <a id="change">model_out_path = model_folder + "model_epoch_{}.pth".format(epoch)</a>
+        state = {"epoch": epoch, "weight": self.model.state_dict()}
+        if not os.path.exists(model_folder):
+            os.makedirs(model_folder)
+        <a id="change">torch.save(state, model_out_path)</a>
+
+
+&#47&#47 copied from pytorch&quots master
+class _LRScheduler(object):</code></pre>

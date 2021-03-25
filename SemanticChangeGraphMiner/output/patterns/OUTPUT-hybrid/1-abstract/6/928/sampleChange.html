@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :param alpha: small number for numerical stability
+        :return: y =&gt; pixel normalized activations
+        
+        <a id="change">y</a> = th.mean(<a id="change">x.pow(2.)</a>, dim=1, keepdim=True) + alpha  &#47&#47 [N1HW]
+        return x.div(y.sqrt())
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        :param alpha: small number for numerical stability
+        :return: y =&gt; pixel normalized activations
+        
+        <a id="change">y</a> = <a id="change">x</a>.pow(2.).mean(dim=1, keepdim=True).add(alpha).sqrt()  &#47&#47 [N1HW]
+        y = x / y  &#47&#47 normalize the input x volume
+        return y
+</code></pre>

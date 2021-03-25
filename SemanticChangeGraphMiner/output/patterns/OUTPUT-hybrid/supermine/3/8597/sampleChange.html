@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    else:
+        first_byte = 0
+
+    <a id="change">if first_byte &gt;= file_size:
+        return file_size
+
+   </a> header = {"Range": "bytes=%s-%s" % (first_byte, file_size)}
+    pbar = tqdm(
+        total=file_size,
+        initial=first_byte,</code></pre><h3>After Change</h3><pre><code class='java'>
+    file_size = int(urlopen(url).info().get("Content-Length", -1))
+    r = requests.get(url, stream=True)
+    with open(get_full_data_path(dst), "wb") as f:
+        <a id="change">pbar = tqdm(total=int(r.headers[&quotContent-Length&quot]))</a>
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+                pbar.update(len(chunk))</code></pre>

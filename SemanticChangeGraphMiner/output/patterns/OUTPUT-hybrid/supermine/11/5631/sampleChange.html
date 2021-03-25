@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def reshape(x, shape):
+    <a id="change">shape = tuple([C.InferredDimension if _ == C.FreeDimension else _ for _ in shape])</a>
+    if isinstance(x, C.variables.Parameter):
+        return C.reshape(x, shape)
+    else:
+        num_dynamic_axis = _get_dynamic_axis_num(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def reshape(x, shape):
+    <a id="change">shape_temp = []</a>
+    <a id="change">for _ in shape:
+        if _ == C.FreeDimension:
+            shape_temp.append(C.InferredDimension)
+        else:
+            shape_temp.append(_)
+
+   </a> shape = tuple(shape_temp)
+
+    if isinstance(x, C.variables.Parameter):
+        return C.reshape(x, shape)</code></pre>

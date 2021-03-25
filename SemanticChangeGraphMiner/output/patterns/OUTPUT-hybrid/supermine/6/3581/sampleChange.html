@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            info[&quottemplate&quot] = template
+            &#47&#47 Clean up context for better readability
+            if getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}).get(&quotSHOW_TEMPLATE_CONTEXT&quot, True):
+                <a id="change">context_data = template_data.get(&quotcontext&quot, None)</a>
+
+                context_list = []
+                <a id="change">for context_layer in context_data.dicts:
+                    if hasattr(context_layer, &quotitems&quot):
+                        for key, value in context_layer.items():
+                            &#47&#47 Replace any request elements - they have a large
+                            &#47&#47 unicode representation and the request data is
+                            &#47&#47 already made available from the Request Vars panel.
+                            if isinstance(value, http.HttpRequest):
+                                context_layer[key] = &quot&lt;&lt;request&gt;&gt;&quot
+                            &#47&#47 Replace the debugging sql_queries element. The SQL
+                            &#47&#47 data is already made available from the SQL panel.
+                            elif key == &quotsql_queries&quot and isinstance(value, list):
+                                context_layer[key] = &quot&lt;&lt;sql_queries&gt;&gt;&quot
+                            &#47&#47 Replace LANGUAGES, which is available in i18n context processor
+                            elif key == &quotLANGUAGES&quot and isinstance(value, tuple):
+                                context_layer[key] = &quot&lt;&lt;languages&gt;&gt;&quot
+                    try:
+                        context_list.append(pformat(context_layer))
+                    except UnicodeEncodeError:
+                        pass
+               </a> info[&quotcontext&quot] = &quot\n&quot.join(context_list)
+            template_context.append(info)
+
+        context = self.context.copy()</code></pre><h3>After Change</h3><pre><code class='java'>
+            info[&quottemplate&quot] = template
+            &#47&#47 Clean up context for better readability
+            if getattr(settings, &quotDEBUG_TOOLBAR_CONFIG&quot, {}).get(&quotSHOW_TEMPLATE_CONTEXT&quot, True):
+                <a id="change">context_list = template_data.get(&quotcontext&quot, [])</a>
+                info[&quotcontext&quot] = &quot\n&quot.join(context_list)
+            template_context.append(info)
+
+        context = self.context.copy()</code></pre>

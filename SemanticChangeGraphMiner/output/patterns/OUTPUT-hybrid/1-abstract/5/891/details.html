@@ -1,0 +1,21 @@
+<html><h3>39c8e82e608d79f0e06cc5e11e600015a9eb9f88,foolbox/attacks/gen_attack.py,GenAttack,apply_noise,#GenAttack#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            noise = rescale_images(noise, x.shape, channel_axis)
+
+        return <a id="change">ep.clip(noise + x, -epsilon, +epsilon)</a>
+
+    def choice(
+        self, a: int, size: Union[int, ep.TensorType], replace: bool, p: ep.TensorType
+    ) -&gt; Any:</code></pre><h3>After Change</h3><pre><code class='java'>
+            noise = rescale_images(noise, x.shape, channel_axis)
+
+        &#47&#47 clip noise to valid linf bounds
+        noise = <a id="change">ep.clip(noise, -epsilon, +epsilon)</a>
+
+        &#47&#47 clip to image bounds
+        return ep.clip(x + noise, 0.0, 1.0)
+</code></pre><img src="3879960.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 2</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bethgelab/foolbox/commit/39c8e82e608d79f0e06cc5e11e600015a9eb9f88#diff-79ffc5f2af03f9391ed4d771c082e06741b8a54b86e57acf7bdff943074086d1L70' target='_blank'>Link</a></div><div id='project'> Project Name: bethgelab/foolbox</div><div id='commit'> Commit Name: 39c8e82e608d79f0e06cc5e11e600015a9eb9f88</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 5895436+zimmerrol@users.noreply.github.com</div><div id='file'> File Name: foolbox/attacks/gen_attack.py</div><div id='class'> Class Name: GenAttack</div><div id='method'> Method Name: apply_noise</div><BR><BR><div id='link'><a href='https://github.com/theislab/scanpy/commit/f82113f76793283803e6e7b5f2493c249dbca667#diff-460c4fcebd66e64ad69bea845929b4210f41a4bacbdf02e00a767b4c59679b6fL48' target='_blank'>Link</a></div><div id='project'> Project Name: theislab/scanpy</div><div id='commit'> Commit Name: f82113f76793283803e6e7b5f2493c249dbca667</div><div id='time'> Time: 2020-10-16</div><div id='author'> Author: koncopd@gmail.com</div><div id='file'> File Name: scanpy/tests/test_filter_rank_genes_groups.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_filter_rank_genes_groups</div><BR>

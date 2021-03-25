@@ -1,0 +1,51 @@
+<html><h3>039d363c90b782900c0b2bbc96ff61b720e892fa,theanolm/src/theanolm-train.py,,train,#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                save_training_state(args.state_path)
+
+    print("Stopping because %d epochs was reached." % args.max_epochs)
+    <a id="change">validation_cost</a> = <a id="change">scorer.negative_log_probability(validation_iter)</a>
+    trainer.append_validation_cost(validation_cost)
+    if trainer.validations_since_min_cost() == 0:
+        best_params = rnnlm.get_state()
+    return best_params</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if (args.validation_interval &gt;= 1) and \
+               (trainer.total_updates % args.validation_interval == 0):
+                validation_cost = <a id="change">-scorer.score_text(validation_iter)</a>
+                if numpy.isnan(validation_cost):
+                    print("Stopping because an invalid floating point operation was performed while computing validation set cost. (Gradients exploded or vanished?)")
+                    return best_params
+                if numpy.isinf(validation_cost):
+                    print("Stopping because validation set cost exploded to infinity.")
+                    return best_params
+
+                trainer.append_validation_cost(validation_cost)
+                trainer.print_cost_history()
+                sys.stdout.flush()
+                validations_since_best = trainer.validations_since_min_cost()
+                if validations_since_best == 0:
+                    best_params = rnnlm.get_state()
+                elif (args.wait_improvement &gt;= 0) and \
+                     (validations_since_best &gt; args.wait_improvement):
+                    if validation_cost &gt;= initial_cost:
+                        args.learning_rate /= 2
+                    rnnlm.set_state(best_params)
+                    trainer.next_epoch()
+                    break
+
+            if (args.save_interval &gt;= 1) and \
+               (trainer.total_updates % args.save_interval == 0):
+                &#47&#47 Save the best parameters and the current state.
+                if not best_params is None:
+                    save_model(args.model_path, best_params)
+                save_training_state(args.state_path)
+
+    print("Stopping because %d epochs was reached." % args.max_epochs)
+    <a id="change">validation_cost</a> = <a id="change">-scorer.score_text(validation_iter)</a>
+    trainer.append_validation_cost(validation_cost)
+    if trainer.validations_since_min_cost() == 0:
+        best_params = rnnlm.get_state()
+    return best_params</code></pre><img src="807192.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/039d363c90b782900c0b2bbc96ff61b720e892fa#diff-f172508b00e01014c52dbddebb54e42740e45ec0add251b9e4b858c71fea1affL42' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: 039d363c90b782900c0b2bbc96ff61b720e892fa</div><div id='time'> Time: 2015-09-29</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/src/theanolm-train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

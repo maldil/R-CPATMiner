@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def set_pstate_frequency(min_freq = 2500, max_freq = 2500):
+    CPU_FREQ_BASE_DIR = &quot/sys/devices/system/cpu&quot
+    CPU_FREQ_FILES = ["scaling_min_freq", "scaling_max_freq", "scaling_cur_freq"]
+    cpu_dirs = <a id="change">[f for f in os.listdir(CPU_FREQ_BASE_DIR) if re.match(r&quotcpu[0-9]+&quot, f)]</a>
+    for cpu_dir in cpu_dirs:
+        full_path = os.path.join(CPU_FREQ_BASE_DIR, cpu_dir, "cpufreq")
+        freq_paths = [os.path.join(full_path, x) for x in CPU_FREQ_FILES]
+        all_exist = True</code></pre><h3>After Change</h3><pre><code class='java'>
+def set_pstate_frequency(min_freq = 2500, max_freq = 2500):
+    CPU_FREQ_BASE_DIR = &quot/sys/devices/system/cpu&quot
+    CPU_FREQ_FILES = ["scaling_min_freq", "scaling_max_freq", "scaling_cur_freq"]
+    cpu_dirs = <a id="change">["cpu" + str(cpu[0]) for cpu in parse_lscpu_cpu_core_list() if cpu[2]]</a>
+    for cpu_dir in cpu_dirs:
+        full_path = os.path.join(CPU_FREQ_BASE_DIR, cpu_dir, "cpufreq")
+        freq_paths = [os.path.join(full_path, x) for x in CPU_FREQ_FILES]
+        all_exist = True</code></pre>

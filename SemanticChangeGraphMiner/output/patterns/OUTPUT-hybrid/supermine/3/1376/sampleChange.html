@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def _generate_horizontal_text(text, font, text_color, font_size, space_width, fit):
+    image_font = ImageFont.truetype(font=font, size=font_size)
+    words = <a id="change">text.split(" ")</a>
+    space_width = image_font.getsize(" ")[0] * space_width
+
+    words_width = [image_font.getsize(w)[0] for w in words]
+    text_width = sum(words_width) + int(space_width) * (len(words) - 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+def _generate_horizontal_text(text, font, text_color, font_size, space_width, character_spacing, fit):
+    image_font = ImageFont.truetype(font=font, size=font_size)
+
+    space_width = <a id="change">int(image_font.getsize(" ")[0] * space_width)</a>
+
+    char_widths = [
+        image_font.getsize(c)[0] if c != " " else space_width for c in text
+    ]</code></pre>

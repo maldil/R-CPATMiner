@@ -1,0 +1,85 @@
+<html><h3>bcdec7cdfadef83ea07a918a973aba4220177eaf,models/AttModel.py,AttModel,_diverse_sample,#AttModel#,346
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                    &#47&#47 stop when all finished
+                    if t == 0:
+                        unfinished = <a id="change">it &gt; 0
+     </a>               else:
+                        unfinished = (seq[:,t-1] &gt; 0) & (<a id="change">it &gt; 0) &#47&#47 ch</a>anged
+                    <a id="change">it = it * unfinished.type_as(it)</a>
+                    <a id="change">seq[:,t]</a> = it
+                    seqLogprobs[:,t] = sampleLogprobs.view(-1)
+
+        return torch.stack(seq_table, 1).reshape(batch_size * group_size, -1), torch.stack(seqLogprobs_table, 1).reshape(batch_size * group_size, -1)</code></pre><h3>After Change</h3><pre><code class='java'>
+                trigrams = trigrams_table[divm]
+                if t &gt;= 0 and t &lt;= self.seq_length-1:
+                    if t == 0: &#47&#47 input &lt;bos&gt;
+                        <a id="change">it</a> = fc_feats.new_full(<a id="change">[batch_size]</a>, self.bos_idx, dtype=torch.long)
+                    else:
+                        it = seq[:, t-1] &#47&#47 changed
+
+                    logprobs, state_table[divm] = self.get_logprobs_state(it, p_fc_feats, p_att_feats, pp_att_feats, p_att_masks, state_table[divm]) &#47&#47 changed
+                    logprobs = F.log_softmax(logprobs / temperature, dim=-1)
+
+                    &#47&#47 Add diversity
+                    if divm &gt; 0:
+                        unaug_logprobs = logprobs.clone()
+                        for prev_choice in range(divm):
+                            prev_decisions = seq_table[prev_choice][:, t]
+                            logprobs[:, prev_decisions] = logprobs[:, prev_decisions] - diversity_lambda
+                    
+                    if decoding_constraint and t &gt; 0:
+                        tmp = logprobs.new_zeros(logprobs.size())
+                        tmp.scatter_(1, seq[:,t-1].data.unsqueeze(1), float(&quot-inf&quot))
+                        logprobs = logprobs + tmp
+
+                    if remove_bad_endings and t &gt; 0:
+                        tmp = logprobs.new_zeros(logprobs.size())
+                        prev_bad = np.isin(seq[:,t-1].data.cpu().numpy(), self.bad_endings_ix)
+                        &#47&#47 Impossible to generate remove_bad_endings
+                        tmp[torch.from_numpy(prev_bad.astype(&quotuint8&quot)), 0] = float(&quot-inf&quot)
+                        logprobs = logprobs + tmp
+
+                    &#47&#47 Mess with trigrams
+                    if block_trigrams and t &gt;= 3:
+                        &#47&#47 Store trigram generated at last step
+                        prev_two_batch = seq[:,t-3:t-1]
+                        for i in range(batch_size): &#47&#47 = seq.size(0)
+                            prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
+                            current  = seq[i][t-1]
+                            if t == 3: &#47&#47 initialize
+                                trigrams.append({prev_two: [current]}) &#47&#47 {LongTensor: list containing 1 int}
+                            elif t &gt; 3:
+                                if prev_two in trigrams[i]: &#47&#47 add to list
+                                    trigrams[i][prev_two].append(current)
+                                else: &#47&#47 create list
+                                    trigrams[i][prev_two] = [current]
+                        &#47&#47 Block used trigrams at next step
+                        prev_two_batch = seq[:,t-2:t]
+                        mask = torch.zeros(logprobs.size(), requires_grad=False).cuda() &#47&#47 batch_size x vocab_size
+                        for i in range(batch_size):
+                            prev_two = (prev_two_batch[i][0].item(), prev_two_batch[i][1].item())
+                            if prev_two in trigrams[i]:
+                                for j in trigrams[i][prev_two]:
+                                    mask[i,j] += 1
+                        &#47&#47 Apply mask to log probs
+                        &#47&#47logprobs = logprobs - (mask * 1e9)
+                        alpha = 2.0 &#47&#47 = 4
+                        logprobs = logprobs + (mask * -0.693 * alpha) &#47&#47 ln(1/2) * alpha (alpha -&gt; infty works best)
+
+                    it, sampleLogprobs = self.sample_next_word(logprobs, sample_method, 1)
+
+                    &#47&#47 stop when all finished
+                    if t == 0:
+                        unfinished = <a id="change">it != self.eos_idx</a>
+                    else:
+                        unfinished = seq[:,t-1] != <a id="change">self.pad_idx</a> & seq[:,t-1] != <a id="change">self.eos_idx</a>
+                        <a id="change">it[~unfinished] = self.pad_idx</a>
+                        <a id="change">unfinished = unfinished & (it != self.eos_idx)</a> &#47&#47 changed
+                    <a id="change">seq[:,t]</a> = it
+                    seqLogprobs[:,t] = sampleLogprobs.view(-1)
+
+        return torch.stack(seq_table, 1).reshape(batch_size * group_size, -1), torch.stack(seqLogprobs_table, 1).reshape(batch_size * group_size, -1)</code></pre><img src="27606437.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 19</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ruotianluo/ImageCaptioning.pytorch/commit/bcdec7cdfadef83ea07a918a973aba4220177eaf#diff-19db989ab9f9301d21cdc9066529071818266d09691a8afb0dd298eaded0b467L351' target='_blank'>Link</a></div><div id='project'> Project Name: ruotianluo/ImageCaptioning.pytorch</div><div id='commit'> Commit Name: bcdec7cdfadef83ea07a918a973aba4220177eaf</div><div id='time'> Time: 2020-04-02</div><div id='author'> Author: rluo@ttic.edu</div><div id='file'> File Name: models/AttModel.py</div><div id='class'> Class Name: AttModel</div><div id='method'> Method Name: _diverse_sample</div><BR><BR><div id='link'><a href='https://github.com/ruotianluo/ImageCaptioning.pytorch/commit/bcdec7cdfadef83ea07a918a973aba4220177eaf#diff-19db989ab9f9301d21cdc9066529071818266d09691a8afb0dd298eaded0b467L351' target='_blank'>Link</a></div><div id='project'> Project Name: ruotianluo/ImageCaptioning.pytorch</div><div id='commit'> Commit Name: bcdec7cdfadef83ea07a918a973aba4220177eaf</div><div id='time'> Time: 2020-04-02</div><div id='author'> Author: rluo@ttic.edu</div><div id='file'> File Name: models/AttModel.py</div><div id='class'> Class Name: AttModel</div><div id='method'> Method Name: _diverse_sample</div><BR><BR><div id='link'><a href='https://github.com/ruotianluo/ImageCaptioning.pytorch/commit/bcdec7cdfadef83ea07a918a973aba4220177eaf#diff-19db989ab9f9301d21cdc9066529071818266d09691a8afb0dd298eaded0b467L255' target='_blank'>Link</a></div><div id='project'> Project Name: ruotianluo/ImageCaptioning.pytorch</div><div id='commit'> Commit Name: bcdec7cdfadef83ea07a918a973aba4220177eaf</div><div id='time'> Time: 2020-04-02</div><div id='author'> Author: rluo@ttic.edu</div><div id='file'> File Name: models/AttModel.py</div><div id='class'> Class Name: AttModel</div><div id='method'> Method Name: _sample</div><BR>

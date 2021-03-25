@@ -1,0 +1,23 @@
+<html><h3>98e43878ec0e56f4bacd2960169a483af8f44c31,app/ops.py,,pit_mse_loss,#,262
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        s_loss_sets = tf.einsum(
+            &quotbij,pij-&gt;bp&quot, s_cross_loss, s_perms_onehot)
+        s_loss = tf.reduce_mean(tf.reduce_min(s_loss_sets, axis=1))
+    <a id="change">return s_loss</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            tf.square(s_x - s_y), reduce_axes)
+        s_loss_sets = tf.einsum(
+            &quotbij,pij-&gt;bp&quot, s_cross_loss, s_perms_onehot)
+        <a id="change">s_loss_sets_idx = tf.argmin(s_loss_sets, axis=1)</a>
+        s_loss = tf.gather_nd(
+            s_loss_sets,
+            <a id="change">tf.stack([
+                tf.range(hparams.BATCH_SIZE, dtype=tf.int64),
+                s_loss_sets_idx], axis=1)</a>)
+        s_loss = tf.reduce_mean(s_loss)
+    <a id="change">return s_loss, v_perms, s_loss_sets_idx</a>
+
+</code></pre><img src="7716629.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/98e43878ec0e56f4bacd2960169a483af8f44c31#diff-ea0ea38d033fc1375f8dafb66bc953ff7ac5c0b89fb6d8de7497dafa724264e8L277' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: 98e43878ec0e56f4bacd2960169a483af8f44c31</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: app/ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pit_mse_loss</div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/f31488d65a98107e03f2045f3c5e2f927dab067d#diff-3bb57a05027e7aa34f7065dc2a857bd08330e9796b9bcb759031a7b57ac3ca6eL73' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: f31488d65a98107e03f2045f3c5e2f927dab067d</div><div id='time'> Time: 2019-01-18</div><div id='author'> Author: mysteryvaibhav@gmail.com</div><div id='file'> File Name: 03-wordemb-pytorch/wordemb-skip.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_sent_loss</div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/f31488d65a98107e03f2045f3c5e2f927dab067d#diff-5c4421a462995183e36cf73be4459bcf0dfd6b31cee3ab279b3beff6d3668144L78' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: f31488d65a98107e03f2045f3c5e2f927dab067d</div><div id='time'> Time: 2019-01-18</div><div id='author'> Author: mysteryvaibhav@gmail.com</div><div id='file'> File Name: 03-wordemb-pytorch/wordemb-cbow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_sent_loss</div><BR>

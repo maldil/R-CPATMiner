@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47std = x.view(x.size(0), -1).std(1).view(*shape)
+    &#47&#47&#47&#47 work for batch size = 1
+    assert(x.size(0) == 1)
+    mean = <a id="change">x.mean()</a>
+    std = x.std()
+    x = (x - mean) / (std + self.eps)
+    if self.affine:
+      shape = [1, -1] + [1]*(x.dim() - 2)</code></pre><h3>After Change</h3><pre><code class='java'>
+  def forward(self, x):
+    shape = [-1] + [1]*(x.dim() - 1)
+    mean = x.view(x.size(0), -1).mean(1).view(*shape)
+    <a id="change">std = x.view(x.size(0), -1).std(1).view(*shape)</a>
+    &#47&#47&#47&#47 work for batch size = 1
+    &#47&#47print(x.size())
+    &#47&#47assert(x.size(0) == 1)
+    &#47&#47mean = x.mean()</code></pre>

@@ -1,0 +1,176 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                              tf.add_n(self.output_photo_discr_loss.values())
+
+            &#47&#47 Compute discriminator accuracies.
+            self.input_painting_discr_acc = {key: tf.reduce_mean(tf.cast(x=(pred &gt; <a id="change">tf.ones_like(pred)*0.5</a>),
+                                                                         dtype=tf.float32)) * scale_weight[key]
+                                             for key, pred in zip(self.input_painting_discr_predictions.keys(),
+                                                                  self.input_painting_discr_predictions.values())}
+            self.input_photo_discr_acc = {key: tf.reduce_mean(tf.cast(x=(pred &lt; <a id="change">tf.ones_like(pred)*0.5</a>),
+                                                                      dtype=tf.float32)) * scale_weight[key]
+                                          for key, pred in zip(self.input_photo_discr_predictions.keys(),
+                                                               self.input_photo_discr_predictions.values())}
+            self.output_photo_discr_acc = {key: tf.reduce_mean(tf.cast(x=(pred &lt; <a id="change">tf.ones_like(pred)*0.5</a>),
+                                                                       dtype=tf.float32)) * scale_weight[key]
+                                           for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                self.output_photo_discr_predictions.values())}
+            self.discr_acc = (tf.add_n(self.input_painting_discr_acc.values()) + \
+                              tf.add_n(self.input_photo_discr_acc.values()) + \
+                              tf.add_n(self.output_photo_discr_acc.values())) / float(len(scale_weight.keys())*3)
+
+
+            &#47&#47 Generator.
+            &#47&#47 Predicts ones for both output images.
+            self.output_photo_gener_loss = {key: self.loss(pred, tf.ones_like(pred)) * scale_weight[key]
+                                            for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                 self.output_photo_discr_predictions.values())}
+
+            self.gener_loss = tf.add_n(self.output_photo_gener_loss.values())
+
+            &#47&#47 Compute generator accuracies.
+            self.output_photo_gener_acc = {key: tf.reduce_mean(tf.cast(x=(pred &gt; tf.ones_like(pred)*0.5),
+                                                                       dtype=tf.float32)) * scale_weight[key]
+                                           for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                self.output_photo_discr_predictions.values())}
+
+            self.gener_acc = tf.add_n(self.output_photo_gener_acc.values()) / float(len(scale_weight.keys()))
+
+
+            &#47&#47 Image loss.
+            self.img_loss_photo = mse_criterion(transformer_block(self.output_photo),
+                                                transformer_block(self.input_photo))
+            self.img_loss = self.img_loss_photo
+
+            &#47&#47 Features loss.
+            self.feature_loss_photo = abs_criterion(self.output_photo_features, self.input_photo_features)
+            self.feature_loss = self.feature_loss_photo
+
+            &#47&#47 ================== Define optimization steps. =============== &#47&#47
+            t_vars = tf.trainable_variables()
+            self.discr_vars = [var for var in t_vars if &quotdiscriminator&quot in var.name]
+            self.encoder_vars = [var for var in t_vars if &quotencoder&quot in var.name]
+            self.decoder_vars = [var for var in t_vars if &quotdecoder&quot in var.name]
+
+            &#47&#47 Discriminator and generator steps.
+            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+
+            with tf.control_dependencies(update_ops):
+                self.d_optim_step = tf.train.AdamOptimizer(self.lr).minimize(
+                    loss=self.options.discr_loss_weight * self.discr_loss,
+                    var_list=[self.discr_vars])
+                self.g_optim_step = tf.train.AdamOptimizer(self.lr).minimize(
+                    loss=self.options.discr_loss_weight * self.gener_loss +
+                         self.options.transformer_loss_weight * self.img_loss +
+                         self.options.feature_loss_weight * self.feature_loss,
+                    var_list=[self.encoder_vars + self.decoder_vars])
+
+            &#47&#47 ============= Write statistics to tensorboard. ================ &#47&#47
+
+            &#47&#47 Discriminator loss summary.
+            s_d1 = [tf.summary.scalar("discriminator/input_painting_discr_loss/"+key, val)
+                    for key, val in zip(self.input_painting_discr_loss.keys(), self.input_painting_discr_loss.values())]
+            s_d2 = [tf.summary.scalar("discriminator/input_photo_discr_loss/"+key, val)
+                    for key, val in zip(self.input_photo_discr_loss.keys(), self.input_photo_discr_loss.values())]
+            s_d3 = [tf.summary.scalar("discriminator/output_photo_discr_loss/" + key, val)
+                    for key, val in zip(self.output_photo_discr_loss.keys(), self.output_photo_discr_loss.values())]
+            s_d = tf.summary.scalar("discriminator/discr_loss", self.discr_loss)
+            self.summary_discriminator_loss = tf.summary.merge(s_d1+s_d2+s_d3+[s_d])
+
+            &#47&#47 Discriminator acc summary.
+            <a id="change">s_d1_acc</a> = [tf.summary.scalar("discriminator/input_painting_discr_acc/"+key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.input_painting_discr_acc.keys(), self.input_painting_discr_acc.values())]
+            <a id="change">s_d2_acc</a> = [tf.summary.scalar("discriminator/input_photo_discr_acc/"+key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.input_photo_discr_acc.keys(), self.input_photo_discr_acc.values())]
+            <a id="change">s_d3_acc</a> = [tf.summary.scalar("discriminator/output_photo_discr_acc/" + key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.output_photo_discr_acc.keys(), self.output_photo_discr_acc.values())]
+            <a id="change">s_d_acc</a> = tf.summary.scalar("discriminator/discr_acc", self.discr_acc)
+            s_d_acc_g = tf.summary.scalar("discriminator/discr_acc", self.gener_acc)
+            self.summary_discriminator_acc = tf.summary.merge(s_d1_acc+s_d2_acc+s_d3_acc+[s_d_acc])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                                                         dtype=tf.float32)) * scale_weight[key]
+                                             for key, pred in zip(self.input_painting_discr_predictions.keys(),
+                                                                  self.input_painting_discr_predictions.values())}
+            self.input_photo_discr_acc = {key: tf.reduce_mean(tf.cast(x=(pred &lt; <a id="change">tf.zeros_like(pred)</a>),
+                                                                      dtype=tf.float32)) * scale_weight[key]
+                                          for key, pred in zip(self.input_photo_discr_predictions.keys(),
+                                                               self.input_photo_discr_predictions.values())}
+            self.output_photo_discr_acc = {key: tf.reduce_mean(tf.cast(x=(pred &lt; tf.zeros_like(pred)),
+                                                                       dtype=tf.float32)) * scale_weight[key]
+                                           for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                self.output_photo_discr_predictions.values())}
+            self.discr_acc = (tf.add_n(self.input_painting_discr_acc.values()) + \
+                              tf.add_n(self.input_photo_discr_acc.values()) + \
+                              tf.add_n(self.output_photo_discr_acc.values())) / float(len(scale_weight.keys())*3)
+
+
+            &#47&#47 Generator.
+            &#47&#47 Predicts ones for both output images.
+            self.output_photo_gener_loss = {key: self.loss(pred, tf.ones_like(pred)) * scale_weight[key]
+                                            for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                 self.output_photo_discr_predictions.values())}
+
+            self.gener_loss = tf.add_n(self.output_photo_gener_loss.values())
+
+            &#47&#47 Compute generator accuracies.
+            self.output_photo_gener_acc = {key: tf.reduce_mean(tf.cast(x=(pred &gt; tf.zeros_like(pred)),
+                                                                       dtype=tf.float32)) * scale_weight[key]
+                                           for key, pred in zip(self.output_photo_discr_predictions.keys(),
+                                                                self.output_photo_discr_predictions.values())}
+
+            self.gener_acc = tf.add_n(self.output_photo_gener_acc.values()) / float(len(scale_weight.keys()))
+
+
+            &#47&#47 Image loss.
+            self.img_loss_photo = mse_criterion(transformer_block(self.output_photo),
+                                                transformer_block(self.input_photo))
+            self.img_loss = self.img_loss_photo
+
+            &#47&#47 Features loss.
+            self.feature_loss_photo = abs_criterion(self.output_photo_features, self.input_photo_features)
+            self.feature_loss = self.feature_loss_photo
+
+            &#47&#47 ================== Define optimization steps. =============== &#47&#47
+            t_vars = tf.trainable_variables()
+            self.discr_vars = [var for var in t_vars if &quotdiscriminator&quot in var.name]
+            self.encoder_vars = [var for var in t_vars if &quotencoder&quot in var.name]
+            self.decoder_vars = [var for var in t_vars if &quotdecoder&quot in var.name]
+
+            &#47&#47 Discriminator and generator steps.
+            update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+
+            with tf.control_dependencies(update_ops):
+                self.d_optim_step = tf.train.AdamOptimizer(self.lr).minimize(
+                    loss=self.options.discr_loss_weight * self.discr_loss,
+                    var_list=[self.discr_vars])
+                self.g_optim_step = tf.train.AdamOptimizer(self.lr).minimize(
+                    loss=self.options.discr_loss_weight * self.gener_loss +
+                         self.options.transformer_loss_weight * self.img_loss +
+                         self.options.feature_loss_weight * self.feature_loss,
+                    var_list=[self.encoder_vars + self.decoder_vars])
+
+            &#47&#47 ============= Write statistics to tensorboard. ================ &#47&#47
+
+            &#47&#47 Discriminator loss summary.
+            s_d1 = [tf.summary.scalar("discriminator/input_painting_discr_loss/"+key, val)
+                    for key, val in zip(self.input_painting_discr_loss.keys(), self.input_painting_discr_loss.values())]
+            s_d2 = [tf.summary.scalar("discriminator/input_photo_discr_loss/"+key, val)
+                    for key, val in zip(self.input_photo_discr_loss.keys(), self.input_photo_discr_loss.values())]
+            s_d3 = [tf.summary.scalar("discriminator/output_photo_discr_loss/" + key, val)
+                    for key, val in zip(self.output_photo_discr_loss.keys(), self.output_photo_discr_loss.values())]
+            s_d = tf.summary.scalar("discriminator/discr_loss", self.discr_loss)
+            self.summary_discriminator_loss = tf.summary.merge(s_d1+s_d2+s_d3+[s_d])
+
+            &#47&#47 Discriminator acc summary.
+            <a id="change">s_d1_acc</a> = [tf.summary.scalar("discriminator/input_painting_discr_acc/"+key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.input_painting_discr_acc.keys(), self.input_painting_discr_acc.values())]
+            <a id="change">s_d2_acc</a> = [tf.summary.scalar("discriminator/input_photo_discr_acc/"+key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.input_photo_discr_acc.keys(), self.input_photo_discr_acc.values())]
+            <a id="change">s_d3_acc</a> = [tf.summary.scalar("discriminator/output_photo_discr_acc/" + key, val)
+                    for <a id="change">key</a>, <a id="change">val</a> in zip(self.output_photo_discr_acc.keys(), self.output_photo_discr_acc.values())]
+            <a id="change">s_d_acc</a> = tf.summary.scalar("discriminator/discr_acc", self.discr_acc)
+            s_d_acc_g = tf.summary.scalar("discriminator/discr_acc", self.gener_acc)
+            self.summary_discriminator_acc = tf.summary.merge(s_d1_acc+s_d2_acc+s_d3_acc+[s_d_acc])
+</code></pre>

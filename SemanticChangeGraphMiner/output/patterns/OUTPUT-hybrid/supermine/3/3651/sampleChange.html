@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if tau is not None:
+        survival_test = survival_test[test_time &lt; tau]
+
+    <a id="change">_</a>, _, estimate = _check_inputs(
+        test_event, test_time, estimate)
+
+    cens = CensoringDistributionEstimator()</code></pre><h3>After Change</h3><pre><code class='java'>
+    if tau is not None:
+        survival_test = survival_test[test_time &lt; tau]
+
+    estimate = <a id="change">check_array(estimate, ensure_2d=False)</a>
+    check_consistent_length(test_event, test_time, estimate)
+
+    cens = CensoringDistributionEstimator()
+    cens.fit(survival_train)</code></pre>

@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+admin.autodiscover()
+
+<a id="change">urlpatterns</a> = patterns(&quottests.views&quot,                                   &#47&#47 noqa
+    <a id="change">url(r&quot^resolving1/(.+)/(.+)/$&quot, &quotresolving_view&quot, name=&quotpositional-resolving&quot)</a>,
+    url(r&quot^resolving2/(?P&lt;arg1&gt;.+)/(?P&lt;arg2&gt;.+)/$&quot, &quotresolving_view&quot),
+    url(r&quot^resolving3/(.+)/$&quot, &quotresolving_view&quot, {&quotarg2&quot: &quotdefault&quot}),
+    url(r&quot^regular/(?P&lt;title&gt;.*)/$&quot, &quotregular_view&quot),
+    url(r&quot^non_ascii_request/$&quot, &quotregular_view&quot, {&quottitle&quot: NonAsciiRepr()}),
+    url(r&quot^new_user/$&quot, &quotnew_user&quot),
+    url(r&quot^execute_sql/$&quot, &quotexecute_sql&quot),
+    <a id="change">url(r&quot^cached_view/$&quot, &quotcached_view&quot)</a>,
+    url(r&quot^__debug__/&quot, include(debug_toolbar.urls)),
+)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+from . import views
+from .models import NonAsciiRepr
+
+<a id="change">urlpatterns</a> = [
+    <a id="change">url(r&quot^resolving1/(.+)/(.+)/$&quot, views.resolving_view, name=&quotpositional-resolving&quot)</a>,
+    url(r&quot^resolving2/(?P&lt;arg1&gt;.+)/(?P&lt;arg2&gt;.+)/$&quot, views.resolving_view),
+    url(r&quot^resolving3/(.+)/$&quot, views.resolving_view, {&quotarg2&quot: &quotdefault&quot}),
+    url(r&quot^regular/(?P&lt;title&gt;.*)/$&quot, views.regular_view),
+    url(r&quot^non_ascii_request/$&quot, views.regular_view, {&quottitle&quot: NonAsciiRepr()}),
+    url(r&quot^new_user/$&quot, views.new_user),
+    <a id="change">url(r&quot^execute_sql/$&quot, views.execute_sql)</a>,
+    url(r&quot^cached_view/$&quot, views.cached_view),
+    url(r&quot^__debug__/&quot, include(debug_toolbar.urls)),
+]</code></pre>

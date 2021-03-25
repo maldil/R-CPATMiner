@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def data_generator(data_file, index_list, batch_size=1, binary=True):
+    nb_subjects = <a id="change">len(index_list)</a>
+    while True:
+        shuffle(index_list)
+        nb_batches = nb_subjects/batch_size
+        &#47&#47 TODO: Edge case? Currently this is handled by flooring the number of training/testing samples</code></pre><h3>After Change</h3><pre><code class='java'>
+            y_list.append(data_file.root.truth[index])
+            if len(x_list) == batch_size:
+                x = np.asarray(x_list)
+                y = <a id="change">np.asarray(y_list)</a>
+                x_list = list()
+                y_list = list()
+                if binary:
+                    y[y &gt; 0] = 1</code></pre>

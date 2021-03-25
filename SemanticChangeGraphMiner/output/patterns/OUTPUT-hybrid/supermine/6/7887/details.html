@@ -1,0 +1,27 @@
+<html><h3>31832e8e8d05da9aaad1d608f7543579a2f166e6,libact/query_strategies/variance_reduction.py,VarianceReduction,Phi,#VarianceReduction#,50
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def Phi(self, pi, x, label_count, feature_count):
+        ret = 0.0
+        <a id="change">for i in range(label_count):
+            A = self.A(pi, i, x, label_count, feature_count)
+            F = self.Fisher(pi, x, label_count, feature_count)
+            ret += np.trace( np.dot(A, F) )
+       </a> return ret
+
+
+    def E(self, X, y, qx, clf, label_count):</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def Phi(self, PI, X, epi, ex, label_count, feature_count):
+        A, F = varRedu.estVar(0.000001, PI, X, epi, ex)
+        <a id="change">try:
+            ret = np.trace(np.dot(A, np.linalg.pinv(F)))
+        except:
+            print(F)
+       </a> return ret
+
+
+    def E(self, X, y, qx, clf, label_count):</code></pre><img src="30276991.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/31832e8e8d05da9aaad1d608f7543579a2f166e6#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL50' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 31832e8e8d05da9aaad1d608f7543579a2f166e6</div><div id='time'> Time: 2015-03-02</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: Phi</div><BR><BR><div id='link'><a href='https://github.com/kk7nc/RMDL/commit/5990ff004b0ba05a994edf760c229401a6cca340#diff-b7f0311182ec453924363cf8b338d28cc13e962d7ba55a9165b2db05cdf5dbdaL30' target='_blank'>Link</a></div><div id='project'> Project Name: kk7nc/RMDL</div><div id='commit'> Commit Name: 5990ff004b0ba05a994edf760c229401a6cca340</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: kk7nc@virginia.edu</div><div id='file'> File Name: src/RMDL_Image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: image_classifciation</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/tpu/commit/71900d314ad4e503f80e67b6a67be42c8b92f9ee#diff-286a74c2a4d3b5b67b5d6d06c9a0e3bee1e3d110c8ce7125c51c1649527447b4L170' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/tpu</div><div id='commit'> Commit Name: 71900d314ad4e503f80e67b6a67be42c8b92f9ee</div><div id='time'> Time: 2020-05-12</div><div id='author'> Author: pengchong@google.com</div><div id='file'> File Name: models/official/detection/executor/tpu_executor.py</div><div id='class'> Class Name: TpuExecutor</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/senarvi/theanolm/commit/e185a7110ec79864dcef5114b71356691eec39df#diff-57561c2146eb37a6099d1ace43af05873a136aad44a23380fa3faacddc71762cL61' target='_blank'>Link</a></div><div id='project'> Project Name: senarvi/theanolm</div><div id='commit'> Commit Name: e185a7110ec79864dcef5114b71356691eec39df</div><div id='time'> Time: 2016-07-16</div><div id='author'> Author: seppo.git@marjaniemi.com</div><div id='file'> File Name: theanolm/commands/sample.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample</div><BR>

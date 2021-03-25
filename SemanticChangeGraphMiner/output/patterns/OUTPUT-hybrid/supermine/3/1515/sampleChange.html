@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ])
+    def test_slice(self, x_size):
+        npt = np.array([[[1, 1, 1], [2, 2, 2]],
+                       [[3, 3, 3], <a id="change">[4, 4, 4]</a>],
+                       [[5, 5, 5], [6, 6, 6]]])
+        x_start = [1, 0, 0]
+        tft = K.constant(npt)
+        <a id="change">test_input = K.eval(K.slice(tft, x_start, x_size))</a>
+        expected = KNP.slice(npt, x_start, x_size)
+        assert np.allclose(test_input, expected)
+
+    @pytest.mark.skipif(K.backend() != &quottensorflow&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+        check_single_tensor_operation(&quotslice&quot, shape, WITH_NP,
+                                      start=start, size=size)
+        with pytest.raises(ValueError):
+            K.slice(K.variable(<a id="change">np.random.random(shape)</a>),
+                    start=[1, 0, 0, 0], size=size)
+
+    @pytest.mark.skipif(K.backend() != &quottensorflow&quot,</code></pre>

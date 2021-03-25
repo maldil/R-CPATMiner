@@ -1,0 +1,32 @@
+<html><h3>071fb5fb20683946a33f40d28af466f8e9ffc1bd,liegroups/torch/so2.py,SO2,left_jacobian,#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            s = phi[large_angle_inds].sin()
+            c = phi[large_angle_inds].cos()
+
+            A = s / <a id="change">phi[large_angle_inds]</a>
+            B = (1. - c) / phi[large_angle_inds]
+
+            jac_large_angle = phi.__class__(
+                len(large_angle_inds), cls.dim, cls.dim)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if len(large_angle_inds) &gt; 0:
+            angle = phi[large_angle_inds]
+            s = <a id="change">angle.sin()</a>
+            c = angle.cos()
+
+            A = (s / angle).unsqueeze_(dim=1).unsqueeze_(
+                dim=2).expand_as(jac[large_angle_inds]) * \
+                torch.eye(cls.dim).unsqueeze_(dim=0).expand_as(
+                jac[large_angle_inds])
+            B = <a id="change">((1. - c) / angle).unsqueeze_(dim=1).unsqueeze_(
+                dim=2).expand_as(jac[large_angle_inds]) * \
+                cls.wedge(phi.__class__([1.]))</a>
+
+            <a id="change">jac[large_angle_inds] = A + B</a>
+
+        return jac.squeeze_()
+
+    @classmethod</code></pre><img src="25035052.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/071fb5fb20683946a33f40d28af466f8e9ffc1bd#diff-3cd7be3bff916f0d48dbcfe396a9a8c08cae5d4293bef06686f5a31621c521e2L43' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 071fb5fb20683946a33f40d28af466f8e9ffc1bd</div><div id='time'> Time: 2017-10-17</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/torch/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: left_jacobian</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/359040379b6f3b8c742a9746d3709a32e454334f#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L67' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 359040379b6f3b8c742a9746d3709a32e454334f</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/bf73dfa5975c4c2e9e9870ea2e597adfde3063d8#diff-624da26aaebe4bc8d49b47fbb4c3f3127c3b1a82ae7efc2021dc01c4320f94c2L67' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: bf73dfa5975c4c2e9e9870ea2e597adfde3063d8</div><div id='time'> Time: 2019-02-07</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Components/Energy/Networks/Tilt_Rotor.py</div><div id='class'> Class Name: Tilt_Rotor</div><div id='method'> Method Name: evaluate_thrust</div><BR>

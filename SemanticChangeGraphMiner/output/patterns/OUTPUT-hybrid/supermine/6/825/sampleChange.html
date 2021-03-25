@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        if secure_js_file and not secure_js_file == &quotNone&quot:
+            &#47&#47 Always zero the configured domains before we start
+            <a id="change">self._secure_js_domains = []</a>
+            self._secure_js_file = secure_js_file
+
+            secure_js_fh = file(secure_js_file)
+            <a id="change">for domain in secure_js_fh:
+                self._secure_js_domains.append(domain.strip())
+
+            &#47&#47 Remove any duplicates
+           </a> self._secure_js_domains = list(set(self._secure_js_domains))
+
+    def get_options(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+        if secure_js_file == &quotNone&quot:
+            return
+
+        secure_js_domains = <a id="change">set()</a>
+        secure_js_domains_fh = file(secure_js_file)
+
+        for domain in secure_js_domains_fh:
+            secure_js_domains.add(domain.strip())
+
+        <a id="change">self._secure_domain_multi_in = MultiIn(secure_js_domains)</a>
+
+    def get_options(self):
+        
+        :return: A list of option objects for this plugin.</code></pre>

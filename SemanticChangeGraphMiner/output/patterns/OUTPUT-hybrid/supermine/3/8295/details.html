@@ -1,0 +1,23 @@
+<html><h3>de00082780be884fc90e0113d323bfd63006ffba,main.py,Model,train,#Model#,428
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &quottrain&quot, hparams.BATCH_SIZE * hparams.MAX_N_SIGNAL, shuffle=True)):
+                max_len = max(map(len, data_pt[0]))
+                spectra = np.stack(
+                    [np.pad(x, [(0, (-len(x))%max_len), (0,0)], mode=&quotconstant&quot) <a id="change">for</a> x in data_pt[0]])
+                spectra = np.reshape(
+                    spectra,
+                    [hparams.BATCH_SIZE, hparams.MAX_N_SIGNAL, max_len, hparams.FEATURE_SIZE])</code></pre><h3>After Change</h3><pre><code class='java'>
+            for i_batch, data_pt in enumerate(dataset.epoch(
+                    &quottrain&quot,
+                    hparams.BATCH_SIZE * hparams.MAX_N_SIGNAL, shuffle=True)):
+                to_feed = <a id="change">dict(
+                    zip(self.train_feed_keys, (
+                        np.reshape(data_pt[0], [hparams.BATCH_SIZE, hparams.MAX_N_SIGNAL, -1, hparams.FEATURE_SIZE]),
+                        hparams.DROPOUT_KEEP_PROB)))</a>
+                step_summary, step_fetch = g_sess.run(
+                    self.train_fetches, to_feed)[:2]
+                self.reset_state()
+                train_writer.add_summary(step_summary)</code></pre><img src="32098545.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L428' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/samuelclay/NewsBlur/commit/c258bbdd11d5d1a860ed4a6297f261618bfc9a9a#diff-52cc449772d678b3fb45d6e2cda479eefc66125ddf559e6ec0fe3b147b9f4e89L8' target='_blank'>Link</a></div><div id='project'> Project Name: samuelclay/NewsBlur</div><div id='commit'> Commit Name: c258bbdd11d5d1a860ed4a6297f261618bfc9a9a</div><div id='time'> Time: 2012-09-27</div><div id='author'> Author: samuel@ofbrooklyn.com</div><div id='file'> File Name: utils/munin/newsblur_tasks_times.py</div><div id='class'> Class Name: NBMuninGraph</div><div id='method'> Method Name: graph_config</div><BR><BR><div id='link'><a href='https://github.com/miso-belica/sumy/commit/41762d1d6324683d26cb9417eb89578f3c4290d4#diff-2d16017db818bb000d93da87f4977fac73938baf73164e00a0a245c911f5f24eL57' target='_blank'>Link</a></div><div id='project'> Project Name: miso-belica/sumy</div><div id='commit'> Commit Name: 41762d1d6324683d26cb9417eb89578f3c4290d4</div><div id='time'> Time: 2015-08-02</div><div id='author'> Author: jgriggs@princeton.edu</div><div id='file'> File Name: sumy/summarizers/sum_basic.py</div><div id='class'> Class Name: SumBasicSummarizer</div><div id='method'> Method Name: _compute_tf</div><BR>

@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                         self.max_grad_norm)
+                self.optimizer.step()
+
+        <a id="change">return value_loss, action_loss, dist_entropy</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        value_loss_epoch = 0
+        action_loss_epoch = 0
+        <a id="change">dist_entropy_epoch = 0</a>
+
+        for e in range(self.ppo_epoch):
+            if hasattr(self.actor_critic, &quotgru&quot):
+                data_generator = rollouts.recurrent_generator(
+                    advantages, self.num_mini_batch)
+            else:
+                data_generator = rollouts.feed_forward_generator(
+                    advantages, self.num_mini_batch)
+
+            for sample in data_generator:
+                observations_batch, states_batch, actions_batch, \
+                   return_batch, masks_batch, old_action_log_probs_batch, \
+                        adv_targ = sample
+
+                &#47&#47 Reshape to do in a single forward pass for all steps
+                values, action_log_probs, dist_entropy, states = self.actor_critic.evaluate_actions(
+                    observations_batch, states_batch,
+                    masks_batch, actions_batch)
+
+                ratio = torch.exp(action_log_probs - old_action_log_probs_batch)
+                surr1 = ratio * adv_targ
+                surr2 = torch.clamp(ratio, 1.0 - self.clip_param,
+                                           1.0 + self.clip_param) * adv_targ
+                action_loss = -torch.min(surr1, surr2).mean()
+
+                value_loss = (return_batch - values).pow(2).mean()
+
+                self.optimizer.zero_grad()
+                (value_loss * self.value_loss_coef + action_loss -
+                 dist_entropy * self.entropy_coef).backward()
+                nn.utils.clip_grad_norm_(self.actor_critic.parameters(),
+                                         self.max_grad_norm)
+                self.optimizer.step()
+
+                <a id="change">value_loss_epoch += value_loss.item()</a>
+                <a id="change">action_loss_epoch += action_loss.item()</a>
+                dist_entropy_epoch += dist_entropy.item()
+                
+        num_updates = self.ppo_epoch * self.num_mini_batch
+
+        value_loss_epoch /= num_updates
+        <a id="change">action_loss_epoch /= num_updates</a>
+        dist_entropy_epoch /= num_updates
+
+        <a id="change">return value_loss_epoch, action_loss_epoch, dist_entropy_epoch</a>
+</code></pre>

@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 TODO: add backbone peptide bonds, if they were missing
+    &#47&#47 TODO: try to better guess the types of atoms (if possible)
+
+    <a id="change">try:
+        fixed_residue = ConstrainedEmbed(template, residue)
+    except ValueError as e:
+        residue2 = SimplifyMol(Chem.Mol(residue))
+        template2 = SimplifyMol(Chem.Mol(template))
+        fixed_residue = ConstrainedEmbed(template2, residue2)
+   </a> assert fixed_residue is not None
+    matched_atoms = fixed_residue.__sssAtoms
+    assert len(matched_atoms) &gt; 0
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 TODO: add backbone peptide bonds, if they were missing
+    &#47&#47 TODO: try to better guess the types of atoms (if possible)
+
+    <a id="change">matched_atoms = template.GetSubstructMatch(residue)</a>
+    <a id="change">if matched_atoms:  &#47&#47 instead of catching ValueError
+        fixed_residue = ConstrainedEmbed(template, residue)
+    else:
+        residue2 = SimplifyMol(Chem.Mol(residue))
+        template2 = SimplifyMol(Chem.Mol(template))
+        matched_atoms = template2.GetSubstructMatch(residue2)
+        if matched_atoms:
+            fixed_residue = ConstrainedEmbed(template2, residue2)
+        else:
+            raise ValueError(&quotNo matching found at missing atom stage.&quot,
+                             template.GetProp(&quot_Name&quot),
+                             Chem.MolToSmiles(template),
+                             Chem.MolToSmiles(residue),
+                             )
+
+   </a> new_amap = []
+    for i in range(fixed_residue.GetNumAtoms()):
+        if i not in matched_atoms:
+            atom = fixed_residue.GetAtomWithIdx(i)</code></pre>

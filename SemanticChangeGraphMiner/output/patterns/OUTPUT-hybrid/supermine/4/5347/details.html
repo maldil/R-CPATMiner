@@ -1,0 +1,30 @@
+<html><h3>b2e82574eb7e7292741ece09ec9eb286e9ea4168,librosa/util/utils.py,,frame,#,35
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    if axis == -1:
+        if not x.flags[&quotF_CONTIGUOUS&quot]:
+            <a id="change">raise ParameterError(&quotInput array must be F-contiguous &quot
+                                 &quotfor framing along axis={}&quot.format(axis))</a>
+
+        shape = list(x.shape)[:-1] + [frame_length, n_frames]
+        strides = list(strides) + [hop_length * new_stride]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if hop_length &lt; 1:
+        raise ParameterError(&quotInvalid hop_length: {:d}&quot.format(hop_length))
+
+    <a id="change">if axis == -1 and not x.flags[&quotF_CONTIGUOUS&quot]:
+        warnings.warn(&quotlibrosa.util.frame called with axis={} &quot
+                      &quoton a non-contiguous input. This will result in a copy.&quot.format(axis))
+        x = np.asfortranarray(x)
+    elif axis == 0 and not x.flags[&quotC_CONTIGUOUS&quot]:
+        warnings.warn(&quotlibrosa.util.frame called with axis={} &quot
+                      &quoton a non-contiguous input. This will result in a copy.&quot.format(axis))
+        x = np.ascontiguousarray(x)
+
+   </a> n_frames = 1 + (x.shape[axis] - frame_length) // hop_length
+    strides = np.asarray(x.strides)
+
+    new_stride = np.prod(strides[strides &gt; 0] // x.itemsize) * x.itemsize</code></pre><img src="23142473.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/b2e82574eb7e7292741ece09ec9eb286e9ea4168#diff-a97ac8b25d96b026c015cf631b9f0f4c2c4405c64cfdad7afde0297c6ad5f4dcL178' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: b2e82574eb7e7292741ece09ec9eb286e9ea4168</div><div id='time'> Time: 2020-05-22</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/util/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: frame</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/cfff799d604ea57385ea2c0e49d6ed9662a38a17#diff-759fc8756ea781dada268562049019ca993108dfac4d687c4c97a830d1c4e7afL131' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: cfff799d604ea57385ea2c0e49d6ed9662a38a17</div><div id='time'> Time: 2015-07-01</div><div id='author'> Author: ebattenberg@gmail.com</div><div id='file'> File Name: librosa/core/constantq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cqt</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/d9f36b1c8bb77f6829c51987ce310831730623ba#diff-fa34127405f91de9275bf79dda0ad98d662d23508ca4c09287424c581d636159L222' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: d9f36b1c8bb77f6829c51987ce310831730623ba</div><div id='time'> Time: 2019-12-27</div><div id='author'> Author: kogito@hotmail.fr</div><div id='file'> File Name: librosa/feature/inverse.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mfcc_to_mel</div><BR>

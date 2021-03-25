@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    assert landmarks2.shape == (68, 2)
+
+    if os.name == &quotnt&quot:
+        <a id="change">true_vals = np.array([[85, 111],
+                              [84, 120],
+                              [85, 130],
+                              [87, 140],
+                              [91, 148],
+                              [98, 155],
+                              [105, 160],
+                              [113, 164],
+                              [120, 165],
+                              [126, 162]], dtype=np.int32)</a>
+
+    else:
+        true_vals = np.array([[85, 110],
+                              [85, 120],</code></pre><h3>After Change</h3><pre><code class='java'>
+    if os.name == &quotnt&quot:
+        &#47&#47 on windows, imageio parses jpgs sometimes differently so pixel values
+        &#47&#47 maybe slightly different
+        <a id="change">assert np.sum(np.abs(landmarks2[:10] - true_vals) &gt; 2) == 0</a>
+    else:
+        assert np.sum(np.abs(landmarks2[:10] - true_vals) &gt; 0) == 0
+        np.testing.assert_array_equal(landmarks2[:10], true_vals)
+</code></pre>

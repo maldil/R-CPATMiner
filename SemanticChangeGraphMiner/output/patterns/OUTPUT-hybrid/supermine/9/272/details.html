@@ -1,0 +1,21 @@
+<html><h3>e427b44f4291a663b0181b8319181f470bd9d1cd,loss.py,GeneratorAdversarialWithContentLoss,forward,#GeneratorAdversarialWithContentLoss#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, out_labels, out_images, target_images):
+        &#47&#47 Adversarial Loss
+        adversarial_loss = <a id="change">torch.mean(torch.log(1 - out_labels))</a>
+        &#47&#47 Content Loss
+        features_input = self.loss_network(out_images)
+        features_target = self.loss_network(target_images)
+        content_loss = self.mse_loss(features_input, features_target)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def forward(self, out_labels, out_images, target_images):
+        &#47&#47 Adversarial Loss
+        &#47&#47 adversarial_loss = torch.mean(torch.log(1 - out_labels))
+        adversarial_loss = <a id="change">-out_labels.mean()</a>
+        &#47&#47 Content Loss
+        features_input = self.loss_network(out_images)
+        features_target = self.loss_network(target_images)
+        content_loss = self.mse_loss(features_input, features_target)</code></pre><img src="1552007.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/e427b44f4291a663b0181b8319181f470bd9d1cd#diff-5417214fd82eddc828782e56401ffa056e917ad8ae14669fb0b704cd9dcad2bfL38' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: e427b44f4291a663b0181b8319181f470bd9d1cd</div><div id='time'> Time: 2017-12-02</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: loss.py</div><div id='class'> Class Name: GeneratorAdversarialWithContentLoss</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/675d1e61ca2cac2e6d09781e1c8406466bc32867#diff-5417214fd82eddc828782e56401ffa056e917ad8ae14669fb0b704cd9dcad2bfL17' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 675d1e61ca2cac2e6d09781e1c8406466bc32867</div><div id='time'> Time: 2017-12-02</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: loss.py</div><div id='class'> Class Name: GeneratorLoss</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/a00032aa2381eac483eb21efd7909ccc70f2f07e#diff-5417214fd82eddc828782e56401ffa056e917ad8ae14669fb0b704cd9dcad2bfL18' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: a00032aa2381eac483eb21efd7909ccc70f2f07e</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: loss.py</div><div id='class'> Class Name: GeneratorLoss</div><div id='method'> Method Name: forward</div><BR>

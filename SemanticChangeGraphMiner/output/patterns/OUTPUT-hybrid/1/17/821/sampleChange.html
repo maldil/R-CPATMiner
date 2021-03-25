@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    nP = model.get_dim("nP")
+    nI = model.get_dim("nI")
+    b = model.get_param("b")
+    <a id="change">W</a> = <a id="change">model.get_param("W")</a>
+    <a id="change">W</a> = W.reshape((nO * nP, nI))
+    <a id="change">Y</a> = model.ops.gemm(X, W, trans2=True)
+    Y += b.reshape((nO * nP,))
+    Y = Y.reshape((Y.shape[0], nO, nP))
+    best, which = model.ops.maxout(Y)</code></pre><h3>After Change</h3><pre><code class='java'>
+    nP = model.get_dim("nP")
+    nI = model.get_dim("nI")
+    b = model.get_param("b")
+    <a id="change">W</a> = <a id="change">cast(Array2d, model.get_param("W"))</a>
+    <a id="change">W</a> = W.reshape((nO * nP, nI))
+    <a id="change">Y</a> = model.ops.gemm(X, W, trans2=True)
+    Y += b.reshape((nO * nP,))
+    Y = Y.reshape((Y.shape[0], nO, nP))
+    best, which = model.ops.maxout(Y)</code></pre>

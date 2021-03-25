@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if xi.size != 6:
+            raise ValueError("xi must have size 6")
+
+        <a id="change">return cls(SO3.exp(xi[3:6]), xi[0:3])</a>
+
+    def log(self):
+        Logarithmic map for SE(3)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if xi.size != 6:
+            raise ValueError("xi must have size 6")
+
+        <a id="change">rho = xi[0:3]</a>
+        phi = xi[3:6]
+        <a id="change">return cls(SO3.exp(phi), SO3.left_jacobian(phi).dot(rho))</a>
+
+    def log(self):
+        Logarithmic map for SE(3)
+</code></pre>

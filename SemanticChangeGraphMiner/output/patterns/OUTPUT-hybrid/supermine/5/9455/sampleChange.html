@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def measure(self, line):
+        h, w = line.shape
+        smoothed = filters.gaussian_filter(line, <a id="change">(h * 0.5, h * self.smoothness)</a>, mode=&quotconstant&quot)
+        smoothed += 0.001 * filters.uniform_filter(smoothed, (h * 0.5, w), mode=&quotconstant&quot)
+        a = np.argmax(smoothed, axis=0)
+        a = filters.gaussian_filter(a, h * self.extra)
+        <a id="change">center = np.array(a, &quoti&quot)</a>
+        deltas = abs(np.arange(h)[:, np.newaxis] - center[np.newaxis, :])
+        mad = np.mean(deltas[line != 0])
+        r = int(1 + self.range * mad)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                   borderType=cv.BORDER_CONSTANT)
+        smoothed += .001 * cv.blur(smoothed, (w, int(h*.5)), borderType=cv.BORDER_CONSTANT)
+
+        a = <a id="change">np.argmax(smoothed, axis=0).astype(np.uint16)</a>
+        kernel = cv.getGaussianKernel(int((8.*h*self.extra)+1), h*self.extra)
+        <a id="change">center = cv.filter2D(a, cv.CV_16U, kernel, borderType=cv.BORDER_REFLECT).flatten()</a>
+
+        deltas = abs(np.arange(h)[:, np.newaxis] - center[np.newaxis, :])
+        mad = np.mean(deltas[line != 0])
+        r = int(1 + self.range * mad)</code></pre>

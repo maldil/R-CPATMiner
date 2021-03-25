@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dat = demean(dat)
+
+    &#47&#47 TODO: Add isclose checking here
+    <a id="change">assert True</a>
+
+def test_normalize_variance():
+
+    dat = np.array([2, 2, 2])</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_demean():
+
+    d1 = np.array([1, 2, 3])
+    d2 = <a id="change">np.array([0, 1, 2, 3, 0])</a>
+
+    &#47&#47 Check default - demean to 0
+    out1 = demean(d1)
+    assert np.isclose(out1.mean(), 0.)
+
+    &#47&#47 Check demeaning and adding specific mean
+    out2 = demean(d1, mean=1.)
+    assert np.isclose(out2.mean(), 1.)
+
+    &#47&#47 Check dealing with zero entries
+    <a id="change">out3 = demean(d2)</a>
+    assert np.isclose(out3[np.nonzero(out3)].mean(), 0)
+
+    &#47&#47 Check turning of non-zero selection
+    out3 = demean(d2, mean=1, select_nonzero = False)</code></pre>

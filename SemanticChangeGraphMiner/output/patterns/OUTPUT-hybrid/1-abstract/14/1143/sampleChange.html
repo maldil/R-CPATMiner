@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    X = np.random.randn(10, 100)
+
+    &#47&#47 Build a recurrence matrix, just for testing purposes
+    <a id="change">rec</a> = <a id="change">librosa</a>.segment.recurrence_matrix(X, sparse=True).astype(np.float)
+
+    <a id="change">X_filtered</a> = librosa.decompose.nn_filter(X, rec=rec)
+
+    &#47&#47 Normalize the recurrence matrix
+    <a id="change">rec</a> = librosa.util.normalize(rec.toarray(), axis=1, norm=1)
+    assert np.allclose(X_filtered, (X.dot(rec.T)))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    X = np.random.randn(10, 100)
+
+    &#47&#47 Build a recurrence matrix, just for testing purposes
+    <a id="change">rec</a> = <a id="change">librosa.segment.recurrence_matrix(X, sparse=True)</a>
+
+    <a id="change">X_filtered</a> = librosa.decompose.nn_filter(X, rec=rec)
+
+    &#47&#47 Normalize the recurrence matrix
+    <a id="change">rec</a> = librosa.util.normalize(rec.toarray().astype(np.float), axis=1, norm=1)
+    assert np.allclose(X_filtered, (X.dot(rec.T)))
+
+</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>74cf61bdaa5b61b8a61fb3115eb6c664a5dcf955,tests/test_printing.py,,test_leaf_components_registers_compose_kernel_variable_properties,#,224
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_leaf_components_registers_compose_kernel_variable_properties(module_callable, expected_param_dicts):
+    module = module_callable()
+    for path, variable in leaf_components(module).items():
+        param_name = path.split(&quot.&quot)[-3] + &quot.&quot + <a id="change">path</a>.split(<a id="change">&quot.&quot</a>)[-2] + &quot.&quot + path.split(&quot.&quot)[-1]
+        assert isinstance(variable, gpflow.Parameter)
+        np.testing.assert_equal(variable.value().numpy(), expected_param_dicts[param_name][&quotvalue&quot])
+        assert variable.trainable == expected_param_dicts[param_name][&quottrainable&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_leaf_components_registers_compose_kernel_variable_properties(module_callable, expected_param_dicts):
+    module = module_callable()
+    leaf_components_dict = leaf_components(module)
+    <a id="change">assert len(leaf_components_dict) &gt; 0</a>
+    for path, variable in leaf_components_dict.items():
+        path_as_list = path.split(&quot.&quot)
+        param_name = path_as_list[-3] + &quot.&quot + path_as_list[-2] + &quot.&quot + path_as_list[-1]
+        assert isinstance(variable, gpflow.Parameter)</code></pre><img src="27775167.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GPflow/GPflow/commit/74cf61bdaa5b61b8a61fb3115eb6c664a5dcf955#diff-bfdb764389cad704e719d2b5bece253a7b13faf5e12bb001f60eaf4d356f2ad3L226' target='_blank'>Link</a></div><div id='project'> Project Name: GPflow/GPflow</div><div id='commit'> Commit Name: 74cf61bdaa5b61b8a61fb3115eb6c664a5dcf955</div><div id='time'> Time: 2019-10-07</div><div id='author'> Author: sergio.diaz@prowler.io</div><div id='file'> File Name: tests/test_printing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_leaf_components_registers_compose_kernel_variable_properties</div><BR><BR><div id='link'><a href='https://github.com/undertheseanlp/underthesea/commit/89ad361f08dca73d8f94608c99c729e9987a011d#diff-dc434dc9f90f0c7cfcc6a2bb9dfdb9b163cca4b1f060dece2c4db7254053f8b5L38' target='_blank'>Link</a></div><div id='project'> Project Name: undertheseanlp/underthesea</div><div id='commit'> Commit Name: 89ad361f08dca73d8f94608c99c729e9987a011d</div><div id='time'> Time: 2017-10-11</div><div id='author'> Author: brother.rain.1024@gmail.com</div><div id='file'> File Name: tests/chunking/test_chunk.py</div><div id='class'> Class Name: TestChunk</div><div id='method'> Method Name: test_accuracy</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/4b91143f8848e0df40955163ad851603dd12e70a#diff-ae46e2ecfd87397ededbcc9043b9b8e5703b9fdce3c010fe4d2e5500558c02d1L24' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 4b91143f8848e0df40955163ad851603dd12e70a</div><div id='time'> Time: 2020-06-15</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: iam/api-client/service_accounts_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_service_accounts</div><BR>

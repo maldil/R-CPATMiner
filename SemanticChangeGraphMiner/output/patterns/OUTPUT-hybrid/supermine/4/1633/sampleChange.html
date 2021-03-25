@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    shape = dcm_array.shape[::-1]
+    &#47&#47 Write the numpy array to a file, so there is no need to keep it in memory
+    &#47&#47 anymore. Then create a SimpleITK image from it.
+    <a id="change">with tempfile.NamedTemporaryFile() as temp:
+        temp.seek(0)
+        temp.write(dcm_array.tobytes())
+        temp.flush()
+        temp.seek(0)
+
+        del dcm_array
+
+        img = SimpleITK.Image(shape, sitk_dtype, 1)
+        SimpleITK._SimpleITK._SetImageFromArray(temp.read(), img)
+
+   </a> return img
+
+
+def image_builder_dicom(</code></pre><h3>After Change</h3><pre><code class='java'>
+            pixel_array = ds.pixel_array
+
+        if (
+            <a id="change">len(pixel_array.shape)</a> == dimensions
+            or pixel_array.shape == pixel_dims
+        ):
+            use_pixel_array = True</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        normalized_flow_map = flow_map / (np.abs(flow_map).max())
+    rgb_map[:,:,0] += normalized_flow_map[0]
+    rgb_map[:,:,1] -= 0.5*(normalized_flow_map[0] + normalized_flow_map[1])
+    rgb_map[<a id="change">:,:,2</a>] += normalized_flow_map[1]
+    return rgb_map.clip(0,1)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def flow2rgb(flow_map, max_value):
+    <a id="change">flow_map_np = flow_map.detach().cpu().numpy()</a>
+    _, h, w = flow_map_np.shape
+    flow_map_np[:,(flow_map_np[0] == 0) & (flow_map_np[1] == 0)] = float(&quotnan&quot)
+    rgb_map = np.ones((3,h,w)).astype(np.float32)
+    if max_value is not None:</code></pre>

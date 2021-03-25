@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            ask_idx = self.invert_id_idx[ask_id]
+
+            rhat[ask_idx] = reward / p[ask_idx]
+            <a id="change">for i in range(self.N):
+                yhat[i] = np.dot(advice[i], rhat)
+                vhat[i] = np.sum(advice[i] / p)
+
+                self.w[i] = self.w[i] * np.exp(
+                        self.pmin / 2 * (yhat[i] + vhat[i]*np.sqrt(
+                            np.log(self.N/self.delta) / self.K / self.T)
+                            )
+                        )
+
+           </a> self.t += 1
+
+        raise StopIteration
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47                np.log(self.N/self.delta) / self.K / self.T)
+            &#47&#47                )
+            &#47&#47            )
+            yhat = <a id="change">np.dot(advice, rhat)</a>
+            vhat = np.sum(advice / np.tile(p, (self.N, 1)), axis=1)
+            self.w = self.w * np.exp(
+                    self.pmin / 2 * (yhat + vhat*np.sqrt(
+                        np.log(self.N/self.delta) / self.K / self.T)</code></pre>

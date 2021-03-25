@@ -1,0 +1,22 @@
+<html><h3>b7693e8420c63bcd7544ee1bc9c2a733408a2794,nilmtk/metergroup.py,MeterGroup,prepare_for_disaggregation,#MeterGroup#,290
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def prepare_for_disaggregation(self, rule=&quot1T&quot):
+        mains = self.mains()
+        mains_good_sections = mains.good_sections().combined
+        mains_energy = <a id="change">mains.total_energy(periods=mains_good_sections)</a>
+        <a id="change">energy_threshold</a> = mains_energy * 0.05
+
+        &#47&#47 TODO: should iterate through &quotmost distal&quot meters
+        for submeter in self.meters_directly_downstream_of_mains():</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        mains = self.mains()
+        mains_good_sections = mains.good_sections().combined
+        mains_energy = <a id="change">mains.total_energy(periods=mains_good_sections).combined</a>
+        energy_ac_type = select_best_ac_type(mains_energy.keys())
+        <a id="change">energy_threshold</a> = mains_energy[energy_ac_type] * 0.05
+
+        &#47&#47 TODO: should iterate through &quotmost distal&quot meters
+        for submeter in self.meters_directly_downstream_of_mains():</code></pre><img src="3613063.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/b7693e8420c63bcd7544ee1bc9c2a733408a2794#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL293' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: b7693e8420c63bcd7544ee1bc9c2a733408a2794</div><div id='time'> Time: 2014-05-22</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: prepare_for_disaggregation</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/53c72d947033eb10fe8a41c1266c4ada8e996be3#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L51' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 53c72d947033eb10fe8a41c1266c4ada8e996be3</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: error_in_assigned_energy</div><BR>

@@ -1,0 +1,34 @@
+<html><h3>2ee8ac1546400645908b61ef015cdf5d71aa34cc,models.py,YOLOLayer,forward,#YOLOLayer#,131
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 Get conf mask where gt and where there is no gt
+            conf_mask_true = mask
+            conf_mask_false = <a id="change">conf_mask - mask</a>
+
+            &#47&#47 Mask outputs to ignore non-existing objects
+            loss_x = self.mse_loss(x[mask], tx[mask])
+            loss_y = self.mse_loss(y[mask], ty[mask])
+            loss_w = self.mse_loss(w[mask], tw[mask])
+            loss_h = self.mse_loss(h[mask], th[mask])
+            loss_conf = <a id="change">self.bce_loss(pred_conf[conf_mask_false], tconf[conf_mask_false]) + self.bce_loss(
+                pred_conf[conf_mask_true], tconf[conf_mask_true]
+            )</a>
+            loss_cls = self.ce_loss(pred_cls[mask], tcls[mask].argmax(1))
+            <a id="change">loss</a> = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
+
+            cls_acc = (pred_cls[mask].argmax(1) == tcls[mask].argmax(1)).float().mean().item()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            loss_w = self.mse_loss(w[obj_mask], tw[obj_mask])
+            loss_h = self.mse_loss(h[obj_mask], th[obj_mask])
+            loss_conf_obj = self.bce_loss(pred_conf[obj_mask], tconf[obj_mask])
+            <a id="change">loss_conf_noobj</a> = <a id="change">self.bce_loss(pred_conf[noobj_mask], tconf[noobj_mask])</a>
+            loss_conf = <a id="change">loss_conf_obj + loss_conf_noobj</a>
+            loss_cls = self.ce_loss(pred_cls[obj_mask], tcls[obj_mask].argmax(1))
+
+            <a id="change">loss</a> = loss_x + loss_y + loss_w + loss_h + loss_conf + loss_cls
+
+            cls_acc = (pred_cls[obj_mask].argmax(1) == tcls[obj_mask].argmax(1)).float().mean().item()
+</code></pre><img src="2618791.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL174' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: YOLOLayer</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/1ea81699d516c6847542b04c8afaf5eb9f6a0954#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL176' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 1ea81699d516c6847542b04c8afaf5eb9f6a0954</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: YOLOLayer</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-dcfeaa5ac3dffd54264034760914588d92fc7395c81eaa9274715840dc28100bL174' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: models.py</div><div id='class'> Class Name: YOLOLayer</div><div id='method'> Method Name: forward</div><BR>

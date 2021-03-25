@@ -1,0 +1,34 @@
+<html><h3>7d7aed37d843059248aeb3682331e92d2f019540,transformer/SubLayers.py,MultiHeadAttention,__init__,#MultiHeadAttention#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.d_v = d_v
+
+        self.w_qs = nn.Parameter(torch.FloatTensor(n_head, d_model, d_k))
+        <a id="change">self.w_ks</a> = <a id="change">nn.Parameter(torch.FloatTensor(n_head, d_model, d_k))</a>
+        self.w_vs = nn.Parameter(torch.FloatTensor(n_head, d_model, d_v))
+
+        self.attention = ScaledDotProductAttention(d_model)
+        self.layer_norm = LayerNormalization(d_model)
+        self.proj = Linear(n_head*d_v, d_model)
+
+        self.dropout = nn.Dropout(dropout)
+
+        init.xavier_normal(self.w_qs)
+        <a id="change">init.xavier_normal(self.w_ks)</a>
+        init.xavier_normal(self.w_vs)
+
+    def forward(self, q, k, v, attn_mask=None):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.d_v = d_v
+
+        self.w_qs = nn.Linear(d_model, n_head * d_k)
+        <a id="change">self.w_ks</a> = <a id="change">nn.Linea</a>r(d_model, n_head * d_k)
+        self.w_vs = nn.Linear(d_model, n_head * d_v)
+        nn.init.xavier_normal_(self.w_qs.weight)
+        <a id="change">nn.init.xavier_normal_(self.w_ks.weight)</a>
+        nn.init.xavier_normal_(self.w_vs.weight)
+
+        self.attention = ScaledDotProductAttention(temperature=np.power(d_model, 0.5))
+        self.layer_norm = LayerNormalization(d_model)</code></pre><img src="789032.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/7d7aed37d843059248aeb3682331e92d2f019540#diff-c2e6f2d92a3d68833db6c545e5d53b5f7850998e08effd9bfdd299a0a944d4d8L15' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 7d7aed37d843059248aeb3682331e92d2f019540</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/SubLayers.py</div><div id='class'> Class Name: MultiHeadAttention</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/7d7aed37d843059248aeb3682331e92d2f019540#diff-c2e6f2d92a3d68833db6c545e5d53b5f7850998e08effd9bfdd299a0a944d4d8L16' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 7d7aed37d843059248aeb3682331e92d2f019540</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/SubLayers.py</div><div id='class'> Class Name: MultiHeadAttention</div><div id='method'> Method Name: __init__</div><BR>

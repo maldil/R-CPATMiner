@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    size = imagedata.GetDimensions()
+
+    width = float(size[0])
+    height = <a id="change">float(size[1]/value)</a>
+
+    <a id="change">resolution = (height/(extent[1]-extent[0])+1)*spacing[1]</a>
+
+    resample = vtk.vtkImageResample()
+    resample.SetInput(imagedata)
+    resample.SetAxisMagnificationFactor(0, resolution)</code></pre><h3>After Change</h3><pre><code class='java'>
+    extent = imagedata.GetExtent()
+    spacing = imagedata.GetSpacing()
+
+    <a id="change">if extent[1]==extent[3]:
+        f = extent[1]
+        x = 0
+        y = 1
+
+    elif extent[1]==extent[5]:
+        f = extent[1]
+        x=0
+        y=2
+
+    elif extent[3]==extent[5]:
+        f = extent[3]
+        x = 1
+        y = 2
+
+   </a> factor = xy_dimension/float(f+1)
+    
+    resample = vtk.vtkImageResample()
+    resample.SetInput(imagedata)</code></pre>

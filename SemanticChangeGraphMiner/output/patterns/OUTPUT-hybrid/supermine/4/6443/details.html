@@ -1,0 +1,23 @@
+<html><h3>b46c893e2c0f9cd505b597c2ff215a0df04b6050,lifelines/fitters/npmle.py,,log_likelihood,#,171
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def log_likelihood(observation_intervals, p, turnbull_interval_lookup, weights):
+
+    ll = 0
+    <a id="change">for observation_interval, w in zip(observation_intervals, weights):
+        min_, max_ = turnbull_interval_lookup[observation_interval]
+        ll += w * np.log(p[min_ : max_ + 1].sum())
+   </a> return ll
+
+
+def reconstruct_survival_function(probabilities, turnbull_intervals, timeline=None, label="NPMLE"):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def log_likelihood(p, turnbull_interval_lookup, weights):
+    P = cumulative_sum(p)
+    <a id="change">ix = np.array(list(turnbull_interval_lookup.values()))</a>
+    return (weights * np.log(P[ix[:, 1] + 1] - P[ix[:, 0]])).sum()
+
+
+def reconstruct_survival_function(probabilities, turnbull_intervals, timeline=None, label="NPMLE"):</code></pre><img src="25620695.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b46c893e2c0f9cd505b597c2ff215a0df04b6050#diff-05a01ce0503407dc9169caee0a0fdf0a97d6724ba90ef37b32beff27304e65fbL173' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b46c893e2c0f9cd505b597c2ff215a0df04b6050</div><div id='time'> Time: 2020-05-19</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_likelihood</div><BR><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/d7b2db3c5262c82c44958afc2500efe0838f0884#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L556' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: d7b2db3c5262c82c44958afc2500efe0838f0884</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _update_edge_keys</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b649cc365040d9cd63631c763d1c485dfe981399#diff-5b86956216e2540fe93140c9ea516d9c8e0128b81b963bf585456505e871c98dL128' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b649cc365040d9cd63631c763d1c485dfe981399</div><div id='time'> Time: 2020-05-11</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: experiments/working_npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/DistrictDataLabs/yellowbrick/commit/b3256666df69e645159c8ef91fb3e4bfd826b8de#diff-a9d3bfb3cacb0995519ef579c7a2c201219a9b886dcc825bd6cb580ee3c63de4L91' target='_blank'>Link</a></div><div id='project'> Project Name: DistrictDataLabs/yellowbrick</div><div id='commit'> Commit Name: b3256666df69e645159c8ef91fb3e4bfd826b8de</div><div id='time'> Time: 2018-06-05</div><div id='author'> Author: lwgray@gmail.com</div><div id='file'> File Name: yellowbrick/classifier/classification_report.py</div><div id='class'> Class Name: ClassificationReport</div><div id='method'> Method Name: score</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/544875dd8a7fea49a86e5623d37274159b4ba7b5#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL159' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 544875dd8a7fea49a86e5623d37274159b4ba7b5</div><div id='time'> Time: 2017-01-10</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR>

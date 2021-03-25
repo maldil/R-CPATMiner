@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        if self.predict_vector is None or self.actual_vector is None:
+            raise pycmVectorError(VECTOR_ONLY_ERROR)
+        <a id="change">classes = set.union(set(self.predict_vector), set(self.actual_vector))</a>
+        if self.positions is None:
+            positions = {self.label_map[_class] : {&quotTP&quot:[], &quotFP&quot:[], &quotTN&quot:[], &quotFN&quot:[]} for _class in classes}
+            predict_vector = self.predict_vector
+            actual_vector = self.actual_vector</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.predict_vector is None or self.actual_vector is None:
+            raise pycmVectorError(VECTOR_ONLY_ERROR)
+        if self.positions is None:
+            <a id="change">classes = list(self.label_map.keys())</a>
+            positions = {self.label_map[_class] : {&quotTP&quot:[], &quotFP&quot:[], &quotTN&quot:[], &quotFN&quot:[]} for _class in classes}
+            [actual_vector, predict_vector] = vector_filter(self.actual_vector, self.predict_vector)
+            for index, observation in enumerate(predict_vector):
+                for _class in classes:</code></pre>

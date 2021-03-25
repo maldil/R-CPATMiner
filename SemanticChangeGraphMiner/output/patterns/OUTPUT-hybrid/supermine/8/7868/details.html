@@ -1,0 +1,23 @@
+<html><h3>2ee8ac1546400645908b61ef015cdf5d71aa34cc,utils/datasets.py,,pad_to_square,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    h, w = image_np.shape[:2]
+    dim_diff = np.abs(h - w)
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    new_shape = <a id="change">(max([h, w]), max([h, w]), 3)</a>
+    padded_image = np.full(new_shape, constant_value, dtype=np.float32)
+    if h &lt; w:
+        padded_image[pad1 : pad1 + h, :] = image_np
+        padding = (0, pad1, 0, pad2)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Upper (left) and lower (right) padding
+    pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+    &#47&#47 Determine padding
+    pad = ((pad1, pad2), (0, 0), (0, 0)) if h &lt;= w else <a id="change">((0, 0), (pad1, pad2), (0, 0))</a>
+    &#47&#47 Add padding
+    <a id="change">img = np.pad(img, pad, "constant", constant_values=127.5)</a>
+    return img, pad
+
+
+class ImageFolder(Dataset):</code></pre><img src="30216140.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L21' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_to_square</div><BR><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/396303a7b84fe4f8b304a5878c487ff0b3a16097#diff-f656be4a1ec4df1b52d8d646b5d94252e036bd7e153fda7fc9ef6416695dc7f9L306' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: 396303a7b84fe4f8b304a5878c487ff0b3a16097</div><div id='time'> Time: 2017-07-08</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/sequence/representations.py</div><div id='class'> Class Name: CNNNet</div><div id='method'> Method Name: user_representation</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/f947b1479e76dbeee06400e8d97b23bf64d0c8ff#diff-c563295221637cd185ffad4213ba15b18af223d9a21c646b65ab7b8dc29c7062L134' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: f947b1479e76dbeee06400e8d97b23bf64d0c8ff</div><div id='time'> Time: 2013-11-21</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/segment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: structure_feature</div><BR>

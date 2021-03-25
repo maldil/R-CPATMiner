@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+             "RSN_HC_unthresholded_tmaps.nii",
+             "rest_hcp_agg__component_ica_.nii"]
+
+    labels = <a id="change">{&quotBasal Ganglia&quot: [21],
+              &quotAuditory&quot: [17],
+              &quotSensorimotor&quot: [7, 23, 24, 38, 56, 29],
+              &quotVisual&quot: [46, 64, 67, 48, 39, 59],
+              &quotDefault-Mode&quot: [50, 53, 25, 68],
+              &quotAttentional&quot: [34, 60, 52, 72, 71, 55],
+              &quotFrontal&quot: [42, 20, 47, 49],
+              }</a>
+
+    filenames = [(f, url + f, opts) for f in files]
+
+    data_dir = _get_dataset_dir(dataset_name, data_dir=data_dir,</code></pre><h3>After Change</h3><pre><code class='java'>
+             "RSN_HC_unthresholded_tmaps.nii",
+             "rest_hcp_agg__component_ica_.nii"]
+
+    labels = <a id="change">[(&quotBasal Ganglia&quot, [21]),
+              (&quotAuditory&quot, [17]),
+              (&quotSensorimotor&quot, [7, 23, 24, 38, 56, 29]),
+              (&quotVisual&quot, [46, 64, 67, 48, 39, 59]),
+              (&quotDefault-Mode&quot, [50, 53, 25, 68]),
+              (&quotAttentional&quot, [34, 60, 52, 72, 71, 55]),
+              (&quotFrontal&quot, [42, 20, 47, 49])]</a>
+
+    <a id="change">networks = [[name] * len(idxs) for name, idxs in labels]</a>
+
+    filenames = [(f, url + f, opts) for f in files]
+
+    data_dir = _get_dataset_dir(dataset_name, data_dir=data_dir,
+                                verbose=verbose)
+    sub_files = _fetch_files(data_dir, filenames, resume=resume,
+                             verbose=verbose)
+
+    fdescr = _get_dataset_descr(dataset_name)
+
+    params = [(&quotdescription&quot, fdescr),
+              (&quotrsn_indices&quot, labels),
+              (&quotnetworks&quot, networks)]
+    <a id="change">params.extend(list(zip(keys, sub_files)))</a>
+
+    return Bunch(**dict(params))
+</code></pre>

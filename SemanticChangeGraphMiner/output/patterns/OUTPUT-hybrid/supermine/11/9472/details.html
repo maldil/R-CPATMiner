@@ -1,0 +1,26 @@
+<html><h3>6acc103ea1f132846020209c3eff5646077e55cd,src/plugin.py,EmbeddingRegularizer,__init__,#EmbeddingRegularizer#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.dim = emb_dim
+
+            if bert is not None:
+                <a id="change">if not isinstance(bert, (tuple, list)) or len(bert) != 2:
+                    raise ValueError("`bert` should be a tuple/list of config and fine-tuned model "
+                                     "such as (\"bert-base-uncased\", \"fine-tuned-model.pth\").")
+               </a> self.emb_table = BertEmbeddingPredictor(
+                    bert[0], text_encoder, bert[1])
+            else:
+                self.emb_table = nn.Embedding.from_pretrained(</code></pre><h3>After Change</h3><pre><code class='java'>
+        if enable:
+            if bert is not None:
+                self.use_bert = True
+                <a id="change">if not isinstance(bert, str):
+                    raise ValueError("`bert` should be a str specifying bert config such as \"bert-base-uncased\".")
+               </a> self.emb_table = BertEmbeddingPredictor(bert, tokenizer, src)
+                <a id="change">vocab_size, emb_dim = self.emb_table.model.bert.embeddings.word_embeddings.weight.shape</a>
+                vocab_size = vocab_size-3 &#47&#47 cls,sep,mask not used
+                self.dim = emb_dim
+            else:
+                self.use_bert = False</code></pre><img src="36213742.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Alexander-H-Liu/End-to-end-ASR-Pytorch/commit/6acc103ea1f132846020209c3eff5646077e55cd#diff-834f0679bc61d0427df924d74c20767d5b8fa62227d824361dd81555df6f6725L10' target='_blank'>Link</a></div><div id='project'> Project Name: Alexander-H-Liu/End-to-end-ASR-Pytorch</div><div id='commit'> Commit Name: 6acc103ea1f132846020209c3eff5646077e55cd</div><div id='time'> Time: 2019-10-14</div><div id='author'> Author: alexliu36@gmail.com</div><div id='file'> File Name: src/plugin.py</div><div id='class'> Class Name: EmbeddingRegularizer</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-7c1ece53a18959b293126dd93f3cf0f768220f50d2c1201e1601681873e6f6e4L78' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/base_model.py</div><div id='class'> Class Name: BaseModel</div><div id='method'> Method Name: load_networks</div><BR>

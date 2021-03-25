@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            inputs = inputs[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        caffe_in = <a id="change">self.preprocess(self.inputs[0], inputs)</a>
+        <a id="change">out</a> = self.forward_all(**{self.inputs[0]: caffe_in})
+        <a id="change">predictions</a> = out[self.outputs[0]].squeeze(axis=(2,3))
+
+        &#47&#47 For oversampling, average predictions across crops.
+        if oversample:
+            <a id="change">predictions</a> = predictions.reshape((len(predictions) / 10, 10, -1))
+            <a id="change">predictions</a> = predictions.mean(1)
+
+        return predictions
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            inputs = inputs[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        caffe_in = np.asarray([<a id="change">self.preprocess(self.inputs[0], in_)</a>
+                    for in_ in inputs])
+        <a id="change">out</a> = self.forward_all(**{self.inputs[0]: caffe_in})
+        <a id="change">predictions</a> = out[self.outputs[0]].squeeze(axis=(2,3))
+
+        &#47&#47 For oversampling, average predictions across crops.
+        if oversample:
+            <a id="change">predictions</a> = predictions.reshape((len(predictions) / 10, 10, -1))
+            <a id="change">predictions</a> = predictions.mean(1)
+
+        return predictions
+</code></pre>

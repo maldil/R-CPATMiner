@@ -1,0 +1,21 @@
+<html><h3>e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f,cesium/featurize.py,,save_featureset,#,346
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    features, channels = zip(*fset.columns)
+    for v in [fset.values, features, channels] + list(kwargs.values()):
+        <a id="change">if np.array(v).dtype == np.object:
+            raise ValueError("Cannot save objects in .npz format.")
+   </a> np.savez(path, values=fset.values, index=fset.index.values.astype(str),
+             features=features, channels=channels, **kwargs)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            arr = v.to_records()
+            dt_list = arr.dtype.descr
+            &#47&#47 Change type of indices from object to str
+            for i, (name, dt) in <a id="change">enumerate(dt_list)</a>:
+                if dt.endswith(&quotO&quot):
+                    size = max(len(x) for x in arr[&quotindex&quot])
+                    dt_list[i] = (name, &quotU&quot + str(size))</code></pre><img src="23121814.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL359' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: e547a82c24b37c157bc9b40d2724a7b1fd0a7b0f</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_featureset</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-1ed198cf4b7c31bf9151b49700cd7ab4c053d62fc84b10c9c71e752c2318add3L35' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/features/feature_libs/structural_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_structural_features</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/5ad9ae2b8ae6b55b07e99de924c77112706aa3b7#diff-9689d6a84f625da282621cc8ae666c3f41bfc86940a453e7b4ee53044fa78b96L32' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 5ad9ae2b8ae6b55b07e99de924c77112706aa3b7</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/features/feature_libs/visual_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_visual_features</div><BR>

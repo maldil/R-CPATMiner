@@ -1,0 +1,31 @@
+<html><h3>5dd5b8652f28426322309c4e983c94a3caa8fa8e,libact/query_strategies/variance_reduction.py,VarianceReduction,A,#VarianceReduction#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def A(self, pi, c, x, label_count, feature_count):
+        grad = pi[c] *  np.ones((feature_count*label_count))
+        <a id="change">for i in range(feature_count):
+            for j in range(label_count):
+                if c == j:
+                    grad[i*label_count+j] *= (1-pi[c]) * x[i]
+                    &#47&#47grad.append(pi[c] * (1-pi[c]) * x[i])
+                else:
+                    grad[i*label_count+j] *= (-pi[j]) * x[i]
+                    &#47&#47grad.append(-pi[c] * pi[j] * x[i])
+        &#47&#47grad = np.array(grad)
+        &#47&#47print(np.shape(grad))
+
+       </a> return np.dot(grad.T, grad)
+
+    def Fisher(self, pi, x, label_count, feature_count):
+        fisher = np.ones((label_count*feature_count, label_count*feature_count))</code></pre><h3>After Change</h3><pre><code class='java'>
+        print(s-time.time())
+        print(np.shape(grad))
+        
+        <a id="change">_pi = -1 * np.array(pi)</a>
+        <a id="change">_pi[c]</a> += 1
+        grad = pi[c] * np.tile(np.array([x]).T, (1, label_count)) *\
+                        np.tile(np.array([_pi]), (feature_count, 1))
+        grad = grad.reshape((feature_count*label_count))</code></pre><img src="9292505.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/5dd5b8652f28426322309c4e983c94a3caa8fa8e#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL20' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 5dd5b8652f28426322309c4e983c94a3caa8fa8e</div><div id='time'> Time: 2014-12-19</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: A</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b0699b34e2b16cb3abbd22c397077cc6c21ef279#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL265' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b0699b34e2b16cb3abbd22c397077cc6c21ef279</div><div id='time'> Time: 2016-11-30</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L161' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 288e2868ce5f35a9c8ecf3e3fa913f293adcf7e7</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR>

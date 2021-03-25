@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if torch.is_tensor(output):
+            output = output.cpu().squeeze().numpy()
+        if torch.is_tensor(target):
+            target = <a id="change">target.cpu().squeeze().numpy()</a>
+        elif isinstance(target, numbers.Number):
+            target = np.asarray([target])
+        if np.ndim(output) == 1:
+            output = output[np.newaxis]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if torch.is_tensor(output):
+            output = output.cpu().squeeze().numpy()
+        if torch.is_tensor(target):
+            target = np.atleast_1d(<a id="change">target.cpu().squeeze().numpy()</a>)
+        elif isinstance(target, numbers.Number):
+            target = np.asarray([target])
+        if np.ndim(output) == 1:</code></pre>

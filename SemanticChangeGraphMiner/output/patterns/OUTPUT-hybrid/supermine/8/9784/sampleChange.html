@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        dy.pickneglogsoftmax(softmax_outputs[ii], disc[mgc_index * self.UPSAMPLE_COUNT + ii]))
+                losses.append(dy.esum(frame_losses))
+
+                history = <a id="change">wave[
+                          (mgc_index + 1) * self.UPSAMPLE_COUNT - self.HISTORY:(mgc_index + 1) * self.UPSAMPLE_COUNT]</a>
+
+            if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 wave += np.array(wave, dtype=np.int32)
+        &#47&#47 wave += 32768
+        wave = wave / 32768
+        <a id="change">wave += 1.0</a>
+        wave = <a id="change">wave * 65535</a>
+        wave = <a id="change">np.clip(np.array(wave, np.int32), 0, 65535)</a>
+
+        &#47&#47 wave = np.array(wave, dtype=np.uint16)
+        &#47&#47 from ipdb import set_trace
+        &#47&#47 set_trace()
+        &#47&#47 print(signal_fft)
+        last_proc = 0
+        dy.renew_cg()
+        total_loss = 0
+        losses = []
+        cnt = 0
+        last_state = None
+        last_val = 32768
+        for mgc_index in range(len(mgc)):
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+
+            if mgc_index &lt; len(mgc) - 1:
+                pred_output, softmax_outputs, last_state = self._predict_one(mgc[mgc_index], history=last_val,
+                                                                             gs_output=wave[
+                                                                                       mgc_index * self.UPSAMPLE_COUNT:mgc_index * self.UPSAMPLE_COUNT +
+                                                                                                                       self.UPSAMPLE_COUNT],
+                                                                             last_state=last_state)
+                frame_losses = []
+                for ii in range(len(softmax_outputs)):
+                    frame_losses.append(
+                        dy.pickneglogsoftmax(softmax_outputs[ii][0],
+                                             int(wave[mgc_index * self.UPSAMPLE_COUNT + ii]) / 256))
+                    frame_losses.append(
+                        dy.pickneglogsoftmax(softmax_outputs[ii][1],
+                                             int(wave[mgc_index * self.UPSAMPLE_COUNT + ii]) % 256))
+
+                losses.append(dy.esum(frame_losses))
+
+                <a id="change">last_val = wave[(mgc_index + 1) * self.UPSAMPLE_COUNT - 1]</a>
+
+            if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()</code></pre>

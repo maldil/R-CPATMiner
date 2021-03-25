@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    update_not_existing_kwargs(kwargs, pl.defaults.confidence_interval)
+    _, percs = helper_predict_with_model(self, Xgrid, plot_raw, apply_link, (lower, upper), which_data_ycols, **predict_kw)
+
+    <a id="change">return dict(gpconfidence=pl.fill_between(canvas, Xgrid, percs[0], percs[1], **kwargs))</a>
+
+    
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    update_not_existing_kwargs(kwargs, pl.defaults.confidence_interval)
+    
+    <a id="change">if len(free_dims)&lt;=1:
+        if len(free_dims)==1:
+            _, percs = helper_predict_with_model(self, Xgrid, plot_raw, apply_link, 
+                                                 (lower, upper), 
+                                                 ycols, predict_kw)
+    
+            fills = []
+            for d in ycols:
+                fills.append(pl.fill_between(canvas, Xgrid[:,free_dims[0]], percs[0][:,d], percs[1][:,d], **kwargs))
+            return dict(gpconfidence=fills)
+        else:
+            pass &#47&#47Nothing to plot!
+    else:
+        raise RuntimeError(&quotCan only plot confidence interval in one input dimension&quot)
+
+
+</a>def plot_density(self, plot_limits=None, fixed_inputs=None,
+              resolution=None, plot_raw=False,
+              apply_link=False, 
+              which_data_ycols=&quotall&quot,</code></pre>

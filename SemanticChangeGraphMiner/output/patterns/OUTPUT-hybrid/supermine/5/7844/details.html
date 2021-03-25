@@ -1,0 +1,28 @@
+<html><h3>f02ab4559d2e4e17401b284f8c023e9693d06aa5,quickbrowse.py,BrowserWindow,set_up_listener,#BrowserWindow#,310
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Each process has one BrowserWindow, and each BrowserWindow
+        &#47&#47 has one named pipe where it can accept commands.
+        self.pipe_name = NAMED_PIPE % 0000  &#47&#47 os.getpid()
+        <a id="change">if not os.path.exists(self.pipe_name):
+            os.mkfifo(self.pipe_name)
+
+        &#47&#47 For some reason, regular open() doesn&quott always work on named pipes
+        &#47&#47 and sometimes hangs. Use os.open instead.
+       </a> self.cmdpipe = os.open(self.pipe_name, os.O_RDONLY | os.O_NONBLOCK)
+
+    def check_pipe(self):
+        &#47&#47 Loop reading all data available.</code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            os.unlink(self.cmdsockname)
+        except OSError:
+            <a id="change">if os.path.exists(self.cmdsockname):
+                raise
+
+        &#47&#47 Create a UDS socket
+       </a> self.cmdsock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+        &#47&#47 Bind the socket to the port
+        self.cmdsock.bind(self.cmdsockname)</code></pre><img src="30164335.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/f02ab4559d2e4e17401b284f8c023e9693d06aa5#diff-ca65b888ae59015cc8f10e82b58fa70feaf76a25f18b644def06ed8b40d2f985L310' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: f02ab4559d2e4e17401b284f8c023e9693d06aa5</div><div id='time'> Time: 2018-06-24</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: quickbrowse.py</div><div id='class'> Class Name: BrowserWindow</div><div id='method'> Method Name: set_up_listener</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/4227f7c2810a6fc48165311e19a4a6aaac38475e#diff-26b96689f7fbd8f3c3be2397e1e45fd589b6142bb7c0a54945c84978e22db208L91' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: 4227f7c2810a6fc48165311e19a4a6aaac38475e</div><div id='time'> Time: 2019-04-16</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/datasets/sdss_specgals.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fetch_sdss_specgals</div><BR><BR><div id='link'><a href='https://github.com/lcswillems/torch-rl/commit/3f196bcdd1e0310208e8978cf4f1fb590614568b#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL15' target='_blank'>Link</a></div><div id='project'> Project Name: lcswillems/torch-rl</div><div id='commit'> Commit Name: 3f196bcdd1e0310208e8978cf4f1fb590614568b</div><div id='time'> Time: 2018-04-15</div><div id='author'> Author: lcswillems@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_model</div><BR>

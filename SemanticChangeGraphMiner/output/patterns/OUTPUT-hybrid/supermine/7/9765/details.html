@@ -1,0 +1,28 @@
+<html><h3>192e33a99505947aedd3dd8b081d71b04f14eb85,examples/equivariance_error/main.py,,,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+y = y.data.cpu().numpy()
+y1 = <a id="change">y1</a>.data.cpu().numpy()
+<a id="change">y2 = y2.data.cpu().numpy()</a>
+
+relative_error = np.std(<a id="change">y1 - y2</a>) / np.std(y)
+
+print(&quotrelative error = {}&quot.format(relative_error))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    return torch.cat([x[:, :, :, n:], x[:, :, :, :n]], dim=3)
+
+&#47&#47 Create random input
+x = <a id="change">torch.autograd.Variable(torch.randn(1, 12, 128, 128), volatile=True).cuda()</a> &#47&#47 [batch, feature, beta, alpha]
+
+y = phi(x)
+<a id="change">y1 = rot(phi(x), angle=45)</a>
+y2 = phi(rot(x, angle=45))
+
+relative_error = torch.std(<a id="change">y1.data - y2.data</a>) / torch.std(y.data)
+
+print(&quotrelative error = {}&quot.format(relative_error))
+</code></pre><img src="37423067.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jonas-koehler/s2cnn/commit/192e33a99505947aedd3dd8b081d71b04f14eb85#diff-19cf35b44cf7959fb05a37231f2126221be90ec0b8c2f85bb07977b38bfdce79L34' target='_blank'>Link</a></div><div id='project'> Project Name: jonas-koehler/s2cnn</div><div id='commit'> Commit Name: 192e33a99505947aedd3dd8b081d71b04f14eb85</div><div id='time'> Time: 2017-10-30</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: examples/equivariance_error/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/fea94d9805d3be49f5ae55d0ab3f35f07a5c6d12#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L163' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: fea94d9805d3be49f5ae55d0ab3f35f07a5c6d12</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/fea94d9805d3be49f5ae55d0ab3f35f07a5c6d12#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL41' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: fea94d9805d3be49f5ae55d0ab3f35f07a5c6d12</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

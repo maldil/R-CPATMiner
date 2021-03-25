@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            
+            scores[i] = fitness
+                
+            <a id="change">if(bestScore&gt;fitness):
+                bestScore=fitness
+                bestIndividual=numpy.copy(ga[i,:])
+        
+        &#47&#47Apply evolutionary operators to chromosomes
+       </a> ga = runOperators(ga, scores, bestIndividual, bestScore, cp, mp, PopSize, lb, ub) 
+                    
+        convergence_curve[l]=bestScore
+     </code></pre><h3>After Change</h3><pre><code class='java'>
+    s=solution()
+        
+    bestIndividual=numpy.zeros(dim)    
+    scores=<a id="change">numpy.random.uniform(0.0, 1.0, PopSize)</a> 
+    bestScore=float("inf")
+    
+    ga=numpy.random.uniform(0,1,(PopSize,dim)) *(ub-lb)+lb
+    convergence_curve=numpy.zeros(iters)
+    
+    print("GA is optimizing  \""+objf.__name__+"\"")  
+    
+    timerStart=time.time() 
+    s.startTime=time.strftime("%Y-%m-%d-%H-%M-%S")
+    
+    for l in range(iters):
+
+        &#47&#47crossover
+        ga = crossoverPopulaton(ga, scores, PopSize, cp, keep)
+           
+        &#47&#47mutation
+        mutatePopulaton(ga, PopSize, mp, keep, lb, ub)
+           
+        ga = clearDups(ga, lb, ub)
+        
+        <a id="change">scores = calculateCost(objf, ga, PopSize, lb, ub)</a>
+            
+        bestScore = min(scores)
+        </code></pre>

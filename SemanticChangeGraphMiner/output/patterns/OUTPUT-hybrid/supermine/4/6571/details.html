@@ -1,0 +1,35 @@
+<html><h3>8184b9fdf51e3f75835fe1f2d56c294d16686241,examples/federated_learning_with_encryption.py,,,#,162
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Predict
+    for (i, c) in enumerate(clients):
+        print(&quotTrain&quot, mean_square_error(c.predict(X[i]), y[i]))
+        print(&quotTest&quot, mean_square_error(<a id="change">c.predict(X_test)</a>, y_test))
+
+    &#47&#47 Each client sends its own model to the next one, in a RING protocol,
+    &#47&#47 aggregating them all. The last client sends the aggregate model to the server</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47     print(mean_square_error(y_pred, y_test))
+
+    &#47&#47 The federated learning with gradient from the google paper
+    <a id="change">n_iter = 5</a>
+    <a id="change">for i in range(n_iter):
+
+        &#47&#47 Compute gradients, encrypt and aggregate
+        encrypt_aggr = clients[0].encrypted_gradient(sum_to=None)
+        encrypt_aggr = clients[1].encrypted_gradient(sum_to=encrypt_aggr)
+        encrypt_aggr = clients[2].encrypted_gradient(sum_to=encrypt_aggr)
+
+        &#47&#47 Send aggregate to server, which decrypts
+        aggr = server.decrypt_aggregate(encrypt_aggr, n_clients)
+
+        &#47&#47 Take gradient steps
+        clients[0].gradient_step(aggr)
+        clients[1].gradient_step(aggr)
+        clients[2].gradient_step(aggr)
+
+   </a> for (i, c) in enumerate(clients):
+        y_pred = c.predict(c.X)
+        print(mean_square_error(y_pred, c.y))
+</code></pre><img src="26015373.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/data61/python-paillier/commit/8184b9fdf51e3f75835fe1f2d56c294d16686241#diff-8b503b12be61cff27acb20969788ce097f27e90ebab53ec2ebbda3f5b484ceeeL168' target='_blank'>Link</a></div><div id='project'> Project Name: data61/python-paillier</div><div id='commit'> Commit Name: 8184b9fdf51e3f75835fe1f2d56c294d16686241</div><div id='time'> Time: 2017-06-20</div><div id='author'> Author: giorgio.patrini@anu.edu.au</div><div id='file'> File Name: examples/federated_learning_with_encryption.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/f8175e0221bbf31ffc8c10ee809b7ee2e118362d#diff-d7341b2ea15e2e8a4bc426cb1ecb65061fc83db83af5bd2e5d89cc93afa5d28fL42' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: f8175e0221bbf31ffc8c10ee809b7ee2e118362d</div><div id='time'> Time: 2018-02-08</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/scoring/functions/NNScore.py</div><div id='class'> Class Name: nnscore</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/zo7/deconvfaces/commit/41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c#diff-93945a688e62274699c4f9f6fb1380052c78cebb78d4b0f6f226902745d45eceL426' target='_blank'>Link</a></div><div id='project'> Project Name: zo7/deconvfaces</div><div id='commit'> Commit Name: 41ef0bf4ece3daf13a02b14c79eb7ddebb42bc0c</div><div id='time'> Time: 2016-09-04</div><div id='author'> Author: zo7.flynn@gmail.com</div><div id='file'> File Name: facegen/generate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_from_yaml</div><BR>

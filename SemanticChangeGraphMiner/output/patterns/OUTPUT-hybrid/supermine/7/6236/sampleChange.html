@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if np.any(col_const):
+            if has_constant == &quotraise&quot:
+                msg = <a id="change">"x contains a constant. Adding a constant with " \
+                      "trend=&quot{0}&quot is not allowed.".format(trend)</a>
+                raise ValueError(msg)
+            elif has_constant == &quotskip&quot:
+                columns = columns[1:]
+                trendarr = trendarr[:, 1:]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if np.any(col_const):
+            if has_constant == &quotraise&quot:
+                <a id="change">if x.ndim == 1:
+                    base_err = "x is constant."
+                else:
+                    columns = np.arange(x.shape[1])[col_const]
+                    if isinstance(x, pd.DataFrame):
+                        columns = x.columns
+                    const_cols = ", ".join([str(c) for c in columns])
+                    base_err = (
+                        "x contains one or more constant columns. Column(s) "
+                        f"{const_cols} are constant."
+                    )
+               </a> msg = (
+                    f"{base_err} Adding a constant with trend=&quot{trend}&quot is not allowed."
+                )
+                raise ValueError(msg)</code></pre>

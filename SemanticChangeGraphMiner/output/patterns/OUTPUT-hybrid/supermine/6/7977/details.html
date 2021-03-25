@@ -1,0 +1,33 @@
+<html><h3>5dd5b8652f28426322309c4e983c94a3caa8fa8e,libact/query_strategies/variance_reduction.py,VarianceReduction,A,#VarianceReduction#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        grad = pi[c] *  np.ones((feature_count*label_count))
+        for i in range(feature_count):
+            for j in range(label_count):
+                <a id="change">if c == j:
+                    grad[i*label_count+j] *= (1-pi[c]) * x[i]
+                    &#47&#47grad.append(pi[c] * (1-pi[c]) * x[i])
+                else:
+                    grad[i*label_count+j] *= (-pi[j]) * x[i]
+                    &#47&#47grad.append(-pi[c] * pi[j] * x[i])
+        &#47&#47grad = np.array(grad)
+        &#47&#47print(np.shape(grad))
+
+       </a> return np.dot(grad.T, grad)
+
+    def Fisher(self, pi, x, label_count, feature_count):
+        fisher = np.ones((label_count*feature_count, label_count*feature_count))</code></pre><h3>After Change</h3><pre><code class='java'>
+        print(s-time.time())
+        print(np.shape(grad))
+        
+        <a id="change">_pi = -1 * np.array(pi)</a>
+        _pi[c] += 1
+        grad = pi[c] * np.tile(np.array([x]).T, (1, label_count)) *\
+                        np.tile(<a id="change">np.array([_pi])</a>, (feature_count, 1))
+        <a id="change">grad = grad.reshape((feature_count*label_count))</a>
+
+        return np.dot(grad.T, grad)
+
+    def Fisher(self, pi, x, label_count, feature_count):</code></pre><img src="30929046.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/5dd5b8652f28426322309c4e983c94a3caa8fa8e#diff-5038066d1d372dbef583864dd1c7c229ac1b1362aecbfd20a02f33c3433af23dL20' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 5dd5b8652f28426322309c4e983c94a3caa8fa8e</div><div id='time'> Time: 2014-12-19</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/variance_reduction.py</div><div id='class'> Class Name: VarianceReduction</div><div id='method'> Method Name: A</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/efc54499191ead69f875877badd3578c60eba7a6#diff-99d2e76afba526df7aa773d938831ae112fde33395aba28b17e1713d791afaf6L37' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: efc54499191ead69f875877badd3578c60eba7a6</div><div id='time'> Time: 2017-02-08</div><div id='author'> Author: ethanmanilow@gmail.com</div><div id='file'> File Name: nussl/audio_signal.py</div><div id='class'> Class Name: AudioSignal</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/mtobeiyf/audio-classification/commit/2f8b3e30e3deb3702ae79b5ef0c3bd84496dcfc5#diff-46f807351583225b138b66b6ca55fbce8c22f94a771568cd31eb205cb92f8dcaL18' target='_blank'>Link</a></div><div id='project'> Project Name: mtobeiyf/audio-classification</div><div id='commit'> Commit Name: 2f8b3e30e3deb3702ae79b5ef0c3bd84496dcfc5</div><div id='time'> Time: 2018-11-24</div><div id='author'> Author: mvrozanti@hotmail.com</div><div id='file'> File Name: feat_extract.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_feature</div><BR><BR><div id='link'><a href='https://github.com/shakedzy/dython/commit/c39850dcb5112d64ffd9d4d4bce178155ecc3b64#diff-70d960f30f365c1139d79094f28344693587a18eb67a490f513fb25f01db43f2L19' target='_blank'>Link</a></div><div id='project'> Project Name: shakedzy/dython</div><div id='commit'> Commit Name: c39850dcb5112d64ffd9d4d4bce178155ecc3b64</div><div id='time'> Time: 2018-04-09</div><div id='author'> Author: shaked.zychlinski@doubleverify.com</div><div id='file'> File Name: dython/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: roc_graph</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/3d535702dc92b55d6bc8cc0c02d45d98c439b733#diff-a171d688e80cc0edcac8ab17a40da4db62d22065e20bf3b962e21261e182f37dL196' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 3d535702dc92b55d6bc8cc0c02d45d98c439b733</div><div id='time'> Time: 2008-12-01</div><div id='author'> Author: bhendrix@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/scatterplot.py</div><div id='class'> Class Name: ScatterPlot</div><div id='method'> Method Name: _gather_points_old</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/122c24b4aeb11ecba5f77c3bf5ef8f20f2167c77#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L57' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 122c24b4aeb11ecba5f77c3bf5ef8f20f2167c77</div><div id='time'> Time: 2018-06-07</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: ListDataset</div><div id='method'> Method Name: __getitem__</div><BR>

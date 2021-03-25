@@ -1,0 +1,25 @@
+<html><h3>9dfafadcea9f709132bce12341a32ff5e27ec33a,implementations/infogan/infogan.py,,sample_image,#,157
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    z = Variable(FloatTensor(np.random.normal(0, 1, (n_row**2, opt.latent_dim))))
+    &#47&#47 Get labels ranging from 0 to n_classes for n rows
+    labels = np.array([num for _ in range(n_row) for num in range(n_row)])
+    <a id="change">labels = Variable(LongTensor(labels))</a>
+    code_input = Variable(FloatTensor(np.random.uniform(-1, 1, (n_row**2, opt.code_dim))))
+    gen_imgs = generator(z, labels, code_input)
+    save_image(gen_imgs.data, &quotimages/%d.png&quot % batches_done, nrow=n_row, normalize=True)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Get varied c1 and c2
+    zeros = np.zeros((n_row**2, 1))
+    <a id="change">c_varied = np.repeat(np.linspace(-1, 1, n_row)[:, np.newaxis], n_row, 0)</a>
+    c1 = Variable(FloatTensor(np.concatenate((c_varied, zeros), -1)))
+    c2 = <a id="change">Variable(FloatTensor(np.concatenate((zeros, c_varied), -1)))</a>
+    sample1 = generator(static_z, static_label, c1)
+    <a id="change">sample2 = generator(static_z, static_label, c2)</a>
+    save_image(sample1.data, &quotimages/varying_c1/%d.png&quot % batches_done, nrow=n_row, normalize=True)
+    save_image(sample2.data, &quotimages/varying_c2/%d.png&quot % batches_done, nrow=n_row, normalize=True)
+
+&#47&#47 ----------</code></pre><img src="3666775.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/9dfafadcea9f709132bce12341a32ff5e27ec33a#diff-1a25c34669bbfa03b9238d7cbb6f22fbb4896e1fa7779271848902ebd250df44L162' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 9dfafadcea9f709132bce12341a32ff5e27ec33a</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/infogan/infogan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/f3c5b75e59717c017fa3779b3f29b725e4ac6d9b#diff-be3351c473e54dc72763c578c658b9df43fc09acd0abad8b638fc4242582942cL48' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: f3c5b75e59717c017fa3779b3f29b725e4ac6d9b</div><div id='time'> Time: 2018-01-24</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: tests/test_retina.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/eab5e7909d647e363002b529e9d39911f4a2b028#diff-ac0e721e086e34ee6dc7102375029bbb64c0049d476e44216b4944e51f4e4e8eL36' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: eab5e7909d647e363002b529e9d39911f4a2b028</div><div id='time'> Time: 2017-12-01</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: train2.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4#diff-d3e1c4411b6f580293411b1726cd987c27fcb1ea04379afb16679af9a663983bL112' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4</div><div id='time'> Time: 2019-04-02</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/bicyclegan/bicyclegan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_images</div><BR>

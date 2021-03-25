@@ -1,0 +1,55 @@
+<html><h3>2f337387d6759627bae60284e7fa612268580724,mmf/models/mmf_transformer.py,MMFTransformerEmbeddings,forward,#MMFTransformerEmbeddings#,155
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        segment_ids: Dict[str, Tensor],
+    ) -&gt; Tensor:
+        list_embeddings = []
+        <a id="change">for modality in self.model_config.modalities:
+            total_embedding = getattr(self, modality.key + "_embedding")(
+                input_ids[modality.key]
+            )
+            if modality.key not in position_ids:
+                total_embedding += getattr(self, modality.key + "_pos_embedding")(
+                    position_ids[modality.key]
+                )
+
+            if modality.key in segment_ids:
+                total_embedding += self.token_type_embeddings(segment_ids[modality.key])
+
+            layer_norm_layer = getattr(self, modality.key + "_layer_norm")
+            dropout_layer = getattr(self, modality.key + "_dropout")
+            list_embeddings.append(dropout_layer(layer_norm_layer(total_embedding)))
+
+       </a> return torch.cat(list_embeddings, dim=1)
+
+
+@registry.register_model("mmf_transformer")</code></pre><h3>After Change</h3><pre><code class='java'>
+        segment_ids: Dict[str, Tensor],
+    ) -&gt; Tensor:
+        list_embeddings = []
+        <a id="change">for idx, (token_emb, pos_emb, layer_norm, dropout) in enumerate(
+            zip(
+                self.token_embeddings,
+                self.pos_embeddings,
+                self.layer_norms,
+                self.dropouts,
+            )
+        ):
+            modality_name = self.modality_keys[idx]
+            total_embedding = token_emb(input_ids[modality_name])
+            if modality_name in position_ids:
+                total_embedding += pos_emb(position_ids[modality_name])
+
+            if modality_name in segment_ids:
+                total_embedding += self.token_type_embeddings(
+                    segment_ids[modality_name]
+                )
+
+            list_embeddings.append(dropout(layer_norm(total_embedding)))
+
+       </a> return torch.cat(list_embeddings, dim=1)
+
+
+@registry.register_model("mmf_transformer")</code></pre><img src="24029263.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pythia/commit/2f337387d6759627bae60284e7fa612268580724#diff-5c1060c8ad17ef5b256724f35b400fc9ca23270d8e520ed68d98864fcac204bbL148' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pythia</div><div id='commit'> Commit Name: 2f337387d6759627bae60284e7fa612268580724</div><div id='time'> Time: 2020-09-15</div><div id='author'> Author: vedanujg@gmail.com</div><div id='file'> File Name: mmf/models/mmf_transformer.py</div><div id='class'> Class Name: MMFTransformerEmbeddings</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL123' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/6e6c12425a787d8c954ce5c31ceed59cdd531001#diff-3896ce7d43d89b990c72bafaf6d1ee3dcea25d3ff78eb238ad6423daf5cd74feL67' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 6e6c12425a787d8c954ce5c31ceed59cdd531001</div><div id='time'> Time: 2018-05-20</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/ctc_decoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: greedy_decoder</div><BR>

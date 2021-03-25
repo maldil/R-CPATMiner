@@ -1,0 +1,27 @@
+<html><h3>9c309a959052ec40cf92cf4baa3894f5118cf8c4,se3cnn/blocks/point_gated_block.py,PointGatedBlock,forward,#PointGatedBlock#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            if len(difference_mat.size()) == 4:
+                batch, N, _M, _ = difference_mat.size()
+            <a id="change">if len(difference_mat.size()) == 3:
+                N, _M, _ = difference_mat.size()
+
+           </a> size_out = sum(mul * (2 * n + 1) for n, mul in enumerate(self.repr_out))
+
+            if self.gate_act is not None:
+                g = y[:, size_out:]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.scalar_act is None and self.gate_act is None:
+            return y
+
+        has_batch = <a id="change">difference_matrix.dim() == 4
+    </a>    <a id="change">if not has_batch:
+            difference_matrix = difference_matrix.unsqueeze(0)
+            y = y.unsqueeze(0)
+
+       </a> batch, N, _M, _ = difference_matrix.size()
+
+        size_out = sum(mul * (2 * l + 1) for l, mul in enumerate(self.repr_out))
+</code></pre><img src="33619273.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/9c309a959052ec40cf92cf4baa3894f5118cf8c4#diff-96c9865e97651dada84c1a0027cbe9124208d3c0a48420dc6911b85549a6ae6cL40' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 9c309a959052ec40cf92cf4baa3894f5118cf8c4</div><div id='time'> Time: 2019-07-08</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/blocks/point_gated_block.py</div><div id='class'> Class Name: PointGatedBlock</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/e839626c28d8dc6030ce71f3619e934b36fb6627#diff-2a65fed333ce2388ad4cd4f49b51f2c5d3078409e302e94e86eb381cde664fcdL39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: e839626c28d8dc6030ce71f3619e934b36fb6627</div><div id='time'> Time: 2020-10-23</div><div id='author'> Author: Balaganskij.NN@phystech.edu</div><div id='file'> File Name: catalyst/metrics/functional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: process_multiclass_components</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/10bdd46d76d35cfba3a484b007ea3e14af801813#diff-27c6290e4997e32b11c5bdc98a32bc9018832fdde4b9e65dcc0482c8d719ec6dL89' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 10bdd46d76d35cfba3a484b007ea3e14af801813</div><div id='time'> Time: 2019-12-09</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/rbm/binary_rbm.py</div><div id='class'> Class Name: BinaryRBM</div><div id='method'> Method Name: effective_energy</div><BR>

@@ -1,0 +1,49 @@
+<html><h3>f2f419b89221602dc31c69de32df1cba281db481,upsetplot/tests/test_data.py,,test_from_contents,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quottyp&quot, [set, list, tuple, iter])
+@pytest.mark.parametrize(&quotid_column&quot, [&quotid&quot, &quotblah&quot])
+def test_from_contents(typ, id_column):
+    <a id="change">contents = {&quotcat1&quot: typ([&quotaa&quot, &quotbb&quot, &quotcc&quot]),
+                &quotcat2&quot: typ([&quotcc&quot, &quotdd&quot]),
+                &quotcat3&quot: typ([&quotee&quot]),
+                }</a>
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot])
+    out = from_contents(OrderedDict(contents), data=empty_data,
+                        id_column=id_column)
+    out2 = from_memberships(memberships=[{&quotcat1&quot},</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_from_contents(typ=set, id_column=&quotid&quot):
+    <a id="change">contents = {&quotcat1&quot: {&quotaa&quot, &quotbb&quot, &quotcc&quot},
+                &quotcat2&quot: {&quotcc&quot, &quotdd&quot},
+                &quotcat3&quot: {&quotee&quot},
+                }</a>
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot])
+    baseline = from_contents(OrderedDict(contents), data=empty_data,
+                             id_column=id_column)
+    &#47&#47 data=None
+    out = from_contents(OrderedDict(contents), id_column=id_column)
+    assert_frame_equal(out.sort_values(id_column), baseline)
+
+    &#47&#47 unordered contents dict
+    <a id="change">out = from_contents({&quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat1&quot: contents[&quotcat1&quot]},
+                        data=empty_data, id_column=id_column)</a>
+    assert_frame_equal(out.reorder_levels([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]),
+                       baseline)
+
+    &#47&#47 empty category
+    <a id="change">out = from_contents({&quotcat1&quot: contents[&quotcat1&quot],
+                         &quotcat2&quot: contents[&quotcat2&quot],
+                         &quotcat3&quot: contents[&quotcat3&quot],
+                         &quotcat4&quot: []},
+                        data=empty_data,
+                        id_column=id_column)</a>
+    assert not out.index.to_frame()[&quotcat4&quot].any()  &#47&#47 cat4 should be all-false
+    assert len(out.index.names) == 4
+    out.index = out.index.to_frame().set_index([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]).index
+    assert_frame_equal(out, baseline)</code></pre><img src="834748.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jnothman/UpSetPlot/commit/f2f419b89221602dc31c69de32df1cba281db481#diff-d3985b50d796cbea735e6d37167cda98c0ed3f1c4c0edde5e3af79a8867260eeL91' target='_blank'>Link</a></div><div id='project'> Project Name: jnothman/UpSetPlot</div><div id='commit'> Commit Name: f2f419b89221602dc31c69de32df1cba281db481</div><div id='time'> Time: 2019-05-30</div><div id='author'> Author: joel.nothman@gmail.com</div><div id='file'> File Name: upsetplot/tests/test_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_from_contents</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/571ac6df8cbd237abf09b85da7c99e2fad3ed280#diff-0ed7727a453ba16ecd9c027f43d0e0e888895db18dfb0eee49b98b83cd666356L312' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 571ac6df8cbd237abf09b85da7c99e2fad3ed280</div><div id='time'> Time: 2014-01-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/dataset/dataset.py</div><div id='class'> Class Name: DataSet</div><div id='method'> Method Name: describe</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/63ea9b2637ce8e478c854b68d8af7ca42e19abcf#diff-068ad5a87f23a3a827514f96dd2a901638a9a52ab22f3bcb2109031a03b26426L26' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 63ea9b2637ce8e478c854b68d8af7ca42e19abcf</div><div id='time'> Time: 2020-09-22</div><div id='author'> Author: 35782177+melaniedejong@users.noreply.github.com</div><div id='file'> File Name: iam/api-client/quickstart.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: quickstart</div><BR>

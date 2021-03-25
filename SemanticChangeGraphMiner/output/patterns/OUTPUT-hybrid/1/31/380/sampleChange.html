@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        print ("[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]" % (epoch, opt.n_epochs, i, len(mnist_loader),
+                                                            d_loss.data.cpu().numpy()[0], g_loss.data.cpu().numpy()[0]))
+
+    <a id="change">save_image(gen_imgs.data, &quotimages/%d.png&quot % epoch, nrow=int(math.sqrt(opt.batch_size)), normalize=True)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        print ("[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]" % (epoch, opt.n_epochs, i, len(dataloader),
+                                                            d_loss.data.cpu().numpy()[0], g_loss.data.cpu().numpy()[0]))
+
+        <a id="change">batches_done</a> = <a id="change">epoch * len(dataloader) + i</a>
+        <a id="change">if batches_done % opt.sample_interval == 0:
+            save_image(gen_imgs.data[:25], &quotimages/%d.png&quot % batches_done, nrow=5, normalize=True)</a>
+</code></pre>

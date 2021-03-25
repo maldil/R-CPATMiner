@@ -1,0 +1,35 @@
+<html><h3>52e09ed9ba6ce987e08334a73a1656792ef7b564,code/deep/DaNN/main.py,,test,#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    correct = 0
+    criterion = nn.CrossEntropyLoss()
+    for batch_id, (data, target) in enumerate(data_tar):
+        <a id="change">if CUDA:
+            model = model.cuda()
+            data, target = data.cuda(), target.cuda()
+       </a> model.eval()
+        data, target = Variable(data.view(-1, 28 * 28), volatile=True), Variable(target)
+        ypred, _, _ = model(data, data)
+        loss = criterion(ypred, target)</code></pre><h3>After Change</h3><pre><code class='java'>
+    total_loss_test = 0
+    correct = 0
+    criterion = nn.CrossEntropyLoss()
+    <a id="change">with torch.no_grad():
+        for batch_id, (data, target) in enumerate(data_tar):
+            data, target = data.view(-1,28 * 28).to(DEVICE),target.to(DEVICE)
+            model.eval()
+            ypred, _, _ = model(data, data)
+            loss = criterion(ypred, target)
+            pred = ypred.data.max(1)[1]  &#47&#47 get the index of the max log-probability
+            correct += pred.eq(target.data.view_as(pred)).cpu().sum()
+            total_loss_test += loss.data
+        accuracy = correct * 100. / len(data_tar.dataset)
+        res = &quotTest: total loss: {:.6f}, correct: [{}/{}], testing accuracy: {:.4f}%&quot.format(
+            total_loss_test, correct, len(data_tar.dataset), accuracy
+        )
+   </a> tqdm.write(res)
+    RESULT_TEST.append([e, total_loss_test, accuracy])
+    log_test.write(res + &quot\n&quot)
+</code></pre><img src="18911298.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/52e09ed9ba6ce987e08334a73a1656792ef7b564#diff-06491bae57e2a6f015bb3e3139b16af62ca1f924806f91e52098a202dbd3d737L69' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 52e09ed9ba6ce987e08334a73a1656792ef7b564</div><div id='time'> Time: 2018-04-26</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/deep/DaNN/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/9c7e9288e31c947aa54aec1217fedfbce2f85bc6#diff-5e25746102683d5dc0fa74531c47856e3fc334a7831ebaec0fa098dd553517e3L22' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 9c7e9288e31c947aa54aec1217fedfbce2f85bc6</div><div id='time'> Time: 2019-05-27</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/trainers/classification.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/carpedm20/ENAS-pytorch/commit/92c6ee78097c4c19837005168f77111e78dcbf0b#diff-9f1d8e92cd6ea2024cda543185e6c91bbc5cd7377d0eb7d5b071abee5e466410L111' target='_blank'>Link</a></div><div id='project'> Project Name: carpedm20/ENAS-pytorch</div><div id='commit'> Commit Name: 92c6ee78097c4c19837005168f77111e78dcbf0b</div><div id='time'> Time: 2018-03-04</div><div id='author'> Author: dukebw@mcmaster.ca</div><div id='file'> File Name: trainer.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: train</div><BR>

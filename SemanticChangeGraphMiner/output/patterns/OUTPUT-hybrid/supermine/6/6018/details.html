@@ -1,0 +1,25 @@
+<html><h3>37177ecd552cc8cc30586a1a041eddcc4b2a9841,skbio/util/_decorator.py,classonlymethod,__get__,#classonlymethod#,347
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                            " &quot%s.%s&quot instead."
+                            % (cls.__name__, self.__func__.__name__))
+
+        <a id="change">evaldict = self.__func__.__globals__.copy()</a>
+        evaldict[&quot_call_&quot] = self.__func__
+        evaldict[&quot_cls_&quot] = cls
+        <a id="change">fun = FunctionMakerDropFirstArg.create(
+            self.__func__, "return _call_(_cls_, %(shortsignature)s)",
+            evaldict, __wrapped__=self.__func__)</a>
+        fun.__func__ = self.__func__  &#47&#47 Doctests need the orginal function
+        <a id="change">return fun</a>
+
+
+class FunctionMakerDropFirstArg(decorator.FunctionMaker):
+    def __init__(self, *args, **kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise TypeError("Class-only method called on an instance. Use"
+                            " &quot%s.%s&quot instead."
+                            % (cls.__name__, self.__func__.__name__))
+        <a id="change">return super().__get__(obj, cls)</a>
+</code></pre><img src="24803834.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/biocore/scikit-bio/commit/37177ecd552cc8cc30586a1a041eddcc4b2a9841#diff-af7b2b6ade182a962a283458d8b6a6556dbf3caebf27ccf00965161772d3e5caL347' target='_blank'>Link</a></div><div id='project'> Project Name: biocore/scikit-bio</div><div id='commit'> Commit Name: 37177ecd552cc8cc30586a1a041eddcc4b2a9841</div><div id='time'> Time: 2016-06-24</div><div id='author'> Author: ebolyen@gmail.com</div><div id='file'> File Name: skbio/util/_decorator.py</div><div id='class'> Class Name: classonlymethod</div><div id='method'> Method Name: __get__</div><BR><BR><div id='link'><a href='https://github.com/biocore/scikit-bio/commit/5da3b4a48dcc59e65d3b7c99bd9b4d284bef1ed5#diff-af7b2b6ade182a962a283458d8b6a6556dbf3caebf27ccf00965161772d3e5caL347' target='_blank'>Link</a></div><div id='project'> Project Name: biocore/scikit-bio</div><div id='commit'> Commit Name: 5da3b4a48dcc59e65d3b7c99bd9b4d284bef1ed5</div><div id='time'> Time: 2016-07-21</div><div id='author'> Author: ebolyen@gmail.com</div><div id='file'> File Name: skbio/util/_decorator.py</div><div id='class'> Class Name: classonlymethod</div><div id='method'> Method Name: __get__</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/d2c42398e842332d7f03c93243b9bc563127fb4f#diff-a7c4852f6776d3a559654457c3fed955ad1aa9efb93ce4fbe9a274cc691d60a4L156' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: d2c42398e842332d7f03c93243b9bc563127fb4f</div><div id='time'> Time: 2019-12-10</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/nn_states/complex_wavefunction.py</div><div id='class'> Class Name: ComplexWaveFunction</div><div id='method'> Method Name: psi</div><BR>

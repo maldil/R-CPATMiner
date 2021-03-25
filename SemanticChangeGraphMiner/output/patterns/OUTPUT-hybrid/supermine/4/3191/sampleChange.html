@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        shutil.copy(tile_dir, train_dir)
+
+    &#47&#47 for tile in test_df[&quotfilename&quot]:
+    for tile in list(<a id="change">tf_test[:,1]</a>):
+        tile_dir = op.join(tiles_dir, tile)
+        shutil.copy(tile_dir, test_dir)
+    &#47&#47&#47&#47&#47&#47 for train</code></pre><h3>After Change</h3><pre><code class='java'>
+    column_name = [&quotfilename&quot, &quotwidth&quot, &quotheight&quot, &quotclass&quot, &quotxmin&quot, &quotymin&quot, &quotxmax&quot, &quotymax&quot]
+    df = pd.DataFrame(tf_tiles_info, columns=column_name)
+    &#47&#47shuffle the dataframe
+    df = <a id="change">df.sample(frac=1)</a>
+    <a id="change">train_df = df[:split_index]</a>
+    test_df = df[split_index:]
+    print("You have {} training tiles and {} test tiles ready".format(
+    len(set(train_df[&quotfilename&quot])), len(set(test_df[&quotfilename&quot]))))
+    &#47&#47 train_df.to_csv("train_df.csv")
+    &#47&#47 test_df.to_csv("test_df.csv")
+
+    tiles_dir = op.join(os.getcwd(), &quottiles&quot)
+    train_dir = op.join(os.getcwd(), &quotimages&quot, &quottrain&quot)
+    test_dir = op.join(os.getcwd(), &quotimages&quot, &quottest&quot)
+
+    if not op.isdir(train_dir):
+        makedirs(train_dir)
+    if not op.isdir(test_dir):
+        makedirs(test_dir)
+
+    for tile in train_df[&quotfilename&quot]:
+        tile_dir = op.join(tiles_dir, tile)
+        shutil.copy(tile_dir, train_dir)
+
+    for tile in test_df[&quotfilename&quot]:
+        tile_dir = op.join(tiles_dir, tile)
+        shutil.copy(tile_dir, test_dir)
+    &#47&#47&#47&#47&#47&#47 for train
+    writer = tf.python_io.TFRecordWriter(FLAGS.train_rd_path)
+    grouped = split(train_df, &quotfilename&quot)
+
+    <a id="change">for group in grouped:
+        tf_example = create_tf_example(group, train_dir)
+        writer.write(tf_example.SerializeToString())
+   </a> writer.close()
+    output_train= op.join(os.getcwd(),FLAGS.train_rd_path)
+    print(&quotSuccessfully created the TFRecords: {}&quot.format(output_train))
+</code></pre>

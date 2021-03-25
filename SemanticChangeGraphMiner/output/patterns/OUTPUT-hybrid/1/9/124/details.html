@@ -1,0 +1,37 @@
+<html><h3>ce0e5b587e7993a377029272d0e27ca970772172,implementations/cyclegan/models.py,ResidualBlock,__init__,#ResidualBlock#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, in_features):
+        super(ResidualBlock, self).__init__()
+
+        <a id="change">conv_block</a> = [  nn.ReflectionPad2d(1),
+                        nn.Conv2d(in_features, in_features, 3),
+                        nn.InstanceNorm2d(in_features),
+                        <a id="change">nn.ReLU(inplace=True)</a>,
+                        nn.ReflectionPad2d(1),
+                        nn.Conv2d(in_features, in_features, 3),
+                        nn.InstanceNorm2d(in_features)  ]
+
+        self.conv_block = <a id="change">nn.Sequential(*conv_block)</a>
+
+    def forward(self, x):
+        return x + self.conv_block(x)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, in_features):
+        super(ResidualBlock, self).__init__()
+
+        self.block = <a id="change">nn.Sequential(
+            nn.ReflectionPad2d(1),
+            nn.Conv2d(in_features, in_features, 3),
+            nn.InstanceNorm2d(in_features),
+            nn.ReLU(inplace=True),
+            nn.ReflectionPad2d(1),
+            nn.Conv2d(in_features, in_features, 3),
+            nn.InstanceNorm2d(in_features),
+        )</a>
+
+    def forward(self, x):
+        return x + self.block(x)
+</code></pre><img src="948910.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/ce0e5b587e7993a377029272d0e27ca970772172#diff-ffdd6394ed91df17f77e7cb4635d49da497fee944c66f6f528ef73ec872930c5L19' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: ce0e5b587e7993a377029272d0e27ca970772172</div><div id='time'> Time: 2019-03-31</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/cyclegan/models.py</div><div id='class'> Class Name: ResidualBlock</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/318c3310a684e096ed2c6aa2e244dd22268ba471#diff-8a7d859f112e4ba31dd58edfd8755673b79476360a40b8406216f8b266b0e96cL244' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 318c3310a684e096ed2c6aa2e244dd22268ba471</div><div id='time'> Time: 2019-03-31</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/munit/models.py</div><div id='class'> Class Name: ResidualBlock</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/ce0e5b587e7993a377029272d0e27ca970772172#diff-ffdd6394ed91df17f77e7cb4635d49da497fee944c66f6f528ef73ec872930c5L19' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: ce0e5b587e7993a377029272d0e27ca970772172</div><div id='time'> Time: 2019-03-31</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/cyclegan/models.py</div><div id='class'> Class Name: ResidualBlock</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/16463f1594953774f1bfcac86d11e70c28d6c0c2#diff-6a8a401f5f303fc8c996ba8d7cb1e4703f35618b0bb7248d596617e208a0de58L15' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 16463f1594953774f1bfcac86d11e70c28d6c0c2</div><div id='time'> Time: 2017-05-08</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/learn/models/voxnet.py</div><div id='class'> Class Name: VoxNet</div><div id='method'> Method Name: __init__</div><BR>

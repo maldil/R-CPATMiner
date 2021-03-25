@@ -1,0 +1,64 @@
+<html><h3>b4757f7fe5b8d238ebb4cb150aeba52306c12071,sklearn/inspection/_plot/partial_dependence.py,PartialDependenceDisplay,plot,#PartialDependenceDisplay#,425
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            self.axes_ = np.empty((n_rows, n_cols), dtype=np.object)
+            self.lines_ = np.empty((n_rows, n_cols), dtype=np.object)
+            self.contours_ = np.empty(<a id="change">(n_rows, n_cols)</a>, dtype=np.object)
+
+            axes_ravel = self.axes_.ravel()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        lines_ravel = self.lines_.ravel(order=&quotC&quot)
+        contours_ravel = self.contours_.ravel(order=&quotC&quot)
+        vlines_ravel = self.deciles_vlines_.ravel(order=&quotC&quot)
+        <a id="change">hlines_ravel = self.deciles_hlines_.ravel(order=&quotC&quot)</a>
+
+        for i, axi, fx, (avg_preds, values) in zip(count(),
+                                                   self.axes_.ravel(),
+                                                   self.features,
+                                                   self.pd_results):
+            if len(values) == 1:
+                lines_ravel[i] = axi.plot(values[0],
+                                          avg_preds[self.target_idx].ravel(),
+                                          **line_kw)[0]
+            else:
+                &#47&#47 contour plot
+                XX, YY = np.meshgrid(values[0], values[1])
+                Z = avg_preds[self.target_idx].T
+                CS = axi.contour(XX, YY, Z, levels=Z_level, linewidths=0.5,
+                                 colors=&quotk&quot)
+                contours_ravel[i] = axi.contourf(XX, YY, Z, levels=Z_level,
+                                                 vmax=Z_level[-1],
+                                                 vmin=Z_level[0],
+                                                 **contour_kw)
+                axi.clabel(CS, fmt=&quot%2.2f&quot, colors=&quotk&quot, fontsize=10,
+                           inline=True)
+
+            trans = transforms.blended_transform_factory(axi.transData,
+                                                         axi.transAxes)
+            ylim = axi.get_ylim()
+            vlines_ravel[i] = axi.vlines(self.deciles[fx[0]], 0, 0.05,
+                                         transform=trans, color=&quotk&quot)
+            axi.set_ylim(ylim)
+
+            &#47&#47 Set xlabel if it is not already set
+            if not axi.get_xlabel():
+                axi.set_xlabel(self.feature_names[fx[0]])
+
+            if len(values) == 1:
+                if n_cols is None or i % n_cols == 0:
+                    axi.set_ylabel(&quotPartial dependence&quot)
+                else:
+                    axi.set_yticklabels([])
+                axi.set_ylim(self.pdp_lim[1])
+            else:
+                &#47&#47 contour plot
+                trans = transforms.blended_transform_factory(axi.transAxes,
+                                                             axi.transData)
+                xlim = axi.get_xlim()
+                <a id="change">hlines_ravel[i]</a> = axi.hlines(self.deciles[fx[1]], 0, 0.05,
+                                             transform=trans, color=&quotk&quot)
+                &#47&#47 hline erases xlim
+                axi.set_ylabel(self.feature_names[fx[1]])</code></pre><img src="23121280.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/b4757f7fe5b8d238ebb4cb150aeba52306c12071#diff-0239129ee36e71eb37218dd17745c41fba4b899793554791675d8a4bdaf81485L425' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: b4757f7fe5b8d238ebb4cb150aeba52306c12071</div><div id='time'> Time: 2020-04-19</div><div id='author'> Author: contact@nicolas-hug.com</div><div id='file'> File Name: sklearn/inspection/_plot/partial_dependence.py</div><div id='class'> Class Name: PartialDependenceDisplay</div><div id='method'> Method Name: plot</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/24d96c7ec2d80322ceb7a084199b891c9ebf88b9#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L132' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: 24d96c7ec2d80322ceb7a084199b891c9ebf88b9</div><div id='time'> Time: 2019-03-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _snn</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/6a8a0266b3f2cbae5ce8cce03996f2c55107c969#diff-d65b6dc61d2dc5856d98aa782721e285712a6c2c9f3ff2c0df69f0fbff8ed409L393' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 6a8a0266b3f2cbae5ce8cce03996f2c55107c969</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: pierre.bellec@gmail.com</div><div id='file'> File Name: nilearn/plotting/html_stat_map.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: view_stat_map</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 And add dependencies on their owners.
+    return InferredDependencies(
+        await <a id="change">Get</a>(
+            Owners, OwnersRequest(extra_init_files.snapshot.files, OwnersNotFoundBehavior.error)
+        )
+    )</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 And add dependencies on their owners.
+    owners = await MultiGet(
+        <a id="change">Get(Owners, OwnersRequest((f,), OwnersNotFoundBehavior.error))</a>
+        for f in extra_init_files.snapshot.files
+    )
+    return InferredDependencies(itertools.chain.from_iterable(owners))
+</code></pre>

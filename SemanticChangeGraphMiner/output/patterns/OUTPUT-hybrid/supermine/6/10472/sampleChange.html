@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    word.unwrap()
+            for parent in root.find_all(attrs={"fonduer": "1"}):
+                if self.space:
+                    parent.string.replace_with(<a id="change">" ".join(parent.stripped_strings)</a>)
+                else:
+                    parent.string.replace_with("".join(parent.stripped_strings))
+                &#47&#47 Rmove the mark</code></pre><h3>After Change</h3><pre><code class='java'>
+                    word.unwrap()
+
+            &#47&#47 Clean-up
+            for i, parent in <a id="change">enumerate(root.find_all(attrs={"fonduer": "1"}))</a>:
+                &#47&#47 Concat consecutive NavigableString
+                parent.smooth()  &#47&#47 beautifulsoup4 &gt;= 4.8.0
+
+                &#47&#47 Remove linebreaks and excess spaces
+                &#47&#47 in reverse order b/c removing element from list in loop
+                <a id="change">for child in reversed(parent.contents):
+                    if isinstance(child, NavigableString):
+                        if child.strip() == "":  &#47&#47 remove if space or linebreak
+                            child.extract()
+                        else:
+                            tmp = re.sub(r"[\n\s]+", " " if self.space else "", child)
+                            n = NavigableString(tmp.strip())
+                            child.replace_with(n)
+               </a> del parent["fonduer"]
+
+        name = os.path.basename(fp)[: os.path.basename(fp).rfind(".")]
+        stable_id = self._get_stable_id(name)</code></pre>

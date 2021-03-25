@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif imgNorm == "sub_mean":
+        img = cv2.resize(img, (width, height))
+        img = img.astype(np.float32)
+        <a id="change">img[:, :, 0] -= 103.939</a>
+        <a id="change">img[:, :, 1] -= 116.779</a>
+        img[:, :, 2] -= 123.68
+        img = img[:, :, ::-1]
+    elif imgNorm == "divide":
+        img = cv2.resize(img, (width, height))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        means = [103.939, 116.779, 123.68]
+
+        <a id="change">for i in range(min(img.shape[2], len(means))):
+            img[:, :, i] -= means[i]
+
+       </a> img = img[:, :, ::-1]
+    elif imgNorm == "divide":
+        img = cv2.resize(img, (width, height))
+        img = img.astype(np.float32)</code></pre>

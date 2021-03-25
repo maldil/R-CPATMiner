@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert abs(fitter.lambda_ / scale - 1) &lt; 0.01
+        assert abs(fitter.percentile(0.6) - scale * np.log(2)) &lt; 0.01
+
+        <a id="change">with pytest.raises(ValueError, match="Percentile must be larger than the cure fraction"):
+            fitter.percentile(0.19)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert abs(fitter.lambda_ / scale - 1) &lt; 0.01
+        assert abs(fitter.percentile(0.6) - scale * np.log(2)) &lt; 0.01
+
+        <a id="change">assert fitter.percentile(0.19) is np.inf</a>
+</code></pre>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quotJan&quot: 1, &quotFeb&quot: 1, &quotMar&quot: 1, &quotApr&quot: 1, &quotJun&quot: 1, &quotJul&quot: 1, &quotAug&quot: 1, &quotSep&quot: 1, &quotOct&quot: 1, &quotNov&quot: 1, &quotDec&quot: 1
+}&quot&quot&quot
+&#47&#47 Hey, it&quots reddit, better use lowercased list (and lowercase matched word later in code)
+<a id="change">nonbreaking_prefixes = {
+    &quota&quot: 1, &quotb&quot: 1, &quotc&quot: 1, &quotd&quot: 1, &quote&quot: 1, &quotf&quot: 1, &quotg&quot: 1, &quoth&quot: 1, &quoti&quot: 1, &quotj&quot: 1, &quotk&quot: 1, &quotl&quot: 1, &quotm&quot: 1, &quotn&quot: 1, &quoto&quot: 1, &quotp&quot: 1, &quotq&quot: 1, &quotr&quot: 1, &quots&quot: 1, &quott&quot: 1, &quotu&quot: 1, &quotv&quot: 1, &quotw&quot: 1, &quotx&quot: 1, &quoty&quot: 1, &quotz&quot: 1,
+    &quotadj&quot: 1, &quotadm&quot: 1, &quotadv&quot: 1, &quotasst&quot: 1, &quotbart&quot: 1, &quotbldg&quot: 1, &quotbrig&quot: 1, &quotbros&quot: 1, &quotcapt&quot: 1, &quotcmdr&quot: 1, &quotcol&quot: 1, &quotcomdr&quot: 1, &quotcon&quot: 1, &quotcorp&quot: 1, &quotcpl&quot: 1, &quotdR&quot: 1, &quotdr&quot: 1, &quotdrs&quot: 1, &quotens&quot: 1,
+    &quotgen&quot: 1, &quotgov&quot: 1, &quothon&quot: 1, &quothr&quot: 1, &quothosp&quot: 1, &quotinsp&quot: 1, &quotlt&quot: 1, &quotmm&quot: 1, &quotmr&quot: 1, &quotmrs&quot: 1, &quotms&quot: 1, &quotmaj&quot: 1, &quotmessrs&quot: 1, &quotmlle&quot: 1, &quotmme&quot: 1, &quotmsgr&quot: 1,
+    &quotop&quot: 1, &quotord&quot: 1, &quotpfc&quot: 1, &quotph&quot: 1, &quotprof&quot: 1, &quotpvt&quot: 1, &quotrep&quot: 1, &quotreps&quot: 1, &quotres&quot: 1, &quotrt&quot: 1, &quotsen&quot: 1, &quotsens&quot: 1, &quotsfc&quot: 1, &quotsgt&quot: 1, &quotsr&quot: 1, &quotst&quot: 1, &quotsupt&quot: 1, &quotsurg&quot: 1,
+    &quotvs&quot: 1, &quoti.e&quot: 1, &quotrev&quot: 1, &quote.g&quot: 1,
+    &quotno&quot: 2, &quotnos&quot: 1, &quotnrt&quot: 2, &quotnr&quot: 1, &quotpp&quot: 2,
+    &quotjan&quot: 1, &quotfeb&quot: 1, &quotmar&quot: 1, &quotapr&quot: 1, &quotjun&quot: 1, &quotjul&quot: 1, &quotaug&quot: 1, &quotsep&quot: 1, &quotoct&quot: 1, &quotnov&quot: 1, &quotdec&quot: 1
+}</a>
+
+&#47&#47 Load list of protected words/phrases (those will not be breaked)
+protected_phrases = []
+with open(preprocessing[&quotprotected_phrases_file&quot], &quotr&quot, encoding=&quotutf-8&quot) as protected_file:</code></pre><h3>After Change</h3><pre><code class='java'>
+with open(preprocessing[&quotprotected_phrases_file&quot], &quotr&quot, encoding=&quotutf-8&quot) as protected_file:
+    protected_phrases = list(filter(None, protected_file.read().split("\n")))
+protected_phrases_regex = []
+<a id="change">with open(preprocessing[&quotprotected_phrases_regex_file&quot], &quotr&quot, encoding=&quotutf-8&quot) as protected_file:
+    protected_phrases_regex = list(filter(None, protected_file.read().split("\n")))
+
+
+&#47&#47 Tokenize sentense
+</a>def tokenize(sentence):
+    &#47&#47 Remove special tokens
+    sentence = re.sub(&quot&lt;unk&gt;|&lt;s&gt;|&lt;/s&gt;&quot, &quot&quot, sentence, flags=re.IGNORECASE)
+</code></pre>

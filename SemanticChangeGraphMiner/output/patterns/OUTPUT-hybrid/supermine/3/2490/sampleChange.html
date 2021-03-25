@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 treated separately
+MINIMIZERS = (gp_minimize,
+              partial(forest_minimize, base_estimator=&quotdt&quot),
+              <a id="change">partial(forest_minimize, base_estimator=&quotet&quot)</a>,
+              partial(forest_minimize, base_estimator=&quotrf&quot),
+              gbrt_minimize)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+for est, acq in product(["dt", "et", "rf"], ACQUISITION):
+    MINIMIZERS.append(
+        partial(forest_minimize, base_estimator=est, acq=acq))
+<a id="change">for acq in ACQUISITION:
+    MINIMIZERS.append(partial(gbrt_minimize, acq=acq))
+
+
+</a>def check_minimizer_api(result, n_models):
+    assert(isinstance(result.space, Space))
+    assert_equal(len(result.models), n_models)
+    assert_equal(len(result.x_iters), 7)</code></pre>

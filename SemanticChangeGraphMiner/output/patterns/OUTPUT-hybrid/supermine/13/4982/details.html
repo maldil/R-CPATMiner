@@ -1,0 +1,36 @@
+<html><h3>f9aea094643fb3240193b0bc0f1908d5b84d82ab,dask_image/ndmeasure/__init__.py,,center_of_mass,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    input_mtch_sum = sum(input, labels, index)
+
+    <a id="change">input_wt_mtch_sum = []</a>
+    <a id="change">for i in _pycompat.irange(input.ndim):
+        sl = input.ndim * [None]
+        sl[i] = slice(None)
+        sl = tuple(sl)
+
+        input_i = dask.array.arange(input.shape[i], chunks=input.chunks[i])
+        input_wt = input * input_i[sl]
+
+        input_wt_mtch_sum.append(sum(input_wt, labels, index))
+
+   </a> input_wt_mtch_sum = dask.array.stack(input_wt_mtch_sum, axis=-1)
+
+    com_lbl = input_wt_mtch_sum / input_mtch_sum[..., None]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    type_mapping = collections.OrderedDict(<a id="change">[
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ]</a>)
+    out_dtype = numpy.dtype(list(type_mapping.items()))
+
+    <a id="change">default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)</a>
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )</code></pre><img src="21549832.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/f33f453e5c7f39f7f0eeb863ba7d786f58ae41b3#diff-c7d90915217ff67a0ed2880b607ca461107b6cf72e1da93891b1b462c0a35f5fL97' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: f33f453e5c7f39f7f0eeb863ba7d786f58ae41b3</div><div id='time'> Time: 2017-11-26</div><div id='author'> Author: neubig@gmail.com</div><div id='file'> File Name: 07-sentrep/text-retrieval.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: index_corpus</div><BR><BR><div id='link'><a href='https://github.com/vitchyr/rlkit/commit/9bdbb11cf27060e7847a87dcdf691dd6b96ce6df#diff-2178a345f4deabd282ac87d8dcb0e8ccc6d47221247628b8dbc0938f186b7b3aL171' target='_blank'>Link</a></div><div id='project'> Project Name: vitchyr/rlkit</div><div id='commit'> Commit Name: 9bdbb11cf27060e7847a87dcdf691dd6b96ce6df</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 38036768+YangRui2015@users.noreply.github.com</div><div id='file'> File Name: rlkit/data_management/obs_dict_replay_buffer.py</div><div id='class'> Class Name: ObsDictRelabelingBuffer</div><div id='method'> Method Name: random_batch</div><BR>

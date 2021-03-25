@@ -1,0 +1,24 @@
+<html><h3>851b618c26a3ab02076e7f40a54d7542e404013b,se3cnn/SO3.py,,spherical_harmonics_xyz,#,109
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def spherical_harmonics_xyz(x, y, z, J):
+    with torch_default_dtype(torch.float64):
+        if x == y == z == 0:  &#47&#47 angles at origin are nan, special treatment
+            <a id="change">if J == 0:  &#47&#47 Y^0 is angularly independent, choose any angle
+                return spherical_harmonics(0, 123, 321)  &#47&#47 [m]
+            else:  &#47&#47 insert zeros for Y^J with J!=0
+                return 0
+       </a> else:  &#47&#47 not at the origin, sample spherical harmonic
+            alpha, beta = x_to_alpha_beta([x, y, z])
+            return spherical_harmonics(J, alpha, beta)  &#47&#47 [m]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 fix values when xyz = 0
+        val = torch.cat([spherical_harmonics(0, 123, 321) if J == 0 else torch.zeros(2 * J + 1) for J in order])  &#47&#47 [m]
+        <a id="change">out[:, xyz.norm(2, -1) == 0] = val.view(-1, 1)</a>
+        return out
+
+
+def compose(a1, b1, c1, a2, b2, c2):</code></pre><img src="38895287.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/851b618c26a3ab02076e7f40a54d7542e404013b#diff-aea3495328514bc68256872a4bcf515b46f9ca204264d5875abd8053e5c4800eL111' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 851b618c26a3ab02076e7f40a54d7542e404013b</div><div id='time'> Time: 2018-12-10</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/SO3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: spherical_harmonics_xyz</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/c28b2e4cfd60a5b131a1f8752d484b9c99d05e81#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L68' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: c28b2e4cfd60a5b131a1f8752d484b9c99d05e81</div><div id='time'> Time: 2017-11-17</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/Kaixhin/Rainbow/commit/a4df4a6f648053e4ad05bbcfc06a87c6fa984e53#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L61' target='_blank'>Link</a></div><div id='project'> Project Name: Kaixhin/Rainbow</div><div id='commit'> Commit Name: a4df4a6f648053e4ad05bbcfc06a87c6fa984e53</div><div id='time'> Time: 2018-02-15</div><div id='author'> Author: kaia@fb.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: DQN</div><div id='method'> Method Name: forward</div><BR>

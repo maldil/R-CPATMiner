@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                     &quot--noinput&quot], shell=False)
+
+    print(f&quotStarting server with port {args.port}.&quot)
+    <a id="change">os.environ[&quotDEBUG&quot] = &quotFalse&quot</a>
+    subprocess.call([&quotpython&quot, manage_path, &quotrunserver&quot, f&quot0.0.0.0:{args.port}&quot])
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument(&quot--database_url&quot, type=str, default=&quotsqlite:///doccano.db&quot, help=&quotdata store&quot)
+    args = parser.parse_args()
+
+    <a id="change">os.environ.setdefault(&quotDEBUG&quot, &quotFalse&quot)</a>
+    os.environ.setdefault(&quotDATABASE_URL&quot, args.database_url)
+
+    print(&quotSetup Database.&quot)
+    base = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))</code></pre>

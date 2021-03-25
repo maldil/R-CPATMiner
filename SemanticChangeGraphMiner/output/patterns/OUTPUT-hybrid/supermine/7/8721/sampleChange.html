@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, input, difference_mat, relative_mask=None):
+        y = self.conv(input, difference_mat, relative_mask)
+        <a id="change">if self.scalar_act is None and self.gate_act is None:
+            z = y
+        else:
+            if len(difference_mat.size()) == 4:
+                batch, N, _M, _ = difference_mat.size()
+            if len(difference_mat.size()) == 3:
+                N, _M, _ = difference_mat.size()
+
+            size_out = sum(mul * (2 * n + 1) for n, mul in enumerate(self.repr_out))
+
+            if self.gate_act is not None:
+                g = y[:, size_out:]
+                g = self.gate_act(g)
+                begin_g = 0  &#47&#47 index of first scalar gate capsule
+
+            z = y.new_empty((y.size(0), size_out, y.size(2)))
+            begin_y = 0  &#47&#47 index of first capsule
+
+            for n, mul in enumerate(self.repr_out):
+                if mul == 0:
+                    continue
+                dim = 2 * n + 1
+
+                &#47&#47 crop out capsules of order n
+                field_y = y[:, begin_y: begin_y + mul * dim]  &#47&#47 [batch, feature * repr, N]
+
+                if n == 0:
+                    &#47&#47 Scalar activation
+                    if self.scalar_act is not None:
+                        field = self.scalar_act(field_y)
+                    else:
+                        field = field_y
+                else:
+                    if self.gate_act is not None:
+                        &#47&#47 reshape channels in capsules and capsule entries
+                        field_y = field_y.contiguous()
+                        field_y = field_y.view(batch, mul, dim, N)  &#47&#47 [batch, feature, repr, x, y, z]
+
+                        &#47&#47 crop out corresponding scalar gates
+                        field_g = g[:, begin_g: begin_g + mul]  &#47&#47 [batch, feature, x, y, z]
+                        begin_g += mul
+                        &#47&#47 reshape channels for broadcasting
+                        field_g = field_g.contiguous()
+                        field_g = field_g.view(batch, mul, 1, N)  &#47&#47 [batch, feature, repr, x, y, z]
+
+                        &#47&#47 scale non-scalar capsules by gate values
+                        field = field_y * field_g  &#47&#47 [batch, feature, repr, x, y, z]
+                        field = field.view(batch, mul * dim, N)  &#47&#47 [batch, feature * repr, x, y, z]
+                        del field_g
+                    else:
+                        field = field_y
+                del field_y
+
+                z[:, begin_y: begin_y + mul * dim] = field
+                begin_y += mul * dim
+                del field
+       </a> return z
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            return y
+
+        has_batch = difference_matrix.dim() == 4
+        <a id="change">if not has_batch:
+            difference_matrix = difference_matrix.unsqueeze(0)
+            y = y.unsqueeze(0)
+
+       </a> batch, N, _M, _ = difference_matrix.size()
+
+        size_out = sum(mul * (2 * l + 1) for l, mul in enumerate(self.repr_out))
+</code></pre>

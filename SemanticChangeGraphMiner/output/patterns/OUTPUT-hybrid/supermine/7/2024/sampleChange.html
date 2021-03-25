@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Specify Mach Number Range
+
+    if supersonic:
+        <a id="change">mach_range  = np.linspace(0, 3., num = grid_points, endpoint=False)</a>
+    else:
+        mach_range  = np.linspace(0, 1., num = grid_points, endpoint=False)
+
+    excess_power = np.zeros((grid_points, grid_points))
+
+
+    for alt_idx in range(grid_points):
+
+        atmo_data = atmo.compute_values(alt_range[alt_idx])
+
+        for mach_idx in range(grid_points):
+
+            <a id="change">V = mach_range[mach_idx] * atmo_data.speed_of_sound</a>
+
+            excess_power[mach_idx, alt_idx] = V[T / W - V * 0.02 / (W / S) - load_factor ** 2 * (K / V) * (W / S)]
+
+    mach_space, alt_space = np.meshgrid(mach_range, alt_range)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Initialize Excess Power and Climb Rate
+
+    excess_power = np.zeros((grid_points, grid_points))
+    <a id="change">climb_rate = np.zeros((grid_points, grid_points))</a>
+
+
+    for alt_idx in range(grid_points):
+</code></pre>

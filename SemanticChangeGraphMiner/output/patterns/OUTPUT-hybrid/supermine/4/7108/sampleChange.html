@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                 [shear_y, 1, shear_y, 0],
+                                 [shear_z, shear_z, 1, 0]])
+        if self.lazy:
+            <a id="change">return shear_matrix</a>
+        else:
+            <a id="change">self.tx.set_parameters(shear_matrix)</a>
+            return self.tx.apply_to_image(X, reference=self.reference)
+
+
+class RandomShear3D(object):</code></pre><h3>After Change</h3><pre><code class='java'>
+        shear_matrix = np.array([[1, shear_x, shear_x, 0],
+                                 [shear_y, 1, shear_y, 0],
+                                 [shear_z, shear_z, 1, 0]])
+        <a id="change">self.tx.set_parameters(shear_matrix)</a>
+        if self.lazy or X is None:
+            return self.tx
+        else:
+            return self.tx.apply_to_image(X, reference=self.reference)</code></pre>

@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    initial_ids = tf.fill([batch_size], tf.constant(bos_id, dtype=tf.int32))
+
+    inputs_old = features["source"]
+    <a id="change">inputs_length_old = features["source_length"]</a>
+
+    &#47&#47 Expand the inputs in to the beam size
+    &#47&#47 [batch, length] =&gt; [batch, beam_size, length]
+    features["source"] = tf.expand_dims(features["source"], 1)
+    features["source"] = tf.tile(features["source"], [1, beam_size, 1])
+    shape = tf.shape(features["source"])
+
+    &#47&#47 [batch, beam_size, length] =&gt; [batch * beam_size, length]
+    features["source"] = tf.reshape(features["source"],
+                                    [shape[0] * shape[1], shape[2]])
+
+    &#47&#47 For source sequence length
+    features["source_length"] = tf.expand_dims(features["source_length"], 1)
+    features["source_length"] = tf.tile(features["source_length"],
+                                        [1, beam_size])
+    shape = tf.shape(features["source_length"])
+
+    &#47&#47 [batch, beam_size, length] =&gt; [batch * beam_size, length]
+    features["source_length"] = tf.reshape(features["source_length"],
+                                           [shape[0] * shape[1]])
+
+    vocab_size = len(params.vocabulary["target"])
+    &#47&#47 Setting decode length to input length + decode_length
+    decode_length = tf.shape(features["source"])[1] + decode_length
+
+    ids, scores = beam_search(symbols_to_logits_fn, initial_ids,
+                              beam_size, decode_length, vocab_size,
+                              alpha,
+                              eos_id=params.mapping["target"][params.eos],
+                              lp_constant=params.decode_constant)
+
+    &#47&#47 Set inputs back to the unexpanded inputs to not to confuse the Estimator
+    features["source"] = inputs_old
+    <a id="change">features["source_length"] = inputs_length_old</a>
+
+    &#47&#47 Return `top_beams` decoding
+    &#47&#47 (also remove initial id from the beam search)
+    if not params.decode_normalize:</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 shape of ids: [batch, beam_size, max_length]
+        &#47&#47 shape of coordinates: [batch, beam_size, 2]
+        batch_pos = compute_batch_indices(batch_size, beam_size)
+        coordinates = tf.stack(<a id="change">[batch_pos, indices]</a>, axis=2)
+        <a id="change">ids = tf.gather_nd(ids, coordinates)</a>
+
+    &#47&#47 Return `top_beams` decoding
+    &#47&#47 (also remove initial id from the beam search)
+    return ids[:, :top_beams, 1:], scores[:, :top_beams]</code></pre>

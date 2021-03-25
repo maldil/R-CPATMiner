@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Init.
+        
+        if random_state is None:
+            self.random_state = <a id="change">np.random.randint(0, 1000, 1)[0]</a>
+        self.n_jobs = n_jobs
+
+    @abstractmethod
+    def evaluate(self, dataset, subject, clf, paradigm):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.n_jobs = n_jobs
+
+        &#47&#47 check paradigm
+        <a id="change">if not isinstance(paradigm, BaseParadigm):
+            raise(ValueError("paradigm must be an Paradigm instance"))
+       </a> self.paradigm = paradigm
+
+        &#47&#47 if no dataset provided, then we get the list from the paradigm
+        if datasets is None:
+            datasets = self.paradigm.datasets
+
+        if not isinstance(datasets, list):
+            if isinstance(datasets, BaseDataset):
+                datasets = [datasets]
+            else:
+                raise(ValueError("datasets must be a list or a dataset "
+                                 "instance"))
+
+        for dataset in datasets:
+            <a id="change">if not(isinstance(dataset, BaseDataset)):
+                raise(ValueError("datasets must only contains dataset "
+                                 "instance"))
+
+       </a> <a id="change">for dataset in datasets:
+            self.paradigm.verify(dataset)
+
+       </a> <a id="change">self.datasets = datasets</a>
+
+    def process(self, pipelines, overwrite=False, suffix=&quot&quot):
+        &quot&quot&quot
+        Runs tasks on all given datasets.</code></pre>

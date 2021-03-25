@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+    img = img.astype(np.float32)
+    <a id="change">img2 = scipy.misc.imresize(img, 0.5, interp=&quotbicubic&quot, mode=&quotF&quot)</a>
+
+    mscn1, var, mu = compute_image_mscn_transform(img)
+    mscn1 = mscn1.astype(np.float32)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        img = img[:, :-woffset]
+
+
+    <a id="change">img</a> = img.astype(np.float32)
+    img2 = np.array(Image.fromarray(img).resize(
+        (int(0.5 * <a id="change">img</a>.shape[0]), int(<a id="change">img.shape[1]</a> * 0.5)),
+        resample=PIL.Image.BICUBIC)
+    )
+</code></pre>

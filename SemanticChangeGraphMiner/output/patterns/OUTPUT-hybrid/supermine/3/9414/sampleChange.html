@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        t = dewarped.shape[0] - img.shape[0]
+        &#47&#47 scale to target height
+        scaled = ScaleToHeightProcessor.scale_to_h(dewarped, self.target_height, order=order, dtype=dtype, cval=cval)
+        if <a id="change">dewarped.shape[1]</a> != 0:
+            m2 = scaled.shape[1] / dewarped.shape[1]
+        else:
+            m2 = -1</code></pre><h3>After Change</h3><pre><code class='java'>
+        if img.size == 0:
+            cval = 1
+        elif img.ndim == 2:
+            cval = <a id="change">np</a>.amax(img).item()
+        else:
+            x, y = np.unravel_index(np.argmax(np.mean(img, axis=2)), img.shape[:2])
+            cval = img[x, y, :].tolist()</code></pre>

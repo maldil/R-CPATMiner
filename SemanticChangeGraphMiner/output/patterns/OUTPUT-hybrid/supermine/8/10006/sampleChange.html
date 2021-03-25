@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 This derives std(y | x) as described in 4.3.2 of arXiv:1211.0906
+            std = np.zeros(len(X))
+
+            <a id="change">for tree in self.estimators_:
+                var_tree = tree.tree_.impurity[tree.apply(X)]
+                mean_tree = tree.predict(X)
+                std += var_tree + mean_tree ** 2
+
+           </a> std /= len(self.estimators_)
+            <a id="change">std -= mean ** 2.0</a>
+            std[std &lt; 0.0] = 0.0
+            std = std ** 0.5
+
+            <a id="change">return mean, std</a>
+
+        return mean
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                raise ValueError(
+                    "Expected impurity to be &quotmse&quot, got %s instead"
+                    % self.criterion)
+            <a id="change">return mean, _return_std(X, self.estimators_, mean)</a>
+
+        return mean
+</code></pre>

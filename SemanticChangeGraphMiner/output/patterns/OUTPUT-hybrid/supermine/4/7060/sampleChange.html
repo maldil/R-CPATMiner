@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.chunk_size = chunk_size
+        self.hop_size = hop_size
+        
+        <a id="change">blocks = []</a>
+        for i in range(num_layers):
+            _block = DualPathBlock(n_features=bottleneck_size, **kwargs)
+            blocks.append(_block)
+            self.add_module(f&quotlayer{i}&quot, _block)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.chunk_size = chunk_size
+        self.hop_size = hop_size
+        
+        self.layers = <a id="change">nn.ModuleList()</a>
+        for i in range(num_layers):
+            _block = DualPathBlock(n_features=bottleneck_size, **kwargs)
+            self.layers.append(_block)
+        self.skip_connection = skip_connection</code></pre>

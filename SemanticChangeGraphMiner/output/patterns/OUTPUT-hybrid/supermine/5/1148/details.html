@@ -1,0 +1,27 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)
+    n_thresh = recall_point * n_match
+    <a id="change">tp = 0</a>
+    count = 0
+    for label, score in sorted_scores:
+        count += 1
+        if label == 1:
+            tp += 1
+        <a id="change">if tp &gt;= n_thresh:
+            break
+
+   </a> return float(count - tp) / count
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    <a id="change">threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels))</a> 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative</code></pre><img src="4941291.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-f725eea8a8cfd270dc9a67e16ed52700e6bfaa5121f5ef13eea92afe7896c09aL87' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/rank.py</div><div id='class'> Class Name: Rank</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/chuyangliu/snake/commit/1226a2eee68336240a35fce9678320ca9430584f#diff-853a583c4cef99563451d6870b00f5a0ceea6fe4dde0758b5ef966363f54e681L185' target='_blank'>Link</a></div><div id='project'> Project Name: chuyangliu/snake</div><div id='commit'> Commit Name: 1226a2eee68336240a35fce9678320ca9430584f</div><div id='time'> Time: 2018-01-06</div><div id='author'> Author: chuyang.s.liu@gmail.com</div><div id='file'> File Name: snake/solver/dqn.py</div><div id='class'> Class Name: DQNSolver</div><div id='method'> Method Name: __choose_action</div><BR>

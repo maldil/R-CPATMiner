@@ -1,0 +1,25 @@
+<html><h3>ce2ff4b47c40fbb29ed297965a8ec607d59b116d,tf_unet/unet.py,Trainer,train,#Trainer#,374
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        avg_gradients[i] = (avg_gradients[i] * (1.0 - (1.0 / (step+1)))) + (gradients[i] / (step+1))
+                        
+                    norm_gradients = [np.linalg.norm(gradient) for gradient in avg_gradients]
+                    <a id="change">self.norm_gradients_node.assign(norm_gradients).eval()</a>
+                    
+                    if step % display_step == 0:
+                        self.output_minibatch_stats(sess, summary_writer, step, batch_x, util.crop_to_shape(batch_y, pred_shape))
+                        </code></pre><h3>After Change</h3><pre><code class='java'>
+                                                                 self.net.y: util.crop_to_shape(batch_y, pred_shape),
+                                                                 self.net.keep_prob: dropout})
+
+                    <a id="change">if self.net.summaries and self.norm_grads:
+                        avg_gradients = _update_avg_gradients(avg_gradients, gradients, step)
+                        norm_gradients = [np.linalg.norm(gradient) for gradient in avg_gradients]
+                        self.norm_gradients_node.assign(norm_gradients).eval()
+                    
+                   </a> if step % display_step == 0:
+                        self.output_minibatch_stats(sess, summary_writer, step, batch_x, util.crop_to_shape(batch_y, pred_shape))
+                        
+                    total_loss += loss</code></pre><img src="3122571.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/ce2ff4b47c40fbb29ed297965a8ec607d59b116d#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L377' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: ce2ff4b47c40fbb29ed297965a8ec607d59b116d</div><div id='time'> Time: 2017-09-21</div><div id='author'> Author: joel.akeret@gmail.com</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/Cadene/bootstrap.pytorch/commit/5596783838477f6e4c099d94a715f18fcc8a1687#diff-ee7cce2fe1b187984d37d4ad3eaf8f1f2b0707dc2bdcc9c434d6d3e52ec7cd13L95' target='_blank'>Link</a></div><div id='project'> Project Name: Cadene/bootstrap.pytorch</div><div id='commit'> Commit Name: 5596783838477f6e4c099d94a715f18fcc8a1687</div><div id='time'> Time: 2018-07-24</div><div id='author'> Author: rcadene@lnode-au16-28.cm.cluster</div><div id='file'> File Name: bootstrap/run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: run</div><BR><BR><div id='link'><a href='https://github.com/anishathalye/neural-style/commit/4ff41aad9a23f4c5160648bb930606175cd932ed#diff-c4f077f47bc975d29e4b31e6530bf53dd830e6afd4d24fcbad21c80b1cfa2a8dL77' target='_blank'>Link</a></div><div id='project'> Project Name: anishathalye/neural-style</div><div id='commit'> Commit Name: 4ff41aad9a23f4c5160648bb930606175cd932ed</div><div id='time'> Time: 2015-12-03</div><div id='author'> Author: me@anishathalye.com</div><div id='file'> File Name: stylize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stylize</div><BR><BR><div id='link'><a href='https://github.com/mindorii/kws/commit/f2105ccdf8e18f2270c45068c6d1bec7338b3825#diff-5e60f8927ac9ba47234cfe7c14e6614fd4adb931f6b664b10b50106c9c05be14L30' target='_blank'>Link</a></div><div id='project'> Project Name: mindorii/kws</div><div id='commit'> Commit Name: f2105ccdf8e18f2270c45068c6d1bec7338b3825</div><div id='time'> Time: 2017-12-15</div><div id='author'> Author: awni.hannun@gmail.com</div><div id='file'> File Name: models/streaming_model.py</div><div id='class'> Class Name: StreamingSpeechModel</div><div id='method'> Method Name: initial_state</div><BR><BR><div id='link'><a href='https://github.com/masa-su/pixyz/commit/c9a2beba5cfed8be10fff48493d740076b9388f1#diff-0c3bd5aa6ba5a572903c9bdee177fe744c621e4e4cf1462fe7124cbf2083f7c1L648' target='_blank'>Link</a></div><div id='project'> Project Name: masa-su/pixyz</div><div id='commit'> Commit Name: c9a2beba5cfed8be10fff48493d740076b9388f1</div><div id='time'> Time: 2019-10-23</div><div id='author'> Author: kaneko@weblab.t.u-tokyo.ac.jp</div><div id='file'> File Name: pixyz/losses/losses.py</div><div id='class'> Class Name: Expectation</div><div id='method'> Method Name: _get_eval</div><BR>

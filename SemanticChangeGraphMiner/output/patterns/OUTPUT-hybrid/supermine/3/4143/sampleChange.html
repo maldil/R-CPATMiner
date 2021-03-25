@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if psutil.virtual_memory().available &lt; 1.2 * pow(10,9):
+                self.predictor_cache = {}
+
+            predictor_record = <a id="change">Predictor.query.filter_by(company_id=self.company_id, name=name)</a>
+            if predictor_record.data[&quotstatus&quot] == &quotcomplete&quot:
+                self.fs_store.get(name, f&quotpredictor_{self.company_id}_{name}&quot, self.config[&quotpaths&quot][&quotpredictors&quot])
+                self.predictor_cache[name] = {
+                    &quotpredictor&quot: mindsdb_native.Predictor(name=name, run_env={&quottrigger&quot: &quotmindsdb&quot}),</code></pre><h3>After Change</h3><pre><code class='java'>
+            if psutil.virtual_memory().available &lt; 1.2 * pow(10,9):
+                self.predictor_cache = {}
+
+            predictor_record = <a id="change">Predictor.query.filter_by(company_id=self.company_id, name=name).first()</a>
+            if predictor_record.data[&quotstatus&quot] == &quotcomplete&quot:
+                self.fs_store.get(name, f&quotpredictor_{self.company_id}_{name}&quot, self.config[&quotpaths&quot][&quotpredictors&quot])
+                self.predictor_cache[name] = {
+                    &quotpredictor&quot: mindsdb_native.Predictor(name=name, run_env={&quottrigger&quot: &quotmindsdb&quot}),</code></pre>

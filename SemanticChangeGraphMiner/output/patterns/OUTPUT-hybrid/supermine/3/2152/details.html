@@ -1,0 +1,20 @@
+<html><h3>17ec4c25d6b26300bbcdb6bfe781595bd2586a96,dask_image/imread/__init__.py,,imread,#,21
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    a = []
+    for i, j in zip(lower_iter, upper_iter):
+        a.append(dask.array.from_delayed(
+            <a id="change">dask.delayed(_utils._read_frame)(fname, slice(i, j),
+                                             arrayfunc=arrayfunc)</a>,
+            (j - i,) + shape[1:],
+            dtype,
+            meta=arrayfunc([])</code></pre><h3>After Change</h3><pre><code class='java'>
+    a = dask.array.map_blocks(
+        _map_read_frame,
+        chunks=dask.array.core.normalize_chunks(
+            <a id="change">(nframes,)</a> + shape[1:], shape),
+        fn=fname,
+        arrayfunc=arrayfunc,
+        meta=arrayfunc([]).astype(dtype),  &#47&#47 meta overwrites `dtype` argument</code></pre><img src="10137826.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/17ec4c25d6b26300bbcdb6bfe781595bd2586a96#diff-425b0576585fcd668a43f742a47a93ff84906bc47dfae67ca2c768a7e8c7e071L49' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: 17ec4c25d6b26300bbcdb6bfe781595bd2586a96</div><div id='time'> Time: 2020-10-25</div><div id='author'> Author: marvin.albert@gmail.com</div><div id='file'> File Name: dask_image/imread/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: imread</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b4ae3a5a56f63b1ed65370d2bb074503026cc1c4#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L230' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b4ae3a5a56f63b1ed65370d2bb074503026cc1c4</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: label</div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/6254b5540c4e114439b9930fe41c20542155ecc9#diff-78b9e10919c691713ccc1c9c83f7e7fd18a1c48469cca2e807892cb9d116e6a8L455' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: 6254b5540c4e114439b9930fe41c20542155ecc9</div><div id='time'> Time: 2017-12-13</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/entity2rec.py</div><div id='class'> Class Name: Entity2Rec</div><div id='method'> Method Name: _compute_features</div><BR>

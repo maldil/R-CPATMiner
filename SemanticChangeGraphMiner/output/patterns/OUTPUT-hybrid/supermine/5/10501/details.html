@@ -1,0 +1,26 @@
+<html><h3>9cf2bcdb24f23a17ec11e69b8885851771dfd3d8,cube/models/vocoder.py,BeeCoder,learn,#BeeCoder#,121
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    sys.stdout.flush()
+            output_power = self._predict_one(mgc[mgc_index], runtime=False)
+            &#47&#47 print(np.abs(signal_fft[mgc_index]))
+            fft_pow = 20 * np.log10(np.maximum(1e-5, <a id="change">np.abs(signal_fft[mgc_index])</a>))  &#47&#47 np.abs(signal_fft[mgc_index])
+            min_level_db = -100.0
+            <a id="change">fft_pow = np.clip((fft_pow - min_level_db) / -min_level_db, 0, 1)</a>
+            &#47&#47 print (fft_pow)
+            &#47&#47 print (fft_angle)
+            &#47&#47 print("")
+            losses.append(dy.binary_log_loss(output_power, dy.inputVector(fft_pow)))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            pred_output = self._predict_one(mgc[mgc_index], runtime=False)
+
+            <a id="change">if mgc_index != len(mgc) - 1:
+                losses.append(dy.squared_distance(pred_output, dy.inputVector(
+                    wave[mgc_index * self.UPSAMPLE_COUNT:mgc_index * self.UPSAMPLE_COUNT + self.UPSAMPLE_COUNT])))
+
+           </a> if len(losses) &gt;= batch_size:
+                loss = dy.esum(losses)
+                total_loss += loss.value()
+                loss.backward()</code></pre><img src="38986802.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/9cf2bcdb24f23a17ec11e69b8885851771dfd3d8#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L108' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 9cf2bcdb24f23a17ec11e69b8885851771dfd3d8</div><div id='time'> Time: 2018-10-25</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/8d63d75858cc6df30ea19c55f0da955d8d46f53a#diff-8a306ac5079751dfe7b1a864b1d8365a5e832f847f73d197c1cb64c7d1e299f0L629' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 8d63d75858cc6df30ea19c55f0da955d8d46f53a</div><div id='time'> Time: 2018-07-26</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/core_class.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: plot</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/83579d7761d6bc995e1e6e90cd376191e648081e#diff-a7485c17070a9cba432799a84a959a871b5269d32890cf9c10cee5ddf32a2f9bL136' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: 83579d7761d6bc995e1e6e90cd376191e648081e</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: Benli11@users.noreply.github.com</div><div id='file'> File Name: ristretto/nmf/rnmf_fhals.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnmf_fhals</div><BR>

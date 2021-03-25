@@ -1,0 +1,25 @@
+<html><h3>90b78b1379b3423aa3b4b5d0de7313f88bda23ab,chainercv/utils/mask/mask_to_bbox.py,,mask_to_bbox,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bbox = []
+    for msk in mask:
+        where = np.argwhere(msk)
+        <a id="change">if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+       </a> bbox.append((y_min, x_min, y_max, x_max))
+    if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)</code></pre><h3>After Change</h3><pre><code class='java'>
+            continue
+        y_min = ys_i.min()
+        x_min = xs_i.min()
+        <a id="change">y_max = ys_i.max() + 1</a>
+        x_max = xs_i.max() + 1
+        bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)
+    return bbox
+</code></pre><img src="37032820.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/e839626c28d8dc6030ce71f3619e934b36fb6627#diff-2a65fed333ce2388ad4cd4f49b51f2c5d3078409e302e94e86eb381cde664fcdL39' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: e839626c28d8dc6030ce71f3619e934b36fb6627</div><div id='time'> Time: 2020-10-23</div><div id='author'> Author: Balaganskij.NN@phystech.edu</div><div id='file'> File Name: catalyst/metrics/functional.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: process_multiclass_components</div><BR><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/d7b2db3c5262c82c44958afc2500efe0838f0884#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L556' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: d7b2db3c5262c82c44958afc2500efe0838f0884</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _update_edge_keys</div><BR>

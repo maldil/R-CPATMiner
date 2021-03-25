@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_find_binning_thresholds_low_n_bins():
+    <a id="change">bin_thresholds = _find_binning_thresholds(DATA, max_bins=128,
+                                              random_state=0)</a>
+    assert len(bin_thresholds) == 2
+    for i in range(len(bin_thresholds)):
+        assert bin_thresholds[i].shape == (127,)  &#47&#47 128 - 1
+        assert bin_thresholds[i].dtype == DATA.dtype</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_find_binning_thresholds_low_n_bins():
+    <a id="change">bin_thresholds = [_find_binning_thresholds(DATA[:, i], max_bins=128)
+                      for i in range(2)]</a>
+    for i in range(len(bin_thresholds)):
+        assert bin_thresholds[i].shape == (127,)  &#47&#47 128 - 1
+        assert bin_thresholds[i].dtype == DATA.dtype
+</code></pre>

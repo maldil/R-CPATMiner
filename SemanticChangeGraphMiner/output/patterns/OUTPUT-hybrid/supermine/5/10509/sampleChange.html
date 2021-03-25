@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for action, r in zip(policy.saved_actions, rewards):
+        action.reinforce(r)
+    optimizer.zero_grad()
+    <a id="change">autograd.backward(policy.saved_actions, [None for _ in policy.saved_actions])</a>
+    optimizer.step()
+    del policy.rewards[:]
+    del policy.saved_actions[:]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def finish_episode():
+    R = 0
+    <a id="change">policy_loss = 0</a>
+    rewards = []
+    for r in policy.rewards[::-1]:
+        R = r + args.gamma * R
+        rewards.insert(0, R)
+    rewards = torch.Tensor(rewards)
+    rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    for log_prob, r in zip(policy.saved_actions, rewards):
+        <a id="change">policy_loss -= (log_prob * reward).sum()</a>
+    optimizer.zero_grad()
+    <a id="change">policy_loss.backward()</a>
+    optimizer.step()
+    del policy.rewards[:]
+    del policy.saved_actions[:]
+</code></pre>

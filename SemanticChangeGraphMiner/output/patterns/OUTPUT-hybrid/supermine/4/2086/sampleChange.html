@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        reduction_indices=1,
+                                        keep_dims=True, name="l2_user_pos")
+            l2_user_neg = tf.reshape(tf.reduce_sum(tf.square(tf.subtract(tmp_user, self._n_item)),
+                                                   reduction_indices=<a id="change">[1, 2]</a>, name="l2_user_neg"), [-1,1])
+            pos_score = l2_user_pos + self._p_item_bias
+            neg_score = l2_user_neg + tf.reduce_sum(self._n_item_bias, reduction_indices=[1, 2])
+            self._loss = tf.reduce_sum(self._weights * tf.maximum(self._margin*self._neg_num + pos_score*self._neg_num - neg_score, 0))</code></pre><h3>After Change</h3><pre><code class='java'>
+                                        reduction_indices=2, 
+                                        name="l2_user_neg")
+            pos_score = l2_user_pos + tf.tile(self._p_item_bias, [1, self._neg_num])         &#47&#47 shape=(2000, self._neg_num)
+            neg_score = l2_user_neg + <a id="change">tf.reduce_sum(self._n_item_bias, reduction_indices=2)</a>  &#47&#47 shape=(2000, self._neg_num)
+            self._loss = tf.reduce_sum(self._weights * tf.maximum(self._margin + pos_score - neg_score, 0))
+
+    def _build_serving_graph(self):</code></pre>

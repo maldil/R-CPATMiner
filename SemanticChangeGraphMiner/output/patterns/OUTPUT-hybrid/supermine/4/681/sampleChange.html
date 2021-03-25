@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+rcParams["debug"]=True
+
+wl = Wordlist("pad_data_qlc.qlc")
+<a id="change">wl.tokenize(&quotpad_orthography_profile&quot)</a>
+wl.output("qlc", filename="tokenized-pad_data")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+print()
+print("ID"+"\t"+"ORIGINAL"+"\t"+"RULES")
+<a id="change">for line in infile:
+    line = line.strip()
+    tokens = line.split("\t")
+    id = tokens[0]
+    counterpart = tokens[2]
+    grapheme_clusters =t.grapheme_clusters(counterpart)
+    rules = t.rules(grapheme_clusters)
+    print(id+"\t"+counterpart+"\t"+rules)
+
+
+</a>
+&#47&#47 this tokenize does not work because of the way the orthography rules are currently written, i.e. 
+&#47&#47 they expect space delimited tokens; the wordlist.tokenize() function first apples the rules
+&#47&#47 and the the Unicode grapheme cluster tokenization</code></pre>

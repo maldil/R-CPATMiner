@@ -1,0 +1,18 @@
+<html><h3>4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27,stanfordnlp/models/common/char_model.py,CharacterLanguageModel,forward,#CharacterLanguageModel#,76
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.pad:
+                res = pad_packed_sequence(res, batch_first=True)[0]
+        
+        <a id="change">return res</a></code></pre><h3>After Change</h3><pre><code class='java'>
+                      self.charlstm_c_init.expand(self.args[&quotchar_num_layers&quot], batch_size, self.args[&quotchar_hidden_dim&quot]).contiguous())
+        output, hidden = self.charlstm(embs, charlens, hx=hidden)
+        output = self.dropout(pad_packed_sequence(output, batch_first=True)[0])
+        <a id="change">decoded = self.decoder(output)</a>
+        <a id="change">return output, hidden, decoded</a>
+
+    def get_representation(self, chars, charoffsets, charlens, char_orig_idx):
+        with torch.no_grad(): &#47&#47TODO: remove
+            output, _, _ = self.forward(chars, charlens)</code></pre><img src="23711881.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/stanfordnlp/stanza/commit/4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27#diff-e4af714aa561396d3d07017b3a2ce37c4127b07e098cca11c5fedc38217c7846L76' target='_blank'>Link</a></div><div id='project'> Project Name: stanfordnlp/stanza</div><div id='commit'> Commit Name: 4cbcf46bb80ecfbfedcd3e2872669d3aa96f5e27</div><div id='time'> Time: 2019-09-06</div><div id='author'> Author: zyh.thu@gmail.com</div><div id='file'> File Name: stanfordnlp/models/common/char_model.py</div><div id='class'> Class Name: CharacterLanguageModel</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/37f599f61067cc6947c9bf783eace05227c0f450#diff-bc5d25ee3851bdc4309fd1e5f652feac88005eea3ad3332685fdcbd90f9d67afL35' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 37f599f61067cc6947c9bf783eace05227c0f450</div><div id='time'> Time: 2017-11-13</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: CapsNet</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/632d385444ae16afe3e4003c94864f9f97dc8541#diff-a0dde2339d3c9cf9be62fcd42b3bce55a28ce81a4df0d1fb8d289a8410c45511L47' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 632d385444ae16afe3e4003c94864f9f97dc8541</div><div id='time'> Time: 2019-09-04</div><div id='author'> Author: hongyu@mail.com</div><div id='file'> File Name: word_language_model/model.py</div><div id='class'> Class Name: RNNModel</div><div id='method'> Method Name: forward</div><BR>

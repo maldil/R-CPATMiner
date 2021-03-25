@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            e.train()
+
+        &#47&#47 define an arbitrary reversible function and define graph for model 1
+        <a id="change">Xin</a> = <a id="change">X.clone()</a>
+        fn = ReversibleBlock(c1_2, c2_2, keep_input=False, coupling=coupling, adapter=AffineAdapterNaive,
+                                   implementation_fwd=implementation_fwd, implementation_bwd=implementation_bwd)
+        <a id="change">Y</a> = fn.forward(Xin)
+        <a id="change">loss2</a> = torch.mean(Y)
+
+        &#47&#47 define the reversible function without custom backprop and define graph for model 2
+        XX = X.clone().data</code></pre><h3>After Change</h3><pre><code class='java'>
+            e.train()
+
+        &#47&#47 define an arbitrary reversible function and define graph for model 1
+        <a id="change">Xin</a> = <a id="change">X</a>.clone().requires_grad_()
+        fn = ReversibleBlock(c1_2, c2_2, keep_input=False, coupling=coupling, adapter=AffineAdapterNaive,
+                                   implementation_fwd=implementation_fwd, implementation_bwd=implementation_bwd)
+        <a id="change">Y</a> = fn.forward(Xin)
+        <a id="change">loss2</a> = torch.mean(Y)
+
+        &#47&#47 define the reversible function without custom backprop and define graph for model 2
+        XX = X.clone().detach().requires_grad_()</code></pre>

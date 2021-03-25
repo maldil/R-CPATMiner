@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x = self.model.layer3(x)
+        x = self.model.layer4(x)
+        x = self.model.avgpool(x)
+        <a id="change">x = torch.squeeze(x)</a>
+        x = self.classifier(x)
+        return x
+
+&#47&#47 Define the DenseNet121-based Model</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = self.model.layer3(x)
+        x = self.model.layer4(x)
+        x = self.model.avgpool(x)
+        <a id="change">x = x.view(x.size(0), x.size(1))</a>
+        x = self.classifier(x)
+        return x
+
+&#47&#47 Define the DenseNet121-based Model</code></pre>

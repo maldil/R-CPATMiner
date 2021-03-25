@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if has_user_input:
+                warnings.warn(("Lost particle {:d} (x={:.0f}, y={:.0f})" +
+                               " after refinement.").format(i, coords[&quotx&quot],
+                                                            <a id="change">coords[&quoty&quot]</a>))
+            continue
+
+        &#47&#47 Make a copy of old coords and overwrite with result</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not pool:
+        refined = map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])
+    else:
+        <a id="change">refined = pool.map(_get_refined_coords, [(coords, pos_columns, image, radius, kwargs, has_user_input) for _, coords in coords_df.iterrows()])</a>
+
+    refined = [ref <a id="change">for</a> ref in refined if ref is not None]
+
+    columns = np.unique(np.concatenate((pos_columns, [&quotr&quot], coords_df.columns)))
+    if len(refined) == 0:</code></pre>

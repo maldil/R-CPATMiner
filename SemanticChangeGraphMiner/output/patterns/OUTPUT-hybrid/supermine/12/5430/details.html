@@ -1,0 +1,30 @@
+<html><h3>bf464d7ed9283988fea1f548a11a0171fd2ff364,keras/utils/version_utils.py,,swap_class,#,97
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return v1_cls
+
+  &#47&#47 Recursively search superclasses to swap in the right Keras class.
+  <a id="change">cls.__bases__ = tuple(
+      swap_class(base, v2_cls, v1_cls, use_v2) for base in cls.__bases__)</a>
+  return cls
+
+
+def disallow_legacy_graph(cls_name, method_name):</code></pre><h3>After Change</h3><pre><code class='java'>
+    return v2_cls if use_v2 else v1_cls
+
+  &#47&#47 Recursively search superclasses to swap in the right Keras class.
+  <a id="change">new_bases = []</a>
+  <a id="change">for base in cls.__bases__:
+    if ((use_v2 and issubclass(base, v1_cls)
+         or (not use_v2 and issubclass(base, v2_cls)))):
+      new_base = swap_class(base, v2_cls, v1_cls, use_v2)
+    else:
+      new_base = base
+    new_bases.append(new_base)
+ </a> <a id="change">cls.__bases__ = tuple(new_bases)</a>
+  return cls
+
+
+def disallow_legacy_graph(cls_name, method_name):</code></pre><img src="23432004.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/bf464d7ed9283988fea1f548a11a0171fd2ff364#diff-2ab94514f1a5fedd962ba7f7a9b3113d1eb2a3d96bec2c2b68adabd57004ee5eL103' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: bf464d7ed9283988fea1f548a11a0171fd2ff364</div><div id='time'> Time: 2021-01-06</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: keras/utils/version_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: swap_class</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/5ef0fc3215fb43f5772673b31c51ad8a6582bc39#diff-ed1178f3a38747717b4f5d25ca681329e55794e6a03ce198cd1c59a80c443dc7L1106' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 5ef0fc3215fb43f5772673b31c51ad8a6582bc39</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: mechaprabal@gmail.com</div><div id='file'> File Name: keras/backend/cntk_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: reshape</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/5ef0fc3215fb43f5772673b31c51ad8a6582bc39#diff-ed1178f3a38747717b4f5d25ca681329e55794e6a03ce198cd1c59a80c443dc7L705' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 5ef0fc3215fb43f5772673b31c51ad8a6582bc39</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: mechaprabal@gmail.com</div><div id='file'> File Name: keras/backend/cntk_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: squeeze</div><BR>

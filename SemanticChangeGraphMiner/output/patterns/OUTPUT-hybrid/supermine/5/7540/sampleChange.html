@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for scene in tqdm(data_loader.scenes):
+            dump_example(args, scene)
+    else:
+        Parallel(n_jobs=args.num_threads)(<a id="change">delayed</a>(dump_example)(args, scene) <a id="change">for</a> scene in tqdm(data_loader.scenes))
+
+    print(&quotGenerating train val lists&quot)
+    np.random.seed(8964)</code></pre><h3>After Change</h3><pre><code class='java'>
+            dump_example(args, scene)
+    else:
+        with ProcessPool(max_workers=args.num_threads) as pool:
+            tasks = <a id="change">pool.map(dump_example, [args]*n_scenes, data_loader.scenes)</a>
+            try:
+                for _ in tqdm(tasks.result(), total=n_scenes):
+                    pass
+            except KeyboardInterrupt as e:</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cn = CfgNode.load_yaml_with_base(args.cfg)
+        for k,v in cn.items():
+            if hasattr(args, k):
+                <a id="change">setattr(args, k, v)</a>
+            else:
+                print(&quotWarning: key %s not in args&quot %k)
+        args = parser.parse_args(namespace=args)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for k,v in cn.items():
+            if not hasattr(args, k):
+                print(&quotWarning: key %s not in args&quot %k)
+            <a id="change">setattr(args, k, v)</a>
+        args = parser.parse_args(namespace=args)
+
+    &#47&#47 Check if args are valid
+    assert args.rnn_size &gt; 0, "rnn_size should be greater than 0"</code></pre>

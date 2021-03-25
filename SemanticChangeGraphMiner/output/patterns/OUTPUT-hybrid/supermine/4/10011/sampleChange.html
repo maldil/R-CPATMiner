@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    hm = hm.cpu().data.numpy()
+    online_targets = tracker.update(orig_img,inps,boxes,hm,cropped_boxes,im_name,scores,_debug=False)
+    new_boxes,new_scores,new_ids,new_crop = [],[],[],[]
+    new_hm = np.zeros(shape=<a id="change">(1,17,64,48)</a>)
+    for t in online_targets:
+        tlbr = t.tlbr
+        tid = t.track_id
+        thm = np.expand_dims(t.pose,axis=0)
+        tcrop = t.crop_box
+        tscore = t.detscore
+        new_boxes.append(tlbr)
+        new_crop.append(tcrop)
+        new_hm = <a id="change">np.concatenate((new_hm,thm),axis=0)</a>
+        new_ids.append(tid)
+        new_scores.append(tscore)
+    <a id="change">new_hm = new_hm[1:]</a>
+    new_hm = torch.from_numpy(new_hm).to(args.device)
+    return new_boxes,new_scores,new_ids,new_hm,new_crop
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        tscore = t.detscore
+        new_boxes.append(tlbr)
+        new_crop.append(tcrop)
+        <a id="change">new_hm.append(thm)</a>
+        new_ids.append(tid)
+        new_scores.append(tscore)
+
+    new_hm = torch.Tensor(new_hm).to(args.device)</code></pre>

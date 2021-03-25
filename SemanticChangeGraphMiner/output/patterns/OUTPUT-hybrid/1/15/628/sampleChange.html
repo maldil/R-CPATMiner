@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def calc_loss(batch, net, tgt_net, gamma, cuda=False):
+    states, actions, rewards, dones, next_states = unpack_batch(batch)
+
+    <a id="change">states_v</a> = <a id="change">Variable(torch.from_numpy(states))</a>
+    next_states_v = Variable(torch.from_numpy(next_states), volatile=True)
+    actions_v = Variable(torch.from_numpy(actions))
+    rewards_v = Variable(torch.from_numpy(rewards))
+    done_mask = torch.ByteTensor(dones)
+    <a id="change">if cuda:
+        states_v = states_v.cuda()
+        next_states_v = next_states_v.cuda()
+        actions_v = actions_v.cuda()
+        rewards_v = rewards_v.cuda()
+        done_mask = done_mask.cuda()
+
+   </a> <a id="change">state_action_values</a> = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_actions = net(next_states_v).max(1)[1]
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)
+    next_state_values[done_mask] = 0.0</code></pre><h3>After Change</h3><pre><code class='java'>
+def calc_loss(batch, net, tgt_net, gamma, device="cpu"):
+    states, actions, rewards, dones, next_states = unpack_batch(batch)
+
+    <a id="change">states_v</a> = <a id="change">torch.tensor(states).to(device)</a>
+    next_states_v = torch.tensor(next_states).to(device)
+    actions_v = torch.tensor(actions).to(device)
+    rewards_v = torch.tensor(rewards).to(device)
+    done_mask = torch.ByteTensor(dones).to(device)
+
+    <a id="change">state_action_values</a> = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_actions = net(next_states_v).max(1)[1]
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)
+    next_state_values[done_mask] = 0.0</code></pre>

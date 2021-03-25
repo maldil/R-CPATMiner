@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        value_loss = (values[:-1] - Variable(returns[:-1])).pow(2).mean()
+
+        advantages = returns[:-1] - <a id="change">values</a>[<a id="change">:-1</a>].data
+        action_loss = -(Variable(advantages) * action_log_probs).mean()
+
+        optimizer.zero_grad()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            episode_rewards *= masks[step].cpu()
+
+        returns[-1] = actor_critic(<a id="change">Variable(states[-1], volatile=True)</a>)[0].data
+
+        <a id="change">for step in reversed(range(args.num_steps)):
+            returns[step] = returns[step + 1] * \
+                args.gamma * masks[step] + rewards[step]
+
+        &#47&#47 Reshape to do in a single forward pass for all steps
+       </a> values, logits = actor_critic(Variable(states[:-1].view(-1, *states.size()[-3:])))
+        log_probs = F.log_softmax(logits)
+        probs = F.softmax(logits)
+
+        &#47&#47 Unreshape
+        logits_size = (args.num_steps, args.num_processes, logits.size(-1))
+
+        log_probs = F.log_softmax(logits).view(logits_size)
+        probs = F.softmax(logits).view(logits_size)
+
+        values = values.view(args.num_steps, args.num_processes, 1)
+        logits = logits.view(logits_size)
+
+        action_log_probs = log_probs.gather(2, Variable(actions.unsqueeze(2)))
+
+        dist_entropy = -(log_probs * probs).sum(-1).mean()
+
+        advantages = Variable(returns[:-1]) - values
+        <a id="change">value_loss = advantages.pow(2).mean()</a>
+
+        action_loss = -(Variable(advantages.data) * action_log_probs).mean()
+
+        optimizer.zero_grad()</code></pre>

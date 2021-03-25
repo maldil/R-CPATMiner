@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 Compute accuracy of each classifier in this cluster
+            prediction_matrix = np.zeros((len(targets), self.n_classifiers))
+            <a id="change">for clf_index in range(self.n_classifiers):
+                predictions = self.BKS_dsel[sample_indices, clf_index]
+                prediction_matrix[:, clf_index] = predictions
+                &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+                self.accuracy_cluster[cluster_index][clf_index] = accuracy_score(np.array(targets), predictions)
+
+            &#47&#47 Get the N most accurate classifiers for the corresponding cluster
+           </a> accuracies = self.accuracy_cluster[cluster_index, :]
+            accuracy_indices = np.argsort(accuracies)[::-1][0:self.N]
+
+            self.diversity_cluster[cluster_index, :] = self._compute_diversity(targets, prediction_matrix)</code></pre><h3>After Change</h3><pre><code class='java'>
+            sample_indices = np.where(labels == cluster_index)[0]
+
+            &#47&#47 Compute accuracy of each classifier in this cluster
+            <a id="change">accuracy = np.mean(self.processed_dsel[sample_indices, :], axis=0)</a>
+            self.accuracy_cluster[cluster_index, :] = accuracy
+
+            &#47&#47 Get the N most accurate classifiers for the corresponding cluster
+            accuracy_indices = np.argsort(accuracy)[::-1][0:self.N]</code></pre>

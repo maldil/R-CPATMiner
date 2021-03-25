@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            (B, c, n) tensor of the interpolated features
+        
+        B, c, m = features.size()
+        <a id="change">n = idx.size(1)</a>
+
+        ctx.three_interpolate_for_backward = (idx, weight, m)
+
+        return _ext.three_interpolate(features, idx, weight)</code></pre><h3>After Change</h3><pre><code class='java'>
+        torch.Tensor
+            (B, c, n) tensor of the interpolated features
+        
+        <a id="change">ctx.save_for_backward(idx, weight, features)</a>
+
+        return _ext.three_interpolate(features, idx, weight)
+
+    @staticmethod</code></pre>

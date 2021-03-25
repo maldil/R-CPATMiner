@@ -1,0 +1,43 @@
+<html><h3>3b1755b2600a0a34a3be60df73cd1710ec8e20ce,nilmtk/metergroup.py,,combine_chunks_from_generators,#,1265
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        timeframe = timeframe.intersect(chunk_from_next_meter.timeframe)
+        chunk = chunk.add(chunk_from_next_meter, fill_value=0, level=&quotphysical_quantity&quot)
+
+        <a id="change">if len(chunk) != len(chunk_from_next_meter):
+            warn("Meters are not perfectly aligned.")
+
+        &#47&#47 Update columns_to_average_counter
+       </a> physical_quantities = chunk_from_next_meter.columns.get_level_values(&quotphysical_quantity&quot)
+        columns_to_average = (set(PHYSICAL_QUANTITIES_TO_AVERAGE)
+                              .intersection(physical_quantities))
+        counter_increment = pd.DataFrame(1, columns=columns_to_average, </code></pre><h3>After Change</h3><pre><code class='java'>
+        if timeframe is None:
+            timeframe = chunk_from_next_meter.timeframe
+        else:
+            <a id="change">timeframe = timeframe.union(chunk_from_next_meter.timeframe)</a>
+
+        &#47&#47 Extend &quotindex&quot if necessary
+        index = extend_index(index, timeframe, sample_period)
+
+        &#47&#47 Reindex chunk_from_next_meter
+        chunk_from_next_meter = chunk_from_next_meter.reindex(
+            index, method=&quotffill&quot, limit=1, fill_value=0)
+
+        &#47&#47 Add
+        <a id="change">try:
+            chunk = chunk.add(chunk_from_next_meter, fill_value=0)
+        except ValueError as e:
+            if str(e) != "cannot join with no level specified and no overlapping names":
+                raise
+            chunk = chunk.add(chunk_from_next_meter, fill_value=0, 
+                              level=&quotphysical_quantity&quot) 
+
+        &#47&#47 Update columns_to_average_counter - this is necessary so we do not
+        &#47&#47 add up columns like &quotvoltage&quot which should be averaged.
+       </a> physical_quantities = chunk_from_next_meter.columns.get_level_values(&quotphysical_quantity&quot)
+        columns_to_average = (set(PHYSICAL_QUANTITIES_TO_AVERAGE)
+                              .intersection(physical_quantities))
+        counter_increment = pd.DataFrame(1, columns=columns_to_average, </code></pre><img src="18533146.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/3b1755b2600a0a34a3be60df73cd1710ec8e20ce#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL1287' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 3b1755b2600a0a34a3be60df73cd1710ec8e20ce</div><div id='time'> Time: 2014-12-11</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: combine_chunks_from_generators</div><BR><BR><div id='link'><a href='https://github.com/lingpy/lingpy/commit/0b33f535fc0a643d612c7f1d758076f48dac0845#diff-930ea9b27269f20f0cc277a141d91ff2a60b67c811c1e1f89199c64cac6ee969L300' target='_blank'>Link</a></div><div id='project'> Project Name: lingpy/lingpy</div><div id='commit'> Commit Name: 0b33f535fc0a643d612c7f1d758076f48dac0845</div><div id='time'> Time: 2012-11-06</div><div id='author'> Author: mattis.list@gmail.com</div><div id='file'> File Name: lingpy/algorithm/classes.py</div><div id='class'> Class Name: WordList</div><div id='method'> Method Name: getDict</div><BR><BR><div id='link'><a href='https://github.com/ilastik/ilastik/commit/219459f15476426276e24329cdb6f091b5f7cf41#diff-0a18d58bb0b393e2340554b0e5cb30e753ecf316bf74adfe99bd9bb37010a510L549' target='_blank'>Link</a></div><div id='project'> Project Name: ilastik/ilastik</div><div id='commit'> Commit Name: 219459f15476426276e24329cdb6f091b5f7cf41</div><div id='time'> Time: 2019-06-26</div><div id='author'> Author: tomaz.vieira@embl.de</div><div id='file'> File Name: ilastik/applets/dataSelection/dataSelectionGui.py</div><div id='class'> Class Name: DataSelectionGui</div><div id='method'> Method Name: _createDatasetInfo</div><BR>

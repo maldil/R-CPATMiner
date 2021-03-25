@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    CSS_BEAR_SETUP_PATH = os.path.join(
+        &quotbears&quot, &quotupload&quot, &quotCSSLintBear&quot, &quotsetup.py&quot)
+    NO_BEAR_PATH = <a id="change">os.path.join(&quotbears&quot, &quotBadBear&quot, &quotInvalidBear.py&quot)</a>
+
+    def setUp(self):
+        self.argv = [&quotgenerate_package.py&quot]
+        argv_patcher = patch.object(sys, &quotargv&quot, self.argv)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+class MainTest(unittest.TestCase):
+
+    <a id="change">BEARS_PATH = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), &quot..&quot, &quotbears&quot))</a>
+    <a id="change">BEARS_UPLOAD_PATH = os.path.join(BEARS_PATH, &quotupload&quot)</a>
+    CSS_BEAR_SETUP_PATH = os.path.join(
+        BEARS_UPLOAD_PATH, &quotCSSLintBear&quot, &quotsetup.py&quot)
+    NO_BEAR_PATH = os.path.join(BEARS_PATH,
+                                &quotBadBear&quot, &quotInvalidBear.py&quot)</code></pre>

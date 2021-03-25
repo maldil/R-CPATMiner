@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        print(&quotLoading model from checkpoint at %s&quot % opt.train_from)
+        model.load_state_dict(checkpoint[&quotmodel&quot])
+        generator.load_state_dict(checkpoint[&quotgenerator&quot])
+        <a id="change">optim = checkpoint[&quotoptim&quot]</a>
+        opt.start_epoch = checkpoint[&quotepoch&quot] + 1
+
+    if len(opt.gpus) &gt;= 1:
+        model.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if opt.train_from:
+        optim.last_ppl = checkpoint[&quotlast_ppl&quot]
+        <a id="change">optim.optimizer.load_state_dict(checkpoint[&quotoptimizer&quot])</a>
+
+    nParams = sum([p.nelement() for p in model.parameters()])
+    print(&quot* number of parameters: %d&quot % nParams)
+</code></pre>

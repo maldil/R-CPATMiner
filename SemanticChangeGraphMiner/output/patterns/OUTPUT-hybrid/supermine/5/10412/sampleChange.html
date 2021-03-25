@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Build dict of import requirments from list of operators
+    import_relations = {op.__name__: op.import_hash for op in operators}
+    <a id="change">print(import_relations)</a>  &#47&#47&#47&#47 to be removed on merge
+
+    if "imblearn" in import_relations.values():
+        pipeline_module = "imblearn"</code></pre><h3>After Change</h3><pre><code class='java'>
+    import_relations = {op.__name__: op.import_hash for op in operators}
+
+    flatten_list = lambda list_: [item for sublist in list_ for item in sublist]
+    <a id="change">modules_used = [
+        module.split(".")[0]
+        for module in flatten_list(
+            [list(val.keys()) for val in import_relations.values()]
+        )
+    ]</a>
+
+    if "imblearn" in modules_used:
+        pipeline_module = "imblearn"
+    else:</code></pre>

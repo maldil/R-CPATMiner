@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if agent_states is None:
+            agent_states = [None] * len(states)
+        if self.preprocessor is not None:
+            <a id="change">states</a> = <a id="change">self.preprocessor(states).to(self.device)</a>
+        probs_v = self.model(states)
+        if self.apply_softmax:
+            probs_v = F.softmax(probs_v, dim=1)
+        probs = probs_v.data.cpu().numpy()</code></pre><h3>After Change</h3><pre><code class='java'>
+        if agent_states is None:
+            agent_states = [None] * len(states)
+        if self.preprocessor is not None:
+            <a id="change">states</a> = <a id="change">self.preprocessor(states)</a>
+            <a id="change">if torch.is_tensor(states):
+                states = states.to(self.device)
+       </a> probs_v = self.model(states)
+        if self.apply_softmax:
+            probs_v = F.softmax(probs_v, dim=1)
+        probs = probs_v.data.cpu().numpy()</code></pre>

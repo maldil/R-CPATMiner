@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            array = np.random.random_sample(100)
+            labels = np.random.choice((0, 1), 100)
+
+            <a id="change">vals</a>, tags = self.experimentLogger.get_classification_metrics(array, labels,
+                                                                          metric=("roc-auc", "pr-score"))
+
+            self.assertTrue("roc-auc" in tags and "pr-score" in tags, "Did not get all classification metrics")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            ret_dict = get_classification_metrics(array, labels, metric=("roc-auc", "pr-score"))
+
+            vals = list(<a id="change">ret_dict.values()</a>)
+
+            self.assertTrue("roc-auc" in ret_dict and "pr-score" in ret_dict, "Did not get all classification metrics")
+            self.assertTrue(vals[0] &gt;= 0 and vals[0] &lt;= 1</code></pre>

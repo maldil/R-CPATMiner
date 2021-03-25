@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    paramsPath = os.path.join(os.path.split(__file__)[0],
+                "modelParams",
+                "model_params.json")
+    <a id="change">with open(paramsPath) as fp:
+      modelParams = json.load(fp)
+
+   </a> self.sensorParams = modelParams["modelParams"]["sensorParams"]\
+                                   ["encoders"]["value"]
+
+    &#47&#47 RDSE - resolution calculation</code></pre><h3>After Change</h3><pre><code class='java'>
+  def initialize(self):
+    &#47&#47 Get config params, setting the RDSE resolution
+    modelParams = getScalarMetricWithTimeOfDayAnomalyParams(
+      <a id="change">self.dataSet.data["value"]</a>, minResolution=0.001)["modelConfig"]
+
+    self._setupEncoderParams(
+      modelParams["modelParams"]["sensorParams"]["encoders"])</code></pre>

@@ -1,0 +1,27 @@
+<html><h3>f7b260e965e277d62d2f54847671d06b1763fb21,tests/python/pants_test/integration/build_ignore_integration_test.py,BuildIgnoreIntegrationTest,test_build_ignore_dependency,#BuildIgnoreIntegrationTest#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert f"{tmpdir_relative}/dir" in no_ignore_result.stdout
+
+    def test_build_ignore_dependency(self) -&gt; None:
+        with <a id="change">temporary_dir(root_dir=get_buildroot())</a> as tmpdir:
+            <a id="change">tmpdir_relative = Path(tmpdir).relative_to(get_buildroot())</a>
+            <a id="change">Path(tmpdir, "dir1").mkdir()</a>
+            <a id="change">Path(tmpdir, "dir1", "BUILD").write_text("files(sources=[])")</a>
+            Path(tmpdir, "dir2").mkdir()
+            Path(tmpdir, "dir2", "BUILD").write_text(
+                f"files(sources=[], dependencies=[&quot{tmpdir_relative}/dir1&quot])"
+            )</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert f"{tmpdir}/dir" in no_ignore_result.stdout
+
+    def test_build_ignore_dependency(self) -&gt; None:
+        sources = <a id="change">{
+            "dir1/BUILD": "files(sources=[])",
+            "dir2/BUILD": "files(sources=[], dependencies=[&quot{tmpdir}/dir1&quot])",
+        }</a>
+        with <a id="change">self.setup_tmpdir(sources)</a> as tmpdir:
+            ignore_result = self.run_pants(
+                [f"--build-ignore={tmpdir}/dir1", "dependencies", f"{tmpdir}/dir2"]
+            )</code></pre><img src="8724357.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-b2cf8286c4d789a1e828c0dd26bc1da7e8b5f4f3cf822f3f659079d0b782507cL19' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: tests/python/pants_test/integration/build_ignore_integration_test.py</div><div id='class'> Class Name: BuildIgnoreIntegrationTest</div><div id='method'> Method Name: test_build_ignore_dependency</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-b2cf8286c4d789a1e828c0dd26bc1da7e8b5f4f3cf822f3f659079d0b782507cL28' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: tests/python/pants_test/integration/build_ignore_integration_test.py</div><div id='class'> Class Name: BuildIgnoreIntegrationTest</div><div id='method'> Method Name: test_build_ignore_dependency</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-d709f02e4dbc58c9b21cc62e4bc6adb71fd98e79b54dbe1b1fbfd36af166908bL13' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/python/rules/run_python_binary_integration_test.py</div><div id='class'> Class Name: RunPythonBinaryIntegrationTest</div><div id='method'> Method Name: test_sample_script</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-b2cf8286c4d789a1e828c0dd26bc1da7e8b5f4f3cf822f3f659079d0b782507cL14' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: tests/python/pants_test/integration/build_ignore_integration_test.py</div><div id='class'> Class Name: BuildIgnoreIntegrationTest</div><div id='method'> Method Name: test_build_ignore_list</div><BR>

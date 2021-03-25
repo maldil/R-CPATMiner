@@ -1,0 +1,20 @@
+<html><h3>b5e848af46b4a6fc21e718803dbf3d7c72afd72a,ch08/lib/common.py,,calc_values_of_states,#,63
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            states_v = states_v.cuda()
+        action_values_v = net(states_v)
+        best_action_values_v = action_values_v.max(1)[0]
+        mean_val = <a id="change">best_action_values_v.mean().data.cpu().numpy()[0]</a>
+        mean_vals.append(mean_val)
+    return np.mean(mean_vals)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        states_v = torch.tensor(batch).to(device)
+        action_values_v = net(states_v)
+        best_action_values_v = action_values_v.max(1)[0]
+        mean_vals.append(<a id="change">best_action_values_v.mean().item()</a>)
+    return np.mean(mean_vals)
+
+</code></pre><img src="1797406.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/b5e848af46b4a6fc21e718803dbf3d7c72afd72a#diff-0104aecfb85abbde18ab9491b2abc8d61703dbec604fbb2b128d92051baf7519L65' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: b5e848af46b4a6fc21e718803dbf3d7c72afd72a</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch08/lib/common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_values_of_states</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-76ef45280999506380a1cd22adfc9b9fd61476500ae25b7339a77ddf0a7423ffL91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/03_train_trpo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

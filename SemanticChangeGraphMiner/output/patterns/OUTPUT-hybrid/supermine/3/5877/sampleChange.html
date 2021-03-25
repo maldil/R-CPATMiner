@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Z = nn_state.compute_normalization(space)
+    eps = 0.000001
+    if train_bases is None:
+        for i in range(<a id="change">len(samples)</a>):
+            NLL -= (cplx.norm_sqr(nn_state.psi(samples[i])) + eps).log()
+            NLL += Z.log()
+    else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                    if samples[i, nn_state.num_visible - j - 1] == 1:
+                        ind += pow(2, j)
+                probs_r = cplx.norm_sqr(psi_r[:, ind]) / Z
+                NLL -= <a id="change">probs_to_logits(probs_r).item()</a>
+    return (NLL / float(len(samples))).item()
+
+
+def KL(nn_state, target_psi, space, bases=None, **kwargs):</code></pre>

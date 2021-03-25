@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if iteration &gt; 1:
+                if verbose:
+                    print(&quotreconstruction error={}, variation={}.&quot.format(
+                        <a id="change">rec_errors[-1]</a>, rec_errors[-2] - rec_errors[-1]))
+
+                if tol and abs(rec_errors[-2] - rec_errors[-1]) &lt; tol:
+                    if verbose:</code></pre><h3>After Change</h3><pre><code class='java'>
+            iprod = tl.sum(tl.sum(mttkrp*factor, axis=0)*weights)
+            rec_error = tl.sqrt(tl.abs(norm_tensor**2 + factors_norm**2 - 2*iprod)) / norm_tensor
+            rec_errors.append(rec_error)
+            <a id="change">if iteration &gt;= 1:
+                rec_error_decrease = rec_errors[-2] - rec_errors[-1]
+
+                if verbose:
+                    print("iteration {}, reconstruction error: {}, decrease = {}".format(iteration, rec_error, rec_error_decrease))
+
+                if cvg_criterion == &quotabs_rec_error&quot:
+                    stop_flag = abs(rec_error_decrease) &lt; tol
+                elif cvg_criterion == &quotrec_error&quot:
+                    stop_flag = rec_error_decrease &lt; tol
+                else:
+                    raise TypeError("Unknown convergence criterion")
+
+                if stop_flag:
+                    if verbose:
+                        print("PARAFAC converged after {} iterations".format(iteration))
+                    break
+            else:
+                if verbose:
+                    print(&quotreconstruction error={}&quot.format(rec_errors[-1]))
+
+   </a> cp_tensor = CPTensor((weights, factors))
+    if return_errors:
+        return cp_tensor, rec_errors
+    else:</code></pre>

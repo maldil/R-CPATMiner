@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        z = np.dot(tilde_z, weight.T) + bias
+
+        &#47&#47 Softmax is computed in log-domain to prevent underflow/overflow
+        <a id="change">log_tilde_z</a> = z - <a id="change">logsumexp(z, axis=1)[:, None]</a>
+
+        return log_tilde_z, layer_inputs
+
+    def cross_entropy_loss(self, input, output):</code></pre><h3>After Change</h3><pre><code class='java'>
+        z = np.dot(tilde_z, weight.T) + bias
+
+        &#47&#47 Softmax is computed in log-domain to prevent underflow/overflow
+        <a id="change">log_tilde_z</a> = z - <a id="change">logsumexp(z, axis=1, keepdims=True)</a>
+
+        return log_tilde_z, layer_inputs
+
+    def cross_entropy_loss(self, input, output):</code></pre>

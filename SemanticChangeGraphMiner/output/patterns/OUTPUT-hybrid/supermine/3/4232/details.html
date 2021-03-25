@@ -1,0 +1,23 @@
+<html><h3>8ed4339a6766191ca067ad76353c8fa480ba41ac,src/garage/np/exploration_policies/add_gaussian_noise.py,AddGaussianNoise,get_actions,#AddGaussianNoise#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        actions, agent_infos = self.policy.get_actions(observations)
+        sigma = self._max_sigma - (self._max_sigma - self._min_sigma) * min(
+            1.0, self._iteration * 1.0 / self._decay_period)
+        return <a id="change">np.clip(actions + np.random.normal(size=actions.shape) * sigma,
+                       self._action_space.low,
+                       self._action_space.high)</a>, agent_infos
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        actions, agent_infos = self.policy.get_actions(observations)
+        for itr, _ in enumerate(actions):
+            <a id="change">actions[itr] = np.clip(
+                actions[itr] +
+                np.random.normal(size=actions[itr].shape) * self._sigma(),
+                self._action_space.low, self._action_space.high)</a>
+            self._total_env_steps += 1
+        return actions, agent_infos
+
+    def _sigma(self):</code></pre><img src="18485467.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rlworkgroup/garage/commit/8ed4339a6766191ca067ad76353c8fa480ba41ac#diff-97b0add459f1f0a9f95647c55b295446de7ad08c4f471524202ba226fe2e400aL62' target='_blank'>Link</a></div><div id='project'> Project Name: rlworkgroup/garage</div><div id='commit'> Commit Name: 8ed4339a6766191ca067ad76353c8fa480ba41ac</div><div id='time'> Time: 2020-09-14</div><div id='author'> Author: 31981600+yeukfu@users.noreply.github.com</div><div id='file'> File Name: src/garage/np/exploration_policies/add_gaussian_noise.py</div><div id='class'> Class Name: AddGaussianNoise</div><div id='method'> Method Name: get_actions</div><BR><BR><div id='link'><a href='https://github.com/bethgelab/foolbox/commit/39c8e82e608d79f0e06cc5e11e600015a9eb9f88#diff-79ffc5f2af03f9391ed4d771c082e06741b8a54b86e57acf7bdff943074086d1L68' target='_blank'>Link</a></div><div id='project'> Project Name: bethgelab/foolbox</div><div id='commit'> Commit Name: 39c8e82e608d79f0e06cc5e11e600015a9eb9f88</div><div id='time'> Time: 2020-08-09</div><div id='author'> Author: 5895436+zimmerrol@users.noreply.github.com</div><div id='file'> File Name: foolbox/attacks/gen_attack.py</div><div id='class'> Class Name: GenAttack</div><div id='method'> Method Name: apply_noise</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/SfmLearner-Pytorch/commit/919426bb58a7d1daf1e9d2e89f172aa6a5b86d85#diff-a76b1436c3c64479da97418f65eee75cfb0f2742bc793df5e6672015abac02daL31' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/SfmLearner-Pytorch</div><div id='commit'> Commit Name: 919426bb58a7d1daf1e9d2e89f172aa6a5b86d85</div><div id='time'> Time: 2017-11-22</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: test_disp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/rlworkgroup/garage/commit/8ed4339a6766191ca067ad76353c8fa480ba41ac#diff-97b0add459f1f0a9f95647c55b295446de7ad08c4f471524202ba226fe2e400aL49' target='_blank'>Link</a></div><div id='project'> Project Name: rlworkgroup/garage</div><div id='commit'> Commit Name: 8ed4339a6766191ca067ad76353c8fa480ba41ac</div><div id='time'> Time: 2020-09-14</div><div id='author'> Author: 31981600+yeukfu@users.noreply.github.com</div><div id='file'> File Name: src/garage/np/exploration_policies/add_gaussian_noise.py</div><div id='class'> Class Name: AddGaussianNoise</div><div id='method'> Method Name: get_action</div><BR>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return to_replace
+
+    def get_dimension_code(self, diff_num):
+        <a id="change">start_function = self.get_syntax(&quotstart_function&quot)</a>
+        <a id="change">open_function = self.get_syntax(&quotopen_function&quot)</a>
+        <a id="change">end_statement = self.get_syntax(&quotend_statement&quot)</a>
+        <a id="change">end_function = self.get_syntax(&quotend_function&quot)</a>
+        <a id="change">code = &quot\n{start_function}int set_dimension(size_t * dimension){open_function}&quot.format(start_function=start_function,
+                                                                                            open_function=open_function)</a>
+        <a id="change">code += &quot\n\tdimension[0] = {diff_num}{end_statement}&quot.format(diff_num=diff_num, end_statement=end_statement)</a>
+        code += &quot\n\treturn GSL_SUCCESS{end_statement}\n&quot.format(end_statement=end_statement)
+        code += end_function
+        <a id="change">return code</a>
+
+    def yvector_code(self, diff_vars):
+        start_function = self.get_syntax(&quotstart_function&quot)
+        open_function = self.get_syntax(&quotopen_function&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return to_replace
+
+    def get_dimension_code(self, diff_num):
+        <a id="change">code = [&quot\n{start_function}int set_dimension(size_t * dimension){open_function}&quot]</a>
+        <a id="change">code += [&quot\tdimension[0] = %d{end_statement}&quot%diff_num]</a>
+        code += [&quot\treturn GSL_SUCCESS{end_statement}&quot]
+        <a id="change">return (&quot\n&quot).join(code).format(**self.syntax)</a>
+
+    def yvector_code(self, diff_vars):
+        allocate_y = [&quot\n{start_function}double* assign_memory_y(){open_function}&quot]
+        allocate_y += [&quot\treturn {open_cast}double *{close_cast} malloc(%d*sizeof(double))&quot%len(diff_vars)]</code></pre>

@@ -1,0 +1,45 @@
+<html><h3>ca078e83147f95ec7df149ef5eea9b6a8424d3bf,memcnn/models/tests/test_memory_saving.py,,test_memory_saving,#,199
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    network.to(device)
+    network.train()
+    network.zero_grad()
+    <a id="change">optim</a> = torch.optim.RMSprop(network.parameters())
+    optim.zero_grad()
+    mem_start = 0 if not device == &quotcuda&quot else \
+        torch.cuda.memory_allocated() / float(1024 ** 2)
+
+    y = network(xx)
+    gc.collect()
+    mem_after_forward = mem_reporter.collect_stats() / float(1024 ** 2) if not device == &quotcuda&quot else \
+        torch.cuda.memory_allocated() / float(1024 ** 2)
+    loss = torch.nn.MSELoss()(y, ytarget)
+    <a id="change">optim.zero_grad()</a>
+    loss.backward()
+    <a id="change">optim.step()</a>
+    gc.collect()
+    &#47&#47 mem_after_backward = mem_reporter.collect_stats() / float(1024 ** 2) if not device == &quotcuda&quot else \
+    &#47&#47     torch.cuda.memory_allocated() / float(1024 ** 2)
+    gc.enable()</code></pre><h3>After Change</h3><pre><code class='java'>
+        network.to(device)
+        network.train()
+        network.zero_grad()
+        <a id="change">optim</a> = torch.optim.RMSprop(network.parameters())
+        optim.zero_grad()
+        mem_start = 0 if not device == &quotcuda&quot else \
+            torch.cuda.memory_allocated() / float(1024 ** 2)
+
+        y = network(xx)
+        gc.collect()
+        mem_after_forward = mem_reporter.collect_stats() / float(1024 ** 2) if not device == &quotcuda&quot else \
+            torch.cuda.memory_allocated() / float(1024 ** 2)
+        loss = torch.nn.MSELoss()(y, ytarget)
+        <a id="change">optim.zero_grad()</a>
+        loss.backward()
+        <a id="change">optim.step()</a>
+        gc.collect()
+        &#47&#47 mem_after_backward = mem_reporter.collect_stats() / float(1024 ** 2) if not device == &quotcuda&quot else \
+        &#47&#47     torch.cuda.memory_allocated() / float(1024 ** 2)
+        gc.enable()</code></pre><img src="3121199.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/ca078e83147f95ec7df149ef5eea9b6a8424d3bf#diff-50345066c3320a30a946b107a01b394bf8b919d2d397c44e62c2db397ae23fcbL226' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: ca078e83147f95ec7df149ef5eea9b6a8424d3bf</div><div id='time'> Time: 2019-12-12</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_memory_saving.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_memory_saving</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/2ee8ac1546400645908b61ef015cdf5d71aa34cc#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L22' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 2ee8ac1546400645908b61ef015cdf5d71aa34cc</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/85426e4964fb6ee30ca5b14c5c79f4843e948962#diff-b08004f13dca27c579c0e9f70d9d82b38368e038dbcd92aa19e7ec040898815eL135' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 85426e4964fb6ee30ca5b14c5c79f4843e948962</div><div id='time'> Time: 2019-12-12</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_revop.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_revblock_chained</div><BR>

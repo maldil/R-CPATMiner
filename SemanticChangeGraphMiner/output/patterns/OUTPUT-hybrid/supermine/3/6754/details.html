@@ -1,0 +1,29 @@
+<html><h3>7348eb260cb8be71a9d469f9a27a2625b0ce1dce,models/networks.py,SIGGRAPHGenerator,forward,#SIGGRAPHGenerator#,349
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        conv8_3 = self.model8(conv8_up)
+
+        if(self.classification):
+            <a id="change">return self.model_class(conv8_3)</a>
+        else:
+            &#47&#47 embed()
+            conv9_up = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            conv9_3 = self.model9(conv9_up)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if(self.classification):
+            out_class = self.model_class(conv8_3)
+
+            conv9_up = self.model9up(conv8_3.detach()) + self.model2short9(<a id="change">conv2_2.detach()</a>)
+            conv9_3 = self.model9(conv9_up)
+
+            conv10_up = self.model10up(conv9_3) + self.model1short10(conv1_2.detach())
+            conv10_2 = self.model10(conv10_up)
+
+            out_reg = self.model_out(conv10_2)
+
+            <a id="change">return (out_class, out_reg)</a>
+        else:
+            conv9_up = self.model9up(conv8_3) + self.model2short9(conv2_2)
+            conv9_3 = self.model9(conv9_up)
+            conv10_up = self.model10up(conv9_3) + self.model1short10(conv1_2)</code></pre><img src="26533024.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/7348eb260cb8be71a9d469f9a27a2625b0ce1dce#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L349' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 7348eb260cb8be71a9d469f9a27a2625b0ce1dce</div><div id='time'> Time: 2018-08-19</div><div id='author'> Author: rzhang88@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: SIGGRAPHGenerator</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/e7f739f3ad1a377bfbcd0b92c55c2b9d947764fc#diff-32396b3ac933956f53ced06e09aa4707ea637b9876f592e124a6eb9cfde78efdL39' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: e7f739f3ad1a377bfbcd0b92c55c2b9d947764fc</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: algo/a2c_acktr.py</div><div id='class'> Class Name: A2C_ACKTR</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/bcbef3267f372186f457b9c22feec249bd85b2f6#diff-d6757ab1e3ffa225bc5e10234856fffd764bbefcce478fc1c4baee1f4c7ef308L214' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: bcbef3267f372186f457b9c22feec249bd85b2f6</div><div id='time'> Time: 2018-12-14</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: util/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cal_feat_mask</div><BR>

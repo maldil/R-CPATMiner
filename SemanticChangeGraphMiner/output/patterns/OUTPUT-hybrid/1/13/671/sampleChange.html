@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    k = _UncheckedAssign.apply(k, f0, (..., 0))
+    for i, (alpha_i, beta_i) in enumerate(zip(tableau.alpha, tableau.beta)):
+        ti = t0 + alpha_i * dt
+        yi = y0 + <a id="change">k</a>[..., :i + 1].matmul(beta_i * dt).view_as(f0).type_as(y0)  &#47&#47 tableau is float 64 so cast back
+        f = func(ti, yi)
+        k = _UncheckedAssign.apply(k, f, (..., i + 1))
+
+    if not (tableau.c_sol[-1] == 0 and (tableau.c_sol[:-1] == tableau.beta[-1]).all()):
+        &#47&#47 This property (true for Dormand-Prince) lets us save a few FLOPs.
+        yi = y0 + k.matmul(dt * tableau.c_sol).view_as(f0).type_as(y0)  &#47&#47 tableau is float 64 so cast back
+
+    <a id="change">y1</a> = yi
+    f1 = k[..., -1]
+    <a id="change">y1_error</a> = k.matmul(dt * tableau.c_error)
+    return y1, f1, y1_error, k
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    t0 = t0.type_as(y0)
+    dt = <a id="change">dt.type_as(y0)</a>
+
+    &#47&#47 We use an unchecked assign to put data into k without incrementing its _version counter, so that the backward
+    &#47&#47 doesn&quott throw an (overzealous) error about in-place correctness. We know that it&quots actually correct.
+    k = torch.empty(*f0.shape, len(tableau.alpha) + 1, dtype=y0.dtype, device=y0.device)
+    k = _UncheckedAssign.apply(k, f0, (..., 0))
+    for i, (alpha_i, beta_i) in enumerate(zip(tableau.alpha, tableau.beta)):
+        ti = t0 + alpha_i * dt
+        yi = y0 + <a id="change">k[..., :i + 1].matmul(beta_i * dt).view_as(f0)</a>
+        f = func(ti, yi)
+        k = _UncheckedAssign.apply(k, f, (..., i + 1))
+
+    if not (tableau.c_sol[-1] == 0 and (tableau.c_sol[:-1] == tableau.beta[-1]).all()):
+        &#47&#47 This property (true for Dormand-Prince) lets us save a few FLOPs.
+        yi = y0 + k.matmul(dt * tableau.c_sol).view_as(f0)
+
+    <a id="change">y1</a> = yi
+    f1 = k[..., -1]
+    <a id="change">y1_error</a> = k.matmul(dt * tableau.c_error)
+    return y1, f1, y1_error, k
+
+</code></pre>

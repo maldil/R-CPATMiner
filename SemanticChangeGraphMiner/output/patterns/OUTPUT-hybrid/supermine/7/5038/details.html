@@ -1,0 +1,19 @@
+<html><h3>9ea14875825b2ab63a43ad2f0f5159d99df86d02,model.py,Lookahead,forward,#Lookahead#,122
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 for each seq-batch-feature combination
+        x = [x[i:i + self.context + 1] for i in range(seq_len)]  &#47&#47 TxLxNxH - sequence, context, batch, feature
+        x = torch.stack(x)
+        x = <a id="change">x.permute(0, 2, 3, 1)</a>  &#47&#47 TxNxHxL - sequence, batch, feature, context
+
+        x = torch.mul(x, self.weight).sum(dim=3)
+        return x</code></pre><h3>After Change</h3><pre><code class='java'>
+                              groups=self.n_features, padding=0, bias=None)
+
+    def forward(self, x):
+        x = <a id="change">x</a>.transpose(<a id="change">0</a>, <a id="change">1</a>).transpose(1, 2)
+        x = F.pad(x, pad=self.pad, value=0)
+        x = self.conv(x)
+        x = x.transpose(1, 2).transpose(0, 1).contiguous()</code></pre><img src="21818701.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/9ea14875825b2ab63a43ad2f0f5159d99df86d02#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L117' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: 9ea14875825b2ab63a43ad2f0f5159d99df86d02</div><div id='time'> Time: 2019-07-29</div><div id='author'> Author: rasmus.arpe@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Lookahead</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: extract_features</div><BR><BR><div id='link'><a href='https://github.com/akanimax/pro_gan_pytorch/commit/68dab2a79a136a1b90181d44300c22b8b6145f52#diff-5f3ed6fe068ca9f008edbe209dd0ccb725f61046cc7c7a45b48cd394360d9049L24' target='_blank'>Link</a></div><div id='project'> Project Name: akanimax/pro_gan_pytorch</div><div id='commit'> Commit Name: 68dab2a79a136a1b90181d44300c22b8b6145f52</div><div id='time'> Time: 2019-04-28</div><div id='author'> Author: akanimax@gmail.com</div><div id='file'> File Name: samples/demo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_image</div><BR><BR><div id='link'><a href='https://github.com/Alexander-H-Liu/End-to-end-ASR-Pytorch/commit/5fc0afb315746846e099897eb7ecdfa2397201cf#diff-55c2ffa52a639f505cfae6d16fe7a482474ac8aad60add92c5871a06ecff8cf7L115' target='_blank'>Link</a></div><div id='project'> Project Name: Alexander-H-Liu/End-to-end-ASR-Pytorch</div><div id='commit'> Commit Name: 5fc0afb315746846e099897eb7ecdfa2397201cf</div><div id='time'> Time: 2019-08-15</div><div id='author'> Author: alexliu36@gmail.com</div><div id='file'> File Name: src/solver.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: exec</div><BR>

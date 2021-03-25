@@ -1,0 +1,32 @@
+<html><h3>8215a34d3203f45254b06a63271fe8010d351e6f,UnetTraining.py,,get_training_weights,#,102
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def get_training_weights(y_train, n_classes):
+    <a id="change">weights = []</a>
+    for label in range(n_classes):
+        <a id="change">weights.append(get_class_weights(y_train[:, label], n_classes=2))</a>
+    print("Training weights: {0}".format(weights))
+    <a id="change">return np.array(weights)</a>
+
+
+def get_class_weights(labels_array, n_classes):
+    counts = np.bincount(np.array(labels_array.ravel(), dtype=np.uint8), minlength=n_classes)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def get_training_weights(training_generator, nb_training_samples, n_classes=2):
+    <a id="change">counts = np.zeros((n_labels, n_classes))</a>
+    i = 0
+    while i &lt; nb_training_samples:
+        _, y_train = training_generator.next()
+        for label in range(n_labels):
+            <a id="change">counts[label, :]</a> += np.bincount(np.array(y_train[:, label].ravel(), dtype=np.uint8), minlength=n_classes)
+        i += 1
+    <a id="change">return counts_to_weights(counts)</a>
+
+
+def counts_to_weights(array):
+    weights_list = []</code></pre><img src="35669925.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ellisdg/3DUnetCNN/commit/8215a34d3203f45254b06a63271fe8010d351e6f#diff-d54912285aaeb09e9678a515a7c3dd473e7ab33766be449a82f52977ec9d55b7L103' target='_blank'>Link</a></div><div id='project'> Project Name: ellisdg/3DUnetCNN</div><div id='commit'> Commit Name: 8215a34d3203f45254b06a63271fe8010d351e6f</div><div id='time'> Time: 2017-02-20</div><div id='author'> Author: david.ellis@unmc.edu</div><div id='file'> File Name: UnetTraining.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_training_weights</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f88ec970f95c3b1fb1f0d72ccf0069732e4a0510#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f88ec970f95c3b1fb1f0d72ccf0069732e4a0510</div><div id='time'> Time: 2019-06-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f5b2d7fecaea7886cc527ee16c292e1cd4bb736a#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f5b2d7fecaea7886cc527ee16c292e1cd4bb736a</div><div id='time'> Time: 2019-05-29</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR>

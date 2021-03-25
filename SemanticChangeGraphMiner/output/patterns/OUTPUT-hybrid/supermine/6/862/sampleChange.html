@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                zero_elements += bvec
+
+    A = []
+    <a id="change">b = []</a>
+    zero = []
+    for i, is_zero in enumerate(zero_elements):
+        if is_zero:
+            eq = np.zeros(n_elements, dtype=int)
+            eq[i] = 1
+            A.append(eq)
+            b.append(0)
+            zero.append(i)
+
+    if A:
+        A = np.asarray(A)
+        b = <a id="change">np.asarray(b)</a>
+    else:
+        <a id="change">A = None</a>
+        b = None
+
+    zeroset = set(zero)
+    nonzero = [i for i in range(n_elements) if i not in zeroset]
+    variables = Bunch(nonzero=nonzero, zero=zero)
+
+    <a id="change">return A, b, variables</a>
+
+
+def initial_point(dist, k, A=None, b=None, isolated=None, **kwargs):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    xopt[np.abs(xopt) &lt; tol] = 0
+    xopt /= xopt.sum()
+
+    &#47&#47 Do not build the full vector since this is input to the red<a id="change">uced
+    &#47&#47 optim</a>ization problem.
+    &#47&#47xx = np.zeros(len(dist.pmf))
+    &#47&#47xx[variables.nonzero] = xopt
+</code></pre>

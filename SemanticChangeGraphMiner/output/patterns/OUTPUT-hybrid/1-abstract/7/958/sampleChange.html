@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+class LayoutToolBar(wx.ToolBar):
+    def __init__(self, parent):
+        <a id="change">wx.ToolBar.__init__(self, parent, -1, wx.DefaultPosition,
+                            wx.DefaultSize,
+                            wx.TB_FLAT|wx.TB_NODIVIDER | wx.TB_DOCKABLE)</a>
+
+        self.SetToolBitmapSize(wx.Size(32,32))
+
+        self.parent = parent</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def __init__(self, parent):
+        style = wx.TB_FLAT|wx.TB_NODIVIDER | wx.TB_DOCKABLE
+        <a id="change">wx.ToolBar.__init__(self, parent, -1, wx.DefaultPosition,
+                            wx.DefaultSize,
+                            style)</a>
+
+        self.SetToolBitmapSize(wx.Size(32,32))
+
+        self.parent = parent
+        self.__init_items()
+        self.__bind_events()
+        self.__bind_events_wx()
+
+        self.ontool_layout = False
+        self.ontool_text = True
+        self.enable_items = [ID_TEXT]
+
+        <a id="change">self.Realize()</a>
+        <a id="change">self.SetStateProjectClose()</a>
+
+    def __bind_events(self):
+        
+        Bind events related to pubsub.</code></pre>

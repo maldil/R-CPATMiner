@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self, n_tgt_vocab, n_max_seq, n_layers=6, n_head=8, d_k=64, d_v=64,
+            d_word_vec=512, d_model=512, d_inner_hid=1024, dropout=0.1):
+
+        <a id="change">super(Decoder, self).__init__()</a>
+        n_position = n_max_seq + 1
+        self.n_max_seq = n_max_seq
+        self.d_model = d_model
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.position_enc = nn.Embedding(
+            n_position, d_word_vec, padding_idx=Constants.PAD)
+        self.position_enc.weight = <a id="change">nn.Parameter(
+            sinusoid_position_encoding_table(n_position, d_word_vec),
+            requires_grad=False)</a>
+
+        self.tgt_word_emb = nn.Embedding(
+            n_tgt_vocab, d_word_vec, padding_idx=Constants.PAD)
+        self.dropout = nn.Dropout(dropout)</code></pre>

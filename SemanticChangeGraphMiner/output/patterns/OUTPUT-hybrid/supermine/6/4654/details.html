@@ -1,0 +1,22 @@
+<html><h3>0cef773c66b325e84900474688a7b0f4f4663f93,utils/eval_utils.py,,get_gt_ranks,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ranks = ranks.view(-1, num_opts)
+    gt_ranks = torch.LongTensor(ans_ind.size(0))
+    for i in range(ans_ind.size(0)):
+        <a id="change">gt_binary = torch.zeros(num_opts)</a>
+        gt_binary[ans_ind[i]] = 1
+        <a id="change">sorted_gt = gt_binary.index_select(0, ranks[i].sort()[1].cpu())</a>
+        gt_rank = (sorted_gt == 1).nonzero() + 1
+        gt_ranks[i] = int(gt_rank)  &#47&#47 gt_rank is 1x1 LongTensor
+    return gt_ranks
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    ans_ind = ans_ind.view(-1)
+    gt_ranks = torch.LongTensor(ans_ind.size(0))
+    for i in range(ans_ind.size(0)):
+        gt_ranks[i] = int(<a id="change">ranks[i, ans_ind[i]]</a>)
+    return gt_ranks
+
+</code></pre><img src="19941413.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/batra-mlp-lab/visdial-challenge-starter-pytorch/commit/0cef773c66b325e84900474688a7b0f4f4663f93#diff-6b20da999691fb1f60c6325e3388443b7c15248b42ea889c90fa2b44f1ce316fL6' target='_blank'>Link</a></div><div id='project'> Project Name: batra-mlp-lab/visdial-challenge-starter-pytorch</div><div id='commit'> Commit Name: 0cef773c66b325e84900474688a7b0f4f4663f93</div><div id='time'> Time: 2018-07-26</div><div id='author'> Author: karandesai281196@gmail.com</div><div id='file'> File Name: utils/eval_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_gt_ranks</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/SentEval/commit/d477e70d888d8501cc0834c47f399a4f65a439d9#diff-c60b2b59be7f81299054b93b5bac04822e29da95cb19143a055a8fc6c85158aaL93' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/SentEval</div><div id='commit'> Commit Name: d477e70d888d8501cc0834c47f399a4f65a439d9</div><div id='time'> Time: 2018-07-13</div><div id='author'> Author: asabran@fb.com</div><div id='file'> File Name: senteval/tools/classifier.py</div><div id='class'> Class Name: PyTorchClassifier</div><div id='method'> Method Name: trainepoch</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/SentEval/commit/d477e70d888d8501cc0834c47f399a4f65a439d9#diff-f7bfe61a1b96a49d5883ad5fcebf53c6981dacebc8cc1ef67dcc6d1ead479436L106' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/SentEval</div><div id='commit'> Commit Name: d477e70d888d8501cc0834c47f399a4f65a439d9</div><div id='time'> Time: 2018-07-13</div><div id='author'> Author: asabran@fb.com</div><div id='file'> File Name: senteval/tools/relatedness.py</div><div id='class'> Class Name: RelatednessPytorch</div><div id='method'> Method Name: trainepoch</div><BR>

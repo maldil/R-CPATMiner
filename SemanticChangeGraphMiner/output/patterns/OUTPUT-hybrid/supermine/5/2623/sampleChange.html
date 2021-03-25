@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        fontsize = 100
+
+        <a id="change">while fontsize:
+            font = f"{self.fontname} {fontsize}"
+            desc = Pango.font_description_from_string(font)
+            layout.set_font_description(desc)
+            pxsize = layout.get_pixel_size()
+            if pxsize.width &lt; self.width - self.border_size*2 and \
+               pxsize.height &lt; self.height - self.border_size*2:
+                break
+            fontsize -= 1
+
+       </a> ctx.move_to(self.border_size, self.border_size)
+        PangoCairo.show_layout(ctx, layout)
+
+    def read_pixbuf(self, filename):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Set color and alpha
+        ctx.set_source_rgba(*self.text_color, self.alpha)
+
+        <a id="change">if not self.layout: &#47&#47 or not self.d_alpha or self.alpha == 0:
+            &#47&#47 print("Laying out text")
+            self.layout = PangoCairo.create_layout(ctx)
+            self.layout.set_text(self.content, -1)
+
+            &#47&#47 For some reason pango width has to be 1024 times the width.
+            &#47&#47 Why? Where does this 1024 come from?
+            &#47&#47 No one explains this anywhere.
+            self.layout.set_width(1024 * (self.width - self.border_size*2))
+            self.layout.set_wrap(Pango.WrapMode.WORD_CHAR)
+
+            fontsize = 100
+
+            while fontsize:
+                font = f"{self.fontname} {fontsize}"
+                desc = Pango.font_description_from_string(font)
+                self.layout.set_font_description(desc)
+                pxsize = self.layout.get_pixel_size()
+                if pxsize.width &lt; self.width - self.border_size*2 and \
+                   pxsize.height &lt; self.height - self.border_size*2:
+                    break
+                fontsize -= 1
+
+       </a> ctx.move_to(self.border_size, self.border_size)
+
+        PangoCairo.show_layout(ctx, self.layout)
+</code></pre>

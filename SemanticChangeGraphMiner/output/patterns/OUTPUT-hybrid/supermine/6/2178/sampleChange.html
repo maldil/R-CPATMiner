@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        thr = np.zeros([data_len,1]) 
+        for ii,_ in enumerate(altitude):            
+            sfc[ii] = sfc_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])    
+            <a id="change">thr[ii] = thr_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])</a>   &#47&#47This is the fix when sklearn is update.
+
+        
+        F    = thr</code></pre><h3>After Change</h3><pre><code class='java'>
+        cond = np.hstack([altitude,mach,throttle])
+           
+        if self.use_extended_surrogate:
+            lo_blender = <a id="change">Cubic_Spline_Blender(0, .01)</a>
+            hi_blender = Cubic_Spline_Blender(0.99, 1)            
+            sfc = self.extended_sfc_surrogate(sfc_surrogate, cond, lo_blender, hi_blender)
+            <a id="change">thr = self.extended_thrust_surrogate(thr_surrogate, cond, lo_blender, hi_blender)</a>
+        else:
+            sfc = sfc_surrogate.predict(cond)
+            thr = thr_surrogate.predict(cond)
+</code></pre>

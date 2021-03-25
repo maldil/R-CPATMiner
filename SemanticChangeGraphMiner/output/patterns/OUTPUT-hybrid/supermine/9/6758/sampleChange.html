@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        ImportError should be raised if module not found.
+        
+        <a id="change">if fullname in self.toc:
+            try:
+                is_pkg, bytecode = self._pyz_archive.extract(fullname)
+                return bytecode
+            except Exception:
+                raise ImportError(&quotLoader FrozenImporter cannot handle module &quot + fullname)
+        else:
+            raise ImportError(&quotLoader FrozenImporter cannot handle module &quot + fullname)
+
+   </a> def get_source(self, fullname):
+        
+        Method should return the source code for the module as a string.
+        But frozen modules does not contain source code.</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 extract() returns None if fullname not in the archive, thus the
+            &#47&#47 next line will raise an execpion which will be catched just
+            &#47&#47 below and raise the ImportError.
+            <a id="change">return self._pyz_archive.extract(fullname)[1]</a>
+        except:
+            raise ImportError(&quotLoader FrozenImporter cannot handle module &quot + fullname)
+
+    def get_source(self, fullname):</code></pre>

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+print(&quotProcessing data...&quot)
+imageProcessor = ImageProcessor(image_data, target_dimensions=target_dimensions, time_series=True)
+image_array = imageProcessor.process_training_data()
+<a id="change">image_data = np.array([np.array([image]).reshape([time_delay]+list(target_dimensions)+[channels]) for image in image_array])</a>
+if verbose:
+    print (&quotprocessed image data shape: &quot + str(image_data.shape))
+
+
+print(&quotTraining net...&quot)
+validation_split = 0.15
+model = TimeDelayConvNN(target_dimensions, time_delay, channels, label_count)
+<a id="change">model.fit(image_data, labels, validation_split)</a></code></pre><h3>After Change</h3><pre><code class='java'>
+
+print(&quotCreating training/testing data...&quot)
+validation_split = 0.25
+<a id="change">X_train</a>, <a id="change">X_test</a>, <a id="change">y_train</a>, <a id="change">y_test</a> = train_test_split(image_data, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)
+<a id="change">train_gen = DataGenerator(time_delay=time_delay).fit(X_train, y_train)</a>
+<a id="change">test_gen = DataGenerator(time_delay=time_delay).fit(X_test, y_test)</a>
+
+print(&quotTraining net...&quot)
+model = TimeDelayConvNN(target_dimensions, time_delay, channels, label_count)
+
+&#47&#47 model.fit(image_data, labels, validation_split)
+<a id="change">model.fit_generator(train_gen.generate(target_dimensions, batch_size=10),
+                    test_gen.generate(target_dimensions, batch_size=10),
+                    epochs=10)</a></code></pre>

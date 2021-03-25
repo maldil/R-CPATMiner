@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return &quotconst double _gsl_{var}_f{ind}&quot.format(var=var, ind=ind)
+
+    def write_dataholder(self, var):
+        <a id="change">try:
+            var_obj = self.variables[var]
+        except:
+            var_obj = self.other_variables[var]
+       </a> <a id="change">dtype = self.generator.c_data_type(var_obj.dtype)</a>
+        if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj, access_data=True)
+            restrict = self.generator.restrict
+            if var_obj.scalar:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for var_obj in variables_in_vector:
+            if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+            <a id="change">code += [&quot\t&quot+self.write_dataholder_single(var_obj)]</a>
+        code += [&quot\n};&quot]
+        <a id="change">return (&quot\n&quot).join(code)</a>
+
+    def to_replace_vector_vars(self, variables_in_vector):
+        to_replace = {}
+        for var_obj in variables_in_vector:</code></pre>

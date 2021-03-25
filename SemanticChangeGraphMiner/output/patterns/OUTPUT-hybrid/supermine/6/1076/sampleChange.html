@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            f.write(chunk)
+
+    &#47&#47 If verify, compare the signature
+    <a id="change">if signature is not None:
+        dlsignature = sha256sum(dlpath)
+        if signature != dlsignature:
+            raise ValueError(
+                "Download signature does not match hardcoded signature!"
+            )
+
+    &#47&#47 If extract, extract the zipfile.
+   </a> if extract:
+        zf = zipfile.ZipFile(dlpath)
+        zf.extractall(path)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        help="prevent new data from being downloaded",
+    )
+    parser.add_argument(
+        &quot-f&quot, &quot--o<a id="change">verwrite&quot, action=&quotstore_true&quot, default=False,
+        help="overwrite any existing data with new download",
+    )
+    parser.add_argument(
+        "data_home", default=None, nargs="?",
+        help="specify the data download location or set $YELLOWBRICK_DATA",
+    )
+
+    args = parser.parse_args()
+
+    if</a> args.cleanup:
+        cleanup_all(data_home=args.data_home)
+
+    if not args.no_download:</code></pre>

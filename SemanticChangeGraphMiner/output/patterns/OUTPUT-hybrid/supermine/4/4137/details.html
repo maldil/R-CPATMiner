@@ -1,0 +1,25 @@
+<html><h3>01b988e5a3a32d44714404070b9aae09d4e93887,utils/tools.py,,gpumemusage,#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def gpumemusage():
+    gpu_mem = subprocess.check_output("nvidia-smi | grep MiB | cut -f 3 -d &quot|&quot", shell=True).replace(&quot &quot, &quot&quot).replace(&quot\n&quot, &quot&quot).replace(&quoti&quot, &quot&quot)
+    curr, tot = [float(a[:-2]) for a in <a id="change">gpu_mem.split(&quot/&quot)</a>]
+    
+    util = "%1.2f"%(100*curr/tot)+&quot%&quot
+    cmem = str(int(math.ceil(curr/1024.)))+&quotGB&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+    all_stat = [float(a) for a in gpu_mem.replace(&quot/&quot,&quot&quot).split(&quotMB&quot)[:-1]]
+
+    gpu_mem = &quot&quot
+    <a id="change">for i in range(len(all_stat)/2):
+        curr, tot = all_stat[2*i], all_stat[2*i+1]
+        util = "%1.2f"%(100*curr/tot)+&quot%&quot
+        cmem = str(int(math.ceil(curr/1024.)))+&quotGB&quot
+        gmem = str(int(math.ceil(tot/1024.)))+&quotGB&quot
+        gpu_mem += util + &quot--&quot + join(cmem, gmem) + &quot &quot
+   </a> return gpu_mem
+
+
+def update_hyperparameter_schedule(args, epoch, global_iteration, optimizer):</code></pre><img src="18394736.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NVIDIA/flownet2-pytorch/commit/01b988e5a3a32d44714404070b9aae09d4e93887#diff-217ea1e96fb551669028a03451214681afc74f587f6cf04eff69c306d74bdcb6L124' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/flownet2-pytorch</div><div id='commit'> Commit Name: 01b988e5a3a32d44714404070b9aae09d4e93887</div><div id='time'> Time: 2017-12-05</div><div id='author'> Author: freda@gcf-sdgx-01.nvidia.com</div><div id='file'> File Name: utils/tools.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gpumemusage</div><BR><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/a74090f72c022d1a6dd6e13a111faa8c571a3726#diff-ce40068d6122a4b39f80ef146a1f3ba460f421081d67e929cab3a465c540e68cL210' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: a74090f72c022d1a6dd6e13a111faa8c571a3726</div><div id='time'> Time: 2016-06-28</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: go.py</div><div id='class'> Class Name: Position</div><div id='method'> Method Name: __str__</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/e1c4e6a7c7db68e123d978bfc56feb057898935f#diff-a17dc8b1db8a3f0d9d502c3c2d7d13001ca5af03ef5419bf371ac130926ce968L46' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: e1c4e6a7c7db68e123d978bfc56feb057898935f</div><div id='time'> Time: 2019-10-24</div><div id='author'> Author: kostasdedesar@penguin</div><div id='file'> File Name: Counting-sort.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

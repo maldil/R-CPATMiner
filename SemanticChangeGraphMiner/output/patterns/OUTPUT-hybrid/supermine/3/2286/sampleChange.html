@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        temp.seek(0)
+        temp.write(dcm_array.tobytes())
+        temp.flush()
+        <a id="change">temp.seek(0)</a>
+
+        del dcm_array
+
+        img = SimpleITK.Image(shape, sitk_dtype, 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+            dcm_array[z_index % dicom_ds.n_slices, :, :] = pixel_array
+
+        del ds
+    <a id="change">if use_pixel_array:
+        img = SimpleITK.GetImageFromArray(pixel_array, isVector=is_rgb)
+    else:
+        img = SimpleITK.GetImageFromArray(dcm_array, isVector=is_rgb)
+   </a> return img
+
+
+def image_builder_dicom(</code></pre>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                points["red"] = array[:,0]
+                points["green"] = array[:,1]
+                points["blue"] = array[:,2]
+            elif <a id="change">array</a>.ndim &lt; 2:
+                points[name] = array
+            else:
+                &#47&#47 Multicomponent arrays aren&quott supported by PyntCloud?</code></pre><h3>After Change</h3><pre><code class='java'>
+        for name, array in scalars.items():
+            if array.ndim == 1:
+                points[name] = array
+            elif <a id="change">array.ndim == 2:
+   </a>             if name in "RGB":
+                    points["red"] = array[:, 0]
+                    points["green"] = array[:, 1]
+                    points["blue"] = array[:, 2]
+                elif name == "Normals":
+                    points["nx"] = array[:, 0]
+                    <a id="change">points["ny"] = array[:, 1]</a>
+                    points["nz"] = array[:, 2]
+                else:
+                    for n in range(array.shape[1]):
+                        points["{}_{}".format(name, n)] = array[:, n]
+            else:
+                <a id="change">warnings.warn("Ignoring scalar field {} with ndim &gt; 2 ({})".format(name, array.ndim))</a>
+
+        return cls(points, mesh=mesh)
+
+    def plot(</code></pre>

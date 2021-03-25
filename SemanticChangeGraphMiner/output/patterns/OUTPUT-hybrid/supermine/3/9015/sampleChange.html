@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    with tf.name_scope("pixel_wise_softmax"):
+        exponential_map = tf.exp(output_map)
+        evidence = tf.add(exponential_map,tf.reverse(exponential_map,[False,False,False,True]))
+        <a id="change">return tf.div(exponential_map,evidence, name="pixel_wise_softmax")</a>
+
+def pixel_wise_softmax_2(output_map):
+    with tf.name_scope("pixel_wise_softmax_2"):
+        exponential_map = tf.exp(output_map)</code></pre><h3>After Change</h3><pre><code class='java'>
+    with tf.name_scope("pixel_wise_softmax"):
+        max_axis = tf.reduce_max(output_map, axis=3, keepdims=True)
+        exponential_map = tf.exp(output_map - max_axis)
+        normalize = <a id="change">tf.reduce_sum(exponential_map, axis=3, keepdims=True)</a>
+        return <a id="change">exponential_map / normalize</a>
+
+def cross_entropy(y_,output_map):
+    with tf.name_scope("xent"):
+        return -tf.reduce_mean(y_*tf.log(tf.clip_by_value(output_map,1e-10,1.0)), name="cross_entropy")</code></pre>

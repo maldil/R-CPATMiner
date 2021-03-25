@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 -----------------------------------------------------------------------------
+data = load_diabetes()
+
+icp = IcpRegressor(NormalizedRegressorNc(<a id="change">RegressorAdapter(RandomForestRegressor(n_estimators=100))</a>,
+                                         RegressorAdapter(RandomForestRegressor(n_estimators=100)),
+                                         AbsErrorErrFunc()))
+<a id="change">icp_cv</a> = RegIcpCvHelper(icp)
+
+<a id="change">scores</a> = cross_val_score(icp_cv,
+                         data.data,
+                         data.target,
+                         iterations=5,
+                         folds=5,
+                         scoring_funcs=[reg_mean_errors, reg_median_size],
+                         significance_levels=[0.05, 0.1, 0.2])
+
+
+print(&quotNormalized absolute error regression: diabetes&quot)
+<a id="change">scores</a> = scores.drop([&quotfold&quot, &quotiter&quot], axis=1)
+print(scores.groupby([&quotsignificance&quot]).mean())
+
+&#47&#47 -----------------------------------------------------------------------------</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 -----------------------------------------------------------------------------
+data = load_diabetes()
+
+underlying_model = <a id="change">RegressorAdapter(RandomForestRegressor(n_estimators=100))</a>
+normalizer_model = RegressorAdapter(RandomForestRegressor(n_estimators=100))
+normalizer = RegressorNormalizer(underlying_model, normalizer_model, AbsErrorErrFunc())
+nc = RegressorNc(underlying_model, AbsErrorErrFunc(), normalizer)
+
+icp = IcpRegressor(nc)
+<a id="change">icp_cv</a> = RegIcpCvHelper(icp)
+
+<a id="change">scores</a> = cross_val_score(icp_cv,
+                         data.data,
+                         data.target,
+                         iterations=5,
+                         folds=5,
+                         scoring_funcs=[reg_mean_errors, reg_median_size],
+                         significance_levels=[0.05, 0.1, 0.2])
+
+
+print(&quotNormalized absolute error regression: diabetes&quot)
+<a id="change">scores</a> = scores.drop([&quotfold&quot, &quotiter&quot], axis=1)
+print(scores.groupby([&quotsignificance&quot]).mean())
+
+&#47&#47 -----------------------------------------------------------------------------</code></pre>

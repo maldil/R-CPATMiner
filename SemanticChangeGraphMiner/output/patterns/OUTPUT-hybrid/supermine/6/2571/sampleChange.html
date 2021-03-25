@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def get_leaf(self, lower_bound):
+        leaf_idx = self._retrieve(lower_bound)  &#47&#47 search the max leaf priority based on the lower_bound
+        data_idx = leaf_idx - self.capacity + 1
+        return <a id="change">[leaf_idx, self.tree[leaf_idx], self.data[data_idx]]</a>
+
+    def _retrieve(self, lower_bound, parent_idx=0):
+        
+        Tree structure and array storage:</code></pre><h3>After Change</h3><pre><code class='java'>
+        while True:     &#47&#47 the while loop is faster than the method in the reference code
+            cl_idx = 2 * parent_idx + 1         &#47&#47 this leaf&quots left and right kids
+            cr_idx = cl_idx + 1
+            <a id="change">if cl_idx &gt;= len(self.tree):        &#47&#47 reach bottom, end search
+                leaf_idx = parent_idx
+                break
+            else:       &#47&#47 downward search, always search for a higher priority node
+                if v &lt;= self.tree[cl_idx]:
+                    parent_idx = cl_idx
+                else:
+                    v -= self.tree[cl_idx]
+                    parent_idx = cr_idx
+
+       </a> data_idx = leaf_idx - self.capacity + 1
+        return leaf_idx, self.tree[leaf_idx], self.data[data_idx]
+
+    @property</code></pre>

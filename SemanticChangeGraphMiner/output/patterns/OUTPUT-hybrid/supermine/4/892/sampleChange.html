@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    tf.logging.info(&quotSampling from datasets %s with weights %s&quot %
+                    (input_files, config.sample_from_datasets_weights))
+    records_datasets = []
+    <a id="change">for input_file in input_files:
+      records_dataset = _read_dataset_internal(file_read_func, [input_file],
+                                               config, filename_shard_fn)
+      records_datasets.append(records_dataset)
+   </a> dataset_weights = list(config.sample_from_datasets_weights)
+    return tf.data.experimental.sample_from_datasets(records_datasets,
+                                                     dataset_weights)
+  else:</code></pre><h3>After Change</h3><pre><code class='java'>
+      if num_readers == 0:
+        tf.logging.info(&quotSkipping dataset due to zero weights: %s&quot, input_file)
+        continue
+      <a id="change">tf.logging.info(
+          &quotNum readers for dataset [%s]: %d&quot, input_file, num_readers)</a>
+      records_dataset = _read_dataset_internal(file_read_func, [input_file],
+                                               num_readers, config,
+                                               filename_shard_fn)
+      dataset_weights.append(weight)</code></pre>

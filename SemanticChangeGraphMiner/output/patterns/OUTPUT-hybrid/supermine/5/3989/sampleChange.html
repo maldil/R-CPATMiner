@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    seq = load_pyrnn(fname)
+                    seq.kind = &quotpyrnn&quot
+                    return seq
+                <a id="change">except</a> Exception as e:
+                    <a id="change">raise</a>
+            else:
+                raise
+
+def load_clstm(fname):</code></pre><h3>After Change</h3><pre><code class='java'>
+    nn = None
+    kind = &quot&quot
+    fname = abspath(expandvars(expanduser(fname)))
+    <a id="change">try:
+        nn = TorchVGSLModel.load_model(fname)
+        kind = &quotvgsl&quot
+    except:
+        nn = TorchVGSLModel.load_clstm_model(fname)
+        kind = &quotclstm&quot
+   </a> if not nn:
+        raise KrakenInvalidModelException(&quotFile {} not loadable by any parser.&quot.format(fname))
+    seq = TorchSeqRecognizer(nn)
+    seq.kind = kind</code></pre>

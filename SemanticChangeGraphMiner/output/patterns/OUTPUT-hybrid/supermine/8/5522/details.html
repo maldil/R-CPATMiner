@@ -1,0 +1,29 @@
+<html><h3>f7b4c6de2037ebedf6bc8ea5979e81666d54534f,research/object_detection/meta_architectures/center_net_meta_arch.py,,convert_strided_predictions_to_normalized_boxes,#,992
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        filter_nonoverlapping=False)
+    return boxes
+
+  <a id="change">box_lists = [box_list.BoxList(boxes) for boxes in tf.unstack(boxes, axis=0)]</a>
+  true_heights, true_widths, _ = tf.unstack(true_image_shapes, axis=1)
+
+  true_heights_list = tf.unstack(true_heights, axis=0)
+  true_widths_list = tf.unstack(true_widths, axis=0)
+
+  <a id="change">box_lists = list(map(_normalize_boxlist,
+                       zip(box_lists, true_heights_list, true_widths_list)))</a>
+  <a id="change">boxes = tf.stack([box_list_instance.get() for
+                    box_list_instance in box_lists], axis=0)</a>
+
+  return boxes
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Note: We use tf ops instead of functions in box_list_ops to make this
+  &#47&#47 function compatible with dynamic batch size.
+  boxes = boxes * stride
+  true_image_shapes = tf.tile(<a id="change">true_image_shapes[:, tf.newaxis, :2]</a>, [1, 1, 2])
+  boxes = boxes / tf.cast(true_image_shapes, tf.float32)
+  boxes = tf.clip_by_value(boxes, 0.0, 1.0)
+  return boxes</code></pre><img src="23554663.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/f7b4c6de2037ebedf6bc8ea5979e81666d54534f#diff-ee421de3daf8a640c16b7f6f5a5d3399d28ded3a5c073b9ee10e5e2a88b7e94fL1012' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: f7b4c6de2037ebedf6bc8ea5979e81666d54534f</div><div id='time'> Time: 2020-12-01</div><div id='author'> Author: rathodv@google.com</div><div id='file'> File Name: research/object_detection/meta_architectures/center_net_meta_arch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_strided_predictions_to_normalized_boxes</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b470898504d2a077433a84e12a7c8078b2494760#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L53' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b470898504d2a077433a84e12a7c8078b2494760</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/cbbcea8795e8da754a5b3ffb1a08ef66afd84eef#diff-60a374c703dcf39413713f8dd108028587228bb7e3205616d19a8734f40bc05aL59' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: cbbcea8795e8da754a5b3ffb1a08ef66afd84eef</div><div id='time'> Time: 2018-09-02</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _ravel_shape_indices</div><BR>

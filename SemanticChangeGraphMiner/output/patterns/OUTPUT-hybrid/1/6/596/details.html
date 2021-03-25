@@ -1,0 +1,34 @@
+<html><h3>8df6b252447e160c2433f2f5e0f5343f7451876b,models/utils.py,,conv_layer,#,174
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    weight_decay = tf.multiply(tf.nn.l2_loss(W), wd, name=&quotweight_loss&quot)
+    tf.add_to_collection(LOSSES_COLLECTION, weight_decay)
+
+    result = <a id="change">tf.nn.bias_add(
+        tf.nn.conv2d(input_x, W, [1, stride, stride, 1], padding), b)</a>
+
+    &#47&#47 apply nonlinearity
+    out = activation(result)
+
+    &#47&#47 log convolution result pre-activation function
+    &#47&#47 on a single image, the first of the batch
+    <a id="change">conv_results</a> = tf.split(
+        value=result[0], num_or_size_splits=shape[3], axis=2)
+    grid_side = math.floor(math.sqrt(shape[3]))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    result = tf.nn.conv2d(input_x, W, [1, stride, stride, 1], padding)
+    if bias_term:
+        b = bias("b", [shape[3]])
+        result = <a id="change">tf.nn.bias_add(result, b)</a>
+
+    &#47&#47 apply nonlinearity
+    out = activation(result)
+
+    &#47&#47 log convolution result pre-activation function
+    &#47&#47 on a single image, the first of the batch
+    <a id="change">conv_results</a> = tf.split(
+        value=result[0], num_or_size_splits=shape[3], axis=2)
+    grid_side = math.floor(math.sqrt(shape[3]))
+</code></pre><img src="2995341.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/8df6b252447e160c2433f2f5e0f5343f7451876b#diff-180d11519347b16a39dbe55e0651b86403aedbf6172aa239536d6610341f0445L184' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 8df6b252447e160c2433f2f5e0f5343f7451876b</div><div id='time'> Time: 2017-02-14</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: models/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: conv_layer</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/900e03a46c6a3aeaf6aa1c058f53979134061549#diff-0f901399b153bf32000ab252f176a2a10c2cb26bb27ff8e0e968551c1c65fd02L36' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 900e03a46c6a3aeaf6aa1c058f53979134061549</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: henry.ehrenberg@outlook.com</div><div id='file'> File Name: snorkel/learning/logistic_regression.py</div><div id='class'> Class Name: LogisticRegression</div><div id='method'> Method Name: _build</div><BR><BR><div id='link'><a href='https://github.com/galeone/dynamic-training-bench/commit/8df6b252447e160c2433f2f5e0f5343f7451876b#diff-180d11519347b16a39dbe55e0651b86403aedbf6172aa239536d6610341f0445L139' target='_blank'>Link</a></div><div id='project'> Project Name: galeone/dynamic-training-bench</div><div id='commit'> Commit Name: 8df6b252447e160c2433f2f5e0f5343f7451876b</div><div id='time'> Time: 2017-02-14</div><div id='author'> Author: nessuno@nerdz.eu</div><div id='file'> File Name: models/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: atrous_conv_layer</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/900e03a46c6a3aeaf6aa1c058f53979134061549#diff-0f901399b153bf32000ab252f176a2a10c2cb26bb27ff8e0e968551c1c65fd02L159' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 900e03a46c6a3aeaf6aa1c058f53979134061549</div><div id='time'> Time: 2017-04-17</div><div id='author'> Author: henry.ehrenberg@outlook.com</div><div id='file'> File Name: snorkel/learning/logistic_regression.py</div><div id='class'> Class Name: SparseLogisticRegression</div><div id='method'> Method Name: _build</div><BR>

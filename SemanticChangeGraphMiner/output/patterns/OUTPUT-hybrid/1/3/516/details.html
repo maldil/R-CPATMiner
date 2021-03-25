@@ -1,0 +1,20 @@
+<html><h3>5c5a490629aa20568434d1c6d11f4be4b8155518,tests/convert_gl2tf2_lstm.py,,gl_calc,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ctx = mx.gpu(0)
+    gl_params = gl_model._collect_params_with_prefix()
+    &#47&#47 gl_w = np.transpose(tf2_w, axes=(3, 2, 0, 1))
+    gl_params[&quotconv.weight&quot]._load_init(<a id="change">mx.nd.array(gl_w, ctx)</a>, ctx)
+    &#47&#47 gl_params[&quotconv.bias&quot]._load_init(mx.nd.array(b, ctx), ctx)
+
+    gl_x = mx.nd.array(x, ctx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 gl_y = gl_model(gl_x).asnumpy()
+
+    ctx = mx.gpu(0)
+    gl_x = <a id="change">mx.nd.zeros((3, 7, 80), ctx)</a>
+    gl_model.initialize(ctx=ctx)
+    gl_model(gl_x)
+    gl_params = gl_model._collect_params_with_prefix()
+    _calc_width(gl_model)</code></pre><img src="2792572.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/osmr/imgclsmob/commit/5c5a490629aa20568434d1c6d11f4be4b8155518#diff-48df4fdd8603ee1c4e2b840ecdcabcc13f6177ba9b5244a5e00ab40d000e5b2bL47' target='_blank'>Link</a></div><div id='project'> Project Name: osmr/imgclsmob</div><div id='commit'> Commit Name: 5c5a490629aa20568434d1c6d11f4be4b8155518</div><div id='time'> Time: 2021-02-02</div><div id='author'> Author: osemery@gmail.com</div><div id='file'> File Name: tests/convert_gl2tf2_lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gl_calc</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-5dfdf9ce647cb4af1e694c363a20c9b3825066680fe0d56198a401735ed9a425L56' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: wedge</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/c69da5ec32a1af288c70af7c37e08f6a8a19fe82#diff-28a7c4e99044954aab2f6e7d824d2b0ea5640a391308f90010e4d9895a91ddadL171' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: c69da5ec32a1af288c70af7c37e08f6a8a19fe82</div><div id='time'> Time: 2018-03-31</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_img</div><BR>

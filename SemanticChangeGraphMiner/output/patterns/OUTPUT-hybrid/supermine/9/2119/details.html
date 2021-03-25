@@ -1,0 +1,35 @@
+<html><h3>2c00aa18540df4ab4c3afeacd44b556b3ce90782,python/magent/utility.py,,download_file,#,208
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47file = urllib2.urlopen(url)
+    &#47&#47with open(filename, &quotwb&quot) as fout:
+    &#47&#47    fout.write(file.read())
+    <a id="change">if platform.system() == &quotDarwin&quot:
+        os.system("curl -O %s &quot%s&quot" % (filename, url))
+    else:
+        os.system("wget -O %s &quot%s&quot" % (filename, url))
+
+   </a> print("download done!")
+
+
+def download_model(url):</code></pre><h3>After Change</h3><pre><code class='java'>
+    import urllib2
+    print("Download %s from %s..." % (filename, url))
+
+    <a id="change">ret = os.system("wget -O %s &quot%s&quot" % (filename, url))</a>
+
+    <a id="change">if ret != 0:
+        print("wget fails. Retry with python function. It may takes several miniuts...")
+        raw = urllib2.urlopen(url)
+        with open(filename, &quotwb&quot) as fout:
+            fout.write(raw.read())
+    else:
+        print("download done!")
+
+
+</a>def download_model(url):
+    name = url.split(&quot/&quot)[-1]
+    name = os.path.join(&quotdata&quot, name)
+    download_file(name, url)</code></pre><img src="9878486.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/geek-ai/MAgent/commit/2c00aa18540df4ab4c3afeacd44b556b3ce90782#diff-65a58fc11fb32fb17518d3a6c4736f5efa52373bc141b257b1fea9e83af5aee3L212' target='_blank'>Link</a></div><div id='project'> Project Name: geek-ai/MAgent</div><div id='commit'> Commit Name: 2c00aa18540df4ab4c3afeacd44b556b3ce90782</div><div id='time'> Time: 2017-12-01</div><div id='author'> Author: zhenglianmin96@163.com</div><div id='file'> File Name: python/magent/utility.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: download_file</div><BR><BR><div id='link'><a href='https://github.com/Microsoft/MMdnn/commit/fdeeaff5e452e257bf3a3dd76e25c81304cc4c98#diff-b203a197f54e74a5c8a6b70db59c0bcd56bd0a6685fc3a39bb329773cd971574L33' target='_blank'>Link</a></div><div id='project'> Project Name: Microsoft/MMdnn</div><div id='commit'> Commit Name: fdeeaff5e452e257bf3a3dd76e25c81304cc4c98</div><div id='time'> Time: 2020-03-15</div><div id='author'> Author: linmajia@users.noreply.github.com</div><div id='file'> File Name: mmdnn/conversion/examples/tensorflow/vis_meta.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _main</div><BR><BR><div id='link'><a href='https://github.com/ultralytics/yolov3/commit/0bc1db58d82c2482bfac1e32a3a43cfd5a533da2#diff-14aa3f6ca8fb175c2b249ec637d89afce517b38ac6f7f72ffda6e85f11095937L21' target='_blank'>Link</a></div><div id='project'> Project Name: ultralytics/yolov3</div><div id='commit'> Commit Name: 0bc1db58d82c2482bfac1e32a3a43cfd5a533da2</div><div id='time'> Time: 2021-01-10</div><div id='author'> Author: glenn.jocher@ultralytics.com</div><div id='file'> File Name: utils/google_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: attempt_download</div><BR>

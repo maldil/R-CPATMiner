@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            n_jobs = max(1, cpu_count() + n_jobs + 1)
+
+        &#47&#47 use the cached optimizer for particular parameter space
+        key = <a id="change">str(param_space)</a>
+        if key not in self.optimizer_:
+            self.optimizer_[key] = self._make_optimizer(param_space)
+        optimizer = self.optimizer_[key]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 use the cached optimizer for particular parameter space
+        if space_id not in self.search_spaces_:
+            <a id="change">raise ValueError("Unknown space %s" % space_id)</a>
+
+        &#47&#47 get the search space for a step
+        search_space = self.search_spaces_[space_id]
+        if isinstance(search_space, tuple):</code></pre>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Pixels are True exactly where there is a border in `labeled`
+    &quot&quot&quot
+    Bc = get_structuring_elem(labeled, Bc)
+    <a id="change">if output is None:
+        output = np.zeros(labeled.shape, bool)
+    else:
+        if output.dtype != bool:
+            raise TypeError(&quotmahotas.labeled.borders: output must be boolean&quot)
+        if not output.flags[&quotC_CONTIGUOUS&quot]:
+            raise TypeError(&quotmahotas.labeled.borders: output must be C-contiguous&quot)
+        if output.shape != labeled.shape:
+            raise ValueError(&quotmahotas.labeled.borders: output must be of same size as `labeled`&quot)
+   </a> return _labeled.borders(labeled, Bc, output)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        Pixels are True exactly where there is a border in `labeled`
+    &quot&quot&quot
+    Bc = get_structuring_elem(labeled, Bc)
+    output = <a id="change">_get_output(labeled, output, &quotlabeled.borders&quot, bool)</a>
+    output.fill(False)
+    return _labeled.borders(labeled, Bc, output)
+
+</code></pre>

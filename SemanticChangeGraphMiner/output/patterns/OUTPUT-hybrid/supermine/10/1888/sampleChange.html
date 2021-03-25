@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data: dict
+        Elements as pandas DataFrames.
+    
+    <a id="change">if laspy is None:
+        raise ImportError("laspy is needed for reading .las files.")
+   </a> data = <a id="change">{}</a>
+
+    with laspy.file.File(filename) as las:
+        data["points"] = pd.DataFrame(las.points["point"])
+        data["points"].columns = (x.lower() <a id="change">for</a> x in data["points"].columns)
+        &#47&#47 because laspy do something strange with scale
+        <a id="change">data["points"].loc[:, ["x", "y", "z"]] *= las.header.scale</a>
+        data = convert_location_to_dtype(data, xyz_dtype)
+        data = convert_color_to_dtype(data, rgb_dtype)
+        data["las_header"] = las.header
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if backend == "pylas":
+        data = read_las_with_pylas(filename)
+    elif <a id="change">backend == "laspy</a>":
+        data = read_las_with_laspy(filename)
+    else:
+        <a id="change">raise ValueError(f"Unsupported backend. Expected one of [&quotpylas&quot, &quotlaspy&quot] but got {backend}")</a>
+    data = convert_location_to_dtype(data, xyz_dtype)
+    data = convert_color_to_dtype(data, rgb_dtype)
+    return data
+</code></pre>

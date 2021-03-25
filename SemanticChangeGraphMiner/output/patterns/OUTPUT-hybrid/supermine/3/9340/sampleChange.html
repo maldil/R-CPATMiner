@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        while True:
+            obs_v = Variable(torch.from_numpy(np.expand_dims(obs, 0)))
+            if cuda:
+                obs_v = <a id="change">obs_v.cuda()</a>
+            out_v = net(obs_v)
+
+            action_idx = out_v.max(dim=1)[1].data.cpu().numpy()[0]
+            if np.random.random() &lt; epsilon:</code></pre><h3>After Change</h3><pre><code class='java'>
+        episode_steps = 0
+
+        while True:
+            <a id="change">obs_v = torch.tensor([obs]).to(device)</a>
+            out_v = net(obs_v)
+
+            action_idx = out_v.max(dim=1)[1].item()
+            if np.random.random() &lt; epsilon:</code></pre>

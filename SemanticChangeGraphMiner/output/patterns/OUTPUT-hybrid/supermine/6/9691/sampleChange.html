@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def gen_loss(self, _, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid
+        scores = <a id="change">th.mean(sigmoid(self.dis(fake_samps, labels, height, alpha)))</a>
+        return 0.5 * <a id="change">((scores - 1) ** 2)</a>
+
+
+class CondHingeGAN(ConditionalGANLoss):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def gen_loss(self, _, fake_samps, labels, height, alpha):
+        from torch.nn.functional import sigmoid
+        scores = <a id="change">sigmoid(self.dis(fake_samps, labels, height, alpha))</a>
+        return 0.5 * <a id="change">(th.mean((scores - 1) ** 2))</a>
+
+
+class CondHingeGAN(ConditionalGANLoss):
+</code></pre>

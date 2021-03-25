@@ -1,0 +1,36 @@
+<html><h3>7685876d31bc74dc9e1a3426c337d0c55c3d87da,paderbox/speech_enhancement/beamformer.py,,get_pca_vector,#,171
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with shape (..., sensors, sensors)
+    :return: Set of beamforming vectors with shape (..., sensors)
+    
+    <a id="change">return get_pca(target_psd_matrix)[0]</a>
+
+
+&#47&#47 TODO: Possible test case: Assert W^H * H = 1.
+&#47&#47 TODO: Make function more stable for badly conditioned noise matrices.</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    eigenvectors, eigenvalues = get_pca(target_psd_matrix)
+    if scaling is None:
+        <a id="change">scale = 1</a>
+    elif <a id="change">scaling == &quottrace</a>&quot:
+        &#47&#47 ToDo: check whether this improves bf results
+        scale = <a id="change">np.sqrt(
+            np.trace(target_psd_matrix, axis1=-1, axis2=-2)
+        ) / np.linalg.norm(eigenvectors, axis=-1)</a>
+        <a id="change">scale = scale[..., None]</a>
+        print(scale.shape)
+    elif scaling == &quoteigenvalue&quot:
+        &#47&#47 ToDo: check whether this improves bf results
+        <a id="change">scale = eigenvalues / np.linalg.norm(
+            eigenvectors, axis=-1)</a>
+        scale = scale[..., None]
+    else:
+        raise ValueError
+    <a id="change">return eigenvectors * scale</a>
+
+
+&#47&#47 TODO: Possible test case: Assert W^H * H = 1.
+&#47&#47 TODO: Make function more stable for badly conditioned noise matrices.</code></pre><img src="34718417.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/fgnt/pb_bss/commit/7685876d31bc74dc9e1a3426c337d0c55c3d87da#diff-a1b13e42a9bbb06a7c7970b55fea4befc9eebce8517f1414d0b0de14a54268b4L179' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/pb_bss</div><div id='commit'> Commit Name: 7685876d31bc74dc9e1a3426c337d0c55c3d87da</div><div id='time'> Time: 2019-08-02</div><div id='author'> Author: heitkaemper@nt.upb.de</div><div id='file'> File Name: paderbox/speech_enhancement/beamformer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_pca_vector</div><BR><BR><div id='link'><a href='https://github.com/HsinYingLee/DRIT/commit/fad73753f836de5cdd08d8e23d26c1170d19b386#diff-7daf826f7e6e0471f80200a036cace05c81a1fb316cc166bef5b3ab0cdaa3627L21' target='_blank'>Link</a></div><div id='project'> Project Name: HsinYingLee/DRIT</div><div id='commit'> Commit Name: fad73753f836de5cdd08d8e23d26c1170d19b386</div><div id='time'> Time: 2018-04-09</div><div id='author'> Author: hytseng0509@gmail.com</div><div id='file'> File Name: src/dataset_unpair.py</div><div id='class'> Class Name: dataset_unpair</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/google-research/google-research/commit/f705891da38c245857f04484ac7b771a37be7571#diff-b646828daaa420e875c1b3a8757a981383c2b655dbf579606860a2f3071dc8f8L267' target='_blank'>Link</a></div><div id='project'> Project Name: google-research/google-research</div><div id='commit'> Commit Name: f705891da38c245857f04484ac7b771a37be7571</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: barron@google.com</div><div id='file'> File Name: jaxnerf/nerf/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: learning_rate_decay</div><BR>

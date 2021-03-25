@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),
+                   nb_val_samples=testX.shape[0], verbose=1)
+
+<a id="change">scores = model.evaluate_generator(test_generator.flow(testX, testY, nb_epoch), testX.shape[0])</a>
+print("Accuracy = %f" % (100 * scores[1]))
+<a id="change">print("Error = %f" % (100 - 100 * scores[1]))</a>
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+(trainX, trainY), (testX, testY) = cifar10.load_data()
+
+trainX = <a id="change">trainX.astype(&quotfloat32&quot)</a>
+testX = testX.astype(&quotfloat32&quot)
+
+trainX /= 255.
+testX /= 255.</code></pre>

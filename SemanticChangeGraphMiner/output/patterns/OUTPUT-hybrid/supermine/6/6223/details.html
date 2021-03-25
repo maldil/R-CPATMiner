@@ -1,0 +1,24 @@
+<html><h3>b4d5c80c83ec0502231ff3563fa8ac5b95717267,conceptnet5/vectors/transforms.py,,make_replacements,#,110
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    intersected = big_frame.loc[small_frame.index].dropna()
+    index, index_map = build_annoy_tree(intersected, tree_depth)
+    replacements = {}
+    <a id="change">average_similarity = []</a>
+    for term in big_frame.index:
+        if term not in small_frame.index:
+            indices, scores = index.get_nns_by_vector(big_frame.loc[term], 2,
+                                                   include_distances=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+    replacements = {}
+    for term in big_frame.index:
+        if term not in small_frame.index:
+            <a id="change">most_similar = similar_to_vec(intersected, big_frame.loc[term], limit=1)</a>
+            <a id="change">got = list(most_similar.index)</a>
+            <a id="change">if got:
+                replacements[term] = got[0]
+   </a> return replacements
+
+
+def choose_small_vocabulary(big_frame):</code></pre><img src="25354550.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/b4d5c80c83ec0502231ff3563fa8ac5b95717267#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL115' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: b4d5c80c83ec0502231ff3563fa8ac5b95717267</div><div id='time'> Time: 2017-06-14</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: make_replacements</div><BR><BR><div id='link'><a href='https://github.com/raghakot/keras-vis/commit/9f221345e7a58804e347f2a1879b06922222413b#diff-ddc653b748c5e4f898ae76bf096a26705096a80aebe4341d1975bdeba6a0b6b6L329' target='_blank'>Link</a></div><div id='project'> Project Name: raghakot/keras-vis</div><div id='commit'> Commit Name: 9f221345e7a58804e347f2a1879b06922222413b</div><div id='time'> Time: 2017-07-03</div><div id='author'> Author: ragha@outlook.com</div><div id='file'> File Name: docs/md_autogen.py</div><div id='class'> Class Name: MarkdownAPIGenerator</div><div id='method'> Method Name: module2md</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/72f3f5bf50ed2d91cdcfbe2cf47120a2df8883cd#diff-a971749d15e3650612d931071655e1aaa68f3744097600135ec5c2b5fe3f0732L429' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 72f3f5bf50ed2d91cdcfbe2cf47120a2df8883cd</div><div id='time'> Time: 2014-11-26</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/elecmeter.py</div><div id='class'> Class Name: ElecMeter</div><div id='method'> Method Name: _get_stat_from_cache_or_compute</div><BR>

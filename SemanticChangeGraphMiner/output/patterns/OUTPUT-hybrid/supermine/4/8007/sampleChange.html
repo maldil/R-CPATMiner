@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    size = _get_size_recursively(cache_dir)
+    size_in_mb = int(round(size/1024./1024.))
+    if size_in_mb &gt; prefs.codegen.max_cache_dir_size:
+        <a id="change">logger.warn(&quotCache size for target "%s": %s MB&quot % (target, size_in_mb))</a>
+    else:
+        logger.debug(&quotCache size for target "%s": %s MB&quot % (target, size_in_mb))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    size = _get_size_recursively(cache_dir)
+    size_in_mb = int(round(size/1024./1024.))
+    if size_in_mb &gt; prefs.codegen.max_cache_dir_size:
+        logger.info(<a id="change">&quotCache size for target "{target}": {size} MB.\n&quot
+                    &quotYou can call "clear_cache(\&quot{target}\&quot)" to delete all &quot
+                    &quotfiles from the cache or manually delete files in the &quot
+                    &quot"{cache_dir}" directory.&quot.format(target=target,
+                                                      size=size_in_mb,
+                                                      cache_dir=cache_dir)</a>)
+    else:
+        logger.debug(&quotCache size for target "%s": %s MB&quot % (target, size_in_mb))
+</code></pre>

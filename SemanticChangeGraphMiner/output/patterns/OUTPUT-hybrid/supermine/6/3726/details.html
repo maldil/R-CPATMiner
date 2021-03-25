@@ -1,0 +1,39 @@
+<html><h3>e35fde3696c0c158f67dd125ac512ea6d67b889c,skopt/optimizer/base.py,,base_minimize,#,30
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        elif acq_optimizer == "lbfgs":
+            best = np.inf
+            <a id="change">x0 = space.transform(space.rvs(n_samples=n_restarts_optimizer,
+                                           random_state=rng))</a>
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                jobs = (delayed(fmin_l_bfgs_b)(
+                    gaussian_acquisition_1D, x,
+                    args=(gp, np.min(yi), acq_func, xi, kappa),
+                    bounds=space.transformed_bounds,
+                    approx_grad=False,
+                    maxiter=20) for x in x0)
+                results = parallel(jobs)
+
+            cand_xs = np.array([r[0] for r in results])
+            cand_acqs = np.array([r[1] for r in results])
+            best_ind = np.argmin(cand_acqs)
+            <a id="change">a = cand_acqs[best_ind]</a>
+
+            if a &lt; best:
+                next_x, best = <a id="change">cand_xs[best_ind]</a>, a
+
+        &#47&#47 lbfgs should handle this but just in case there are precision errors.
+        next_x = np.clip(</code></pre><h3>After Change</h3><pre><code class='java'>
+            next_x = X[np.argmin(values)]
+
+        elif acq_optimizer == "lbfgs":
+            <a id="change">x0 = X[np.argsort(values)[:n_restarts_optimizer]]</a>
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                jobs = (delayed(fmin_l_bfgs_b)(</code></pre><img src="16416107.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/e35fde3696c0c158f67dd125ac512ea6d67b889c#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL176' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: e35fde3696c0c158f67dd125ac512ea6d67b889c</div><div id='time'> Time: 2017-01-03</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/f3cdb3e031b20e246aaf17d631decd87d2a38db3#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L165' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: f3cdb3e031b20e246aaf17d631decd87d2a38db3</div><div id='time'> Time: 2017-01-10</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: tell</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/70fcd3094baba3139afcda727683d58c2928261f#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 70fcd3094baba3139afcda727683d58c2928261f</div><div id='time'> Time: 2017-08-04</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5#diff-8f37a1d4ff1c05c653d3806be9e4154bd61163694eafc57e15710b067c0cc561L26' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: ce5da48b8586d7cfdb392b8cad1988e6bfdd17d5</div><div id='time'> Time: 2017-08-03</div><div id='author'> Author: liu_xinru@wheatoncollege.edu</div><div id='file'> File Name: lexos/processors/analyze/similarity.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: similarity_maker</div><BR>

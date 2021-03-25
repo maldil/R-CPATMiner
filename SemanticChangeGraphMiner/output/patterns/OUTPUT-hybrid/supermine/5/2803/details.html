@@ -1,0 +1,23 @@
+<html><h3>7f7a30cae66e7d65917ceea966225292f582d809,onnx_coreml/_transformers.py,DeadCodeElimination,__call__,#DeadCodeElimination#,795
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for node in graph.nodes:
+            output_used = False
+            for _output in node.outputs:
+                if <a id="change">_output in output_names</a> or _output in use_set:
+                    output_used = True
+                    break
+            if not output_used:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            if not output_used:
+                &#47&#47 Remove current node
+                <a id="change">for _input in node.inputs:
+                    uses[_input] -= 1
+                    if uses[_input] == 0:
+                        del uses[_input]
+               </a> nodes_to_be_removed.append(node.name)
+                for parent in node.parents:
+                    parent.children.remove(node)
+</code></pre><img src="12421288.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/onnx/onnx-coreml/commit/7f7a30cae66e7d65917ceea966225292f582d809#diff-f45f4e3fd0ef5830e4edeb95c97ead20725c1de6b7bf6711727deacbc69eb969L797' target='_blank'>Link</a></div><div id='project'> Project Name: onnx/onnx-coreml</div><div id='commit'> Commit Name: 7f7a30cae66e7d65917ceea966225292f582d809</div><div id='time'> Time: 2019-10-04</div><div id='author'> Author: bhushan.s.94@gmail.com</div><div id='file'> File Name: onnx_coreml/_transformers.py</div><div id='class'> Class Name: DeadCodeElimination</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/huggingface/neuralcoref/commit/204878825342bfdcc3b2e446b7825f8cbf6d54f5#diff-0f98ad0dce704294014ac1147f1a86e43317155d388432faf10969c9096ba51cL235' target='_blank'>Link</a></div><div id='project'> Project Name: huggingface/neuralcoref</div><div id='commit'> Commit Name: 204878825342bfdcc3b2e446b7825f8cbf6d54f5</div><div id='time'> Time: 2017-07-12</div><div id='author'> Author: thomwolf@gmail.com</div><div id='file'> File Name: neuralcoref/algorithm.py</div><div id='class'> Class Name: Coref</div><div id='method'> Method Name: get_clusters</div><BR><BR><div id='link'><a href='https://github.com/lingpy/lingpy/commit/4560e7769fc21e04c5f673f0549de6601d43de45#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L9' target='_blank'>Link</a></div><div id='project'> Project Name: lingpy/lingpy</div><div id='commit'> Commit Name: 4560e7769fc21e04c5f673f0549de6601d43de45</div><div id='time'> Time: 2013-09-09</div><div id='author'> Author: mattis.list@posteo.de</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

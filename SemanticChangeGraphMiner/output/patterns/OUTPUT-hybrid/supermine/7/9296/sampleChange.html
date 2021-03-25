@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+qt_module_obj = __import__(&quotPyQt5.Qt&quot).__dict__[&quotQt&quot]
+
+for module_name in PYQT_MODULES:
+    <a id="change">try:
+        &#47&#47 This is always the top-level &quotPyQt5&quot module.
+        top_level_module_obj = __import__(PYQT_PACKAGE + &quot.&quot + module_name)
+
+        &#47&#47 Grab the module we are interested in from the top-level module
+        module_obj = top_level_module_obj.__dict__[module_name]
+
+        &#47&#47 Merge symbols exported by the module with PyQt5.Qt
+        qt_module_obj.__dict__.update(module_obj.__dict__)
+    except ImportError:
+        &#47&#47 It is OK if some module is missing. E.g.: QtMacExtras is built only on
+        &#47&#47 OS X and QtWinExtras is built only on Windows.
+        pass</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 ``utils/hooks/qt.py`` for more details.
+pyqt_path = os.path.join(sys._MEIPASS, &quotPyQt5&quot, &quotQt&quot)
+os.environ[&quotQT_PLUGIN_PATH&quot] = os.path.join(pyqt_path, &quotplugins&quot)
+<a id="change">os.environ[&quotQML2_IMPORT_PATH&quot]</a> = os.path.join(pyqt_path, &quotqml&quot)
+</code></pre>

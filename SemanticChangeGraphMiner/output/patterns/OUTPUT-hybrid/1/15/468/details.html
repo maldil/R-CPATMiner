@@ -1,0 +1,39 @@
+<html><h3>76268fad949d573c4b09c90aad608c844e899c42,tfcoreml/_layers.py,,transpose,#,976
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  &#47&#47 TODO - only works for 4D tensor without batch axis
+  target_batch_idx = axes.index(0) &#47&#47 the assumed TF batch axis
+  target_height_idx = axes.index(1) &#47&#47 the assumed TF height axis
+  <a id="change">target_width_idx</a> = <a id="change">axes.index(2)</a> &#47&#47 the assumed TF width axis
+  target_channel_idx = axes.index(3) &#47&#47 the assumed TF channel axis
+
+  <a id="change">coreml_axes</a> = <a id="change">[0]*4</a>
+  coreml_axes[target_batch_idx] = 0
+  coreml_axes[target_height_idx] = 2
+  <a id="change">coreml_axes[target_width_idx]</a> = <a id="change">3</a>
+  coreml_axes[target_channel_idx] = 1
+
+  context.builder.add_permute(output_name, coreml_axes, input_name, output_name)
+  context.translated[output_name] = True</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  &#47&#47Permutation without swapping appears to give wrong results, which may be
+  &#47&#47a bug in coreml itself
+  if axes[1] != 1 and axes[2] != 2 and <a id="change">axes[3]</a> != 3:
+    assert False, "Only swapping permutes work"
+
+  &#47&#47 First, work out where the indicies should move in TF
+  <a id="change">target_idx</a> = (axes.index(0),
+                axes.index(1),
+                <a id="change">axes.index(2)</a>,
+                axes.index(3))
+
+  &#47&#47 Translate from NHWC to NCHW order
+  target_idx = (target_idx[0],
+                target_idx[3],
+                target_idx[1],
+                <a id="change">target_idx[2]</a>)
+
+  def translate_transpose(idx):
+    if idx == 0:</code></pre><img src="2612071.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tf-coreml/tf-coreml/commit/76268fad949d573c4b09c90aad608c844e899c42#diff-5afc14d1d579aea58a730fde74889dc05d6462cbe3fc5a0c55d6392c2c3948cdL981' target='_blank'>Link</a></div><div id='project'> Project Name: tf-coreml/tf-coreml</div><div id='commit'> Commit Name: 76268fad949d573c4b09c90aad608c844e899c42</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: n.westlake@bath.ac.uk</div><div id='file'> File Name: tfcoreml/_layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: transpose</div><BR><BR><div id='link'><a href='https://github.com/tf-coreml/tf-coreml/commit/76268fad949d573c4b09c90aad608c844e899c42#diff-5afc14d1d579aea58a730fde74889dc05d6462cbe3fc5a0c55d6392c2c3948cdL981' target='_blank'>Link</a></div><div id='project'> Project Name: tf-coreml/tf-coreml</div><div id='commit'> Commit Name: 76268fad949d573c4b09c90aad608c844e899c42</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: n.westlake@bath.ac.uk</div><div id='file'> File Name: tfcoreml/_layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: transpose</div><BR>

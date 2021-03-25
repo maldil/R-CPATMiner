@@ -1,0 +1,43 @@
+<html><h3>900b9a7f2884aaf419e62508be7497b0ad3e1f62,pytext/metric_reporters/squad_metric_reporter.py,SquadMetricReporter,_unnumberize,#SquadMetricReporter#,358
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idx, end_idx = self.tensorizer._lookup_tokens(doc_str)
+        <a id="change">doc_tokens = list(doc_tokens)</a>
+        num_ans_tokens = len(ans_tokens)
+        start_char_idx = 0
+        end_char_idx = 0
+        answer_str = ""
+        <a id="change">for doc_token_idx in range(len(doc_tokens) - num_ans_tokens):
+            if doc_tokens[doc_token_idx : doc_token_idx + num_ans_tokens] == ans_tokens:
+                start_char_idx = start_idx[doc_token_idx]
+                end_char_idx = end_idx[doc_token_idx + num_ans_tokens - 1]
+                answer_str = doc_str[start_char_idx:end_char_idx]
+                break
+       </a> return answer_str, start_char_idx, end_char_idx
+
+    &#47&#47 The following three functions are copied from Squad&quots evaluation script.
+    &#47&#47 https://worksheets.codalab.org/rest/bundles/0x6b567e1cf2e041ec80d7098f031c5c9e/contents/blob/</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idxs, end_idxs = self.tensorizer._lookup_tokens(doc_str)
+        &#47&#47 find the offset of doc_tokens in tokens
+        <a id="change">offset = list(
+            map(
+                lambda x: tokens[x : x + len(doc_tokens)] == doc_tokens,
+                range(len(tokens) - len(doc_tokens) + 1),
+            )
+        ).index(True)</a>
+        assert offset &gt; -1
+
+        &#47&#47 find the answer char idxs
+        start_char_idx = 0
+        end_char_idx = end_idxs[-1]
+        try:
+            start_char_idx = <a id="change">start_idxs[ans_token_start - offset]</a>
+            end_char_idx = end_idxs[ans_token_end - offset]
+        except IndexError:
+            &#47&#47 if token indices fall outside the bounds due to a model misprediction.
+            pass</code></pre><img src="7099390.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/900b9a7f2884aaf419e62508be7497b0ad3e1f62#diff-1516e23205a74c8bcb7f842f8260f7c9118246fc6a6b12bd5b7fb16810cefa04L368' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 900b9a7f2884aaf419e62508be7497b0ad3e1f62</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: debo@fb.com</div><div id='file'> File Name: pytext/metric_reporters/squad_metric_reporter.py</div><div id='class'> Class Name: SquadMetricReporter</div><div id='method'> Method Name: _unnumberize</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca337ebba627326cd7b15b454053e31f51b5e441#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL118' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca337ebba627326cd7b15b454053e31f51b5e441</div><div id='time'> Time: 2015-06-16</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: rejection_sample</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/9a2903dac097a7f3633f6c828533ed385c7159c9#diff-88f94f9ee4f72507e49385a2ac8be9457e0e07ab44eb55782f3f642c17084dc4L75' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 9a2903dac097a7f3633f6c828533ed385c7159c9</div><div id='time'> Time: 2019-07-17</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extract_refbasis_samples</div><BR>

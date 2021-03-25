@@ -1,0 +1,33 @@
+<html><h3>fc56073588771c81b4e134bff54195f5e74e6b43,thinc/backends/ops.py,Ops,minibatch,#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sizes = itertools.repeat(size) if isinstance(size, int) else size
+        is_list = isinstance(sequence, list)
+        if isinstance(sequence, list):  &#47&#47 need condition here for type checking
+            <a id="change">sequence = Objects(sequence)</a>
+        indices = numpy.arange(len(sequence))
+        if shuffle:
+            numpy.random.shuffle(indices)
+        i = 0
+        queue = []
+        while i &lt; indices.shape[0]:  &#47&#47 type: ignore
+            batch_size = next(sizes)
+            idx_batch = indices[i : i + batch_size]
+            subseq = sequence[idx_batch]
+            if is_xp_array(subseq):
+                subseq = self.as_contig(cast(Array, subseq))
+            <a id="change">if is_list and isinstance(subseq, Objects):
+                subseq = subseq.data
+           </a> queue.append(subseq)
+            i += batch_size
+        return queue
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if isinstance(sequence, list):
+                subseq = [sequence[i] for i in idx_batch]
+            elif isinstance(sequence, tuple):
+                subseq = tuple(<a id="change">sequence[i]</a> <a id="change">for</a> i in idx_batch)  &#47&#47 type: ignore
+            else:
+                subseq = sequence[idx_batch]  &#47&#47 type: ignore
+            if is_xp_array(subseq):</code></pre><img src="15919586.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/fc56073588771c81b4e134bff54195f5e74e6b43#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L53' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: fc56073588771c81b4e134bff54195f5e74e6b43</div><div id='time'> Time: 2020-01-21</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: minibatch</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/6b07ae6f8e587fd27f9b30ec4922e255b428a794#diff-1ba79836c770af55114c98b177c4c909815183ae4cda7cec941d2a918c2c38d7L72' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 6b07ae6f8e587fd27f9b30ec4922e255b428a794</div><div id='time'> Time: 2008-08-27</div><div id='author'> Author: kammeyer@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/tools/traits_tool.py</div><div id='class'> Class Name: TraitsTool</div><div id='method'> Method Name: normal_left_dclick</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/fc56073588771c81b4e134bff54195f5e74e6b43#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L83' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: fc56073588771c81b4e134bff54195f5e74e6b43</div><div id='time'> Time: 2020-01-21</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: multibatch</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    tensor_output = tf_op(tensor_input, axis=1)
+    np_output = tensor_output.numpy()
+
+    <a id="change">constants_map["random_input_arr"]</a> = <a id="change">np_input.flatten().tolist()</a>
+    constants_map["const_axis"] = [1]
+    constants_map["ref_output_arr"] = np_output.flatten().tolist()
+    declare_tensor_strs.extend(
+        [</code></pre><h3>After Change</h3><pre><code class='java'>
+    tensor_output = tf_op(tensor_input, axis=1)
+    np_output = tensor_output.numpy()
+
+    <a id="change">constants_map["random_input_arr"]</a> = (<a id="change">np_input.flatten().tolist()</a>, "float")
+    constants_map["const_axis"] = ([1], "uint32_t")
+    constants_map["ref_output_arr"] = (np_output.flatten().tolist(), "uint32_t")
+    declare_tensor_strs.extend(</code></pre>

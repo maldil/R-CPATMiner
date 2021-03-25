@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quotIterating epochs ...&quot)
+        verbose = False if self.n_jobs &gt; 1 else self.verbose
+        corrs = parallel(<a id="change">my_iterator</a>(self, epochs, idxs, verbose)
+                         <a id="change">for</a> idxs in np.array_split(np.arange(n_epochs),
+                         n_jobs))
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:</code></pre><h3>After Change</h3><pre><code class='java'>
+                            for random_state in np.arange(0, n_epochs, n_jobs)]
+        epoch_idxs = np.array_split(np.arange(n_epochs), n_jobs)
+        corrs = parallel(my_iterator(self, epochs, idxs, chs, verbose)
+                         <a id="change">for</a> idxs, chs in <a id="change">zip(epoch_idxs, self.ch_subsets_)</a>)
+        self.corr_ = np.concatenate(corrs)
+        if self.verbose is not False and self.n_jobs &gt; 1:
+            print(&quot[Done]&quot)</code></pre>

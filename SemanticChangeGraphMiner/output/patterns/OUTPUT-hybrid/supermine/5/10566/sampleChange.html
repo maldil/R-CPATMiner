@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    style_std = style_feat.std(dim=2).view(N, C, 1, 1).expand(size)
+    style_mean = style_feat.mean(dim=2).view(N, C, 1, 1).expand(size)
+    content_feat_3d = content_feat.view(N, C, -1)
+    <a id="change">content_std = content_feat_3d.std(dim=2).view(N, C, 1, 1).expand(size)</a>
+    content_mean = content_feat_3d.mean(dim=2).view(N, C, 1, 1).expand(size)
+    normalized_feat = (content_feat - content_mean) / content_std
+    return normalized_feat * style_std + style_mean
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    style_std = style_feat.view(N, C, -1).std(dim=2).view(N, C, 1, 1)
+    style_mean = style_feat.view(N, C, -1).mean(dim=2).view(N, C, 1, 1)
+    content_std = <a id="change">content_feat.view(N, C, -1).std(dim=2).view(N, C, 1, 1)</a>
+    content_mean = content_feat.view(N, C, -1).mean(dim=2).view(N, C, 1, 1)
+    normalized_feat = (content_feat - content_mean.expand(
+        size)) / content_std.expand(size)
+    return normalized_feat * style_std.expand(size) + style_mean.expand(size)</code></pre>

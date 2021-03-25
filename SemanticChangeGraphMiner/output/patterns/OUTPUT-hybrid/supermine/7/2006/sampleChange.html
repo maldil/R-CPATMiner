@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    images = []
+    for dirpath, _, fnames in sorted(os.walk(path)):
+        for fname in sorted(fnames):
+            <a id="change">if is_image_file(fname):
+                img_path = os.path.join(dirpath, fname)
+                images.append(img_path)
+   </a> assert images, &quot%s has no valid image file&quot % path
+    return images
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def get_image_paths(data_type, dataroot):
+    env, paths = None, None
+    if dataroot is not None:
+        <a id="change">if data_type == &quotlmdb&quot:
+            env, paths = _get_paths_from_lmdb(dataroot)
+        elif data_type == &quotimg&quot:
+            paths = sorted(_get_paths_from_images(dataroot))
+        else:
+            raise NotImplementedError("data_type [%s] is not recognized." % data_type)
+   </a> return env, paths
+
+
+def _read_lmdb_img(env, path):</code></pre>

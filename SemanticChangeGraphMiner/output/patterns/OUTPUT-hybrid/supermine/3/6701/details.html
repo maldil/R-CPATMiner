@@ -1,0 +1,46 @@
+<html><h3>1f3da600c20e3376b0bb396bba482b1e90b7883c,i3nception_tf.py,,,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out3d = unitpy(input_3d_var)
+        filter_idx = 5
+        py_out = py_to_tf_reshape(
+            out3d.data.numpy())[0][0][<a id="change">:, :, filter_idx</a>].copy()
+        tf_out = tf_out3dsample[0][0][:, :, filter_idx].copy()
+        import pdb
+        pdb.set_trace()</code></pre><h3>After Change</h3><pre><code class='java'>
+        target_var = torch.autograd.Variable(target)
+
+        &#47&#47 Pytorch forward pass
+        input_3d = <a id="change">input_2d</a>.clone().unsqueeze(2).repeat(1, 1, frame_nb, 1, 1)
+        input_3d_var = torch.autograd.Variable(input_3d)
+
+        feed_dict = {}
+        input_3d_tf = input_3d.numpy().transpose(0, 2, 3, 4, 1)  &#47&#47
+        feed_dict[rgb_input] = input_3d_tf
+
+        &#47&#47 Get output
+        tf_out3dsample = sess.run(rgb_logits, feed_dict=feed_dict)
+        out_tf_np = tf_out3dsample.transpose((0, 4, 1, 2, 3))
+        out_tf = torch.from_numpy(out_tf_np)
+
+        unit_name_tf = &quotRGB/inception_i3d/Conv3d_1a_7x7/&quot
+
+        &#47&#47 Create state_dict
+        state_dict = {}
+        i3nception.load_conv3d(state_dict, &quot&quot, sess, unit_name_tf)
+        unitpy.eval()
+        unitpy.load_state_dict(state_dict)
+        out_pt = unitpy(input_3d_var).data
+        out_pt_np = out_pt.numpy()
+        filter_idx = 0
+
+        &#47&#47 Plot slices
+        filter_idx = 0
+        img_tf = out_tf_np[0][filter_idx][0]
+        <a id="change">img_pt = out_pt_np[0][filter_idx][0]</a>
+
+        max_v = max(img_tf.max(), img_pt.max())
+        min_v = min(img_tf.min(), img_pt.min())
+        plt.subplot(2, 2, 1)</code></pre><img src="26411043.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hassony2/kinetics_i3d_pytorch/commit/1f3da600c20e3376b0bb396bba482b1e90b7883c#diff-a85f429fb89e88d1df3e80fb86b4e70180a6f1fca5c43e04e756965bd6df2aa5L57' target='_blank'>Link</a></div><div id='project'> Project Name: hassony2/kinetics_i3d_pytorch</div><div id='commit'> Commit Name: 1f3da600c20e3376b0bb396bba482b1e90b7883c</div><div id='time'> Time: 2017-11-24</div><div id='author'> Author: yana.hasson@inria.fr</div><div id='file'> File Name: i3nception_tf.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/3c7d4d1240103e4c06a0110b00e11b7e1002dd0e#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L62' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 3c7d4d1240103e4c06a0110b00e11b7e1002dd0e</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: LSTM</div><BR><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/4d721c8fe97723d5d0a32e8e6f10cf14c6800e92#diff-352019e02af2c679214aad4aef6c53091e53e92ea89929d91ce5541fb1bcb552L206' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: 4d721c8fe97723d5d0a32e8e6f10cf14c6800e92</div><div id='time'> Time: 2018-11-29</div><div id='author'> Author: samuel@mapillary.com</div><div id='file'> File Name: modules/functions.py</div><div id='class'> Class Name: InPlaceABNSync</div><div id='method'> Method Name: backward</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/d2c500803a9d7141a3933d0f4804d9635cd7bfc6#diff-5e6eebf2c435a47bcbb2e61fc96c8bae9bebb52910f359ab8f064829a9a64100L21' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: d2c500803a9d7141a3933d0f4804d9635cd7bfc6</div><div id='time'> Time: 2018-12-13</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/soft_shift_net/innerSoftShiftTripleModule.py</div><div id='class'> Class Name: InnerSoftShiftTripleModule</div><div id='method'> Method Name: forward</div><BR>

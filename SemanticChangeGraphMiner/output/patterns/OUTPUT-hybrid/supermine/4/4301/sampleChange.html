@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    with graph.as_default():
+        features = input_fn()
+        refs = features["references"]
+        <a id="change">placeholders = {
+            "source": tf.placeholder(tf.int32, [None, None], "source"),
+            "source_length": tf.placeholder(tf.int32, [None], "source_length")
+        }</a>
+        predictions = eval_fn(placeholders)
+        predictions = predictions[0][:, 0, :]
+
+        all_refs = [[] for _ in range(len(refs))]
+        all_outputs = []
+
+        sess_creator = tf.train.ChiefSessionCreator(
+            checkpoint_dir=path,
+            config=config
+        )
+
+        with tf.train.MonitoredSession(session_creator=sess_creator) as sess:
+            while not sess.should_stop():
+                feats = sess.run(features)
+                outputs = sess.run(predictions, feed_dict={
+                    placeholders["source"]: feats["source"],
+                    placeholders["source_length"]: feats["source_length"]
+                })
+                &#47&#47 shape: [batch, len]
+                outputs = <a id="change">outputs.tolist()</a>
+                &#47&#47 shape: ([batch, len], ..., [batch, len])
+                references = [item.tolist() for item in feats["references"]]
+
+                all_outputs.extend(outputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    with graph.as_default():
+        features = input_fn()
+        refs = features["references"]
+        placeholders = <a id="change">[]</a>
+        for i in range(len(device_list)):
+            placeholders.append({
+                "source": tf.placeholder(tf.int32, [None, None],
+                                         "source_%d" % i),
+                "source_length": tf.placeholder(tf.int32, [None],
+                                                "source_length_%d" % i)
+            })
+        predictions = parallel.data_parallelism(
+            device_list, eval_fn, placeholders)
+        predictions = [pred[0][:, 0, :] for pred in predictions]
+
+        all_refs = [[] for _ in range(len(refs))]
+        all_outputs = []
+
+        sess_creator = tf.train.ChiefSessionCreator(
+            checkpoint_dir=path,
+            config=config
+        )
+
+        with tf.train.MonitoredSession(session_creator=sess_creator) as sess:
+            while not sess.should_stop():
+                feats = sess.run(features)
+                inp_feats = {
+                    "source": feats["source"],
+                    "source_length": feats["source_length"]
+                }
+                <a id="change">op, feed_dict = _shard_features(inp_feats, placeholders,
+                                                predictions)</a>
+                &#47&#47 A list of numpy array with shape: [batch, len]
+                outputs = sess.run(op, feed_dict=feed_dict)
+
+                for shard in outputs:</code></pre>

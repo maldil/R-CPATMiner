@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Geodesic distance for Grassmann
+    def dist(self, X, Y):
+        if self._k == 1:
+            <a id="change">u, s, v = np.linalg.svd(np.dot(X.T, Y))</a>
+            s[s &gt; 1] = 1
+            s = np.arccos(s)
+            return np.linalg.norm(s)
+        else:
+            XtY = multiprod(multitransp(X), Y)
+            square_d = 0
+            for i in xrange(self._k):
+                s = <a id="change">np</a>.linalg.svd(XtY[i], compute_uv=False)
+                &#47&#47 Ensure that -1 &lt;= s &lt;= 1
+                s = np.fmin(s, [1])
+                s = np.fmax(s, [-1])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Geodesic distance for Grassmann
+    def dist(self, X, Y):
+        u, s, v = <a id="change">svd(multiprod(multitransp(X), Y))</a>
+        s[s &gt; 1] = 1
+        s = np.arccos(s)
+        return np.linalg.norm(s)
+</code></pre>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if axes_lengths[axis] is not None:
+                &#47&#47 checking dimension
+                if isinstance(axes_lengths[axis], int) and isinstance(length, int):
+                    <a id="change">print(&quotchecked dimension&quot)</a>
+                    &#47&#47 TODO check for static graphs
+                    assert axes_lengths[axis] == length
+            else:
+                axes_lengths[axis] = length</code></pre><h3>After Change</h3><pre><code class='java'>
+            for axis in known_axes:
+                known_product *= axes_lengths[axis]
+
+            <a id="change">if len(unknown_axes) == 0:
+                if isinstance(length, int) and isinstance(known_product, int):
+                    assert length == known_product
+            else:
+                if isinstance(length, int) and isinstance(known_product, int):
+                    assert length % known_product == 0
+                unknown_axis, = unknown_axes
+                axes_lengths[unknown_axis] = length // known_product
+
+       </a> init_shapes = axes_lengths
+        reduced_axes_lengths = [dim for i, dim in enumerate(axes_lengths) if i not in self.reduced_elementary_axes]
+        final_shapes = []
+        for grouping in self.output_composite_axes:</code></pre>

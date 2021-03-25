@@ -1,0 +1,31 @@
+<html><h3>9faf2c65f74e3ee9bdaeedf9f3e5856727f0afe7,reinforcement_learning/reinforce.py,,finish_episode,#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for action, r in zip(policy.saved_actions, rewards):
+        action.reinforce(r)
+    optimizer.zero_grad()
+    <a id="change">autograd.backward(policy.saved_actions, [None for _ in policy.saved_actions])</a>
+    optimizer.step()
+    del policy.rewards[:]
+    del policy.saved_actions[:]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def finish_episode():
+    R = 0
+    <a id="change">policy_loss = 0</a>
+    rewards = []
+    for r in policy.rewards[::-1]:
+        R = r + args.gamma * R
+        rewards.insert(0, R)
+    rewards = torch.Tensor(rewards)
+    rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
+    for log_prob, r in zip(policy.saved_actions, rewards):
+        <a id="change">policy_loss -= (log_prob * reward).sum()</a>
+    optimizer.zero_grad()
+    <a id="change">policy_loss.backward()</a>
+    optimizer.step()
+    del policy.rewards[:]
+    del policy.saved_actions[:]
+</code></pre><img src="38992099.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/9faf2c65f74e3ee9bdaeedf9f3e5856727f0afe7#diff-53b9a2ef1cbf4f635a82cfa98660cd9381d6080847046c9145884c6796b877c5L61' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 9faf2c65f74e3ee9bdaeedf9f3e5856727f0afe7</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: design@kaixhin.com</div><div id='file'> File Name: reinforcement_learning/reinforce.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/ca907342507c1139696f542de0a3351d7a382eee#diff-5a9b3c72d798ab16737a14c4e24fee71dd6b5dff1d075679591993b742acc0b8L68' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: ca907342507c1139696f542de0a3351d7a382eee</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: sgross@fb.com</div><div id='file'> File Name: reinforcement_learning/actor_critic.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/9faf2c65f74e3ee9bdaeedf9f3e5856727f0afe7#diff-5a9b3c72d798ab16737a14c4e24fee71dd6b5dff1d075679591993b742acc0b8L64' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 9faf2c65f74e3ee9bdaeedf9f3e5856727f0afe7</div><div id='time'> Time: 2017-12-04</div><div id='author'> Author: design@kaixhin.com</div><div id='file'> File Name: reinforcement_learning/actor_critic.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finish_episode</div><BR>

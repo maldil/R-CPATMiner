@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def extract_feature(file_name=None, X_sample_rate=None):
+    if file_name and not X_sample_rate: X, sample_rate = sf.read(file_name, dtype=&quotfloat32&quot)
+    elif not file_name and X_sample_rate: <a id="change">X</a>, sample_rate = X_sample_rate
+    if X.ndim &gt; 1: X = X[:,0]
+    X = X.T
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        data = []
+        with sd.InputStream(samplerate=sample_rate, callback=callback):
+            while True: 
+                <a id="change">if len(data) &lt; 100000: data.extend(q.get())
+                else: break
+</a>        X = np.array(data)
+
+    if X.ndim &gt; 1: X = X[:,0]
+    X = X.T</code></pre>

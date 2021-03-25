@@ -1,0 +1,27 @@
+<html><h3>fad73753f836de5cdd08d8e23d26c1170d19b386,src/dataset_unpair.py,dataset_unpair,__getitem__,#dataset_unpair#,21
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def __getitem__(self, index):
+    crop_img = self.load_img(self.images[index], flip=self.flip, random_crop=True)
+    raw_data = <a id="change">crop_img.transpose((2, 0, 1))</a>
+    data = ((torch.FloatTensor(raw_data) / 255.0) - 0.5) * 2
+    <a id="change">return data</a>
+
+  def load_img(self, img_name, flip=False, random_crop=False):
+    if self.input_dim == 3:
+      img = cv2.cvtColor(cv2.imread(img_name), cv2.COLOR_BGR2RGB)</code></pre><h3>After Change</h3><pre><code class='java'>
+  def __getitem__(self, index):
+    if self.dataset_size == self.A_size:
+      data_A = self.load_img(self.A[index], self.input_dim_A)
+      <a id="change">data_B = self.load_img(self.B[random.randint(0, self.B_size - 1)], self.input_dim_B)</a>
+    else:
+      data_A = self.load_img(self.A[random.randint(0, self.A_size - 1)], self.input_dim_A)
+      data_B = self.load_img(self.B[index], self.input_dim_B)
+    <a id="change">return data_A, data_B</a>
+
+  def load_img(self, img_name, input_dim):
+    img = Image.open(img_name).convert(&quotRGB&quot)
+    img = self.transforms(img)</code></pre><img src="38468442.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HsinYingLee/DRIT/commit/fad73753f836de5cdd08d8e23d26c1170d19b386#diff-7daf826f7e6e0471f80200a036cace05c81a1fb316cc166bef5b3ab0cdaa3627L21' target='_blank'>Link</a></div><div id='project'> Project Name: HsinYingLee/DRIT</div><div id='commit'> Commit Name: fad73753f836de5cdd08d8e23d26c1170d19b386</div><div id='time'> Time: 2018-04-09</div><div id='author'> Author: hytseng0509@gmail.com</div><div id='file'> File Name: src/dataset_unpair.py</div><div id='class'> Class Name: dataset_unpair</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/danforthcenter/plantcv/commit/ee7dc09812df5dded34adcde4267d9c754e3b655#diff-6deec1fc57d65cd4462ea88407ba222103689492a46804c64d01ad9b814c6dadL12' target='_blank'>Link</a></div><div id='project'> Project Name: danforthcenter/plantcv</div><div id='commit'> Commit Name: ee7dc09812df5dded34adcde4267d9c754e3b655</div><div id='time'> Time: 2019-09-11</div><div id='author'> Author: haleyschuhl@gmail.com</div><div id='file'> File Name: plantcv/plantcv/hyperspectral/read_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_data</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/f2fc17c740d609e7fd9118093f7fad7824d3415e#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L115' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: f2fc17c740d609e7fd9118093f7fad7824d3415e</div><div id='time'> Time: 2019-06-03</div><div id='author'> Author: daras.giannhs@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: _scaled_dot_prod</div><BR>

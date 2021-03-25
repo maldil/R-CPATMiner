@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 for name, mm in self.verbose.items():
+        for name, mm in mon.items():
+            d = mm.to_pandas()
+            <a id="change">if naming == &quotsuffix&quot:
+                df = df.join(d, rsuffix=name)
+                continue
+           </a> if naming == &quotprefix&quot:
+                d.columns = [name+&quot_&quot+c for c in d.columns]
+            df = df.join(d)
+        return df</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 df = self.train_loss.to_pandas()
+        mon = self.monitors.copy()
+        df = mon.pop(&quottrain_loss&quot).to_pandas()
+        <a id="change">df.columns = [&quottrain_loss&quot]</a>
+        if self.verbose.__class__ in [dict, OrderedDict]:
+            mon.update(self.verbose)
+        &#47&#47 for name, mm in self.verbose.items():
+        for name, mm in mon.items():</code></pre>

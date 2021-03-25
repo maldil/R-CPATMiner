@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 O(NK) + O(N)
+            prob = self.model.predict_real(X_pool)
+            min_margin = np.inf
+            <a id="change">for j in range(len(prob)):
+                m1_id = np.argmax(prob[j])
+                m2_id = np.argmax(np.delete(prob[j], m1_id))
+                margin = prob[j][m1_id] - prob[j][m2_id]
+                if margin &lt; min_margin:
+                    min_margin = margin
+                    ask_id = j
+
+       </a> else:
+            raise ValueError(
+                "Invalid method &quot%s&quot (available choices: (&quotlc&quot, &quotsm&quot, &quotle&quot)"
+                % self.method</code></pre><h3>After Change</h3><pre><code class='java'>
+                ind = [0, 1]
+            else:
+                &#47&#47 Find 2 largest decision values
+                <a id="change">ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]</a>
+            margin = <a id="change">np.abs(np.abs(dvalue[:, ind[0]]) - np.abs(dvalue[:, ind[1]]))</a>
+            <a id="change">ask_id = np.argmin(margin)</a>
+
+        return unlabeled_entry_ids[ask_id]
+
+    def get_model(self):</code></pre>

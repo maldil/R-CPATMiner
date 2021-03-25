@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 size: (batch * beam) x seq
+            dec_partial_pos = dec_partial_pos.repeat(n_remaining_sents * beam_size, 1)
+            &#47&#47 wrap into a Variable
+            dec_partial_pos = Variable(<a id="change">dec_partial_pos.type(torch.LongTensor)</a>, volatile=True)
+
+            if self.opt.cuda:
+                dec_partial_seq = dec_partial_seq.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+        sz_b, len_s = src_seq.size()
+        src_seq = src_seq.repeat(1, sz_beam).view(sz_b * sz_beam, len_s)
+
+        <a id="change">sz_b</a>, len_s, d_h = enc_output.size()
+        enc_output = enc_output.repeat(1, sz_beam, 1).view( sz_b * sz_beam, len_s, d_h)
+
+        &#47&#47--- Prepare beams</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  
+  gce_instances = config.project.get(&quotgce_instances&quot)
+  resources = config.project.get(&quotresources&quot, [])
+  <a id="change">for resource in resources:
+    gce_instance = resource.get(&quotgce_instance&quot)
+    if gce_instance:
+      gce_instances.append(gce_instance)
+
+ </a> if not gce_instances:
+    logging.info(&quotNo GCS Images required.&quot)
+    return
+  project_id = config.project[&quotproject_id&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+  
+  gce_instances = config.project.get(&quotgce_instances&quot, [])
+  gce_instances.extend(
+      <a id="change">config.project.get(&quotresources&quot, {}).get(&quotgce_instances&quot, [])</a>)
+  if not gce_instances:
+    logging.info(&quotNo GCS Images required.&quot)
+    return</code></pre>

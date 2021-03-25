@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ...                   ((&quota&quot, &quotb&quot, &quotc&quot), (&quota&quot, &quotc&quot))])
+        
+        set_u = set(u)
+        <a id="change">set_v = set(v)</a>
+        if set_u.isdisjoint(set_v):
+            raise ValueError(&quotNo sepset found between these two edges.&quot)
+
+        super().add_edge(u, v)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        import networkx as nx
+
+        if u in <a id="change">self.nodes()</a> and v in self.nodes() and nx.has_path(self, u, v):
+            raise ValueError(&quotAddition of edge between {u} and {v} forms a cycle breaking the &quot
+                             &quotproperties of Junction Tree&quot.format(u=str(u), v=str(v)))
+</code></pre>

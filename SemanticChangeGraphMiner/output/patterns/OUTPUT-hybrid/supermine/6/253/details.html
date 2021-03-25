@@ -1,0 +1,24 @@
+<html><h3>784586f02d063d39360a287422a6384f30f10d12,liegroups/se3.py,SE3,vee,#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if Xi.shape != (cls.dim, cls.dim):
+            raise ValueError("Xi must have shape (4,4)")
+
+        <a id="change">return np.hstack([Xi[0:3, 3], SO3.vee(Xi[0:3, 0:3])])</a>
+
+    @classmethod
+    def exp(cls, xi):
+        Exponential map for SE(3).</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError("Xi must have shape ({},{}) or (N,{},{})".format(
+                cls.dim, cls.dim, cls.dim, cls.dim))
+
+        <a id="change">xi = np.empty([Xi.shape[0], cls.dof])</a>
+        xi[:, 0:3] = Xi[:, 0:3, 3]
+        <a id="change">xi[:, 3:6]</a> = SO3.vee(Xi[:, 0:3, 0:3])
+        <a id="change">return np.squeeze(xi)</a>
+
+    @classmethod
+    def odot(cls, p, **kwargs):
+        SE(3) \odot operator as defined by Barfoot.</code></pre><img src="1404224.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-daeb16847a4515f22b7440cee4b42272a8506db0f24cbac5ab9ee347919454bdL72' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se3.py</div><div id='class'> Class Name: SE3</div><div id='method'> Method Name: vee</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/784586f02d063d39360a287422a6384f30f10d12#diff-ccc16ee38df5a402e0629acb9b8a425cf4a23d88ce6964decfdffae6ecbbe688L71' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 784586f02d063d39360a287422a6384f30f10d12</div><div id='time'> Time: 2017-01-30</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/se2.py</div><div id='class'> Class Name: SE2</div><div id='method'> Method Name: vee</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/a4566752a9207c7769e00c97e08f905d601f27e9#diff-186ad95a70638c873084e785a8e0c297eef603a829ab1eeecd6b033b98806771L18' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: a4566752a9207c7769e00c97e08f905d601f27e9</div><div id='time'> Time: 2016-02-15</div><div id='author'> Author: jamiehntownsend@gmail.com</div><div id='file'> File Name: pymanopt/tools/multi.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: multiprod</div><BR>

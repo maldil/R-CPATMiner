@@ -1,0 +1,32 @@
+<html><h3>99095d5412483ec623278bdb1a0c9e24b18bfc85,pdpipe/basic_stages.py,MapColVals,_op,#MapColVals#,497
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        inter_df = df
+        source_column = df[self._column_name]
+        if self._drop:
+            inter_df = <a id="change">df.drop(self._column_name, axis=1)</a>
+        inter_df = df.assign(**{
+            self._result_col_name: source_column.replace(self._value_map)
+        })
+        return inter_df</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _op(self, df, verbose):
+        inter_df = df
+        <a id="change">for i, colname in enumerate(self._columns):
+            source_col = df[colname]
+            loc = df.columns.get_loc(colname) + 1
+            new_name = self._result_columns[i]
+            if self._drop:
+                inter_df = inter_df.drop(colname, axis=1)
+                loc -= 1
+            inter_df = out_of_place_col_insert(
+                df=inter_df,
+                series=source_col.map(self._value_map),
+                loc=loc,
+                column_name=new_name)
+       </a> return inter_df
+
+
+class Encode(PipelineStage):</code></pre><img src="37864353.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L497' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: MapColVals</div><div id='method'> Method Name: _op</div><BR><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/412e06fce467da87161cb535ba25c4234a0c3712#diff-612726541557aebfa2be302ac8ced2ffac2e7b3f0d4008b894f880e4fa147608L64' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: 412e06fce467da87161cb535ba25c4234a0c3712</div><div id='time'> Time: 2014-10-02</div><div id='author'> Author: pieterjan.moreels@gmail.com</div><div id='file'> File Name: db_whitelist.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/CNuge/kaggle-code/commit/b7990885d8b26b9404fd9ce952b0b2f005019594#diff-98e1d888948d2fb9ceba7250296619639269b2d8c5bec5737f959d9d670bfd88L23' target='_blank'>Link</a></div><div id='project'> Project Name: CNuge/kaggle-code</div><div id='commit'> Commit Name: b7990885d8b26b9404fd9ce952b0b2f005019594</div><div id='time'> Time: 2018-01-12</div><div id='author'> Author: nugentc@uoguelph.ca</div><div id='file'> File Name: california_housing/feature_engineering.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca337ebba627326cd7b15b454053e31f51b5e441#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL118' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca337ebba627326cd7b15b454053e31f51b5e441</div><div id='time'> Time: 2015-06-16</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: rejection_sample</div><BR>

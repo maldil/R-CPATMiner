@@ -1,0 +1,74 @@
+<html><h3>e7f739f3ad1a377bfbcd0b92c55c2b9d947764fc,algo/a2c_acktr.py,A2C_ACKTR,update,#A2C_ACKTR#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        advantages = Variable(rollouts.returns[:-1]) - values
+        value_loss = advantages.pow(2).mean()
+
+        action_loss = -(<a id="change">Variable(advantages.data)</a> * action_log_probs).mean()
+
+        if self.acktr and self.optimizer.steps % self.optimizer.Ts == 0:
+            &#47&#47 Sampled fisher, see Martens 2014
+            self.actor_critic.zero_grad()
+            pg_fisher_loss = -action_log_probs.mean()
+
+            value_noise = Variable(torch.randn(values.size()))
+            if values.is_cuda:
+                value_noise = value_noise.cuda()
+
+            sample_values = values + value_noise
+            vf_fisher_loss = -(
+                values - Variable(sample_values.data)).pow(2).mean()
+
+            fisher_loss = pg_fisher_loss + vf_fisher_loss
+            self.optimizer.acc_stats = True
+            fisher_loss.backward(retain_graph=True)
+            self.optimizer.acc_stats = False
+
+        self.optimizer.zero_grad()
+        (value_loss * self.value_loss_coef + action_loss -
+         dist_entropy * self.entropy_coef).backward()
+
+        if self.acktr == False:
+            nn.utils.clip_grad_norm(self.actor_critic.parameters(),
+                                    self.max_grad_norm)
+
+        self.optimizer.step()
+
+        return <a id="change">value_loss</a>, action_loss, dist_entropy
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        advantages = rollouts.returns[:-1] - values
+        value_loss = advantages.pow(2).mean()
+
+        action_loss = -(<a id="change">advantages.detach()</a> * action_log_probs).mean()
+
+        if self.acktr and self.optimizer.steps % self.optimizer.Ts == 0:
+            &#47&#47 Sampled fisher, see Martens 2014
+            self.actor_critic.zero_grad()
+            pg_fisher_loss = -action_log_probs.mean()
+
+            value_noise = torch.randn(values.size())
+            if values.is_cuda:
+                value_noise = value_noise.cuda()
+
+            sample_values = values + value_noise
+            vf_fisher_loss = -(values - sample_values.detach()).pow(2).mean()
+
+            fisher_loss = pg_fisher_loss + vf_fisher_loss
+            self.optimizer.acc_stats = True
+            fisher_loss.backward(retain_graph=True)
+            self.optimizer.acc_stats = False
+
+        self.optimizer.zero_grad()
+        (value_loss * self.value_loss_coef + action_loss -
+         dist_entropy * self.entropy_coef).backward()
+
+        if self.acktr == False:
+            nn.utils.clip_grad_norm_(self.actor_critic.parameters(),
+                                     self.max_grad_norm)
+
+        self.optimizer.step()
+
+        return value_loss.item(), <a id="change">action_loss.item()</a>, dist_entropy.item()
+</code></pre><img src="3989980.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/e7f739f3ad1a377bfbcd0b92c55c2b9d947764fc#diff-32396b3ac933956f53ced06e09aa4707ea637b9876f592e124a6eb9cfde78efdL39' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: e7f739f3ad1a377bfbcd0b92c55c2b9d947764fc</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: algo/a2c_acktr.py</div><div id='class'> Class Name: A2C_ACKTR</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/activatedgeek/LeNet-5/commit/b9d7f39a752d23a7de60ea6d679812c401fab57e#diff-d6af0459a37d985953d7040c14f53feb3b9cc9e58b543aa3c2b80256d276c5e0L46' target='_blank'>Link</a></div><div id='project'> Project Name: activatedgeek/LeNet-5</div><div id='commit'> Commit Name: b9d7f39a752d23a7de60ea6d679812c401fab57e</div><div id='time'> Time: 2019-01-01</div><div id='author'> Author: 1sanyamkapoor@gmail.com</div><div id='file'> File Name: run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/activatedgeek/LeNet-5/commit/b9d7f39a752d23a7de60ea6d679812c401fab57e#diff-d6af0459a37d985953d7040c14f53feb3b9cc9e58b543aa3c2b80256d276c5e0L73' target='_blank'>Link</a></div><div id='project'> Project Name: activatedgeek/LeNet-5</div><div id='commit'> Commit Name: b9d7f39a752d23a7de60ea6d679812c401fab57e</div><div id='time'> Time: 2019-01-01</div><div id='author'> Author: 1sanyamkapoor@gmail.com</div><div id='file'> File Name: run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test</div><BR>

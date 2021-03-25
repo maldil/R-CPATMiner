@@ -1,0 +1,27 @@
+<html><h3>2eef369b7ac92e38f81819307a4af4238fd953ee,thinc/backends/jax_ops.py,JaxOps,pad,#JaxOps#,174
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if len(set(seq.shape[1:] for seq in seqs)) != 1:
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        shapes = [tuple(<a id="change">s.shape</a>) <a id="change">for</a> s in seqs]
+        <a id="change">dim_sizes = zip(*[shape for shape in shapes])</a>
+        max_dims = <a id="change">[max(sizes) for sizes in dim_sizes]</a>
+        final_shape = (len(seqs),) + tuple(max_dims)
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            region = [i] + [slice(0, dim) for dim in arr.shape]
+            <a id="change">output = index_update(output, index[region], arr)</a>
+        return output
+
+    def list2padded(self, seqs: List[Array2d]) -&gt; Padded:
+        Pack a sequence of 2d arrays into a Padded datatype.</code></pre><h3>After Change</h3><pre><code class='java'>
+        length = max(len(seq) for seq in seqs)
+        &#47&#47 Round the length
+        length = (length + (round_to-1)) // round_to * round_to
+        final_shape = (len(seqs), length) + <a id="change">seqs</a>[<a id="change">0</a>].shape[1:]
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            output[i, :arr.shape[0]] = arr</code></pre><img src="36470060.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/2eef369b7ac92e38f81819307a4af4238fd953ee#diff-81cc8f51f6740cb9176ed41208fbe48f219b34ec841882757d63d0f73bc01577L184' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 2eef369b7ac92e38f81819307a4af4238fd953ee</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/jax_ops.py</div><div id='class'> Class Name: JaxOps</div><div id='method'> Method Name: pad</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6799144620411f23c3a15abae1f78c5bc2a4f7c0#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L125' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6799144620411f23c3a15abae1f78c5bc2a4f7c0</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: pad</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR>

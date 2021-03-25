@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        k_model = pytorch_to_keras(model, input_var, (inp, inp, inp,), verbose=True)
+
+        <a id="change">pytorch_output = output.data.numpy()</a>
+        keras_output = k_model.predict(input_np)
+
+        error = np.max(pytorch_output - keras_output)
+        print(error)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 This isn&quott a depthwise convolution, so shouldn&quott be detected as such
+        non_dw_model = TestConv2dNonDepthwise(inp)
+        output = non_dw_model(input_var)
+        <a id="change">k_model = pytorch_to_keras(non_dw_model, input_var, (inp, inp, inp,), verbose=True)</a>
+        check_error(output, k_model, input_np)
+
+    print(&quotMax error: {0}&quot.format(max_error))
+</code></pre>

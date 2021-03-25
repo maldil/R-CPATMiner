@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        p = pixelBlocks[&quotraster_pixels&quot]
+
+        if self.measure is None:
+            <a id="change">b = resize(p, shape, order=0, preserve_range=True)</a>
+        else:
+            blockSizes = tuple(np.divide(p.shape, shape))
+            b = measure.block_reduce(p, blockSizes, self.measure)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def updatePixels(self, tlc, shape, props, **pixelBlocks):
+        if self.func is None:
+            b = resize(pixelBlocks[&quotraster_pixels&quot], shape, order=0, preserve_range=True)
+            m = <a id="change">resize(pixelBlocks[&quotraster_mask&quot], shape, order=0, preserve_range=True)</a>
+        else:
+            p = pixelBlocks[&quotraster_pixels&quot]
+            blockSizes = tuple(np.divide(p.shape, shape))
+
+            q = np.ma.masked_array(view_as_blocks(p, blockSizes), 
+                                   view_as_blocks(~pixelBlocks[&quotraster_mask&quot].astype(&quotb1&quot), blockSizes))
+            for i in range(len(q.shape) // 2):
+                q = self.func(q, axis=-1)
+            b = q.data
+            m = ~q.mask
+
+        pixelBlocks[&quotoutput_pixels&quot] = b.astype(props[&quotpixelType&quot], copy=False)
+        <a id="change">pixelBlocks[&quotoutput_mask&quot] = m.astype(&quotu1&quot, copy=False)</a>
+        return pixelBlocks
+
+</code></pre>

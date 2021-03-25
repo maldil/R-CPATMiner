@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.bias = K.update(self.bias, self.bias + K.sum(inputs_hat * outputs, [0, -2, -1]))
+
+        &#47&#47 Handling with no routing scenario. Prior bias will always be zero.
+        <a id="change">if self.num_routing == 0:
+            c = K.softmax(self.bias)
+            c_expand = K.expand_dims(K.expand_dims(K.expand_dims(c, 2), 2), 0)
+            outputs = squash(K.sum(c_expand * inputs_hat, 1, keepdims=True))
+
+       </a> return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])
+
+    def compute_output_shape(self, input_shape):
+        return tuple([None, self.num_capsule, self.dim_vector])</code></pre><h3>After Change</h3><pre><code class='java'>
+            outputs = squash(K.sum(c * inputs_hat, 1, keepdims=True))
+
+            &#47&#47 last iteration needs not compute bias which will not be passed to the graph any more anyway.
+            <a id="change">if i != self.num_routing - 1:
+                self.bias += K.sum(inputs_hat * outputs, -1, keepdims=True)
+
+       </a> return K.reshape(outputs, [-1, self.num_capsule, self.dim_vector])
+
+    def compute_output_shape(self, input_shape):
+        return tuple([None, self.num_capsule, self.dim_vector])</code></pre>

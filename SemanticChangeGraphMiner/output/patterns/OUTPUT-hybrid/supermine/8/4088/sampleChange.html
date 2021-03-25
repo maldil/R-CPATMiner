@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._labels = data["labels"] if "labels" in data else None
+        self._masks = data["masks"] if "masks" in data else None
+
+        self._permutation = <a id="change">np.random.permutation(len(self._images))</a>
+
+    @property
+    def images(self):
+        return self._images</code></pre><h3>After Change</h3><pre><code class='java'>
+class Dataset:
+    def __init__(self, filename, shuffle_batches = True):
+        data = np.load(filename)
+        <a id="change">self._images</a> = data["images"]
+        self._labels = data["labels"] if "labels" in data else None
+        self._masks = data["masks"] if "masks" in data else None
+
+        <a id="change">self._shuffle_batches</a> = shuffle_batches
+        self._permutation = <a id="change">np.random.permutation(len(self._images)) if self._shuffle_batches else range(len(self._images))</a>
+
+    @property
+    def images(self):
+        return self._images</code></pre>

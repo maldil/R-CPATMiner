@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        )
+
+    def test_sql_action_and_go_back(self):
+        <a id="change">self.selenium.get(self.live_server_url + "/execute_sql/")</a>
+        sql_panel = self.selenium.find_element_by_id("SQLPanel")
+        debug_window = self.selenium.find_element_by_id("djDebugWindow")
+
+        &#47&#47 Click to show the SQL panel
+        self.selenium.find_element_by_class_name("SQLPanel").click()
+
+        &#47&#47 SQL panel loads
+        button = WebDriverWait(self.selenium, timeout=3).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".remoteCall"))
+        )
+        button.click()
+
+        &#47&#47 SQL selected window loads
+        WebDriverWait(self.selenium, timeout=3).until(EC.visibility_of(debug_window))
+        self.assertIn("SQL selected", debug_window.text)
+
+        &#47&#47 Close the SQL selected window
+        debug_window.find_element_by_class_name("djDebugClose").click()
+        <a id="change">WebDriverWait</a>(<a id="change">self.selenium</a>, timeout=<a id="change">3</a>).until(
+            EC.invisibility_of_element(debug_window)
+        )
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        )
+
+    def test_sql_action_and_go_back(self):
+        <a id="change">self.get("/execute_sql/")</a>
+        sql_panel = self.selenium.find_element_by_id("SQLPanel")
+        debug_window = self.selenium.find_element_by_id("djDebugWindow")
+
+        &#47&#47 Click to show the SQL panel
+        self.selenium.find_element_by_class_name("SQLPanel").click()
+
+        &#47&#47 SQL panel loads
+        button = self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".remoteCall"))
+        )
+        button.click()
+
+        &#47&#47 SQL selected window loads
+        self.wait.until(EC.visibility_of(debug_window))
+        self.assertIn("SQL selected", debug_window.text)
+
+        &#47&#47 Close the SQL selected window
+        debug_window.find_element_by_class_name("djDebugClose").click()
+        <a id="change">self</a>.wait.until(EC.invisibility_of_element(debug_window))
+
+        &#47&#47 SQL panel is still visible
+        self.assertTrue(sql_panel.is_displayed())</code></pre>

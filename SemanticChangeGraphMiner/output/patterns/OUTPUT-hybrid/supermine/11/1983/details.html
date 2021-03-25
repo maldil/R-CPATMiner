@@ -1,0 +1,48 @@
+<html><h3>13b86a857c1e9fb716c75c51646eaec5829b945d,trunk/SUAVE/Components/Energy/Networks/Propulsor_Surrogate.py,Propulsor_Surrogate,evaluate_thrust,#Propulsor_Surrogate#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cond = np.hstack([altitude,mach,throttle])
+        
+        &#47&#47 Run the surrogate for a range of altitudes
+        data_len = <a id="change">len(altitude)</a>
+        <a id="change">sfc = np.zeros([data_len,1])</a>  
+        thr = np.zeros([data_len,1]) 
+        <a id="change">for ii,_ in enumerate(altitude):            
+            sfc[ii] = sfc_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])    
+            thr[ii] = thr_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])   &#47&#47This is the fix when sklearn is update.
+
+        
+       </a> F    = thr
+        mdot = thr*sfc*self.number_of_engines
+        
+        &#47&#47 Save the output</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47thr[ii] = thr_surrogate.predict([np.array([altitude[ii][0],mach[ii][0],throttle[ii][0]])])\
+                &#47&#47*self.thrust_input_scale*self.thrust_rubber_scale
+            
+        <a id="change">if self.use_extended_surrogate:
+            lo_blender = Cubic_Spline_Blender(0, .01)
+            hi_blender = Cubic_Spline_Blender(0.99, 1)            
+            sfc = self.extended_sfc_surrogate(sfc_surrogate, cond, lo_blender, hi_blender)
+            thr = self.extended_thrust_surrogate(thr_surrogate, cond, lo_blender, hi_blender)
+        else:
+            sfc = sfc_surrogate.predict(cond)
+            thr = thr_surrogate.predict(cond)
+
+       </a> sfc = sfc*self.sfc_input_scale*self.sfc_anchor_scale
+        thr = thr*self.thrust_input_scale*self.thrust_anchor_scale
+       
+        F    = thr
+        &#47&#47from SUAVE.Core import Units
+        mdot = thr*sfc*self.number_of_engines&#47&#47*Units.lb/Units.lbf/Units.hr
+       
+        &#47&#47 Save the output
+        results = Data()
+        results.thrust_force_vector = self.number_of_engines * F * [np.cos(self.thrust_angle),0,-np.sin(self.thrust_angle)]    
+        results.vehicle_mass_rate   = mdot
+        <a id="change">results.tsfc                = sfc</a>
+        results.thrust_scalar_value = thr
+   
+        return results          
+   </code></pre><img src="9488786.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/13b86a857c1e9fb716c75c51646eaec5829b945d#diff-c09e31a879d82ef45aef0b6d23311f0e216695770130737973cb6ae1c6836d59L83' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 13b86a857c1e9fb716c75c51646eaec5829b945d</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: timdmacdo@gmail.com</div><div id='file'> File Name: trunk/SUAVE/Components/Energy/Networks/Propulsor_Surrogate.py</div><div id='class'> Class Name: Propulsor_Surrogate</div><div id='method'> Method Name: evaluate_thrust</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/419c33c9b0d0a5b576bf28d9cd8abdbf04eb6d3c#diff-cc4db625cfc2de87cc14144ce885d55e95bddff3aab37e9e573043ee9e909988L28' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: 419c33c9b0d0a5b576bf28d9cd8abdbf04eb6d3c</div><div id='time'> Time: 2020-08-04</div><div id='author'> Author: ryan.hammonds@utexas.edu</div><div id='file'> File Name: neurodsp/aperiodic/autocorr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compute_autocorr</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/a482f9a6ce01bccb75413cd1ff212ccf047dd614#diff-c09e31a879d82ef45aef0b6d23311f0e216695770130737973cb6ae1c6836d59L84' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: a482f9a6ce01bccb75413cd1ff212ccf047dd614</div><div id='time'> Time: 2020-01-31</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Components/Energy/Networks/Propulsor_Surrogate.py</div><div id='class'> Class Name: Propulsor_Surrogate</div><div id='method'> Method Name: evaluate_thrust</div><BR>

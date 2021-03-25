@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 MDS embeddings, each gives a different output.
+    X_dist = squareform(pdist(X, distance_metric))
+
+    <a id="change">if how == &quotclassic&quot:
+        &#47&#47 classical MDS as defined in cmdscale
+        &#47&#47 Y = cmdscale(X_dist)[0][:,:ndim]
+        Y = cmdscale_fast(X_dist, ndim)
+    elif how == &quotmetric&quot:
+        &#47&#47 First compute CMDS
+        Y_cmds = cmdscale_fast(X_dist, ndim)
+        &#47&#47 Metric MDS from sklearn
+        Y = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y_cmds)
+    elif how == &quotnonmetric&quot:
+        &#47&#47 First compute CMDS
+        Y_cmds = cmdscale_fast(X_dist, ndim)
+        &#47&#47 Then compute Metric MDS
+        Y_mmds = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                     dissimilarity="precomputed", random_state=seed,
+                     n_jobs=n_jobs, n_init=1).fit_transform(X_dist,
+                                                            init=Y_cmds)
+        &#47&#47 Nonmetric MDS from sklearn using metric MDS as an initialization
+        Y = MDS(n_components=ndim, metric=False, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y_mmds)
+    else:
+        raise ValueError("Allowable &quothow&quot values for MDS: &quotclassic&quot, "
+                         "&quotmetric&quot, or &quotnonmetric&quot. "
+                         "&quot{}&quot was passed.".format(how))
+   </a> return Y
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 initialize all by CMDS
+    Y = cmdscale_fast(X_dist, ndim)
+    if how in [&quotmetric&quot, &quotnonmetric&quot]:
+        <a id="change">log_debug("Performing metric MDS on "
+                  "{} of shape {}...".format(type(X_dist),
+                                             X_dist.shape))</a>
+        &#47&#47 Metric MDS from sklearn
+        Y = MDS(n_components=ndim, metric=True, max_iter=3000, eps=1e-12,
+                dissimilarity="precomputed", random_state=seed, n_jobs=n_jobs,
+                n_init=1).fit_transform(X_dist, init=Y)</code></pre>

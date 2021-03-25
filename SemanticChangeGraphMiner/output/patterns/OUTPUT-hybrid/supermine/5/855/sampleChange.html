@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_clamps():
+    d = np.array([.51, .48, .01])
+    out_ = <a id="change">(np.array([[4, 3, 0], [5, 4, 1]]),
+            np.array([ 0., 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.]))</a>
+    out = module.clamped_indexes(d, 2**3)
+    np.testing.assert_allclose(out[0], out_[0])
+    np.testing.assert_allclose(out[1], out_[1], rtol=1e-7, atol=1e-8)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_clamps():
+    d = np.array([.51, .48, .01])
+    <a id="change">locs = np.linspace(0, 1, 2**3+1)</a>
+    out_ = np.array([[4, 3, 0], [5, 4, 1]])
+    out = module.clamped_indexes(d, locs)
+    np.testing.assert_allclose(out, out_)
+</code></pre>

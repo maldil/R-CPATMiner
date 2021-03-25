@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    input_mtch_sum = sum(input, labels, index)
+
+    <a id="change">input_wt_mtch_sum = []</a>
+    <a id="change">for i in _pycompat.irange(input.ndim):
+        sl = input.ndim * [None]
+        sl[i] = slice(None)
+        sl = tuple(sl)
+
+        input_i = dask.array.arange(input.shape[i], chunks=input.chunks[i])
+        input_wt = input * input_i[sl]
+
+        input_wt_mtch_sum.append(sum(input_wt, labels, index))
+
+   </a> input_wt_mtch_sum = dask.array.stack(input_wt_mtch_sum, axis=-1)
+
+    com_lbl = input_wt_mtch_sum / input_mtch_sum[..., None]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    type_mapping = collections.OrderedDict(<a id="change">[
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ]</a>)
+    out_dtype = numpy.dtype(list(type_mapping.items()))
+
+    <a id="change">default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)</a>
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )</code></pre>

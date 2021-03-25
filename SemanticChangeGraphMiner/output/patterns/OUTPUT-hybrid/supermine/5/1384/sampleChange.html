@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _current_h_conv = h_conv_init
+        for i in range(self.num_int_conv_layers):
+            W_conv_intermediate.append(_weight_variable([3, 3, self.k, self.k], name="W_conv_inter" + str(i)))
+            h_conv_intermediate.append(tf.nn.relu(_conv2d(_current_h_conv, W_conv_intermediate[-1]), name=<a id="change">"h_conv_inter" + str(i)</a>))
+            _current_h_conv = h_conv_intermediate[-1]
+
+        W_conv_final = _weight_variable([1, 1, self.k, 1], name="W_conv_final")</code></pre><h3>After Change</h3><pre><code class='java'>
+        h_conv_intermediate = []
+        _current_h_conv = h_conv_init
+        for i in range(self.num_int_conv_layers):
+            <a id="change">with tf.name_scope("layer"+str(i)):
+                W_conv_intermediate.append(_weight_variable([3, 3, self.k, self.k], name="W_conv"))
+                h_conv_intermediate.append(tf.nn.relu(_conv2d(_current_h_conv, W_conv_intermediate[-1]), name="h_conv"))
+                _current_h_conv = h_conv_intermediate[-1]
+
+       </a> W_conv_final = _weight_variable([1, 1, self.k, 1], name="W_conv_final")
+        b_conv_final = tf.Variable(tf.constant(0, shape=[go.N ** 2], dtype=tf.float32), name="b_conv_final")
+        h_conv_final = _conv2d(h_conv_intermediate[-1], W_conv_final)
+        output = tf.nn.softmax(tf.reshape(h_conv_final, [-1, go.N ** 2]) + b_conv_final)</code></pre>

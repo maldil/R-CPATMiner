@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert len(w) == 0
+
+    def test_warning(self):
+        with <a id="change">pytest.warns(None)</a> as w:
+            F.create_fb_matrix(201, 0, 8000, 128, 16000)
+        assert len(w) == 1
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert len(w) == 0
+
+    def test_warning(self):
+        with <a id="change">warnings.catch_warnings(record=True)</a> as w:
+            <a id="change">warnings.simplefilter("always")</a>
+            F.create_fb_matrix(201, 0, 8000, 128, 16000)
+        assert len(w) == 1
+
+</code></pre>

@@ -1,0 +1,32 @@
+<html><h3>8e55eff8f3cd1fd6a932d02098bdfdd6b959e306,classification_models/resnet/builder.py,,build_resnet,#,21
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    conv_params = get_conv_params()
+    init_filters = 64
+
+    <a id="change">if block_type == &quotbasic&quot:
+        conv_block = basic_conv_block
+        identity_block = basic_identity_block
+    else:
+        conv_block = usual_conv_block
+        identity_block = usual_identity_block
+    
+    &#47&#47 resnet bottom
+   </a> x = BatchNormalization(name=&quotbn_data&quot, **no_scale_bn_params)(img_input)
+    x = ZeroPadding2D(padding=(3, 3))(x)
+    x = Conv2D(init_filters, (7, 7), strides=(2, 2), name=&quotconv0&quot, **conv_params)(x)
+    x = BatchNormalization(name=&quotbn0&quot, **bn_params)(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        attention_block = spatial_se_block()
+    elif attention == &quotcse&quot:
+        attention_block = channel_se_block(ratio=16)
+    elif <a id="change">attention == &quotcsse&quot</a>:
+        attention_block = csse_block(ratio=2)
+    elif <a id="change">attention is None:
+</a>        attention_block = None
+    else:
+        raise ValueError(<a id="change">&quotSupported attention blocks are: sse, cse, csse. Got "{}".&quot.format(attention)</a>)
+
+    &#47&#47 get parameters for model layers
+    no_scale_bn_params = get_bn_params(scale=False)</code></pre><img src="26141071.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/qubvel/classification_models/commit/8e55eff8f3cd1fd6a932d02098bdfdd6b959e306#diff-728e93d986a380d165c518d12408c3a3ba656ab079aafc8f887d537064da8818L54' target='_blank'>Link</a></div><div id='project'> Project Name: qubvel/classification_models</div><div id='commit'> Commit Name: 8e55eff8f3cd1fd6a932d02098bdfdd6b959e306</div><div id='time'> Time: 2018-12-26</div><div id='author'> Author: qubvel@gmail.com</div><div id='file'> File Name: classification_models/resnet/builder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: build_resnet</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/9b95e0f07b60b6a144893dcc506dfaf90db61c95#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL223' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 9b95e0f07b60b6a144893dcc506dfaf90db61c95</div><div id='time'> Time: 2020-05-18</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stack_memory</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/9ce31f7b61bd03877727ebf0ea94fd1505da61e7#diff-f00a859d384a587ba6e998acc00d532ba950650019bab855dbe9f3a6a8c5bb0aL126' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: 9ce31f7b61bd03877727ebf0ea94fd1505da61e7</div><div id='time'> Time: 2019-08-25</div><div id='author'> Author: egor.v.panfilov@gmail.com</div><div id='file'> File Name: skimage/morphology/convex_hull.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convex_hull_object</div><BR>

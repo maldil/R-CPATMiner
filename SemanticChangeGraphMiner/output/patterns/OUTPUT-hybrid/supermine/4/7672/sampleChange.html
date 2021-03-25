@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return packet_ratio
+
+        for ip_proto_num, proto_df in mac_df.groupby(&quotip.proto&quot):
+            ip_proto = <a id="change">TCP_UDP_PROTOS.get(ip_proto_num)</a>
+            <a id="change">if ip_proto is None:
+                continue
+           </a> src = proto_df[&quot%s.srcport&quot % ip_proto]
+            dst = proto_df[&quot%s.dstport&quot % ip_proto]
+            for field_name, wk_ports, port_src, port_dst in (
+                (&quotpriv&quot, self.WK_PRIV_TCPUDP_PORTS,</code></pre><h3>After Change</h3><pre><code class='java'>
+                    packet_ratio = 1
+            return packet_ratio
+
+        for ip_proto_num, ip_proto in <a id="change">TCP_UDP_PROTOS.items()</a>:
+            proto_df = mac_df[mac_df[&quotip.proto&quot]==ip_proto_num]
+            lowest_ports = self._lowest_ip_proto_port(proto_df, ip_proto)
+            src = proto_df[&quot%s.srcport&quot % ip_proto]</code></pre>

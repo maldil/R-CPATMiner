@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+)
+def test_ro_parser_corpus(NLP, test_file, uas_threshold, las_threshold):
+    data_path = TEST_FILES_DIR / test_file
+    <a id="change">if not data_path.exists():
+        raise FileNotFoundError("Test corpus not found", data_path)
+   </a> <a id="change">examples = json_path_to_examples(data_path, NLP)</a>
+    <a id="change">scores = NLP.evaluate(examples)</a>
+
+    assert scores["dep_uas"] &gt; uas_threshold
+    <a id="change">assert scores["dep_las"] &gt; las_threshold</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+)
+def test_ro_parser_corpus(NLP, test_file, uas_threshold, las_threshold):
+    data_path = TEST_FILES_DIR / test_file
+    <a id="change">evaluate_corpus(NLP, data_path, {"dep_uas": uas_threshold, "dep_las": las_threshold})</a>
+</code></pre>

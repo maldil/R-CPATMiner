@@ -1,0 +1,28 @@
+<html><h3>c7f7d1979a35b443dba7e776203ed7084efecf77,models/networks.py,ResnetBlock,build_conv_block,#ResnetBlock#,185
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        conv_block = []
+        p = 0
+        &#47&#47 TODO: support padding types
+        <a id="change">assert(padding_type == &quotzero&quot)</a>
+        p = 1
+
+        &#47&#47 TODO: InstanceNorm
+        conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p),</code></pre><h3>After Change</h3><pre><code class='java'>
+            conv_block += [nn.Dropout(0.5)]
+
+        p = 0
+        <a id="change">if padding_type == &quotreflect&quot:
+            conv_block += [nn.ReflectionPad2d(1)]
+        elif padding_type == &quotreplicate&quot:
+            conv_block += [nn.ReplicationPad2d(1)]
+        elif padding_type == &quotzero&quot:
+            p = 1
+        else:
+            raise NotImplementedError(&quotpadding [%s] is not implemented&quot % padding_type)
+       </a> conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p),
+                       norm_layer(dim)]
+
+        return nn.Sequential(*conv_block)</code></pre><img src="27904905.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/c7f7d1979a35b443dba7e776203ed7084efecf77#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L187' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: c7f7d1979a35b443dba7e776203ed7084efecf77</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: junyanz@berkeley.edu</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: ResnetBlock</div><div id='method'> Method Name: build_conv_block</div><BR><BR><div id='link'><a href='https://github.com/fgnt/nara_wpe/commit/6c89ec0f602e12acb0efe50d7eb626f781e911bf#diff-b5d67ad6d85b5e35a1f8351a839b625f84b35b3d8964d5ea0978b9dfb4006b1dL378' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/nara_wpe</div><div id='commit'> Commit Name: 6c89ec0f602e12acb0efe50d7eb626f781e911bf</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: nara_wpe/wpe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wpe_v8</div><BR><BR><div id='link'><a href='https://github.com/fgnt/nara_wpe/commit/ab6b42b73b4d8fed909b041966bebe8b025889e2#diff-b5d67ad6d85b5e35a1f8351a839b625f84b35b3d8964d5ea0978b9dfb4006b1dL378' target='_blank'>Link</a></div><div id='project'> Project Name: fgnt/nara_wpe</div><div id='commit'> Commit Name: ab6b42b73b4d8fed909b041966bebe8b025889e2</div><div id='time'> Time: 2018-05-28</div><div id='author'> Author: mail@lukas-drude.de</div><div id='file'> File Name: nara_wpe/wpe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wpe_v8</div><BR>

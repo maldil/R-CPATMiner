@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _get_name(self, top, names, autonames):
+        if top not in names:
+            autonames[top.fn.type_name] += 1
+            names[top] = top.fn.type_name + <a id="change">str(autonames[top.fn.type_name])</a>
+        return names[top]
+
+    def _to_proto(self, layers, names, autonames):
+        if self in layers:</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _get_name(self, names, autonames):
+        if self not in names and self.ntop &gt; 0:
+            names[self] = self._get_top_name(self.tops[0], names, autonames)
+        elif <a id="change">self not in names</a>:
+            autonames[self.type_name] += 1
+            names[self] = self.type_name + str(autonames[self.type_name])
+        return names[self]</code></pre>

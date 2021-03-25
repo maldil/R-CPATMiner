@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i in range(size - 1):
+            for j, (var, st) in enumerate(self.state):
+                next_st = <a id="change">sample_discrete(list(self.transition_models[var][st].keys()),
+                                          list(self.transition_models[var][st].values()))[0]</a>
+                self.state[j] = State(var, next_st)
+            sampled.loc[i + 1] = [st for var, st in self.state]
+
+        return sampled</code></pre><h3>After Change</h3><pre><code class='java'>
+        var_states = defaultdict(dict)
+        var_values = defaultdict(dict)
+        samples = defaultdict(dict)
+        <a id="change">for var in self.transition_models.keys():
+            for st in self.transition_models[var]:
+                var_states[var][st] = list(self.transition_models[var][st].keys())
+                var_values[var][st] = list(self.transition_models[var][st].values())
+                samples[var][st] = sample_discrete(var_states[var][st], var_values[var][st])[0]
+
+       </a> for i in range(size - 1):
+            for j, (var, st) in enumerate(self.state):
+                next_st = samples[var][st]
+                self.state[j] = State(var, next_st)</code></pre>

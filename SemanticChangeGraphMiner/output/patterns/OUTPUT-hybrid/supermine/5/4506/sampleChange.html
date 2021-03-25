@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ordered = order
+    if ordered is None:
+        ordered = array_kind.ordinal(x)
+    idx = <a id="change">np.argsort(y)</a>
+    x = np.asarray(x)
+    <a id="change">categories = pd.unique(x[idx])</a>
+    return pd.Categorical(x, categories=categories, ordered=ordered)
+
+
+&#47&#47 These are function that can be called by the user inside the aes()</code></pre><h3>After Change</h3><pre><code class='java'>
+        ...
+    ValueError: Lengths are not equal. len(c) is 7 and len(x) is 6.
+    
+    if len(x) != <a id="change">len(y)</a>:
+        raise ValueError(
+            "Lengths are not equal. len(x) is {} and len(x) is {}.".format(
+                len(x), len(y)</code></pre>

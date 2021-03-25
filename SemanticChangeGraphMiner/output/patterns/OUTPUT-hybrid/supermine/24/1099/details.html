@@ -1,0 +1,57 @@
+<html><h3>8896f02f94da16afe5b3ea5330e4f99245b75d6b,examples/lqr_pg.py,,experiment,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dataset_eval = core.evaluate(n_episodes=ep_per_run)
+        print(&quotpolicy parameters: &quot, policy.get_weights())
+        J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+        <a id="change">print(&quotJ at iteration &quot + str(i) + &quot: &quot + str(np.mean(J)))</a>
+
+
+if __name__ == &quot__main__&quot:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def experiment(alg, n_epochs, n_iterations, ep_per_run):
+    np.random.seed()
+
+    <a id="change">logger = Logger(alg.__name__, results_dir=None)</a>
+    <a id="change">logger.strong_line()</a>
+    <a id="change">logger.info(&quotExperiment Algorithm: &quot + alg.__name__)</a>
+
+    &#47&#47 MDP
+    mdp = LQR.generate(dimensions=1)
+
+    approximator = Regressor(LinearApproximator,
+                             input_shape=mdp.info.observation_space.shape,
+                             output_shape=mdp.info.action_space.shape)
+
+    sigma = Regressor(LinearApproximator,
+                      input_shape=mdp.info.observation_space.shape,
+                      output_shape=mdp.info.action_space.shape)
+
+    sigma_weights = 2 * np.ones(sigma.weights_size)
+    sigma.set_weights(sigma_weights)
+
+    policy = StateStdGaussianPolicy(approximator, sigma)
+
+    &#47&#47 Agent
+    optimizer = AdaptiveOptimizer(eps=.01)
+    algorithm_params = dict(optimizer=optimizer)
+    agent = alg(mdp.info, policy, **algorithm_params)
+
+    &#47&#47 Train
+    core = Core(agent, mdp)
+    dataset_eval = core.evaluate(n_episodes=ep_per_run)
+    J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+    logger.epoch_info(0, J=np.mean(J), policy_weights=policy.get_weights())
+
+    for i in trange(n_epochs, leave=False):
+        core.learn(n_episodes=n_iterations * ep_per_run,
+                   n_episodes_per_fit=ep_per_run)
+        dataset_eval = core.evaluate(n_episodes=ep_per_run)
+        J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+        <a id="change">logger.epoch_info(i+1, J=np.mean(J), policy_weights=policy.get_weights())</a>
+
+
+if __name__ == &quot__main__&quot:
+    algs = [REINFORCE, GPOMDP, eNAC]</code></pre><img src="4872591.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 16</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/8896f02f94da16afe5b3ea5330e4f99245b75d6b#diff-e9f36076e7ead3a1c33d593d4a18427b0098b8a42d02649a46b325788616fc15L27' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 8896f02f94da16afe5b3ea5330e4f99245b75d6b</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: boris.ilpossente@hotmail.it</div><div id='file'> File Name: examples/lqr_pg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/60ebba7d23a946b55de9aaa34d08637e42e75d3b#diff-f711d28845e9dfa29eeac4300f1cbecd27d9244dc994925bdf44edbad4e89ee5L27' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 60ebba7d23a946b55de9aaa34d08637e42e75d3b</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: boris.ilpossente@hotmail.it</div><div id='file'> File Name: examples/lqr_bbo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/8896f02f94da16afe5b3ea5330e4f99245b75d6b#diff-e9f36076e7ead3a1c33d593d4a18427b0098b8a42d02649a46b325788616fc15L27' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 8896f02f94da16afe5b3ea5330e4f99245b75d6b</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: boris.ilpossente@hotmail.it</div><div id='file'> File Name: examples/lqr_pg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/8896f02f94da16afe5b3ea5330e4f99245b75d6b#diff-1d68f3f273aaea04a8c043b2c71bb442a598aa634ebf9114678f8e2b092a79b9L105' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 8896f02f94da16afe5b3ea5330e4f99245b75d6b</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: boris.ilpossente@hotmail.it</div><div id='file'> File Name: examples/pendulum_ac.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/8896f02f94da16afe5b3ea5330e4f99245b75d6b#diff-9325ff88a87910aa716c15c6dcd7e7b78b5f66ed27b9d06221557ece5e4219e6L95' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 8896f02f94da16afe5b3ea5330e4f99245b75d6b</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: boris.ilpossente@hotmail.it</div><div id='file'> File Name: examples/pendulum_dpg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: experiment</div><BR>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Alpha = [_dual_cd(K, Y[:, i],
+                          self.C, self.loss, self.max_iter, rs, self.tol,
+                          precomputed_kernel=True, verbose=self.verbose)
+                    <a id="change">for</a> i in range(Y.shape[1])]
+        self.dual_coef_ = np.array(Alpha) * Y.T
+        &#47&#47 FIXME: can trim the model
+        self.X_train_ = X</code></pre><h3>After Change</h3><pre><code class='java'>
+                             filter_params=True, n_jobs=self.n_jobs,
+                             **self._kernel_params())
+        self.dual_coef_ = np.zeros((n_vectors, n_samples), dtype=np.float64)
+        <a id="change">for i in xrange(n_vectors):
+            _dual_cd(self.dual_coef_[i], K, Y[:, i],
+                     self.C, self.loss, self.max_iter, rs, self.tol,
+                     precomputed_kernel=True, verbose=self.verbose)
+       </a> self.dual_coef_ *= Y.T
+        &#47&#47 FIXME: can trim the model
+        self.X_train_ = X
+</code></pre>

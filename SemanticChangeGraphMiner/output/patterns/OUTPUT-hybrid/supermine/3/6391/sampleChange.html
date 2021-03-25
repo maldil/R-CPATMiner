@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        next_states_v = next_states_v.cuda()
+        actions_v = actions_v.cuda()
+        rewards_v = rewards_v.cuda()
+        <a id="change">done_mask = done_mask.cuda()</a>
+
+    state_action_values = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_actions = net(next_states_v).max(1)[1]
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    next_state_values = tgt_net(next_states_v).gather(1, next_state_actions.unsqueeze(-1)).squeeze(-1)
+    next_state_values[done_mask] = 0.0
+
+    expected_state_action_values = <a id="change">next_state_values.detach()</a> * gamma + rewards_v
+    return nn.MSELoss()(state_action_values, expected_state_action_values)
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            if diagonal:
+                assert ax.shape == (numvars, numvars)
+                <a id="change">ax[0, 1].remove()</a>
+                ax_hist_x = ax[0, 0]
+                ax_hist_y = ax[1, 1]
+                ax = ax[1, 0]
+                for val, ax_, rotate in ((x, ax_hist_x, False), (y, ax_hist_y, True)):</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            if diagonal:
+                assert ax.shape == (numvars, numvars)
+                <a id="change">if ax[0, 1] is not None and ax[0, 1].get_figure() is not None:
+                    ax[0, 1].remove()
+               </a> ax_return = ax
+                ax_hist_x = ax[0, 0]
+                ax_hist_y = ax[1, 1]
+                ax = ax[1, 0]</code></pre>

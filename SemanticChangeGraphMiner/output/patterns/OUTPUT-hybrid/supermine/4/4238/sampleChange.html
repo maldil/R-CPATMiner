@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    im_test_r = im_test.ravel()
+    im_true_r = im_true.ravel()
+    <a id="change">ignored = np.zeros(im_true_r.shape, np.bool)</a>
+    for label in ignore_labels:
+        ignored[im_true_r == label] = True
+    data = np.ones(im_true_r.shape)
+    data[ignored] = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+        ignore_labels = []
+    im_test_r = im_test.reshape(-1)
+    im_true_r = im_true.reshape(-1)
+    data = <a id="change">np.isin(im_true_r, ignore_labels, invert=True).astype(float)</a>
+    if normalize:
+        data /= np.count_nonzero(data)
+    cont = sparse.coo_matrix((data, (im_true_r, im_test_r))).tocsr()
+    return cont</code></pre>

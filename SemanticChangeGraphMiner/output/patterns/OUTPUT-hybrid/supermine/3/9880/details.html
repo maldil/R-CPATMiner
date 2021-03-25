@@ -1,0 +1,27 @@
+<html><h3>f2f419b89221602dc31c69de32df1cba281db481,upsetplot/tests/test_data.py,,test_from_contents,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot])
+    out = from_contents(OrderedDict(contents), data=empty_data,
+                        id_column=id_column)
+    <a id="change">out2 = from_memberships(memberships=[{&quotcat1&quot},
+                                         {&quotcat1&quot},
+                                         {&quotcat1&quot, &quotcat2&quot},
+                                         {&quotcat2&quot},
+                                         {&quotcat3&quot},
+                                         []],
+                            data=empty_data)</a>
+    assert_series_equal(out[id_column].reset_index(drop=True),
+                        pd.Series([&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot],
+                                  name=id_column))
+    assert_frame_equal(out.drop(columns=[id_column]), out2)</code></pre><h3>After Change</h3><pre><code class='java'>
+    assert not out.index.to_frame()[&quotcat4&quot].any()  &#47&#47 cat4 should be all-false
+    assert len(out.index.names) == 4
+    out.index = out.index.to_frame().set_index([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]).index
+    <a id="change">assert_frame_equal(out, baseline)</a>
+
+
+@pytest.mark.parametrize(&quotid_column&quot, [&quotid&quot, &quotblah&quot])
+def test_from_contents_invalid(id_column):</code></pre><img src="37570980.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jnothman/UpSetPlot/commit/f2f419b89221602dc31c69de32df1cba281db481#diff-d3985b50d796cbea735e6d37167cda98c0ed3f1c4c0edde5e3af79a8867260eeL91' target='_blank'>Link</a></div><div id='project'> Project Name: jnothman/UpSetPlot</div><div id='commit'> Commit Name: f2f419b89221602dc31c69de32df1cba281db481</div><div id='time'> Time: 2019-05-30</div><div id='author'> Author: joel.nothman@gmail.com</div><div id='file'> File Name: upsetplot/tests/test_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_from_contents</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/e6a540f792db2f72147600110aeef26d66fc5c2d#diff-6c1f303d9884426cd6aba8e209161c352f2e24fbcc82ee914e11678823116c8eL43' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: e6a540f792db2f72147600110aeef26d66fc5c2d</div><div id='time'> Time: 2018-01-04</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/tests/audit/test_redos.py</div><div id='class'> Class Name: TestREDoS</div><div id='method'> Method Name: test_found_redos</div><BR><BR><div id='link'><a href='https://github.com/SPFlow/SPFlow/commit/a94dbd2936fdc64e921333c04e0d66d491efc706#diff-2607d463415271dcbe111c69dc9f2fada17568c2dccb5eda6e91ab3e2db1433fL40' target='_blank'>Link</a></div><div id='project'> Project Name: SPFlow/SPFlow</div><div id='commit'> Commit Name: a94dbd2936fdc64e921333c04e0d66d491efc706</div><div id='time'> Time: 2018-11-19</div><div id='author'> Author: claas@voelcker.net</div><div id='file'> File Name: src/spn/algorithms/stats/Moments.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Moment</div><BR>

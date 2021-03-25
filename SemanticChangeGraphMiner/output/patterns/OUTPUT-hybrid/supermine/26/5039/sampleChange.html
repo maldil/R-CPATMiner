@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    with self.con:
+      self.cur.execute("INSERT INTO methods VALUES (NULL,?, ?,?)",
+          (name, parameters, alias))
+      <a id="change">self.cur.execute("SELECT last_insert_rowid()")</a>
+      return self.cur.fetchall()[0][0]
+
+  def UpdateMethod(self, methodId, alias):
+    self.cur.execute("UPDATE methods SET alias=\&quot" + alias + "\&quot WHERE id="</code></pre><h3>After Change</h3><pre><code class='java'>
+  &quot&quot&quot
+  def NewMethod(self, name, parameters, alias):
+    with self.con:
+      <a id="change">command = "INSERT INTO methods VALUES (NULL,%s,%s,%s)"</a>
+
+      <a id="change">if self.driver == "mysql":
+        self.cur.execute(command, (name, parameters, alias))
+        self.cur.execute("SELECT LAST_INSERT_ID()")
+
+      elif self.driver == "sqlite":
+        self.cur.execute(command % (&quot?&quot, &quot?&quot, &quot?&quot), (name, parameters, alias))
+        self.cur.execute("SELECT last_insert_rowid()")
+
+     </a> return self.cur.fetchall()[0][0]
+
+  def UpdateMethod(self, methodId, alias):
+    self.cur.execute("UPDATE methods SET alias=\&quot" + alias + "\&quot WHERE id="</code></pre>

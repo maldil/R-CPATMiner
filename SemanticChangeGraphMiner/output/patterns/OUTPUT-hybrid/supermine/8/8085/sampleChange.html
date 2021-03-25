@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    g = points({&quota&quot: Categorical(1, 2), &quotb&quot: [1., 4.]},
+                random_state=1)
+    <a id="change">for i in range(2):
+        assert_equal(next(g), expected[i])
+
+
+</a>def test_sub_grids():
+    g = points(
+        [{&quota&quot: [&quota&quot], &quotb&quot: [1, 4]}, {&quota&quot: [&quotb&quot], &quotc&quot: [4, 5]}], random_state=1)
+    expected =[{&quota&quot: &quotb&quot, &quotc&quot: 4}, {&quota&quot: &quotb&quot, &quotc&quot: 4}, {&quota&quot: &quota&quot, &quotb&quot: 1},</code></pre><h3>After Change</h3><pre><code class='java'>
+    expected =[{&quota&quot: 2, &quotb&quot: 4.988739243755474},
+               {&quota&quot: 1, &quotb&quot: 1.0004574992693795}]
+
+    <a id="change">for i,p in enumerate(points({&quota&quot: Categorical(1, 2), &quotb&quot: Continuous(1, 4)},
+                                len(expected), random_state=1)):
+        assert_equal(p, expected[i])
+
+   </a> for i,p in enumerate(points({&quota&quot: Categorical(1, 2), &quotb&quot: [1., 4.]},
+                              len(expected), random_state=1)):
+        assert_equal(p, expected[i])
+</code></pre>

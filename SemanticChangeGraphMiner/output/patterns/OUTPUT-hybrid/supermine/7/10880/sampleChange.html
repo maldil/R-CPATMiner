@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if phase == &quottar&quot and epoch_acc &gt; best_acc:
+                best_acc = epoch_acc
+        print()
+        fname = <a id="change">&quotfinetune_result&quot + model_name + \
+            str(LEARNING_RATE) + str(args.source) + \
+            &quot-&quot + str(args.target) + &quot.csv&quot</a>
+        np.savetxt(fname, np.asarray(a=acc_hist, dtype=float), delimiter=&quot,&quot,
+                   fmt=&quot%.4f&quot)
+    time_pass = time.time() - since
+    print(&quotTraining complete in {:.0f}m {:.0f}s&quot.format(</code></pre><h3>After Change</h3><pre><code class='java'>
+            if phase == &quotval&quot and epoch_acc &gt; best_acc:
+                stop = 0
+                best_acc = epoch_acc
+                <a id="change">torch.save(model.state_dict(), &quotmodel.pkl&quot)</a>
+        if stop &gt;= args.early_stop:
+            break
+        print()
+    model.load_state_dict(torch.load(&quotmodel.pkl&quot))</code></pre>

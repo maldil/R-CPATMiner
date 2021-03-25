@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_binarize_one_no_drop():
+    Basic binning test.
+    df = _one_categ_df()
+    res_df = <a id="change">Binarize(&quotBorn&quot, drop=False).apply(df, verbose=True)</a>
+    assert &quotGreece&quot not in res_df.columns
+    assert &quotBorn&quot in res_df.columns
+    assert &quotBorn_UK&quot in res_df.columns
+    assert res_df[&quotBorn_UK&quot][1] == 0</code></pre><h3>After Change</h3><pre><code class='java'>
+    assert res_df[&quotBorn_USA&quot][3] == 0
+
+    &#47&#47 check when fitted
+    <a id="change">df2 = _one_categ_single_row_df()</a>
+    assert binarize.is_fitted
+    <a id="change">res_df2 = binarize(df2, verbose=True)</a>
+    <a id="change">print(res_df2)</a>
+    assert &quotBorn&quot in res_df2.columns
+    assert res_df2[&quotBorn&quot][1] == &quotGreece&quot
+    assert &quotBorn_Greece&quot not in res_df2.columns
+    assert &quotBorn_UK&quot in res_df2.columns</code></pre>

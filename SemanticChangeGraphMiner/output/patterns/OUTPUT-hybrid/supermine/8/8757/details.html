@@ -1,0 +1,69 @@
+<html><h3>fbf1298b6d7b5dd0eab212947831fb29792baa68,DeepExploit/CreateReport.py,CreateReport,create_report,#CreateReport#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.util.print_message(NOTE, &quotCreating report.&quot)
+
+        &#47&#47 Gather reporting items.
+        <a id="change">csv_file_list = glob.glob(os.path.join(self.report_path, &quot*.csv&quot))</a>
+
+        &#47&#47 Create DataFrame.
+        content_list = []
+        <a id="change">for file in csv_file_list:
+            content_list.append(pd.read_csv(file, names=self.header, sep=&quot,&quot))
+       </a> df_csv = pd.concat(content_list).drop_duplicates().sort_values(by=[&quotip&quot, &quotport&quot],
+                                                                       ascending=True).reset_index(drop=True,
+                                                                                                   col_level=1)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            exit(1)
+
+        &#47&#47 Gather reporting items.
+        <a id="change">if mode == &quottrain&quot:
+            self.util.print_message(NOTE, &quotCreating training report.&quot)
+            csv_file_list = glob.glob(os.path.join(self.report_train_path, &quot*.csv&quot))
+
+            &#47&#47 Create DataFrame.
+            content_list = []
+            for file in csv_file_list:
+                content_list.append(pd.read_csv(file, names=self.header, sep=&quot,&quot))
+            df_csv = pd.concat(content_list).drop_duplicates().sort_values(by=[&quotip&quot, &quotport&quot],
+                                                                           ascending=True).reset_index(drop=True,
+                                                                                                       col_level=1)
+
+            items = []
+            for idx in range(len(df_csv)):
+                items.append({&quotip_addr&quot: df_csv.loc[idx, &quotip&quot],
+                              &quotport&quot: df_csv.loc[idx, &quotport&quot],
+                              &quotprod_name&quot: df_csv.loc[idx, &quotservice&quot],
+                              &quotvuln_name&quot: df_csv.loc[idx, &quotvuln_name&quot],
+                              &quottype&quot: df_csv.loc[idx, &quottype&quot],
+                              &quotdescription&quot: df_csv.loc[idx, &quotdescription&quot],
+                              &quotexploit&quot: df_csv.loc[idx, &quotexploit&quot],
+                              &quottarget&quot: df_csv.loc[idx, &quottarget&quot],
+                              &quotpayload&quot: df_csv.loc[idx, &quotpayload&quot],
+                              &quotref&quot: str(df_csv.loc[idx, &quotreference&quot]).replace(&quot@&quot, &quot&lt;br&gt;&quot)})
+
+            try:
+                &#47&#47 Setting template.
+                env = Environment(loader=FileSystemLoader(self.report_train_path))
+                template = env.get_template(self.template_train)
+                pd.set_option(&quotdisplay.max_colwidth&quot, -1)
+                html = template.render({&quottitle&quot: &quotDeep Exploit Scan Report&quot, &quotitems&quot: items})
+
+                &#47&#47 Write report.
+                with codecs.open(self.report_train_file, &quotw&quot, &quotutf-8&quot) as fout:
+                    fout.write(html)
+            except Exception as err:
+                self.util.print_exception(err, &quotCreating report error.&quot)
+            self.util.print_message(OK, &quotCreating training report done.&quot)
+        else:
+            self.util.print_message(NOTE, &quotCreating testing report.&quot)
+            self.util.print_message(OK, &quotCreating testing report done.&quot)
+
+
+&#47&#47 Define command option.
+</a>__doc__ = {f}
+Usage:
+    {f} (-m &lt;mode&gt; | --mode &lt;mode&gt;)
+    {f} -h | --help</code></pre><img src="34404492.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/13o-bbr-bbq/machine_learning_security/commit/fbf1298b6d7b5dd0eab212947831fb29792baa68#diff-c995c54fa6249b8572ea5ef056870dda0f0e3ab7133612834573ea7ac1b3c76bL40' target='_blank'>Link</a></div><div id='project'> Project Name: 13o-bbr-bbq/machine_learning_security</div><div id='commit'> Commit Name: fbf1298b6d7b5dd0eab212947831fb29792baa68</div><div id='time'> Time: 2018-07-11</div><div id='author'> Author: takaesu235@gmail.com</div><div id='file'> File Name: DeepExploit/CreateReport.py</div><div id='class'> Class Name: CreateReport</div><div id='method'> Method Name: create_report</div><BR><BR><div id='link'><a href='https://github.com/13o-bbr-bbq/machine_learning_security/commit/8ef0696faafad2a35227fef0227bf6e1f81cef74#diff-c995c54fa6249b8572ea5ef056870dda0f0e3ab7133612834573ea7ac1b3c76bL45' target='_blank'>Link</a></div><div id='project'> Project Name: 13o-bbr-bbq/machine_learning_security</div><div id='commit'> Commit Name: 8ef0696faafad2a35227fef0227bf6e1f81cef74</div><div id='time'> Time: 2018-07-17</div><div id='author'> Author: takaesu235@gmail.com</div><div id='file'> File Name: DeepExploit/CreateReport.py</div><div id='class'> Class Name: CreateReport</div><div id='method'> Method Name: create_report</div><BR><BR><div id='link'><a href='https://github.com/gyoisamurai/GyoiThon/commit/dcadd82c55dcc78d2b419467b93e1df28be2dc81#diff-67080235e55f5560fd3017dee1681fa268744a95d674f0766bb3ea74c8d4ce84L349' target='_blank'>Link</a></div><div id='project'> Project Name: gyoisamurai/GyoiThon</div><div id='commit'> Commit Name: dcadd82c55dcc78d2b419467b93e1df28be2dc81</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: gyoiler3@gmail.com</div><div id='file'> File Name: modules/Gyoi_Creator.py</div><div id='class'> Class Name: Creator</div><div id='method'> Method Name: add_train_data</div><BR>

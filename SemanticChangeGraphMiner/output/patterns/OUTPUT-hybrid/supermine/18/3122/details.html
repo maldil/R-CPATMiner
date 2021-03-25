@@ -1,0 +1,29 @@
+<html><h3>556bfe20bd5f08b1f841296aca064f126080cfd2,nilmtk/metrics.py,,rms_error_power,#,155
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n_samples = 0
+        for aligned_meters_chunk in align_two_meters(pred_meter, 
+                                                     ground_truth_meter):
+            <a id="change">diff = aligned_meters_chunk.icol(0) - aligned_meters_chunk.icol(1)</a>
+            diff.dropna(inplace=True)
+            sum_of_squared_diff += (diff ** 2).sum()
+            n_samples += len(diff)
+
+        <a id="change">error[pred_meter.instance()]</a> = math.sqrt(sum_of_squared_diff / n_samples)
+
+    return pd.Series(error)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples = 0
+        for aligned_meters_chunk in align_two_meters(pred_meter, 
+                                                     ground_truth_meter):
+            <a id="change">diff = aligned_meters_chunk.iloc[:, 0] - aligned_meters_chunk.iloc[:, 1]</a>
+            diff.dropna(inplace=True)
+            sum_of_squared_diff += (diff ** 2).sum()
+            n_samples += len(diff)
+
+        <a id="change">error[pred_meter.instance()]</a> = math.sqrt(sum_of_squared_diff / n_samples)
+
+    return pd.Series(error)
+</code></pre><img src="13899102.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/556bfe20bd5f08b1f841296aca064f126080cfd2#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L181' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 556bfe20bd5f08b1f841296aca064f126080cfd2</div><div id='time'> Time: 2018-03-18</div><div id='author'> Author: 10246101+PMeira@users.noreply.github.com</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rms_error_power</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/556bfe20bd5f08b1f841296aca064f126080cfd2#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L227' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 556bfe20bd5f08b1f841296aca064f126080cfd2</div><div id='time'> Time: 2018-03-18</div><div id='author'> Author: 10246101+PMeira@users.noreply.github.com</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: f1_score</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/556bfe20bd5f08b1f841296aca064f126080cfd2#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L146' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 556bfe20bd5f08b1f841296aca064f126080cfd2</div><div id='time'> Time: 2018-03-18</div><div id='author'> Author: 10246101+PMeira@users.noreply.github.com</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_normalized_error_power</div><BR>

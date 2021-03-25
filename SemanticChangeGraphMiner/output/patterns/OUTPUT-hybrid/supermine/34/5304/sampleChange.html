@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def feed_data(self, data, volatile=False, need_HR=True):
+        &#47&#47 LR
+        <a id="change">input_L = data[&quotLR&quot]</a>
+        <a id="change">self.input_L.resize_(input_L.size()).copy_(input_L)</a>
+        <a id="change">self.var_L</a> = <a id="change">Variable(self.input_L, volatile=volatile)</a>
+        &#47&#47 seg
+        input_seg = data[&quotseg&quot]
+        self.input_seg.resize_(input_seg.size()).copy_(input_seg)
+        self.var_seg = Variable(self.input_seg, volatile=volatile)
+        &#47&#47 category
+        input_cat = data[&quotcategory&quot]
+        self.input_cat.resize_(input_cat.size()).copy_(input_cat)
+        self.var_cat = Variable(self.input_cat, volatile=volatile)
+
+        if need_HR:  &#47&#47 train or val
+            <a id="change">input_H = data[&quotHR&quot]</a>
+            <a id="change">self.input_H.resize_(input_H.size()).copy_(input_H)</a>
+            <a id="change">self.var_H = Variable(self.input_H, volatile=volatile)</a>
+
+    def optimize_parameters(self, step):
+        &#47&#47 G
+        self.optimizer_G_SFT.zero_grad()</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.print_network()
+        print(&quot-----------------------------------------------&quot)
+
+    def feed_data(<a id="change">self</a>, data, volatile=False, need_HR=True):
+        &#47&#47 LR
+        <a id="change">self.var_L</a> = <a id="change">data[&quotLR&quot].to(self.device)</a>
+        &#47&#47 seg
+        self.var_seg = data[&quotseg&quot].to(self.device)
+        &#47&#47 category
+        self.var_cat = data[&quotcategory&quot].long().to(self.device)
+
+        if need_HR:  &#47&#47 train or val
+            <a id="change">self.var_H = data[&quotHR&quot].to(self.device)</a>
+
+    def optimize_parameters(self, step):
+        &#47&#47 G
+        self.optimizer_G_SFT.zero_grad()</code></pre>

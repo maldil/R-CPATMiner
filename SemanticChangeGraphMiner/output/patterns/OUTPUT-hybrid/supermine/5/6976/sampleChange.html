@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.group_id = [0 for _ in range(nenv)]
+
+  def update_obs(self, obs): &#47&#47 (self.nenv, 32, 32, 2)
+    <a id="change">obs = np.asarray(obs, dtype=np.int32).swapaxes(1, 2).swapaxes(2, 3)</a>
+    self.obs = np.roll(self.obs, shift=-1, axis=3)
+    self.obs[:, :, :, -1:] = obs[:, :, :, :]
+    &#47&#47 could not broadcast input array from shape (4,1,32,32) into shape (4,4,32)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  def update_obs(self, obs): &#47&#47 (self.nenv, 32, 32, 2)
+    &#47&#47obs = np.asarray(obs, dtype=np.int32).swapaxes(1, 2).swapaxes(2, 3)
+    self.obs = np.roll(self.obs, shift=-3, axis=3)
+    <a id="change">new_map = np.zeros((self.nenv, 32, 32, 3))</a>
+    new_map[:,:,:,-1] = obs[:,0,:,:]
+    for env_num in range(self.nenv):
+      marine0 = self.xy_per_marine[env_num]["0"]
+      marine1 = self.xy_per_marine[env_num]["1"]</code></pre>

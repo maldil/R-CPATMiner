@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    history = np.vstack([np.roll(data, -i * delay, axis=1) for i in range(n_steps)[::-1]])
+
+    &#47&#47 Trim to original width
+    <a id="change">if delay &gt; 0:
+        history = history[:, :t]
+    else:
+        history = history[:, -t:]
+
+    &#47&#47 Make contiguous
+   </a> return np.asfortranarray(history)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    t = data.shape[-1]
+    
+    if t &lt; 1:
+        <a id="change">raise ParameterError(&quotCannot stack memory when input data has &quot
+                             &quotno columns. Given data.shape={}&quot.format(data.shape))</a>
+    kwargs.setdefault(&quotmode&quot, &quotconstant&quot)
+
+    if kwargs[&quotmode&quot] == &quotconstant&quot:
+        kwargs.setdefault(&quotconstant_values&quot, [0])</code></pre>

@@ -1,0 +1,27 @@
+<html><h3>2c6ce0ebfa9537246878e8fb9144e0c879fca17d,cube/models/vocoder.py,BeeCoder,_predict_one,#BeeCoder#,97
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for w, b, hid in zip(self.softmax_w, self.softmax_b, output_hidden):
+            logits = w.expr(update=True) * hid + b.expr(update=True)
+            if runtime:
+                logits = <a id="change">dy.softmax(logits)</a>
+            output.append(logits)
+        return output
+
+    def learn(self, wave, mgc, batch_size):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.model.populate(output_base + ".network")
+
+    def _predict_one(self, mgc, last_fft=None, runtime=True):
+        <a id="change">if last_fft is None:
+            last_fft_real = np.zeros(self.FFT_SIZE)
+            last_fft_imag = np.zeros(self.FFT_SIZE)
+        else:
+            last_fft_real = np.real(last_fft)
+            last_fft_imag = np.imag(last_fft)
+
+       </a> hidden = dy.concatenate([dy.inputVector(mgc), dy.inputVector(last_fft_real), dy.inputVector(last_fft_imag)])
+
+        for w, b in zip(self.hidden_w, self.hidden_b):
+            hidden = dy.tanh(w.expr(update=True) * hidden + b.expr(update=True))</code></pre><img src="7720997.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L84' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: _predict_one</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/93ddba439d54cda15f22ffd9ca52318cfba01475#diff-fd888aea1d9bb293278102cc4639f3380c219ad2ed9a2dbd792343590e991b2eL76' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 93ddba439d54cda15f22ffd9ca52318cfba01475</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: Akio.Hayakawa@sony.com</div><div id='file'> File Name: speech-synthesis/WaveNet/model.py</div><div id='class'> Class Name: waveNet</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/190d9b204a1a4798f0723c8d8d37ac5ac950909e#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL37' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 190d9b204a1a4798f0723c8d8d37ac5ac950909e</div><div id='time'> Time: 2019-05-08</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHitSingle</div><div id='method'> Method Name: predict_survival_function</div><BR>

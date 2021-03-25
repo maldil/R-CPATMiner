@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            "expected 1D or 2D with size 1 in the second dim"
+        )
+
+    <a id="change">if targets.max() != len(torch.unique(targets)) - 1:
+        if raise_class_labels_mismatch:
+            raise Exception(
+                "`targets` maximum does not represent number of classes"
+            )
+        &#47&#47 mapping classes
+        outputs, targets = map_labels_to_classes(outputs, targets)
+   </a> return outputs, targets
+
+
+def process_multilabel_components(</code></pre><h3>After Change</h3><pre><code class='java'>
+        num_classes = max(
+            outputs.shape[argmax_dim], int(targets.max().detach().item() + 1)
+        )
+        <a id="change">outputs = torch.argmax(outputs, dim=argmax_dim)</a>
+    if num_classes is None:
+        &#47&#47 as far as we expect the outputs/targets tensors to be int64
+        &#47&#47 we could find number of classes as max available number
+        <a id="change">num_classes = max(
+            int(outputs.max().detach().item() + 1),
+            int(targets.max().detach().item() + 1),
+        )</a>
+
+    if outputs.dim() == 1:
+        outputs = outputs.view(-1, 1)
+    else:</code></pre>

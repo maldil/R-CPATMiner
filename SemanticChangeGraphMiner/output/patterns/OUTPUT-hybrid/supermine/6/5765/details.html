@@ -1,0 +1,40 @@
+<html><h3>22cb76a3479ceba89addb1f467c2dd573cb29026,pytext/torchscript/module.py,ScriptPyTextEmbeddingModule,make_prediction,#ScriptPyTextEmbeddingModule#,283
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47   cross-request batches and client side
+        &#47&#47   batches into a cross-request list of
+        &#47&#47   client-side batch tensors
+        <a id="change">start = 0</a>
+        for elems in client_batch:
+            end = start + elems
+            <a id="change">res_list.append(flat_result.narrow(0, start, elems))</a>
+            start = end
+
+        return res_list
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise RuntimeError("Parameter type unsupported")
+
+        &#47&#47 if torch.jit.isinstance(flat_result, torch.Tensor):
+        <a id="change">if isinstance(flat_result, torch.Tensor):
+            &#47&#47 destructure flat result tensor combining
+            &#47&#47   cross-request batches and client side
+            &#47&#47   batches into a cross-request list of
+            &#47&#47   client-side batch tensors
+            return destructure_tensor(client_batch, flat_result)
+        else:
+            &#47&#47 destructure result list of any result type combining
+            &#47&#47   cross-request batches and client side
+            &#47&#47   batches into a cross-request list of
+            &#47&#47   client-side result lists
+            result_texts_any_list: List[Any] = torch.jit.annotate(List[Any], [])
+            for v in flat_result:
+                result_texts_any_list.append(v)
+
+            return destructure_any_list(client_batch, result_texts_any_list)
+
+   </a> @torch.jit.script_method
+    def make_batch(
+        self,
+        mega_batch: List[</code></pre><img src="24130083.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/22cb76a3479ceba89addb1f467c2dd573cb29026#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL154' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 22cb76a3479ceba89addb1f467c2dd573cb29026</div><div id='time'> Time: 2021-02-16</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: ScriptPyTextEmbeddingModule</div><div id='method'> Method Name: make_prediction</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/2079a72d90e527149e527b5cb376b37ddc9e25bd#diff-cf613f975bcb4a7b0136f6885f8fdabbbcc6cd73028ee9559c95bb761cf43bedL25' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 2079a72d90e527149e527b5cb376b37ddc9e25bd</div><div id='time'> Time: 2017-05-09</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/affine_transforms.py</div><div id='class'> Class Name: Affine</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/sklearn-pandas/commit/1c7a87e96c4b6180e423586193c26e5ccd2f6bfd#diff-9728344e509406e59956db6d787c666abdd83452a4b2adce5c18b134a17d5cfeL121' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/sklearn-pandas</div><div id='commit'> Commit Name: 1c7a87e96c4b6180e423586193c26e5ccd2f6bfd</div><div id='time'> Time: 2015-08-02</div><div id='author'> Author: mahmoud@thehumangeo.com</div><div id='file'> File Name: sklearn_pandas/__init__.py</div><div id='class'> Class Name: DataFrameMapper</div><div id='method'> Method Name: transform</div><BR>

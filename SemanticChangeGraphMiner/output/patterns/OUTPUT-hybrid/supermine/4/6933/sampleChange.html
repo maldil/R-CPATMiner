@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        with open(os.path.join(self.cache, filename), &quotwb&quot) as f:
+            &#47&#47 for key in data:
+            &#47&#47     data_dict[key] = data_dict[key].astype(PRECISION[self.save_precision].value)
+            <a id="change">pickle.dump(data_dict, f)</a>
+
+    def load_from_cache(self, filename: str):
+        with open(os.path.join(self.cache, filename), &quotrb&quot) as f:
+            data = pickle.load(f)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.cache_populated = True
+
+    def write_to_cache(self, data_dict, i):
+        <a id="change">self.cache_dataset[i]</a> = data_dict
+
+    def load_from_cache(self, i):
+        data = self.cache_dataset[i]</code></pre>

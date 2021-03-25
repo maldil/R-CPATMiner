@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def direct(model_name, scope):
+    if model_name.startswith(&quotgen&quot):
+        fun = load_nothing
+        <a id="change">if &quotFasterRCNN&quot in model_name:
+            if &quotvgg16&quot in scope.stem_name:
+                fun = load_ref_faster_rcnn_vgg16_voc
+            elif &quotzf&quot in scope.stem_name:
+                fun = load_ref_faster_rcnn_zf_voc
+        elif &quotTinyYOLOv2&quot in model_name:
+            if &quottinydarknet19&quot in scope.stem_name:
+                fun = load_ref_tiny_yolo_v2_voc
+        elif &quotYOLOv2&quot in model_name:
+            if &quotdarknet19&quot in scope.stem_name:
+                fun = load_ref_yolo_v2_voc
+   </a> else:
+        fun = __load_dict__[model_name]
+
+    def _direct():</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def direct(model_name, scope):
+    if model_name.startswith(&quotgen&quot):
+        model_name = <a id="change">model_name[3:].lower()</a>
+        stem_name = scope.stem.model_name
+        try:
+            <a id="change">fun = __gen_load_dict__[model_name][stem_name]</a>
+        except KeyError:
+            fun = load_nothing
+            warnings.warn(&quotRandom initialization will be performed because &quot
+                          &quotthe pre-trained weights for &quot + model_name +</code></pre>

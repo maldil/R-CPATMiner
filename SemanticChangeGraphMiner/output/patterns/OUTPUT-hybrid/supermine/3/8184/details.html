@@ -1,0 +1,66 @@
+<html><h3>c7c47bbaf9c48c1919d3f7b928614d9f1300b7d3,app/grandchallenge/cases/image_builders/tiff.py,,image_builder_tiff,#,372
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+) -&gt; ImageBuilderResult:
+    new_images = []
+    new_image_files = []
+    <a id="change">consumed_files = []</a>
+    invalid_file_errors = {}
+    new_folder_upload = []
+
+    def format_error(message):
+        return f"Tiff image builder: {message}"
+
+    loaded_files, errors = _load_gc_files(files=files, converter=pyvips)
+    for gc_file in loaded_files:
+        dzi_output = None
+        error = ""
+        if gc_file.path in errors:
+            error = errors[gc_file.path]
+
+        &#47&#47 try and load image with tiff file
+        try:
+            gc_file = _load_with_tiff(gc_file=gc_file)
+        except Exception as e:
+            error += f"Load error: {e}. "
+
+        &#47&#47 try and load image with open_slide
+        try:
+            dzi_output, gc_file = _load_and_create_dzi(gc_file=gc_file)
+        except Exception as e:
+            error += f"Dzi error: {e}. "
+
+        &#47&#47 validate
+        try:
+            gc_file.validate()
+        except ValidationError as e:
+            error += f"Validation error: {e}. "
+            invalid_file_errors[gc_file.path] = format_error(error)
+            continue
+
+        image = _create_tiff_image_entry(tiff_file=gc_file)
+        new_image_files = _add_image_files(
+            gc_file=gc_file, image=image, new_image_files=new_image_files,
+        )
+
+        new_folder_upload = _add_folder_uploads(
+            dzi_output=dzi_output,
+            image=image,
+            new_folder_upload=new_folder_upload,
+        )
+        new_images.append(image)
+        <a id="change">consumed_files.append(gc_file.path)</a>
+        if gc_file.associated_files:
+            consumed_files += list(f for f in gc_file.associated_files)
+
+    return ImageBuilderResult(</code></pre><h3>After Change</h3><pre><code class='java'>
+        if gc_file.associated_files:
+            consumed_files |= {f for f in gc_file.associated_files}
+        else:
+            <a id="change">consumed_files.add(gc_file.path)</a>
+
+    return ImageBuilderResult(
+        consumed_files=consumed_files,
+        file_errors=invalid_file_errors,</code></pre><img src="31786756.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/c7c47bbaf9c48c1919d3f7b928614d9f1300b7d3#diff-35dbf8a9bf94fc72a9f4a3dff0a4ecc9846f4546364625cc6f35e48e04a3976eL375' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: c7c47bbaf9c48c1919d3f7b928614d9f1300b7d3</div><div id='time'> Time: 2020-06-27</div><div id='author'> Author: 12661555+jmsmkn@users.noreply.github.com</div><div id='file'> File Name: app/grandchallenge/cases/image_builders/tiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: image_builder_tiff</div><BR><BR><div id='link'><a href='https://github.com/sepandhaghighi/pycm/commit/6ed69329baf29aa8b0acbd0587fc93eb23956959#diff-eecca3b7a93c2efde444c61391a20f094d3ef74e386fe98a08dba2b6f8afe5e7L330' target='_blank'>Link</a></div><div id='project'> Project Name: sepandhaghighi/pycm</div><div id='commit'> Commit Name: 6ed69329baf29aa8b0acbd0587fc93eb23956959</div><div id='time'> Time: 2020-05-17</div><div id='author'> Author: sepand.haghighi@yahoo.com</div><div id='file'> File Name: pycm/pycm_util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: matrix_params_calc</div><BR><BR><div id='link'><a href='https://github.com/raghakot/keras-vis/commit/9f221345e7a58804e347f2a1879b06922222413b#diff-ddc653b748c5e4f898ae76bf096a26705096a80aebe4341d1975bdeba6a0b6b6L329' target='_blank'>Link</a></div><div id='project'> Project Name: raghakot/keras-vis</div><div id='commit'> Commit Name: 9f221345e7a58804e347f2a1879b06922222413b</div><div id='time'> Time: 2017-07-03</div><div id='author'> Author: ragha@outlook.com</div><div id='file'> File Name: docs/md_autogen.py</div><div id='class'> Class Name: MarkdownAPIGenerator</div><div id='method'> Method Name: module2md</div><BR>

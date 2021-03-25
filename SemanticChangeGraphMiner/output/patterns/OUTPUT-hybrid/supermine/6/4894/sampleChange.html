@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 and the best minimum is used
+            elif self.acq_optimizer == "lbfgs":
+                best = np.inf
+                x0 = <a id="change">self.space.transform(
+                    self.space.rvs(n_samples=self.n_restarts_optimizer,
+                                   random_state=self.rng))</a>
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    jobs = (delayed(fmin_l_bfgs_b)(
+                        gaussian_acquisition_1D, x,
+                        args=(est, np.min(self.yi), self.acq_func,
+                              self.xi, self.kappa),
+                        bounds=self.space.transformed_bounds,
+                        approx_grad=False,
+                        maxiter=20) for x in x0)
+                    results = self.parallel(jobs)
+
+                cand_xs = np.array([r[0] for r in results])
+                cand_acqs = np.array([r[1] for r in results])
+                best_ind = np.argmin(cand_acqs)
+                <a id="change">a = cand_acqs[best_ind]</a>
+
+                if a &lt; best:
+                    next_x, best = cand_xs[best_ind], a
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 minimization starts from `n_restarts_optimizer` different points
+            &#47&#47 and the best minimum is used
+            elif self.acq_optimizer == "lbfgs":
+                x0 = X[<a id="change">np.argsort(values)[:self.n_restarts_optimizer]</a>]
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")</code></pre>

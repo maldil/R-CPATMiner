@@ -1,0 +1,57 @@
+<html><h3>3f277c18dee8a6470cdda8a397ce71f56dabdc9e,Losses.py,,loss_HardNet,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif batch_reduce == &quotaverage&quot:
+        min_neg = torch.mean(dist_without_min_on_diag,1)[0]
+        if anchor_swap:
+            min_neg2 = torch.t(<a id="change">torch</a>.mean(dist_without_min_on_diag,0)[0])
+            min_neg = torch.min(min_neg,min_neg2)
+        <a id="change">min_neg</a> = torch.t(min_neg).squeeze(0)
+    elif batch_reduce == &quotrandom&quot:
+        idxs = torch.randperm(anchor.size()[0]).long()
+        min_neg = dist_without_min_on_diag.gather(1,idxs.view(-1,1))
+        if anchor_swap:
+            min_neg2 = torch.t(dist_without_min_on_diag.gather(0,idxs.view(-1,1))) 
+            min_neg = torch.min(min_neg,min_neg2)
+        min_neg = torch.t(min_neg).squeeze(0)
+    else: 
+        print (&quotUnknown batch reduce mode. Try min, average or random&quot)
+        sys.exit(1)
+
+    if loss_type == "triplet_margin":
+        <a id="change">loss</a> = torch.clamp(margin + pos - min_neg, min=0.0)
+    elif loss_type == &quotsoftmax&quot:
+        exp_pos = torch.exp(2.0 - pos);
+        <a id="change">exp_den</a> = exp_pos + torch.exp(2.0 - min_neg) + eps;
+        <a id="change">loss</a> = - torch.log( exp_pos / exp_den )
+    elif loss_type == &quotcontrastive&quot:
+        loss = torch.clamp(margin - min_neg, min=0.0) + pos;
+    else: </code></pre><h3>After Change</h3><pre><code class='java'>
+    elif batch_reduce == &quotaverage&quot:
+        min_neg = torch.mean(dist_without_min_on_diag,1)
+        if anchor_swap:
+            min_neg2 = torch.t(<a id="change">torch.mean(dist_without_min_on_diag,0)</a>)
+            min_neg = torch.min(min_neg,min_neg2)
+        <a id="change">min_neg</a> = torch.t(min_neg).squeeze(0)
+    elif batch_reduce == &quotrandom&quot:
+        idxs = torch.autograd.Variable(torch.randperm(anchor.size()[0]).long()).cuda()
+        min_neg = dist_without_min_on_diag.gather(1,idxs.view(-1,1))
+        if anchor_swap:
+            min_neg2 = torch.t(dist_without_min_on_diag).gather(1,idxs.view(-1,1)) 
+            min_neg = torch.min(min_neg,min_neg2)
+        min_neg = torch.t(min_neg).squeeze(0)
+    else: 
+        print (&quotUnknown batch reduce mode. Try min, average or random&quot)
+        sys.exit(1)
+
+    if loss_type == "triplet_margin":
+        <a id="change">loss</a> = torch.clamp(margin + pos - min_neg, min=0.0)
+    elif loss_type == &quotsoftmax&quot:
+        exp_pos = torch.exp(2.0 - pos);
+        <a id="change">exp_den</a> = exp_pos + torch.exp(2.0 - min_neg) + eps;
+        <a id="change">loss</a> = - torch.log( exp_pos / exp_den )
+    elif loss_type == &quotcontrastive&quot:
+        loss = torch.clamp(margin - min_neg, min=0.0) + pos;
+    else: </code></pre><img src="2086942.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/3f277c18dee8a6470cdda8a397ce71f56dabdc9e#diff-615b423951840966c78cf71aeacd9718c3cfa10f78647ff434a55c821342069eL30' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 3f277c18dee8a6470cdda8a397ce71f56dabdc9e</div><div id='time'> Time: 2017-07-25</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: Losses.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: loss_HardNet</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/dbd087f55b79484532451d2754dcf10d60564fc3#diff-e7ed64295f7e6b75063cb14210a5c367a4ca53a8830376fba14c38d8b09f0d29L46' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: dbd087f55b79484532451d2754dcf10d60564fc3</div><div id='time'> Time: 2018-10-18</div><div id='author'> Author: michal.tyszkiewicz@gmail.com</div><div id='file'> File Name: se3cnn/batchnorm.py</div><div id='class'> Class Name: SE3BatchNorm</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/3f277c18dee8a6470cdda8a397ce71f56dabdc9e#diff-615b423951840966c78cf71aeacd9718c3cfa10f78647ff434a55c821342069eL30' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 3f277c18dee8a6470cdda8a397ce71f56dabdc9e</div><div id='time'> Time: 2017-07-25</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: Losses.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: loss_HardNet</div><BR>

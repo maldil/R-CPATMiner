@@ -1,0 +1,83 @@
+<html><h3>2baae0a182c2d83cff4f6a2830ffdb3b077e0676,skyalignments.py,,,#,251
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                            observer.lat / ephem.degree,
+                                            observer.lon / ephem.degree,
+                                            observer.elevation)
+    <a id="change">print(observer)</a>
+    print()
+
+    alignments = find_alignments(observer, waypoints, allpoints=args.allpoints)
+    if alignments:</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        observer_point = None
+
+    <a id="change">if args.year:
+        year = args.year
+    else:
+        year = datetime.now().year
+
+
+   </a> waypoints = []
+    for filename in args.waypointfiles:
+        if filename.lower().endswith(&quotgpx&quot):
+            obs, wp = read_waypoint_file_GPX(filename)
+        elif filename.lower().endswith(&quotcsv&quot):
+            obs, wp = read_waypoint_file_CSV(filename)
+        else:
+            print("Unknown file type %s: skipping" % filename)
+            continue
+        if wp:
+            waypoints += wp
+        else:
+            print("No waypoints in", filename)
+        if obs:
+            observer_point = obs
+
+    if not waypoints:
+        parser.print_help()
+        sys.exit(1)
+
+    if not observer_point:
+        print("Using first waypoint for observer:", waypoints[0])
+        observer_point = waypoints[0]
+        if not args.allpoints:
+            waypoints = waypoints[1:]
+
+    observer = ephem.Observer()
+    &#47&#47 Observer will take degrees as a string, but if you pass it floats
+    &#47&#47 it expects radians, though that&quots undocumented.
+    observer.lat = observer_point[1] * ephem.degree
+    observer.lon = observer_point[2] * ephem.degree
+    if len(observer_point) &gt; 3:
+        observer.elevation = observer_point[3]
+    else:
+        observer.elevation = 500.0  &#47&#47 meters
+    if args.observername:
+        observer.name = args.observername
+    else:
+        observer.name = "%s %f, %f, %dm" % (observer_point[0],
+                                            observer.lat / ephem.degree,
+                                            observer.lon / ephem.degree,
+                                            observer.elevation)
+    &#47&#47 print(observer)
+
+    alignments = find_alignments(observer, waypoints,
+                                 year=year, allpoints=args.allpoints)
+    if alignments:
+        &#47&#47 pprint(alignments)
+        cur_observer = None
+        for a in alignments:
+            if a[&quotobserver&quot] != cur_observer:
+                cur_observer = a[&quotobserver&quot]
+                print("\nFrom %s:" % cur_observer)
+
+            print("%s, %s at %s (az %d +/- %.2f)"
+                  % ( a[&quotevent&quot], a[&quottarget&quot],
+                      <a id="change">a[&quottime&quot]</a>,
+                      a[&quotazimuth&quot], <a id="change">a[&quotslop&quot]</a>))
+        &#47&#47 save_alignments_as_GPX(alignments)
+
+    else:</code></pre><img src="34634960.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/2baae0a182c2d83cff4f6a2830ffdb3b077e0676#diff-bdecc75d92c39bfc5e45a984cab45236975d758df2f9055b7c054ce51a8382edL253' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: 2baae0a182c2d83cff4f6a2830ffdb3b077e0676</div><div id='time'> Time: 2019-04-29</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: skyalignments.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/2baae0a182c2d83cff4f6a2830ffdb3b077e0676#diff-bdecc75d92c39bfc5e45a984cab45236975d758df2f9055b7c054ce51a8382edL253' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: 2baae0a182c2d83cff4f6a2830ffdb3b077e0676</div><div id='time'> Time: 2019-04-29</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: skyalignments.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kbardool/keras-frcnn/commit/6ecffe54690da84be104cbb2ec8a709f6b2a7fd3#diff-9bd73d9e4724c2f9969911091cea0d7e2b443ef7bbc0850fc253d761bcf4ce0dL5' target='_blank'>Link</a></div><div id='project'> Project Name: kbardool/keras-frcnn</div><div id='commit'> Commit Name: 6ecffe54690da84be104cbb2ec8a709f6b2a7fd3</div><div id='time'> Time: 2017-02-03</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: data_augment.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: augment</div><BR><BR><div id='link'><a href='https://github.com/merenlab/anvio/commit/ca8eeb16b304cdee02c5714f74d388e2c4b21b4b#diff-0b4c51ceaf5aff28a174971809addfcb1dc9fbb04c2f96b1d53c1a339330e874L45' target='_blank'>Link</a></div><div id='project'> Project Name: merenlab/anvio</div><div id='commit'> Commit Name: ca8eeb16b304cdee02c5714f74d388e2c4b21b4b</div><div id='time'> Time: 2021-01-01</div><div id='author'> Author: samuelmiller10@gmail.com</div><div id='file'> File Name: anvio/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: TABULATE</div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/9aceadde003d2b200dc7d31ebd4d9ca1f1298603#diff-057b66176ed58b28dafd7f29010f378967c96007f709c87b22f5646f6fd17d87L195' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: 9aceadde003d2b200dc7d31ebd4d9ca1f1298603</div><div id='time'> Time: 2019-09-07</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: check_monitors.py</div><div id='class'> Class Name: XDisp</div><div id='method'> Method Name: find_orphans</div><BR>

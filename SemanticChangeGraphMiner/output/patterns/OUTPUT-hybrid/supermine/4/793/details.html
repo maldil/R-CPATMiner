@@ -1,0 +1,23 @@
+<html><h3>f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8,pgmpy/inference/Sampling.py,BayesianModelSampling,forward_sample,#BayesianModelSampling#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                weights = []
+                <a id="change">for i in range(size):
+                    evid = [sampled[var][i] for var in cpd.evidence]
+                    weights.append(cpd.reduce(evid, inplace=False).values)
+               </a> sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                &#47&#47 can generate the column at once
+                weights = cpd.values</code></pre><h3>After Change</h3><pre><code class='java'>
+        for index, node in enumerate(self.topological_order):
+            cpd = self.cpds[node]
+            if cpd.evidence:
+                <a id="change">evidence = sampled.values[:, :index].tolist()</a>
+                weights = np.apply_along_axis(lambda t: cpd.reduce(t, inplace=False).values, 1, evidence)
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            else:
+                sampled[node] = sample_discrete(cpd.variables[cpd.variable], cpd.values, size)</code></pre><img src="3807790.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8#diff-9c11e1abd1b593684c520cd13f6a2e08049570d788fb45e92bcdd72749f49bbeL63' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: f58745ab284f48b7ef4ce813f5f8cd26bdb3c0a8</div><div id='time'> Time: 2015-06-16</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/Sampling.py</div><div id='class'> Class Name: BayesianModelSampling</div><div id='method'> Method Name: forward_sample</div><BR><BR><div id='link'><a href='https://github.com/hanxiao/bert-as-service/commit/2bfe5bfcec7759ae022b1a479411aa7d1b8401f1#diff-1952d8eaead7f712e29f5645e63c4a4f431806db0ce05a06c187bbc81f72b592L26' target='_blank'>Link</a></div><div id='project'> Project Name: hanxiao/bert-as-service</div><div id='commit'> Commit Name: 2bfe5bfcec7759ae022b1a479411aa7d1b8401f1</div><div id='time'> Time: 2019-05-06</div><div id='author'> Author: zyn2122@gmail.com</div><div id='file'> File Name: example/example7.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/e626254b74ecb6dc71396c1b35237b53a5e35163#diff-1baa74d77918013501c0f4cf775b28e0133f8dbe2da52b8555ea0c8b034d0d45L22' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: e626254b74ecb6dc71396c1b35237b53a5e35163</div><div id='time'> Time: 2017-08-23</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/datasets.py</div><div id='class'> Class Name: pdbbind</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,20 @@
+<html><h3>8c95a5bc7ed0f2cbb2ce126ffb128c5eaa12c32f,src/python/pants/backend/python/dependency_inference/rules.py,,infer_python_init_dependencies,#,112
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 And add dependencies on their owners.
+    return InferredDependencies(
+        await <a id="change">Get</a>(
+            Owners, OwnersRequest(extra_init_files.snapshot.files, OwnersNotFoundBehavior.error)
+        )
+    )</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 And add dependencies on their owners.
+    owners = await MultiGet(
+        <a id="change">Get(Owners, OwnersRequest((f,), OwnersNotFoundBehavior.error))</a>
+        for f in extra_init_files.snapshot.files
+    )
+    return InferredDependencies(itertools.chain.from_iterable(owners))
+</code></pre><img src="2847982.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/8c95a5bc7ed0f2cbb2ce126ffb128c5eaa12c32f#diff-b5f1dd9557ee0bdb5054c727d4620db34752fec1c7851c9040bdb1be8ee564faL126' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: 8c95a5bc7ed0f2cbb2ce126ffb128c5eaa12c32f</div><div id='time'> Time: 2020-07-28</div><div id='author'> Author: stuhood@gmail.com</div><div id='file'> File Name: src/python/pants/backend/python/dependency_inference/rules.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: infer_python_init_dependencies</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/2a4559bb966c65602699cf6cd3d399161ed1d821#diff-c474d26e0e3869431b7e440dae6ff66114f3e8599e619a6b4144b0dacb00dd1cL99' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: 2a4559bb966c65602699cf6cd3d399161ed1d821</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/codegen/protobuf/python/rules.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_python_from_protobuf</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/8c95a5bc7ed0f2cbb2ce126ffb128c5eaa12c32f#diff-b5f1dd9557ee0bdb5054c727d4620db34752fec1c7851c9040bdb1be8ee564faL152' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: 8c95a5bc7ed0f2cbb2ce126ffb128c5eaa12c32f</div><div id='time'> Time: 2020-07-28</div><div id='author'> Author: stuhood@gmail.com</div><div id='file'> File Name: src/python/pants/backend/python/dependency_inference/rules.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: infer_python_conftest_dependencies</div><BR>

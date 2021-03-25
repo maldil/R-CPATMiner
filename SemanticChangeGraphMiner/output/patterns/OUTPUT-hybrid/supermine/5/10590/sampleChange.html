@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))
+
+
+if <a id="change">len(env.observation_space.shape) == 1:
+   </a> env = VecNormalize(env, ret=False)
+    env.ob_rms = ob_rms
+
+    &#47&#47 An ugly hack to remove updates</code></pre><h3>After Change</h3><pre><code class='java'>
+render_func = None
+tmp_env = env
+while True:
+    <a id="change">if hasattr(tmp_env, &quotenvs&quot):
+        render_func = tmp_env.envs[0].render
+        break
+    elif hasattr(tmp_env, &quotvenv&quot):
+        tmp_env = tmp_env.venv
+    elif hasattr(tmp_env, &quotenv&quot):
+        tmp_env = tmp_env.env
+    else:
+        break
+
+&#47&#47 We need to use the same statistics for normalization as used in training
+</a>actor_critic, ob_rms = \
+            torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))
+
+if isinstance(env.venv, VecNormalize):</code></pre>

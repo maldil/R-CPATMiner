@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def predict(self, X):
+        Predict for each quantile.
+        <a id="change">return np.asarray([rgr.predict(X) for rgr in self.regressors_]).T</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    "return_std works only if the quan")
+            low = self.regressors_[self.quantiles.index(0.16)].predict(X)
+            high = self.regressors_[self.quantiles.index(0.84)].predict(X)
+            <a id="change">mean = self.regressors_[self.quantiles.index(0.5)].predict(X)</a>
+            return mean, ((high - low) / 2.0)
+</code></pre>

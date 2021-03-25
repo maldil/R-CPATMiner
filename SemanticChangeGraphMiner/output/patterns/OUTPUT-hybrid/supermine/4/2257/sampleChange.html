@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 directly load mask offline
+        &#47&#47 TODO: make masks variant each image in a batch
+        self.mask_global = input[&quotM&quot].to(self.device).byte()
+        self.mask_global = <a id="change">self</a>.mask_global.narrow(<a id="change">0</a>,<a id="change">0</a>,1).narrow(1,0,1)
+
+        &#47&#47 create mask online
+        if not self.opt.offline_loading_mask:</code></pre><h3>After Change</h3><pre><code class='java'>
+                self.mask_global = self.create_random_mask().type_as(self.mask_global).view(1, *self.mask_global.size()[-3:])
+                &#47&#47 As generating random masks online are computation-heavy
+                &#47&#47 So just generate one ranodm mask for a batch images.
+                self.mask_global = self.mask_global.expand(self.opt.batchSize, <a id="change">*</a>self.mask_global.size()[-3:])
+            else:
+                raise ValueError("Mask_type [%s] not recognized." % self.opt.mask_type)
+        &#47&#47 For loading mask offline, we also need to change &quotopt.mask_type&quot and &quotopt.mask_sub_type&quot</code></pre>

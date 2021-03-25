@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    stregr.fit(X1, y, sample_weight=np.ones(40)).predict(X1)
+    mse = 0.21
+    got = np.mean((<a id="change">stregr.predict(X1)</a> - y) ** 2)
+    assert round(got, 2) == mse
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    svr_rbf = SVR(kernel=&quotrbf&quot)
+    stregr = StackingRegressor(regressors=[svr_lin, lr, ridge],
+                               meta_regressor=svr_rbf)
+    pred1 = <a id="change">stregr</a>.fit(X1, <a id="change">y</a>).predict(X1)
+    pred2 = stregr.fit(X1, y, sample_weight=np.ones(40)).predict(X1)
+    maxdiff = np.max(np.abs(pred1 - pred2))
+    assert maxdiff &lt; 1e-3, "max diff is %.4f" % maxdiff</code></pre>

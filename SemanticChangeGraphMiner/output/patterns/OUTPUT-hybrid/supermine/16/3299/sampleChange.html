@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    avgtemp = np.average(masked_thermal)
+    mediantemp = np.median(masked_thermal)
+
+    <a id="change">prefix = label + "_"</a>
+
+    &#47&#47 Store data into outputs class
+    outputs.add_observation(variable=prefix + &quotmax_temp&quot, trait=&quotmaximum temperature&quot,
+                            method=&quotplantcv.plantcv.analyze_thermal_values&quot, scale=&quotdegrees&quot, datatype=float,
+                            value=maxtemp, label=&quotdegrees&quot)
+    outputs.add_observation(variable=<a id="change">prefix + &quotmin_temp&quot</a>, trait=&quotminimum temperature&quot,
+                            method=&quotplantcv.plantcv.analyze_thermal_values&quot, scale=&quotdegrees&quot, datatype=float,
+                            value=mintemp, label=&quotdegrees&quot)
+    outputs.add_observation(variable=<a id="change">prefix + &quotmean_temp&quot</a>, trait=&quotmean temperature&quot,
+                            method=&quotplantcv.plantcv.analyze_thermal_values&quot, scale=&quotdegrees&quot, datatype=float,
+                            value=avgtemp, label=&quotdegrees&quot)
+    outputs.add_observation(variable=<a id="change">prefix + &quotmedian_temp&quot</a>, trait=&quotmedian temperature&quot,
+                            method=&quotplantcv.plantcv.analyze_thermal_values&quot, scale=&quotdegrees&quot, datatype=float,
+                            value=mediantemp, label=&quotdegrees&quot)
+    outputs.add_observation(variable=<a id="change">prefix + &quotthermal_frequencies&quot</a>, trait=&quotthermal frequencies&quot,
+                            method=&quotplantcv.plantcv.analyze_thermal_values&quot, scale=&quotfrequency&quot, datatype=list,
+                            value=hist_percent, label=bin_labels)
+    analysis_img = None
+
+    if histplot is True:
+        params.device += 1
+
+        dataset = pd.DataFrame({&quotTemperature C&quot: bin_labels,
+                                &quotProportion of pixels (%)&quot: hist_percent})
+        fig_hist = (ggplot(data=dataset,
+                           mapping=aes(x=&quotTemperature C&quot,
+                                       y=&quotProportion of pixels (%)&quot))
+                    + geom_line(color=&quotgreen&quot))
+
+        analysis_img = fig_hist
+        if params.debug == "print":
+            fig_hist.save(os.path.join(params.debug_outdir, <a id="change">str(params.device)</a> + <a id="change">prefix</a> + &quot_therm_histogram.png&quot),
+                          verbose=False)
+        elif params.debug == "plot":
+            print(fig_hist)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        analysis_img = fig_hist
+        if params.debug == "print":
+            fig_hist.save(os.path.join(params.debug_outdir, <a id="change">str(params.device)</a> + &quot_therm_histogram.png&quot), verbose=False)
+        elif params.debug == "plot":
+            print(fig_hist)
+</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  &quot&quot&quot
+  N,K = np.shape(S)
+
+  <a id="change">rms = np.sqrt(np.sum(S*S,axis = 0)/N)</a>
+  return rms
+
+
+@cache</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 If we don&quott have a spectrogram, build one
+    if S is None:
+        &#47&#47 By default, use a magnitude spectrogram
+        <a id="change">S = librosa.stft(y, n_fft=n_fft, hop_length=hop_length)</a>
+
+    return <a id="change">np.sqrt(np.mean(np.abs(S)**2, axis=0))</a>
+
+
+@cache
+def line_features(S, order=1, sr=22050):</code></pre>

@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        `end=None`.  If this df starts with an open-ended good section
+        then the first TimeFrame will have `start=None`.
+    
+    index = <a id="change">df</a>.dropna().index
+    timedeltas_sec = timedelta64_to_secs(diff(index.values))
+    timedeltas_check = timedeltas_sec &lt;= max_sample_period
+    timedeltas_check = concatenate(
+        [[previous_chunk_ended_with_open_ended_good_section], 
+         timedeltas_check])
+    transitions = diff(timedeltas_check.astype(np.int))
+    good_sect_starts = index[:-1][transitions ==  1]
+    good_sect_ends   = index[:-1][transitions == -1]
+    good_sect_ends = list(good_sect_ends)
+    good_sect_starts = list(good_sect_starts)
+
+    &#47&#47 Use look_ahead to see if we need to append a 
+    &#47&#47 good sect start or good sect end.
+    look_ahead_valid = look_ahead is not None and not df.look_ahead.empty
+    if look_ahead_valid:
+        look_ahead_timedelta = df.look_ahead.dropna().index[0] - index[-1]
+        look_ahead_gap = look_ahead_timedelta.total_seconds()
+    if timedeltas_check[-1]: &#47&#47 current chunk ends with a good section
+        if not look_ahead_valid or look_ahead_gap &gt; max_sample_period:
+            &#47&#47 current chunk ends with a good section which needs to 
+            &#47&#47 be closed because next chunk either does not exist
+            &#47&#47 or starts with a sample which is more than max_sample_period
+            &#47&#47 away from df.index[-1]
+            good_sect_ends += [index[-1]]
+    elif look_ahead_valid and look_ahead_gap &lt;= max_sample_period:
+        &#47&#47 Current chunk appears to end with a bad section
+        &#47&#47 but last sample is the start of a good section
+        good_sect_starts += [index[-1]]
+
+    &#47&#47 Work out if this chunk ends with an open ended good section
+    if len(good_sect_ends) == 0:
+        <a id="change">ends_with_open_ended_good_section</a> = (
+            len(good_sect_starts) &gt; 0 or 
+            previous_chunk_ended_with_open_ended_good_section)
+    elif len(good_sect_starts) &gt; 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+        `end=None`.  If this df starts with an open-ended good section
+        then the first TimeFrame will have `start=None`.
+    
+    index = <a id="change">df</a>.dropna().sort_index().index
+    timedeltas_sec = timedelta64_to_secs(diff(index.values))
+    timedeltas_check = timedeltas_sec &lt;= max_sample_period
+    timedeltas_check = concatenate(
+        [[previous_chunk_ended_with_open_ended_good_section], 
+         timedeltas_check])
+    transitions = diff(timedeltas_check.astype(np.int))
+    good_sect_starts = index[:-1][transitions ==  1]
+    good_sect_ends   = index[:-1][transitions == -1]
+    good_sect_ends = list(good_sect_ends)
+    good_sect_starts = list(good_sect_starts)
+
+    &#47&#47 Use look_ahead to see if we need to append a 
+    &#47&#47 good sect start or good sect end.
+    look_ahead_valid = look_ahead is not None and not df.look_ahead.empty
+    if look_ahead_valid:
+        look_ahead_timedelta = df.look_ahead.dropna().index[0] - index[-1]
+        look_ahead_gap = look_ahead_timedelta.total_seconds()
+    if timedeltas_check[-1]: &#47&#47 current chunk ends with a good section
+        if not look_ahead_valid or look_ahead_gap &gt; max_sample_period:
+            &#47&#47 current chunk ends with a good section which needs to 
+            &#47&#47 be closed because next chunk either does not exist
+            &#47&#47 or starts with a sample which is more than max_sample_period
+            &#47&#47 away from df.index[-1]
+            good_sect_ends += [index[-1]]
+    elif look_ahead_valid and look_ahead_gap &lt;= max_sample_period:
+        &#47&#47 Current chunk appears to end with a bad section
+        &#47&#47 but last sample is the start of a good section
+        good_sect_starts += [index[-1]]
+
+    &#47&#47 Work out if this chunk ends with an open ended good section
+    if len(good_sect_ends) == 0:
+        <a id="change">ends_with_open_ended_good_section</a> = (
+            len(good_sect_starts) &gt; 0 or 
+            previous_chunk_ended_with_open_ended_good_section)
+    elif len(good_sect_starts) &gt; 0:</code></pre>

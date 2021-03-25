@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for msk in mask:
+        where = np.argwhere(msk)
+        if len(where) &gt; 0:
+            y_min, x_min = <a id="change">where.min(0)</a>
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+        bbox.append((y_min, x_min, y_max, x_max))</code></pre><h3>After Change</h3><pre><code class='java'>
+    R, H, W = mask.shape
+    xp = cuda.get_array_module(mask)
+
+    <a id="change">instance_index</a>, ys, xs = xp.nonzero(mask)
+    bbox = xp.zeros((R, 4), dtype=np.float32)
+    for i in range(R):
+        ys_i = ys[instance_index == i]</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if invoice_filename in self._cached_invoices:
+            return self._cached_invoices.get(invoice_filename)
+        path = os.path.realpath(os.path.join(self.directory, invoice_filename))
+        self.log_status(&quotamazon: processing %s&quot % <a id="change">(path, )</a>)
+        invoice = parse_invoice(path)  &#47&#47 type: Optional[Order]
+        self._cached_invoices[invoice_filename] = invoice, path
+        return invoice, path</code></pre><h3>After Change</h3><pre><code class='java'>
+        invoice_path = os.path.realpath(os.path.join(self.directory, invoice_filename))
+
+        invoice = self.pickler.load(results, invoice_path) &#47&#47 type: Optional[Order]
+        <a id="change">if invoice is None:
+            self.log_status(&quotamazon: processing %s: %s&quot % (order_id, invoice_path, ))
+            invoice = parse_invoice(invoice_path)
+            self.pickler.dump( results, invoice_path, invoice )
+
+       </a> self._cached_invoices[invoice_filename] = invoice, invoice_path
+        return invoice, invoice_path
+
+    def prepare(self, journal: JournalEditor, results: SourceResults):</code></pre>

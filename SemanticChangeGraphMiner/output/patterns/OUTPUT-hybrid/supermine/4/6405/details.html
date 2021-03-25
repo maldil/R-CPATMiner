@@ -1,0 +1,26 @@
+<html><h3>6bf3f51cd0a312da842157665663c2dad9983248,tensorflow_ranking/python/losses_impl.py,ClickEMLoss,_compute_latent_prob,#ClickEMLoss#,914
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      exam_prob_given_non_clicks = exam_prob * (1 - rel_prob) / prob_non_clicks
+      rel_prob_given_non_clicks = (1 - exam_prob) * rel_prob / prob_non_clicks
+
+      <a id="change">exam_prob_given_non_clicks</a>, rel_prob_given_non_clicks = [
+          tf.stop_gradient(
+              tf.compat.v1.where(is_clicked, tf.ones_like(prob), prob))
+          for prob in [exam_prob_given_non_clicks, rel_prob_given_non_clicks]</code></pre><h3>After Change</h3><pre><code class='java'>
+    with tf.compat.v1.name_scope(name=&quotcompute_latent_prob&quot):
+      is_clicked = tf.greater_equal(tf.cast(clicks, tf.float32), 1.0)
+      exam_logits_posterior = exam_logits - tf.math.softplus(rel_logits)
+      <a id="change">rel_logits_posterior = rel_logits - tf.math.softplus(exam_logits)</a>
+      exam_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(exam_logits_posterior),
+          tf.sigmoid(exam_logits_posterior))
+      <a id="change">rel_prob_posterior = tf.compat.v1.where(
+          is_clicked, tf.ones_like(rel_logits_posterior),
+          tf.sigmoid(rel_logits_posterior))</a>
+      return tf.stop_gradient(exam_prob_posterior), tf.stop_gradient(
+          rel_prob_posterior)
+
+  def compute_unreduced_loss(self, labels, logits):</code></pre><img src="25591461.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/ranking/commit/6bf3f51cd0a312da842157665663c2dad9983248#diff-ac0a8b23265c0fdd56da5d2709bf0e7dfce716e2713c8c9fd8d44f4fd9461ff7L930' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/ranking</div><div id='commit'> Commit Name: 6bf3f51cd0a312da842157665663c2dad9983248</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: xuanhui@google.com</div><div id='file'> File Name: tensorflow_ranking/python/losses_impl.py</div><div id='class'> Class Name: ClickEMLoss</div><div id='method'> Method Name: _compute_latent_prob</div><BR><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/4d96f8c9a0c98df0a422cc498b86a6b5563f5b49#diff-62ccdba6294fdae2d58d248d4af399f9c0fcd90f6fa3626059a71f2e728eb196L301' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: 4d96f8c9a0c98df0a422cc498b86a6b5563f5b49</div><div id='time'> Time: 2020-08-06</div><div id='author'> Author: jean.kossaifi@gmail.com</div><div id='file'> File Name: tensorly/decomposition/candecomp_parafac.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: parafac</div><BR><BR><div id='link'><a href='https://github.com/mahyarnajibi/SNIPER/commit/ce9e61f795ab62c0d1b0823444483235a02040f7#diff-e08fac7eb9145e7681255f071cce7328388e8c5ec5f3304632c1a2150adc2434L276' target='_blank'>Link</a></div><div id='project'> Project Name: mahyarnajibi/SNIPER</div><div id='commit'> Commit Name: ce9e61f795ab62c0d1b0823444483235a02040f7</div><div id='time'> Time: 2018-05-08</div><div id='author'> Author: mahyarnajibi@gmail.com</div><div id='file'> File Name: lib/metric.py</div><div id='class'> Class Name: VisMetric</div><div id='method'> Method Name: update</div><BR>

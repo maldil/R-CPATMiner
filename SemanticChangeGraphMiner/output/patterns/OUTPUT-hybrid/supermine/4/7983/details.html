@@ -1,0 +1,28 @@
+<html><h3>82c09890456f2fec708f4201801385924d3b8874,official/vision/beta/modeling/video_classification_model.py,VideoClassificationModel,__init__,#VideoClassificationModel#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self._kernel_regularizer = kernel_regularizer
+    self._bias_regularizer = bias_regularizer
+    self._backbone = backbone
+    <a id="change">if use_sync_bn:
+      self._norm = tf.keras.layers.experimental.SyncBatchNormalization
+    else:
+      self._norm = tf.keras.layers.BatchNormalization
+   </a> axis = -1 if tf.keras.backend.image_data_format() == &quotchannels_last&quot else 1
+
+    inputs = tf.keras.Input(shape=input_specs.shape[1:])
+    endpoints = backbone(inputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    endpoints = backbone(inputs)
+
+    if aggregate_endpoints:
+      <a id="change">pooled_feats = []</a>
+      for endpoint in endpoints.values():
+        x_pool = tf.keras.layers.GlobalAveragePooling3D()(endpoint)
+        pooled_feats.append(x_pool)
+      x = <a id="change">tf.concat(pooled_feats, axis=1)</a>
+    else:
+      x = endpoints[max(endpoints.keys())]
+      x = tf.keras.layers.GlobalAveragePooling3D()(x)
+</code></pre><img src="30946298.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/82c09890456f2fec708f4201801385924d3b8874#diff-eb080184571494b8a3c4f52c51e9fa56a1e69cdbf5de470011d2c859a7ba91aaL26' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 82c09890456f2fec708f4201801385924d3b8874</div><div id='time'> Time: 2020-10-23</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: official/vision/beta/modeling/video_classification_model.py</div><div id='class'> Class Name: VideoClassificationModel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/yangyanli/PointCNN/commit/9f0eca493539f189c20c9bc5ecd3a353e682c8d7#diff-b28b33d4532b1c8c51f2309bd8f340f461b4e8eadcf1aa19d28d3821b09c66bcL21' target='_blank'>Link</a></div><div id='project'> Project Name: yangyanli/PointCNN</div><div id='commit'> Commit Name: 9f0eca493539f189c20c9bc5ecd3a353e682c8d7</div><div id='time'> Time: 2018-04-16</div><div id='author'> Author: yangyan.lee@gmail.com</div><div id='file'> File Name: pointcnn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: xconv</div><BR><BR><div id='link'><a href='https://github.com/soft-matter/trackpy/commit/83d1a46c72c12f8140d5232de59097d894d9d5f7#diff-611d02d0de9d7bfb648c272e6ba8de9ababfdfa496663f40c65baaf6cac6587aL103' target='_blank'>Link</a></div><div id='project'> Project Name: soft-matter/trackpy</div><div id='commit'> Commit Name: 83d1a46c72c12f8140d5232de59097d894d9d5f7</div><div id='time'> Time: 2013-01-22</div><div id='author'> Author: daniel.b.allan@gmail.com</div><div id='file'> File Name: mr/fitting.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: NLS</div><BR>

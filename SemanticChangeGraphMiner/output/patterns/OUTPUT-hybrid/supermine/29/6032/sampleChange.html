@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        
+        &#47&#47 get the current value of the first moment
+        <a id="change">x = be.expit(self.params.loc)</a>
+
+        &#47&#47 update the sample size
+        <a id="change">n = len(data)</a>
+        <a id="change">new_sample_size = n + self.sample_size</a>
+
+        &#47&#47 update the first moment
+        <a id="change">x *= self.sample_size / new_sample_size</a>
+        <a id="change">x += n * be.mean(data, axis=0) / new_sample_size</a>
+
+        &#47&#47 update the class attributes
+        self.params = ParamsBernoulli(be.logit(x))
+        <a id="change">self.sample_size = new_sample_size</a>
+
+    def shrink_parameters(self, shrinkage=1):
+        
+        Apply shrinkage to the parameters of the layer.</code></pre><h3>After Change</h3><pre><code class='java'>
+            None
+
+        
+        <a id="change">self.mean_calc.update(data)</a>
+        <a id="change">self.sample_size = self.mean_calc.num</a>
+        self.params = ParamsBernoulli(be.logit(self.mean_calc.mean))
+
+    def shrink_parameters(self, shrinkage=1):
+        </code></pre>

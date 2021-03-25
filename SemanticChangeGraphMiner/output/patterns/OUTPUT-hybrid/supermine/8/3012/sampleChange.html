@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return losses[self.loss]
+
+    def fit(self, X, y):
+        <a id="change">self.label_binarizer_ = LabelBinarizer(neg_label=-1, pos_label=1)</a>
+        Y = np.asfortranarray(self.label_binarizer_.fit_transform(y),
+                              dtype=np.float64)
+        return self._fit(X, Y)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return losses[self.loss]
+
+    def fit(self, X, y):
+        <a id="change">self._set_label_transformers(y)</a>
+        Y = np.asfortranarray(self.label_binarizer_.transform(y),
+                              dtype=np.float64)
+        return self._fit(X, Y)
+</code></pre>

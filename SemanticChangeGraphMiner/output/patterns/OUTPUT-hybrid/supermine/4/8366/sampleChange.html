@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                 [0., 1., 0., 0.],
+                                 [0., 0., 1., 0.],
+                                 [0., 0., 0., 1.]])  &#47&#47 4 x 4
+        <a id="change">identity = identity.to(device)</a>
+
+        assert_allclose(f(input)[0], expected)
+        assert_allclose(f(input)[1], expected_transform)
+        assert_allclose(f1(input)[0], input)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                    [0., 0., 0., 0.],
+                                    [0., 0., 0., 1.]]]]], device=device, dtype=dtype)  &#47&#47 2 x 3 x 4
+
+        expected_transform = torch.tensor(<a id="change">[[[1., 0., 0., 0.],
+                                            [0., 1., 0., 0.],
+                                            [0., 0., -1., 1.],
+                                            [0., 0., 0., 1.]]]</a>, device=device, dtype=dtype)  &#47&#47 4 x 4
+
+        identity = torch.tensor([[[1., 0., 0., 0.],
+                                  [0., 1., 0., 0.],</code></pre>

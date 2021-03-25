@@ -1,0 +1,34 @@
+<html><h3>cf8a3fb30547d6e980ecd8182f64a51df8e55c62,python/dgl/backend/pytorch/tensor.py,,pad_packed_tensor,#,228
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    x = input.new(batch_size * max_len, *old_shape[1:])
+    x.fill_(value)
+    index = []
+    <a id="change">for i, l in enumerate(lengths):
+        index.extend(range(i * max_len, i * max_len + l))
+   </a> index = th.tensor(index).to(device)
+    return scatter_row(x, index, input).view(batch_size, max_len, *old_shape[1:])
+
+def pack_padded_tensor(input, lengths):</code></pre><h3>After Change</h3><pre><code class='java'>
+    old_shape = input.shape
+    device = input.device
+    if not is_tensor(lengths):
+        <a id="change">lengths = th.tensor(lengths, dtype=th.int64, device=device)</a>
+    else:
+        lengths = lengths.to(device)
+    max_len = as_scalar(lengths.max())
+
+    if l_min is not None:
+        max_len = builtins.max(max_len, l_min)
+
+    batch_size = len(lengths)
+    x = input.new(batch_size * max_len, *old_shape[1:])
+    x.fill_(value)
+    index = th.ones(len(input), dtype=th.int64, device=device)
+    <a id="change">cum_lengths = th.cumsum(lengths, 0)</a>
+    index[cum_lengths[:-1]] += (max_len - <a id="change">lengths[:-1]</a>)
+    index = th.cumsum(index, 0) - 1
+    x[index] = input
+    return x.view(batch_size, max_len, *old_shape[1:])</code></pre><img src="33788418.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L230' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_packed_tensor</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L10' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L230' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_packed_tensor</div><BR>

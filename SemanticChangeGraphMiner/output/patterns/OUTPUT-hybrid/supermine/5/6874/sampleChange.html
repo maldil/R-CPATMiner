@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, device, path_to_detector=None, verbose=False):
+        super(SFDDetector, self).__init__(device, verbose)
+
+        <a id="change">base_path = os.path.join(appdata_dir(&quotface_alignment&quot), "data")</a>
+
+        &#47&#47 Initialise the face detector
+        if path_to_detector is None:
+            path_to_detector = os.path.join(
+                base_path, "s3fd_convert.pth")
+
+            if not os.path.isfile(path_to_detector):
+                print("Downloading the face detection CNN. Please wait...")
+
+                path_to_temp_detector = os.path.join(
+                    base_path, "s3fd_convert.pth.download")
+
+                if os.path.isfile(path_to_temp_detector):
+                    os.remove(os.path.join(path_to_temp_detector))
+
+                request_file.urlretrieve(
+                    "https://www.adrianbulat.com/downloads/python-fan/s3fd_convert.pth",
+                    os.path.join(path_to_temp_detector))
+
+                os.rename(os.path.join(path_to_temp_detector), os.path.join(path_to_detector))
+
+        self.face_detector = s3fd()
+        <a id="change">self.face_detector.load_state_dict(torch.load(path_to_detector))</a>
+        self.face_detector.to(device)
+        self.face_detector.eval()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Initialise the face detector
+        if path_to_detector is None:
+            model_weights = load_url(<a id="change">models_urls[&quots3fd&quot]</a>)
+        else:
+            model_weights = torch.load(path_to_detector)
+</code></pre>

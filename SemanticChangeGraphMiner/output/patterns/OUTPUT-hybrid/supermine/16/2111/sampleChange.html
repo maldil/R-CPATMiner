@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+             P = [[[(77.0, 67.0), (77.5, 77.0), ... ]]]
+    
+
+    <a id="change">with open(filename, "r") as input_file:
+        &#47&#47 List with all the patterns
+        pattern_list = []
+        &#47&#47 Current pattern, which will contain all occs
+        pattern = []
+        &#47&#47 Current occurrence, containing (onset, midi)
+        occurrence = []
+        for line in input_file.readlines():
+            if "pattern" in line:
+                if occurrence != []:
+                    pattern.append(occurrence)
+                if pattern != []:
+                    pattern_list.append(pattern)
+                occurrence = []
+                pattern = []
+                continue
+            if "occurrence" in line:
+                if occurrence != []:
+                    pattern.append(occurrence)
+                occurrence = []
+                continue
+            string_values = line.split(",")
+            onset_midi = (float(string_values[0]), float(string_values[1]))
+            occurrence.append(onset_midi)
+
+        &#47&#47 Add last occurrence and pattern to pattern_list
+        if occurrence != []:
+            pattern.append(occurrence)
+        if pattern != []:
+            pattern_list.append(pattern)
+
+   </a> return pattern_list
+
+
+def load_wav(path, mono=True):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Keep track of whether we create our own file handle
+    own_fh = False
+    &#47&#47 If the filename input is a string, need to open it
+    <a id="change">if type(filename) == str:
+        &#47&#47 Remember that we need to close it later
+        own_fh = True
+        &#47&#47 Open the file for reading
+        input_file = open(filename, &quotr&quot)
+    &#47&#47 If the provided has a read attribute, we can use it as a file handle
+    elif hasattr(filename, &quotread&quot):
+        input_file = filename
+    &#47&#47 Raise error otherwise
+    else:
+        raise ValueError(&quotfilename must be a string or file handle&quot)
+
+    &#47&#47 List with all the patterns
+   </a> pattern_list = []
+    &#47&#47 Current pattern, which will contain all occs
+    pattern = []
+    &#47&#47 Current occurrence, containing (onset, midi)
+    occurrence = []
+    for line in input_file.readlines():
+        if "pattern" in line:
+            if occurrence != []:
+                pattern.append(occurrence)
+            if pattern != []:
+                pattern_list.append(pattern)
+            occurrence = []
+            pattern = []
+            continue
+        if "occurrence" in line:
+            if occurrence != []:
+                pattern.append(occurrence)
+            occurrence = []
+            continue
+        string_values = line.split(",")
+        onset_midi = (float(string_values[0]), float(string_values[1]))
+        occurrence.append(onset_midi)
+
+    &#47&#47 Add last occurrence and pattern to pattern_list
+    if occurrence != []:
+        pattern.append(occurrence)
+    if pattern != []:
+        pattern_list.append(pattern)
+
+    &#47&#47 If we opened an input file, we need to close it
+    if own_fh:
+        <a id="change">input_file.close()</a>
+
+    return pattern_list
+
+</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.beta = np.min([1, self.beta + self.beta_increment_per_sampling])  &#47&#47 max = 1
+
+        min_prob = np.min(self.tree.tree[-self.tree.capacity:]) / self.tree.root_priority
+        maxiwi = <a id="change">np.power(self.tree.capacity * min_prob, -self.beta)</a>  &#47&#47 for later normalizing ISWeights
+        for i in range(n):
+            a = segment * i
+            b = segment * (i + 1)
+            lower_bound = np.random.uniform(a, b)
+            idx, p, data = self.tree.get_leaf(lower_bound)
+            prob = p / self.tree.root_priority
+            ISWeights.append(self.tree.capacity * prob)
+            batch_idx.append(idx)
+            batch_memory.append(data)
+
+        ISWeights = np.vstack(ISWeights)
+        ISWeights = <a id="change">np.power(ISWeights, -self.beta) / maxiwi</a>  &#47&#47 normalize
+        return batch_idx, np.vstack(batch_memory), ISWeights
+
+    def update(self, idx, error):</code></pre><h3>After Change</h3><pre><code class='java'>
+            v = np.random.uniform(a, b)
+            idx, p, data = self.tree.get_leaf(v)
+            prob = p / self.tree.total_p
+            <a id="change">ISWeights</a>[i, 0] = np.power(prob/min_prob, -self.beta)
+            b_idx[i], b_memory[i, :] = idx, data
+        return b_idx, b_memory, ISWeights
+</code></pre>

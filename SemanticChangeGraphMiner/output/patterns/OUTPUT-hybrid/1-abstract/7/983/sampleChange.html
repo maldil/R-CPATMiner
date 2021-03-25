@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_get_output_explicit_dtype():
+    f = np.arange(256).reshape((32,8))
+    output = np.zeros_like(f)
+    <a id="change">_get_output(f, output, &quottesting&quot, bool)</a>
+
+
+def test_get_axis_good():
+    f = np.zeros((3,4,5,3,2,2,5,3,2,4,1))</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_get_output_explicit_dtype():
+    f = np.arange(256).reshape((32,8))
+    output = np.zeros_like(f)
+    <a id="change">with pytest.raises(ValueError):
+        _get_output(f, output, &quottesting&quot, bool)
+
+
+</a>def test_get_axis_good():
+    f = np.zeros((3,4,5,3,2,2,5,3,2,4,1))
+    for i in range(len(f.shape)):
+        assert i == _get_axis(f, i, &quottest&quot)</code></pre>

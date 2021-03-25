@@ -1,0 +1,161 @@
+<html><h3>0b03930bc47e60c880412883fc8f27035bd5a00f,main.py,Model,build,#Model#,263
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            s_mixed_signals = tf.reduce_sum(
+                s_src_signals, axis=1)
+
+            s_src_signals_log = tf.log1p(<a id="change">tf.abs(s_src_signals)</a>)
+            s_mixed_signals_phase = tf.atan2(
+                tf.imag(s_mixed_signals), tf.real(s_mixed_signals))
+            s_mixed_signals_power = tf.abs(s_mixed_signals)
+            s_mixed_signals_log = tf.log1p(s_mixed_signals_power)
+            &#47&#47 int[B, T, F]
+            &#47&#47 float[B, T, F, E]
+            s_embed = encoder(s_mixed_signals_log)
+            s_embed_flat = tf.reshape(
+                s_embed,
+                [hparams.BATCH_SIZE, -1, hparams.EMBED_SIZE])
+
+            &#47&#47 TODO make attractor estimator a submodule ?
+            if hparams.TRAIN_ESTIMATOR_METHOD == &quottruth&quot:
+                with tf.name_scope(&quotattractor&quot):
+                    s_src_assignment = tf.argmax(s_src_signals_log, axis=1)
+                    s_indices = tf.reshape(
+                        s_src_assignment,
+                        [hparams.BATCH_SIZE, -1])
+                    fn_segmean = lambda _: tf.unsorted_segment_sum(
+                        _[0], _[1], hparams.MAX_N_SIGNAL)
+                    &#47&#47 float[B, C, E]
+                    s_attractors = tf.map_fn(
+                        fn_segmean, (s_embed_flat, s_indices), hparams.FLOATX)
+            elif hparams.TRAIN_ESTIMATOR_METHOD == &quotanchor&quot:
+                estimator = hparams.get_estimator(
+                    &quotanchor&quot)(self, &quottrain_estimator&quot)
+                s_attractors = estimator(s_embed)
+
+            using_same_method = (
+                hparams.INFER_ESTIMATOR_METHOD ==
+                hparams.TRAIN_ESTIMATOR_METHOD)
+
+            if using_same_method:
+                s_valid_attractors = s_attractors
+            else:
+                s_valid_attractors = hparams.get_estimator(
+                    hparams.INFER_ESTIMATOR_METHOD)(&quotinfer_estimator&quot)(s_embed)
+
+            s_separated_signals_log = do_separation(
+                s_mixed_signals_log, s_attractors, s_embed_flat)
+
+            if using_same_method:
+                s_separated_signals_log_valid = s_separated_signals_log
+            else:
+                s_separated_signals_log_valid = do_separation(
+                    s_mixed_signals_log, s_valid_attractors, s_embed_flat)
+
+            &#47&#47 loss and SNR for training
+            s_train_loss, v_perms, s_perm_sets = ops.pit_mse_loss(
+                s_src_signals_log, s_separated_signals_log)
+            s_perm_idxs = tf.stack([
+                tf.tile(
+                    tf.expand_dims(tf.range(hparams.BATCH_SIZE), 1),
+                    [1, hparams.MAX_N_SIGNAL]),
+                tf.gather(v_perms, s_perm_sets)], axis=2)
+            s_perm_idxs = tf.reshape(
+                s_perm_idxs, [hparams.BATCH_SIZE*hparams.MAX_N_SIGNAL, 2])
+            s_separated_signals_log =tf.gather_nd(
+                s_separated_signals_log, s_perm_idxs)
+            s_separated_signals_log = tf.reshape(
+                s_separated_signals_log, [
+                    hparams.BATCH_SIZE,
+                    hparams.MAX_N_SIGNAL,
+                    -1, hparams.FEATURE_SIZE])
+
+            s_mixed_signals_phase = tf.expand_dims(s_mixed_signals_phase, 1)
+            s_separated_signals_pwr = tf.expm1(s_separated_signals_log)
+            s_separated_signals = tf.complex(
+                tf.cos(s_mixed_signals_phase) * s_separated_signals_pwr,
+                tf.sin(s_mixed_signals_phase) * s_separated_signals_pwr)
+            s_train_snr = tf.reduce_mean(ops.batch_snr(
+                s_src_signals, s_separated_signals, is_complex=True))
+
+            &#47&#47 ^ for validation / inference
+            s_valid_loss, v_perms, s_perm_sets = ops.pit_mse_loss(
+                s_src_signals_log, s_separated_signals_log_valid)
+            s_perm_idxs = tf.stack([
+                tf.tile(
+                    tf.expand_dims(tf.range(hparams.BATCH_SIZE), 1),
+                    [1, hparams.MAX_N_SIGNAL]),
+                tf.gather(v_perms, s_perm_sets)],
+                axis=2)
+            s_perm_idxs = tf.reshape(
+                s_perm_idxs, [hparams.BATCH_SIZE*hparams.MAX_N_SIGNAL, 2])
+            s_separated_signals_log_valid_pit = tf.gather_nd(
+                s_separated_signals_log_valid, s_perm_idxs)
+            s_separated_signals_log_valid_pit = tf.reshape(
+                s_separated_signals_log_valid_pit, [
+                    hparams.BATCH_SIZE,
+                    hparams.MAX_N_SIGNAL,
+                    -1, hparams.FEATURE_SIZE])
+            <a id="change">s_separated_signals_pwr_valid = tf.expm1(
+                s_separated_signals_log_valid_pit)</a>
+            s_separated_signals_pwr_infer = tf.expm1(
+                s_separated_signals_log_valid)
+
+            s_separated_signals_valid = tf.complex(</code></pre><h3>After Change</h3><pre><code class='java'>
+            s_mixed_signals = tf.reduce_sum(
+                s_src_signals, axis=1)
+
+            s_src_signals_pwr = <a id="change">tf.abs(s_src_signals)</a>
+            s_src_signals_log = tf.log1p(s_src_signals_pwr)
+            s_mixed_signals_phase = tf.atan2(
+                tf.imag(s_mixed_signals), tf.real(s_mixed_signals))
+            s_mixed_signals_power = tf.abs(s_mixed_signals)
+            s_mixed_signals_log = tf.log1p(s_mixed_signals_power)
+            &#47&#47 int[B, T, F]
+            &#47&#47 float[B, T, F, E]
+            s_embed = encoder(s_mixed_signals_log)
+            s_embed_flat = tf.reshape(
+                s_embed,
+                [hparams.BATCH_SIZE, -1, hparams.EMBED_SIZE])
+
+            &#47&#47 TODO make attractor estimator a submodule ?
+            if hparams.TRAIN_ESTIMATOR_METHOD == &quottruth&quot:
+                with tf.name_scope(&quotattractor&quot):
+                    s_src_assignment = tf.argmax(s_src_signals_log, axis=1)
+                    s_indices = tf.reshape(
+                        s_src_assignment,
+                        [hparams.BATCH_SIZE, -1])
+                    fn_segmean = lambda _: tf.unsorted_segment_sum(
+                        _[0], _[1], hparams.MAX_N_SIGNAL)
+                    &#47&#47 float[B, C, E]
+                    s_attractors = tf.map_fn(
+                        fn_segmean, (s_embed_flat, s_indices), hparams.FLOATX)
+            elif hparams.TRAIN_ESTIMATOR_METHOD == &quotanchor&quot:
+                estimator = hparams.get_estimator(
+                    &quotanchor&quot)(self, &quottrain_estimator&quot)
+                s_attractors = estimator(s_embed)
+
+            using_same_method = (
+                hparams.INFER_ESTIMATOR_METHOD ==
+                hparams.TRAIN_ESTIMATOR_METHOD)
+
+            if using_same_method:
+                s_valid_attractors = s_attractors
+            else:
+                s_valid_attractors = hparams.get_estimator(
+                    hparams.INFER_ESTIMATOR_METHOD)(&quotinfer_estimator&quot)(s_embed)
+
+            s_separated_signals_pwr = do_separation(
+                s_mixed_signals_power, s_attractors, s_embed_flat)
+
+            if hparams.DEBUG:
+                _s_masks = _g_masks
+
+            if using_same_method:
+                <a id="change">s_separated_signals_pwr_valid = s_separated_signals_pwr</a>
+            else:
+                s_separated_signals_pwr_valid = do_separation(
+                    s_mixed_signals_power, s_valid_attractors, s_embed_flat)
+</code></pre><img src="24275824.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/0b03930bc47e60c880412883fc8f27035bd5a00f#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L291' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: 0b03930bc47e60c880412883fc8f27035bd5a00f</div><div id='time'> Time: 2017-08-09</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: build</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/7474beb8e6f97ccad01bfe3cc60a299fe3ffec7c#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L470' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 7474beb8e6f97ccad01bfe3cc60a299fe3ffec7c</div><div id='time'> Time: 2019-08-18</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plp</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/23bb353a6ab85d7ea03c06a2ccfa7d91e2f078d3#diff-512a2542f97bec3a574d6456a67695f81c11f3f3957c52bafc343a9ec96b54d7L76' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 23bb353a6ab85d7ea03c06a2ccfa7d91e2f078d3</div><div id='time'> Time: 2019-08-05</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/util/plot.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plotly_sphere</div><BR><BR><div id='link'><a href='https://github.com/scikit-video/scikit-video/commit/14a7c84fa56c32eb7f4bbe057ce118cbff6ce8fd#diff-18c97cd87579b5b8ee38ba35180e24eab119ab41c45aaa72513b2a98a767aa23L63' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-video/scikit-video</div><div id='commit'> Commit Name: 14a7c84fa56c32eb7f4bbe057ce118cbff6ce8fd</div><div id='time'> Time: 2016-11-16</div><div id='author'> Author: tgoodall@utexas.edu</div><div id='file'> File Name: skvideo/measure/scene.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _scenedet_intensity</div><BR>

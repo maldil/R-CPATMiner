@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 higher, thus it is harder to calculate the ETA.
+        &#47&#47
+        if not self.has_finished_crawl() and not self.has_finished_audit():
+            return <a id="change">Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO * 1.5)</a>
+
+        &#47&#47
+        &#47&#47 During the early phases of the scan it is easy to believe that the
+        &#47&#47 scan will finish soon (not many items in the queue). To prevent
+        &#47&#47 this we set a big adjustment ratio
+        &#47&#47
+        if run_time &lt; 30:
+            <a id="change">return Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO * 20)</a>
+
+        if run_time &lt; 60:
+            <a id="change">return Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO * 10)</a>
+
+        if run_time &lt; 120:
+            return Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO * 7.5)
+
+        if run_time &lt; 180:
+            <a id="change">return Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO * 3.5)</a>
+
+        return Adjustment(unknown=GREP_DEFAULT_UNKNOWN_ADJUSTMENT_RATIO)
+
+    def log_eta(self, msg):</code></pre><h3>After Change</h3><pre><code class='java'>
+            return Adjustment(known=1, unknown=50)
+
+        if run_time &lt; 60:
+            <a id="change">return Adjustment(known=1, unknown=35)</a>
+
+        if run_time &lt; 120:
+            return Adjustment(known=1, unknown=20)
+</code></pre>

@@ -1,0 +1,102 @@
+<html><h3>70ea65ca477b6fc05d5b24d03b559f424ac3a1c8,main.py,,batchify_with_label,#,204
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    feature_seq_tensors = []
+    for idx in range(feature_num):
+        feature_seq_tensors.append(autograd.Variable(torch.zeros((batch_size, max_seq_len)),volatile =  volatile_flag).long())
+    <a id="change">mask</a> = <a id="change">autograd.Varia</a>ble(<a id="change">torch.zeros((batch_size, max_seq_len))</a>,volatile =  volatile_flag).byte()
+    for idx, (seq, label, seqlen) in enumerate(zip(words, labels, word_seq_lengths)):
+        word_seq_tensor[idx, :seqlen] = torch.LongTensor(seq)
+        label_seq_tensor[idx, :seqlen] = torch.LongTensor(label)
+        mask[idx, :seqlen] = torch.Tensor([1]*seqlen)
+        for idy in range(feature_num):
+            feature_seq_tensors[idy][idx,:seqlen] = torch.LongTensor(features[idx][:,idy])
+    word_seq_lengths, word_perm_idx = word_seq_lengths.sort(0, descending=True)
+    word_seq_tensor = word_seq_tensor[word_perm_idx]
+    for idx in range(feature_num):
+        feature_seq_tensors[idx] = feature_seq_tensors[idx][word_perm_idx]
+
+    label_seq_tensor = label_seq_tensor[word_perm_idx]
+    <a id="change">mask</a> = mask[word_perm_idx]
+    &#47&#47&#47&#47&#47&#47 deal with char
+    &#47&#47 pad_chars (batch_size, max_seq_len)
+    pad_chars = [chars[idx] + [[0]] * (max_seq_len-len(chars[idx])) for idx in range(len(chars))]
+    length_list = [list(map(len, pad_char)) for pad_char in pad_chars]
+    max_word_len = max(map(max, length_list))
+    char_seq_tensor = autograd.Variable(torch.zeros((batch_size, max_seq_len, max_word_len)), volatile =  volatile_flag).long()
+    char_seq_lengths = torch.LongTensor(length_list)
+    for idx, (seq, seqlen) in enumerate(zip(pad_chars, char_seq_lengths)):
+        for idy, (word, wordlen) in enumerate(zip(seq, seqlen)):
+            &#47&#47 print len(word), wordlen
+            char_seq_tensor[idx, idy, :wordlen] = torch.LongTensor(word)
+
+    char_seq_tensor = char_seq_tensor[word_perm_idx].view(batch_size*max_seq_len,-1)
+    char_seq_lengths = char_seq_lengths[word_perm_idx].view(batch_size*max_seq_len,)
+    char_seq_lengths, char_perm_idx = char_seq_lengths.sort(0, descending=True)
+    char_seq_tensor = char_seq_tensor[char_perm_idx]
+    _, char_seq_recover = char_perm_idx.sort(0, descending=False)
+    _, word_seq_recover = word_perm_idx.sort(0, descending=False)
+    if gpu:
+        word_seq_tensor = word_seq_tensor.cuda()
+        for idx in range(feature_num):
+            feature_seq_tensors[idx] = feature_seq_tensors[idx].cuda()
+        word_seq_lengths = word_seq_lengths.cuda()
+        word_seq_recover = word_seq_recover.cuda()
+        label_seq_tensor = label_seq_tensor.cuda()
+        char_seq_tensor = char_seq_tensor.cuda()
+        char_seq_recover = char_seq_recover.cuda()
+        <a id="change">mask</a> = mask.cuda()
+    return word_seq_tensor,feature_seq_tensors, word_seq_lengths, word_seq_recover, char_seq_tensor, char_seq_lengths, char_seq_recover, label_seq_tensor, mask
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    feature_seq_tensors = []
+    for idx in range(feature_num):
+        feature_seq_tensors.append(torch.zeros((batch_size, max_seq_len),requires_grad =  if_train).long())
+    <a id="change">mask</a> = <a id="change">torch</a>.zeros((batch_size, max_seq_len), requires_grad =  if_train).byte()
+    for idx, (seq, label, seqlen) in enumerate(zip(words, labels, word_seq_lengths)):
+        seqlen = seqlen.item()
+        word_seq_tensor[idx, :seqlen] = torch.LongTensor(seq)
+        label_seq_tensor[idx, :seqlen] = torch.LongTensor(label)
+        mask[idx, :seqlen] = torch.Tensor([1]*seqlen)
+        for idy in range(feature_num):
+            feature_seq_tensors[idy][idx,:seqlen] = torch.LongTensor(features[idx][:,idy])
+    word_seq_lengths, word_perm_idx = word_seq_lengths.sort(0, descending=True)
+    word_seq_tensor = word_seq_tensor[word_perm_idx]
+    for idx in range(feature_num):
+        feature_seq_tensors[idx] = feature_seq_tensors[idx][word_perm_idx]
+
+    label_seq_tensor = label_seq_tensor[word_perm_idx]
+    <a id="change">mask</a> = mask[word_perm_idx]
+    &#47&#47&#47&#47&#47&#47 deal with char
+    &#47&#47 pad_chars (batch_size, max_seq_len)
+    pad_chars = [chars[idx] + [[0]] * (max_seq_len-len(chars[idx])) for idx in range(len(chars))]
+    length_list = [list(map(len, pad_char)) for pad_char in pad_chars]
+    max_word_len = max(map(max, length_list))
+    char_seq_tensor = torch.zeros((batch_size, max_seq_len, max_word_len), requires_grad =  if_train).long()
+    char_seq_lengths = torch.LongTensor(length_list)
+    for idx, (seq, seqlen) in enumerate(zip(pad_chars, char_seq_lengths)):
+        for idy, (word, wordlen) in enumerate(zip(seq, seqlen)):
+            &#47&#47 print len(word), wordlen
+            char_seq_tensor[idx, idy, :wordlen] = torch.LongTensor(word)
+
+    char_seq_tensor = char_seq_tensor[word_perm_idx].view(batch_size*max_seq_len,-1)
+    char_seq_lengths = char_seq_lengths[word_perm_idx].view(batch_size*max_seq_len,)
+    char_seq_lengths, char_perm_idx = char_seq_lengths.sort(0, descending=True)
+    char_seq_tensor = char_seq_tensor[char_perm_idx]
+    _, char_seq_recover = char_perm_idx.sort(0, descending=False)
+    _, word_seq_recover = word_perm_idx.sort(0, descending=False)
+    if gpu:
+        word_seq_tensor = word_seq_tensor.cuda()
+        for idx in range(feature_num):
+            feature_seq_tensors[idx] = feature_seq_tensors[idx].cuda()
+        word_seq_lengths = word_seq_lengths.cuda()
+        word_seq_recover = word_seq_recover.cuda()
+        label_seq_tensor = label_seq_tensor.cuda()
+        char_seq_tensor = char_seq_tensor.cuda()
+        char_seq_recover = char_seq_recover.cuda()
+        <a id="change">mask</a> = mask.cuda()
+    return word_seq_tensor,feature_seq_tensors, word_seq_lengths, word_seq_recover, char_seq_tensor, char_seq_lengths, char_seq_recover, label_seq_tensor, mask
+
+</code></pre><img src="2156153.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jiesutd/NCRFpp/commit/70ea65ca477b6fc05d5b24d03b559f424ac3a1c8#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L225' target='_blank'>Link</a></div><div id='project'> Project Name: jiesutd/NCRFpp</div><div id='commit'> Commit Name: 70ea65ca477b6fc05d5b24d03b559f424ac3a1c8</div><div id='time'> Time: 2018-12-17</div><div id='author'> Author: jieynlp@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: batchify_with_label</div><BR>

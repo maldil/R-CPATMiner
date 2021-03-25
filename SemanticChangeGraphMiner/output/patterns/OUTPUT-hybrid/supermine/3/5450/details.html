@@ -1,0 +1,19 @@
+<html><h3>aca137c1ce28ade53acfd834344de5ad66131d53,official/nlp/optimization.py,AdamWeightDecay,_resource_apply_dense,#AdamWeightDecay#,196
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 backward pass.
+    &#47&#47 TODO(b/171088214): Remove it after the control dependency in
+    &#47&#47 nested function is fixed.
+    with tf.control_dependencies(<a id="change">[grad]</a>):
+      lr_t, kwargs = self._get_lr(var.device, var.dtype.base_dtype, apply_state)
+      decay = self._decay_weights_op(var, lr_t, apply_state)
+    with tf.control_dependencies([decay]):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 backward pass.
+    &#47&#47 TODO(b/171088214): Remove it after the control dependency in
+    &#47&#47 nested function is fixed.
+    with tf.control_dependencies([<a id="change">tf.identity(grad)</a>]):
+      lr_t, kwargs = self._get_lr(var.device, var.dtype.base_dtype, apply_state)
+      decay = self._decay_weights_op(var, lr_t, apply_state)
+    with tf.control_dependencies([decay]):</code></pre><img src="23445905.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/aca137c1ce28ade53acfd834344de5ad66131d53#diff-ba1c5b15e5be95c0d015522105f09b7923f414dd8836813b34e95486073a9ae6L202' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: aca137c1ce28ade53acfd834344de5ad66131d53</div><div id='time'> Time: 2020-10-22</div><div id='author'> Author: crccw@google.com</div><div id='file'> File Name: official/nlp/optimization.py</div><div id='class'> Class Name: AdamWeightDecay</div><div id='method'> Method Name: _resource_apply_dense</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/071fb5fb20683946a33f40d28af466f8e9ffc1bd#diff-fc7b44f20ad0f4681b2d073669010ed930926c7fd4cbcb391b6bee6d0c1c1ef9L41' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 071fb5fb20683946a33f40d28af466f8e9ffc1bd</div><div id='time'> Time: 2017-10-17</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/numpy/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: left_jacobian</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/071fb5fb20683946a33f40d28af466f8e9ffc1bd#diff-fc7b44f20ad0f4681b2d073669010ed930926c7fd4cbcb391b6bee6d0c1c1ef9L54' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 071fb5fb20683946a33f40d28af466f8e9ffc1bd</div><div id='time'> Time: 2017-10-17</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/numpy/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: inv_left_jacobian</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/aca137c1ce28ade53acfd834344de5ad66131d53#diff-ba1c5b15e5be95c0d015522105f09b7923f414dd8836813b34e95486073a9ae6L215' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: aca137c1ce28ade53acfd834344de5ad66131d53</div><div id='time'> Time: 2020-10-22</div><div id='author'> Author: crccw@google.com</div><div id='file'> File Name: official/nlp/optimization.py</div><div id='class'> Class Name: AdamWeightDecay</div><div id='method'> Method Name: _resource_apply_sparse</div><BR>

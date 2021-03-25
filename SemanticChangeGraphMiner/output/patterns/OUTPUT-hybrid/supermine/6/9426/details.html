@@ -1,0 +1,33 @@
+<html><h3>6b8fd96888fd95e82e010837439a84a3e7487336,kmodes/tests/test_common.py,,test_non_meta_estimators,#,46
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 input validation etc for non-meta estimators
+    estimators = all_estimators()
+    for name, Estimator in estimators:
+        <a id="change">if name != &quotkprototypes&quot:
+            yield check_estimators_dtypes, name, Estimator
+            yield check_fit_score_takes_y, name, Estimator
+
+            &#47&#47 Check that all estimator yield informative messages when
+            &#47&#47 trained on empty datasets
+            yield check_estimators_empty_data_messages, name, Estimator
+
+            yield check_pipeline_consistency, name, Estimator
+
+            if name not in [&quotImputer&quot]:
+                &#47&#47 Test that all estimators check their input for NaN&quots and infs
+                yield check_estimators_nan_inf, name, Estimator
+
+            yield check_estimators_overwrite_params, name, Estimator
+       </a> yield check_estimator_sparse_data, name, Estimator
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if name == &quotkmodes&quot:
+            for check in _yield_all_checks(name, Estimator):
+                &#47&#47 Skip these
+                if check.__name__ not in <a id="change">(&quotcheck_clustering&quot,
+                                          &quotcheck_dtype_object&quot)</a>:
+                    yield _named_check(check, name), name, Estimator
+        elif name == &quotkprototypes&quot:
+            for check in _yield_all_checks(name, Estimator):</code></pre><img src="36097670.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nicodv/kmodes/commit/6b8fd96888fd95e82e010837439a84a3e7487336#diff-4f07f18ac91e331b7234c889087383e827e7fed04ffbf9cc55bdd6bfcf8a35efL46' target='_blank'>Link</a></div><div id='project'> Project Name: nicodv/kmodes</div><div id='commit'> Commit Name: 6b8fd96888fd95e82e010837439a84a3e7487336</div><div id='time'> Time: 2016-10-16</div><div id='author'> Author: njdevos@gmail.com</div><div id='file'> File Name: kmodes/tests/test_common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_non_meta_estimators</div><BR><BR><div id='link'><a href='https://github.com/theislab/scanpy/commit/c5c2d65ebd3ee375fa9855c326d88646ee403aa7#diff-21ad0490793d77ccea82cf97754c21e2d80b915002d6301e3b9ae54031fdcdf4L141' target='_blank'>Link</a></div><div id='project'> Project Name: theislab/scanpy</div><div id='commit'> Commit Name: c5c2d65ebd3ee375fa9855c326d88646ee403aa7</div><div id='time'> Time: 2020-12-03</div><div id='author'> Author: fidel.ramirez@gmail.com</div><div id='file'> File Name: scanpy/get.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: obs_df</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/283ecdfd495c8d5256c5ab07b470f36270d7f4a8#diff-888808a70a99ab07add31f4de4262725219330b6bffb9ac42ee174498a4ae7e0L70' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 283ecdfd495c8d5256c5ab07b470f36270d7f4a8</div><div id='time'> Time: 2017-07-22</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/gen_learning.py</div><div id='class'> Class Name: GenerativeModel</div><div id='method'> Method Name: train</div><BR>

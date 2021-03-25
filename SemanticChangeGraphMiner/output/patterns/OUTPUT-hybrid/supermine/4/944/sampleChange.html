@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def slice(x, start, size):
+    <a id="change">raise NotImplementedError</a>
+
+
+def _reshape_batch(x, shape):
+    &#47&#47 there is a bug in cntk 2.1&quots unpack_batch implementation</code></pre><h3>After Change</h3><pre><code class='java'>
+def slice(x, start, size):
+    if not (len(int_shape(x)) == len(start) == len(size)):
+        raise ValueError(&quotThe dimension and the size of indices should match.&quot)
+    out = <a id="change">x[tuple([py_slice(i, i + j) for (i, j) in zip(start, size)])]</a>
+    out._keras_shape = tuple(size)
+    return out
+
+</code></pre>

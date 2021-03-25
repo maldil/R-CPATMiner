@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        D = np.abs(D)**2
+    else:
+        &#47&#47 Convert to power
+        D = <a id="change">np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length)) ** 2</a>
+
+    &#47&#47 Normalize, retain magnitude
+    D = np.abs(D / D.max())
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        del pitches
+
+    else:
+        D = <a id="change">librosa.stft(y, n_fft=n_fft, hop_length=hop_length)</a>
+
+    &#47&#47 Normalize, retain power
+    D = <a id="change">np.abs(D / D.max())**2</a>
+
+    &#47&#47 Build the CQ basis
+    cq_basis = librosa.filters.logfrequency(sr, n_fft=n_fft, **kwargs)
+    </code></pre>

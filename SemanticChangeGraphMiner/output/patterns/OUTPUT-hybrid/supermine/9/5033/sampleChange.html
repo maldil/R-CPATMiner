@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return os.path.expandvars(os.path.expanduser(path))
+
+&#47&#47 Site-packages functions - use native function if available.
+<a id="change">if hasattr(site, &quotgetsitepackages&quot):
+    getsitepackages = site.getsitepackages
+&#47&#47 Backported for virtualenv.
+&#47&#47 Module &quotsite&quot in virtualenv might not have this attribute.
+else:
+    def getsitepackages():
+        
+        Return only one item as list with one item.
+        
+        &#47&#47 For now used only on Windows. Raise Exception for other platforms.
+        if is_win:
+            pths = [os.path.join(sys.prefix, &quotLib&quot, &quotsite-packages&quot)]
+            &#47&#47 Include Real sys.prefix for virtualenv.
+            if is_virtualenv:
+                pths.append(os.path.join(base_prefix, &quotLib&quot, &quotsite-packages&quot))
+            return pths
+        else:
+            &#47&#47 TODO Implement for Python 2.6 on other platforms.
+            raise NotImplementedError()
+
+&#47&#47 Wrapper to load a module from a Python source file.
+&#47&#47 This function loads import hooks when processing them.
+</a>import importlib.machinery
+def importlib_load_source(name, pathname):
+    &#47&#47 Import module from a file.
+    mod_loader = importlib.machinery.SourceFileLoader(name, pathname)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 Backported for virtualenv.
+&#47&#47 Module &quotsite&quot in virtualenv might not have this attribute.
+<a id="change">getsitepackages = getattr(site, &quotgetsitepackages&quot, getsitepackages)</a>
+
+&#47&#47 Wrapper to load a module from a Python source file.
+&#47&#47 This function loads import hooks when processing them.
+import importlib.machinery</code></pre>

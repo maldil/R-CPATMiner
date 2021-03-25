@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def test_doc_array_attr_of_token(en_tokenizer, en_vocab):
+    <a id="change">text = "An example sentence"</a>
+    <a id="change">tokens = en_tokenizer(text)</a>
+    example = tokens.vocab["example"]
+    assert example.orth != example.shape
+    feats_array = tokens.to_array((ORTH, SHAPE))
+    assert feats_array[0][0] != feats_array[0][1]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_doc_array_attr_of_token(en_vocab):
+    <a id="change">doc = Doc(en_vocab, words=["An", "example", "sentence"])</a>
+    example = doc.vocab["example"]
+    assert example.orth != example.shape
+    feats_array = doc.to_array((ORTH, SHAPE))
+    assert feats_array[0][0] != feats_array[0][1]</code></pre>

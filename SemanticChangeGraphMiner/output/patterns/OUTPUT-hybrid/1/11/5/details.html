@@ -1,0 +1,45 @@
+<html><h3>e10b29f4ba212cb7e1c25a57c7e8b3a465631ccf,official/nlp/data/pretrain_dataloader.py,BertPretrainDataLoader,_decode,#BertPretrainDataLoader#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def _decode(self, record: tf.Tensor):
+    Decodes a serialized tf.Example.
+    <a id="change">name_to_features</a> = {
+        &quotinput_ids&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotinput_mask&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotsegment_ids&quot:
+            <a id="change">tf.io.FixedLenFeature([self._seq_length], tf.int64)</a>,
+        &quotmasked_lm_positions&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_ids&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  def _decode(self, record: tf.Tensor):
+    Decodes a serialized tf.Example.
+    <a id="change">name_to_features</a> = {
+        &quotinput_mask&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotmasked_lm_positions&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_ids&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_weights&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.float32),
+    }
+    <a id="change">if self._params.use_v2_feature_names:
+      name_to_features.update({
+          &quotinput_word_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+          &quotinput_type_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+      })
+    else:
+      name_to_features.update({
+          &quotinput_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+          &quotsegment_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+      })
+   </a> if self._use_next_sentence_label:
+      name_to_features[&quotnext_sentence_labels&quot] = tf.io.FixedLenFeature([1],
+                                                                       tf.int64)
+    if self._use_position_id:</code></pre><img src="25443.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/e10b29f4ba212cb7e1c25a57c7e8b3a465631ccf#diff-495619941f73ea86e714c49a288a1f9914ec3ecc663038f0e16dd6d47060b0f8L58' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: e10b29f4ba212cb7e1c25a57c7e8b3a465631ccf</div><div id='time'> Time: 2020-09-08</div><div id='author'> Author: hongkuny@google.com</div><div id='file'> File Name: official/nlp/data/pretrain_dataloader.py</div><div id='class'> Class Name: BertPretrainDataLoader</div><div id='method'> Method Name: _decode</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/3c61d59128c88f7e155a84296e1b9c1d0fa56170#diff-18d7889156d7558713e7bd006b1c31cf60e6f4d0bf3b96e9a0734b9b71f2e697L197' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 3c61d59128c88f7e155a84296e1b9c1d0fa56170</div><div id='time'> Time: 2020-12-03</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: official/nlp/data/wmt_dataloader.py</div><div id='class'> Class Name: WMTDataLoader</div><div id='method'> Method Name: _decode</div><BR>

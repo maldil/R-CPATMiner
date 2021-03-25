@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        expected = expected.dropna()
+        expected_corr = expected.corr()
+
+        fa = <a id="change">FactorAnalyzer()</a>
+        <a id="change">fa.analyze(data, 1, rotation=None, impute=&quotdrop&quot)</a>
+        assert_frame_equal(fa.corr, expected_corr)
+
+    @raises(ValueError)
+    def test_analyze_impute_value_error(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        expected_corr = expected.corr()
+        expected_corr = expected_corr.values
+
+        fa = <a id="change">FactorAnalyzer(rotation=None, impute=&quotdrop&quot, n_factors=1)</a>
+        <a id="change">fa.fit(data)</a>
+        assert_array_almost_equal(fa.corr_, expected_corr)
+
+    @raises(ValueError)
+    def test_analyze_impute_value_error(self):</code></pre>

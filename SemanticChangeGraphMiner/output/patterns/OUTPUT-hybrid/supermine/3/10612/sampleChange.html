@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if load_triplets:
+            data_a, data_p, data_n = data
+            if args.cuda:
+                data_a, data_p, data_n  = data_a.cuda(), data_p.cuda(), <a id="change">data_n.cuda()</a>
+            data_a, data_p, data_n = Variable(data_a), Variable(data_p), Variable(data_n)
+            out_a, out_p, out_n = model(data_a), model(data_p), model(data_n)
+
+            if args.hard_mining:</code></pre><h3>After Change</h3><pre><code class='java'>
+            out_a, out_p = model(data_a), model(data_p)
+
+        if load_triplets:
+            data_n  = <a id="change">data_n.cuda()</a>
+            data_n = Variable(data_n)
+            <a id="change">out_n = model(data_n)</a>
+
+        if args.batch_reduce == &quotL2Net&quot:
+            loss = loss_L2Net(out_a, out_p, anchor_swap = args.anchorswap,
+                    margin = args.margin, loss_type = args.loss)</code></pre>

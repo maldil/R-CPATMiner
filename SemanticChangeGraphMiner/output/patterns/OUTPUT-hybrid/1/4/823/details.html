@@ -1,0 +1,21 @@
+<html><h3>8f2f0408337cf96ca3d737075068d870a3d0a36c,mordecai/geoparse.py,Geoparser,batch_geoparse,#Geoparser#,1029
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not self.threads:
+            print("Error: can&quott run batch_geoparse without setting threads = True.")
+            return
+        nlped_docs = <a id="change">nlp.pipe(text_list, multiprocessing.cpu_count())</a>
+        &#47&#47pool = ThreadPool(self.n_threads)
+        &#47&#47processed = pool.map(self.geoparse, nlped_docs)
+        &#47&#47pool.close()
+        &#47&#47pool.join()</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        if not self.threads:
+            print("batch_geoparsed should be used with threaded searches. Please set `threads=True` when initializing the geoparser.")
+        nlped_docs = <a id="change">list(nlp.pipe(text_list, as_tuples=False, n_threads=multiprocessing.cpu_count()))</a>
+        processed = []
+        for i in tqdm(nlped_docs, disable=not self.progress):
+            p = self.geoparse(i)
+            processed.append(p)</code></pre><img src="3869906.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/openeventdata/mordecai/commit/8f2f0408337cf96ca3d737075068d870a3d0a36c#diff-aa69da5cdb5088bbac44897826d3106c1c8c7700d29932c12e0c657e853faf54L1034' target='_blank'>Link</a></div><div id='project'> Project Name: openeventdata/mordecai</div><div id='commit'> Commit Name: 8f2f0408337cf96ca3d737075068d870a3d0a36c</div><div id='time'> Time: 2018-07-02</div><div id='author'> Author: ahalterman0@gmail.com</div><div id='file'> File Name: mordecai/geoparse.py</div><div id='class'> Class Name: Geoparser</div><div id='method'> Method Name: batch_geoparse</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/46628d88903edaa2c3614339a0d464b9fcdcc690#diff-2f06c2344ed710078500e23edce426efedd22936f8bd4d1f552a4c5c76106f55L38' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: 46628d88903edaa2c3614339a0d464b9fcdcc690</div><div id='time'> Time: 2020-02-12</div><div id='author'> Author: sofie.vanlandeghem@gmail.com</div><div id='file'> File Name: spacy/tests/regression/test_issue4903.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_issue4903</div><BR><BR><div id='link'><a href='https://github.com/explosion/spaCy/commit/1de61f68d645f0157f3902713bb69be1cf1421e2#diff-e1a4dc4f9948dcae8b96463579f3104f7abfaedc32cefe7d1c1a7bc57f626a74L283' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/spaCy</div><div id='commit'> Commit Name: 1de61f68d645f0157f3902713bb69be1cf1421e2</div><div id='time'> Time: 2019-06-26</div><div id='author'> Author: sofie.vanlandeghem@gmail.com</div><div id='file'> File Name: examples/pipeline/wikidata_entity_linking.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _measure_accuracy</div><BR>

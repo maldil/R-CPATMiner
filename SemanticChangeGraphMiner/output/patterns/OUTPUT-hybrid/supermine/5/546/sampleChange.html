@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not tl.shape(tensor) == (size, )*order:
+        raise ValueError(&quotThe input tensor does not have the same size along each mode.&quot)
+
+    <a id="change">factor = tl.zeros((size, rank), **tl.context(tensor))</a>
+    weigths = tl.zeros(rank, **tl.context(tensor))
+
+    for i in range(rank):
+        eigenval, eigenvec, deflated = symmetric_power_iteration(tensor, n_repeat=n_repeat, n_iteration=n_iteration, verbose=verbose)
+        <a id="change">factor = tl.index_update(factor, tl.index[:, i], eigenvec)</a>
+        weigths = tl.index_update(weigths, tl.index[i], eigenval)
+        tensor = deflated
+
+    return weigths, factor</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    for _ in range(rank):
+        eigenval, eigenvec, deflated = symmetric_power_iteration(tensor, n_repeat=n_repeat, n_iteration=n_iteration, verbose=verbose)
+        <a id="change">factor.append(eigenvec)</a>
+        weigths.append(eigenval)
+        tensor = deflated
+
+    factor = tl.stack(factor, axis=1)</code></pre>

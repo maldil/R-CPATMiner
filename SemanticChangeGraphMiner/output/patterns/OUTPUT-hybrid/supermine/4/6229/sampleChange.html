@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		"feed a batch into the NN to train it"
+		sparse = self.toSparse(batch.gtTexts)
+		rate = 0.01 if self.batchesTrained &lt; 10 else (0.001 if self.batchesTrained &lt; 10000 else 0.0001) &#47&#47 decay learning rate
+		(_, lossVal) = <a id="change">self.sess.run([self.optimizer, self.loss], { self.inputImgs : batch.imgs, self.gtTexts : sparse , self.seqLen : [Model.maxTextLen] * Model.batchSize, self.learningRate : rate} )</a>
+		self.batchesTrained += 1
+		return lossVal
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+	def trainBatch(self, batch):
+		"feed a batch into the NN to train it"
+		numBatchElements = <a id="change">len(batch.imgs)</a>
+		sparse = self.toSparse(batch.gtTexts)
+		rate = 0.01 if self.batchesTrained &lt; 10 else (0.001 if self.batchesTrained &lt; 10000 else 0.0001) &#47&#47 decay learning rate
+		evalList = [self.optimizer, self.loss]
+		feedDict = {self.inputImgs : batch.imgs, self.gtTexts : sparse , self.seqLen : [Model.maxTextLen] * numBatchElements, self.learningRate : rate}
+		<a id="change">(_, lossVal) = self.sess.run(evalList, feedDict)</a>
+		self.batchesTrained += 1
+		return lossVal
+
+</code></pre>

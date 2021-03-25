@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Test generate predictions API with hashing and a threshold
+    
+
+    yield <a id="change">check_generate_predictions, False, False</a>
+    yield check_generate_predictions, True, False
+    yield check_generate_predictions, False, True
+    yield check_generate_predictions, True, True
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_generate_predictions():
+
+    <a id="change">for (use_feature_hashing,
+         use_threshold,
+         test_on_subset) in product([True, False], [True, False], [True, False]):
+        yield check_generate_predictions, use_feature_hashing, use_threshold, test_on_subset
+
+
+</a>def check_generate_predictions_console(use_threshold=False):
+
+    &#47&#47 create some simple classification data without feature hashing
+    train_fs, test_fs = make_classification_data(num_examples=1000,</code></pre>

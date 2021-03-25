@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      &#47&#47 gcs-&gt;table (or load) step, so we take that as the input table (and emit a load
+      &#47&#47 operator).
+      source_of_table = bq_pipeline_output_config
+      load_task_config[&quottable&quot] = <a id="change">source_of_table.get(&quottable&quot)</a>
+
+    &#47&#47 If a table or path are absent, there is no load to be done so we return None
+    if load_task_config[&quottable&quot] is None or load_task_config[&quotpath&quot] is None:
+      return None</code></pre><h3>After Change</h3><pre><code class='java'>
+    load_task_config = {&quottype&quot: &quotpydatalab.bq.load&quot}
+
+    &#47&#47 The path URL of the GCS load file(s).
+    <a id="change">if &quotpath&quot not in bq_pipeline_input_config:
+      return None
+
+    &#47&#47 The path URL of the GCS load file(s), and associated parameters
+   </a> load_task_config[&quotpath&quot] = bq_pipeline_input_config.get(&quotpath&quot)
+
+    if &quotformat&quot in bq_pipeline_input_config:
+      load_task_config[&quotformat&quot] = bq_pipeline_input_config[&quotformat&quot]</code></pre>

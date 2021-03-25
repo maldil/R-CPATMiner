@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        elif name in F_KDTREE:
+            kwargs["kdtree"] = self.kdtrees[kwargs["kdtree"]]
+            <a id="change">valid_args = crosscheck_kwargs_function(kwargs, F_KDTREE[name])</a>
+            return <a id="change">F_KDTREE[name](**valid_args)</a>
+
+        else:
+            <a id="change">raise ValueError("Unsupported filter; supported filters are: {}".format(ALL_FILTERS))</a> 
+    
+    def get_sample(self, name, **kwargs):
+         Returns arbitrary number of points sampled by selected method</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        if name in ALL_FILTERS:
+            <a id="change">F = ALL_FILTERS[name](self, **kwargs)</a>
+            <a id="change">F.extract_info()</a>
+            return <a id="change">F.compute()</a>
+
+        else:
+            raise ValueError("Unsupported filter. Check docstring")
+            </code></pre>

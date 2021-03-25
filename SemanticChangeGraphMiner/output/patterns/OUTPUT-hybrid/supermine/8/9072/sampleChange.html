@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            "alias": form.cleaned_data["alias"],
+        }
+        &#47&#47 Using SimpleTemplateResponse avoids running global context processors.
+        <a id="change">return SimpleTemplateResponse("debug_toolbar/panels/sql_select.html", context)</a>
+    return HttpResponseBadRequest("Form errors")
+
+
+@csrf_exempt</code></pre><h3>After Change</h3><pre><code class='java'>
+            "headers": headers,
+            "alias": form.cleaned_data["alias"],
+        }
+        <a id="change">content = render_to_string("debug_toolbar/panels/sql_select.html", context)</a>
+        <a id="change">return JsonResponse({"content": content})</a>
+    return HttpResponseBadRequest("Form errors")
+
+
+@csrf_exempt</code></pre>

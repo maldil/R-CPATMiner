@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __init__(self, in_features):
+        super(ResidualBlock, self).__init__()
+
+        <a id="change">conv_block</a> = [  nn.ReflectionPad2d(1),
+                        nn.Conv2d(in_features, in_features, 3),
+                        nn.InstanceNorm2d(in_features),
+                        <a id="change">nn.ReLU(inplace=True)</a>,
+                        nn.ReflectionPad2d(1),
+                        nn.Conv2d(in_features, in_features, 3),
+                        nn.InstanceNorm2d(in_features)  ]
+
+        self.conv_block = <a id="change">nn.Sequential(*conv_block)</a>
+
+    def forward(self, x):
+        return x + self.conv_block(x)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, in_features):
+        super(ResidualBlock, self).__init__()
+
+        self.block = <a id="change">nn.Sequential(
+            nn.ReflectionPad2d(1),
+            nn.Conv2d(in_features, in_features, 3),
+            nn.InstanceNorm2d(in_features),
+            nn.ReLU(inplace=True),
+            nn.ReflectionPad2d(1),
+            nn.Conv2d(in_features, in_features, 3),
+            nn.InstanceNorm2d(in_features),
+        )</a>
+
+    def forward(self, x):
+        return x + self.block(x)
+</code></pre>

@@ -1,0 +1,30 @@
+<html><h3>e22ec775fbde41968ca64ba2ed0e09e8f5cf687d,brian2/codegen/generators/GSL_generator.py,GSLCodeGenerator,write_dataholder,#GSLCodeGenerator#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def write_dataholder_single(self, var_obj):
+        raise NotImplementedError
+    def write_dataholder(self, variables_in_vector):
+        <a id="change">raise NotImplementedError</a>
+    def to_replace_vector_vars(self, variables_in_vector, ignore=[]):
+        raise NotImplementedError
+    def unpack_namespace_single(self, var_obj, in_vector, in_scalar):
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+        return allocate_yvector + &quot\n&quot + (&quot\n&quot).join(fill_yvector) + &quot\n&quot + (&quot\n&quot).join(empty_yvector)
+
+    def write_dataholder(self, variables_in_vector):
+        <a id="change">end_statement = self.get_syntax(&quotend_statement&quot)</a>
+        open_struct = self.get_syntax(&quotopen_struct&quot)
+        end_struct = self.get_syntax(&quotend_struct&quot)
+
+        <a id="change">code = [&quot\n&quot+self.declare(&quotstruct&quot, &quotdataholder&quot) + open_struct]</a>
+        code += [&quot\n\t&quot+self.declare(&quotint&quot, &quot_idx&quot, in_struct=True) + end_statement]
+        <a id="change">for var_obj in variables_in_vector:
+            if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+            code += [&quot\t&quot+self.write_dataholder_single(var_obj)]
+       </a> code += [end_struct]
+        return (&quot\n&quot).join(code)
+
+    def find_undefined_variables(self, statements):</code></pre><img src="14259161.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/e22ec775fbde41968ca64ba2ed0e09e8f5cf687d#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL76' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: e22ec775fbde41968ca64ba2ed0e09e8f5cf687d</div><div id='time'> Time: 2017-07-10</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/ae454df2f747d1a630a70a7d1fb528f927b29ea4#diff-542891d1156706136e4c0299fe5d844ae0079f4f4860f05e5b4fc3d5c8d90ad0L856' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: ae454df2f747d1a630a70a7d1fb528f927b29ea4</div><div id='time'> Time: 2020-05-14</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/datasets/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _pitch_shift</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/e22ec775fbde41968ca64ba2ed0e09e8f5cf687d#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL76' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: e22ec775fbde41968ca64ba2ed0e09e8f5cf687d</div><div id='time'> Time: 2017-07-10</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/478d440f0902562314e6780f1b694ae48084f002#diff-542891d1156706136e4c0299fe5d844ae0079f4f4860f05e5b4fc3d5c8d90ad0L857' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 478d440f0902562314e6780f1b694ae48084f002</div><div id='time'> Time: 2020-04-23</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/datasets/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _pitch_shift</div><BR>

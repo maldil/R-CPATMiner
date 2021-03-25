@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    See :class:`~kornia.losses.PSNRLoss` for details.
+    
+    <a id="change">if not torch.is_tensor(input) or not torch.is_tensor(target):
+        raise TypeError(f"Expected 2 torch tensors but got {type(input)} and {type(target)}")
+
+   </a> if input.shape != target.shape:
+        raise TypeError(f"Expected tensors of equal shapes, but got {input.shape} and {target.shape}")
+    <a id="change">mse_val = mse_loss(input, target, reduction=&quotmean&quot)</a>
+    max_val_tensor: torch.Tensor = torch.tensor(max_val).to(input.device).to(input.dtype)
+    return 10 * torch.log10(max_val_tensor * max_val_tensor / mse_val)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        tensor(-20.0000)
+    
+
+    <a id="change">return -1. * psnr(input, target, max_val)</a>
+
+
+class PSNRLoss(nn.Module):
+    rCreates a criterion that calculates the PSNR loss.</code></pre>

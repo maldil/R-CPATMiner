@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 initialize values
+        numMics = self.steer.mics.num_mics
+        m_index = arange(numMics, dtype=int)
+        <a id="change">n_index</a> = <a id="change">arange</a>(0,num)[:,newaxis]
+        c = self.steer.env.c/self.source.sample_freq
+        delays = self.rm/c
+        d_index = array(delays, dtype=int) &#47&#47 integer index
+        d_interp2 = delays % 1 &#47&#47 2nd coeff for lin interpolation between samples
+        d_interp1 = 1-d_interp2 &#47&#47 1st coeff for lin interpolation 
+        w = self._get_weights()
+        amp = (w/(self.rm*self.rm)).sum(1) * self.r0
+        amp = 1.0/(amp[:, newaxis]*self.rm) &#47&#47 multiplication factor
+        temp = empty((self.grid.size, self.source.numchannels), dtype=float)
+        d_interp1 *= amp &#47&#47 premultiplication, to save later ops
+        d_interp2 *= amp
+        maxdelay = int((self.rm/c).max())+2 + num &#47&#47 +2 because interpolation
+        initialNumberOfBlocks = int(ceil(maxdelay/num))
+        bufferSize=initialNumberOfBlocks*num
+        self.buffer = zeros((bufferSize,numMics), dtype=float)
+        self.bufferIndex = bufferSize &#47&#47 indexing current time sample in buffer 
+        fill_buffer_generator = self._fill_buffer(num)
+        for _ in range(initialNumberOfBlocks):
+            next(fill_buffer_generator)
+
+        &#47&#47 start processing
+        flag = True
+        while flag:
+            samplesleft = self.buffer.shape[0]-self.bufferIndex
+            if samplesleft-maxdelay &lt;= 0:
+                num += samplesleft-maxdelay
+                maxdelay += samplesleft-maxdelay
+                n_index = arange(0,<a id="change">num</a>)[:,newaxis]
+                flag=False
+            &#47&#47 init step
+            p_res = array(
+                self.buffer[self.bufferIndex:self.bufferIndex+maxdelay,:])
+            Phi, autopow = self.delay_and_sum(
+                num,p_res,d_interp1,d_interp2,d_index,m_index,temp)
+            Gamma = zeros(Phi.shape)
+            Gamma_autopow = zeros(Phi.shape)
+            J = 0
+            &#47&#47 deconvolution 
+            while (J &lt; self.n_iter):
+                &#47&#47 print(f"start clean iteration {J+1} of max {self.n_iter}")
+                if self.r_diag:
+                    powPhi = clip((Phi[:num]**2-autopow).sum(0),1e-100,1e+100)
+                else:
+                    powPhi = (Phi[:num]**2).sum(0)
+                imax = argmax(powPhi)
+                <a id="change">t_float</a> = delays[imax,m_index]+n_index
+                <a id="change">t_ind</a> = t_float.astype(int)
+                for m in range(numMics): 
+                    p_res[t_ind[:num,m],m] -= self.damp*interp(t_ind[:num,m],
+                                                               t_float[:num,m],</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 initialize values
+        numMics = self.steer.mics.num_mics
+        m_index = arange(numMics, dtype=int)
+        <a id="change">n_index</a> = arange(0,<a id="change">num+1</a>)[:,newaxis]
+        c = self.steer.env.c/self.source.sample_freq
+        delays = self.rm/c
+        d_index = array(delays, dtype=int) &#47&#47 integer index
+        d_interp2 = delays % 1 &#47&#47 2nd coeff for lin interpolation between samples
+        d_interp1 = 1-d_interp2 &#47&#47 1st coeff for lin interpolation 
+        w = self._get_weights()
+        amp = (w/(self.rm*self.rm)).sum(1) * self.r0
+        amp = 1.0/(amp[:, newaxis]*self.rm) &#47&#47 multiplication factor
+        temp = empty((self.grid.size, self.source.numchannels), dtype=float)
+        d_interp1 *= amp &#47&#47 premultiplication, to save later ops
+        d_interp2 *= amp
+        maxdelay = int((self.rm/c).max())+2 + num &#47&#47 +2 because interpolation
+        initialNumberOfBlocks = int(ceil(maxdelay/num))
+        bufferSize=initialNumberOfBlocks*num
+        self.buffer = zeros((bufferSize,numMics), dtype=float)
+        self.bufferIndex = bufferSize &#47&#47 indexing current time sample in buffer 
+        fill_buffer_generator = self._fill_buffer(num)
+        for _ in range(initialNumberOfBlocks):
+            next(fill_buffer_generator)
+
+        &#47&#47 start processing
+        flag = True
+        while flag:
+            samplesleft = self.buffer.shape[0]-self.bufferIndex
+            if samplesleft-maxdelay &lt;= 0:
+                num += samplesleft-maxdelay
+                maxdelay += samplesleft-maxdelay
+                n_index = <a id="change">arange</a>(0,<a id="change">num+1</a>)[:,newaxis]
+                flag=False
+            &#47&#47 init step
+            p_res = array(
+                self.buffer[self.bufferIndex:self.bufferIndex+maxdelay,:])
+            Phi, autopow = self.delay_and_sum(
+                num,p_res,d_interp1,d_interp2,d_index,m_index,temp)
+            Gamma = zeros(Phi.shape)
+            Gamma_autopow = zeros(Phi.shape)
+            J = 0
+            &#47&#47 deconvolution 
+            while (J &lt; self.n_iter):
+                &#47&#47 print(f"start clean iteration {J+1} of max {self.n_iter}")
+                if self.r_diag:
+                    powPhi = clip((Phi[:num]**2-autopow).sum(0),1e-100,1e+100)
+                else:
+                    powPhi = (Phi[:num]**2).sum(0)
+                imax = argmax(powPhi)
+                <a id="change">t_float</a> = delays[imax,m_index]+n_index
+                <a id="change">t_ind</a> = t_float.astype(int)
+                for m in range(numMics): 
+                    p_res[t_ind[:num+1,m],m] -= self.damp*interp(t_ind[:num+1,m],
+                                                               t_float[:num,m],</code></pre>

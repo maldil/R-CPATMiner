@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if result[&quotfinal&quot] is True:
+                timestamps = result[&quotalternatives&quot][0][&quottimestamps&quot]
+                for entry in timestamps:
+                    <a id="change">elements.append(TextStim(text=entry[0], onset=entry[1],
+                                             duration=entry[2]-entry[1]))</a>
+        return ComplexTextStim(elements=elements)
+
+    def _query_api(self, clip):
+        &#47&#47 Adapted from SpeechRecognition source code, modified to get text</code></pre><h3>After Change</h3><pre><code class='java'>
+        for result in results:
+            if result[&quotfinal&quot] is True:
+                timestamps = result[&quotalternatives&quot][0][&quottimestamps&quot]
+                <a id="change">if self.resolution is &quotwords&quot:
+                    for entry in timestamps:
+                        text = entry[0]
+                        start = entry[1]
+                        end = entry[2]
+                        elements.append(TextStim(text=text, onset=start,
+                                                 duration=end-start))
+                elif self.resolution is &quotphrases&quot:
+                    text = result[&quotalternatives&quot][0][&quottranscript&quot]
+                    start = timestamps[0][1]
+                    end = timestamps[-1][2]
+                    elements.append(TextStim(text=text, onset=start,
+                                             duration=end-start))
+       </a> return ComplexTextStim(elements=elements)
+
+    def _query_api(self, clip):
+        &#47&#47 Adapted from SpeechRecognition source code, modified to get text</code></pre>

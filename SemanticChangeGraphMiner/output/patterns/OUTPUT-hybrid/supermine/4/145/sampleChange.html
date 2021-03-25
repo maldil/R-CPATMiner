@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.bad_endings_ix = [int(k) for k,v in self.vocab.items() if v in bad_endings]
+
+    def init_hidden(self, bsz):
+        weight = next(<a id="change">self.parameters()</a>)
+        return (weight.new_zeros(self.num_layers, bsz, self.rnn_size),
+                weight.new_zeros(self.num_layers, bsz, self.rnn_size))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def init_hidden(self, bsz):
+        weight = self.logit.weight \
+                 if hasattr(self.logit, "weight") \
+                 else <a id="change">self</a>.logit[<a id="change">0</a>].weight
+        return (weight.new_zeros(self.num_layers, bsz, self.rnn_size),
+                weight.new_zeros(self.num_layers, bsz, self.rnn_size))
+</code></pre>

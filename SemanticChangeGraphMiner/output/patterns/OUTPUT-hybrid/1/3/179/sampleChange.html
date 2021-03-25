@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        super().__init__()
+
+        &#47&#47 First convolution
+        self.features = <a id="change">nn.Sequential(
+            OrderedDict([
+                (&quotconv1&quot,
+                 nn.Conv3d(
+                     3,
+                     num_init_features,
+                     kernel_size=(conv1_t_size, 7, 7),
+                     stride=(conv1_t_stride, 2, 2),
+                     padding=(conv1_t_size // 2, 3, 3),
+                     bias=False)),
+                (&quotnorm1&quot, nn.BatchNorm3d(num_init_features)),
+                (&quotrelu1&quot, nn.ReLU(inplace=True)),
+                (&quotpool1&quot, nn.MaxPool3d(kernel_size=3, stride=2, padding=1)),
+            ]))</a>
+
+        &#47&#47 Each denseblock
+        num_features = num_init_features
+        for i, num_layers in enumerate(block_config):</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.features.append((&quotpool1&quot,
+                                  nn.MaxPool3d(
+                                      kernel_size=3, stride=2, padding=1)))
+        self.features = <a id="change">nn.Sequential(OrderedDict(self.features))</a>
+
+        &#47&#47 Each denseblock
+        num_features = num_init_features
+        for i, num_layers in enumerate(block_config):</code></pre>

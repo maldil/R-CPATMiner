@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    
+    D, V = scipy.linalg.eigh(Ci)
+    D = <a id="change">numpy.matrix(numpy.diag(D**alpha))</a>
+    <a id="change">V = numpy.matrix(V)</a>
+    Out = numpy.matrix(<a id="change">V * D * V.T</a>)
+    return Out
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    
+    D, V = scipy.linalg.eigh(Ci)
+    D = <a id="change">numpy.diag(D**alpha)</a>
+    Out = numpy.dot(<a id="change">numpy.dot(V, D)</a>, <a id="change">V.T</a>)
+    return Out
+
+</code></pre>

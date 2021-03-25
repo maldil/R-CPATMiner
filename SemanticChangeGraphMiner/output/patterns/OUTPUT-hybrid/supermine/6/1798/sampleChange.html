@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        shape = [len(seqs)]
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        dim_sizes = <a id="change">zip(*[seq.shape for seq in seqs])</a>
+        shape.extend(max(sizes) for sizes in dim_sizes)
+        &#47&#47 Now copy the data into our new buffer.
+        output: Array = self.alloc(tuple(shape), dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError("Cannot pad sequences that differ on other dimensions")
+        &#47&#47 Find the maximum dimension along each axis. That&quots what we&quotll pad to.
+        shapes = [tuple(s.shape) for s in seqs]
+        <a id="change">dim_sizes = zip(*[shape for shape in shapes])</a>
+        <a id="change">max_dims = [max(sizes) for sizes in dim_sizes]</a>
+        final_shape = (len(seqs),) + tuple(max_dims)
+        output = self.alloc(final_shape, dtype=seqs[0].dtype)
+        for i, arr in enumerate(seqs):
+            region = [i] + [slice(0, dim) for dim in arr.shape]</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        AtoB = self.opt.which_direction == &quotAtoB&quot
+        input_A = input[&quotA&quot if AtoB else &quotB&quot]
+        input_B = input[&quotB&quot if AtoB else &quotA&quot]
+        <a id="change">self.input_A.resize_(input_A.size()).copy_(input_A)</a>
+        self.input_B.resize_(input_B.size()).copy_(input_B)
+        self.image_paths = input[&quotA_paths&quot if AtoB else &quotB_paths&quot]
+
+    def forward(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def set_input(self, input):
+        AtoB = self.opt.which_direction == &quotAtoB&quot
+        <a id="change">input_A</a> = input[&quotA&quot if AtoB else &quotB&quot]
+        input_B = input[&quotB&quot if AtoB else &quotA&quot]
+        <a id="change">if len(self.gpu_ids) &gt; 0:
+            input_A = input_A.cuda(self.gpu_ids[0], async=True)
+            input_B = input_B.cuda(self.gpu_ids[0], async=True)
+       </a> <a id="change">self.input_A = input_A</a>
+        <a id="change">self.input_B = input_B</a>
+        self.image_paths = input[&quotA_paths&quot if AtoB else &quotB_paths&quot]
+
+    def forward(self):
+        self.real_A = Variable(self.input_A)</code></pre>

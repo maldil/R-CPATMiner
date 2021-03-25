@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if self.normalizer is not None:
+            X = self.normalizer.inverse_transform(X)
+        <a id="change">if self.min_value is not None:
+            X[X &lt; self.min_value] = self.min_value
+       </a> <a id="change">if self.max_value is not None:
+            X[X &gt; self.max_value] = self.max_value
+       </a> return X
+
+    def solve(self, X, missing_mask):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            X[X &gt; self.max_value] = self.max_value
+        return X
+
+    def project_result(<a id="change">self</a>, X):
+        
+        First undo normaliztion and then clip to the user-specified min/max
+        range.
+        
+        X = np.asarray(X)
+        if self.normalizer is not None:
+            X = self.normalizer.inverse_transform(X)
+        return <a id="change">self.clip(X)</a>
+
+    def solve(self, X, missing_mask):
+        
+        Given an initialized matrix X and a mask of where its missing values</code></pre>

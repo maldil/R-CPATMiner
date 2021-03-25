@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+this_file = os.path.dirname(os.path.realpath(__file__))
+print(this_file)
+<a id="change">extra_objects = [&quotsrc/roi_crop_cuda_kernel.cu.o&quot]</a>
+extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
+
+ffi = create_extension(
+    &quot_ext.roi_crop&quot,</code></pre><h3>After Change</h3><pre><code class='java'>
+from torch.utils.ffi import create_extension
+
+&#47&#47this_file = os.path.dirname(__file__)
+<a id="change">torch_root = os.path.join(os.path.dirname(sys.executable),
+                          &quotLib/site-packages/torch/lib&quot)</a>
+<a id="change">cuda_root = os.environ[&quotCUDA_PATH&quot]</a>
+
+sources = [&quotsrc/roi_crop.cpp&quot]
+headers = [&quotsrc/roi_crop.h&quot]
+<a id="change">include_dirs = []</a>
+defines = []
+with_cuda = False
+
+this_file = os.path.dirname(os.path.realpath(__file__))
+print(this_file)
+
+if torch.cuda.is_available():
+    print(&quotIncluding CUDA code.&quot)
+    sources += [&quotsrc/roi_crop_cuda.cpp&quot]
+    headers += [&quotsrc/roi_crop_cuda.h&quot]
+    <a id="change">include_dirs += [os.path.join(cuda_root,"include"), 
+                     os.path.join(torch_root,&quotinclude&quot)]</a>
+    defines += [(&quotWITH_CUDA&quot, None)]
+    with_cuda = True
+
+extra_objects = <a id="change">[&quotsrc/roi_crop_cuda_kernel.lib&quot]</a>
+extra_objects = [os.path.join(this_file, fname) for fname in extra_objects]
+extra_objects += <a id="change">[os.path.join(torch_root,&quotATen.lib&quot),
+                  os.path.join(cuda_root,&quotlib/x64/cudart.lib&quot),
+                  os.path.join(torch_root,&quot_C.lib&quot)]</a>
+<a id="change">print(extra_objects)</a>
+
+ffi = create_extension(
+    &quot_ext.roi_crop&quot,
+    headers=headers,</code></pre>

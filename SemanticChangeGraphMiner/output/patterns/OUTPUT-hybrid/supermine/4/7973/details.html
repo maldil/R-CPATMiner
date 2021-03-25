@@ -1,0 +1,49 @@
+<html><h3>8184b9fdf51e3f75835fe1f2d56c294d16686241,examples/federated_learning_with_encryption.py,,,#,162
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Each client trains a linear regressor on its own data
+    for (i, c) in enumerate(clients):
+        <a id="change">c = c.fit(X[i], y[i], n_iter=50, eta=0.05)</a>
+        print(c.weights)
+
+    &#47&#47 Predict
+    for (i, c) in enumerate(clients):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Instantiate Alice, Bob and Carol.
+    &#47&#47 Each client gets the public key at creation
+    clients = []
+    <a id="change">for i in range(n_clients):
+        clients.append(Client(names[i], X[i], y[i], server.pubkey))
+
+    &#47&#47 Each client trains a linear regressor on its own data
+    &#47&#47 for (i, c) in enumerate(clients):
+    &#47&#47     c = c.fit(n_iter=50, eta=0.05)
+    &#47&#47     print(c.weights)
+    &#47&#47
+    &#47&#47 &#47&#47 Predict
+    &#47&#47 for (i, c) in enumerate(clients):
+    &#47&#47     print(&quotTrain&quot, mean_square_error(c.predict(X[i]), y[i]))
+    &#47&#47     print(&quotTest&quot, mean_square_error(c.predict(X_test), y_test))
+
+    &#47&#47 Each client sends its own model to the next one, in a RING protocol,
+    &#47&#47 aggregating them all. The last client sends the aggregate model to the server
+    &#47&#47 All those exchanges happen the encrypted domain, so neither any client
+    &#47&#47 sees in the clear the model of anybody else, nor the server reads any
+    &#47&#47 client&quots individual model.
+    &#47&#47 encrypted_aggr = clients[0].encrypt_and_aggregate(input_model=None)
+    &#47&#47 encrypted_aggr = clients[1].encrypt_and_aggregate(input_model=encrypted_aggr)
+    &#47&#47 encrypted_aggr = clients[2].encrypt_and_aggregate(input_model=encrypted_aggr)
+    &#47&#47 aggr = server.decrypt_aggregate(encrypted_aggr, n_clients)
+    &#47&#47 print(aggr)
+    &#47&#47 for (i, c) in enumerate(clients):
+    &#47&#47     c.weights = aggr
+    &#47&#47     y_pred = c.predict(X_test)
+    &#47&#47     print(mean_square_error(y_pred, y_test))
+
+    &#47&#47 The federated learning with gradient from the google paper
+   </a> n_iter = 5
+    for i in range(n_iter):
+
+        &#47&#47 Compute gradients, encrypt and aggregate</code></pre><img src="30922759.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/data61/python-paillier/commit/8184b9fdf51e3f75835fe1f2d56c294d16686241#diff-8b503b12be61cff27acb20969788ce097f27e90ebab53ec2ebbda3f5b484ceeeL168' target='_blank'>Link</a></div><div id='project'> Project Name: data61/python-paillier</div><div id='commit'> Commit Name: 8184b9fdf51e3f75835fe1f2d56c294d16686241</div><div id='time'> Time: 2017-06-20</div><div id='author'> Author: giorgio.patrini@anu.edu.au</div><div id='file'> File Name: examples/federated_learning_with_encryption.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/lightning/commit/ef0afebc5aacf2f27a57e87c60c3d23e56b37958#diff-095a81126dd1129112950e8ebd66555b6d8475c5aaa76d8fe4ae014f220de568L58' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/lightning</div><div id='commit'> Commit Name: ef0afebc5aacf2f27a57e87c60c3d23e56b37958</div><div id='time'> Time: 2015-09-08</div><div id='author'> Author: f@bianp.net</div><div id='file'> File Name: lightning/impl/tests/test_sag.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sag_sparse</div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/da66e64f1eff8b52ae90cccc6f75a75d1af94c50#diff-cb3809abb78287fa8597abd877d4c0f541c64570a7e9ce62fc4887d0ab99eb61L11' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: da66e64f1eff8b52ae90cccc6f75a75d1af94c50</div><div id='time'> Time: 2018-02-05</div><div id='author'> Author: aperez@thoughtworks.com</div><div id='file'> File Name: examples/convolutional_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

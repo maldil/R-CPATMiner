@@ -1,0 +1,199 @@
+<html><h3>00cce06892217b891c8a85ead8c51b28d556bd64,skopt/gp_opt.py,,gp_minimize,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print("Current minimum: %0.4f" % np.min(yi))
+
+    &#47&#47 Pack results
+    <a id="change">res = OptimizeResult()</a>
+    <a id="change">best = np.argmin(yi)</a>
+    <a id="change">res.x = Xi[best]</a>
+    <a id="change">res.fun = yi[best]</a>
+    <a id="change">res.func_vals = np.array(yi)</a>
+    <a id="change">res.x_iters = Xi</a>
+    res.models = models
+    <a id="change">res.space = space</a>
+    <a id="change">res.random_state = rng</a>
+    <a id="change">res.specs = specs</a>
+
+    <a id="change">return res</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Check params
+    rng = check_random_state(random_state)
+    <a id="change">space</a> = Space(dimensions)
+
+    &#47&#47 Default GP
+    if base_estimator is None:
+        base_estimator = GaussianProcessRegressor(
+            kernel=(ConstantKernel(1.0, (0.01, 1000.0)) *
+                    Matern(length_scale=np.ones(space.transformed_n_dims),
+                           length_scale_bounds=[(0.01, 100)] * space.transformed_n_dims,
+                           nu=2.5)),
+            normalize_y=True, alpha=alpha, random_state=random_state)
+
+    &#47&#47 Initialize with provided points (x0 and y0) and/or random points
+    if x0 is None:
+        x0 = []
+    elif not isinstance(x0[0], list):
+        x0 = [x0]
+
+    if not isinstance(x0, list):
+        raise ValueError("`x0` should be a list, but got %s" % type(x0))
+
+    n_init_func_calls = len(x0) if y0 is None else 0
+    n_total_init_calls = n_random_starts + n_init_func_calls
+
+    if n_total_init_calls &lt;= 0:
+        &#47&#47 if x0 is not provided and n_random_starts is 0 then
+        &#47&#47 it will ask for n_random_starts to be &gt; 0.
+        raise ValueError(
+            "Expected `n_random_starts` &gt; 0, got %d" % n_random_starts)
+
+    if n_calls &lt; n_total_init_calls:
+        raise ValueError(
+            "Expected `n_calls` &gt;= %d, got %d" % (n_total_init_calls, n_calls))
+
+    func_call_no = 0
+    if y0 is None and x0:
+        y0 = []
+        for i, x in enumerate(x0):
+
+            if verbose:
+                func_call_no += 1
+                print("Function evaluation No: %d at provided "
+                      "point started." % func_call_no)
+                t = time()
+
+            curr_y = func(x)
+            y0.append(curr_y)
+
+            if verbose:
+                print("Function evaluation No: %d at provided "
+                      "point ended." % func_call_no)
+                print("Time taken: %0.4f" % (time() - t))
+                print("Function value obtained: %0.4f" % curr_y)
+                print("Current minimum: %0.4f" % np.min(y0))
+
+            if callback is not None:
+                callback(pack_optimize_result(x0, y0, space, rng, specs))
+
+    elif x0:
+        if isinstance(y0, Iterable):
+            y0 = list(y0)
+        elif isinstance(y0, numbers.Number):
+            y0 = [y0]
+        else:
+            raise ValueError(
+                "`y0` should be an iterable or a scalar, got %s" % type(y0))
+        if len(x0) != len(y0):
+            raise ValueError("`x0` and `y0` should have the same length")
+        if not all(map(np.isscalar, y0)):
+            raise ValueError(
+                "`y0` elements should be scalars")
+    else:
+        y0 = []
+
+    &#47&#47 Random function evaluations.
+    X_rand = space.rvs(n_samples=n_random_starts, random_state=rng)
+    Xi = x0 + X_rand
+    yi = y0
+
+    for i, x in enumerate(X_rand):
+        if verbose:
+            func_call_no += 1
+            print("Function evaluation no: %d at a "
+                  "random point started" % func_call_no)
+            t = time()
+
+        curr_y = func(x)
+        yi.append(curr_y)
+
+        if verbose:
+            print("Function evaluation no: %d at a "
+                  "random point ended" % func_call_no)
+            print("Time taken: %0.4f" % (time() - t))
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+
+        if callback is not None:
+            callback(pack_optimize_result(
+                x0 + X_rand[:i + 1], yi, space, rng, specs))
+
+    if np.ndim(yi) != 1:
+        raise ValueError("`func` should return a scalar")
+
+    if search == "auto":
+        if space.is_real:
+            search = "lbfgs"
+        else:
+            search = "sampling"
+    elif search not in ["lbfgs", "sampling"]:
+        raise ValueError(
+            "Expected search to be &quotlbfgs&quot, &quotsampling&quot or &quotauto&quot, "
+            "got %s" % search)
+
+    &#47&#47 Bayesian optimization loop
+    models = []
+    n_model_iter = n_calls - n_total_init_calls
+    for i in range(n_model_iter):
+
+        if verbose:
+            print("Fitting GaussianProcessRegressor no: %d" % (i + 1))
+        gp = clone(base_estimator)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            gp.fit(space.transform(Xi), yi)
+
+        models.append(gp)
+
+        if search == "sampling":
+            X = space.transform(space.rvs(n_samples=n_points,
+                                          random_state=rng))
+            values = _gaussian_acquisition(
+                X=X, model=gp,  y_opt=np.min(yi), method=acq,
+                xi=xi, kappa=kappa)
+            next_x = X[np.argmin(values)]
+
+        elif search == "lbfgs":
+            best = np.inf
+
+            for j in range(n_restarts_optimizer):
+                x0 = space.transform(space.rvs(n_samples=1,
+                                               random_state=rng))[0]
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    x, a, _ = fmin_l_bfgs_b(
+                        _acquisition, x0,
+                        args=(gp, np.min(yi), acq, xi, kappa),
+                        bounds=space.transformed_bounds,
+                        approx_grad=True, maxiter=20)
+
+                if a &lt; best:
+                    next_x, best = x, a
+
+        next_x = space.inverse_transform(next_x.reshape((1, -1)))[0]
+
+        if verbose:
+            func_call_no += 1
+            print("Function evaluation no: %d started" % func_call_no)
+            t = time()
+
+        curr_y = func(next_x)
+        Xi.append(next_x)
+        yi.append(curr_y)
+        if verbose:
+            print("Function evaluation no: %d ended" % func_call_no)
+            print("Time taken: %0.4f" % (time() - t))
+            print("Function value obtained: %0.4f" % curr_y)
+            print("Current minimum: %0.4f" % np.min(yi))
+
+        <a id="change">if callback is not None:
+            callback(pack_optimize_result(Xi, yi, space, rng, specs))
+
+    &#47&#47 Pack results
+   </a> <a id="change">return pack_optimize_result(Xi, yi, space, rng, specs, models)</a>
+</code></pre><img src="4077576.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 28</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/00cce06892217b891c8a85ead8c51b28d556bd64#diff-97050f864b120e12efbf2dc90b39500f0534c635d2c6f5cd442216bc9abcebcbL179' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 00cce06892217b891c8a85ead8c51b28d556bd64</div><div id='time'> Time: 2016-08-08</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/gp_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gp_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/00cce06892217b891c8a85ead8c51b28d556bd64#diff-97050f864b120e12efbf2dc90b39500f0534c635d2c6f5cd442216bc9abcebcbL179' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 00cce06892217b891c8a85ead8c51b28d556bd64</div><div id='time'> Time: 2016-08-08</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/gp_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gp_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/00cce06892217b891c8a85ead8c51b28d556bd64#diff-b664a3975b355614eb5080a28622c74841ee57034e3aa7ccb00c1cb7ff75b571L85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 00cce06892217b891c8a85ead8c51b28d556bd64</div><div id='time'> Time: 2016-08-08</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/dummy_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dummy_minimize</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/00cce06892217b891c8a85ead8c51b28d556bd64#diff-61fdc31889ebe6a56e4b2c3dcf028aa12f8c604323247723fa74b63475e7184aL29' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 00cce06892217b891c8a85ead8c51b28d556bd64</div><div id='time'> Time: 2016-08-08</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/tree_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _tree_minimize</div><BR>

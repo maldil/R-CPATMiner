@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                mb_rewards[e_idx, n] = r
+                batch_dones[e_idx].append(done)
+        &#47&#47 obtain values for the last observation
+        obs_v = <a id="change">ptan.agent.default_states_preprocessor(obs, cuda)</a>
+        _, values_v = net(obs_v)
+        values_last = values_v.squeeze().data.cpu().numpy()
+
+        for e_idx, (rewards, dones, value) in enumerate(zip(mb_rewards, batch_dones, values_last)):</code></pre><h3>After Change</h3><pre><code class='java'>
+                mb_rewards[e_idx, n] = r
+                batch_dones[e_idx].append(done)
+        &#47&#47 obtain values for the last observation
+        obs_v = <a id="change">ptan.agent.default_states_preprocessor(obs).to(device)</a>
+        _, values_v = net(obs_v)
+        values_last = values_v.squeeze().data.cpu().numpy()
+
+        for e_idx, (rewards, dones, value) in enumerate(zip(mb_rewards, batch_dones, values_last)):</code></pre>

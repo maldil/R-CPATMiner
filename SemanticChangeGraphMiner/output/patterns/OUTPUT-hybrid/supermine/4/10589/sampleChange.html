@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    grad[i*label_count+j] *= (1-pi[c]) * x[i]
+                    &#47&#47grad.append(pi[c] * (1-pi[c]) * x[i])
+                else:
+                    <a id="change">grad[i*label_count+j]</a> *= (-pi[j]) * x[i]
+                    &#47&#47grad.append(-pi[c] * pi[j] * x[i])
+        &#47&#47grad = np.array(grad)
+        &#47&#47print(np.shape(grad))</code></pre><h3>After Change</h3><pre><code class='java'>
+        _pi = -1 * np.array(pi)
+        _pi[c] += 1
+        grad = pi[c] * np.tile(np.array([x]).T, (1, label_count)) *\
+                        <a id="change">np.tile(np.array([_pi]), (feature_count, 1))</a>
+        grad = grad.reshape((feature_count*label_count))
+
+        return np.dot(grad.T, grad)
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return self._transpose(V * factors)
+
+    def rand(self):
+        <a id="change">X = self._normalize_columns(rnd.randn(self._m, self._n))</a>
+        <a id="change">return self._transpose(X)</a>
+
+    def randvec(self, X):
+        H = rnd.randn(*X.shape)
+        X = self._transpose(X)</code></pre><h3>After Change</h3><pre><code class='java'>
+        return V * factors
+
+    def rand(self):
+        <a id="change">return self._normalize_columns(rnd.randn(self._m, self._n))</a>
+
+    def randvec(self, X):
+        H = rnd.randn(*X.shape)
+        P = self.proj(X, H)</code></pre>

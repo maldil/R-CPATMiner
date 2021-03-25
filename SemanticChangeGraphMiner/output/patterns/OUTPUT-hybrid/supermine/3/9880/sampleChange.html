@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    empty_data = pd.DataFrame(index=[&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot])
+    out = from_contents(OrderedDict(contents), data=empty_data,
+                        id_column=id_column)
+    <a id="change">out2 = from_memberships(memberships=[{&quotcat1&quot},
+                                         {&quotcat1&quot},
+                                         {&quotcat1&quot, &quotcat2&quot},
+                                         {&quotcat2&quot},
+                                         {&quotcat3&quot},
+                                         []],
+                            data=empty_data)</a>
+    assert_series_equal(out[id_column].reset_index(drop=True),
+                        pd.Series([&quotaa&quot, &quotbb&quot, &quotcc&quot, &quotdd&quot, &quotee&quot, &quotff&quot],
+                                  name=id_column))
+    assert_frame_equal(out.drop(columns=[id_column]), out2)</code></pre><h3>After Change</h3><pre><code class='java'>
+    assert not out.index.to_frame()[&quotcat4&quot].any()  &#47&#47 cat4 should be all-false
+    assert len(out.index.names) == 4
+    out.index = out.index.to_frame().set_index([&quotcat1&quot, &quotcat2&quot, &quotcat3&quot]).index
+    <a id="change">assert_frame_equal(out, baseline)</a>
+
+
+@pytest.mark.parametrize(&quotid_column&quot, [&quotid&quot, &quotblah&quot])
+def test_from_contents_invalid(id_column):</code></pre>

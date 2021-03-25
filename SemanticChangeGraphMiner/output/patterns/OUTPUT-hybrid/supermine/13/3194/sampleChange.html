@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 spectral clustering
+        if verbose:
+            print("Calculating SVD...")
+            <a id="change">start = time.time()</a>
+        U, S, _ = randomized_svd(diff_op,
+                                 n_components=n_svd,
+                                 random_state=random_state)
+        if verbose:
+            print("Calculated SVD in {:.2f} seconds".format(
+                time.time() - start))
+            start = time.time()
+            print("Calculating Kmeans...")
+        kmeans = MiniBatchKMeans(n_landmark,
+                                 init_size=3 * n_landmark,
+                                 batch_size=10000,
+                                 random_state=random_state)
+        clusters = kmeans.fit_predict(np.matmul(U, np.diagflat(S)))
+        landmarks = np.unique(clusters)
+        <a id="change">if verbose:
+            print("Calculated Kmeans in {:.2f} seconds".format(
+                time.time() - start))
+
+        &#47&#47 transition matrices
+       </a> if is_sparse:
+            pmn = sparse.vstack(
+                [sparse.csr_matrix(kernel[clusters == i, :].sum(
+                    axis=0)) for i in landmarks])</code></pre><h3>After Change</h3><pre><code class='java'>
+                                 n_components=n_svd,
+                                 random_state=random_state)
+        log_complete("SVD")
+        <a id="change">log_start("KMeans")</a>
+        kmeans = MiniBatchKMeans(n_landmark,
+                                 init_size=3 * n_landmark,
+                                 batch_size=10000,
+                                 random_state=random_state)</code></pre>

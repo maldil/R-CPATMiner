@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idx, end_idx = self.tensorizer._lookup_tokens(doc_str)
+        <a id="change">doc_tokens = list(doc_tokens)</a>
+        num_ans_tokens = len(ans_tokens)
+        start_char_idx = 0
+        end_char_idx = 0
+        answer_str = ""
+        <a id="change">for doc_token_idx in range(len(doc_tokens) - num_ans_tokens):
+            if doc_tokens[doc_token_idx : doc_token_idx + num_ans_tokens] == ans_tokens:
+                start_char_idx = start_idx[doc_token_idx]
+                end_char_idx = end_idx[doc_token_idx + num_ans_tokens - 1]
+                answer_str = doc_str[start_char_idx:end_char_idx]
+                break
+       </a> return answer_str, start_char_idx, end_char_idx
+
+    &#47&#47 The following three functions are copied from Squad&quots evaluation script.
+    &#47&#47 https://worksheets.codalab.org/rest/bundles/0x6b567e1cf2e041ec80d7098f031c5c9e/contents/blob/</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 start_idx and end_idx are lists of char start and end positions in doc_str.
+        doc_tokens, start_idxs, end_idxs = self.tensorizer._lookup_tokens(doc_str)
+        &#47&#47 find the offset of doc_tokens in tokens
+        <a id="change">offset = list(
+            map(
+                lambda x: tokens[x : x + len(doc_tokens)] == doc_tokens,
+                range(len(tokens) - len(doc_tokens) + 1),
+            )
+        ).index(True)</a>
+        assert offset &gt; -1
+
+        &#47&#47 find the answer char idxs
+        start_char_idx = 0</code></pre>

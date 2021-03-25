@@ -1,0 +1,31 @@
+<html><h3>f9aea094643fb3240193b0bc0f1908d5b84d82ab,dask_image/ndmeasure/__init__.py,,center_of_mass,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    input_wt_mtch_sum = []
+    for i in _pycompat.irange(input.ndim):
+        sl = <a id="change">input.ndim * [None]</a>
+        sl[i] = slice(None)
+        <a id="change">sl = tuple(sl)</a>
+
+        input_i = dask.array.arange(input.shape[i], chunks=input.chunks[i])
+        input_wt = input * input_i[sl]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    index = index.T
+
+    type_mapping = collections.OrderedDict([
+        <a id="change">(("%i" % i), input.dtype)</a> for i in _pycompat.irange(input.ndim)
+    ])
+    <a id="change">out_dtype = numpy.dtype(list(type_mapping.items()))</a>
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    <a id="change">func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )</a>
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )</code></pre><img src="23127776.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/f9aea094643fb3240193b0bc0f1908d5b84d82ab#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L51' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: f9aea094643fb3240193b0bc0f1908d5b84d82ab</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/46324d0e05c679b2cf50b81289fe2886456f6e51#diff-2202c83549e1666b53b7764ad03e0619bf5aca5e6cfbe77e26266babeb35b9dbL45' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 46324d0e05c679b2cf50b81289fe2886456f6e51</div><div id='time'> Time: 2017-09-19</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/pid/ibroja.py</div><div id='class'> Class Name: BROJAOptimizer</div><div id='method'> Method Name: objective</div><BR><BR><div id='link'><a href='https://github.com/kundajelab/dragonn/commit/9c158b87f5fb2dca1ed95884e667ab2fc218e1b7#diff-32db8bda9df10bc3308a4865e580e4a515df7f617a43468aea7006a6f81a7fa4L175' target='_blank'>Link</a></div><div id='project'> Project Name: kundajelab/dragonn</div><div id='commit'> Commit Name: 9c158b87f5fb2dca1ed95884e667ab2fc218e1b7</div><div id='time'> Time: 2017-05-01</div><div id='author'> Author: jisraeli@stanford.edu</div><div id='file'> File Name: dragonn/models.py</div><div id='class'> Class Name: SequenceDNN</div><div id='method'> Method Name: deeplift</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/56926bc8b4a158e1c40cddbc795303bc6a66f44d#diff-55a42756f95d6114e9eb09372ec1ec4876dbf831f5c4f02f3695884d5971098aL30' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 56926bc8b4a158e1c40cddbc795303bc6a66f44d</div><div id='time'> Time: 2019-05-23</div><div id='author'> Author: sukriti.mehrotra@sony.com</div><div id='file'> File Name: semantic-segmentation/deeplabv3plus/image_preprocess.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: resize</div><BR>

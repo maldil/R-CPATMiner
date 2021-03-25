@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.Rs_in = [(m, l) for m, l in Rs_in if m &gt;= 1]
+        self.multiplicities_out = [m for m, _ in self.Rs_out]
+        self.multiplicities_in = [m for m, _ in self.Rs_in]
+        self.dims_out = <a id="change">[2 * l + 1 for _, l in self.Rs_out]</a>
+        self.dims_in = [2 * l + 1 for _, l in self.Rs_in]
+        self.radial_function = radial_function
+        self.register_buffer(&quotradii&quot, radii)
+        self.J_filter_max = J_filter_max
+        <a id="change">self.n_out = sum(m * d for m, d in zip(self.multiplicities_out, self.dims_out))</a>
+        self.n_in = sum(m * d for m, d in zip(self.multiplicities_in, self.dims_in))
+        self.sh_backwardable = sh_backwardable
+
+        self.nweights = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.radial_function = radial_function
+        self.register_buffer(&quotradii&quot, radii)
+        self.J_filter_max = J_filter_max
+        self.n_out = <a id="change">sum(m * (2 * l + 1) for m, l in self.Rs_out)</a>
+        self.n_in = sum(m * (2 * l + 1) for m, l in self.Rs_in)
+        self.sh_backwardable = sh_backwardable
+
+        self.nweights = 0</code></pre>

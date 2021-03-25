@@ -1,0 +1,27 @@
+<html><h3>0acfbc16e60efe8e4b6666196d4111206db29254,models/resnet.py,PreActBottleneck,forward,#PreActBottleneck#,120
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, x):
+        out = F.relu(self.bn1(x))
+        <a id="change">shortcut</a> = <a id="change">self.shortcut(out)</a>
+        out = self.conv1(out)
+        out = self.conv2(F.relu(self.bn2(out)))
+        out = self.conv3(F.relu(self.bn3(out)))
+        <a id="change">out</a> += shortcut
+        return out
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, x):
+        out = F.relu(self.bn1(x))
+        <a id="change">shortcut</a> = <a id="change">self.shortcut(out)</a> if hasattr(self, &quotshortcut&quot) else x
+        out = self.conv1(out)
+        out = self.conv2(F.relu(self.bn2(out)))
+        out = self.conv3(F.relu(self.bn3(out)))
+        <a id="change">out</a> += shortcut
+        return out
+
+</code></pre><img src="1771407.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kuangliu/pytorch-cifar/commit/0acfbc16e60efe8e4b6666196d4111206db29254#diff-da62ce430302dcb6718b9a6a36a17d97e7ef64d1ecba8920e816a058c59c6816L118' target='_blank'>Link</a></div><div id='project'> Project Name: kuangliu/pytorch-cifar</div><div id='commit'> Commit Name: 0acfbc16e60efe8e4b6666196d4111206db29254</div><div id='time'> Time: 2017-07-24</div><div id='author'> Author: kuang.liu@hotmail.com</div><div id='file'> File Name: models/resnet.py</div><div id='class'> Class Name: PreActBottleneck</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/kuangliu/pytorch-cifar/commit/0acfbc16e60efe8e4b6666196d4111206db29254#diff-da62ce430302dcb6718b9a6a36a17d97e7ef64d1ecba8920e816a058c59c6816L64' target='_blank'>Link</a></div><div id='project'> Project Name: kuangliu/pytorch-cifar</div><div id='commit'> Commit Name: 0acfbc16e60efe8e4b6666196d4111206db29254</div><div id='time'> Time: 2017-07-24</div><div id='author'> Author: kuang.liu@hotmail.com</div><div id='file'> File Name: models/resnet.py</div><div id='class'> Class Name: PreActBlock</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/kuangliu/pytorch-cifar/commit/9c40489751bdf173b7da2b1f7cf9ef3657988eb8#diff-da62ce430302dcb6718b9a6a36a17d97e7ef64d1ecba8920e816a058c59c6816L30' target='_blank'>Link</a></div><div id='project'> Project Name: kuangliu/pytorch-cifar</div><div id='commit'> Commit Name: 9c40489751bdf173b7da2b1f7cf9ef3657988eb8</div><div id='time'> Time: 2017-05-02</div><div id='author'> Author: kuang.liu@hotmail.com</div><div id='file'> File Name: models/resnet.py</div><div id='class'> Class Name: BasicBlock</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/kuangliu/pytorch-cifar/commit/9c40489751bdf173b7da2b1f7cf9ef3657988eb8#diff-da62ce430302dcb6718b9a6a36a17d97e7ef64d1ecba8920e816a058c59c6816L57' target='_blank'>Link</a></div><div id='project'> Project Name: kuangliu/pytorch-cifar</div><div id='commit'> Commit Name: 9c40489751bdf173b7da2b1f7cf9ef3657988eb8</div><div id='time'> Time: 2017-05-02</div><div id='author'> Author: kuang.liu@hotmail.com</div><div id='file'> File Name: models/resnet.py</div><div id='class'> Class Name: Bottleneck</div><div id='method'> Method Name: forward</div><BR>

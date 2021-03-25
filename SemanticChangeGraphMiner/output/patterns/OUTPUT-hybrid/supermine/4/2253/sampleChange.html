@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    heatmap = zoom(heatmap, zoom_factor)
+
+    &#47&#47 Normalize and create heatmap.
+    <a id="change">heatmap = utils.normalize(heatmap)</a>
+    return np.uint8(<a id="change">cm.jet(heatmap)[..., :3] * 255</a>)
+
+
+def visualize_cam(model, layer_idx, filter_indices,</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Figure out the zoom factor.
+    zoom_factor = [i / (j * 1.0) for i, j in iter(zip(input_dims, output_dims))]
+    heatmap = zoom(heatmap, zoom_factor)
+    return <a id="change">utils.normalize(heatmap)</a>
+
+
+def visualize_cam(model, layer_idx, filter_indices,
+                  seed_input, penultimate_layer_idx=None,</code></pre>

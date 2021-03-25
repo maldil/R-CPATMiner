@@ -1,0 +1,20 @@
+<html><h3>0cd1348f3c432cc2afcc491c06b2b9301d526882,rdkit_fixer.py,,ExtractPocketAndLigand,#,198
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    blacklist_ids = list(chain(*hetatm_residues.values()))
+    protein_amap = np.array([i for i in range(mol.GetNumAtoms())
+                             if i not in blacklist_ids])
+    protein_coords = np.array(<a id="change">mol</a>.GetConformer().GetPositions())[protein_amap]
+
+    &#47&#47 Pocket selection based on cutoff
+    mask = (cdist(protein_coords, ligand_coords) &lt;= cutoff).any(axis=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    blacklist_ids = list(chain(*hetatm_residues.values()))
+    protein_amap = np.array([i for i in range(mol.GetNumAtoms())
+                             if i not in blacklist_ids])
+    <a id="change">conf = mol.GetConformer()</a>
+    protein_coords = np.array([conf.GetAtomPosition(i)
+                              for i in range(mol.GetNumAtoms())])[protein_amap]
+
+    &#47&#47 Pocket selection based on cutoff</code></pre><img src="25252087.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/0cd1348f3c432cc2afcc491c06b2b9301d526882#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L273' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 0cd1348f3c432cc2afcc491c06b2b9301d526882</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ExtractPocketAndLigand</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/aa5d761c03ea31df01ff51ec3634dd89cd73bec1#diff-e57039a45bbd8fe0725b1f6771a73623b3174b99f11ba2df477177a4679bb45eL178' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: aa5d761c03ea31df01ff51ec3634dd89cd73bec1</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/toolkits/extras/rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: UFFConstrainedOptimize</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/7b721b7c9f51995c90949bc68fa91e657c29b378#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L448' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 7b721b7c9f51995c90949bc68fa91e657c29b378</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: martasd@ibb.waw.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: AddMissingAtoms</div><BR>

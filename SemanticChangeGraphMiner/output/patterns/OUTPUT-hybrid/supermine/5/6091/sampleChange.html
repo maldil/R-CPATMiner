@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if name != &quot&quot:
+        Reparameterization.apply(module, name, dim, reparameterization, hook_child)
+    else:
+        names = <a id="change">list(module.state_dict().keys())</a>
+        for name in names:
+            apply_reparameterization(module, reparameterization, name, dim, hook_child)
+    return module</code></pre><h3>After Change</h3><pre><code class='java'>
+    if name2use != &quot&quot:
+        Reparameterization.apply(module, name, dim, reparameterization, hook_child)
+    else:
+        names = [n <a id="change">for</a> n,_ in module2use.named_parameters()]
+        if name2use != &quot&quot:
+            names = [name2use+&quot.&quot+n for n in names]
+        if name != &quot&quot:
+            names = <a id="change">[name+&quot.&quot+n for n in names]</a>
+        for name in names:
+            apply_reparameterization(module, reparameterization, name, dim, hook_child)
+    return module</code></pre>

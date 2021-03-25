@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                set_of_l_filters = set_of_l_filters.union(l_filters)
+
+                &#47&#47 precompute the change of basis Q
+                Q = <a id="change">[SO3.clebsch_gordan(l_out, l_in, l) for l in l_filters]</a>
+                <a id="change">Q = torch.cat(Q, dim=2)</a>  &#47&#47 [m_out, m_in, l_filter * m_filter]
+                self.register_buffer("Q_{}_{}".format(i, j), Q.type(torch.get_default_dtype()))
+
+        &#47&#47 create the radial model: R+ -&gt; R^n_path</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 create the set of all spherical harmonics orders needed
+                set_of_l_filters = set_of_l_filters.union(l_filters)
+
+                <a id="change">for l in l_filters:
+                    &#47&#47 precompute the change of basis Q
+                    Q = SO3.clebsch_gordan(l_out, l_in, l).type(torch.get_default_dtype())
+                    self.register_buffer("Q_{}_{}_{}".format(l_out, l_in, l), Q)
+
+        &#47&#47 create the radial model: R+ -&gt; R^n_path
+        &#47&#47 it contains the learned parameters
+       </a> self.R = RadialModel(n_path)
+
+        self.set_of_l_filters = sorted(set_of_l_filters)
+</code></pre>

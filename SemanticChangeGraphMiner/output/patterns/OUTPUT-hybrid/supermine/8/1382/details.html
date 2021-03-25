@@ -1,0 +1,28 @@
+<html><h3>f7a04171e58eb43dfe5b18d06c76481cdf1c5da9,deslib/dcs/lca.py,LCA,estimate_competence,#LCA#,85
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    if self.DSEL_target[index] == predicted_label:
+                        result.append(self.processed_dsel[index][clf_index])
+
+                <a id="change">if len(result) == 0:
+                    competences[clf_index] = 0.0
+                else:
+                    competences[clf_index] = np.mean(result)
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Expanding the dimensions of the predictions and target arrays in order to compare both.
+        predictions_3d = np.expand_dims(predictions, axis=1)
+        <a id="change">target_3d = np.expand_dims(self.DSEL_target[idx_neighbors], axis=2)</a>
+        &#47&#47 Create a mask to remove the neighbors belonging to a different class than the predicted by the base classifier
+        mask = (predictions_3d != target_3d)
+        masked_preprocessed = np.ma.MaskedArray(self.processed_dsel[idx_neighbors, :], mask=mask)
+
+        competences_masked = <a id="change">np.mean(masked_preprocessed, axis=1)</a>
+        &#47&#47 Fill 0 to the masked values in the resulting array (when no neighbors belongs to the class predicted by
+        &#47&#47 the corresponding base classifier)
+        competences = np.ma.filled(competences_masked, 0)
+</code></pre><img src="7528114.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/23ee13aef276de7ad726eb4825e201d3c885c008#diff-78b9e10919c691713ccc1c9c83f7e7fd18a1c48469cca2e807892cb9d116e6a8L67' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: 23ee13aef276de7ad726eb4825e201d3c885c008</div><div id='time'> Time: 2018-01-25</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/entity2rec.py</div><div id='class'> Class Name: Entity2Rec</div><div id='method'> Method Name: content_similarities</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR>

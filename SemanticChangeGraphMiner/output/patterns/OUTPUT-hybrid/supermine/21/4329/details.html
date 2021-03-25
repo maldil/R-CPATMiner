@@ -1,0 +1,155 @@
+<html><h3>d5b0cd8e7960c247bb7c5b7c832358f8831780fb,ch15/03_train_trpo.py,,,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    net_act = model.ModelActor(env.observation_space.shape[0], env.action_space.shape[0])
+    net_crt = model.ModelCritic(env.observation_space.shape[0])
+    <a id="change">if args.cuda:
+        net_act.cuda()
+        net_crt.cuda()
+   </a> print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-trpo_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=<a id="change">args</a>.cuda)
+    exp_source = ptan.experience.ExperienceSource(env, agent, steps_count=1)
+
+    opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    trajectory = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        for step_idx, exp in enumerate(exp_source):
+            rewards_steps = exp_source.pop_rewards_steps()
+            if rewards_steps:
+                rewards, steps = zip(*rewards_steps)
+                writer.add_scalar("episode_steps", np.mean(steps), step_idx)
+                tracker.reward(np.mean(rewards), step_idx)
+
+            if step_idx % TEST_ITERS == 0:
+                ts = time.time()
+                rewards, steps = test_net(net_act, test_env, cuda=args.cuda)
+                print("Test done in %.2f sec, reward %.3f, steps %d" % (
+                    time.time() - ts, rewards, steps))
+                writer.add_scalar("test_reward", rewards, step_idx)
+                writer.add_scalar("test_steps", steps, step_idx)
+                if best_reward is None or best_reward &lt; rewards:
+                    if best_reward is not None:
+                        print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                        name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                        fname = os.path.join(save_path, name)
+                        torch.save(net_act.state_dict(), fname)
+                    best_reward = rewards
+
+            trajectory.append(exp)
+            if len(trajectory) &lt; TRAJECTORY_SIZE:
+                continue
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = Variable(torch.from_numpy(np.array(traj_states, dtype=np.float32)))
+            traj_actions_v = Variable(torch.from_numpy(np.array(traj_actions, dtype=np.float32)))
+            <a id="change">if args.cuda:
+                traj_states_v = traj_states_v.cuda()
+                traj_actions_v = traj_actions_v.cuda()
+
+           </a> traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, cuda=<a id="change">args</a>.cuda)
+            mu_v = net_act(traj_states_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+
+            &#47&#47 normalize advantages
+            traj_adv_v = (traj_adv_v - torch.mean(traj_adv_v)) / torch.std(traj_adv_v)
+
+            &#47&#47 drop last entry from the trajectory, an our adv and ref value calculated without it
+            trajectory = trajectory[:-1]
+            old_logprob_v = old_logprob_v[:-1].detach()
+            traj_states_v = traj_states_v[:-1]
+            traj_actions_v = traj_actions_v[:-1]
+            sum_loss_value = 0.0
+            sum_loss_policy = 0.0
+            count_steps = 0
+
+            &#47&#47 critic step
+            opt_crt.zero_grad()
+            value_v = net_crt(traj_states_v)
+            loss_value_v = F.mse_loss(value_v, traj_ref_v)
+            loss_value_v.backward()
+            opt_crt.step()
+
+            &#47&#47 actor step
+            def get_loss():
+                mu_v = net_act(traj_states_v)
+                logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+                action_loss_v = -traj_adv_v.unsqueeze(dim=-1) * torch.exp(logprob_v - old_logprob_v)
+                return action_loss_v.mean()
+
+            def get_kl():
+                mu_v = net_act(traj_states_v)
+                logstd_v = net_act.logstd
+                mu0_v = mu_v.detach()
+                logstd0_v = logstd_v.detach()
+                std_v = torch.exp(logstd_v)
+                std0_v = std_v.detach()
+                kl = logstd_v - logstd0_v + (std0_v ** 2 + ((mu0_v - mu_v) ** 2) / (2.0 * std_v ** 2)) - 0.5
+                return kl.sum(1, keepdim=True)
+
+            trpo.trpo_step(net_act, get_loss, get_kl, TRPO_MAX_KL, TRPO_DAMPING, cuda=args.cuda)
+
+            trajectory.clear()
+            writer.add_scalar("advantage", traj_adv_v.mean().data.cpu().numpy()[0], step_idx)
+            writer.add_scalar("values", traj_ref_v.mean().data.cpu().numpy()[0], step_idx)
+            writer.add_scalar("loss_value", <a id="change">loss_value_v</a>.data.cpu().numpy()[0], step_idx)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_env = gym.make(args.env)
+
+    net_act = model.ModelActor(env.observation_space.shape[0], env.action_space.shape[0]).to(device)
+    net_crt = <a id="change">model.ModelCritic(env.observation_space.shape[0]).to(device)</a>
+    print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-trpo_" + args.name)
+    agent = model.AgentA2C(net_act, device=<a id="change">device</a>)
+    exp_source = ptan.experience.ExperienceSource(env, agent, steps_count=1)
+
+    opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    trajectory = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        for step_idx, exp in enumerate(exp_source):
+            rewards_steps = exp_source.pop_rewards_steps()
+            if rewards_steps:
+                rewards, steps = zip(*rewards_steps)
+                writer.add_scalar("episode_steps", np.mean(steps), step_idx)
+                tracker.reward(np.mean(rewards), step_idx)
+
+            if step_idx % TEST_ITERS == 0:
+                ts = time.time()
+                rewards, steps = test_net(net_act, test_env, device=device)
+                print("Test done in %.2f sec, reward %.3f, steps %d" % (
+                    time.time() - ts, rewards, steps))
+                writer.add_scalar("test_reward", rewards, step_idx)
+                writer.add_scalar("test_steps", steps, step_idx)
+                if best_reward is None or best_reward &lt; rewards:
+                    if best_reward is not None:
+                        print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                        name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                        fname = os.path.join(save_path, name)
+                        torch.save(net_act.state_dict(), fname)
+                    best_reward = rewards
+
+            trajectory.append(exp)
+            if len(trajectory) &lt; TRAJECTORY_SIZE:
+                continue
+
+            traj_states = [t[0].state for t in trajectory]
+            traj_actions = [t[0].action for t in trajectory]
+            traj_states_v = torch.FloatTensor(traj_states).to(<a id="change">device</a>)
+            traj_actions_v = torch.FloatTensor(traj_actions).to(device)
+            traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, device=<a id="change">device</a>)
+            mu_v = net_act(traj_states_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+</code></pre><img src="18897184.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 21</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-76ef45280999506380a1cd22adfc9b9fd61476500ae25b7339a77ddf0a7423ffL91' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/03_train_trpo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/7a6e3b93fb4b97af7b06244b768b1fee4b547c17#diff-67c7be1e7c26487e70450e11ed1a97f95dee1feb27d72923a87ab3a3764cb99eL49' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 7a6e3b93fb4b97af7b06244b768b1fee4b547c17</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch12/train_crossent.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

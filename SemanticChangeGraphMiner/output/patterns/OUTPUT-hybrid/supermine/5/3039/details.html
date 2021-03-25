@@ -1,0 +1,21 @@
+<html><h3>d7b2db3c5262c82c44958afc2500efe0838f0884,osmnx/utils_graph.py,,_update_edge_keys,#,536
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 for each unique different street, iterate its key + 1 so it&quots unique
+    for u, v, k in set(different_streets):
+        &#47&#47 filter out key if it appears in data dict as we&quotll pass it explicitly
+        <a id="change">attributes = {k: v for k, v in G[u][v][k].items() if k != "key"}</a>
+        G.add_edge(u, v, key=k + 1, **attributes)
+        G.remove_edge(u, v, key=k)
+
+    return G</code></pre><h3>After Change</h3><pre><code class='java'>
+                different_streets.append(group.index[0])
+
+    &#47&#47 for each unique different street, give it a unique key
+    set_different_streets = <a id="change">set(different_streets)</a>
+    utils.log(f"Found {len(set_different_streets)} different streets")
+    for u, v, k in set(different_streets):
+        new_key = max(list(G[u][v]) + list(G[v][u])) + 1
+        G.add_edge(u, v, key=new_key, **G.get_edge_data(u, v, k))</code></pre><img src="13651777.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/d7b2db3c5262c82c44958afc2500efe0838f0884#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L556' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: d7b2db3c5262c82c44958afc2500efe0838f0884</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _update_edge_keys</div><BR><BR><div id='link'><a href='https://github.com/lovit/soynlp/commit/bf03e74b9b0858f2e827e6da4b0ca8d960b3b5b6#diff-3d83ca6b5429a432f128d0fd3604647bb5c878df1c4f0326972b3815ca8ce9ebL321' target='_blank'>Link</a></div><div id='project'> Project Name: lovit/soynlp</div><div id='commit'> Commit Name: bf03e74b9b0858f2e827e6da4b0ca8d960b3b5b6</div><div id='time'> Time: 2018-11-13</div><div id='author'> Author: soy.lovit@gmail.com</div><div id='file'> File Name: soynlp/pos/_news_pos.py</div><div id='class'> Class Name: NewsPOSExtractor</div><div id='method'> Method Name: _extract_compound_nouns</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/c9e82bb1ab323d4a79793e47dbdd9204302e36af#diff-ba250285ccc67c0635e0e88f43604e24c85f3ab7fc969bdc9221c1e7d548069fL118' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: c9e82bb1ab323d4a79793e47dbdd9204302e36af</div><div id='time'> Time: 2015-04-06</div><div id='author'> Author: se.raschka@me.com</div><div id='file'> File Name: mlxtend/file_io/find.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: find_filegroups</div><BR>

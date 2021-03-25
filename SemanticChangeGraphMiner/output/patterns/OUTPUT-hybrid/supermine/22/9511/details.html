@@ -1,0 +1,32 @@
+<html><h3>47f8fe9404071e5d30ef5aea8fb96539eb0a82c3,fancyimpute/solver.py,Solver,project_result,#Solver#,125
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if self.normalizer is not None:
+            X = self.normalizer.inverse_transform(X)
+        <a id="change">if self.min_value is not None:
+            X[X &lt; self.min_value] = self.min_value
+       </a> <a id="change">if self.max_value is not None:
+            X[X &gt; self.max_value] = self.max_value
+       </a> return X
+
+    def solve(self, X, missing_mask):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            X[X &gt; self.max_value] = self.max_value
+        return X
+
+    def project_result(<a id="change">self</a>, X):
+        
+        First undo normaliztion and then clip to the user-specified min/max
+        range.
+        
+        X = np.asarray(X)
+        if self.normalizer is not None:
+            X = self.normalizer.inverse_transform(X)
+        return <a id="change">self.clip(X)</a>
+
+    def solve(self, X, missing_mask):
+        
+        Given an initialized matrix X and a mask of where its missing values</code></pre><img src="36351550.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 17</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/47f8fe9404071e5d30ef5aea8fb96539eb0a82c3#diff-20661181cd41c85d5bc1c69689131cf70095ab2e3abe8eef6144121bd1fbc4cfL125' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 47f8fe9404071e5d30ef5aea8fb96539eb0a82c3</div><div id='time'> Time: 2016-01-28</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/solver.py</div><div id='class'> Class Name: Solver</div><div id='method'> Method Name: project_result</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/47f8fe9404071e5d30ef5aea8fb96539eb0a82c3#diff-243377263eb64970f3a4e24b9cc4d35c4ddc8ef789ad6a701e18e994e438392bL148' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 47f8fe9404071e5d30ef5aea8fb96539eb0a82c3</div><div id='time'> Time: 2016-01-28</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/MICE.py</div><div id='class'> Class Name: MICE</div><div id='method'> Method Name: perform_imputation_round</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/47f8fe9404071e5d30ef5aea8fb96539eb0a82c3#diff-3917b7e0c004cc7591efe73af40b0f29d7c8bc8b67e4b12db8b4434d67600d51L129' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 47f8fe9404071e5d30ef5aea8fb96539eb0a82c3</div><div id='time'> Time: 2016-01-28</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/soft_impute.py</div><div id='class'> Class Name: SoftImpute</div><div id='method'> Method Name: solve</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/47f8fe9404071e5d30ef5aea8fb96539eb0a82c3#diff-20661181cd41c85d5bc1c69689131cf70095ab2e3abe8eef6144121bd1fbc4cfL125' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 47f8fe9404071e5d30ef5aea8fb96539eb0a82c3</div><div id='time'> Time: 2016-01-28</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/solver.py</div><div id='class'> Class Name: Solver</div><div id='method'> Method Name: project_result</div><BR>

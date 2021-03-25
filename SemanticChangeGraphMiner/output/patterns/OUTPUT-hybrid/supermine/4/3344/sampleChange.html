@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+parser.add_argument_group(&quotOptimization related arguments&quot)
+parser.add_argument(&quot-batch_size&quot, default=4, help=&quotBatch size&quot)
+parser.add_argument(&quot-learning_rate&quot, default=1e-3, help=&quotLearning rate&quot)
+<a id="change">parser.add_argument(&quot-dropout&quot, default=0.5, help=&quotDropout&quot)</a>
+parser.add_argument(&quot-num_epochs&quot, default=20, help=&quotEpochs&quot)
+parser.add_argument(&quot-weight_init&quot, default=&quotxavier&quot, choices=[&quotxavier&quot, &quotkaiming&quot],
+                        help=&quotWeight initialization strategy&quot)
+parser.add_argument(&quot-gpuid&quot, default=0, help=&quotGPU id to use&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+args = parser.parse_args()
+for arg in vars(args):
+    <a id="change">print(&quot{:&lt;20}: {}&quot.format(arg, getattr(args, arg)))</a>
+
+&#47&#47 seed for reproducibility
+torch.manual_seed(1234)
+</code></pre>

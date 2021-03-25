@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    type_mapping = collections.OrderedDict([
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ])
+    <a id="change">out_dtype = numpy.dtype(list(type_mapping.items()))</a>
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+
+    <a id="change">com_lbl = dask.array.stack([com_lbl[k] for k in type_mapping], axis=-1)</a>
+
+    return com_lbl
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    out_dtype = numpy.dtype([<a id="change">("com", input.dtype, (input.ndim,))</a>])
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+    <a id="change">com_lbl = com_lbl["com"]</a>
+
+    return com_lbl
+
+</code></pre>

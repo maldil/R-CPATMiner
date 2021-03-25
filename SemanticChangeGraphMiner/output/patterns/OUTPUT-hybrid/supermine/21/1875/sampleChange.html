@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 self.show_lineplot(tpr, fpr, name=name, opts={"fillarea": True, "webgl": True})
+            &#47&#47 self.add_to_graph(x_vals=np.arange(0, 1.1, 0.1), y_vals=np.arange(0, 1.1, 0.1), name=name, append=True)
+
+        <a id="change">if use_sub_process:
+            p = Process(target=__get_roc_curve, kwargs=dict(tensor=tensor,
+                                                            labels=labels,
+                                                            reduce_to_n_samples=reduce_to_n_samples,
+                                                            results_fn=results_fn
+                                                            ))
+            atexit.register(p.terminate)
+            p.start()
+        else:
+            try:
+                return __get_roc_curve(tensor=tensor,
+                                       labels=labels,
+                                       reduce_to_n_samples=reduce_to_n_samples,
+                                       results_fn=results_fn
+                                       )
+            except Exception as e:
+                warnings.warn("Sth went wrong with calculating the roc curve")
+
+   </a> @staticmethod
+    def get_pr_curve(tensor, labels, reduce_to_n_samples=None, use_sub_process=False,
+                     results_fn=lambda x, *y, **z: None):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            results_fn: function which is called with the results/ return values. Expected f(tpr, fpr)
+
+        
+        <a id="change">warnings.warn("This method is deprecated !!! Please use the utils.metrics method")</a>
+        return get_roc_curve(tensor, labels, reduce_to_n_samples, use_sub_process, results_fn)
+
+    @staticmethod
+    def get_pr_curve(tensor, labels, reduce_to_n_samples=None, use_sub_process=False,</code></pre>

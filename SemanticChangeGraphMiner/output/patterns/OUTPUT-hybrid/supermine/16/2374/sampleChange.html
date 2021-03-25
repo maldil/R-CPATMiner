@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        saver.restore(sess, latest_checkpoint)
+        print(&quot done!&quot)
+    else:
+        <a id="change">print(&quotNo checkpoint found in:&quot, checkpoint_paths)</a>
+
+    &#47&#47 Evaluation (epoch=-1 to say that this is an evaluation after training)
+    res = sess.run(evaluations_ops)
+    print(&quotCost: {}&quot.format(res[&quotcost&quot]))</code></pre><h3>After Change</h3><pre><code class='java'>
+from .training_utils import evaluation_pipeline, \
+    checkpointing_system, plot_evaluation, metrics_system
+
+<a id="change">parser = argparse.ArgumentParser(description=&quotEval&quot)</a>
+<a id="change">parser.add_argument(&quottfrecords&quot,
+                    type=str,
+                    metavar=&quotTFRECORDS_DIR&quot,
+                    help=&quotevaluate using all tfrecords in TFRECORDS_DIR&quot)</a>
+<a id="change">parser.add_argument(&quotoutput&quot,
+                    type=str,
+                    metavar=&quotOUR_DIR&quot,
+                    help=&quotuse OUR_DIR to load checkpoints and write images&quot)</a>
+<a id="change">parser.add_argument(&quot--run-id&quot,
+                    required=True,
+                    type=str,
+                    metavar=&quotRUN_ID&quot,
+                    help=&quotload checkpoint from the run RUN_ID&quot)</a>
+<a id="change">args = parser.parse_args()</a>
+dir_tfrecords = Path(args.tfrecords).expanduser().resolve().as_posix()
+<a id="change">dir_output = Path(args.output).expanduser().resolve().joinpath(args.run_id).as_posix()</a>
+
+&#47&#47 PARAMETERS
+run_id = args.run_id
+val_number_of_images = 100</code></pre>

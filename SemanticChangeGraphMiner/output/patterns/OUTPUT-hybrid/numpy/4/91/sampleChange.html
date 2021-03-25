@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    os.path.join(self.args.features_folder, file_base_name),
+                    item["features"],
+                )
+                <a id="change">np.save(
+                    os.path.join(self.args.features_folder, info_file_base_name),
+                    tmp_dict,
+                )</a>
+
+    def execute(self):
+        if self.args.mode == "convert":
+            self.convert()</code></pre><h3>After Change</h3><pre><code class='java'>
+                path = os.path.join(self.args.features_folder, file_base_name)
+                if PathManager.exists(path):
+                    continue
+                <a id="change">info_path = os.path.join(self.args.features_folder, info_file_base_name)</a>
+                base_path = "/".join(path.split("/")[:-1])
+                PathManager.mkdirs(base_path)
+                np.save(PathManager.open(path, "wb"), item["features"])
+                <a id="change">np.save(PathManager.open(info_path, "wb"), tmp_dict)</a>
+
+    def execute(self):
+        if self.args.mode == "convert":
+            self.convert()</code></pre>

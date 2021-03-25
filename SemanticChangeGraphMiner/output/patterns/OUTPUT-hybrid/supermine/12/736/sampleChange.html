@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        writer.add_scalar("batch_steps", batch_steps, step_idx)
+        speed = batch_steps / (time.time() - t_start)
+        writer.add_scalar("speed", speed, step_idx)
+        <a id="change">print("%d: reward=%.2f, speed=%.2f f/s" % (step_idx, m_reward, speed))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                break
+            time.sleep(0.1)
+
+        dt_data = <a id="change">time.time() - t_start</a>
+        m_reward = np.mean(batch_reward)
+        if m_reward &gt; 18:
+            print("Solved in %d steps" % step_idx)
+            break
+
+        train_step(net, batch_noise, batch_reward, writer, step_idx)
+        writer.add_scalar("reward_mean", m_reward, step_idx)
+        writer.add_scalar("reward_std", np.std(batch_reward), step_idx)
+        writer.add_scalar("reward_max", np.max(batch_reward), step_idx)
+        writer.add_scalar("batch_episodes", len(batch_reward), step_idx)
+        writer.add_scalar("batch_steps", batch_steps, step_idx)
+        speed = batch_steps / (time.time() - t_start)
+        writer.add_scalar("speed", speed, step_idx)
+        dt_step = <a id="change">time</a>.time() - t_start - dt_data
+
+        <a id="change">print("%d: reward=%.2f, speed=%.2f f/s, data_gather=%.3f, train=%.3f, steps_mean=%.2f, min=%.2f, max=%.2f, steps_std=%.2f" % (
+            step_idx, m_reward, speed, dt_data, dt_step, np.mean(batch_steps_data),
+            np.min(batch_steps_data), np.max(batch_steps_data), np.std(batch_steps_data)))</a>
+</code></pre>

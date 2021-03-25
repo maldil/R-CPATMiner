@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        .. note:: Different AC types will be treated separately.
+        
+        &#47&#47 Get a list of generators
+        <a id="change">generators = [meter.load(**kwargs) for meter in self.meters]</a>
+
+        &#47&#47 Load each generator and yield the sum
+        while True:
+            chunk = None</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Get a list of generators
+        generators = []
+        for meter in self.meters:
+            <a id="change">try:
+                generator = meter.load(**kwargs)
+            except MeasurementError as e:
+                warn("Ignoring meter &quot{}&quot because it does not have the correct"
+                     " measurements.  The MeasurementError was: &quot{}&quot"
+                     .format(meter.identifier, e))
+            else:
+                generators.append(generator)
+
+        &#47&#47 Load each generator and yield the sum
+       </a> while True:
+            chunk = None
+            for generator in generators:
+                try:</code></pre>

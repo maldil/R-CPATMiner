@@ -1,0 +1,43 @@
+<html><h3>1e619d91956c813d2328a5460da0a273fe135905,hook/zmes_hook_helpers/face.py,Face,detect,#Face#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        matched_face_names = []
+        matched_face_rects = []
+
+        <a id="change">for idx,face_encoding in enumerate(face_encodings):
+            preds = self.svm_model.predict_proba([face_encoding])[0]
+
+            print (preds, self.svm_model.classes_)
+            best_pred_ndx = np.argmax(preds)
+            best_pred = preds[best_pred_ndx]
+            loc = face_locations[idx]
+
+            if best_pred &gt;= g.config[&quotface_recog_min_confidence&quot]:
+                 matched_face_names.append(self.svm_model.classes_[best_pred_ndx])
+                 g.logger.debug(&quotface:{} matched with confidence: {}&quot.format(self.svm_model.classes_[best_pred_ndx], best_pred))
+            else:     
+                g.logger.debug (&quotface matched:{} but confidence of:{} is less than {}, marking it unknown&quot.format(self.svm_model.classes_[best_pred_ndx], best_pred, g.config[&quotface_recog_min_confidence&quot]))
+                matched_face_names.append(g.config[&quotunknown_face_name&quot])
+                best_pred = 1 &#47&#47 if unknown, don&quott carry over pred prob
+            matched_face_rects.append((loc[3], loc[0], loc[1], loc[2]))
+            conf.append(best_pred)
+       </a> return matched_face_rects, matched_face_names, conf
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Use the KNN model to find the best matches for the test face
+        closest_distances = self.knn.kneighbors(face_encodings, n_neighbors=1)
+        are_matches = <a id="change">[closest_distances[0][i][0] &lt;= g.config[&quotface_recog_dist_threshold&quot] for i in range(len(face_locations))]</a>
+
+        matched_face_names = []
+        matched_face_rects = []
+
+        <a id="change">for pred, loc, rec in zip(self.knn.predict(face_encodings), face_locations, are_matches):
+            label = pred if rec else g.config[&quotunknown_face_name&quot]
+            matched_face_rects.append((loc[3], loc[0], loc[1], loc[2]))
+            matched_face_names.append(label)
+            conf.append(1)
+
+       </a> return matched_face_rects, matched_face_names, conf
+</code></pre><img src="28342483.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL1' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/c2165a915867df7e292ef4ba4017f4f1fccc34f5#diff-276b561250d60ef72bcd12d7ae11f2870afea3c4b45b4d6cf422287f06d5d586L18' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: c2165a915867df7e292ef4ba4017f4f1fccc34f5</div><div id='time'> Time: 2020-07-12</div><div id='author'> Author: xy.wang@zilliz.com</div><div id='file'> File Name: ann_benchmarks/algorithms/milvus.py</div><div id='class'> Class Name: Milvus</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/bd1fa163ba2e3a02da40151c9ab5e498878800e9#diff-07e9c93f2cec703bf5d95545ca13f028732efcf4703c0d6df16a63f73200fdebL68' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: bd1fa163ba2e3a02da40151c9ab5e498878800e9</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: angelica.perez37@gmail.com</div><div id='file'> File Name: riot_neuralnet/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_raw_training_labels</div><BR>

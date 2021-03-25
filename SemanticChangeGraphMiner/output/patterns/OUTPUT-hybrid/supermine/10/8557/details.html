@@ -1,0 +1,33 @@
+<html><h3>1002cfbcc9f8182404fb058f959d625de2eabbfc,deslib/dcs/rank.py,Rank,estimate_competence,#Rank#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.DFP_mask[clf_index]:
+                &#47&#47 count the number of correctly classified samples in the
+                &#47&#47 neighborhood.
+                <a id="change">for counter, index in enumerate(idx_neighbors):
+                    if self.processed_dsel[index][clf_index]:
+                        continue
+                    else:
+                        competences[clf_index] = counter
+                        break
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                     The competence level estimated for each base classifier
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        results_neighbors = self.processed_dsel[<a id="change">idx_neighbors, :</a>]
+
+        &#47&#47 Get the shape of the vector in order to know the number of samples, base classifiers and neighbors considered.
+        shape = results_neighbors.shape
+
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        <a id="change">addition = np.zeros((shape[0], shape[2]))</a>
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        competences = np.argmax(results_neighbors == 0, axis=1)
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)</code></pre><img src="33390047.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-f725eea8a8cfd270dc9a67e16ed52700e6bfaa5121f5ef13eea92afe7896c09aL87' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/rank.py</div><div id='class'> Class Name: Rank</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f7a04171e58eb43dfe5b18d06c76481cdf1c5da9#diff-d5c2402c42649d54d77c173a2fa2add152bb925bb42b798814c7d3e89e7576efL85' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f7a04171e58eb43dfe5b18d06c76481cdf1c5da9</div><div id='time'> Time: 2018-03-29</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/lca.py</div><div id='class'> Class Name: LCA</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/f8d9a6c144ef84bad2478a4ba4eedb1c559274e0#diff-b708cc8ada86fe8fd796b4c20a550b9c08c55736dac82fb28110d5293b645b48L27' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: f8d9a6c144ef84bad2478a4ba4eedb1c559274e0</div><div id='time'> Time: 2020-11-11</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/_shared/coord.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ensure_spacing</div><BR>

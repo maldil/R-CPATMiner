@@ -1,0 +1,25 @@
+<html><h3>6585887db30feab4c87f81b6ffedc3ba2dcb13bb,thinc/neural/_classes/multiheaded_attention.py,MultiHeadedAttention,_apply_attn,#MultiHeadedAttention#,398
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nD = V0.shape[-1]
+        V1 = V0.reshape((nB * nH, nL, nD))
+        S1 = S0.reshape((nB * nH, nL, nL))
+        <a id="change">S2</a> = <a id="change">self.ops.xp.matmul(S1, V1)</a>
+
+        <a id="change">S3</a> = S2.reshape((nB, nH, nL, nD))
+
+        def backprop_attn4(dS3):
+            dS2 = dS3.reshape((nB * nH, nL, nD))</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 S3: (nB, nH, nL, nD)
+        nB, nH, nL, nL = S0.shape
+        nD = V0.shape[-1]
+        <a id="change">V1</a> = V0.reshape((nB * nH, nL, nD))
+        S1 = S0.reshape((nB * nH, nL, nL))
+        <a id="change">S2</a> = <a id="change">self.ops.matmul(self.ops.xp.ascontiguousarray(S1), self.ops.xp.ascontiguousarray(V1))</a>
+
+        <a id="change">S3</a> = S2.reshape((nB, nH, nL, nD))
+
+        def backprop_attn4(dS3):
+            dS2 = self.ops.xp.ascontiguousarray(dS3.reshape((nB * nH, nL, nD)))</code></pre><img src="1771791.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6585887db30feab4c87f81b6ffedc3ba2dcb13bb#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L399' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6585887db30feab4c87f81b6ffedc3ba2dcb13bb</div><div id='time'> Time: 2019-06-09</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: _apply_attn</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6585887db30feab4c87f81b6ffedc3ba2dcb13bb#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L157' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6585887db30feab4c87f81b6ffedc3ba2dcb13bb</div><div id='time'> Time: 2019-06-09</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: SparseAttention</div><div id='method'> Method Name: _scaled_dot_prod</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6585887db30feab4c87f81b6ffedc3ba2dcb13bb#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L354' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6585887db30feab4c87f81b6ffedc3ba2dcb13bb</div><div id='time'> Time: 2019-06-09</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: _scaled_dot_prod</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6585887db30feab4c87f81b6ffedc3ba2dcb13bb#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L399' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6585887db30feab4c87f81b6ffedc3ba2dcb13bb</div><div id='time'> Time: 2019-06-09</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: _apply_attn</div><BR>

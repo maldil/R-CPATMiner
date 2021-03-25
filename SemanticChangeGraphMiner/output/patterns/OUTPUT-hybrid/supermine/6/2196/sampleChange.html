@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    max = int(max)
+    bins = int(bins)
+
+    <a id="change">lbl_mtch = _utils._get_label_matches(labels, index)</a>
+
+    index_ranges = [_pycompat.irange(e) for e in index.shape]
+
+    result = numpy.empty(index.shape, dtype=object)
+    for i in itertools.product(*index_ranges):
+        <a id="change">result[i]</a> = _utils._histogram(
+            input[lbl_mtch[i]], min, max, bins
+        )
+    result = result[()]</code></pre><h3>After Change</h3><pre><code class='java'>
+    max = int(max)
+    bins = int(bins)
+
+    <a id="change">func = functools.partial(_utils._histogram, min=min, max=max, bins=bins)</a>
+    <a id="change">result = labeled_comprehension(input, labels, index, func, object, None)</a>
+
+    return result
+
+</code></pre>

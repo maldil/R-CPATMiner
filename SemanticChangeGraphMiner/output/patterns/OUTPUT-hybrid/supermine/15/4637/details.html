@@ -1,0 +1,27 @@
+<html><h3>f522e894852f28da0d6b9441ce8e49f486dfbc5f,conceptnet5/vectors/transforms.py,,choose_small_vocabulary,#,149
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+     - are not in ConceptNet
+    
+    concepts = set(line.strip() for line in open(concepts_filename))
+    <a id="change">small_vocab = [term for term in big_frame.index if term.count(&quot_&quot) &lt; 1 and term in concepts]</a>
+    return small_vocab
+
+
+def make_big_frame(frame, language):</code></pre><h3>After Change</h3><pre><code class='java'>
+     - are not frequent
+    
+    concepts = set(line.strip() for line in open(concepts_filename))
+    <a id="change">vocab = []</a>
+    <a id="change">for term in big_frame.index:
+        if &quot_&quot not in term and term in concepts:
+            frequency = word_frequency(uri_to_label(term), language, wordlist=&quotlarge&quot)
+            vocab.append((term, frequency))
+   </a> <a id="change">small_vocab = [term for term, frequency in sorted(vocab, key=lambda x: x[1], reverse=True)[
+                                               :50000]]</a>
+    return small_vocab
+
+
+def make_big_frame(frame, language):</code></pre><img src="19915950.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 14</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/f522e894852f28da0d6b9441ce8e49f486dfbc5f#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL156' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: f522e894852f28da0d6b9441ce8e49f486dfbc5f</div><div id='time'> Time: 2017-06-16</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: choose_small_vocabulary</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/952f26f1f16ac30315f799e163106a688fc05cb7#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL158' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: 952f26f1f16ac30315f799e163106a688fc05cb7</div><div id='time'> Time: 2018-05-14</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: choose_small_vocabulary</div><BR><BR><div id='link'><a href='https://github.com/bambinos/bambi/commit/e2502957ebe993c13fd84af53dea1a9e71c0d5ae#diff-1aaef6370fa4f66c64e1552dc9b687aca1d1e7d9c55accee3d1bc8f8e3102c03L789' target='_blank'>Link</a></div><div id='project'> Project Name: bambinos/bambi</div><div id='commit'> Commit Name: e2502957ebe993c13fd84af53dea1a9e71c0d5ae</div><div id='time'> Time: 2020-10-30</div><div id='author'> Author: aloctavodia@gmail.com</div><div id='file'> File Name: bambi/models.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: plot_priors</div><BR>

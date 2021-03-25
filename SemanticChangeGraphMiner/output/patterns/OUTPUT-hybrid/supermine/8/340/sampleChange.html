@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    list_match = re.findall(signature, response, flags=re.IGNORECASE)
+                    if len(list_match) != 0:
+                        &#47&#47 Add product name and version.
+                        <a id="change">prod_info_list.append(product + str(items[1]) + &quot &quot + list_match[0])</a>
+        except Exception as err:
+            self.util.print_message(WARNING, &quot{}&quot.format(err))
+        return list(set(prod_info_list))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    if len(list_match) != 0:
+                        &#47&#47 Check version.
+                        version_info = &quot&quot
+                        <a id="change">for target_string in list_match:
+                            version_info = self.extract_version(target_string).lower()
+                            if version_info != &quot&quot:
+                                break
+
+                        &#47&#47 Add product name and version.
+                       </a> if str(items[1]) != &quot&quot:
+                            prod_info_list.append(product + &quot@&quot + str(items[1]))
+                        elif version_info != &quot&quot:
+                            prod_info_list.append(product + &quot@&quot + version_info)</code></pre>

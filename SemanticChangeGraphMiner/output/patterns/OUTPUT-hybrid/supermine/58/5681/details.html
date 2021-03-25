@@ -1,0 +1,77 @@
+<html><h3>dce008fdb854987bf596f084024df3117a4c06ec,kymatio/scattering1d/frontend/torch_frontend.py,ScatteringTorch1D,scattering,#ScatteringTorch1D#,73
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                       vectorize=self.vectorize,
+                       size_scattering=size_scattering)
+
+        if <a id="change">self.vectorize</a>:
+            scattering_shape = S.shape[-2:]
+            S = <a id="change">S.reshape(batch_shape + scattering_shape)</a>
+        else:
+            for k, v in S.items():
+                scattering_shape = v.shape[-2:]
+                <a id="change">S[k]</a> = v.reshape(<a id="change">batch_shape + scattering_shape</a>)
+
+        return S
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                &quotInput tensor x should have at least one axis, got {}&quot.format(
+                    len(x.shape)))
+
+        <a id="change">if not self.out_type in (&quotarray&quot, &quotlist&quot):
+            raise RuntimeError("The out_type must be one of &quotarray&quot or &quotlist&quot.")
+
+       </a> batch_shape = x.shape[:-1]
+        signal_shape = x.shape[-1:]
+
+        x = x.reshape((-1, 1) + signal_shape)
+
+        self.load_filters()
+
+        &#47&#47 get the arguments before calling the scattering
+        &#47&#47 treat the arguments
+        if self.vectorize:
+            if not(self.average):
+                raise ValueError(
+                    &quotOptions average=False and vectorize=True are &quot +
+                    &quotmutually incompatible. Please set vectorize to False.&quot)
+            size_scattering = precompute_size_scattering(
+                self.J, self.Q, max_order=self.max_order, detail=True)
+        else:
+            size_scattering = 0
+
+
+        S = scattering1d(x, self.backend.pad, self.backend.unpad, self.backend, self.J, self.psi1_f, self.psi2_f, self.phi_f,\
+                         max_order=self.max_order, average=self.average,
+                       pad_left=self.pad_left, pad_right=self.pad_right,
+                       ind_start=self.ind_start, ind_end=self.ind_end,
+                       oversampling=self.oversampling,
+                       vectorize=self.vectorize,
+                       size_scattering=size_scattering,
+                       out_type=<a id="change">self.out_type</a>)
+
+        if <a id="change">self.out_type == &quotarray&quot and self.vectorize</a>:
+            scattering_shape = S.shape[-2:]
+            new_shape = <a id="change">batch_shape + scattering_shape</a>
+
+            <a id="change">S = S.reshape(new_shape)</a>
+        elif <a id="change">self.out_type == &quotarray&quot and not self.vectorize</a>:
+            for k, v in S.items():
+                &#47&#47 NOTE: Have to get the shape for each one since we may have
+                &#47&#47 average == False.
+                scattering_shape = v.shape[-2:]
+                <a id="change">new_shape = batch_shape + scattering_shape</a>
+
+                <a id="change">S[k]</a> = v.reshape(new_shape)
+        elif <a id="change">self.out_type == &quotlist&quot</a>:
+            <a id="change">for x in S:
+                scattering_shape = x[&quotcoef&quot].shape[-1:]
+                new_shape = batch_shape + scattering_shape
+
+                x[&quotcoef&quot] = x[&quotcoef&quot].reshape(new_shape)
+
+       </a> return S
+
+
+ScatteringTorch1D._document()</code></pre><img src="24005646.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 42</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/dce008fdb854987bf596f084024df3117a4c06ec#diff-270e3f47b2878f8292cbe7e5184f9f6cc5011b5d026cf50390322baf82eb7b99L75' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: dce008fdb854987bf596f084024df3117a4c06ec</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering1d/frontend/torch_frontend.py</div><div id='class'> Class Name: ScatteringTorch1D</div><div id='method'> Method Name: scattering</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/dce008fdb854987bf596f084024df3117a4c06ec#diff-270e3f47b2878f8292cbe7e5184f9f6cc5011b5d026cf50390322baf82eb7b99L75' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: dce008fdb854987bf596f084024df3117a4c06ec</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering1d/frontend/torch_frontend.py</div><div id='class'> Class Name: ScatteringTorch1D</div><div id='method'> Method Name: scattering</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/dce008fdb854987bf596f084024df3117a4c06ec#diff-516ea0ad939e9cdc27ef2c968d32fc8bb9b51d9c6bd18b3caf5ad34d310d18aaL20' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: dce008fdb854987bf596f084024df3117a4c06ec</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering1d/frontend/numpy_frontend.py</div><div id='class'> Class Name: ScatteringNumPy1D</div><div id='method'> Method Name: scattering</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/dce008fdb854987bf596f084024df3117a4c06ec#diff-57c0ab886d429035789d88738019609e548bf3c729d209ca9df60cf73eee74a9L22' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: dce008fdb854987bf596f084024df3117a4c06ec</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering1d/frontend/tensorflow_frontend.py</div><div id='class'> Class Name: ScatteringTensorFlow1D</div><div id='method'> Method Name: scattering</div><BR>

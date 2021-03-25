@@ -1,0 +1,34 @@
+<html><h3>9ba91fa13cbb1e7bc4069e46469b34abb5ca4869,models/networks.py,GANLoss,get_target_tensor,#GANLoss#,130
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def get_target_tensor(self, input, target_is_real):
+        target_tensor = None
+        if target_is_real:
+            create_label = ((<a id="change">self.real_label_var</a> is None) or
+                            (<a id="change">self</a>.real_label_var.numel() != input.numel()))
+            if create_label:
+                real_tensor = self.Tensor(<a id="change">input.size()</a>).fill_(self.real_label)
+                <a id="change">self.real_label_var = Variable(real_tensor, requires_grad=False)</a>
+            target_tensor = self.real_label_var
+        else:
+            create_label = ((<a id="change">self.fake_label_var</a> is None) or
+                            (<a id="change">self</a>.fake_label_var.numel() != input.numel()))
+            if create_label:
+                fake_tensor = self.Tensor(input.size()).fill_(self.fake_label)
+                <a id="change">self.fake_label_var = Variable(fake_tensor, requires_grad=False)</a>
+            target_tensor = self.fake_label_var
+        <a id="change">return target_tensor</a>
+
+    def __call__(self, input, target_is_real):
+        target_tensor = self.get_target_tensor(input, target_is_real)
+        return self.loss(input, target_tensor)</code></pre><h3>After Change</h3><pre><code class='java'>
+            target_tensor = self.real_label
+        else:
+            target_tensor = self.fake_label
+        <a id="change">return target_tensor.expand_as(input)</a>
+
+    def __call__(self, input, target_is_real):
+        target_tensor = self.get_target_tensor(input, target_is_real)
+        return self.loss(input, target_tensor)</code></pre><img src="28202412.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L126' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: GANLoss</div><div id='method'> Method Name: get_target_tensor</div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L130' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: GANLoss</div><div id='method'> Method Name: get_target_tensor</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/b96c824d5fc325b6f3ad4d10031a7ec28f9e941f#diff-e5796de3a79360949a789b92b811a03c2e8ff41fafafe245037bd58250b4bab2L261' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: b96c824d5fc325b6f3ad4d10031a7ec28f9e941f</div><div id='time'> Time: 2018-03-05</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: models/densenet_efficient.py</div><div id='class'> Class Name: _EfficientDensenetBottleneckFn</div><div id='method'> Method Name: forward</div><BR>

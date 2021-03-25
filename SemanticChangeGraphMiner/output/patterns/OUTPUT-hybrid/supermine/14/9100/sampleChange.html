@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def test_can_post_in_forum_admin(self):
+        If you&quotre a forum admin, you can post even if you have no sounds, you&quotre within
+        5 minutes of the last one, and you&quotve gone over the limit of posts for the day
+        <a id="change">created = datetime.datetime(2019, 2, 3, 10, 50, 00)</a>
+        post = Post.objects.create(thread=self.thread, body="", author=self.user, moderation_state="OK")
+        <a id="change">post.created</a> = created
+        post.save()
+        perm = Permission.objects.get_by_natural_key(&quotcan_moderate_forum&quot, &quotforum&quot, &quotpost&quot)
+        self.user.user_permissions.add(perm)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def test_can_post_in_forum_admin(self):
+        If you&quotre a forum admin, you can post even if you have no sounds, you&quotre within
+        5 minutes of the last one, and you&quotve gone over the limit of posts for the day
+        <a id="change">created = parse_date("2019-02-03 10:50:00")</a>
+        post = Post.objects.create(thread=self.thread, body="", author=self.user, moderation_state="OK")
+        <a id="change">post.created</a> = created
+        post.save()
+        perm = Permission.objects.get_by_natural_key(&quotcan_moderate_forum&quot, &quotforum&quot, &quotpost&quot)
+        self.user.user_permissions.add(perm)</code></pre>

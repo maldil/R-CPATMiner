@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        img = np.array(Image.open(img_path))
+
+        &#47&#47 Black and white images
+        <a id="change">if len(img.shape) == 2:
+            img = np.repeat(img[:, :, np.newaxis], 3, axis=2)
+
+       </a> h, w, _ = img.shape
+        dim_diff = np.abs(h - w)
+        &#47&#47 Upper (left) and lower (right) padding
+        pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2</code></pre><h3>After Change</h3><pre><code class='java'>
+        img = np.array(Image.open(img_path))
+
+        &#47&#47 Handles images with less than three channels
+        while <a id="change">len(img.shape) != 3:
+   </a>         index += 1
+            img_path = self.img_files[index % len(self.img_files)].rstrip()
+            <a id="change">img = np.array(Image.open(img_path))</a>
+
+        h, w, _ = img.shape
+        dim_diff = np.abs(h - w)
+        &#47&#47 Upper (left) and lower (right) padding</code></pre>

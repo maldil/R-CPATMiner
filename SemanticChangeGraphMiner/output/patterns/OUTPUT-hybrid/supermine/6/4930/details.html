@@ -1,0 +1,24 @@
+<html><h3>aa1eb21d82804500e2357cde21b18bcf6f87825a,spotlight/factorization/implicit.py,ImplicitFactorizationModel,predict,#ImplicitFactorizationModel#,245
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self._check_input(user_ids, item_ids)
+
+        <a id="change">user_ids = torch.from_numpy(user_ids.reshape(-1, 1).astype(np.int64))</a>
+        item_ids = torch.from_numpy(item_ids.reshape(-1, 1).astype(np.int64))
+
+        <a id="change">user_var = Variable(gpu(user_ids, self._use_cuda))</a>
+        item_var = Variable(gpu(item_ids, self._use_cuda))
+
+        out = self._net(user_var, item_var)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        self._check_input(user_ids, item_ids, allow_items_none=True)
+        <a id="change">self._net.train(False)</a>
+
+        user_ids, item_ids = _predict_process_ids(user_ids, item_ids,
+                                                  self._num_items,
+                                                  self._use_cuda)</code></pre><img src="21163959.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/aa1eb21d82804500e2357cde21b18bcf6f87825a#diff-dd1a4554bf56bdf8bb54e9a3d9c8898f86a08e67e9341b3fd61b2f4d54ca8b2aL245' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: aa1eb21d82804500e2357cde21b18bcf6f87825a</div><div id='time'> Time: 2017-08-02</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/factorization/implicit.py</div><div id='class'> Class Name: ImplicitFactorizationModel</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/aa1eb21d82804500e2357cde21b18bcf6f87825a#diff-1d074553c8360eeb4748d829e86a653cdba4e5fda01ae13e8095bcf928f8d973L224' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: aa1eb21d82804500e2357cde21b18bcf6f87825a</div><div id='time'> Time: 2017-08-02</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/factorization/explicit.py</div><div id='class'> Class Name: ExplicitFactorizationModel</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4#diff-d3e1c4411b6f580293411b1726cd987c27fcb1ea04379afb16679af9a663983bL112' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: fc9e5824ad7bd3094f5012dc6fc3d2348481a2f4</div><div id='time'> Time: 2019-04-02</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/bicyclegan/bicyclegan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_images</div><BR>

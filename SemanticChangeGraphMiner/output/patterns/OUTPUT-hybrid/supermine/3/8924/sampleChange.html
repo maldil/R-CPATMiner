@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 Get block/grid sizes:
+    dev = misc.get_current_device()
+    <a id="change">block_dim</a>, grid_dim = misc.select_block_grid_sizes(dev, x_gpu.shape)
+
+    &#47&#47 Set this to False when debugging to make sure the compiled kernel is
+    &#47&#47 not cached:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    si_gpu = gpuarray.empty_like(x_gpu)
+    ci_gpu = gpuarray.empty_like(x_gpu)
+    <a id="change">func(x_gpu, si_gpu, ci_gpu)</a>
+        
+    return (si_gpu, ci_gpu)
+sici.cache = {}
+</code></pre>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if isinstance(model, nx.Model):
+        models = [model]
+    elif isinstance(model, list) or isinstance(model, tuple):
+        models = <a id="change">list(model)</a>
+    else:
+        raise ValueError(&quot`model` must be a model, list, or tuple of models&quot)
+
+    &#47&#47 make list of tournaments</code></pre><h3>After Change</h3><pre><code class='java'>
+        tournaments = nx.tournament_all()
+    elif nx.isint(tournament) or nx.isstring(tournament):
+        tournaments = [tournament]
+    elif <a id="change">isinstance</a>(tournament, list) or isinstance(tournament, tuple):
+        tournaments = tournament
+    else:
+        msg = &quot`tournament` must be an integer, string, list, tuple, or None.&quot
+        <a id="change">raise ValueError(msg)</a>
+    tournaments = [nx.tournament_str(t) for t in tournaments]
+    if len(tournaments) != len(set(tournaments)):
+        raise ValueError(&quot`tournament` cannot contain duplicates&quot)
+</code></pre>

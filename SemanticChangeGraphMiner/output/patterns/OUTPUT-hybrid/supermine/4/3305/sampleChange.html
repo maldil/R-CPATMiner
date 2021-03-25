@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_perturb():
+    T = SE3.exp(np.array([1, 2, 3, 4, 5, 6]))
+    T_copy = <a id="change">SE3.from_matrix(T.as_matrix())</a>
+    xi = np.array([0.6, 0.5, 0.4, 0.3, 0.2, 0.1])
+    T.perturb(xi)
+    assert np.allclose(T.as_matrix(), (SE3.exp(xi) * T_copy).as_matrix())
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def test_perturb():
+    T = SE3.exp(np.array([1, 2, 3, 4, 5, 6]))
+    T_copy = <a id="change">copy.deepcopy(T)</a>
+    xi = np.array([0.6, 0.5, 0.4, 0.3, 0.2, 0.1])
+    T.perturb(xi)
+    assert np.allclose(T.as_matrix(), (SE3.exp(xi) * T_copy).as_matrix())
+</code></pre>

@@ -1,0 +1,50 @@
+<html><h3>223b817345f40076b2ff8dd0e7e49c00e1d6c03c,nussl/separation/primitive/repet_sim.py,RepetSim,__init__,#RepetSim#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                 max_repeating_frames=None, high_pass_cutoff=None, do_mono=False,
+                 use_librosa_stft=constants.USE_LIBROSA_STFT, matlab_fidelity=False,
+                 mask_type=mask_separation_base.MaskSeparationBase.SOFT_MASK, mask_threshold=0.5):
+        <a id="change">super(RepetSim, self).__init__(input_audio_signal=input_audio_signal, mask_type=mask_type,
+                                       mask_threshold=mask_threshold)</a>
+
+        self.high_pass_cutoff = 100 if high_pass_cutoff is None else high_pass_cutoff
+        self.similarity_threshold = 0 if similarity_threshold is None else similarity_threshold
+        self.min_distance_between_frames = 1 if min_distance_between_frames is None else min_distance_between_frames
+        self.max_repeating_frames = 100 if max_repeating_frames is None else max_repeating_frames
+
+        self._min_distance_converted_to_hops = False
+
+        <a id="change">self.verbose</a> = False
+        self.similarity_matrix = None
+        self.background = None
+        self.foreground = None
+        self.similarity_indices = None
+        <a id="change">self.magnitude_spectrogram</a> = None
+        <a id="change">self.stft</a> = None
+        self.result_masks = None
+        <a id="change">self.use_librosa_stft = use_librosa_stft</a>
+        <a id="change">self.matlab_fidelity</a> = matlab_fidelity
+
+        if self.matlab_fidelity:
+            <a id="change">self.use_librosa_stft</a> = False
+
+        <a id="change">self.do_mono = do_mono</a>
+
+        if self.do_mono:
+            <a id="change">self</a>.audio_signal.to_mono(overwrite=True)
+
+    def run(self):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, input_audio_signal, similarity_threshold=0, 
+                 min_distance_between_frames=1, max_repeating_frames=100, 
+                 high_pass_cutoff=100, mask_type=&quotsoft&quot, mask_threshold=0.5):
+        <a id="change">super().__init__(
+            input_audio_signal=input_audio_signal, 
+            mask_type=mask_type,
+            mask_threshold=mask_threshold)</a>
+
+        self.high_pass_cutoff = high_pass_cutoff
+        self.similarity_threshold = similarity_threshold
+        self.min_distance_between_frames = min_distance_between_frames</code></pre><img src="26974618.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/223b817345f40076b2ff8dd0e7e49c00e1d6c03c#diff-7d68a897271bfe9ae1deb7b29563e1d8ac78838ffd79207268e547f5b3c92a4cL34' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 223b817345f40076b2ff8dd0e7e49c00e1d6c03c</div><div id='time'> Time: 2020-03-22</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/primitive/repet_sim.py</div><div id='class'> Class Name: RepetSim</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/223b817345f40076b2ff8dd0e7e49c00e1d6c03c#diff-7d68a897271bfe9ae1deb7b29563e1d8ac78838ffd79207268e547f5b3c92a4cL40' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 223b817345f40076b2ff8dd0e7e49c00e1d6c03c</div><div id='time'> Time: 2020-03-22</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/primitive/repet_sim.py</div><div id='class'> Class Name: RepetSim</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/1cadb414e15dd9c65600b4432ed77428397deabc#diff-1d74f415074284692ca38528ba2cb0cf3c4082cf359fdd1974af31508b889dbbL31' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 1cadb414e15dd9c65600b4432ed77428397deabc</div><div id='time'> Time: 2020-03-22</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/factorization/rpca.py</div><div id='class'> Class Name: RPCA</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL21' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: __init__</div><BR>

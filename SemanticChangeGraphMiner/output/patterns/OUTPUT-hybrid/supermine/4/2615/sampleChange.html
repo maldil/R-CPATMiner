@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for b, batch in enumerate(val_iter):
+        src, len_src = batch.src
+        trg, len_trg = batch.trg
+        <a id="change">src</a>, trg = src.cuda(), trg.cuda()
+        output = model(src, trg)
+        loss = F.cross_entropy(output.view(-1, vocab_size),
+                               trg.contiguous().view(-1), ignore_index=pad)</code></pre><h3>After Change</h3><pre><code class='java'>
+        src, len_src = batch.src
+        trg, len_trg = batch.trg
+        src = Variable(src.data.cuda(), volatile=True)
+        <a id="change">trg = Variable(trg.data.cuda(), volatile=True)</a>
+        output = model(src, trg)
+        loss = F.cross_entropy(output.view(-1, vocab_size),
+                               trg.contiguous().view(-1), ignore_index=pad)
+        total_loss += loss.data[0]</code></pre>

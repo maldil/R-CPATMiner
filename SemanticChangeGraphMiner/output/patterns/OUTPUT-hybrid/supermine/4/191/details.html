@@ -1,0 +1,22 @@
+<html><h3>043d176e63960102db551b2b5739721c0467a43e,thinc/neural/_classes/multiheaded_attention.py,MultiHeadedAttention,begin_update,#MultiHeadedAttention#,232
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Qs, Ks, Vs = self._split_seqs(QKV, lengths)
+        Xattns, get_dQs_dKs_dVs = self._attend_seqs(Qs, Ks, Vs)
+        assert Xattns[0].shape == (lengths[0], X.shape[1]), (Xattns[0].shape, X.shape[1])
+        <a id="change">Xattn = self.ops.flatten(Xattns)</a>
+        assert Xattn.shape == X.shape
+        <a id="change">Y, get_dXattn = self.get_output.begin_update(Xattn, drop=drop)</a>
+
+        def backprop_self_attn(dY, sgd=None):
+            dXattn = get_dXattn(dY, sgd=sgd)
+            dXattns = self.ops.unflatten(dXattn, lengths)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def begin_update(self, inputs, drop=0.0):
+        (Qs, Ks, Vs), get_d_inputs = self.handle_inputs(inputs, drop=drop)
+        Y, get_dQs_dKs_dVs = self.attend((Qs, Ks, Vs), drop=drop)
+        <a id="change">outputs</a>, get_dY = self.handle_outputs(Y, inputs)
+
+        def backprop_self_attn(d_outputs, sgd=None):
+            dY = get_dY(d_outputs, sgd=sgd)</code></pre><img src="1253170.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/043d176e63960102db551b2b5739721c0467a43e#diff-905122852669865bab581e1c4d6012aefb6038afc985c96fa4acffdfdbeaa3a0L25' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 043d176e63960102db551b2b5739721c0467a43e</div><div id='time'> Time: 2019-06-10</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/neural/_classes/multiheaded_attention.py</div><div id='class'> Class Name: MultiHeadedAttention</div><div id='method'> Method Name: begin_update</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/b7c2f6e9ccd65a53d8ae9aa0d3ee287ce9c93019#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L243' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: b7c2f6e9ccd65a53d8ae9aa0d3ee287ce9c93019</div><div id='time'> Time: 2014-02-07</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: estimate_tuning</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/tpot/commit/ef29cd9bde8695645d63ae7f568fb298809e7b19#diff-af09f9926e900caa780b0103b6e5fe571db2074aa4eb6c98ddac9a74465e7ac8L43' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/tpot</div><div id='commit'> Commit Name: ef29cd9bde8695645d63ae7f568fb298809e7b19</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: weixuanf@pennmedicine.upenn.edu</div><div id='file'> File Name: tpot/builtins/dataset_selector.py</div><div id='class'> Class Name: DatasetSelector</div><div id='method'> Method Name: fit</div><BR>

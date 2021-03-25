@@ -1,0 +1,30 @@
+<html><h3>44672d4eba334ca97d32874d9aa03b02ce46d513,nilmtk/metergroup.py,MeterGroup,load,#MeterGroup#,517
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        .. note:: Different AC types will be treated separately.
+        
+        &#47&#47 Get a list of generators
+        <a id="change">generators = [meter.load(**kwargs) for meter in self.meters]</a>
+
+        &#47&#47 Load each generator and yield the sum
+        while True:
+            chunk = None</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Get a list of generators
+        generators = []
+        for meter in self.meters:
+            <a id="change">try:
+                generator = meter.load(**kwargs)
+            except MeasurementError as e:
+                warn("Ignoring meter &quot{}&quot because it does not have the correct"
+                     " measurements.  The MeasurementError was: &quot{}&quot"
+                     .format(meter.identifier, e))
+            else:
+                generators.append(generator)
+
+        &#47&#47 Load each generator and yield the sum
+       </a> while True:
+            chunk = None
+            for generator in generators:
+                try:</code></pre><img src="19769165.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/44672d4eba334ca97d32874d9aa03b02ce46d513#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL567' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 44672d4eba334ca97d32874d9aa03b02ce46d513</div><div id='time'> Time: 2014-12-10</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/d690e06459ea9f71f8e246edbf88e7f4d7250bf5#diff-20e4496adfeef9d5174d69be011c32a5397592eb691f0b5c0ef6350c51d1375dL237' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: d690e06459ea9f71f8e246edbf88e7f4d7250bf5</div><div id='time'> Time: 2014-01-01</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: src/BayesianModel/BayesianModel.py</div><div id='class'> Class Name: BayesianModel</div><div id='method'> Method Name: add_states</div><BR><BR><div id='link'><a href='https://github.com/matthewwithanm/django-imagekit/commit/14bac58373d87ab4d90879b1654b62bf89603bc4#diff-f32b96e0a664ff304caab211b21834b8a500496d526fbfa9aa42e4e791af6625L103' target='_blank'>Link</a></div><div id='project'> Project Name: matthewwithanm/django-imagekit</div><div id='commit'> Commit Name: 14bac58373d87ab4d90879b1654b62bf89603bc4</div><div id='time'> Time: 2011-11-02</div><div id='author'> Author: matthew@exanimo.com</div><div id='file'> File Name: imagekit/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _get_suggested_extension</div><BR>

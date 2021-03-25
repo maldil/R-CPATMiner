@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    elif rec == &quotSVD&quot:
+        algorithm = SVD()
+
+    elif <a id="change">rec == &quotNMF&quot:</a>
+        algorithm = NMF()
+
+    else:
+        <a id="change">raise ValueError("Choose between ItemKNN, SVD or NMF")</a>
+
+    itemrec = SurpriseRecommender(algorithm, args.dataset, args.train)
+
+    &#47&#47 initialize evaluator</code></pre><h3>After Change</h3><pre><code class='java'>
+        algorithm = [SVD()]
+        name = [&quotSVD&quot]
+
+    elif <a id="change">rec == &quotNMF&quot:</a>
+        algorithm = [NMF()]
+        name = [&quotNMF&quot]
+
+    else:
+        <a id="change">algorithm = [KNNBaseline(sim_options=sim_options), SVD(), NMF()]</a>
+        <a id="change">name = [&quotItemKNN&quot, &quotSVD&quot, &quotNMF&quot]</a>
+
+    &#47&#47 initialize evaluator
+
+    if args.dataset == &quotLastFM&quot:</code></pre>

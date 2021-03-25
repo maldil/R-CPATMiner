@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        kl = self.prior_kl()
+        f_mean, f_var = self.predict_f(X)
+        var_exp = self.likelihood.variational_expectations(f_mean, f_var, Y)
+        scale = <a id="change">tf.cast(self.num_data, kl.dtype) / tf.cast(tf.shape(X)[0], kl.dtype)</a>
+        return tf.reduce_sum(var_exp) * scale - kl
+
+    def predict_f(self, Xnew, full_cov=False, full_output_cov=False) -&gt; tf.Tensor:
+        q_mu = self.q_mu()</code></pre><h3>After Change</h3><pre><code class='java'>
+        var_exp = self.likelihood.variational_expectations(f_mean, f_var, Y)
+        scale = tf.cast(1.0, kl.data)
+        if self.num_data is not None:
+            num_data = <a id="change">tf.cast(self.num_data, kl.dtype)</a>
+            minibatch_size = tf.cast(tf.shape(X)[0], kl.dtype)
+            scale = num_data / minibatch_size
+        return tf.reduce_sum(var_exp) * scale - kl
+</code></pre>

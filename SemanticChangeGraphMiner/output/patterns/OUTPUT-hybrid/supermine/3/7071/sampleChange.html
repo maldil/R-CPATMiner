@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      self.state_buffer.append(torch.zeros(84, 84, device=self.device))
+
+  def reset(self):
+    <a id="change">if self.life_termination:
+      self.life_termination = False  &#47&#47 Reset flag
+      self.ale.act(0)  &#47&#47 Use a no-op after loss of life
+    else:
+      &#47&#47 Reset internals
+      self._reset_buffer()
+      self.ale.reset_game()
+      &#47&#47 Perform up to 30 random no-ops before starting
+      for _ in range(random.randrange(30)):
+        self.ale.act(0)  &#47&#47 Assumes raw action 0 is always no-op
+        if self.ale.game_over():
+          self.ale.reset_game()
+    &#47&#47 Process and return "initial" state
+   </a> observation = self._get_state()
+    self.state_buffer.append(observation)
+    self.lives = self.ale.lives()
+    return torch.stack(list(self.state_buffer), 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+    observation = self._reset()
+    &#47&#47 Press fire (raw action 1) to reset game if needed
+    if 1 in self.actions.keys():
+      observation, _, done = <a id="change">self.step(1)</a>
+      if done:
+        self._reset()
+      observation, _, done = self.step(2)
+      if done:</code></pre>

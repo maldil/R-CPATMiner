@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        
+        if signal_length is not None and signal_starting_position &gt;= signal_length:
+            <a id="change">raise IndexError(&quotsignal_starting_position cannot be greater than signal_length!&quot)</a>
+
+        try:
+            with audioread.audio_open(os.path.realpath(input_file_path)) as input_file:
+                self.sample_rate = input_file.samplerate</code></pre><h3>After Change</h3><pre><code class='java'>
+            if offset &gt; file_length:
+                raise ValueError(&quotoffset is longer than signal!&quot)
+
+            <a id="change">if duration is not None and offset + duration &gt;= file_length:
+                warnings.warn(&quotoffset + duration are longer than the signal. Reading until end of signal...&quot,
+                              UserWarning)
+
+           </a> audio_input, self.sample_rate = librosa.load(input_file_path,
+                                                         sr=None,
+                                                         offset=offset,
+                                                         duration=duration,</code></pre>

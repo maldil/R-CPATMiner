@@ -1,0 +1,19 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    sorted_scores = zip(labels, scores)
+    sorted_scores.sort(key=<a id="change">operator.itemgetter(1)</a>, reverse=False)
+
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    FP = np.sum(<a id="change">labels[:threshold_index]</a> == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    return float(FP) / float(FP + TN)
+&quot&quot&quotimport operator</code></pre><img src="22915209.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/maxpumperla/deep_learning_and_the_game_of_go/commit/a17ac3677d207e04a53ed70fa971fbf436c0266f#diff-338ab475ff2733151bc03d346842b9bdf00c39ac7dd466756c43c47bc56a2610L146' target='_blank'>Link</a></div><div id='project'> Project Name: maxpumperla/deep_learning_and_the_game_of_go</div><div id='commit'> Commit Name: a17ac3677d207e04a53ed70fa971fbf436c0266f</div><div id='time'> Time: 2020-04-08</div><div id='author'> Author: 41198454+JingOY0610@users.noreply.github.com</div><div id='file'> File Name: code/dlgo/agent/alphago.py</div><div id='class'> Class Name: AlphaGoMCTS</div><div id='method'> Method Name: policy_rollout</div><BR><BR><div id='link'><a href='https://github.com/AxeldeRomblay/MLBox/commit/5229c0512485bbf06c20bf9c1ce631d3e3c8517e#diff-871816cedd842065143f7fb7aa9ddc9ecda0afdd04cc63857cdb18569bd20e15L93' target='_blank'>Link</a></div><div id='project'> Project Name: AxeldeRomblay/MLBox</div><div id='commit'> Commit Name: 5229c0512485bbf06c20bf9c1ce631d3e3c8517e</div><div id='time'> Time: 2017-07-26</div><div id='author'> Author: axelderomblay@gmail.com</div><div id='file'> File Name: python-package/mlbox/prediction/predictor.py</div><div id='class'> Class Name: Predictor</div><div id='method'> Method Name: __plot_feature_importances</div><BR>

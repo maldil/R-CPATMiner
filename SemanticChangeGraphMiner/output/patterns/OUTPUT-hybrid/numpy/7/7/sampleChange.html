@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        full_batch, obs, acts, reward_bound = filter_batch(full_batch + batch, PERCENTILE)
+        if not full_batch:
+            continue
+        obs_v = <a id="change">Variable(torch.from_numpy(np.array(obs)))</a>
+        acts_v = <a id="change">Variable(torch.from_numpy(np.array(acts)))</a>
+        full_batch = full_batch[-500:]
+
+        optimizer.zero_grad()
+        action_scores_v = net(obs_v)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not full_batch:
+            continue
+        obs_v = torch.FloatTensor(obs)
+        acts_v = <a id="change">torch.LongTensor(acts)</a>
+        full_batch = full_batch[-500:]
+
+        optimizer.zero_grad()
+        action_scores_v = net(obs_v)</code></pre>

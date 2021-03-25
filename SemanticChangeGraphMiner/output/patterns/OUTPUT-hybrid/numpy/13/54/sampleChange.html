@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError(&quotSize mismatch between n_fft and len(window)&quot)
+
+    &#47&#47 Pad the window out to n_fft size
+    <a id="change">lpad        = (n_fft - win_length)/2</a>
+    fft_window  = <a id="change">np.pad(fft_window, (lpad, n_fft - win_length - lpad), mode=&quotconstant&quot)</a>
+    
+    &#47&#47 Reshape so that the window can be broadcast
+    fft_window  = fft_window.reshape((-1, 1))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError(&quotSize mismatch between n_fft and len(window)&quot)
+
+    &#47&#47 Pad the window out to n_fft size
+    fft_window = <a id="change">util.pad_center(fft_window, n_fft)</a>
+
+    &#47&#47 Reshape so that the window can be broadcast
+    fft_window  = fft_window.reshape((-1, 1))
+</code></pre>

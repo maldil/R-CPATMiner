@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 We build from source on windows, otherwise, we looks for a wheel
+if sys.platform != &quotwin32&quot:
+    <a id="change">wheel</a> = next(file <a id="change">for</a> file in os.listdir(<a id="change">str(DIST_PATH.resolve())</a>)
+                 if file.endswith(&quot.whl&quot))
+else:
+    wheel = None
+
+&#47&#47 Numpy version is used for building
+numpy_version = next(package for package in requirements if &quotnumpy&quot in package)
+
+&#47&#47 Render and write the meta.yaml file to $ROOT/conda/meta.yaml
+context = {
+    &quotrequirements&quot: requirements,
+    &quotnumpy_version&quot: numpy_version,
+    &quotVERSION&quot: VERSION,
+    &quotwheel&quot: <a id="change">wheel</a>,
+    &quotpy_version&quot: &quot{0.major}{0.minor}&quot.format(sys.version_info)
+}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 conda puts a space between packages and versions, so we have to match that
+requirements = []
+with open(str(REQUIREMENTS_FILE.resolve())) as file:
+    <a id="change">for line in file:
+        requirement = line.strip()
+        match = re.match(r&quot^([A-Za-z\-0-9]+)&quot, requirement)
+        _, match_end = match.span()
+        package = match.group(0)
+        version = requirement[match_end:].replace(&quot==&quot, &quot&quot)
+        requirements.append(f&quot{package} {version}&quot)
+
+&#47&#47 Render and write the meta.yaml file to $ROOT/conda/meta.yaml
+</a>context = {
+    &quotrequirements&quot: requirements,
+    &quotVERSION&quot: VERSION
+}</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_fft = int(2.0**(np.ceil(np.log2(max_filter_length))))
+
+    &#47&#47 Conjugate-transpose the basis
+    fft_basis = <a id="change">np</a>.fft.fft(basis, n=n_fft, axis=1).conj()
+
+    <a id="change">fft_basis</a> = util.sparsify(fft_basis)
+
+    n_octaves = int(np.ceil(float(n_bins) / bins_per_octave))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_fft = int(2.0**(np.ceil(np.log2(max_filter_length))))
+
+    &#47&#47 Conjugate-transpose the basis
+    fft_basis = <a id="change">np.fft.fft(basis, n=n_fft, axis=1)[:, :(n_fft / 2)+1]</a>
+
+    <a id="change">fft_basis</a> = util.sparsify(fft_basis)
+
+    n_octaves = int(np.ceil(float(n_bins) / bins_per_octave))
+</code></pre>

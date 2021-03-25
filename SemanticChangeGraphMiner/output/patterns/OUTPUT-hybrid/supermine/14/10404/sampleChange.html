@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    net = model.PhraseModel(emb_size=model.EMBEDDING_DIM, dict_size=len(emb_dict),
+                            hid_size=model.HIDDEN_STATE_SIZE)
+    <a id="change">if args.cuda:
+        net.cuda()
+   </a> log.info("Model: %s", net)
+
+    writer = SummaryWriter(comment="-" + args.name)
+
+    optimiser = optim.Adam(net.parameters(), lr=LEARNING_RATE)
+    best_bleu = None
+    for epoch in range(MAX_EPOCHES):
+        losses = []
+        bleu_sum = 0.0
+        bleu_count = 0
+        for batch in data.iterate_batches(train_data, BATCH_SIZE):
+            optimiser.zero_grad()
+            input_seq, out_seq_list, _, out_idx = model.pack_batch(batch, net.emb,
+                                                                   cuda=<a id="change">args</a>.cuda)
+            enc = net.encode(input_seq)
+
+            net_results = []
+            net_targets = []
+            for idx, out_seq in enumerate(out_seq_list):
+                ref_indices = out_idx[idx][1:]
+                enc_item = net.get_encoded_item(enc, idx)
+                if random.random() &lt; TEACHER_PROB:
+                    r = net.decode_teacher(enc_item, out_seq)
+                    bleu_sum += model.seq_bleu(r, ref_indices)
+                else:
+                    r, seq = net.decode_chain_argmax(enc_item, out_seq.data[0:1],
+                                                     len(ref_indices))
+                    bleu_sum += utils.calc_bleu(seq, ref_indices)
+                net_results.append(r)
+                net_targets.extend(ref_indices)
+                bleu_count += 1
+            results_v = torch.cat(net_results)
+            targets_v = Variable(torch.LongTensor(net_targets))
+            <a id="change">if args.cuda:
+                targets_v = targets_v.cuda()
+           </a> loss_v = F.cross_entropy(results_v, targets_v)
+            loss_v.backward()
+            optimiser.step()
+
+            losses.append(<a id="change">loss_v</a>.data.cpu().numpy()[0])
+        bleu = bleu_sum / bleu_count
+        bleu_test = run_test(test_data, net, end_token, args.cuda)
+        log.info("Epoch %d: mean loss %.3f, mean BLEU %.3f, test BLEU %.3f",</code></pre><h3>After Change</h3><pre><code class='java'>
+                        help="Enable cuda")
+    parser.add_argument("-n", "--name", required=True, help="Name of the run")
+    args = parser.parse_args()
+    device = torch.device(<a id="change">"cuda" if args.cuda else "cpu"</a>)
+
+    saves_path = os.path.join(SAVES_DIR, args.name)
+    os.makedirs(saves_path, exist_ok=True)</code></pre>

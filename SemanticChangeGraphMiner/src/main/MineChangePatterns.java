@@ -56,7 +56,7 @@ public class MineChangePatterns {
 		if(SystemUtils.IS_OS_MAC){
 			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/SemanticChangeGraphMiner/SemanticChangeGraphMiner/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_LINUX) {
-			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/AtomicASTChangeMining_Ref/selected-repos.csv");
+			content = FileIO.readStringFromFile("/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
 			content = FileIO.readStringFromFile(new File(reposPath).getParentFile().getAbsolutePath() + "/" + new File(reposPath).getName() + ".csv");
 		}
@@ -82,7 +82,7 @@ public class MineChangePatterns {
 							projectNames.add(name);
 							System.out.println("Project " + projectNames.size() + " " + name);
 						}
-						mine(graphs, 2, name.replace("/", "---"));
+						mine(graphs, 1, name.replace("/", "---"));
 						System.out.println("Done " + name);
 					}
 				});
@@ -108,6 +108,11 @@ public class MineChangePatterns {
 		System.out.println("Projects: " + projectNames.size());
 		System.out.println("Commits: " + numOfCommits);
 		System.out.println("Graphs: " + numOfGraphs);
+
+		System.out.println("<td>"+projectNames.size()+"</td>");
+		System.out.println("<td>"+numOfCommits+"</td>");
+		System.out.println("<td>"+numOfGraphs+"</td>");
+
 		long end = System.currentTimeMillis();
 		System.out.println((end - start) / 1000 + " s.");
 		if (Pattern.mode == 0) {
@@ -115,7 +120,6 @@ public class MineChangePatterns {
 //				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 				pool.shutdown();
 				pool.awaitTermination(1, TimeUnit.MINUTES);
-				pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 			} catch (final InterruptedException e) { }
 		}
 	}
@@ -131,7 +135,7 @@ public class MineChangePatterns {
 		}
 	}
 
-	private static ArrayList<GROUMGraph> readGraphs(String changesPath, String projectName) {
+	public static ArrayList<GROUMGraph> readGraphs(String changesPath, String projectName) {
 		ArrayList<GROUMGraph> graphs = new ArrayList<>();
 		File dir = new File(changesPath + "/" + projectName);
 		System.out.println(changesPath + "/" + projectName);
@@ -147,9 +151,9 @@ public class MineChangePatterns {
 			//System.out.println("Commit " + i + ": " + file.getName());
 			@SuppressWarnings("unchecked")
 			HashMap<String, HashMap<String, ChangeGraph>> fileChangeGraphs = (HashMap<String, HashMap<String, ChangeGraph>>) FileIO.readObjectFromFile(sub.getAbsolutePath());
+
 			for (String fp : fileChangeGraphs.keySet()) {
 //				System.out.println(fp);
-				//System.out.println(fp);
 				HashMap<String, ChangeGraph> cgs = fileChangeGraphs.get(fp);
 				for (String method : cgs.keySet()) {
 					//System.out.println(method);
@@ -163,9 +167,6 @@ public class MineChangePatterns {
 					numOfGraphs.incrementAndGet();
 					GROUMGraph g = new GROUMGraph(cg, name);
 
-					if (cg.getNodes().size() <= 2) continue;
-					numOfGraphs.incrementAndGet();
-					GROUMGraph g = new GROUMGraph(cg, name);
 					// FIXME
 					g.pruneDoubleEdges();
 					g.setProject(projectName);

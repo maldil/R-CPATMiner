@@ -1,0 +1,25 @@
+<html><h3>153f77827dd75fc74aff90838d0f6b3955c1b27d,sk_dsp_comm/digitalcom.py,,QAM_SEP,#,423
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rx_data.real[s1r] = (M - 1)*np.ones(len(s1r))
+    rx_data.real[s2r] = np.zeros(len(s2r))
+    &#47&#47 Fix-up edge points imag part
+    <a id="change">s1i</a> = <a id="change">mlab.find(rx_data.imag &gt; M - 1)</a>
+    <a id="change">s2i</a> = <a id="change">mlab.find(rx_data.imag &lt; 0)</a>
+    <a id="change">rx_data.imag[s1i]</a> = (M - 1)*np.ones(len(s1i))
+    <a id="change">rx_data.imag[s2i]</a> = np.zeros(len(s2i))
+    rx_data = 2*rx_data - (M - 1)*(1 + 1j)
+    &#47&#47Correlate the first Ncorr symbols at four possible phase rotations
+    R0,lags = xcorr(rx_data,tx_data,Ncorr)</code></pre><h3>After Change</h3><pre><code class='java'>
+    rx_data.real[s1r] = (M - 1)*np.ones(len(s1r))
+    rx_data.real[s2r] = np.zeros(len(s2r))
+    &#47&#47 Fix-up edge points imag part
+    <a id="change">s1i</a> = <a id="change">np.nonzero(np.ravel(rx_data.imag &gt; M - 1))[0]</a>
+    <a id="change">s2i</a> = <a id="change">np.nonzero(np.ravel(rx_data.imag &lt; 0))[0]</a>
+    <a id="change">rx_data.imag[s1i]</a> = (M - 1)*np.ones(len(s1i))
+    <a id="change">rx_data.imag[s2i]</a> = np.zeros(len(s2i))
+    rx_data = 2*rx_data - (M - 1)*(1 + 1j)
+    &#47&#47Correlate the first Ncorr symbols at four possible phase rotations
+    R0,lags = xcorr(rx_data,tx_data,Ncorr)</code></pre><img src="2618183.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mwickert/scikit-dsp-comm/commit/153f77827dd75fc74aff90838d0f6b3955c1b27d#diff-7baca50f1f16904ce9b4a96e422c4ec3c7fc980ece48c929287b2e7af52eb4e7L455' target='_blank'>Link</a></div><div id='project'> Project Name: mwickert/scikit-dsp-comm</div><div id='commit'> Commit Name: 153f77827dd75fc74aff90838d0f6b3955c1b27d</div><div id='time'> Time: 2018-04-26</div><div id='author'> Author: Chiranth.Siddappa@cosmicaes.com</div><div id='file'> File Name: sk_dsp_comm/digitalcom.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QAM_SEP</div><BR><BR><div id='link'><a href='https://github.com/mwickert/scikit-dsp-comm/commit/153f77827dd75fc74aff90838d0f6b3955c1b27d#diff-7baca50f1f16904ce9b4a96e422c4ec3c7fc980ece48c929287b2e7af52eb4e7L455' target='_blank'>Link</a></div><div id='project'> Project Name: mwickert/scikit-dsp-comm</div><div id='commit'> Commit Name: 153f77827dd75fc74aff90838d0f6b3955c1b27d</div><div id='time'> Time: 2018-04-26</div><div id='author'> Author: Chiranth.Siddappa@cosmicaes.com</div><div id='file'> File Name: sk_dsp_comm/digitalcom.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: QAM_SEP</div><BR><BR><div id='link'><a href='https://github.com/mwickert/scikit-dsp-comm/commit/21616eefc617c2ec89e397776b20b0e891bddc0f#diff-5c81d3c29b889c52c369aa2af97b169fcebc9b2e91a2b4eae8ecb7e532b7cf0dL771' target='_blank'>Link</a></div><div id='project'> Project Name: mwickert/scikit-dsp-comm</div><div id='commit'> Commit Name: 21616eefc617c2ec89e397776b20b0e891bddc0f</div><div id='time'> Time: 2018-04-28</div><div id='author'> Author: Chiranth.Siddappa@cosmicaes.com</div><div id='file'> File Name: sk_dsp_comm/sigsys.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: simpleQuant</div><BR>

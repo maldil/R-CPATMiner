@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if modality.key in segment_ids:
+                total_embedding += self.token_type_embeddings(segment_ids[modality.key])
+
+            <a id="change">layer_norm_layer = getattr(self, modality.key + "_layer_norm")</a>
+            dropout_layer = getattr(self, modality.key + "_dropout")
+            list_embeddings.append(dropout_layer(layer_norm_layer(total_embedding)))
+
+        return torch.cat(list_embeddings, dim=1)</code></pre><h3>After Change</h3><pre><code class='java'>
+                self.token_embeddings,
+                self.pos_embeddings,
+                self.layer_norms,
+                <a id="change">self.dropouts</a>,
+            )
+        ):
+            <a id="change">modality_name = self.modality_keys[idx]</a>
+            total_embedding = token_emb(input_ids[modality_name])
+            if modality_name in position_ids:
+                total_embedding += pos_emb(position_ids[modality_name])
+</code></pre>

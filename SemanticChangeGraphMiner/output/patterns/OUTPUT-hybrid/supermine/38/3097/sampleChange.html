@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        This is the inverse operation to SE3.vee.
+        
+        if <a id="change">len(xi)</a> != cls.dof:
+            <a id="change">raise ValueError("xi must have length 6")</a>
+
+        return np.vstack(
+            [np.hstack(<a id="change">[SO3.wedge(xi[3:7]),
+                        np.reshape(xi[0:3], (3, 1))]</a>),
+             <a id="change">[0, 0, 0, 0]</a>]
+        )
+
+    @classmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        This is the inverse operation to SE3.vee.
+        
+        <a id="change">xi = np.atleast_2d(xi)</a>
+        if <a id="change">xi.shape[1]</a> != cls.dof:
+            <a id="change">raise ValueError(
+                "xi must have shape ({},) or (N,{})".format(cls.dof, cls.dof))</a>
+
+        Xi = np.zeros([<a id="change">xi.shape[0]</a>, <a id="change">cls.dim</a>, <a id="change">cls.dim</a>])
+        Xi[<a id="change">:, 0:3, 0</a>:3] = SO3.wedge(<a id="change">xi[:, 3:7]</a>)
+        Xi[<a id="change">:, 0:3, 3</a>] = <a id="change">xi[:, 0:3]</a>
+        return np.squeeze(Xi)
+
+    @classmethod
+    def vee(cls, Xi):</code></pre>

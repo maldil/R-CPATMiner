@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 For masking inputs with offline random masks.
+        if not self.opt.isTrain and self.opt.offline_testing:
+            self.mask_global = Image.open(os.path.join(&quotmasks&quot, <a id="change">os</a>.path.splitext(os.path.basename(self.image_paths[0]))[0]+&quot_mask.png&quot))
+            self.mask_global = transforms.ToTensor()(self.mask_global).unsqueeze(0).type_as(real_A).byte()
+            
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        real_B = input[&quotB&quot].to(self.device)
+        &#47&#47 directly load mask offline
+        &#47&#47 TODO: make masks variant each image in a batch
+        self.mask_global = <a id="change">input</a>[<a id="change">&quotM&quot</a>].to(self.device).byte()
+        self.mask_global = self.mask_global.narrow(0,0,1).narrow(1,0,1)
+
+        &#47&#47 create mask online</code></pre>

@@ -1,0 +1,61 @@
+<html><h3>2bf236792fee65bd2ceab922451a230a3a986cf6,memcnn/models/tests/test_revop.py,,test_reversible_block_fwd_bwd,#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        keep_input = keep_input_sub or implementation_bwd == -1 or implementation_fwd == -1
+                        &#47&#47 print(bwd, coupling, keep_input, implementation_fwd, implementation_bwd)
+                        &#47&#47 test with zero padded convolution
+                        <a id="change">X</a> = <a id="change">Variable(torch.from_numpy(data.copy()))</a>
+                        Ytarget = Variable(torch.from_numpy(target_data.copy()))
+                        Xshape = X.shape
+                        Gm2 = copy.deepcopy(Gm)
+                        rb = revop.ReversibleBlock(Gm2, coupling=coupling, implementation_fwd=implementation_fwd,
+                                                   implementation_bwd=implementation_bwd, keep_input=keep_input)
+                        rb.train()
+                        rb.zero_grad()
+
+                        optim = torch.optim.RMSprop(rb.parameters())
+                        optim.zero_grad()
+                        if not bwd:
+                            Xin = X.clone()
+                            Y = rb(Xin)
+                            Yrev = Y.clone()
+                            <a id="change">Xinv</a> = rb.inverse(Yrev)
+                        else:
+                            <a id="change">Xin</a> = X.clone()
+                            <a id="change">Y</a> = rb.inverse(Xin)
+                            <a id="change">Yrev</a> = Y.clone()
+                            Xinv = rb(Yrev)
+                        <a id="change">loss</a> = torch.nn.MSELoss()(Y, Ytarget)
+
+                        &#47&#47 has input been retained/discarded after forward (and backward) passes?
+                        if keep_input:</code></pre><h3>After Change</h3><pre><code class='java'>
+                        keep_input = keep_input_sub or implementation_bwd == -1 or implementation_fwd == -1
+                        &#47&#47 print(bwd, coupling, keep_input, implementation_fwd, implementation_bwd)
+                        &#47&#47 test with zero padded convolution
+                        <a id="change">X</a> = <a id="change">torch.from_numpy(data.copy())</a>
+                        Ytarget = torch.from_numpy(target_data.copy())
+                        Xshape = X.shape
+                        Gm2 = copy.deepcopy(Gm)
+                        rb = revop.ReversibleBlock(Gm2, coupling=coupling, implementation_fwd=implementation_fwd,
+                                                   implementation_bwd=implementation_bwd, keep_input=keep_input)
+                        rb.train()
+                        rb.zero_grad()
+
+                        optim = torch.optim.RMSprop(rb.parameters())
+                        optim.zero_grad()
+                        if not bwd:
+                            Xin = X.clone()
+                            Y = rb(Xin)
+                            Yrev = Y.clone()
+                            <a id="change">Xinv</a> = rb.inverse(Yrev)
+                        else:
+                            <a id="change">Xin</a> = X.clone()
+                            <a id="change">Y</a> = rb.inverse(Xin)
+                            <a id="change">Yrev</a> = Y.clone()
+                            Xinv = rb(Yrev)
+                        <a id="change">loss</a> = torch.nn.MSELoss()(Y, Ytarget)
+
+                        &#47&#47 has input been retained/discarded after forward (and backward) passes?
+                        if keep_input:</code></pre><img src="1974814.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/2bf236792fee65bd2ceab922451a230a3a986cf6#diff-b08004f13dca27c579c0e9f70d9d82b38368e038dbcd92aa19e7ec040898815eL55' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 2bf236792fee65bd2ceab922451a230a3a986cf6</div><div id='time'> Time: 2019-05-28</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/tests/test_revop.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_reversible_block_fwd_bwd</div><BR><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/f3a62a8080bab4c5482887be46f54734f23e0b98#diff-1ab03ba30d73b3d04dc31385d7a4640161026fa0282c7f361f938483066d1fefL76' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: f3a62a8080bab4c5482887be46f54734f23e0b98</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: synthesis.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wavegen</div><BR><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/0a8e27413d721bf8d753e5e6061cc24f5bf6474f#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L489' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 0a8e27413d721bf8d753e5e6061cc24f5bf6474f</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_model</div><BR>

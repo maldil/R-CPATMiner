@@ -1,0 +1,23 @@
+<html><h3>971719830d589eba66434ddabfc62c1a689be677,skrebate/relieff.py,ReliefF,_run_algorithm,#ReliefF#,420
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        nan_entries = np.isnan(self._X)
+
+        if self.n_jobs != 1:
+            scores = np.sum(Parallel(n_jobs=self.n_jobs)(<a id="change">delayed(
+                self._compute_scores)(instance_num, attr, nan_entries)</a> for instance_num in range(self._datalen)), axis=0)
+        else:
+            scores = np.sum([self._compute_scores(instance_num, attr, nan_entries) for instance_num in range(self._datalen)], axis=0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            scores = np.sum([self._compute_scores(instance_num, attr, nan_entries) for instance_num in range(self._datalen)], axis=0)
+        
+        NNlist = map(self._find_neighbors, range(self._datalen))
+        scores = np.sum(Parallel(n_jobs=self.n_jobs)(<a id="change">delayed(
+            compute_scores)(instance_num, attr, nan_entries, self._num_attributes,
+            NN, self._headers, self._class_type, self._X, self._y, self._labels_std)</a>
+             for instance_num, NN in zip(range(self._datalen), NNlist)), axis=0)
+
+        return np.array(scores)
+</code></pre><img src="28056684.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/971719830d589eba66434ddabfc62c1a689be677#diff-941c1cb20593c08ec2c17714f1eac34b3ab078e9caa1d0c971a3c6d487be80e3L420' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 971719830d589eba66434ddabfc62c1a689be677</div><div id='time'> Time: 2017-04-07</div><div id='author'> Author: weixuanf@upenn.edu</div><div id='file'> File Name: skrebate/relieff.py</div><div id='class'> Class Name: ReliefF</div><div id='method'> Method Name: _run_algorithm</div><BR><BR><div id='link'><a href='https://github.com/D2KLab/entity2rec/commit/1783757d1d5f62d2398d1f8df2cd71b4c3113b6f#diff-771037fdeab3e63530757e85ec4d30179dcdd23b7fed819d1533836923911843L207' target='_blank'>Link</a></div><div id='project'> Project Name: D2KLab/entity2rec</div><div id='commit'> Commit Name: 1783757d1d5f62d2398d1f8df2cd71b4c3113b6f</div><div id='time'> Time: 2018-01-22</div><div id='author'> Author: enricopalumbo0@gmail.com</div><div id='file'> File Name: entity2rec/evaluator.py</div><div id='class'> Class Name: Evaluator</div><div id='method'> Method Name: features</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b4ae3a5a56f63b1ed65370d2bb074503026cc1c4#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L230' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b4ae3a5a56f63b1ed65370d2bb074503026cc1c4</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: label</div><BR>

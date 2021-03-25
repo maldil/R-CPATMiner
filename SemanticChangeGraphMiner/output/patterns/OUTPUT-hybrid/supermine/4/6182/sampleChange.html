@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	eval_metric = metric.RCNNAccMetric(config)
+	cls_metric  = metric.RCNNLogLossMetric(config)
+	bbox_metric = metric.RCNNL1LossCRCNNMetric(config)
+	<a id="change">eval_metrics = mx.metric.CompositeEvalMetric()</a>
+	eval_metrics.add(eval_metric)
+	<a id="change">eval_metrics.add(cls_metric)</a>
+	eval_metrics.add(bbox_metric) 
+
+
+	eval_metrics = mx.metric.CompositeEvalMetric()</code></pre><h3>After Change</h3><pre><code class='java'>
+	sym_inst.infer_shape(shape_dict)
+	arg_params, aux_params = load_param(config.network.pretrained,config.network.pretrained_epoch,convert=True)
+
+	narg_params = <a id="change">{}</a>
+	naux_params = {}
+	for name in arg_params:
+		narg_params[&quotf_&quot + name] = arg_params[name]
+	for name in aux_params:
+		naux_params[&quotf_&quot + name] = aux_params[name]
+
+	<a id="change">arg_params = dict(arg_params.items() + narg_params.items())</a>
+	aux_params = dict(aux_params.items() + naux_params.items())
+ 
+
+	sym_inst.init_weight_rcnn(config,arg_params,aux_params)</code></pre>

@@ -1,0 +1,51 @@
+<html><h3>2733bef356c53286d475a67476d88d4840923830,code/deep/finetune_AlexNet_ResNet/finetune_office31.py,,finetune,#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for epoch in range(1, N_EPOCH + 1):
+        &#47&#47 lr_schedule(optimizer, epoch)
+        print(&quotLearning rate: {:.8f}&quot.format(optimizer.param_groups[0][&quotlr&quot]))
+        <a id="change">print(&quotLearning rate: {:.8f}&quot.format(optimizer.param_groups[-1][&quotlr&quot]))</a>
+        for phase in [&quotsrc&quot, &quotval&quot, &quottar&quot]:
+            if phase == &quotsrc&quot:
+                model.train()
+            else:</code></pre><h3>After Change</h3><pre><code class='java'>
+    criterion = nn.CrossEntropyLoss()
+    stop = 0
+    for epoch in range(1, args.n_epoch + 1):
+        <a id="change">stop += 1</a>
+        &#47&#47 You can uncomment this line for scheduling learning rate
+        &#47&#47 lr_schedule(optimizer, epoch)
+        for phase in [&quotsrc&quot, &quotval&quot, &quottar&quot]:
+            if phase == &quotsrc&quot:
+                model.train()
+            else:
+                model.eval()
+            total_loss, correct = 0, 0
+            for inputs, labels in dataloaders[phase]:
+                inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
+                optimizer.zero_grad()
+                with torch.set_grad_enabled(phase == &quotsrc&quot):
+                    outputs = model(inputs)
+                    loss = criterion(outputs, labels)
+                preds = torch.max(outputs, 1)[1]
+                if phase == &quotsrc&quot:
+                    loss.backward()
+                    optimizer.step()
+                total_loss += loss.item() * inputs.size(0)
+                correct += torch.sum(preds == labels.data)
+            epoch_loss = total_loss / len(dataloaders[phase].dataset)
+            epoch_acc = correct.double() / len(dataloaders[phase].dataset)
+            print(&quotEpoch: [{:02d}/{:02d}]---{}, loss: {:.6f}, acc: {:.4f}&quot.format(epoch, args.n_epoch, phase, epoch_loss,
+                                                                                  epoch_acc))
+            if phase == &quotval&quot and epoch_acc &gt; best_acc:
+                stop = 0
+                best_acc = epoch_acc
+                torch.save(model.state_dict(), &quotmodel.pkl&quot)
+        <a id="change">if stop &gt;= args.early_stop:
+            break
+       </a> print()
+    model.load_state_dict(torch.load(&quotmodel.pkl&quot))
+    acc_test = test(model, dataloaders[&quottar&quot])
+    time_pass = time.time() - since</code></pre><img src="26167965.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/2733bef356c53286d475a67476d88d4840923830#diff-3a0171c82ffe1293d5696d6703828e34998b1c16890b633015cd0292eaabef25L89' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 2733bef356c53286d475a67476d88d4840923830</div><div id='time'> Time: 2020-09-30</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/deep/finetune_AlexNet_ResNet/finetune_office31.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: finetune</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/fc06baef499b8e0a6d677d4a19fa983f173ad06c#diff-76c1b698a39908553a336a1284b06031ca2bfaea2db2293149b825edc61d4284L486' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: fc06baef499b8e0a6d677d4a19fa983f173ad06c</div><div id='time'> Time: 2020-07-28</div><div id='author'> Author: 34657725+jeremiedbb@users.noreply.github.com</div><div id='file'> File Name: sklearn/cluster/_kmeans.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _kmeans_single_lloyd</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/70e1e9c9d0cda4c66e7f877e2d9e23dc3da236e8#diff-6708067c0756cbce64e3951d2b6754d699da2d66e930dd663073af326bb5dc04L99' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 70e1e9c9d0cda4c66e7f877e2d9e23dc3da236e8</div><div id='time'> Time: 2016-02-23</div><div id='author'> Author: git@sweichwald.de</div><div id='file'> File Name: pymanopt/solvers/trust_regions.py</div><div id='class'> Class Name: TrustRegions</div><div id='method'> Method Name: solve</div><BR>

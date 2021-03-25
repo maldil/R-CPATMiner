@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def process_request(self, request):
+        if self.show_toolbar(request):
+            if self.override_url:
+                <a id="change">original_urlconf</a> = <a id="change">getattr(request, &quoturlconf&quot, settings.ROOT_URLCONF)</a>
+                debug_toolbar.urls.urlpatterns += patterns(&quot&quot,
+                    (&quot&quot, include(original_urlconf)),
+                )
+                self.override_url = False</code></pre><h3>After Change</h3><pre><code class='java'>
+    def process_request(self, request):
+        if self.show_toolbar(request):
+            if self.override_url:
+                <a id="change">original_urlconf</a> = __import__(<a id="change">getattr(request, &quoturlconf&quot, settings.ROOT_URLCONF)</a>, {}, {}, [&quot*&quot])
+                debug_toolbar.urls.urlpatterns += patterns(&quot&quot,
+                    (&quot&quot, include(original_urlconf)),
+                )
+                <a id="change">if hasattr(original_urlconf, &quothandler404&quot):
+                    debug_toolbar.urls.handler404 = original_urlconf.handler404
+               </a> if hasattr(original_urlconf, &quothandler500&quot):
+                    debug_toolbar.urls.handler500 = original_urlconf.handler500
+                self.override_url = False
+            request.urlconf = &quotdebug_toolbar.urls&quot</code></pre>

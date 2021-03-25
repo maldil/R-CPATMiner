@@ -1,0 +1,23 @@
+<html><h3>4fa15dade9f2174a602a28682d2f1013dba3ef78,src/pyscenic/binarization.py,,_derive_threshold,#,13
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data = auc_mtx[regulon_name].values.reshape(-1, 1)
+    gmm = mixture.GaussianMixture(n_components=2, covariance_type=&quotfull&quot).fit(data)
+    idx = np.argmax(gmm.means_)
+    return max(<a id="change">(gmm.means_[idx] - 1 * sqrt(gmm.covariances_[idx]))</a>[0], 0)
+
+def binarize(auc_mtx: pd.DataFrame) -&gt; (pd.DataFrame, pd.Series):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    data = auc_mtx[regulon_name].values.reshape(-1, 1)
+    gmm = mixture.GaussianMixture(n_components=2, covariance_type=&quotfull&quot).fit(data)
+    avgs = gmm.means_
+    stds = <a id="change">np.sqrt(gmm.covariances_.reshape(-1, 1))</a>
+
+    &#47&#47 The threshold is based on the distribution with the highest mean and is defined as (mu - 2 x std)
+    idx = np.argmax(avgs)
+    threshold = max(<a id="change">avgs[idx] - 2 * stds[idx]</a>, 0)
+    &#47&#47 This threshold cannot be lower than (mu + 2 x std) based on the distribution with the lowest mean.
+    idx = np.argmin(avgs)
+    lower_bound = avgs[idx] + 2 * stds[idx]</code></pre><img src="9007112.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/4fa15dade9f2174a602a28682d2f1013dba3ef78#diff-29d2ea264a796da7ded64d6e06e12de253b1b1fc425df4fdd0905a0e7ef5985eL14' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: 4fa15dade9f2174a602a28682d2f1013dba3ef78</div><div id='time'> Time: 2018-05-09</div><div id='author'> Author: vandesande.bram@gmail.com</div><div id='file'> File Name: src/pyscenic/binarization.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _derive_threshold</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras-preprocessing/commit/75c9e8cbcd9da21591cd5f8aaaa99205f48fa606#diff-15425a54e76054c2a35e9730b611f796a672782baf61b63638841c5dcb8d66e3L943' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras-preprocessing</div><div id='commit'> Commit Name: 75c9e8cbcd9da21591cd5f8aaaa99205f48fa606</div><div id='time'> Time: 2021-01-19</div><div id='author'> Author: eli.osherovich@gmail.com</div><div id='file'> File Name: keras_preprocessing/image/image_data_generator.py</div><div id='class'> Class Name: ImageDataGenerator</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/dd17b42f452bc156f55e3400f8ebc84d58761e65#diff-b3e4f227d9c19bf809be06f1e34bfd82b4670dc470f56965b6c7cb2d9f639ad4L104' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: dd17b42f452bc156f55e3400f8ebc84d58761e65</div><div id='time'> Time: 2019-12-30</div><div id='author'> Author: gregory.lee@cchmc.org</div><div id='file'> File Name: skimage/filters/_window.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: window</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/441bab4b2277333e58823c0159206644c0b4eee9#diff-3e68af83f0215b7892c4d070508fa780acc25adc2b72b38e832906ff38fe4988L41' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: 441bab4b2277333e58823c0159206644c0b4eee9</div><div id='time'> Time: 2019-03-22</div><div id='author'> Author: tdonoghue@ucsd.edu</div><div id='file'> File Name: neurodsp/sim/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: normalize_variance</div><BR>

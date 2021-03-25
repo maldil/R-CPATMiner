@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Noise input.
+        z = np.random.uniform(-1., 1., size=[1, z_dim])
+        &#47&#47 Generate image from noise. Extend to 3 channels for matplot figure.
+        temp = [[ii, ii, ii] for ii in list(<a id="change">gen.predict({&quotinput_gen_noise&quot: z})[0]</a>)]
+        a[j][i].imshow(np.reshape(temp, (28, 28, 3)))
+f.show()
+plt.draw()</code></pre><h3>After Change</h3><pre><code class='java'>
+    g = np.array(gen.predict({&quotinput_gen_noise&quot: z}))
+    for j in range(4):
+        &#47&#47 Generate image from noise. Extend to 3 channels for matplot figure.
+        <a id="change">img = np.reshape(np.repeat(g[j][:, :, np.newaxis], 3, axis=2),
+                         newshape=(28, 28, 3))</a>
+        a[j][i].imshow(img)
+
+f.show()
+plt.draw()</code></pre>

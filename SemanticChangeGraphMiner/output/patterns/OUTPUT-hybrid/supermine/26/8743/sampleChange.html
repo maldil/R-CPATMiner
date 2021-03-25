@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.mark.django_db
+def test_errors_on_files_with_duplicate_file_names():
+    <a id="change">task_collector = CeleryTaskCollector(signals.build_images)</a>
+    <a id="change">with replace_var(signals, "build_images", task_collector):
+        images = [
+            "image10x10x10.zraw",
+            "image10x10x10.mhd",
+            "image10x10x10.zraw",
+            "image10x10x10.mhd",
+        ]
+        session, uploaded_images = create_raw_upload_image_session(images)
+        uploaded_images = RawImageFile.objects.filter(upload_session=session).all()
+        assert len(uploaded_images) == 4
+
+        task_collector.execute_calls()
+
+        session.refresh_from_db()
+        assert session.session_state == UPLOAD_SESSION_STATE.stopped
+        assert session.error_message is None
+
+        for raw_image in uploaded_images:
+            raw_image.refresh_from_db()
+            assert raw_image.error is not None
+
+
+</a>@pytest.mark.django_db
+def test_mhd_file_annotation_creation():
+    task_collector = CeleryTaskCollector(signals.build_images)
+    with replace_var(signals, "build_images", task_collector):</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.django_db
+def test_errors_on_files_with_duplicate_file_names(settings):
+    &#47&#47 Override the celery settings
+    <a id="change">settings.task_eager_propagates = True,</a>
+    <a id="change">settings.task_always_eager = True,</a>
+    <a id="change">settings.broker_url = &quotmemory://&quot,</a>
+    <a id="change">settings.backend = &quotmemory&quot</a>
+
+    images = [
+        "image10x10x10.zraw",
+        "image10x10x10.mhd",</code></pre>

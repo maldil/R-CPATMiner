@@ -1,0 +1,30 @@
+<html><h3>59ec6660464bd378b20d4ae200c7614133a9a38b,pyntcloud/samplers/points.py,FarthestPointsSampler,compute,#FarthestPointsSampler#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise ValueError("n can&quott be higher than the number of points in the PyntCloud.")
+        remaining_points = self.points.values
+        solution_set = list()
+        <a id="change">solution_set.append(remaining_points.pop(
+            random.randint(0, len(remaining_points) - 1)))</a>
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, solution_set[0]) for p in remaining_points]
+            for i, p in enumerate(remaining_points):
+                for j, s in enumerate(solution_set):</code></pre><h3>After Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+
+        &#47&#47 the sampled points set as the return
+        select_idx = <a id="change">np.random.randint(low=0, high=len(self.points))</a>
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        <a id="change">solution_set = remaining_points[select_idx: select_idx+1]</a>
+        remaining_points = np.delete(remaining_points, select_idx)
+
+        for _ in range(self.n - 1):
+            distance_sum = self.cal_distance(remaining_points, solution_set)
+            select_idx = np.argmax(distance_sum)
+            <a id="change">solution_set = np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)</a>
+            remaining_points = np.delete(remaining_points, select_idx)
+
+        return pd.DataFrame(solution_set, columns=self.points.columns)
+</code></pre><img src="27769635.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/59ec6660464bd378b20d4ae200c7614133a9a38b#diff-1da77a1e515a06956f2402a626f20d1605f6c245dfc6da7a2304fdade3d54125L54' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 59ec6660464bd378b20d4ae200c7614133a9a38b</div><div id='time'> Time: 2019-08-26</div><div id='author'> Author: hc.wang96@gmail.com</div><div id='file'> File Name: pyntcloud/samplers/points.py</div><div id='class'> Class Name: FarthestPointsSampler</div><div id='method'> Method Name: compute</div><BR><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/335d758f3348cb2b7a1e03cb8248dfde39f8c439#diff-920783ba0058b5be7d95d230be3abfac53d7b10cf6b28d60d7e7256560f578d1L221' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: 335d758f3348cb2b7a1e03cb8248dfde39f8c439</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: david_abel@brown.edu</div><div id='file'> File Name: simple_rl/abstraction/state_abs/sa_helpers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: visualize_state_abstr_grid</div><BR><BR><div id='link'><a href='https://github.com/nerox8664/pytorch2keras/commit/94472724eedd3382396d435fe2810422f472967e#diff-b9ed8622eb5b24be70cbb5211320111547e78ea2234c1c8a25706b2bc8f48e92L9' target='_blank'>Link</a></div><div id='project'> Project Name: nerox8664/pytorch2keras</div><div id='commit'> Commit Name: 94472724eedd3382396d435fe2810422f472967e</div><div id='time'> Time: 2018-05-30</div><div id='author'> Author: nerox8664@gmail.com</div><div id='file'> File Name: tests/embedding.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

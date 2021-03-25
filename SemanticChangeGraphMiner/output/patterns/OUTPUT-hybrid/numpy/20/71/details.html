@@ -1,0 +1,30 @@
+<html><h3>e4deccd98b73c918f582297050ecaf899e5387eb,ristretto/tests/test_interp_decomp.py,,test_rid_row,#,67
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    m, k = 100, 10
+    A = np.array(np.random.randn(m, k), np.float64)
+    A = A.dot(A.T)
+    <a id="change">A = A[:,0:50]</a>
+
+    &#47&#47 index_set = False
+    Z, R = rinterp_decomp(A, k=k+2, mode=&quotrow&quot, index_set=False)
+    <a id="change">relative_error = (np.linalg.norm(A - Z.dot(R)) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+    &#47&#47 index_set = True
+    Z, R = rinterp_decomp(A, k=k+2, mode=&quotrow&quot, index_set=True)
+    relative_error = <a id="change">(np.linalg.norm(A - Z.dot(A[R,:])) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+
+&#47&#47 =============================================================================</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 test index_set == False
+    Z, R = rinterp_decomp(A, k+2, mode=&quotrow&quot, index_set=False)
+    A_id = Z.dot(R)
+    <a id="change">assert relative_error(A, A_id) &lt; atol_float32</a>
+
+    &#47&#47 ------------------------------------------------------------------------
+    &#47&#47 test index_set == True
+    Z, R = rinterp_decomp(A, k+2, mode=&quotrow&quot, index_set=True)</code></pre><img src="2739241.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 6</div><BR><div id='size'>Non-data size: 16</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-3cef69a7e6250b328eee560a897dc70ec3be494bdd3335ced9e1e38a47e3f12cL69' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_interp_decomp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rid_row</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-3cef69a7e6250b328eee560a897dc70ec3be494bdd3335ced9e1e38a47e3f12cL69' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_interp_decomp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rid_row</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-3cef69a7e6250b328eee560a897dc70ec3be494bdd3335ced9e1e38a47e3f12cL16' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_interp_decomp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_id_col</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-de654584746b0ddc7376e4656b8572829edb75b131a6a8c181fe31b4ce06e335L35' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_cur.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rcur</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-3cef69a7e6250b328eee560a897dc70ec3be494bdd3335ced9e1e38a47e3f12cL52' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_interp_decomp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rid_col</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-3cef69a7e6250b328eee560a897dc70ec3be494bdd3335ced9e1e38a47e3f12cL32' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_interp_decomp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_id_row</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-de654584746b0ddc7376e4656b8572829edb75b131a6a8c181fe31b4ce06e335L15' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_cur.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_cur</div><BR>

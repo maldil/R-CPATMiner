@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    images = []
+    for flow_map in sorted(glob.glob(os.path.join(dir,flow_dir,&quot*&quot,&quot*.flo&quot))):
+        flow_map = os.path.relpath(flow_map,<a id="change">os.path.join(dir,flow_dir)</a>)
+        root_filename = flow_map[:-8]
+        frame_nb = int(flow_map[-8:-4])
+        img1 = os.path.join(img_dir,root_filename+str(frame_nb).zfill(4)+&quot.png&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        flow_map = os.path.relpath(flow_map,os.path.join(dataset_dir,flow_dir))
+
+        scene_dir, filename = os.path.split(flow_map)
+        no_ext_filename = <a id="change">os.path.splitext(filename)[0]</a>
+        prefix, frame_nb = no_ext_filename.split(&quot_&quot)
+        frame_nb = int(frame_nb)
+        img1 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb))
+        img2 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb + 1))</code></pre>

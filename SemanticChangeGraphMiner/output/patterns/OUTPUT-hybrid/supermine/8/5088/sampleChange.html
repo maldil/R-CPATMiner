@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    arr = _prepare_rgba_array(rgba)
+    if isinstance(background, tuple) and len(background) != 3:
+        <a id="change">raise ValueError(&quotthe background must be a tuple with 3 items - the &quot
+                         &quotRGB color of the background. Got {0} items.&quot
+                         .format(len(background)))</a>
+
+    alpha = arr[..., -1]
+    channels = arr[..., :-1]
+    out = np.empty_like(channels)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if len(background) != 3:
+        raise ValueError(&quotbackground must be an array-like containing 3 RGB &quot
+                         f&quotvalues. Got {len(background)} items&quot)
+    <a id="change">if np.any(background &lt; 0) or np.any(background &gt; 1):
+        raise ValueError(&quotbackground RGB values must be floats between &quot
+                         &quot0 and 1.&quot)
+
+   </a> background = background[np.newaxis, ...]
+    alpha = arr[..., -1, np.newaxis]
+    channels = arr[np.newaxis, ..., :-1]
+</code></pre>

@@ -1,0 +1,26 @@
+<html><h3>c395079717340c8a92b1635f8b40a5ba39c513e5,contents/9_Deep_Deterministic_Policy_Gradient_DDPG/DDPG.py,Actor,learn,#Actor#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 instead of above method, I use a hard replacement here
+        if self.t_replace_counter % self.t_replace_iter == 0:
+            self.sess.run([<a id="change">tf.assign(t, e)</a> <a id="change">for</a> t, e in zip(self.t_params, self.e_params)])
+        self.t_replace_counter += 1
+
+    def choose_action(self, s):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def learn(self, s):   &#47&#47 batch update
+        self.sess.run(self.train_op, feed_dict={S: s})
+
+        <a id="change">if self.replacement[&quotname&quot] == &quotsoft&quot:
+            self.sess.run(self.soft_replace)
+        else:
+            if self.t_replace_counter % self.replacement[&quotrep_iter_a&quot] == 0:
+                self.sess.run(self.hard_replace)
+            self.t_replace_counter += 1
+
+   </a> def choose_action(self, s):
+        s = s[np.newaxis, :]    &#47&#47 single state
+        return self.sess.run(self.a, feed_dict={S: s})[0]  &#47&#47 single action
+</code></pre><img src="11820656.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/c395079717340c8a92b1635f8b40a5ba39c513e5#diff-28240ecd1173ed5bbd9aa1e939bcd7acf18db0d7d6f59f1d27510b8633d7ddd5L72' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: c395079717340c8a92b1635f8b40a5ba39c513e5</div><div id='time'> Time: 2017-08-09</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/9_Deep_Deterministic_Policy_Gradient_DDPG/DDPG.py</div><div id='class'> Class Name: Actor</div><div id='method'> Method Name: learn</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L324' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Bin</div><div id='method'> Method Name: _op</div><BR><BR><div id='link'><a href='https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/commit/c395079717340c8a92b1635f8b40a5ba39c513e5#diff-28240ecd1173ed5bbd9aa1e939bcd7acf18db0d7d6f59f1d27510b8633d7ddd5L151' target='_blank'>Link</a></div><div id='project'> Project Name: MorvanZhou/Reinforcement-learning-with-tensorflow</div><div id='commit'> Commit Name: c395079717340c8a92b1635f8b40a5ba39c513e5</div><div id='time'> Time: 2017-08-09</div><div id='author'> Author: morvanzhou@gmail.com</div><div id='file'> File Name: contents/9_Deep_Deterministic_Policy_Gradient_DDPG/DDPG.py</div><div id='class'> Class Name: Critic</div><div id='method'> Method Name: learn</div><BR>

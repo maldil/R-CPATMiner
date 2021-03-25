@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        headings = self._document.headings
+        significant_words = chain(*map(attrgetter("words"), headings))
+        significant_words = <a id="change">map(self.stem_word, significant_words)</a>
+        significant_words = ffilter(self._is_null_word, significant_words)
+        significant_words = frozenset(significant_words)
+
+        <a id="change">sentences = self._document.sentences</a>
+        <a id="change">return self._get_best_sentences(sentences, sentences_count,
+            self._rate_sentence_by_title_method, significant_words)</a>
+
+    def _is_null_word(self, word):
+        return word in self._null_words
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        summarization_method = EdmundsonTitleMethod(self._document,
+            self._stemmer, self._null_words)
+
+        <a id="change">return summarization_method(sentences_count)</a>
+
+    def _is_null_word(self, word):
+        return word in self._null_words
+</code></pre>

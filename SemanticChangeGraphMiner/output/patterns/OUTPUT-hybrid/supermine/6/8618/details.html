@@ -1,0 +1,26 @@
+<html><h3>3f196bcdd1e0310208e8978cf4f1fb590614568b,utils.py,,load_model,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return os.path.join(storage_dir(), &quotmodels&quot, model_name+".pt")
+
+def load_model(observation_space, action_space, from_path):
+    <a id="change">if from_path == None or not(os.path.exists(from_path)):
+        policy_net = Policy(observation_space, action_space)
+        value_net = Value(observation_space)
+    else:
+        policy_net, value_net = pickle.load(open(from_path, "rb"))
+
+   </a> if ac_rl.use_gpu:
+        policy_net = policy_net.cuda()
+        value_net = value_net.cuda()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    acmodel = ACModel(observation_space, action_space)
+    if from_path != None and os.path.exists(from_path):
+        acmodel.load_state_dict(torch.load(from_path))
+    <a id="change">return acmodel</a>
+
+def save_model(acmodel, to_path):
+    dirname = os.path.dirname(to_path)
+    if not(os.path.isdir(dirname)):</code></pre><img src="33779920.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/lcswillems/torch-rl/commit/3f196bcdd1e0310208e8978cf4f1fb590614568b#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL13' target='_blank'>Link</a></div><div id='project'> Project Name: lcswillems/torch-rl</div><div id='commit'> Commit Name: 3f196bcdd1e0310208e8978cf4f1fb590614568b</div><div id='time'> Time: 2018-04-15</div><div id='author'> Author: lcswillems@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_model</div><BR><BR><div id='link'><a href='https://github.com/matthewwithanm/django-imagekit/commit/f9c4d6b500888c059dcf4547a3442e6a7a582b27#diff-f32b96e0a664ff304caab211b21834b8a500496d526fbfa9aa42e4e791af6625L227' target='_blank'>Link</a></div><div id='project'> Project Name: matthewwithanm/django-imagekit</div><div id='commit'> Commit Name: f9c4d6b500888c059dcf4547a3442e6a7a582b27</div><div id='time'> Time: 2011-09-23</div><div id='author'> Author: matthew@exanimo.com</div><div id='file'> File Name: imagekit/models.py</div><div id='class'> Class Name: ImageSpecFile</div><div id='method'> Method Name: image</div><BR><BR><div id='link'><a href='https://github.com/matthewwithanm/django-imagekit/commit/71c56c7d6affae7506b298ad7f7c3855ce0e93a9#diff-f06f65cb87dd0773c02d9f7e9e4cf2c6aa2385b3230a7497d2d198ee117b6a2cL275' target='_blank'>Link</a></div><div id='project'> Project Name: matthewwithanm/django-imagekit</div><div id='commit'> Commit Name: 71c56c7d6affae7506b298ad7f7c3855ce0e93a9</div><div id='time'> Time: 2012-02-12</div><div id='author'> Author: matthew@exanimo.com</div><div id='file'> File Name: imagekit/models/fields.py</div><div id='class'> Class Name: ImageSpecFieldFile</div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/matthewwithanm/django-imagekit/commit/f9e02d250ed9a25d0a68f0937cbe4bd1bc175183#diff-5d407125b30c748ca4ca597eee29fb4d81a440cc5ce4522c3b1665285018539fL47' target='_blank'>Link</a></div><div id='project'> Project Name: matthewwithanm/django-imagekit</div><div id='commit'> Commit Name: f9e02d250ed9a25d0a68f0937cbe4bd1bc175183</div><div id='time'> Time: 2009-01-14</div><div id='author'> Author: justin.driscoll@gmail.com</div><div id='file'> File Name: src/imagekit/specs.py</div><div id='class'> Class Name: Accessor</div><div id='method'> Method Name: _create</div><BR>

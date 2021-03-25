@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data = auc_mtx[regulon_name].values.reshape(-1, 1)
+    gmm = mixture.GaussianMixture(n_components=2, covariance_type=&quotfull&quot).fit(data)
+    idx = np.argmax(gmm.means_)
+    return max(<a id="change">(gmm.means_[idx] - 1 * sqrt(gmm.covariances_[idx]))[0]</a>, 0)
+
+def binarize(auc_mtx: pd.DataFrame) -&gt; (pd.DataFrame, pd.Series):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    data = auc_mtx[regulon_name].values.reshape(-1, 1)
+    gmm = mixture.GaussianMixture(n_components=2, covariance_type=&quotfull&quot).fit(data)
+    avgs = gmm.means_
+    stds = <a id="change">np.sqrt(gmm.covariances_.reshape(-1, 1))</a>
+
+    &#47&#47 The threshold is based on the distribution with the highest mean and is defined as (mu - 2 x std)
+    idx = np.argmax(avgs)
+    threshold = max(avgs[idx] - 2 * stds[idx], 0)
+    &#47&#47 This threshold cannot be lower than (mu + 2 x std) based on the distribution with the lowest mean.
+    idx = np.argmin(avgs)
+    <a id="change">lower_bound = avgs[idx] + 2 * stds[idx]</a>
+
+    return max(lower_bound, threshold)
+
+def binarize(auc_mtx: pd.DataFrame) -&gt; (pd.DataFrame, pd.Series):</code></pre>

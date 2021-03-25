@@ -1,0 +1,38 @@
+<html><h3>1b92598dbfb489fe0f7a1c9b2015db5d702be948,thinc/layers/embed.py,,Embed,#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    attrs: Dict[str, Any] = {"column": column}
+    if dropout is not None:
+        attrs["dropout_rate"] = dropout
+    <a id="change">return Model(
+        "embed",
+        forward,
+        init=partial(init, initializer),
+        attrs=attrs,
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )</a>
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    nV = model.get_dim("nV")</code></pre><h3>After Change</h3><pre><code class='java'>
+    attrs: Dict[str, Union[None, int, float]] = {}
+    if dropout is not None:
+        attrs["dropout_rate"] = dropout
+    <a id="change">model = Model( &#47&#47 type: ignore
+        "embed",
+        forward,
+        init=partial(init, initializer),
+        attrs=attrs,
+        dims={"nO": nO, "nV": nV},
+        params={"E": None},
+    )</a>
+    model = model if column is None else chain(ints_getitem(column), model)
+    model.attrs["column"] = column
+    <a id="change">return cast(Model[InT, OutT], model)</a>
+
+
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:</code></pre><img src="3990472.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1b92598dbfb489fe0f7a1c9b2015db5d702be948#diff-2000e8749a91df13f189f011eef0f2fb64aa34578021a257f7791b78dcdd9a88L24' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1b92598dbfb489fe0f7a1c9b2015db5d702be948</div><div id='time'> Time: 2020-01-28</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/embed.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: Embed</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/5dccee984b2c25f6508947d3731b8934296ff4c5#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L17' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 5dccee984b2c25f6508947d3731b8934296ff4c5</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: LSTM_step</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/a392ddaeae3a8343a968c8839afeea70b6f3a8b8#diff-b84111412be61ffb2b1c7026217f94c7cd2e4d37a4d2370946f84b844c92ca1bL7' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: a392ddaeae3a8343a968c8839afeea70b6f3a8b8</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/recurrent.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: recurrent</div><BR><BR><div id='link'><a href='https://github.com/XifengGuo/CapsNet-Keras/commit/37f599f61067cc6947c9bf783eace05227c0f450#diff-bc5d25ee3851bdc4309fd1e5f652feac88005eea3ad3332685fdcbd90f9d67afL35' target='_blank'>Link</a></div><div id='project'> Project Name: XifengGuo/CapsNet-Keras</div><div id='commit'> Commit Name: 37f599f61067cc6947c9bf783eace05227c0f450</div><div id='time'> Time: 2017-11-13</div><div id='author'> Author: guoxifeng1990@163.com</div><div id='file'> File Name: capsulenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: CapsNet</div><BR>

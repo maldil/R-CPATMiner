@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                f2a = melfb(sample_rate, len(frame), num_frequency_bands, mel_filter_width)
+                f2a = f2a[:,:(round(len(frame)/2) + 1)]
+
+                n   = <a id="change">f2a.shape[0]</a>
+                
+                &#47&#47 initialze the state vector
+                state   = numpy.zeros( (n, 1) )
+                fbg     = numpy.zeros( (n, 1) )</code></pre><h3>After Change</h3><pre><code class='java'>
+                pass
+
+            &#47&#47 FFT each frame
+            D = <a id="change">scipy.fft(frame)</a>
+
+            &#47&#47 multiply by f2a
+            audiogram = numpy.dot(f2a, numpy.abs(D))
+
+            &#47&#47&#47&#47 DPWE
+            &#47&#47             state = max([alpha*state,audgram(:,i)],[],2);
+            &#47&#47             fbg(:,i) = state;
+            &#47&#47 ...
+            &#47&#47
+            <a id="change">state = numpy.maximum(alpha * state, audiogram)</a>
+
+            &#47&#47E = diag(1./(sf2a+(sf2a==0))) * f2a&quot * fbg;
+            E   = normalize_f2a * numpy.dot(f2a.T, state);
+
+            &#47&#47% Remove any zeros in E (shouldn&quott be any, but who knows?)
+            &#47&#47E(E(:)&lt;=0) = min(E(E(:)&gt;0));
+
+            &#47&#47% invert back to waveform
+            &#47&#47y = istft(D./E);
+
+            y = scipy.ifft(<a id="change">D/E</a>)
+
+            pass
+        pass</code></pre>

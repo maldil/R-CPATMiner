@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 we then get the data, and define a target column we will try to predict,
+&#47&#47 as well as a dirty colum we will encode with the different methods.
+&#47&#47 the rest will have a standard encoding
+<a id="change">data_path = fetching.get_data_dir()</a>
+fetching.fetch_employee_salaries()
+data_file = <a id="change">os.path.join(data_path, &quotemployee_salaries&quot, &quotrows.csv&quot)</a>
+df = pd.read_csv(data_file).astype(str)
+df[&quotCurrent Annual Salary&quot] = [float(s[1:]) for s
+                               in df[&quotCurrent Annual Salary&quot]]
+df[&quotYear First Hired&quot] = [int(s.split(&quot/&quot)[-1])
+                          <a id="change">for</a> s in df[&quotDate First Hired&quot]]
+
+target_column = &quotCurrent Annual Salary&quot
+y = df[target_column].values.ravel()</code></pre><h3>After Change</h3><pre><code class='java'>
+from dirty_cat.datasets import fetch_employee_salaries
+
+description = fetch_employee_salaries()
+df = pd.read_csv(<a id="change">description[&quotpath&quot]</a>).astype(str)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 and carry out some basic preprocessing:</code></pre>

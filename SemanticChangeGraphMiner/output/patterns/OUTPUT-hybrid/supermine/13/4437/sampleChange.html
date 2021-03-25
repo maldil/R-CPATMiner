@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+if __name__ == &quot__main__&quot:
+    if len(sys.argv) &lt; 3:
+        <a id="change">rgb1</a>, rgb2 = make_test_images()
+    else:
+        rgb1 = read_image(sys.argv[1])
+        rgb2 = read_image(sys.argv[2])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+if __name__ == &quot__main__&quot:
+    parser = argparse.ArgumentParser(description="Stack astronomical images")
+    <a id="change">parser.add_argument(&quot-t&quot, "--test", dest="test", default=False,
+                        action="store_true",
+                help="Test mode: generate images instead of reading files")</a>
+    <a id="change">parser.add_argument(&quot-d&quot, action="store", default=&quot.&quot, dest="dir",
+                        help=&quotDirectory to save files (default: .)&quot)</a>
+    <a id="change">parser.add_argument(&quotimagefiles&quot, nargs=&quot*&quot, help="2 or more input images")</a>
+    args = parser.parse_args(sys.argv[1:])
+
+    if args.test:
+        register_all(make_test_images(), outdir=args.dir)</code></pre>

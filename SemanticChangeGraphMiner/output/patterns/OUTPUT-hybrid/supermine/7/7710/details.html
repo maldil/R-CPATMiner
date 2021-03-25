@@ -1,0 +1,33 @@
+<html><h3>17522b968c8a1d2b29d0034fc57cec59ed9972de,pymanopt/tools/autodiff/_tensorflow.py,TensorflowBackend,compute_hessian,#TensorflowBackend#,76
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @assert_backend_available
+    def compute_hessian(self, objective, argument):
+        &#47&#47 TODO
+        <a id="change">raise NotImplementedError(&quotTensorflow backend does not yet &quot
+                                  &quotimplement compute_hessian.&quot)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @assert_backend_available
+    def compute_hessian(self, objective, argument):
+        <a id="change">if not isinstance(argument, list):
+            argA = tf.Variable(tf.zeros(tf.shape(argument)))
+            tfhess = _hessian_vector_product(objective, [argument], [argA])
+
+            def hess(x, a):
+                feed_dict = {argument: x, argA: a}
+                return self._session.run(tfhess[0], feed_dict)
+
+        else:
+            argA = [tf.Variable(tf.zeros(tf.shape(arg)))
+                    for arg in argument]
+            tfhess = _hessian_vector_product(objective, argument, argA)
+
+            def hess(x, a):
+                feed_dict = {i: d for i, d in zip(argument+argA, x+a)}
+                return self._session.run(tfhess, feed_dict)
+
+       </a> return hess
+</code></pre><img src="29462531.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/17522b968c8a1d2b29d0034fc57cec59ed9972de#diff-48a05758db4a8298ef7d3437e27382ce0db995b5480af9341a5a6190460ca8ceL78' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 17522b968c8a1d2b29d0034fc57cec59ed9972de</div><div id='time'> Time: 2016-03-15</div><div id='author'> Author: git@sweichwald.de</div><div id='file'> File Name: pymanopt/tools/autodiff/_tensorflow.py</div><div id='class'> Class Name: TensorflowBackend</div><div id='method'> Method Name: compute_hessian</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/fdf356a91622033dc8e88ccf64c2f421e9d3a8a8#diff-8d32667925d215594acf23a0edf4fbe4fbdd5541eb0f656968cbfdb1c1df87a3L834' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: fdf356a91622033dc8e88ccf64c2f421e9d3a8a8</div><div id='time'> Time: 2018-02-27</div><div id='author'> Author: kvamme@samba8.ad.nr.no</div><div id='file'> File Name: pycox/cox.py</div><div id='class'> Class Name: CoxTime</div><div id='method'> Method Name: predict_cumulative_hazard_at_times</div><BR><BR><div id='link'><a href='https://github.com/mortendahl/tf-encrypted/commit/0be81ada984e231be55e60466da93ba551bcf3a1#diff-f0047fcaf2d5bd28f24f979157fa93ef7b8eab4af3784babe18ee67021a51140L87' target='_blank'>Link</a></div><div id='project'> Project Name: mortendahl/tf-encrypted</div><div id='commit'> Commit Name: 0be81ada984e231be55e60466da93ba551bcf3a1</div><div id='time'> Time: 2020-07-28</div><div id='author'> Author: zhicong303@gmail.com</div><div id='file'> File Name: tf_encrypted/protocol/aby3/aby3.py</div><div id='class'> Class Name: ABY3</div><div id='method'> Method Name: setup_pairwise_randomness</div><BR>

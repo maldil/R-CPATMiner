@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 We normalize bounding boxes points.
+    bboxes_float = tf.to_float(bboxes)
+    <a id="change">x_min, y_min, x_max, y_max = tf.unstack(bboxes_float, axis=1)</a>
+
+    x_min = x_min / old_width
+    y_min = y_min / old_height
+    x_max = x_max / old_width</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 x_min, y_min, x_max, y_max = np.split(bboxes, 4, axis=1)
+    &#47&#47 import ipdb; ipdb.set_trace()
+    x_min = bboxes[:, 0] / old_width
+    y_min = bboxes[<a id="change">:, 1</a>] / old_height
+    x_max = bboxes[:, 2] / old_width
+    y_max = bboxes[:, 3] / old_height
+</code></pre>

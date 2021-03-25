@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.mixing = ica.mixing_
+        self.mean = ica.mean_
+        <a id="change">self.sources = []</a>
+        <a id="change">for i in range(sources.shape[0]):
+            signal = nussl.audio_signal.AudioSignal(audio_data_array=sources[i, :],
+                                                    sample_rate=self.audio_signal.sample_rate)
+            self.sources.append(signal)
+       </a> return self.sources
+
+    def make_audio_signals(self):
+         Returns the background and foreground audio signals. You must have run ICA.run() prior</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 store the resultant computations
+        self.estimated_mixing_params = ica.mixing_
+        self.mean = ica.mean_
+        <a id="change">self.estimated_sources = [nussl.AudioSignal(audio_data_array=ica_output[i, :],
+                                                    sample_rate=self.audio_signal.sample_rate)
+                                  for i in range(ica_output.shape[0])]</a>
+
+        return self.estimated_sources
+
+    def make_audio_signals(self):</code></pre>

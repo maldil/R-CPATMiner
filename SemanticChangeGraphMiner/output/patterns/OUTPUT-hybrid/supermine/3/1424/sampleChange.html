@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Find the minimum sample period.
+    &#47&#47 For the sake of speed, only use the first 100 samples.
+    FWD_DIFF = <a id="change">np.diff(datetime_index.values[:100]).astype(np.float)</a>
+    MIN_SAMPLE_PERIOD = FWD_DIFF.min() / 1E9
+    MAX_SAMPLES_PER_PERIOD = _secs_per_period_alias(freq) / MIN_SAMPLE_PERIOD
+    MAX_SAMPLES_PER_2_PERIODS = MAX_SAMPLES_PER_PERIOD * 2
+    n_rows_processed = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 during the loop...
+
+    &#47&#47 Find the minimum sample period.
+    <a id="change">MIN_SAMPLE_PERIOD = int(sample_period(datetime_index))</a>
+    MAX_SAMPLES_PER_PERIOD = int(_secs_per_period_alias(freq) / MIN_SAMPLE_PERIOD)
+    MAX_SAMPLES_PER_2_PERIODS = MAX_SAMPLES_PER_PERIOD * 2
+    n_rows_processed = 0
+    boundaries = {}</code></pre>

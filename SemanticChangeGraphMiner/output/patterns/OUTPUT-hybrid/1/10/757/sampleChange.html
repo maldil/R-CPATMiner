@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    Prod reduction op.
+    
+    return np.prod(a, axis=<a id="change">tuple(reduction_indices)</a>, keepdims=keep_dims),
+
+
+@Operation.factory(attrs=("keep_dims",))</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    Prod reduction op.
+    
+    return np.prod(a, axis=<a id="change">reduction_indices</a> if <a id="change">not isinstance(reduction_indices, np.ndarray)</a> else \
+                           <a id="change">tuple(reduction_indices)</a>,
+                   keepdims=keep_dims),
+
+</code></pre>

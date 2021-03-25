@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 and context vector
+        rnn_output = rnn_output.squeeze(0)  &#47&#47 S(=1) x B x I -&gt; B x I
+        context = context.squeeze(1)  &#47&#47 B x S(=1) x I -&gt; B x I
+        <a id="change">output</a> = F.log_softmax(<a id="change">self.out(torch.cat((rnn_output, context), 1))</a>)
+
+        &#47&#47 Return final output, hidden state, and attention weights (for
+        &#47&#47 visualization)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 and context vector
+        rnn_output = rnn_output.squeeze(0)  &#47&#47 S(=1) x B x I -&gt; B x I
+        context = context.squeeze(1)  &#47&#47 B x S(=1) x I -&gt; B x I
+        <a id="change">output</a> = <a id="change">self.out(torch.cat((rnn_output, context), 1))</a>
+
+        &#47&#47 Return final output, hidden state, and attention weights (for
+        &#47&#47 visualization)
+        return output, context, hidden, attn_weights</code></pre>

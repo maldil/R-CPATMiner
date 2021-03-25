@@ -1,0 +1,41 @@
+<html><h3>0d96f546e8512e200e3ad0e9bfe8a23b42a478bc,skbio/diversity/beta/_base.py,,beta_diversity,#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ValueError(
+            "Number of rows in counts must be equal to number of provided "
+            "ids.")
+    <a id="change">if metric in _skbio_metrics:
+        metric = _skbio_metrics[metric]
+
+   </a> if callable(metric):
+        metric = partial(metric, **kwargs)
+
+    distances = pdist(counts, metric)</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(
+            "Number of rows in counts must be equal to number of provided "
+            "ids.")
+    <a id="change">if metric in _skbio_metrics:
+        if metric == &quotunweighted_unifrac&quot:
+            metric, counts, _ = _unweighted_unifrac_pdist_f(
+                counts, otu_ids=kwargs[&quototu_ids&quot], tree=kwargs[&quottree&quot])
+        elif metric == &quotweighted_unifrac&quot:
+            try:
+                normalized = kwargs[&quotnormalized&quot]
+            except KeyError:
+                normalized=False
+            metric, counts, _ = _weighted_unifrac_pdist_f(
+                counts, otu_ids=kwargs[&quototu_ids&quot], tree=kwargs[&quottree&quot],
+                normalized=normalized)
+        else:
+            metric = _skbio_metrics[metric]
+    elif callable(metric):
+        metric = partial(metric, **kwargs)
+    else:
+        pass
+
+   </a> distances = pdist(counts, metric)
+    return DistanceMatrix(distances, ids)
+
+pw_distances_from_table_deprecation_reason = (</code></pre><img src="37828432.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/biocore/scikit-bio/commit/0d96f546e8512e200e3ad0e9bfe8a23b42a478bc#diff-f1d7686731e72a115b1a14ee640ffdd86dddce3f4358fd477040af17b15c27b4L64' target='_blank'>Link</a></div><div id='project'> Project Name: biocore/scikit-bio</div><div id='commit'> Commit Name: 0d96f546e8512e200e3ad0e9bfe8a23b42a478bc</div><div id='time'> Time: 2015-11-09</div><div id='author'> Author: gregcaporaso@gmail.com</div><div id='file'> File Name: skbio/diversity/beta/_base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: beta_diversity</div><BR><BR><div id='link'><a href='https://github.com/recipy/recipy/commit/49667f36855ef08accc19640b03a9307caa69f59#diff-feef3f540264a9594f528376e19a749677c1b5cc38485b2874cd3cc999ed3dfdL31' target='_blank'>Link</a></div><div id='project'> Project Name: recipy/recipy</div><div id='commit'> Commit Name: 49667f36855ef08accc19640b03a9307caa69f59</div><div id='time'> Time: 2015-08-30</div><div id='author'> Author: florian.rathgeber@gmail.com</div><div id='file'> File Name: recipy/log.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_init</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/muse-lsl/commit/efaa4b898c5bba5c4530e0f629c426d707943b4a#diff-a44f7537f2b0de6cbaca6bdcaf68238c8951b4c68fb7fa50e8c86dbf82c09ccbL21' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/muse-lsl</div><div id='commit'> Commit Name: efaa4b898c5bba5c4530e0f629c426d707943b4a</div><div id='time'> Time: 2018-05-07</div><div id='author'> Author: morrisondano@gmail.com</div><div id='file'> File Name: muse-lsl/muselsl/muse_stream.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: list_devices</div><BR><BR><div id='link'><a href='https://github.com/geomstats/geomstats/commit/2d00b7371a87b0a6a17de19d550e326db5cf15f3#diff-09e1c5342323ae293ce8c6ee45eed0bfd1bf01a755d4d82dedbe9651e3a7f979L925' target='_blank'>Link</a></div><div id='project'> Project Name: geomstats/geomstats</div><div id='commit'> Commit Name: 2d00b7371a87b0a6a17de19d550e326db5cf15f3</div><div id='time'> Time: 2020-11-29</div><div id='author'> Author: nicolas.guigui@inria.fr</div><div id='file'> File Name: tests/test_backends.py</div><div id='class'> Class Name: TestBackends</div><div id='method'> Method Name: test_choice</div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/0d42713d2e1e651f02e79896f4b8c849d25fdde2#diff-d2af0a25c8af179cf697aa2ac0f0c907db92ad5af78948f34f6e6884c53c0781L641' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 0d42713d2e1e651f02e79896f4b8c849d25fdde2</div><div id='time'> Time: 2017-05-29</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: nilearn/plotting/displays.py</div><div id='class'> Class Name: BaseSlicer</div><div id='method'> Method Name: _map_show</div><BR>

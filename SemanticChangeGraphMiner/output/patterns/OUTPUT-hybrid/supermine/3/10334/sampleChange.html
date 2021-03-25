@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        inter_df = df
+        for stage in self._stages:
+            inter_df = stage.apply(inter_df, exraise, verbose)
+        <a id="change">return inter_df</a>
+
+    def fit_transform(self, X, y=None, exraise=None, verbose=None):
+        Fits this pipeline and transforms the input dataframe.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def apply(self, df, exraise=None, verbose=False):
+        if self.is_fitted:
+            <a id="change">return self.transform(X=df, exraise=None, verbose=verbose)</a>
+        return self.fit_transform(X=df, exraise=exraise, verbose=verbose)
+
+    def fit_transform(self, X, y=None, exraise=None, verbose=None):
+        Fits this pipeline and transforms the input dataframe.</code></pre>

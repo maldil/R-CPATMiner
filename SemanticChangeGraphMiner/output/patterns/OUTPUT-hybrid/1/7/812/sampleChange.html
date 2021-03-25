@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    shutil.copyfile(input_conllu,
+                    f"{tokenizer_dir}/{short_name}.{dataset}.gold.conllu")
+    <a id="change">shutil.copyfile(input_txt,
+                    f"{tokenizer_dir}/{short_name}.{dataset}.txt")</a>
+
+    if short_language == "vi":
+        postprocess_vietnamese_tokenizer_data.main([input_txt,
+                                                    "--char_level_pred", f"{tokenizer_dir}/{short_name}-ud-{dataset}.toklabels",</code></pre><h3>After Change</h3><pre><code class='java'>
+    input_conllu = find_treebank_dataset_file(treebank, udbase_dir, dataset, "conllu")
+    input_conllu_copy = f"{tokenizer_dir}/{short_name}.{dataset}.gold.conllu"
+
+    <a id="change">if short_name == "sl_ssj":
+        preprocess_ssj_data.process(input_txt, input_conllu, input_txt_copy, input_conllu_copy)
+    else:
+        os.makedirs(tokenizer_dir, exist_ok=True)
+        shutil.copyfile(input_txt, input_txt_copy)
+        shutil.copyfile(input_conllu, input_conllu_copy)
+
+   </a> prepare_tokenizer_data.main([input_txt_copy,
+                                 input_conllu_copy,
+                                 "-o", f"{tokenizer_dir}/{short_name}-ud-{dataset}.toklabels",
+                                 "-m", f"{tokenizer_dir}/{short_name}-ud-{dataset}-mwt.json"])</code></pre>

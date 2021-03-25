@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    cand_deps.add((gold_i, gold_head, token.dep_.lower()))
+        if "-" not in [token[-1] for token in gold.orig_annot]:
+            cand_ents = set()
+            current_ent = <a id="change">{k.label_: set() for k in doc.ents}</a>
+            current_gold = {k.label_: set() for k in doc.ents}
+            for ent in doc.ents:
+                if ent.label_ not in self.ner_per_ents:
+                    self.ner_per_ents[ent.label_] = PRFScore()</code></pre><h3>After Change</h3><pre><code class='java'>
+                    cand_deps.add((gold_i, gold_head, token.dep_.lower()))
+        if "-" not in [token[-1] for token in gold.orig_annot]:
+            &#47&#47 Find all NER labels in gold and doc
+            ent_labels = set(<a id="change">[x[0] for x in gold_ents]</a>
+                    + [k.label_ for k in doc.ents])
+            &#47&#47 Set up all labels for per type scoring and prepare gold per type
+            gold_per_ents = {ent_label: set() for ent_label in ent_labels}
+            for ent_label in ent_labels:
+                if ent_label not in self.ner_per_ents:
+                    self.ner_per_ents[ent_label] = PRFScore()
+                gold_per_ents[ent_label].update([x for x in gold_ents if x[0] == ent_label])
+            &#47&#47 Find all candidate labels, for all and per type
+            cand_ents = set()
+            <a id="change">cand_per_ents = {ent_label: set() for ent_label in ent_labels}</a>
+            for ent in doc.ents:
+                first = gold.cand_to_gold[ent.start]
+                last = gold.cand_to_gold[ent.end - 1]
+                if first is None or last is None:</code></pre>

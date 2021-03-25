@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def backward_D_A(self):
+        fake_B = self.fake_B_pool.query(self.fake_B)
+        <a id="change">loss_D_A</a> = <a id="change">self.backward_D_basic(self.netD_A, self.real_B, fake_B)</a>
+        self.loss_D_A = <a id="change">loss_D_A.data[0]</a>
+
+    def backward_D_B(self):
+        fake_A = self.fake_A_pool.query(self.fake_A)
+        loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def backward_D_A(self):
+        fake_B = self.fake_B_pool.query(self.fake_B)
+        self.loss_D_A = <a id="change">self.backward_D_basic(self.netD_A, self.real_B, fake_B)</a>
+
+    def backward_D_B(self):
+        fake_A = self.fake_A_pool.query(self.fake_A)
+        self.loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)</code></pre>

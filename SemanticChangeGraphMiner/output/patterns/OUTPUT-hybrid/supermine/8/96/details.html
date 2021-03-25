@@ -1,0 +1,37 @@
+<html><h3>748283f9689365064493d0d434755c33ca16bef7,geomstats/_backend/numpy/linalg.py,,logm,#,45
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def logm(x):
+    <a id="change">return np.vectorize(
+        asp.logm, signature=&quot(n,m)-&gt;(n,m)&quot)(x)</a>
+
+
+def solve_sylvester(a, b, q):
+    if a.shape == b.shape:</code></pre><h3>After Change</h3><pre><code class='java'>
+    new_x = to_ndarray(x, to_ndim=3)
+    if _is_symmetric(new_x):
+        eigvals, eigvecs = np.linalg.eigh(new_x)
+        <a id="change">if (eigvals &gt; 0).all():
+            eigvals = np.log(eigvals)
+            eigvals = np.vectorize(np.diag, signature=&quot(n)-&gt;(n,n)&quot)(eigvals)
+            transp_eigvecs = np.transpose(eigvecs, axes=(0, 2, 1))
+            result = np.matmul(eigvecs, eigvals)
+            result = np.matmul(result, transp_eigvecs)
+        else:
+            result = np.vectorize(scipy.linalg.logm,
+                                  signature=&quot(n,m)-&gt;(n,m)&quot)(new_x)
+   </a> else:
+        result = np.vectorize(scipy.linalg.logm,
+                              signature=&quot(n,m)-&gt;(n,m)&quot)(new_x)
+
+    if ndim == 2:
+        return result[0]
+    <a id="change">return result</a>
+
+
+def solve_sylvester(a, b, q):
+    if a.shape == b.shape:</code></pre><img src="771338.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/geomstats/geomstats/commit/748283f9689365064493d0d434755c33ca16bef7#diff-b04ef65ffecb43277ba8d7fb4364b32726aae12cae7e662f5f48dad53ae02b48L1' target='_blank'>Link</a></div><div id='project'> Project Name: geomstats/geomstats</div><div id='commit'> Commit Name: 748283f9689365064493d0d434755c33ca16bef7</div><div id='time'> Time: 2021-01-12</div><div id='author'> Author: nicolas.guigui@inria.fr</div><div id='file'> File Name: geomstats/_backend/numpy/linalg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: logm</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: extract_features</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/46b762f7987ca6ee9fa44c150cd648b6db8aadc1#diff-bcb495a7b272b03762c6f0c88b9f77501b3b08ef624999e86d7be1ea163a4fc1L28' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 46b762f7987ca6ee9fa44c150cd648b6db8aadc1</div><div id='time'> Time: 2019-02-24</div><div id='author'> Author: blondegeek@gmail.com</div><div id='file'> File Name: se3cnn/point_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: neighbor_feature_matrix</div><BR>

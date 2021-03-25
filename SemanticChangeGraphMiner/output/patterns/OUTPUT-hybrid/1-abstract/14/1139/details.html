@@ -1,0 +1,30 @@
+<html><h3>48c1c96ac4cfec5580a5feb7eb7ef7c25c6db234,keras/backend/tensorflow_backend.py,,ctc_label_dense_to_sparse,#,4257
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                             label_shape)
+    label_ind = tf.boolean_mask(label_array, dense_mask)
+
+    batch_array = <a id="change">tf.transpose(tf.reshape(tf.tile(tf.range(label_shape[0]),
+                                                  max_num_labels_tns), reverse(label_shape, 0)))</a>
+    <a id="change">batch_ind</a> = tf.boolean_mask(batch_array, dense_mask)
+    <a id="change">indices</a> = tf.transpose(tf.reshape(concatenate([batch_ind, label_ind], axis=0), [2, -1]))
+
+    <a id="change">vals_sparse</a> = tf.gather_nd(labels, indices)
+
+    return tf.SparseTensor(tf.to_int64(indices), vals_sparse, tf.to_int64(label_shape))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    label_ind = tf.boolean_mask(label_array, dense_mask)
+
+    tmp = tf.tile(tf.range(label_shape[0]), max_num_labels_tns)
+    batch_array = <a id="change">tf.transpose(tf.reshape(tmp, reverse(label_shape, 0)))</a>
+    <a id="change">batch_ind</a> = tf.boolean_mask(batch_array, dense_mask)
+
+    <a id="change">indices</a> = concatenate([batch_ind, label_ind], axis=0)
+    indices = tf.transpose(tf.reshape(indices, [2, -1]))
+
+    <a id="change">vals_sparse</a> = tf.gather_nd(labels, indices)
+
+    indices = tf.to_int64(indices)
+    label_shape = tf.to_int64(label_shape)</code></pre><img src="3880248.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 1</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/48c1c96ac4cfec5580a5feb7eb7ef7c25c6db234#diff-8d37272f22c146505301f9d7f2a729d60681f649b77fea252346332e7ac31327L4284' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 48c1c96ac4cfec5580a5feb7eb7ef7c25c6db234</div><div id='time'> Time: 2018-10-29</div><div id='author'> Author: gabrieldemarmiesse@gmail.com</div><div id='file'> File Name: keras/backend/tensorflow_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ctc_label_dense_to_sparse</div><BR>

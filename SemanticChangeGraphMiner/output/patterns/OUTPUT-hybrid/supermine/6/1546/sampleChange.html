@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return symmetric[..., tril_mask]
+    scaling = np.ones(symmetric.shape[-2:])
+    np.fill_diagonal(scaling, sqrt(2.))
+    <a id="change">tril_mask = np.tril(np.ones(symmetric.shape[-2:])).astype(np.bool)</a>
+    <a id="change">return symmetric[..., tril_mask] / scaling[tril_mask]</a>
+
+
+def sym_matrix_to_vec(symmetric, discard_diagonal=False):
+    Return the flattened lower triangular part of an array.</code></pre><h3>After Change</h3><pre><code class='java'>
+        (..., n_features * (n_features + 1) / 2) if discard_diagonal is False and
+        (..., (n_features - 1) * n_features / 2) otherwise.
+    
+    <a id="change">return sym_matrix_to_vec(symmetric=symmetric, discard_diagonal=discard_diagonal)</a>
+
+
+def sym_matrix_to_vec(symmetric, discard_diagonal=False):
+    Return the flattened lower triangular part of an array.</code></pre>

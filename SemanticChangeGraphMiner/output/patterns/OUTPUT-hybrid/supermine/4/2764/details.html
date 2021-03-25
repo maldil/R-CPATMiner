@@ -1,0 +1,23 @@
+<html><h3>d41aa4d2c995796e3978a83052515572f402fa5f,basic/model.py,Model,_build_loss,#Model#,219
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            losses = tf.nn.sigmoid_cross_entropy_with_logits(
+                tf.reshape(self.logits2, [-1, M, JX]), tf.cast(self.wy, &quotfloat&quot))  &#47&#47 [N, M, JX]
+            num_pos = tf.reduce_sum(tf.cast(self.wy, &quotfloat&quot))
+            num_neg = <a id="change">tf.reduce_sum(tf.cast(self.x_mask, &quotfloat&quot))</a> - num_pos
+            <a id="change">damp_ratio = num_pos / num_neg</a>
+            <a id="change">dampened_losses = losses * ((tf.cast(self.x_mask, &quotfloat&quot) - tf.cast(self.wy, &quotfloat&quot)) * damp_ratio + tf.cast(self.wy, &quotfloat&quot))</a>
+            new_losses = tf.reduce_sum(dampened_losses, [1, 2])
+            ce_loss = tf.reduce_mean(loss_mask * new_losses)
+            tf.add_to_collection(&quotlosses&quot, ce_loss)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if config.na:
+                na = tf.reshape(self.na, [-1, 1])
+                concat_y = tf.concat(1, [na, tf.reshape(self.wy, [-1, M * JX])])
+                losses = <a id="change">tf.nn.softmax_cross_entropy_with_logits(self.concat_logits, tf.cast(concat_y, &quotfloat&quot))</a>
+            else:
+                losses = tf.nn.softmax_cross_entropy_with_logits(
+                    self.logits2, tf.cast(tf.reshape(self.wy, [-1, M * JX]), &quotfloat&quot))
+            ce_loss = tf.reduce_mean(loss_mask * losses)</code></pre><img src="12281019.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/wenwei202/iss-rnns/commit/d41aa4d2c995796e3978a83052515572f402fa5f#diff-1079e779be5179430411034adfa57e7cba8daf2c993cb52fbb924dd805321c78L219' target='_blank'>Link</a></div><div id='project'> Project Name: wenwei202/iss-rnns</div><div id='commit'> Commit Name: d41aa4d2c995796e3978a83052515572f402fa5f</div><div id='time'> Time: 2017-01-21</div><div id='author'> Author: seominjoon@gmail.com</div><div id='file'> File Name: basic/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: _build_loss</div><BR><BR><div id='link'><a href='https://github.com/brilee/MuGo/commit/754238ee0338c960ed6f3640f3ef6dd3b3fb7108#diff-3d9f5c51ee85fb2da79a74349657cb62bb9abc5a02fd3d0238ffc76251310e24L53' target='_blank'>Link</a></div><div id='project'> Project Name: brilee/MuGo</div><div id='commit'> Commit Name: 754238ee0338c960ed6f3640f3ef6dd3b3fb7108</div><div id='time'> Time: 2017-06-23</div><div id='author'> Author: brian.kihoon.lee@gmail.com</div><div id='file'> File Name: policy.py</div><div id='class'> Class Name: PolicyNetwork</div><div id='method'> Method Name: set_up_network</div><BR><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/6abab74f85bf850de55fa9e39ece64b8a9eeff58#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L192' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 6abab74f85bf850de55fa9e39ece64b8a9eeff58</div><div id='time'> Time: 2016-12-27</div><div id='author'> Author: jakeret@phys.ethz.ch</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Unet</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Start contraction loop
+    for num, contraction in enumerate(contraction_list):
+        inds, idx_rm, einsum_str, remaining, blas_flag = contraction
+        <a id="change">tmp_operands = []</a>
+        for x in inds:
+            <a id="change">tmp_operands.append(operands.pop(x))</a>
+
+        &#47&#47 Do we need to deal with the output?
+        handle_out = specified_out and ((num + 1) == len(contraction_list))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 check if we are performing the pre-pass of an expression with constants
+        if parse_constants:
+            &#47&#47 if so, keep contracting until we find any non-constant operators, then break out
+            <a id="change">operands_copy = list(operands)</a>
+            <a id="change">if any(operands_copy.pop(x) is None for x in inds):
+                return operands, contraction_list[num:]
+
+       </a> tmp_operands = [operands.pop(x) for x in inds]
+
+        &#47&#47 Do we need to deal with the output?
+        handle_out = specified_out and ((num + 1) == len(contraction_list))</code></pre>

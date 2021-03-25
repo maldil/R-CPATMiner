@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                values = values_series / values_series.sum()
+                parent_card = np.array([])
+                for node in nx.ancestors(self, node):
+                    <a id="change">parent_card.append(data.ix[:, node].value_counts().shape[0])</a>
+                self.add_cpd(TabularCPD(node, data.ix[:, node].value_counts.shape[0], values, parent_card,
+                                        list(nx.ancestors(self, node))))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                values = state_counts / state_counts.sum()
+                parent_card = np.array([])
+                for u in nx.ancestors(self, node):
+                    parent_card = <a id="change">np.append(parent_card, data.ix[:, u].value_counts().shape[0])</a>
+                var_card = data.ix[:, node].value_counts.shape[0]
+                self.add_cpd(TabularCPD(node, var_card, values.reshape(var_card, values.size / var_card), parent_card,
+                                        list(nx.ancestors(self, node))))
+</code></pre>

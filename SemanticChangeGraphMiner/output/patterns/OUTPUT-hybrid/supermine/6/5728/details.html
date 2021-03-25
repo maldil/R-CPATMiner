@@ -1,0 +1,28 @@
+<html><h3>ce7dc229bea184b9d606a1fe6a19a30c2c4a0d36,aae/adversarial_autoencoder.py,AdversarialAutoencoder,build_encoder,#AdversarialAutoencoder#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def build_encoder(self):
+        &#47&#47 Encoder
+        <a id="change">encoder</a> = <a id="change">Sequential()</a>
+
+        encoder.add(Flatten(input_shape=self.img_shape))
+        encoder.add(Dense(512))
+        encoder.add(LeakyReLU(alpha=0.2))
+        encoder.add(BatchNormalization(momentum=0.8))
+        <a id="change">encoder.add(Dense(512))</a>
+        <a id="change">encoder.add(LeakyReLU(alpha=0.2))</a>
+        encoder.add(BatchNormalization(momentum=0.8))
+        encoder.add(Dense(self.encoded_dim))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        h = LeakyReLU(alpha=0.2)(h)
+        mu = Dense(self.latent_dim)(h)
+        log_var = Dense(self.latent_dim)(h)
+        <a id="change">latent_repr = merge([mu, log_var],
+                mode=lambda p: p[0] + K.random_normal(K.shape(p[0])) * K.exp(p[1] / 2),
+                output_shape=lambda p: p[0])</a>
+
+        return Model(img, latent_repr)
+</code></pre><img src="24060415.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/Keras-GAN/commit/ce7dc229bea184b9d606a1fe6a19a30c2c4a0d36#diff-e6624d18bd234da8643ffbb392fed4bb3c3f21bd05681f138da3dfaed0eb3667L58' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/Keras-GAN</div><div id='commit'> Commit Name: ce7dc229bea184b9d606a1fe6a19a30c2c4a0d36</div><div id='time'> Time: 2018-05-11</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: aae/adversarial_autoencoder.py</div><div id='class'> Class Name: AdversarialAutoencoder</div><div id='method'> Method Name: build_encoder</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/Keras-GAN/commit/ce7dc229bea184b9d606a1fe6a19a30c2c4a0d36#diff-e6624d18bd234da8643ffbb392fed4bb3c3f21bd05681f138da3dfaed0eb3667L58' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/Keras-GAN</div><div id='commit'> Commit Name: ce7dc229bea184b9d606a1fe6a19a30c2c4a0d36</div><div id='time'> Time: 2018-05-11</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: aae/adversarial_autoencoder.py</div><div id='class'> Class Name: AdversarialAutoencoder</div><div id='method'> Method Name: build_encoder</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/cloudml-samples/commit/e648c769cba51a96bc581be2e4d0e44bf958134d#diff-93c2e9604ad42cb3a165e994e7477ac39badf265c0e7fd8470b2841b50eeac20L64' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/cloudml-samples</div><div id='commit'> Commit Name: e648c769cba51a96bc581be2e4d0e44bf958134d</div><div id='time'> Time: 2019-04-21</div><div id='author'> Author: gogasca@google.com</div><div id='file'> File Name: census/tf-keras/trainer/model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_keras_model</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/28b8b9d39f53d8327dbf658048a81b7046ae398f#diff-59719226492ae5866e961f891e05b3ddcb62ffeee0b19e751ef45fa9857a05b7L21' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 28b8b9d39f53d8327dbf658048a81b7046ae398f</div><div id='time'> Time: 2017-10-08</div><div id='author'> Author: stypka@spotify.com</div><div id='file'> File Name: magpie/nn/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cnn</div><BR>

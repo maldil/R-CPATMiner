@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier and test example
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        results_neighbors = self.processed_dsel[idx_neighbors, :]
+
+        &#47&#47 Get the shape of the vector in order to know the number of samples, base classifiers and neighbors considered.
+        shape = results_neighbors.shape
+
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        competences = np.argmax(results_neighbors == 0, axis=1)
+
+        <a id="change">return competences</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        competences = np.argmax(results_neighbors == 0, axis=1)
+
+        <a id="change">return competences.astype(np.float32)</a>
+</code></pre>

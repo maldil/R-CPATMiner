@@ -1,0 +1,25 @@
+<html><h3>72b9ef8fe0d617149db5241b7197c0e8486f9557,opt_einsum/tests/test_sharing.py,,test_sharing_value,#,14
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.mark.parametrize(&quotbackend&quot, [&quotnumpy&quot, torch_if_found])
+def test_sharing_value(backend):
+    <a id="change">w = np.random.normal(size=(2, 3, 4))</a>
+    x = <a id="change">np.random.normal(size=(3, 4, 5))</a>
+    y = np.random.normal(size=(4, 5, 6))
+    z = <a id="change">np.random.normal(size=(5, 6, 7))</a>
+    expr = &quotabc,bcd,cde,def-&gt;af&quot
+
+    expected = contract(expr, w, x, y, z, backend=backend)
+    with shared_intermediates():</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.parametrize(&quotbackend&quot, backends)
+def test_sharing_value(backend):
+    eq = &quotabc,bcd,cde,def-&gt;af&quot
+    views = <a id="change">helpers.build_views(eq)</a>
+    <a id="change">shapes = [v.shape for v in views]</a>
+    expr = contract_expression(eq, *shapes)
+
+    expected = expr(*views, backend=backend)
+    with shared_intermediates():</code></pre><img src="2969389.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/72b9ef8fe0d617149db5241b7197c0e8486f9557#diff-93118cd3501d2ce60e5e30a624a6f9d28e374aecc2cc18b600fc5e29b9ba952bL15' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 72b9ef8fe0d617149db5241b7197c0e8486f9557</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/tests/test_sharing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sharing_value</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/72b9ef8fe0d617149db5241b7197c0e8486f9557#diff-93118cd3501d2ce60e5e30a624a6f9d28e374aecc2cc18b600fc5e29b9ba952bL15' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 72b9ef8fe0d617149db5241b7197c0e8486f9557</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/tests/test_sharing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sharing_value</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/72b9ef8fe0d617149db5241b7197c0e8486f9557#diff-93118cd3501d2ce60e5e30a624a6f9d28e374aecc2cc18b600fc5e29b9ba952bL30' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 72b9ef8fe0d617149db5241b7197c0e8486f9557</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/tests/test_sharing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_complete_sharing</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/72b9ef8fe0d617149db5241b7197c0e8486f9557#diff-93118cd3501d2ce60e5e30a624a6f9d28e374aecc2cc18b600fc5e29b9ba952bL55' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 72b9ef8fe0d617149db5241b7197c0e8486f9557</div><div id='time'> Time: 2018-08-20</div><div id='author'> Author: fritzo@uber.com</div><div id='file'> File Name: opt_einsum/tests/test_sharing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_partial_sharing</div><BR>

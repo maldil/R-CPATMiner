@@ -1,0 +1,243 @@
+<html><h3>84feedee2b6d0933cd6c3d7e420c369fe17c6cda,official/vision/beta/ops/spatial_transform_ops.py,,multilevel_crop_and_resize,#,136
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  with tf.name_scope(&quotmultilevel_crop_and_resize&quot):
+    levels = list(features.keys())
+    min_level = min(levels)
+    <a id="change">max_level</a> = <a id="change">max(levels)</a>
+    batch_size, max_feature_height, max_feature_width, num_filters = (
+        features[min_level].get_shape().as_list())
+    if batch_size is None:
+      batch_size = tf.shape(features[min_level])[0]
+    _, num_boxes, _ = boxes.get_shape().as_list()
+
+    &#47&#47 Stack feature pyramid into a features_all of shape
+    &#47&#47 [batch_size, levels, height, width, num_filters].
+    features_all = []
+    feature_heights = []
+    feature_widths = []
+    for level in range(min_level, max_level + 1):
+      <a id="change">shape</a> = features[level].get_shape().as_list()
+      feature_heights.append(shape[1])
+      feature_widths.append(shape[2])
+      &#47&#47 Concat tensor of [batch_size, height_l * width_l, num_filters] for each
+      &#47&#47 levels.
+      features_all.append(
+          tf.reshape(features[level], [batch_size, -1, num_filters]))
+    features_r2 = tf.reshape(tf.concat(features_all, 1), [-1, num_filters])
+
+    &#47&#47 Calculate height_l * width_l for each level.
+    level_dim_sizes = [
+        feature_widths[i] * feature_heights[i]
+        for i in range(len(feature_widths))
+    ]
+    &#47&#47 level_dim_offsets is accumulated sum of level_dim_size.
+    level_dim_offsets = [0]
+    for i in range(len(feature_widths) - 1):
+      level_dim_offsets.append(level_dim_offsets[i] + level_dim_sizes[i])
+    batch_dim_size = level_dim_offsets[-1] + level_dim_sizes[-1]
+    level_dim_offsets = tf.constant(level_dim_offsets, tf.int32)
+    height_dim_sizes = tf.constant(feature_widths, tf.int32)
+
+    &#47&#47 Assigns boxes to the right level.
+    box_width = boxes[:, :, 3] - boxes[:, :, 1]
+    box_height = boxes[:, :, 2] - boxes[:, :, 0]
+    areas_sqrt = tf.cast(tf.sqrt(box_height * box_width), tf.float32)
+    levels = tf.cast(
+        tf.math.floordiv(
+            tf.math.log(tf.divide(areas_sqrt, 224.0)),
+            tf.math.log(2.0)) + 4.0,
+        dtype=tf.int32)
+    &#47&#47 Maps levels between [min_level, max_level].
+    <a id="change">levels</a> = tf.minimum(max_level, tf.maximum(levels, min_level))
+
+    &#47&#47 Projects box location and sizes to corresponding feature levels.
+    <a id="change">scale_to_level</a> = tf.cast(
+        tf.pow(tf.constant(2.0), tf.cast(levels, tf.float32)),
+        dtype=boxes.dtype)
+    boxes /= tf.expand_dims(scale_to_level, axis=2)
+    <a id="change">box_width</a> /= scale_to_level
+    box_height /= scale_to_level
+    <a id="change">boxes</a> = tf.concat([boxes[:, :, 0:2],
+                       tf.expand_dims(box_height, -1),
+                       tf.expand_dims(box_width, -1)], axis=-1)
+
+    &#47&#47 Maps levels to [0, max_level-min_level].
+    levels -= min_level
+    <a id="change">level_strides</a> = tf.pow([[2.0]], tf.cast(levels, tf.float32))
+    <a id="change">boundary</a> = tf.cast(
+        tf.concat([
+            tf.expand_dims(
+                [[tf.cast(max_feature_height, tf.float32)]] / level_strides - 1,
+                axis=-1),
+            tf.expand_dims(
+                [[tf.cast(max_feature_width, tf.float32)]] / level_strides - 1,
+                axis=-1),
+        ],
+                  axis=-1), boxes.dtype)
+
+    &#47&#47 Compute grid positions.
+    kernel_y, kernel_x, box_gridy0y1, box_gridx0x1 = _compute_grid_positions(
+        boxes, boundary, output_size, sample_offset)
+
+    x_indices = tf.cast(
+        tf.reshape(box_gridx0x1, [batch_size, num_boxes, output_size * 2]),
+        dtype=tf.int32)
+    y_indices = tf.cast(
+        tf.reshape(box_gridy0y1, [batch_size, num_boxes, output_size * 2]),
+        dtype=tf.int32)
+
+    batch_size_offset = tf.tile(
+        tf.reshape(
+            tf.range(batch_size) * batch_dim_size, [batch_size, 1, 1, 1]),
+        [1, num_boxes, output_size * 2, output_size * 2])
+    &#47&#47 Get level offset for each box. Each box belongs to one level.
+    levels_offset = tf.tile(
+        tf.reshape(
+            tf.gather(level_dim_offsets, levels),
+            [batch_size, num_boxes, 1, 1]),
+        [1, 1, output_size * 2, output_size * 2])
+    <a id="change">y_indices_offset</a> = tf.tile(
+        tf.reshape(
+            y_indices * tf.expand_dims(tf.gather(height_dim_sizes, levels), -1),
+            [batch_size, num_boxes, output_size * 2, 1]),
+        [1, 1, 1, output_size * 2])
+    x_indices_offset = tf.tile(
+        tf.reshape(x_indices, [batch_size, num_boxes, 1, output_size * 2]),
+        [1, 1, output_size * 2, 1])
+    <a id="change">indices</a> = tf.reshape(
+        batch_size_offset + levels_offset + y_indices_offset + x_indices_offset,
+        [-1])
+
+    &#47&#47 TODO(wangtao): replace tf.gather with tf.gather_nd and try to get similar
+    &#47&#47 performance.
+    <a id="change">features_per_box</a> = tf.reshape(
+        tf.gather(features_r2, indices),
+        [batch_size, num_boxes, output_size * 2, output_size * 2, num_filters])
+
+    &#47&#47 Bilinear interpolation.
+    <a id="change">features_per_box</a> = _feature_bilinear_interpolation(
+        features_per_box, kernel_y, kernel_x)
+    return features_per_box
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  with tf.name_scope(&quotmultilevel_crop_and_resize&quot):
+    levels = list(features.keys())
+    min_level = int(min(levels))
+    <a id="change">max_level</a> = int(<a id="change">max(levels)</a>)
+    batch_size, max_feature_height, max_feature_width, num_filters = (
+        features[str(min_level)].get_shape().as_list())
+    if batch_size is None:
+      batch_size = tf.shape(features[str(min_level)])[0]
+    _, num_boxes, _ = boxes.get_shape().as_list()
+
+    &#47&#47 Stack feature pyramid into a features_all of shape
+    &#47&#47 [batch_size, levels, height, width, num_filters].
+    features_all = []
+    feature_heights = []
+    feature_widths = []
+    for level in range(min_level, max_level + 1):
+      <a id="change">shape</a> = features[str(level)].get_shape().as_list()
+      feature_heights.append(shape[1])
+      feature_widths.append(shape[2])
+      &#47&#47 Concat tensor of [batch_size, height_l * width_l, num_filters] for each
+      &#47&#47 levels.
+      features_all.append(
+          tf.reshape(features[str(level)], [batch_size, -1, num_filters]))
+    features_r2 = tf.reshape(tf.concat(features_all, 1), [-1, num_filters])
+
+    &#47&#47 Calculate height_l * width_l for each level.
+    level_dim_sizes = [
+        feature_widths[i] * feature_heights[i]
+        for i in range(len(feature_widths))
+    ]
+    &#47&#47 level_dim_offsets is accumulated sum of level_dim_size.
+    level_dim_offsets = [0]
+    for i in range(len(feature_widths) - 1):
+      level_dim_offsets.append(level_dim_offsets[i] + level_dim_sizes[i])
+    batch_dim_size = level_dim_offsets[-1] + level_dim_sizes[-1]
+    level_dim_offsets = tf.constant(level_dim_offsets, tf.int32)
+    height_dim_sizes = tf.constant(feature_widths, tf.int32)
+
+    &#47&#47 Assigns boxes to the right level.
+    box_width = boxes[:, :, 3] - boxes[:, :, 1]
+    box_height = boxes[:, :, 2] - boxes[:, :, 0]
+    areas_sqrt = tf.cast(tf.sqrt(box_height * box_width), tf.float32)
+    levels = tf.cast(
+        tf.math.floordiv(
+            tf.math.log(tf.divide(areas_sqrt, 224.0)),
+            tf.math.log(2.0)) + 4.0,
+        dtype=tf.int32)
+    &#47&#47 Maps levels between [min_level, max_level].
+    <a id="change">levels</a> = tf.minimum(max_level, tf.maximum(levels, min_level))
+
+    &#47&#47 Projects box location and sizes to corresponding feature levels.
+    <a id="change">scale_to_level</a> = tf.cast(
+        tf.pow(tf.constant(2.0), tf.cast(levels, tf.float32)),
+        dtype=boxes.dtype)
+    boxes /= tf.expand_dims(scale_to_level, axis=2)
+    <a id="change">box_width</a> /= scale_to_level
+    box_height /= scale_to_level
+    <a id="change">boxes</a> = tf.concat([boxes[:, :, 0:2],
+                       tf.expand_dims(box_height, -1),
+                       tf.expand_dims(box_width, -1)], axis=-1)
+
+    &#47&#47 Maps levels to [0, max_level-min_level].
+    levels -= min_level
+    <a id="change">level_strides</a> = tf.pow([[2.0]], tf.cast(levels, tf.float32))
+    <a id="change">boundary</a> = tf.cast(
+        tf.concat([
+            tf.expand_dims(
+                [[tf.cast(max_feature_height, tf.float32)]] / level_strides - 1,
+                axis=-1),
+            tf.expand_dims(
+                [[tf.cast(max_feature_width, tf.float32)]] / level_strides - 1,
+                axis=-1),
+        ],
+                  axis=-1), boxes.dtype)
+
+    &#47&#47 Compute grid positions.
+    kernel_y, kernel_x, box_gridy0y1, box_gridx0x1 = _compute_grid_positions(
+        boxes, boundary, output_size, sample_offset)
+
+    x_indices = tf.cast(
+        tf.reshape(box_gridx0x1, [batch_size, num_boxes, output_size * 2]),
+        dtype=tf.int32)
+    y_indices = tf.cast(
+        tf.reshape(box_gridy0y1, [batch_size, num_boxes, output_size * 2]),
+        dtype=tf.int32)
+
+    batch_size_offset = tf.tile(
+        tf.reshape(
+            tf.range(batch_size) * batch_dim_size, [batch_size, 1, 1, 1]),
+        [1, num_boxes, output_size * 2, output_size * 2])
+    &#47&#47 Get level offset for each box. Each box belongs to one level.
+    levels_offset = tf.tile(
+        tf.reshape(
+            tf.gather(level_dim_offsets, levels),
+            [batch_size, num_boxes, 1, 1]),
+        [1, 1, output_size * 2, output_size * 2])
+    <a id="change">y_indices_offset</a> = tf.tile(
+        tf.reshape(
+            y_indices * tf.expand_dims(tf.gather(height_dim_sizes, levels), -1),
+            [batch_size, num_boxes, output_size * 2, 1]),
+        [1, 1, 1, output_size * 2])
+    x_indices_offset = tf.tile(
+        tf.reshape(x_indices, [batch_size, num_boxes, 1, output_size * 2]),
+        [1, 1, output_size * 2, 1])
+    <a id="change">indices</a> = tf.reshape(
+        batch_size_offset + levels_offset + y_indices_offset + x_indices_offset,
+        [-1])
+
+    &#47&#47 TODO(wangtao): replace tf.gather with tf.gather_nd and try to get similar
+    &#47&#47 performance.
+    <a id="change">features_per_box</a> = tf.reshape(
+        tf.gather(features_r2, indices),
+        [batch_size, num_boxes, output_size * 2, output_size * 2, num_filters])
+
+    &#47&#47 Bilinear interpolation.
+    <a id="change">features_per_box</a> = _feature_bilinear_interpolation(
+        features_per_box, kernel_y, kernel_x)
+    return features_per_box
+</code></pre><img src="1934909.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/84feedee2b6d0933cd6c3d7e420c369fe17c6cda#diff-15bea8a04336a17015189bf960b1b2a4a74336f901a3b2c43a6030fbd7bbcc9fL162' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 84feedee2b6d0933cd6c3d7e420c369fe17c6cda</div><div id='time'> Time: 2020-09-11</div><div id='author'> Author: arashwan@google.com</div><div id='file'> File Name: official/vision/beta/ops/spatial_transform_ops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: multilevel_crop_and_resize</div><BR><BR><div id='link'><a href='https://github.com/mathurinm/celer/commit/7ec51702c69912a83bb5929d8a6be200db9b5dd2#diff-920a837fb38acf4017a067704a8a50e2a8beea27d8eb1d85d6ef41e03e096719L83' target='_blank'>Link</a></div><div id='project'> Project Name: mathurinm/celer</div><div id='commit'> Commit Name: 7ec51702c69912a83bb5929d8a6be200db9b5dd2</div><div id='time'> Time: 2018-04-16</div><div id='author'> Author: mathurin.massias@gmail.com</div><div id='file'> File Name: celer/homotopy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: celer_path</div><BR><BR><div id='link'><a href='https://github.com/jiesutd/NCRFpp/commit/70ea65ca477b6fc05d5b24d03b559f424ac3a1c8#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L225' target='_blank'>Link</a></div><div id='project'> Project Name: jiesutd/NCRFpp</div><div id='commit'> Commit Name: 70ea65ca477b6fc05d5b24d03b559f424ac3a1c8</div><div id='time'> Time: 2018-12-17</div><div id='author'> Author: jieynlp@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: batchify_with_label</div><BR>

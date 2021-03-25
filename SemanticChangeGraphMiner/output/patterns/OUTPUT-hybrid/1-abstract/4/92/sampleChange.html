@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for estimator in [KMeans(n_clusters=n_clusters, random_state=42),
+                      MiniBatchKMeans(n_clusters=n_clusters, random_state=42)]:
+        est_1 = clone(estimator).fit(X)
+        est_2 = <a id="change">clone(estimator).fit(X, sample_weight=sample_weight)</a>
+        assert_almost_equal(v_measure_score(est_1.labels_, est_2.labels_), 1.0)
+        assert_almost_equal(_sort_centers(est_1.cluster_centers_),
+                            _sort_centers(est_2.cluster_centers_))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    km = Estimator(n_clusters=n_clusters, random_state=42, n_init=1)
+    km_none = clone(km).fit(data, sample_weight=None)
+    km_ones = <a id="change">clone(km).fit(data, sample_weight=sample_weight)</a>
+
+    assert_array_equal(km_none.labels_, km_ones.labels_)
+    assert_allclose(km_none.cluster_centers_, km_ones.cluster_centers_)
+</code></pre>

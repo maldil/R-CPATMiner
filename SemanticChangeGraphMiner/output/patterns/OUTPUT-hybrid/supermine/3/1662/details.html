@@ -1,0 +1,21 @@
+<html><h3>f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7,models/shared_rnn.py,RNN,forward,#RNN#,195
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if hidden_norms.data.max() &gt; max_norm:
+                logger.info(f&quotclipping {hidden_norms.max()} to {max_norm}&quot)
+                norm = hidden[hidden_norms &gt; max_norm].norm(dim=-1)
+                norm = <a id="change">norm.unsqueeze(-1)</a>
+                detached_norm = torch.autograd.Variable(norm.data,
+                                                        requires_grad=False)
+                hidden[hidden_norms &gt; max_norm] *= max_norm/detached_norm
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                clip_select = hidden_norms &gt; max_norm
+                clip_norms = hidden_norms[clip_select]
+
+                <a id="change">mask = np.ones(hidden.size())</a>
+                normalizer = max_norm/clip_norms
+                normalizer = normalizer[:, np.newaxis]
+
+                mask[clip_select] = normalizer</code></pre><img src="8421264.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/carpedm20/ENAS-pytorch/commit/f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7#diff-b02f719a0cadd35d51b5f18576fb2e3122a29a3f0a9ed03e6733db2b4851c2abL213' target='_blank'>Link</a></div><div id='project'> Project Name: carpedm20/ENAS-pytorch</div><div id='commit'> Commit Name: f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7</div><div id='time'> Time: 2018-03-11</div><div id='author'> Author: dukebw@mcmaster.ca</div><div id='file'> File Name: models/shared_rnn.py</div><div id='class'> Class Name: RNN</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/SenticNet/conv-emotion/commit/87d57a3d34a1eef2c6ad5519741710e3321f136c#diff-1d1c0879fec769e0236a8daedf9ec58539ee90a439cbf96ec58b7cdb862359c3L304' target='_blank'>Link</a></div><div id='project'> Project Name: SenticNet/conv-emotion</div><div id='commit'> Commit Name: 87d57a3d34a1eef2c6ad5519741710e3321f136c</div><div id='time'> Time: 2019-03-19</div><div id='author'> Author: 40890991+soujanyaporia@users.noreply.github.com</div><div id='file'> File Name: DialogueRNN/model.py</div><div id='class'> Class Name: BiE2EModel</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL52' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: translate_batch</div><BR>

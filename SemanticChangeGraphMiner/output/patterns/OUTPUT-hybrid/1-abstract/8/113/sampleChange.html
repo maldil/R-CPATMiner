@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            (lines[2][1][:10] == "&#47&#47 Subject:" or
+             lines[2][1][:8] == "&#47&#47 Query:" or
+             lines[2][1][:11] == "&#47&#47 Database:")):
+            <a id="change">return True, {}</a>
+        else:
+            return False, {}
+    except IndexError:
+        return False, {}</code></pre><h3>After Change</h3><pre><code class='java'>
+    if len(lines) &lt; 3:
+        return False, {}
+
+    <a id="change">if not lines[0].startswith("&#47&#47 BLAST"):
+        return False, {}
+   </a> <a id="change">if not (lines[1].startswith("&#47&#47 Query:") or
+            lines[1].startswith("&#47&#47 Database:")):
+        return False, {}
+   </a> if not (lines[2].startswith("&#47&#47 Subject:") or
+            lines[2].startswith("&#47&#47 Query:") or
+            lines[2].startswith("&#47&#47 Database:")):
+        <a id="change">return False, {}</a>
+
+    <a id="change">return True, {}</a>
+
+
+@blast7.reader(pd.DataFrame, monkey_patch=False)
+def _blast7_to_data_frame(fh):</code></pre>

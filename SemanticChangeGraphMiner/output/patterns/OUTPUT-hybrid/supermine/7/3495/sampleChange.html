@@ -1,0 +1,105 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            
+        &#47&#47 The actual transform
+        &#47&#47 TODO: stuff loop into theano
+        <a id="change">for mii,gii,gi1,gi2,win_range,Lg,col in loopparams:
+&#47&#47            Lg = len(gii)            
+            &#47&#47 if the number of time channels is too small (mii &lt; Lg), aliasing is introduced
+            &#47&#47 wrap around and sum up in the end (below)
+&#47&#47            col = int(ceil(float(Lg)/mii)) &#47&#47 normally col == 1                        
+&#47&#47            assert col*mii &gt;= Lg                        
+
+            temp = temp0[:col*mii]
+
+            &#47&#47 original version
+&#47&#47            t = ft[win_range]*N.fft.fftshift(N.conj(gii))
+&#47&#47            temp[:(Lg+1)//2] = t[Lg//2:]  &#47&#47 if mii is odd, this is of length mii-mii//2
+&#47&#47            temp[-(Lg//2):] = t[:Lg//2]  &#47&#47 if mii is odd, this is of length mii//2
+
+            &#47&#47 modified version to avoid superfluous memory allocation
+            t1 = temp[:(Lg+1)//2]
+            t1[:] = gi1  &#47&#47 if mii is odd, this is of length mii-mii//2
+            t2 = temp[-(Lg//2):]
+            t2[:] = gi2  &#47&#47 if mii is odd, this is of length mii//2
+
+            ftw = ft[win_range]
+            t2 *= ftw[:Lg//2]
+            t1 *= ftw[Lg//2:]
+
+&#47&#47            (wh1a,wh1b),(wh2a,wh2b) = win_range
+&#47&#47            t2[:wh1a.stop-wh1a.start] *= ft[wh1a]
+&#47&#47            t2[wh1a.stop-wh1a.start:] *= ft[wh1b]
+&#47&#47            t1[:wh2a.stop-wh2a.start] *= ft[wh2a]
+&#47&#47            t1[wh2a.stop-wh2a.start:] *= ft[wh2b]
+            
+            temp[(Lg+1)//2:-(Lg//2)] = 0  &#47&#47 clear gap (if any)
+            
+            if col &gt; 1:
+                temp = N.sum(temp.reshape((mii,-1)),axis=1)
+            else:
+                temp = temp.copy()
+ 
+            c.append(temp)
+            
+       </a> yield map(ifft,c)  &#47&#47 TODO: if matrixform, perform "2D" FFT along one axis
+
+        
+&#47&#47 non-sliced version</code></pre><h3>After Change</h3><pre><code class='java'>
+        p = (mii,gii,gi1,gi2,win_range,Lg,col)
+        loopparams.append(p)
+
+    <a id="change">if True or T is None:
+        def loop(temp0):
+            c = [] &#47&#47 Initialization of the result
+                
+            &#47&#47 The actual transform
+            &#47&#47 TODO: stuff loop into theano
+            for mii,gii,gi1,gi2,win_range,Lg,col in loopparams:
+    &#47&#47            Lg = len(gii)            
+                &#47&#47 if the number of time channels is too small (mii &lt; Lg), aliasing is introduced
+                &#47&#47 wrap around and sum up in the end (below)
+    &#47&#47            col = int(ceil(float(Lg)/mii)) &#47&#47 normally col == 1                        
+    &#47&#47            assert col*mii &gt;= Lg                        
+    
+                temp = temp0[:col*mii]
+    
+                &#47&#47 original version
+    &#47&#47            t = ft[win_range]*N.fft.fftshift(N.conj(gii))
+    &#47&#47            temp[:(Lg+1)//2] = t[Lg//2:]  &#47&#47 if mii is odd, this is of length mii-mii//2
+    &#47&#47            temp[-(Lg//2):] = t[:Lg//2]  &#47&#47 if mii is odd, this is of length mii//2
+    
+                &#47&#47 modified version to avoid superfluous memory allocation
+                t1 = temp[:(Lg+1)//2]
+                t1[:] = gi1  &#47&#47 if mii is odd, this is of length mii-mii//2
+                t2 = temp[-(Lg//2):]
+                t2[:] = gi2  &#47&#47 if mii is odd, this is of length mii//2
+    
+                ftw = ft[win_range]
+                t2 *= ftw[:Lg//2]
+                t1 *= ftw[Lg//2:]
+    
+    &#47&#47            (wh1a,wh1b),(wh2a,wh2b) = win_range
+    &#47&#47            t2[:wh1a.stop-wh1a.start] *= ft[wh1a]
+    &#47&#47            t2[wh1a.stop-wh1a.start:] *= ft[wh1b]
+    &#47&#47            t1[:wh2a.stop-wh2a.start] *= ft[wh2a]
+    &#47&#47            t1[wh2a.stop-wh2a.start:] *= ft[wh2b]
+                
+                temp[(Lg+1)//2:-(Lg//2)] = 0  &#47&#47 clear gap (if any)
+                
+                if col &gt; 1:
+                    temp = N.sum(temp.reshape((mii,-1)),axis=1)
+                else:
+                    temp = temp.copy()
+     
+                c.append(temp)
+            return c
+    else:
+        raise RuntimeError("Theano support not implemented yet")
+
+   </a> for f in f_slices:
+        Ls = len(f)
+        
+        &#47&#47 some preparation    </code></pre>

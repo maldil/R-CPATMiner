@@ -1,0 +1,26 @@
+<html><h3>cf4379b2fc6ec480a801397aa8481f6a55ba5c6e,graphbrain/meaning/ontology.py,,subtypes,#,4
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def subtypes(hg, edge):
+    ont_edges = hg.search((const.type_of_pred, &quot*&quot, edge))
+    <a id="change">return tuple([ont_edge[1] for ont_edge in ont_edges])</a>
+
+
+def supertypes(hg, edge):
+    ont_edges = hg.serch((const.type_of_pred, edge, &quot*&quot))</code></pre><h3>After Change</h3><pre><code class='java'>
+def subtypes(hg, edge, deep=False):
+    ont_edges = hg.search((const.type_of_pred, &quot*&quot, edge))
+    subs = set([ont_edge[1] for ont_edge in ont_edges])
+    <a id="change">if deep:
+        new_subs = set()
+        for sub in subs:
+            new_subs |= subtypes(hg, sub, deep=True)
+        subs |= new_subs
+   </a> <a id="change">return subs</a>
+
+
+def supertypes(hg, edge, deep=False):
+    ont_edges = hg.search((const.type_of_pred, edge, &quot*&quot))</code></pre><img src="36162209.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/graphbrain/graphbrain/commit/cf4379b2fc6ec480a801397aa8481f6a55ba5c6e#diff-09bf4562c286ccee848e8c1de5293c07a610ee28b8169c79315ba47671e9dc57L6' target='_blank'>Link</a></div><div id='project'> Project Name: graphbrain/graphbrain</div><div id='commit'> Commit Name: cf4379b2fc6ec480a801397aa8481f6a55ba5c6e</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: telmo@telmomenezes.net</div><div id='file'> File Name: graphbrain/meaning/ontology.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: subtypes</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L53' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_forward</div><BR><BR><div id='link'><a href='https://github.com/graphbrain/graphbrain/commit/cf4379b2fc6ec480a801397aa8481f6a55ba5c6e#diff-09bf4562c286ccee848e8c1de5293c07a610ee28b8169c79315ba47671e9dc57L11' target='_blank'>Link</a></div><div id='project'> Project Name: graphbrain/graphbrain</div><div id='commit'> Commit Name: cf4379b2fc6ec480a801397aa8481f6a55ba5c6e</div><div id='time'> Time: 2019-08-01</div><div id='author'> Author: telmo@telmomenezes.net</div><div id='file'> File Name: graphbrain/meaning/ontology.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: supertypes</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L100' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 3ef43e41e74f4cebf8b1be006bf0b596a6b37e5a</div><div id='time'> Time: 2014-07-18</div><div id='author'> Author: jonlong@cs.berkeley.edu</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_backward</div><BR>

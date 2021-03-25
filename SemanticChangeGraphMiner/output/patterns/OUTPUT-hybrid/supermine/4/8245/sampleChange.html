@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    if cuda_available:
+        interpolates = interpolates.cuda()
+    <a id="change">interpolates = autograd.Variable(interpolates, requires_grad=True)</a>
+
+    disc_interpolates, _ = netD(interpolates)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    alpha = alpha.cuda() if cuda_available else alpha
+
+    fake_data = fake_data.view(BATCH_SIZE, 3, DIM, DIM)
+    interpolates = alpha * real_data.detach() + ((1 - alpha) * <a id="change">fake_data.detach()</a>)
+
+    if cuda_available:
+        interpolates = interpolates.cuda()</code></pre>

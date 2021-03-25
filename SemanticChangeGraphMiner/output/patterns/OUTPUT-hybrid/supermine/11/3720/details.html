@@ -1,0 +1,29 @@
+<html><h3>c6e83948f53bcd5d77b1714b691bbd74d12da613,thinc/initializers.py,,xavier_uniform_init,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def xavier_uniform_init(data: Array, *, inplace: bool = False) -&gt; Array:
+    <a id="change">xp = get_array_module(data)</a>
+    scale = xp.sqrt(6.0 / (data.shape[0] + data.shape[1]))
+    <a id="change">if inplace:
+        copy_array(data, xp.random.uniform(-scale, scale, data.shape))
+        return data
+    else:
+        return xp.random.uniform(-scale, scale, data.shape)
+
+
+</a>@registry.initializers("xavier_uniform_init.v0")
+def configure_xavier_uniform_init(*, inplace: bool = False) -&gt; Callable[[Array], Array]:
+    return partial(xavier_uniform_init, inplace=inplace)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def xavier_uniform_init(ops: Ops, shape: Shape) -&gt; Array:
+    scale = ops.xp.sqrt(6.0 / (shape[0] + shape[1]))
+    return <a id="change">ops.asarray(numpy.random.uniform(-scale, scale, shape), dtype="f")</a>
+
+
+@registry.initializers("xavier_uniform_init.v0")
+def configure_xavier_uniform_init() -&gt; Callable[[Shape], Array]:</code></pre><img src="16366681.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c6e83948f53bcd5d77b1714b691bbd74d12da613#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L9' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c6e83948f53bcd5d77b1714b691bbd74d12da613</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: xavier_uniform_init</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c6e83948f53bcd5d77b1714b691bbd74d12da613#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L37' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c6e83948f53bcd5d77b1714b691bbd74d12da613</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: uniform_init</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c6e83948f53bcd5d77b1714b691bbd74d12da613#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L56' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c6e83948f53bcd5d77b1714b691bbd74d12da613</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: normal_init</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c6e83948f53bcd5d77b1714b691bbd74d12da613#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L9' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c6e83948f53bcd5d77b1714b691bbd74d12da613</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: xavier_uniform_init</div><BR>

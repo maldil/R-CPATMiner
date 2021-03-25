@@ -1,0 +1,22 @@
+<html><h3>6dfa3d3e9a6a668ca6380134da7db7b63fad7f6a,tensorly/decomposition/_nn_cp.py,,non_negative_parafac_hals,#,294
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                factors[mode] = tl.transpose(
+                    hals_nnls_exact(tl.transpose(mttkrp), pseude_inverse, tl.transpose(factors[mode]),
+                                     maxiter=5000)[0])
+            factors_norm = tl.sum(tl.sum(pseude_inverse * tl.dot(<a id="change">tl.conj(tl.transpose(factors[mode]))</a>, factors[mode])))
+            rec_error = norm_tensor ** 2 + factors_norm - 2 * tl.dot(tl.tensor_to_vec(factors[mode]),
+                                                                     tl.tensor_to_vec(mttkrp))
+            rec_error = rec_error ** (1 / 2) / norm_tensor</code></pre><h3>After Change</h3><pre><code class='java'>
+                                     maxiter=5000)[0])
+ 
+        if tol:
+            factors_norm = cp_norm(<a id="change">(weights, factors)</a>)
+            iprod = tl.sum(tl.sum(mttkrp*factor, axis=0)*weights)
+            rec_error = <a id="change">tl.sqrt(tl.abs(norm_tensor**2 + factors_norm**2 - 2*iprod)) / norm_tensor</a>
+            rec_errors.append(rec_error)
+
+            if iteration &gt; 1:
+                if verbose:</code></pre><img src="29290136.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/6dfa3d3e9a6a668ca6380134da7db7b63fad7f6a#diff-ee80cc538fadb543db3c79fceeab03b141cc96159788b56e218eb6ac83aedf5eL356' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: 6dfa3d3e9a6a668ca6380134da7db7b63fad7f6a</div><div id='time'> Time: 2021-02-25</div><div id='author'> Author: caglayan.tuna@irisa.fr</div><div id='file'> File Name: tensorly/decomposition/_nn_cp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_negative_parafac_hals</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/84d7770cb65a52231b64f6822d3adb889b35ffa6#diff-c49b8660958f8ae6f4b060c6f2f98e7d1a003103974c4434d7673d538f3480e8L216' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 84d7770cb65a52231b64f6822d3adb889b35ffa6</div><div id='time'> Time: 2014-01-15</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/core.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: stft</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/09902b89cdf8fc79d18f09216c285adb579c83b6#diff-a6fae830ab3488d81e8a15fd0de7369bb216dc36ce530f16c4ef84654d7e760bL169' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 09902b89cdf8fc79d18f09216c285adb579c83b6</div><div id='time'> Time: 2018-02-27</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/doa/frida.py</div><div id='class'> Class Name: FRIDA</div><div id='method'> Method Name: _visibilities</div><BR>

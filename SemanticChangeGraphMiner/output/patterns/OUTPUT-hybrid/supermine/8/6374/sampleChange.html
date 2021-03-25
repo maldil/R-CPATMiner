@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        col1 = my_data[1:,:1]
+        col2 = my_data[1:,1:2]
+        col3 = my_data[1:,2:3]
+        <a id="change">for ii in xrange(0, len(col1)-1):
+            if (col1[ii] == col1[ii+1])&(col2[ii] == col2[ii+1])&(col3[ii] == col3[ii+1]):
+                np.delete(my_data,(ii), axis=0)
+
+                
+    
+       </a> xy  = my_data[1:,:3] &#47&#47 Altitude, Mach, Throttle
+        thr = np.transpose(np.atleast_2d(my_data[1:,3])) &#47&#47 Thrust
+        sfc = np.transpose(np.atleast_2d(my_data[1:,4]))  &#47&#47 SFC
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47if (col1[ii] == col1[ii+1])&(col2[ii] == col2[ii+1])&(col3[ii] == col3[ii+1]):
+                &#47&#47np.delete(my_data,(ii), axis=0)
+
+        b = np.ascontiguousarray(my_data).view(np.dtype(<a id="change">(np.void, my_data.dtype.itemsize * my_data.shape[1])</a>))
+        _, idx = np.unique(b, return_index=True)
+        
+        my_data = my_data[idx]                </code></pre>

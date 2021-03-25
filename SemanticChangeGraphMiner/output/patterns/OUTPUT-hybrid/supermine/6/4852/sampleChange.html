@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+vgg = nn.Sequential(*list(vgg.children())[:31])
+network = net.Net(vgg, decoder)
+
+<a id="change">for name in [&quotenc_1&quot, &quotenc_2&quot, &quotenc_3&quot, &quotenc_4&quot]:
+    for param in getattr(network, name).parameters():
+        param.requires_grad = False
+</a>network.train()
+network.cuda()
+
+content_tf = train_transform()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if (i + 1) % args.save_model_interval == 0 or (i + 1) == args.max_iter:
+        state_dict = net.decoder.state_dict()
+        <a id="change">for key in state_dict.keys():
+            state_dict[key] = state_dict[key].to(torch.device(&quotcpu&quot))
+       </a> torch.save(state_dict,
+                   &quot{:s}/decoder_iter_{:d}.pth.tar&quot.format(args.save_dir,
+                                                           i + 1))
+writer.close()</code></pre>

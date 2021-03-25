@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                collected_associated_files = []
+                invalid_files = []
+                for algorithm in IMAGE_BUILDER_ALGORITHMS:
+                    <a id="change">new_images</a>, new_associated_image_files, new_invalid_files = \
+                        algorithm(tmp_dir)
+
+                    collected_images += new_images
+                    <a id="change">collected_associated_files += new_associated_image_files</a>
+                    invalid_files += list(new_invalid_files.keys())
+
+                    for used_file in new_associated_image_files:
+                        filename = used_file.file.name</code></pre><h3>After Change</h3><pre><code class='java'>
+                    algorithm_result: ImageBuilderResult
+
+                    collected_images += list(algorithm_result.new_images)
+                    <a id="change">collected_associated_files += \
+                        list(algorithm_result.new_image_files)</a>
+
+                    for filename in algorithm_result.consumed_files:
+                        if filename in unconsumed_filenames:
+                            unconsumed_filenames.remove(filename)</code></pre>

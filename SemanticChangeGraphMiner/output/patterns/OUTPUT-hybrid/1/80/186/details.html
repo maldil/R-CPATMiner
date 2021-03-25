@@ -1,0 +1,167 @@
+<html><h3>ccbaf353bcd6121c50b4de0965177480b8f6eb48,copy_problem_100/rwa_model/train.py,,,#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	g = tf.matmul(xh_join, W_g)+b_g
+	<a id="change">u</a> = tf.matmul(x_step, W_u)+b_u
+	q = tf.matmul(xh_join, W_a)+b_a
+
+	q_greater = tf.maximum(q, 0.0)	&#47&#47 Greater of the exponent term or zero
+	<a id="change">scale</a> = tf.exp(<a id="change">-q_greater</a>)
+	<a id="change">a_scale</a> = tf.exp(<a id="change">q-q_greater</a>)
+
+	n = <a id="change">tf.mul(n, scale)+tf.mul(tf.mul(u, tf.nn.tanh(g)), a_scale)</a>	&#47&#47 Numerically stable update of numerator
+	<a id="change">d</a> = tf.mul(d, scale)+a_scale	&#47&#47 Numerically stable update of denominator
+	<a id="change">h</a> = activation(tf.div(n, d))
+
+	<a id="change">ly</a> = tf.matmul(h, W_o)+b_o
+
+	<a id="change">error_step</a> = tf.nn.softmax_cross_entropy_with_logits(ly, y[:,i,:])	&#47&#47 Cross-entropy cost function
+	<a id="change">error</a> += tf.select(tf.greater(l, i), error_step, tf.zeros([batch_size]))	&#47&#47 Include cost from this step only if the sequence length has not been exceeded
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Optimizer
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Optimizer
+&#47&#47
+<a id="change">cost</a> = tf.reduce_mean(tf.div(error, l))
+<a id="change">optimizer</a> = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Train
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Operation to initialize session
+&#47&#47
+initializer = tf.global_variables_initializer()
+
+&#47&#47 Open session
+&#47&#47
+with tf.Session() as session:
+
+	&#47&#47 Initialize variables
+	&#47&#47
+	session.run(initializer)
+
+	&#47&#47 Each training session represents one batch
+	&#47&#47
+	for iteration in range(num_iterations):
+
+		&#47&#47 Grab a batch of training data
+		&#47&#47
+		xs, ls, ys = dp.train.batch(batch_size)
+		feed = {x: xs, l: ls, y: ys}
+
+		&#47&#47 Update parameters
+		&#47&#47
+		<a id="change">out</a> = session.run((cost,  optimizer), feed_dict=feed)
+		print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottrain&quot, &quotCost:&quot, out[0]/np.log(2.0))
+
+		&#47&#47 Periodically run model on test data
+		&#47&#47
+		if iteration%100 == 0:
+
+			&#47&#47 Grab a batch of test data
+			&#47&#47
+			xs, ls, ys = dp.test.batch(batch_size)
+			feed = {x: xs, l: ls, y: ys}
+
+			&#47&#47 Run model
+			&#47&#47
+			<a id="change">out</a> = session.run(cost, feed_dict=feed)
+			print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottest&quot, &quotCost:&quot, out/np.log(2.0))
+
+	&#47&#47 Save the trained model</code></pre><h3>After Change</h3><pre><code class='java'>
+n = tf.zeros([batch_size, num_cells])
+d = tf.zeros([batch_size, num_cells])
+h = tf.zeros([batch_size, num_cells])
+<a id="change">a_max</a> = <a id="change">tf.fill([batch_size, num_cells], -1E38)</a>	&#47&#47 Start off with lowest number possible
+
+&#47&#47 Define model
+&#47&#47
+error = tf.zeros([batch_size])
+h += activation(tf.expand_dims(s, 0))
+
+for i in range(max_steps):
+
+	x_step = x[:,i,:]
+	xh_join = tf.concat(1, [x_step, h])	&#47&#47 Combine the features and hidden state into one tensor
+
+	<a id="change">u</a> = tf.matmul(x_step, W_u)+b_u
+	g = tf.matmul(xh_join, W_g)+b_g
+	a = tf.matmul(xh_join, W_a)+b_a
+
+	<a id="change">z</a> = <a id="change">tf.mul(u, tf.nn.tanh(g))</a>
+
+	<a id="change">a_newmax</a> = tf.maximum(a_max, a)
+	<a id="change">exp_diff</a> = tf.exp(<a id="change">a_max-a_newmax</a>)
+	<a id="change">exp_scaled</a> = tf.exp(<a id="change">a-a_newmax</a>)
+
+	n = <a id="change">tf.mul(n, exp_diff)+tf.mul(z, exp_scaled)</a>	&#47&#47 Numerically stable update of numerator
+	<a id="change">d</a> = tf.mul(d, exp_diff)+exp_scaled	&#47&#47 Numerically stable update of denominator
+	<a id="change">h</a> = activation(tf.div(n, d))
+	<a id="change">a_max</a> = <a id="change">a_newmax</a>
+
+	<a id="change">ly</a> = tf.matmul(h, W_o)+b_o
+
+	<a id="change">error_step</a> = tf.nn.softmax_cross_entropy_with_logits(ly, y[:,i,:])	&#47&#47 Cross-entropy cost function
+	<a id="change">error</a> += tf.select(tf.greater(l, i), error_step, tf.zeros([batch_size]))	&#47&#47 Include cost from this step only if the sequence length has not been exceeded
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Optimizer
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Optimizer
+&#47&#47
+<a id="change">cost</a> = tf.reduce_mean(tf.div(error, l))
+<a id="change">optimizer</a> = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Train
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+&#47&#47 Operation to initialize session
+&#47&#47
+initializer = tf.global_variables_initializer()
+
+&#47&#47 Open session
+&#47&#47
+with tf.Session() as session:
+
+	&#47&#47 Initialize variables
+	&#47&#47
+	session.run(initializer)
+
+	&#47&#47 Each training session represents one batch
+	&#47&#47
+	for iteration in range(num_iterations):
+
+		&#47&#47 Grab a batch of training data
+		&#47&#47
+		xs, ls, ys = dp.train.batch(batch_size)
+		feed = {x: xs, l: ls, y: ys}
+
+		&#47&#47 Update parameters
+		&#47&#47
+		<a id="change">out</a> = session.run((cost,  optimizer), feed_dict=feed)
+		print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottrain&quot, &quotCost:&quot, out[0]/np.log(2.0))
+
+		&#47&#47 Periodically run model on test data
+		&#47&#47
+		if iteration%100 == 0:
+
+			&#47&#47 Grab a batch of test data
+			&#47&#47
+			xs, ls, ys = dp.test.batch(batch_size)
+			feed = {x: xs, l: ls, y: ys}
+
+			&#47&#47 Run model
+			&#47&#47
+			<a id="change">out</a> = session.run(cost, feed_dict=feed)
+			print(&quotIteration:&quot, iteration, &quotDataset:&quot, &quottest&quot, &quotCost:&quot, out/np.log(2.0))
+
+	&#47&#47 Save the trained model</code></pre><img src="1205522.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 15</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/ccbaf353bcd6121c50b4de0965177480b8f6eb48#diff-881fb0d7f567825e7582a06d5618b3324a84e4d6ec6d2565acc0e71e983e0617L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: ccbaf353bcd6121c50b4de0965177480b8f6eb48</div><div id='time'> Time: 2017-03-11</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: copy_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/ccbaf353bcd6121c50b4de0965177480b8f6eb48#diff-9af6483f1996064b86d5fd2a318794a680c4c3629ccd45c7f674de9bfd781a68L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: ccbaf353bcd6121c50b4de0965177480b8f6eb48</div><div id='time'> Time: 2017-03-11</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: adding_problem_1000/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/ccbaf353bcd6121c50b4de0965177480b8f6eb48#diff-881fb0d7f567825e7582a06d5618b3324a84e4d6ec6d2565acc0e71e983e0617L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: ccbaf353bcd6121c50b4de0965177480b8f6eb48</div><div id='time'> Time: 2017-03-11</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: copy_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/ccbaf353bcd6121c50b4de0965177480b8f6eb48#diff-27e421b87f69b4c02403a4485730123bcdcab610493aba32ffafc40b53c2e5b8L26' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: ccbaf353bcd6121c50b4de0965177480b8f6eb48</div><div id='time'> Time: 2017-03-11</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: adding_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

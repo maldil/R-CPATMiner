@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.up2 = UNetUp(1024, 512, dropout=0.5)
+        self.up3 = UNetUp(1024, 256, dropout=0.5)
+        self.up4 = UNetUp(512, 128)
+        <a id="change">self.up5</a> = <a id="change">UNetUp(256, 64)</a>
+
+
+        final = [   nn.Upsample(scale_factor=2),
+                    nn.Conv2d(128, out_channels, 3, 1, 1),</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.down4 = UNetDown(256, 512, dropout=0.5)
+        self.down5 = UNetDown(512, 512, dropout=0.5)
+        self.down6 = UNetDown(512, 512, dropout=0.5)
+        <a id="change">self.down7 = UNetDown(512, 512, dropout=0.5)</a>
+
+        self.up1 = UNetUp(512, 512, dropout=0.8)
+        self.up2 = UNetUp(1024, 512, dropout=0.5)
+        self.up3 = UNetUp(1024, 512, dropout=0.5)
+        self.up4 = UNetUp(1024, 256, dropout=0.5)
+        <a id="change">self.up5</a> = UNetUp(512, 128)
+        <a id="change">self.up6 = UNetUp(256, 64)</a>
+
+
+        final = [   nn.Upsample(scale_factor=2),
+                    nn.Conv2d(128, out_channels, 3, 1, 1),</code></pre>

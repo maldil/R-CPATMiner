@@ -1,0 +1,46 @@
+<html><h3>8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628,tests/layer/test_rgcn.py,,test_RGCN_apply_sparse,#,182
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    <a id="change">A_indices</a> = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None]))</a>, 0) for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]
+
+    generator = RelationalFullBatchNodeGenerator(G, sparse=True)
+    rgcnModel = RGCN([2], generator, num_bases=10, activations=["relu"], dropout=0.5)
+
+    x_in, x_out = rgcnModel.in_out_tensors()
+    model = keras.Model(inputs=x_in, outputs=x_out)
+
+    &#47&#47 Check fit method
+    out_indices = np.array([[0, 1]], dtype="int32")
+    <a id="change">preds_1</a> = model.predict([features[None, :, :], out_indices] + A_indices + A_values)
+    assert preds_1.shape == (1, 2, 2)
+
+    &#47&#47 Check fit method</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    As = get_As(G)
+    As = [A.tocoo() for A in As]
+    <a id="change">A_indices</a> = [
+        np.expand_dims(<a id="change">np.hstack((A.row[:, None], A.col[:, None])).astype(np.int64)</a>, 0)
+        for A in As
+    ]
+    A_values = [np.expand_dims(A.data, 0) for A in As]
+
+    generator = RelationalFullBatchNodeGenerator(G, sparse=True)
+    rgcnModel = RGCN([2], generator, num_bases=10, activations=["relu"], dropout=0.5)
+
+    x_in, x_out = rgcnModel.in_out_tensors()
+    model = keras.Model(inputs=x_in, outputs=x_out)
+
+    &#47&#47 Check fit method
+    out_indices = np.array([[0, 1]], dtype="int32")
+    <a id="change">preds_1</a> = model.predict([features[None, :, :], out_indices] + A_indices + A_values)
+    assert preds_1.shape == (1, 2, 2)
+
+    &#47&#47 Check fit method</code></pre><img src="730955.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 9</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-d5b7d4bb10bb25818819f9a2a6a4d755947da4844ba974dd4b2ca9c6660bfefaL187' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_rgcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_RGCN_apply_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-c3fb2d2e76cc98b6147f36791db8ed3921f204860c990965674c52614824ca22L177' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_appnp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_APPNP_linkmodel_apply_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-d5b7d4bb10bb25818819f9a2a6a4d755947da4844ba974dd4b2ca9c6660bfefaL119' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_rgcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_RelationalGraphConvolution_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-c3fb2d2e76cc98b6147f36791db8ed3921f204860c990965674c52614824ca22L274' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_appnp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_APPNP_apply_propagate_model_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-d5b7d4bb10bb25818819f9a2a6a4d755947da4844ba974dd4b2ca9c6660bfefaL241' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_rgcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_RGCN_apply_sparse_directed</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-7a53d300fc3c61eae342a46673342df6fa98b73944fdd6cb1dbee5b09f6122e0L229' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_gcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_GCN_linkmodel_apply_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-c3fb2d2e76cc98b6147f36791db8ed3921f204860c990965674c52614824ca22L126' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_appnp.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_APPNP_apply_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-7a53d300fc3c61eae342a46673342df6fa98b73944fdd6cb1dbee5b09f6122e0L176' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_gcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_GCN_apply_sparse</div><BR><BR><div id='link'><a href='https://github.com/stellargraph/stellargraph/commit/8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628#diff-7a53d300fc3c61eae342a46673342df6fa98b73944fdd6cb1dbee5b09f6122e0L111' target='_blank'>Link</a></div><div id='project'> Project Name: stellargraph/stellargraph</div><div id='commit'> Commit Name: 8f9cabbf7f1adb9ef680f6c3cf2067a8c8f7a628</div><div id='time'> Time: 2020-06-24</div><div id='author'> Author: Huon.Wilson@data61.csiro.au</div><div id='file'> File Name: tests/layer/test_gcn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_GraphConvolution_sparse</div><BR>

@@ -1,0 +1,23 @@
+<html><h3>240d23ec41ee51c72a69fda93148cb534a6688ec,aif360/algorithms/inprocessing/meta_fair_classifier.py,MetaFairClassifier,fit,#MetaFairClassifier#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        sens_index = dataset.feature_names.index(self.sensitive_attr)
+
+        x_train = dataset.features
+        y_train = np.array([1 if y == <a id="change">[dataset.favorable_label]</a> else
+                           -1 for y in dataset.labels])
+        x_control_train = x_train[:, sens_index].copy()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        x_train = dataset.features
+        y_train = np.where(dataset.labels.flatten() == dataset.favorable_label,
+                           1, -1)
+        <a id="change">x_control_train = np.where(
+                np.isin(dataset.protected_attributes[:, sens_idx],
+                        dataset.privileged_protected_attributes[sens_idx]),
+                1, 0)</a>
+
+        self.model = self.obj.getModel(self.tau, x_train, y_train,
+            x_control_train, self.seed)
+</code></pre><img src="35158076.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/240d23ec41ee51c72a69fda93148cb534a6688ec#diff-c66af5dc06bf677a414d2c4868ac9ddb6e367e5a733449cc17325495742e3cd3L45' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: 240d23ec41ee51c72a69fda93148cb534a6688ec</div><div id='time'> Time: 2020-08-05</div><div id='author'> Author: hoffman.sc@gmail.com</div><div id='file'> File Name: aif360/algorithms/inprocessing/meta_fair_classifier.py</div><div id='class'> Class Name: MetaFairClassifier</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/f1dd50395b7021c5194b3bd8e5c2900873c91f35#diff-07f01aa8b62b6b1dd8dc6f527f5fcb5ac6651380e7ce371ad50f490701c2772dL8' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: f1dd50395b7021c5194b3bd8e5c2900873c91f35</div><div id='time'> Time: 2015-03-13</div><div id='author'> Author: se.raschka@me.com</div><div id='file'> File Name: tests/tests_classifier/test_perceptron.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/tensorflow/ranking/commit/6bf3f51cd0a312da842157665663c2dad9983248#diff-ac0a8b23265c0fdd56da5d2709bf0e7dfce716e2713c8c9fd8d44f4fd9461ff7L930' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/ranking</div><div id='commit'> Commit Name: 6bf3f51cd0a312da842157665663c2dad9983248</div><div id='time'> Time: 2021-01-29</div><div id='author'> Author: xuanhui@google.com</div><div id='file'> File Name: tensorflow_ranking/python/losses_impl.py</div><div id='class'> Class Name: ClickEMLoss</div><div id='method'> Method Name: _compute_latent_prob</div><BR>

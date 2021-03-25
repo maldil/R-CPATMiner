@@ -1,0 +1,24 @@
+<html><h3>ec01f586b20cc3e9e15146e71d9248301ba277ae,tgen/rank.py,PerceptronRanker,_get_rival_candidates,#PerceptronRanker#,250
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 candidates generated using the random planner (use the current DA)
+        if &quotrandom&quot in self.rival_gen_strategy:
+            random_doc = self.random_candgen.generate_tree(da)
+            <a id="change">for _ in xrange(self.rival_number - 1):
+                self.random_candgen.generate_tree(da, random_doc)
+           </a> rival_ttrees.extend(ttrees_from_doc(random_doc, self.language, self.selector))
+            rival_feats.extend([self.vectorizer.transform(self.feats.get_features(ttree, {&quotda&quot: da}))
+                                for ttree in rival_ttrees])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            random_doc = None
+            while random_doc is None or (len(random_doc.bundles) &lt; self.rival_number):
+                random_doc = self.random_candgen.generate_tree(da, random_doc)
+                <a id="change">if (random_doc.bundles[-1].get_zone(self.language, self.selector).ttree
+                    == train_ttrees[gold_ttree_no]):  &#47&#47 don&quott generate trees identical to the gold one
+                    del random_doc.bundles[-1]
+           </a> random_ttrees = ttrees_from_doc(random_doc, self.language, self.selector)
+            rival_ttrees.extend(random_ttrees)
+            rival_feats.extend([self.vectorizer.transform(self.feats.get_features(ttree, {&quotda&quot: da}))
+                                for ttree in random_ttrees])</code></pre><img src="14995158.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/ec01f586b20cc3e9e15146e71d9248301ba277ae#diff-8a38dc0f58c29d4066f37a4649bddd620f2139bc7272bb5e2b07fd502edb75a3L248' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: ec01f586b20cc3e9e15146e71d9248301ba277ae</div><div id='time'> Time: 2014-07-02</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank.py</div><div id='class'> Class Name: PerceptronRanker</div><div id='method'> Method Name: _get_rival_candidates</div><BR><BR><div id='link'><a href='https://github.com/jaakkopasanen/AutoEq/commit/5798262e2f9d254f37cbe762f89747b7049a8acc#diff-f60dcd75745b8a69ac22a06a74d67db4aa9bd70ee559c204e7e467a96df09147L97' target='_blank'>Link</a></div><div id='project'> Project Name: jaakkopasanen/AutoEq</div><div id='commit'> Commit Name: 5798262e2f9d254f37cbe762f89747b7049a8acc</div><div id='time'> Time: 2020-10-18</div><div id='author'> Author: jaakko.o.pasanen@gmail.com</div><div id='file'> File Name: measurements/crinacle/crinacle_crawler.py</div><div id='class'> Class Name: CrinacleCrawler</div><div id='method'> Method Name: get_urls</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/2e2fcd1c79a70e5cb7a9bae8b09dca2919041e39#diff-955d28881832469ea2b02793af25ea54cee186fcbfc2828a65539b6e7f566f00L34' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 2e2fcd1c79a70e5cb7a9bae8b09dca2919041e39</div><div id='time'> Time: 2015-02-01</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/ExactInference.py</div><div id='class'> Class Name: VariableElimination</div><div id='method'> Method Name: _variable_elimination</div><BR>

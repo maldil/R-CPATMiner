@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            grep_queue_timestamps.append(get_line_epoch(line))
+
+    &#47&#47 Get the last timestamp to use as max in the graphs
+    last_timestamp = <a id="change">get_line_epoch(line)</a>
+
+    if not grep_queue_sizes:
+        print(&quotNo audit consumer queue size data found&quot)
+        return</code></pre><h3>After Change</h3><pre><code class='java'>
+            grep_queue_timestamps.append(get_line_epoch(line))
+
+    &#47&#47 Get the last timestamp to use as max in the graphs
+    <a id="change">first_timestamp = get_first_timestamp(scan)</a>
+    last_timestamp = <a id="change">get_last_timestamp(scan)</a>
+    <a id="change">spent_time_epoch = last_timestamp - first_timestamp</a>
+    <a id="change">grep_queue_timestamps = [ts - first_timestamp for ts in grep_queue_timestamps]</a>
+
+    if not grep_queue_sizes:
+        print(&quotNo grep consumer queue size data found&quot)
+        return</code></pre>

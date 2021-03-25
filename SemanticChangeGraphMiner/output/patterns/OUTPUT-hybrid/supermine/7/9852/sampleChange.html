@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Compute probability distribution
+        &#47&#47 logprob, responsibilities = self._gmm.eval(x)
+        if len(x.shape) == 1:
+            <a id="change">x = x.reshape((x.shape[0], 1))</a>
+        logprob, responsibilities = self._gmm.score_samples(x)
+        return np.exp(logprob)
+
+    def pdf_individual(self, x):</code></pre><h3>After Change</h3><pre><code class='java'>
+        Compute probability distribution
+        &#47&#47 logprob, responsibilities = self._gmm.eval(x)
+        if x.ndim == 1:
+            x = <a id="change">x[:, np.newaxis]</a>
+        logprob, responsibilities = self._gmm.score_samples(x)
+        return np.exp(logprob)
+
+    def pdf_individual(self, x):</code></pre>

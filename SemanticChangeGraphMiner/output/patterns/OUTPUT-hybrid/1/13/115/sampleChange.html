@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            tensor: The product of the tensor along the specified axis.
+
+    
+    <a id="change">return numpy.prod(x, axis=axis, keepdims=keepdims)</a>
+
+def tany(x: T.Tensor, axis: int=None, keepdims: bool=False) -&gt; T.Boolean:
+    
+    Return True if any elements of the input tensor are true along the</code></pre><h3>After Change</h3><pre><code class='java'>
+            tensor: The product of the tensor along the specified axis.
+
+    
+    <a id="change">if axis is not None:
+        tmp = numpy.prod(x, axis=axis, keepdims=True)
+        if keepdims:
+            return tmp
+        else:
+            return flatten(tmp)
+    else:
+        return numpy.prod(x)
+
+</a>def tany(x: T.Tensor, axis: int=None, keepdims: bool=False) -&gt; T.Boolean:
+    
+    Return True if any elements of the input tensor are true along the
+    specified axis.</code></pre>

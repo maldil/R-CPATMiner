@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    cublasCheckStatus(status)
+
+
+<a id="change">if __name__ == "__main__":
+    import doctest
+    doctest.testmod()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                            int(A), lda, int(P),
+                                            int(C), ldc, int(info),
+                                            batchSize)                                            
+<a id="change">if _cublas_version &gt;= 5000:
+    _libcublas.cublasSdgmm.restype = \
+    _libcublas.cublasDdgmm.restype = \
+    _libcublas.cublasCdgmm.restype = \
+    _libcublas.cublasZdgmm.restype = int
+
+    _libcublas.cublasSdgmm.argtypes = \
+    _libcublas.cublasDdgmm.argtypes = \
+    _libcublas.cublasCdgmm.argtypes = \
+    _libcublas.cublasZdgmm.argtypes =  [_types.handle,
+                                        ctypes.c_int,
+                                        ctypes.c_int,
+                                        ctypes.c_int,
+                                        ctypes.c_void_p,
+                                        ctypes.c_int,
+                                        ctypes.c_void_p,
+                                        ctypes.c_int,
+                                        ctypes.c_void_p,
+                                        ctypes.c_int]
+</a>@_cublas_version_req(5.0)
+def cublasSdgmm(handle, side, m, n, A, lda, x, incx, C, ldc):
+    
+    Multiplies a matrix with a diagonal matrix.</code></pre>

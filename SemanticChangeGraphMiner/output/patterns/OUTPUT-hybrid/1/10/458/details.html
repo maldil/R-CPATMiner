@@ -1,0 +1,25 @@
+<html><h3>5b2327e051d5243f80b9b9f39f6800bbc8749bed,PyInstaller/utils/misc.py,,compile_py_files,#,101
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                obj_fnm = os.path.join(leading, mod_name + ext)
+                &#47&#47 TODO see above regarding read()[:4] versus read(4)
+                <a id="change">needs_compile</a> = (mtime(src_fnm) &gt; mtime(obj_fnm)
+                                 or
+                                 <a id="change">open</a>(obj_fnm, &quotrb&quot).read()[:4] != BYTECODE_MAGIC)
+                if needs_compile:
+                    &#47&#47 TODO see above todo regarding using node.code
+                    py_compile.compile(src_fnm, obj_fnm)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                obj_fnm = os.path.join(leading, mod_name + ext)
+                &#47&#47 TODO see above regarding read()[:4] versus read(4)
+                <a id="change">needs_compile</a> = mtime(src_fnm) &gt; mtime(obj_fnm)
+                if not needs_compile:
+                    <a id="change">with open(obj_fnm, &quotrb&quot) as fh:
+                        needs_compile = fh.read()[:4] != BYTECODE_MAGIC
+               </a> if needs_compile:
+                    &#47&#47 TODO see above todo regarding using node.code
+                    py_compile.compile(src_fnm, obj_fnm)
+                    logger.debug("compiled %s", src_fnm)</code></pre><img src="2541350.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/5b2327e051d5243f80b9b9f39f6800bbc8749bed#diff-642b0a93aa4524d83f8ab6e8961cc100b3362ad7a12c8310d08067e02e361fd7L148' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 5b2327e051d5243f80b9b9f39f6800bbc8749bed</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: contact@tiger-222.fr</div><div id='file'> File Name: PyInstaller/utils/misc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compile_py_files</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/5b2327e051d5243f80b9b9f39f6800bbc8749bed#diff-9253386dccb0c1f9219c858826229bac6572a8bbbab1d0b8f00de83a9098fdcbL494' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 5b2327e051d5243f80b9b9f39f6800bbc8749bed</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: contact@tiger-222.fr</div><div id='file'> File Name: tests/old_suite/runtests.py</div><div id='class'> Class Name: BuildTestRunner</div><div id='method'> Method Name: test_logs</div><BR>

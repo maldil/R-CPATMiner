@@ -1,0 +1,21 @@
+<html><h3>72313bc158d57e1f36e2c17848338a3079982def,ch16/01_cartpole_es.py,,train_step,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    opt.zero_grad()
+    for p, p_update in zip(net.parameters(), weighted_noise):
+        update = p_update / (len(batch_reward) * NOISE_STD)
+        <a id="change">p.grad = Variable(update)</a>
+&#47&#47        p.data += LEARNING_RATE * update
+&#47&#47        m_updates.append(torch.norm(update))
+    opt.step()
+    writer.add_scalar("update_l2", np.mean(m_updates), step_idx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    for p, p_update in zip(net.parameters(), weighted_noise):
+        update = p_update / (len(batch_reward) * NOISE_STD)
+        p.data += LEARNING_RATE * update
+        <a id="change">m_updates.append(torch.norm(update))</a>
+    writer.add_scalar("update_l2", np.mean(m_updates), step_idx)
+
+
+if __name__ == "__main__":</code></pre><img src="12850470.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/72313bc158d57e1f36e2c17848338a3079982def#diff-e9d4b5961dd97356fd5848a5e4c82c945d873dfd9979d05ec858c859e512ff19L80' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 72313bc158d57e1f36e2c17848338a3079982def</div><div id='time'> Time: 2018-02-20</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch16/01_cartpole_es.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_step</div><BR><BR><div id='link'><a href='https://github.com/activatedgeek/LeNet-5/commit/b9d7f39a752d23a7de60ea6d679812c401fab57e#diff-d6af0459a37d985953d7040c14f53feb3b9cc9e58b543aa3c2b80256d276c5e0L46' target='_blank'>Link</a></div><div id='project'> Project Name: activatedgeek/LeNet-5</div><div id='commit'> Commit Name: b9d7f39a752d23a7de60ea6d679812c401fab57e</div><div id='time'> Time: 2019-01-01</div><div id='author'> Author: 1sanyamkapoor@gmail.com</div><div id='file'> File Name: run.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/f4ca9b361adb382423c753f7f864a5dd0e454964#diff-0e4135cb1d95a5c7db5f0c86f21da5b047bdaf0b946fe240418cfafe4393517fL53' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: f4ca9b361adb382423c753f7f864a5dd0e454964</div><div id='time'> Time: 2017-05-12</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/tensor_transforms.py</div><div id='class'> Class Name: ToVariable</div><div id='method'> Method Name: __call__</div><BR>

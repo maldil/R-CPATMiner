@@ -1,0 +1,24 @@
+<html><h3>34eabb02f5882fba7db0cff82c302164c9f7e795,mindsdb/utilities/log.py,DbHandler,emit,#DbHandler#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if log_type in [&quotERROR&quot, &quotWARNING&quot]:
+            trace = traceback.format_stack(limit=20)
+            trac_log = Log(log_type=&quottraceback&quot, source=source, payload=<a id="change">str(trace)</a>, company_id=self.company_id)
+            session.add(trac_log)
+            session.commit()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            session.commit()
+
+            try:
+                requests.get("https://public.api.mindsdb.com/error",timeout=1, params=<a id="change">{
+                    &quotlog_type&quot: &quottraceback&quot
+                    ,&quotsource&quot: source
+                    ,&quotpayload&quot: trace
+                    ,&quotcompany_id&quot: str(self.company_id)
+                }</a>)
+            except Exception as e:
+                pass
+</code></pre><img src="24086383.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mindsdb/mindsdb/commit/34eabb02f5882fba7db0cff82c302164c9f7e795#diff-4b01d1d745bff7c77116083cb902bdd746f40a7e074d7a58d21ff3388e40cdf9L32' target='_blank'>Link</a></div><div id='project'> Project Name: mindsdb/mindsdb</div><div id='commit'> Commit Name: 34eabb02f5882fba7db0cff82c302164c9f7e795</div><div id='time'> Time: 2021-02-09</div><div id='author'> Author: george@cerebralab.com</div><div id='file'> File Name: mindsdb/utilities/log.py</div><div id='class'> Class Name: DbHandler</div><div id='method'> Method Name: emit</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/5a083a388e89fe242ac1adff22926a55553e4615#diff-e3127a2e63b433b03af290ae8dc0f2220ae45c4adfd1c2b3be0d5bbfdcc81efdL248' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 5a083a388e89fe242ac1adff22926a55553e4615</div><div id='time'> Time: 2007-06-03</div><div id='author'> Author: pwang@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco2/data_label.py</div><div id='class'> Class Name: DataLabel</div><div id='method'> Method Name: _data_point_changed</div><BR><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/c6418175813007be62406bfb35b42441202b017a#diff-a6d869978abc92f5dd1bc4554d9c0234b65e11fc394f787a1ff0b57eb7a6459dL189' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: c6418175813007be62406bfb35b42441202b017a</div><div id='time'> Time: 2018-03-03</div><div id='author'> Author: maau@itu.dk</div><div id='file'> File Name: create_website.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_latex_plot</div><BR>

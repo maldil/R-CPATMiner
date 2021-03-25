@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if max_order == 2:
+        output_size += order2_size
+
+    <a id="change">out_S_0, out_S_1, out_S_2 = [], [], []</a>
+
+    U_r = pad(x)
+
+    U_0_c = fft(U_r, &quotC2C&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+            S_2_r = fft(S_2_c, &quotC2R&quot, inverse=True)
+            S_2_r = unpad(S_2_r)
+
+            <a id="change">S[..., n_order2, :, :] = S_2_r.squeeze(-3)</a>
+            n_order2 += 1
+
+    return S
+</code></pre>

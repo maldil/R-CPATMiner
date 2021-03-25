@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.initial_dropout = RandomDropout(0.4)
+
+        self.SA_module0 = <a id="change">PointnetSAModule(
+            npoint=1024,
+            radius=0.1,
+            nsample=32,
+            mlp=[input_channels, 32, 32, 64])</a>
+        self.SA_module1 = PointnetSAModule(
+            npoint=256, radius=0.2, nsample=32, mlp=[64 + 3, 64, 64, 128])
+        self.SA_module2 = PointnetSAModule(
+            npoint=64, radius=0.4, nsample=32, mlp=[128 + 3, 128, 128, 256])
+        self.SA_module3 = PointnetSAModule(
+            npoint=16, radius=0.8, nsample=32, mlp=[256 + 3, 256, 256, 512])
+
+        self.FP_module0 = PointnetFPModule(mlp=[512 + 256, 256, 256])
+        self.FP_module1 = PointnetFPModule(mlp=[256 + 128, 256, 256])
+        self.FP_module2 = <a id="change">PointnetFPModule(mlp=[256 + 64, 256, 128])</a>
+        self.FP_module3 = PointnetFPModule(mlp=[128 + 6, 128, 128, 128])
+
+        self.FC_layer = nn.Sequential(
+            pt_utils.Conv1d(128, 128, bn=True), nn.Dropout(),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.initial_dropout = RandomDropout(0.4)
+
+        <a id="change">self.SA_modules</a> = nn.ModuleList()
+        <a id="change">self.SA_modules.append(
+            PointnetSAModule(
+                npoint=1024,
+                radius=0.1,
+                nsample=32,
+                mlp=[input_channels, 32, 32, 64]))</a>
+        self.SA_modules.append(
+            PointnetSAModule(
+                npoint=256, radius=0.2, nsample=32, mlp=[64 + 3, 64, 64, 128]))
+        self.SA_modules.append(
+            PointnetSAModule(
+                npoint=64,
+                radius=0.4,
+                nsample=32,
+                mlp=[128 + 3, 128, 128, 256]))
+        self.SA_modules.append(
+            PointnetSAModule(
+                npoint=16,
+                radius=0.8,
+                nsample=32,
+                mlp=[256 + 3, 256, 256, 512]))
+
+        <a id="change">self.FP_modules</a> = nn.ModuleList()
+        self.FP_modules.append(PointnetFPModule(mlp=[128 + input_channels - 3, 128, 128, 128]))
+        <a id="change">self.FP_modules.append(PointnetFPModule(mlp=[256 + 64, 256, 128]))</a>
+        self.FP_modules.append(PointnetFPModule(mlp=[256 + 128, 256, 256]))
+        self.FP_modules.append(PointnetFPModule(mlp=[512 + 256, 256, 256]))
+
+        self.FC_layer = nn.Sequential(</code></pre>

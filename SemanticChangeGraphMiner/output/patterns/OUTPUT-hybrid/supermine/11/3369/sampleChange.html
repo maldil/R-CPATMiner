@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            varActual = np.var(ref, axis=0)  &#47&#47 variance of each attribute
+            varInds = [1 if (i &lt; varExpect) else 0 for i in varActual]
+            relDim = sum(varInds)
+            score_ = <a id="change">np.sqrt(np.dot(varInds, np.square(obs - means))/relDim) if relDim &gt; 0 else 0.</a>
+            result.append(score_)
+        return np.array(result)
+
+    def __check_params(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        :return: numpy array containing the SOD outlier scores for each observation
+        
+        ref_inds = self.__snn(X)
+        <a id="change">res = np.zeros(shape=(X.shape[0], ))</a>
+        for i in range(X.shape[0]):
+            obs = X[i]
+            ref = X[ref_inds[i, ], ]
+            means = np.mean(ref, axis=0)  &#47&#47 mean of each column
+            &#47&#47 average squared distance of the reference to the mean
+            var_total = sum(sum(np.square(ref - means)))/self.ref_set_
+            var_expect = self.alpha_ * var_total / X.shape[1]
+            var_actual = np.var(ref, axis=0)  &#47&#47 variance of each attribute
+            var_inds = [1 if (i &lt; var_expect) else 0 for i in var_actual]
+            rel_dim = sum(var_inds)
+            if rel_dim != 0:
+                <a id="change">res[i] = np.sqrt(np.dot(var_inds, np.square(obs - means)) / rel_dim)</a>
+
+        <a id="change">return res</a>
+</code></pre>

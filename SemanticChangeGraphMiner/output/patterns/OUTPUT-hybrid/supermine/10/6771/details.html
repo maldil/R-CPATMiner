@@ -1,0 +1,28 @@
+<html><h3>22cb76a3479ceba89addb1f467c2dd573cb29026,pytext/torchscript/module.py,ScriptPyTextModuleWithDense,forward,#ScriptPyTextModuleWithDense#,100
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dense_tensor = torch.tensor(dense_feat, dtype=torch.float)
+        if self.tensorizer.device != "":
+            dense_tensor = dense_tensor.to(self.tensorizer.device)
+        <a id="change">logits = self.model(input_tensors, dense_tensor)</a>
+        <a id="change">return self.output_layer(logits)</a>
+
+
+class ScriptTwoTowerModule(torch.jit.ScriptModule):
+    @torch.jit.script_method</code></pre><h3>After Change</h3><pre><code class='java'>
+        languages: Optional[List[str]] = None,
+        dense_feat: Optional[List[List[float]]] = None,
+    ):
+        <a id="change">return self.forward_impl(
+            texts,
+            multi_texts,
+            tokens,
+            languages,
+            dense_feat,
+        )</a>
+
+
+class ScriptPyTextEmbeddingModuleWithDenseIndex(ScriptPyTextEmbeddingModuleWithDense):
+    def __init__(</code></pre><img src="26599969.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/22cb76a3479ceba89addb1f467c2dd573cb29026#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL101' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 22cb76a3479ceba89addb1f467c2dd573cb29026</div><div id='time'> Time: 2021-02-16</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: ScriptPyTextModuleWithDense</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/22cb76a3479ceba89addb1f467c2dd573cb29026#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL61' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 22cb76a3479ceba89addb1f467c2dd573cb29026</div><div id='time'> Time: 2021-02-16</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: ScriptPyTextModule</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/22cb76a3479ceba89addb1f467c2dd573cb29026#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL464' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 22cb76a3479ceba89addb1f467c2dd573cb29026</div><div id='time'> Time: 2021-02-16</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: ScriptPyTextEmbeddingModuleWithDense</div><div id='method'> Method Name: forward</div><BR>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    return x, y
+                return x
+        plist = [ndim-1] + list(range(0,ndim-1))
+        <a id="change">x = x.permute(*plist)</a>
+        if y is not None:
+            y = y.permute(*plist)
+            <a id="change">return x, y</a>
+        return x
+
+CHW = ChannelsFirst
+CDHW = ChannelsFirst</code></pre><h3>After Change</h3><pre><code class='java'>
+        for idx, _input in enumerate(inputs):
+            _input = _input.permute(*plist)
+            outputs.append(_input)
+        return <a id="change">outputs if idx &gt; 1 else outputs[0]</a>
+
+CHW = ChannelsFirst
+CDHW = ChannelsFirst
+</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._output = output
+        self._var_map = {var: i for i, var in enumerate(inputs + (output,))}
+        dist = dist.coalesce(inputs + (output,))
+        <a id="change">constraints = [i + dist.rvs[-1] for i in dist.rvs[:-1]]</a>
+        super(BROJAOptimizer, self).__init__(dist, constraints)
+
+
+    def objective(self, x):</code></pre><h3>After Change</h3><pre><code class='java'>
+        rv_mode : bool
+            Unused, provided for compatibility with parent class.
+        
+        dist = dist.coalesce((input,) + (<a id="change">sum(others, ())</a>,) + (output,))
+        constraints = [[0, 2], [1, 2]]
+        super(BROJAOptimizer, self).__init__(dist, constraints)
+</code></pre>

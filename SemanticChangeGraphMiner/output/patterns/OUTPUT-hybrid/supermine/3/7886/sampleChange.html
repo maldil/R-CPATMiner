@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    batch_array = tf.transpose(tf.reshape(tf.tile(tf.range(label_shape[0]),
+                                                  max_num_labels_tns), reverse(label_shape, 0)))
+    batch_ind = tf.boolean_mask(batch_array, dense_mask)
+    indices = <a id="change">tf.transpose(tf.reshape(concatenate([batch_ind, label_ind], axis=0), [2, -1]))</a>
+
+    vals_sparse = tf.gather_nd(labels, indices)
+
+    return tf.SparseTensor(tf.to_int64(indices), vals_sparse, tf.to_int64(label_shape))</code></pre><h3>After Change</h3><pre><code class='java'>
+    batch_ind = tf.boolean_mask(batch_array, dense_mask)
+
+    indices = concatenate([batch_ind, label_ind], axis=0)
+    indices = <a id="change">tf.transpose(tf.reshape(indices, [2, -1]))</a>
+
+    vals_sparse = tf.gather_nd(labels, indices)
+
+    <a id="change">indices = tf.to_int64(indices)</a>
+    label_shape = tf.to_int64(label_shape)
+    return tf.SparseTensor(indices, vals_sparse, label_shape)
+
+</code></pre>

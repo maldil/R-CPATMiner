@@ -1,0 +1,34 @@
+<html><h3>5eeca7d385178092790e08c1d5ad6cbcff35d3dc,nilmtk/metergroup.py,MeterGroup,load,#MeterGroup#,518
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    chunk = chunk_from_next_meter
+                    timeframe = chunk.timeframe
+                elif len(chunk_from_next_meter) &gt; 0:
+                    n = <a id="change">len(chunk)</a>
+                    timeframe = timeframe.intersect(chunk_from_next_meter.timeframe)
+                    chunk += chunk_from_next_meter
+                    chunk = chunk.dropna()
+                    if len(chunk) &lt; n:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                &#47&#47 Update columns_to_average_counter
+                physical_quantities = chunk_from_next_meter.columns.get_level_values(&quotphysical_quantity&quot)
+                <a id="change">columns_to_average = (set(PHYSICAL_QUANTITIES_TO_AVERAGE)
+                                      .intersection(physical_quantities))</a>
+                counter_increment = <a id="change">pd.DataFrame(1, columns=columns_to_average, 
+                                                 index=chunk_from_next_meter.index)</a>
+                columns_to_average_counter = columns_to_average_counter.add(
+                    counter_increment, fill_value=0)
+
+            if chunk.empty:
+                break
+
+            &#47&#47 Divide any columns which need dividing to create mean values
+            <a id="change">for column in columns_to_average_counter:
+                chunk[column] /= columns_to_average_counter[column]
+
+           </a> chunk.timeframe = timeframe
+            yield chunk
+
+    def plot_when_on(self, **load_kwargs):</code></pre><img src="38088741.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/5eeca7d385178092790e08c1d5ad6cbcff35d3dc#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL581' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 5eeca7d385178092790e08c1d5ad6cbcff35d3dc</div><div id='time'> Time: 2014-12-11</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: MeterGroup</div><div id='method'> Method Name: load</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/ff5e5677fc969ccee18b0d1f537e96aff0ab8e0c#diff-8fa522ed249a74b656146370c9fc5f93e5bead2a2d2669026de8ab2a4ae1ec09L95' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: ff5e5677fc969ccee18b0d1f537e96aff0ab8e0c</div><div id='time'> Time: 2018-06-26</div><div id='author'> Author: 10246101+PMeira@users.noreply.github.com</div><div id='file'> File Name: nilmtk/disaggregate/hart_85.py</div><div id='class'> Class Name: PairBuffer</div><div id='method'> Method Name: pair_transitions</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/muse-lsl/commit/1ec0207376e3dcece97812f8ae40bc8d7ec9b208#diff-2dee6ac300955b3f59bbec03cf22b3ef7d5310f4c9c2b1971c8dcf630c9dca6dL43' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/muse-lsl</div><div id='commit'> Commit Name: 1ec0207376e3dcece97812f8ae40bc8d7ec9b208</div><div id='time'> Time: 2017-11-10</div><div id='author'> Author: hubert@interaxon.ca</div><div id='file'> File Name: stimulus_presentation/generate_spatial_gratings.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/deeptools/HiCExplorer/commit/ae99b536ff30a731a1ae226e124867534a715bd4#diff-b2c64d20dd8be118bec7f2e29c5b0a390a3d30ae2bfb25cc7f1ae1814184d99aL304' target='_blank'>Link</a></div><div id='project'> Project Name: deeptools/HiCExplorer</div><div id='commit'> Commit Name: ae99b536ff30a731a1ae226e124867534a715bd4</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: 26085589+gtrichard@users.noreply.github.com</div><div id='file'> File Name: hicexplorer/hicPlotDistVsCounts.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/a48399dd824b40c3ac5b8d8fa838e14cc87e661e#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL384' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: a48399dd824b40c3ac5b8d8fa838e14cc87e661e</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_featureset</div><BR>

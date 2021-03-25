@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def normal_init(ops: Ops, shape: Shape, *, fan_in: int = -1) -&gt; FloatsXd:
+    if fan_in == -1:
+        fan_in = shape[1]
+    <a id="change">scale</a> = <a id="change">ops.xp.sqrt(1.0 / fan_in)</a>
+    size = int(ops.xp.prod(ops.xp.asarray(shape)))
+    <a id="change">inits</a> = numpy.random.normal(scale=scale, size=size).astype("float32")
+    <a id="change">inits</a> = ops.reshape_f(inits, shape)
+    return ops.asarray_f(inits)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def normal_init(ops: Ops, shape: Shape, *, fan_in: int = -1) -&gt; FloatsXd:
+    if fan_in == -1:
+        fan_in = shape[1]
+    <a id="change">scale</a> = float(<a id="change">ops.xp.sqrt(1.0 / fan_in)</a>)
+    size = int(ops.xp.prod(ops.xp.asarray(shape)))
+    <a id="change">inits</a> = numpy.random.normal(scale=scale, size=size).astype("float32")
+    <a id="change">inits</a> = ops.reshape_f(inits, shape)
+    return ops.asarray_f(inits)
+
+</code></pre>

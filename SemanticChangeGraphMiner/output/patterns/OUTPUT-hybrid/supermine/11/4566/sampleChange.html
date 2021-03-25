@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    aug_item = augmented_dataset[0]
+    assert np.allclose(aug_item["mix"].audio_data[1, :], 
+        librosa.effects.time_stretch(np.asfortranarray(item["mix"].audio_data[1, :]), stretch_factor))
+    <a id="change">for name, source in item["sources"].items():
+        assert np.allclose(aug_item["sources"][name].audio_data[1, :], 
+            librosa.effects.time_stretch(np.asfortranarray(item["sources"][name].audio_data[1, :]), stretch_factor))
+
+</a>def test_pitch_shift():
+    shift = 2
+    sample_rate = item["mix"].sample_rate
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_stretch():
+    stretch_factor = .8
+
+    augmented = time_stretch(<a id="change">item["mix"]</a>, stretch_factor)
+
+    assert np.allclose(augmented.audio_data[1, :], 
+            librosa.effects.time_stretch(np.asfortranarray(item["mix"].audio_data[1, :]), stretch_factor))</code></pre>

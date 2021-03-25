@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        logL = np.sum(nu * (-y / y_hat - np.log(y_hat)))
+    elif distr == &quotneg-binomial&quot:
+        r = 15.
+        C = np.sum(<a id="change">loggamma</a>(y + r) - <a id="change">loggamma(y + 1)</a> -
+                   loggamma(r) + r * np.log(r))
+        logL = C - np.sum(np.log(y_hat + r) * (y_hat + r) + y * np.log(y_hat))
+    return logL</code></pre><h3>After Change</h3><pre><code class='java'>
+        logL = np.sum(nu * (-y / y_hat - np.log(y_hat)))
+    elif distr == &quotneg-binomial&quot:
+        r = 15.
+        logL =  np.sum(<a id="change">loggamma(y + r) + r * np.log(r) + y * np.log(y_hat) - loggamma(y + 1) -
+                   loggamma(r) - np.log(y_hat + r) * (y + r)</a>)
+    return logL
+
+</code></pre>

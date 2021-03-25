@@ -1,0 +1,31 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    <a id="change">sorted_scores = zip(labels, scores)</a>
+    <a id="change">sorted_scores.sort(key=operator.itemgetter(1), reverse=False)</a>
+
+    &#47&#47 Compute error rate
+    n_match = sum(1 for x in sorted_scores if x[0] == 1)
+    n_thresh = recall_point * n_match</code></pre><h3>After Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    distances = 1.0 / (scores + 1e-8)
+    recall_point = 0.95
+    <a id="change">labels = labels[np.argsort(distances)]</a>
+    &#47&#47 Sliding threshold: get first index where recall &gt;= recall_point. 
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    <a id="change">return float(FP) / float(FP + TN)</a>
+&quot&quot&quotimport operator
+
+
+def ErrorRateAt95Recall(labels, scores):</code></pre><img src="14937920.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/b10c11e8f77cafaef0e4cb12406c5c7d9adf2c2d#diff-410414dde681eb2086f6c5469f520d7ad7a2b14a6cfeb83ab4c2ba94fcd31800L13' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: b10c11e8f77cafaef0e4cb12406c5c7d9adf2c2d</div><div id='time'> Time: 2018-10-09</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/controllers/profiling/scan_log_analysis/data/crawling_stats.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: show_crawling_stats</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/56f3eaf6f4b8a40fa5f04dde65c562b21327f69a#diff-61547ae95c6c797a1ba6b5f37f1b7ce37dafabda8be8e90b444708e6b2cf009eL71' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 56f3eaf6f4b8a40fa5f04dde65c562b21327f69a</div><div id='time'> Time: 2014-07-02</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/dataset_converters/redd/convert_redd.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _find_all_chans</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/56f3eaf6f4b8a40fa5f04dde65c562b21327f69a#diff-61547ae95c6c797a1ba6b5f37f1b7ce37dafabda8be8e90b444708e6b2cf009eL62' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 56f3eaf6f4b8a40fa5f04dde65c562b21327f69a</div><div id='time'> Time: 2014-07-02</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/dataset_converters/redd/convert_redd.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _find_all_houses</div><BR>

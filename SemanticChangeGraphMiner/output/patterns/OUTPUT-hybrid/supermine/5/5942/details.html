@@ -1,0 +1,26 @@
+<html><h3>59ec6660464bd378b20d4ae200c7614133a9a38b,pyntcloud/samplers/points.py,FarthestPointsSampler,compute,#FarthestPointsSampler#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        remaining_points = self.points.values
+        solution_set = list()
+        solution_set.append(remaining_points.pop(
+            random.randint(0, <a id="change">len(remaining_points)</a> - 1)))
+        for _ in range(self.n - 1):
+            distances = [self.cal_distance(p, solution_set[0]) for p in remaining_points]
+            for i, p in enumerate(remaining_points):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 the sampled points set as the return
+        select_idx = np.random.randint(low=0, high=len(self.points))
+        &#47&#47 to remain the shape as (1, n) instead of (n, )
+        <a id="change">solution_set = remaining_points[select_idx: select_idx+1]</a>
+        remaining_points = np.delete(remaining_points, select_idx)
+
+        for _ in range(self.n - 1):
+            distance_sum = self.cal_distance(remaining_points, solution_set)
+            select_idx = <a id="change">np.argmax(distance_sum)</a>
+            <a id="change">solution_set = np.concatenate([solution_set, remaining_points[select_idx:select_idx+1]], axis=0)</a>
+            <a id="change">remaining_points = np.delete(remaining_points, select_idx)</a>
+
+        return pd.DataFrame(solution_set, columns=self.points.columns)
+</code></pre><img src="24530003.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/59ec6660464bd378b20d4ae200c7614133a9a38b#diff-1da77a1e515a06956f2402a626f20d1605f6c245dfc6da7a2304fdade3d54125L54' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 59ec6660464bd378b20d4ae200c7614133a9a38b</div><div id='time'> Time: 2019-08-26</div><div id='author'> Author: hc.wang96@gmail.com</div><div id='file'> File Name: pyntcloud/samplers/points.py</div><div id='class'> Class Name: FarthestPointsSampler</div><div id='method'> Method Name: compute</div><BR><BR><div id='link'><a href='https://github.com/titu1994/DenseNet/commit/516c2a4c7e8f92e1ea299e966215c2ffe4c5b980#diff-d2e999a343da3360dfb817b9228dc42f3dace9123e5515af24c522da04d66d9fL14' target='_blank'>Link</a></div><div id='project'> Project Name: titu1994/DenseNet</div><div id='commit'> Commit Name: 516c2a4c7e8f92e1ea299e966215c2ffe4c5b980</div><div id='time'> Time: 2016-12-07</div><div id='author'> Author: titu1994@gmail.com</div><div id='file'> File Name: cifar10.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/20f388cfe01635a2073723c5c4ffd6dd7a87fbb2#diff-ede2a3389f55bc62e19f594496e58466639a9aa4939f25dd1aa7098ef2b46fdaL154' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 20f388cfe01635a2073723c5c4ffd6dd7a87fbb2</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: cedric.renggli@gmail.com</div><div id='file'> File Name: tensorflow_hub/tools/module_search/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: knn_errorrate_loo</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/20f388cfe01635a2073723c5c4ffd6dd7a87fbb2#diff-ede2a3389f55bc62e19f594496e58466639a9aa4939f25dd1aa7098ef2b46fdaL118' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 20f388cfe01635a2073723c5c4ffd6dd7a87fbb2</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: cedric.renggli@gmail.com</div><div id='file'> File Name: tensorflow_hub/tools/module_search/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: knn_errorrate</div><BR>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert_all_finite(X_train)
+        assert_all_finite(X_test)
+        assert_all_finite(y_train)
+        <a id="change">assert sp.isspmatrix_csc(X_test)</a>
+        assert X_train.shape[1] == X_test.shape[1]
+        assert X_train.shape[0] == len(y_train)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert_all_finite(X_train)
+        assert_all_finite(X_test)
+        assert_all_finite(y_train)
+        <a id="change">if not sp.isspmatrix_csc(X_test):
+            X_test = X_test.tocsc()
+            warnings.warn(&quotconvert X_test to csc&quot)
+       </a> if not sp.isspmatrix_csc(X_train):
+            X_train = X_train.tocsc()
+            warnings.warn(&quotconvert X_train to csc&quot)
+        assert X_train.shape[1] == X_test.shape[1]</code></pre>

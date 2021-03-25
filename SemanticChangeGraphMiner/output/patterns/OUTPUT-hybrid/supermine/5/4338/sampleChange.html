@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        os.system(&quotwget http://places2.csail.mit.edu/models_places365/&quot + model_file)
+        os.system(&quotwget https://raw.githubusercontent.com/csailvision/places365/master/wideresnet.py&quot)
+    useGPU = 0
+    <a id="change">if useGPU == 1:
+        model = torch.load(model_file)
+    else:
+        model = torch.load(model_file, map_location=lambda storage, loc: storage) &#47&#47 allow cpu
+
+    &#47&#47 the following is deprecated, everything is migrated to python36
+
+    &#47&#47&#47&#47 if you encounter the UnicodeDecodeError when use python3 to load the model, add the following line will fix it. Thanks to @soravux
+    &#47&#47from functools import partial
+    &#47&#47import pickle
+    &#47&#47pickle.load = partial(pickle.load, encoding="latin1")
+    &#47&#47pickle.Unpickler = partial(pickle.Unpickler, encoding="latin1")
+    &#47&#47model = torch.load(model_file, map_location=lambda storage, loc: storage, pickle_module=pickle)
+
+   </a> model.eval()
+    &#47&#47 hook the feature extractor
+    features_names = [&quotlayer4&quot,&quotavgpool&quot] &#47&#47 this is the last conv layer of the resnet
+    for name in features_names:</code></pre><h3>After Change</h3><pre><code class='java'>
+    import wideresnet
+    model = wideresnet.resnet18(num_classes=365)
+    checkpoint = torch.load(model_file, map_location=lambda storage, loc: storage)
+    state_dict = {str.replace(k,&quotmodule.&quot,&quot&quot): v <a id="change">for</a> k,v in checkpoint[&quotstate_dict&quot].items()}
+    model.load_state_dict(state_dict)
+    model.eval()
+</code></pre>

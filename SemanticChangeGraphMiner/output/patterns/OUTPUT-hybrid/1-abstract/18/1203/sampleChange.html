@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    gts = []
+
+    for data in tqdm(data_loader.load_data(), desc=name):
+        <a id="change">ds</a>+=<a id="change">func</a>(data[&quotp0&quot],data[&quotp1&quot]).tolist()
+        gts+=data[&quotsame&quot].cpu().numpy().flatten().tolist()
+
+    sames = np.array(gts)
+    ds = np.array(ds)
+
+    sorted_inds = np.argsort(ds)
+    <a id="change">ds_sorted</a> = ds[sorted_inds]
+    sames_sorted = sames[sorted_inds]
+
+    TPs = np.cumsum(sames_sorted)
+    <a id="change">FPs</a> = np.cumsum(1-sames_sorted)
+    FNs = np.sum(sames_sorted)-TPs
+
+    precs = TPs/(TPs+FPs)
+    <a id="change">recs</a> = TPs/(TPs+FNs)
+    score = util.voc_ap(recs,precs)
+
+    return(score, dict(ds=ds,sames=sames))</code></pre><h3>After Change</h3><pre><code class='java'>
+    gts = []
+
+    for data in tqdm(data_loader.load_data(), desc=name):
+        <a id="change">ds</a>+=<a id="change">func</a>(data[&quotp0&quot],data[&quotp1&quot]).data.cpu().numpy().tolist()
+        gts+=data[&quotsame&quot].cpu().numpy().flatten().tolist()
+
+    sames = np.array(gts)
+    ds = np.array(ds)
+
+    sorted_inds = np.argsort(ds)
+    <a id="change">ds_sorted</a> = ds[sorted_inds]
+    sames_sorted = sames[sorted_inds]
+
+    TPs = np.cumsum(sames_sorted)
+    <a id="change">FPs</a> = np.cumsum(1-sames_sorted)
+    FNs = np.sum(sames_sorted)-TPs
+
+    precs = TPs/(TPs+FPs)
+    <a id="change">recs</a> = TPs/(TPs+FNs)
+    score = util.voc_ap(recs,precs)
+
+    return(score, dict(ds=ds,sames=sames))</code></pre>

@@ -1,0 +1,25 @@
+<html><h3>9ea14875825b2ab63a43ad2f0f5159d99df86d02,model.py,Lookahead,forward,#Lookahead#,122
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        seq_len = input.size(0)
+        &#47&#47 pad the 0th dimension (T/sequence) with zeroes whose number = context
+        &#47&#47 Once pytorch&quots padding functions have settled, should move to those.
+        <a id="change">padding = torch.zeros(self.context, *(input.size()[1:])).type_as(input)</a>
+        x = torch.cat((input, padding), 0)
+
+        &#47&#47 add lookahead windows (with context+1 width) as a fourth dimension
+        &#47&#47 for each seq-batch-feature combination
+        <a id="change">x = [x[i:i + self.context + 1] for i in range(seq_len)]</a>  &#47&#47 TxLxNxH - sequence, context, batch, feature
+        x = torch.stack(x)
+        x = x.permute(0, 2, 3, 1)  &#47&#47 TxNxHxL - sequence, batch, feature, context
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = x.transpose(0, 1).transpose(1, 2)
+        x = F.pad(x, pad=self.pad, value=0)
+        x = self.conv(x)
+        <a id="change">x = x.transpose(1, 2).transpose(0, 1).contiguous()</a>
+        return x
+
+    def __repr__(self):
+        return self.__class__.__name__ + &quot(&quot \</code></pre><img src="1905599.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SeanNaren/deepspeech.pytorch/commit/9ea14875825b2ab63a43ad2f0f5159d99df86d02#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L117' target='_blank'>Link</a></div><div id='project'> Project Name: SeanNaren/deepspeech.pytorch</div><div id='commit'> Commit Name: 9ea14875825b2ab63a43ad2f0f5159d99df86d02</div><div id='time'> Time: 2019-07-29</div><div id='author'> Author: rasmus.arpe@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: Lookahead</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/32dc03f14c36d1df46f37a7d13ad528e52c6f786#diff-528bd29352c7471d35a4f6d90b05bbef21ab1a9dba3ec3a812e42bf9071dd7feL168' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 32dc03f14c36d1df46f37a7d13ad528e52c6f786</div><div id='time'> Time: 2015-11-05</div><div id='author'> Author: matthieu.perrinel@gmail.com</div><div id='file'> File Name: python/caffe/io.py</div><div id='class'> Class Name: Transformer</div><div id='method'> Method Name: deprocess</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/1aff9ce62a0c9db7f02b93830fed4073fed49bd1#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L60' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 1aff9ce62a0c9db7f02b93830fed4073fed49bd1</div><div id='time'> Time: 2015-02-02</div><div id='author'> Author: jwasilkowski@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updatePixels</div><BR>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test_median_smoothing(self):
+        should_stop = check_should_stop(mode=&quotmedian_smoothing&quot,
+                                        performance_history=<a id="change">get_data()</a>,
+                                        patience=8)
+        self.assertTrue(should_stop)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test_median_smoothing(self):
+        data = []
+        <a id="change">for i in range(10):
+            data.extend(np.arange(0, 8))
+            data.extend(np.arange(1, 9)[::-1])
+       </a> should_stop = check_should_stop(mode=&quotmedian_smoothing&quot,
+                                        performance_history=np.arange(0,20) / 10,
+                                        patience=8)
+        self.assertTrue(should_stop)</code></pre>

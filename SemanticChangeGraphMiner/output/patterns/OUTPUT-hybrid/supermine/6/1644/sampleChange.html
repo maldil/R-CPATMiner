@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            raise IOError("Cannot read from file, {file}".format(file=input_file_path))
+
+        self.path_to_input_file = input_file_path
+        self._active_end = signal_length if signal_length is not None else <a id="change">self._audio_data.shape[self._LEN]</a>
+        self._active_start = signal_starting_position
+
+    def load_audio_from_array(self, signal, sample_rate=constants.DEFAULT_SAMPLE_RATE):
+        Loads an audio signal from a numpy array. Only accepts float arrays and int arrays of depth 16-bits.</code></pre><h3>After Change</h3><pre><code class='java'>
+            with audioread.audio_open(os.path.realpath(input_file_path)) as input_file:
+                file_length = input_file.duration
+
+            <a id="change">if offset &gt; file_length:
+                raise ValueError(&quotoffset is longer than signal!&quot)
+
+           </a> if duration is not None and offset + duration &gt;= file_length:
+                <a id="change">warnings.warn(&quotoffset + duration are longer than the signal. Reading until end of signal...&quot,
+                              UserWarning)</a>
+
+            audio_input, self.sample_rate = librosa.load(input_file_path,
+                                                         sr=None,
+                                                         offset=offset,</code></pre>

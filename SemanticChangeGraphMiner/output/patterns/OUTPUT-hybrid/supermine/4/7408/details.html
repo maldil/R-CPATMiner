@@ -1,0 +1,61 @@
+<html><h3>8d63d75858cc6df30ea19c55f0da955d8d46f53a,pyntcloud/core_class.py,PyntCloud,plot,#PyntCloud#,628
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            camera = pythreejs.PerspectiveCamera(
+                fov=90,
+                aspect=width / height,
+                position=tuple(self.centroid + [0, abs(self.xyz.max(0)[1]), abs(<a id="change">self</a>.xyz.max(0)[2]) * 2]),
+                up=[0, 0, 1])
+            children.append(camera)
+
+            <a id="change">orbit_control = pythreejs.OrbitControls(controlling=camera)</a>
+            orbit_control.target = tuple(self.centroid)
+
+            camera.lookAt(tuple(self.centroid))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            from IPython.display import display
+
+            children = []
+            <a id="change">widgets = []</a>
+
+            if mesh:
+                raise NotImplementedError("Plotting mesh geometry with pythreejs backend is not supported yet.")
+
+            if polylines:
+                lines = get_polylines_pythreejs(polylines)
+                children.extend(lines)
+
+            points = get_pointcloud_pythreejs(self.xyz, colors)
+            children.append(points)
+
+            size = ipywidgets.FloatSlider(value=initial_point_size, min=0.0, max=(ptp / 20), step=(ptp / 200))
+            ipywidgets.jslink((size, &quotvalue&quot), (points.material, &quotsize&quot))
+            widgets.append(ipywidgets.Label(&quotPoint size:&quot))
+            widgets.append(size)
+
+            camera = get_camera_pythreejs(self.centroid, self.xyz, width, height)
+            children.append(camera)
+
+            controls = [get_orbit_controls(camera, self.centroid)]
+
+            if not scene:
+                scene = pythreejs.Scene(children=children)
+
+                renderer = pythreejs.Renderer(
+                    scene=scene,
+                    camera=camera,
+                    controls=controls,
+                    width=width,
+                    height=height)
+
+                display(renderer)
+
+                color = ipywidgets.ColorPicker()
+                ipywidgets.jslink((color, &quotvalue&quot), (scene, &quotbackground&quot))
+                <a id="change">widgets.append(ipywidgets.Label(&quotBackground color:&quot))</a>
+                widgets.append(color)
+
+            display(ipywidgets.HBox(children=[widgets]))
+</code></pre><img src="28568115.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/8d63d75858cc6df30ea19c55f0da955d8d46f53a#diff-8a306ac5079751dfe7b1a864b1d8365a5e832f847f73d197c1cb64c7d1e299f0L629' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 8d63d75858cc6df30ea19c55f0da955d8d46f53a</div><div id='time'> Time: 2018-07-26</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/core_class.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: plot</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-0d5670c5f2a5fcf1725f9db7564e16eeb4669ea8b33c1560f28c55affc6cf2a3L37' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/mrr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mrr</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/e1c4e6a7c7db68e123d978bfc56feb057898935f#diff-a17dc8b1db8a3f0d9d502c3c2d7d13001ca5af03ef5419bf371ac130926ce968L46' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: e1c4e6a7c7db68e123d978bfc56feb057898935f</div><div id='time'> Time: 2019-10-24</div><div id='author'> Author: kostasdedesar@penguin</div><div id='file'> File Name: Counting-sort.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __call__(self, x, y):
+        if y is not None:
+            for t in self.transforms:
+                <a id="change">x</a>, y = t(x, y)
+            return x, y
+        else:
+            for t in self.transforms:</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __call__(self, *inputs):
+        for transform in self.transforms:
+            if not isinstance(inputs, (list,tuple)):
+                <a id="change">inputs = [inputs]</a>
+            <a id="change">inputs = transform(*inputs)</a>
+        return inputs
+
+
+class ToTensor(object):</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_PSD_continuous():
+    t = np.linspace(-9, 10, 10000)
+    for a in (1, 2):
+        <a id="change">for t0 in (-2, 0, 2):
+            for f0 in (-1, 0, 1):
+                for method in (1, 2):
+                    yield (check_PSD_continuous, a, t0, f0, method, t)
+
+
+</a>def check_IFT_continuous(a, t0, f0, method, f):
+    H = sinegauss_FT(f, t0, f0, a)
+    t, h = IFT_continuous(f, H, method=method)
+    assert_allclose(h, sinegauss(t, t0, f0, a), atol=1E-12)</code></pre><h3>After Change</h3><pre><code class='java'>
+    t = np.linspace(-9, 10, 10000)
+    h = sinegauss(t, t0, f0, a)
+    f, P = PSD_continuous(t, h, method=method)
+    <a id="change">assert_allclose(P, sinegauss_PSD(f, t0, f0, a), atol=1E-12)</a>
+
+
+@pytest.mark.parametrize(&quota&quot, [1, 2])
+@pytest.mark.parametrize(&quott0&quot, [-2, 0, 2])</code></pre>

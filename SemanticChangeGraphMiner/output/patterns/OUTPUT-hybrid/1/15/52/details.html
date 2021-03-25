@@ -1,0 +1,26 @@
+<html><h3>f254e101c3b0e10495dab1fe03769d9b94847629,tests/perf/simple.py,,,#,9
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+W = tf.Variable(tf.truncated_normal([784, 100], stddev=0.05))
+b = tf.Variable(tf.zeros([100]))
+y = tf.nn.softmax(tf.matmul(x, W) + b, name="output")
+<a id="change">sess.run(tf.initialize_all_variables())</a>
+
+&#47&#47 setup td model
+model = td.Model()
+model.add(y, sess)</code></pre><h3>After Change</h3><pre><code class='java'>
+b = tf.Variable(tf.zeros([100]))
+y = tf.nn.softmax(tf.matmul(x, W) + b, name="output")
+
+<a id="change">if td._tf_version[:3] &lt; (0, 12, 0) and 0:
+    sess.run(tf.initialize_all_variables())
+else:
+    sess.run(tf.global_variables_initializer())
+
+&#47&#47 setup td model
+</a>model = td.Model()
+model.add(y, sess)
+inp, outp = model.get("input", "output")
+</code></pre><img src="767626.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/f254e101c3b0e10495dab1fe03769d9b94847629#diff-8d37755aa7c90a8339682178b51c5e6b1169a31a5390936338a8a509e80563a0L9' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: f254e101c3b0e10495dab1fe03769d9b94847629</div><div id='time'> Time: 2016-12-12</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tests/perf/simple.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/f254e101c3b0e10495dab1fe03769d9b94847629#diff-8625233a622ea732ebcde202ab5e31246e3285c6e6efc9b29be72669d4ff0086L8' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: f254e101c3b0e10495dab1fe03769d9b94847629</div><div id='time'> Time: 2016-12-12</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tests/models/simple.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/f254e101c3b0e10495dab1fe03769d9b94847629#diff-49e462ae50d2ab13d42a1dccd65066d360cc3058351f4e819da94207107aa050L8' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: f254e101c3b0e10495dab1fe03769d9b94847629</div><div id='time'> Time: 2016-12-12</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tests/models/simple2.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

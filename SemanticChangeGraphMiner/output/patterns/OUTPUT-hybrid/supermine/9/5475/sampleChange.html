@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for t in emotions:
+                att_em, alpha_ = self.matchatt(emotions,t,mask=umask)
+                att_emotions.append(att_em.unsqueeze(0))
+                alpha.append(<a id="change">alpha_[:,0,:]</a>)
+            att_emotions = torch.cat(att_emotions,dim=0)
+            hidden = F.relu(self.linear(att_emotions))
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+        qmask = qmask.unsqueeze(1).expand(-1, T1.size(1), -1)
+
+        umask = torch.FloatTensor([1,1,1]).type(T1.type())
+        <a id="change">umask = umask.expand(-1, T1.size(1))</a>
+
+        emotions_f, alpha_f = self.dialog_rnn_f(U, qmask) &#47&#47 seq_len, batch, D_e
+        emotions_f = self.dropout_rec(emotions_f)
+        rev_U = self._reverse_seq(U, umask)
+        emotions_b, alpha_b = self.dialog_rnn_r(rev_U, qmask)
+        emotions_b = self._reverse_seq(emotions_b, umask)
+        emotions_b = self.dropout_rec(emotions_b)
+        emotions = torch.cat([emotions_f,emotions_b],dim=-1)
+        &#47&#47print(emotions)
+        emotions = self.dropout_rec(emotions)
+
+        &#47&#47emotions = emotions.unsqueeze(1)
+        if att2:
+            <a id="change">att_emotion, _ = self.matchatt(emotions,emotions[-1])</a>
+            hidden = F.relu(self.linear1(att_emotion))
+        else:
+            hidden = F.relu(self.linear1(emotions[-1]))
+        &#47&#47hidden = F.relu(self.linear2(hidden))</code></pre>

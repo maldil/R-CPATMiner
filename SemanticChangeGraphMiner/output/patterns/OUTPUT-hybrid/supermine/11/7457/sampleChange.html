@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            self.l_pix_w = train_opt[&quotpixel_weight&quot]
+
+            &#47&#47 optimizers
+            <a id="change">self.optimizers = []</a>
+            wd_G = train_opt[&quotweight_decay_G&quot] if train_opt[&quotweight_decay_G&quot] else 0
+            optim_params = []
+            for k, v in self.netG.named_parameters():  &#47&#47 can optimize for a part of the model
+                if v.requires_grad:
+                    optim_params.append(v)
+                else:
+                    print(&quotWARNING: params [%s] will not optimize.&quot % k)
+            self.optimizer_G = torch.optim.Adam(optim_params,
+                                                lr=train_opt[&quotlr_G&quot], weight_decay=wd_G)
+            self.optimizers.append(self.optimizer_G)
+
+            &#47&#47 schedulers
+            <a id="change">self.schedulers = []</a>
+            if train_opt[&quotlr_scheme&quot] == &quotMultiStepLR&quot:
+                for optimizer in self.optimizers:
+                    self.schedulers.append(lr_scheduler.MultiStepLR(optimizer, \
+                        train_opt[&quotlr_steps&quot], train_opt[&quotlr_gamma&quot]))</code></pre><h3>After Change</h3><pre><code class='java'>
+            elif loss_type == &quotl2&quot:
+                self.cri_pix = nn.MSELoss().to(self.device)
+            else:
+                <a id="change">raise NotImplementedError(&quotLoss type [{:s}] is not recognized.&quot.format(loss_type))</a>
+            self.l_pix_w = train_opt[&quotpixel_weight&quot]
+
+            &#47&#47 optimizers
+            wd_G = train_opt[&quotweight_decay_G&quot] if train_opt[&quotweight_decay_G&quot] else 0</code></pre>

@@ -1,0 +1,34 @@
+<html><h3>80d32c6793323bb1a1c0bb55faef8f9b5d30f62a,chemml/chem/magpie_python/vassal/geometry/Line.py,Line,distance,#Line#,178
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if l is None:
+            d = p - self.zero
+            n = np.zeros(3)
+            <a id="change">try:
+                n = d - np.dot(d, self.direction) * self.direction
+            except RuntimeWarning:
+                print(d, self.direction)
+           </a> return norm(n)
+        else:
+            normal = np.cross(self.direction, l.direction)
+            n = norm(normal)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 except RuntimeWarning:
+            &#47&#47     print(d, self.direction)
+            &#47&#47 return norm(n)
+            <a id="change">with warnings.catch_warnings(record=True) as w:
+                &#47&#47 Cause all warnings to always be triggered.
+                warnings.simplefilter("always")
+                n = d - np.dot(d, self.direction) * self.direction
+                &#47&#47 print(n, norm(n))
+                if len(w) &gt; 0 and issubclass(w[-1].category, RuntimeWarning):
+                    &#47&#47 Todo: check w/ Ram if this is what he meant to do when catch a warning: n = np.zeros(3)
+                    &#47&#47 n = np.zeros(3)
+                    &#47&#47 print(d, self.direction)
+                    pass
+                return norm(n)
+       </a> else:
+            normal = np.cross(self.direction, l.direction)
+            n = norm(normal)
+            if n &lt; sys.float_info.min:</code></pre><img src="3284391.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hachmannlab/chemml/commit/80d32c6793323bb1a1c0bb55faef8f9b5d30f62a#diff-fe884f8acff7b4a92915ec104095df7a4b2f580d84414428ed91c26512b47704L198' target='_blank'>Link</a></div><div id='project'> Project Name: hachmannlab/chemml</div><div id='commit'> Commit Name: 80d32c6793323bb1a1c0bb55faef8f9b5d30f62a</div><div id='time'> Time: 2018-10-02</div><div id='author'> Author: mojtabah@buffalo.edu</div><div id='file'> File Name: chemml/chem/magpie_python/vassal/geometry/Line.py</div><div id='class'> Class Name: Line</div><div id='method'> Method Name: distance</div><BR><BR><div id='link'><a href='https://github.com/metagenome-atlas/atlas/commit/e66f756f492ef8e6a4c398c512eba867cad2652f#diff-6fe574953682dbd8ddf79bde70914ed5c2f7cd0fffe8be4c73266d61ab5f6d90L45' target='_blank'>Link</a></div><div id='project'> Project Name: metagenome-atlas/atlas</div><div id='commit'> Commit Name: e66f756f492ef8e6a4c398c512eba867cad2652f</div><div id='time'> Time: 2021-01-14</div><div id='author'> Author: silas.kieser@gmail.com</div><div id='file'> File Name: atlas/rules/get_fasta_of_bins.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/openml/openml-python/commit/33c3a8101efe1cb66599831c03a6b960248a8718#diff-9cc0e191426810b9a76098707c2ddc9ec73a7f1852024a72445ddcb08b52f09bL389' target='_blank'>Link</a></div><div id='project'> Project Name: openml/openml-python</div><div id='commit'> Commit Name: 33c3a8101efe1cb66599831c03a6b960248a8718</div><div id='time'> Time: 2016-03-25</div><div id='author'> Author: feurerm@informatik.uni-freiburg.de</div><div id='file'> File Name: openml/datasets/functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _get_dataset_qualities</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/5b2327e051d5243f80b9b9f39f6800bbc8749bed#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L42' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 5b2327e051d5243f80b9b9f39f6800bbc8749bed</div><div id='time'> Time: 2018-09-09</div><div id='author'> Author: contact@tiger-222.fr</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/20ca9d882e448df5f1a9c5c0d74772763651826a#diff-070d88571c97b540af4b435b1ddb263529213890e10e6d46f30eaff3e4fbbae1L307' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 20ca9d882e448df5f1a9c5c0d74772763651826a</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: use_params</div><BR>

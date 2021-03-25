@@ -1,0 +1,23 @@
+<html><h3>53bc1480e10f6594574850a05e20b3616d904dfe,pgmpy/inference/base.py,Inference,__init__,#Inference#,50
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if not set(factor.variables.keys()).issubset(set(self.variables)):
+                    raise ValueError(&quotFactors are not consistent with the model&quot)
+
+                <a id="change">for index in range(len(factor.variables)):
+                    self.cardinality[list(factor.variables.keys())[index]] = factor.cardinality[index]
+
+               </a> for var in factor.variables:
+                    try:
+                        self.factors[var].append(factor)
+                    except KeyError:</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, model):
+        self.variables = model.nodes()
+        self.cardinality = {}
+        self.factors = <a id="change">defaultdict(list)</a>
+
+        model.check_model()
+
+        if isinstance(model, BayesianModel):</code></pre><img src="39172941.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/53bc1480e10f6594574850a05e20b3616d904dfe#diff-e6d7be8ef2344de0b1d143f15e60f237a0b02f15c714ca779f9c75de1cb88960L50' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 53bc1480e10f6594574850a05e20b3616d904dfe</div><div id='time'> Time: 2014-12-21</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/inference/base.py</div><div id='class'> Class Name: Inference</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/45ffcc4d387da3e767ea675640f411dbea349ff0#diff-e30d05af267fcba64311305c2241bcd4145c104c9cce44d7753bba6e949f1c71L217' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 45ffcc4d387da3e767ea675640f411dbea349ff0</div><div id='time'> Time: 2017-06-28</div><div id='author'> Author: iaroslav.email@gmail.com</div><div id='file'> File Name: skopt/wrappers/scikit_learn.py</div><div id='class'> Class Name: SkoptSearchCV</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/raghakot/keras-vis/commit/9f221345e7a58804e347f2a1879b06922222413b#diff-ddc653b748c5e4f898ae76bf096a26705096a80aebe4341d1975bdeba6a0b6b6L329' target='_blank'>Link</a></div><div id='project'> Project Name: raghakot/keras-vis</div><div id='commit'> Commit Name: 9f221345e7a58804e347f2a1879b06922222413b</div><div id='time'> Time: 2017-07-03</div><div id='author'> Author: ragha@outlook.com</div><div id='file'> File Name: docs/md_autogen.py</div><div id='class'> Class Name: MarkdownAPIGenerator</div><div id='method'> Method Name: module2md</div><BR>

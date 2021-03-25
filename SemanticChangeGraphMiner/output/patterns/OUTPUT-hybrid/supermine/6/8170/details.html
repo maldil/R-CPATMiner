@@ -1,0 +1,30 @@
+<html><h3>61228f3243eaee39cba31a9abd2afc6ead9612a8,implementations/bicyclegan/bicyclegan.py,,,#,136
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47  Log Progress
+        &#47&#47 --------------
+
+        logger.log(<a id="change">{&quotloss_D_VAE&quot: loss_D_VAE, &quotloss_D_LR&quot: loss_D_LR,
+                    &quotloss_G&quot: loss_GE, &quotloss_pixel&quot: loss_pixel, &quotloss_latent&quot: loss_latent}</a>,
+                    images={&quotreal_B&quot: real_B, &quotfake_B&quot: fake_B, &quotreal_A&quot: real_A},
+                    epoch=epoch, batch=i)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 --------------
+
+        &#47&#47 Determine approximate time left
+        batches_done = epoch * <a id="change">len(dataloader)</a> + i
+        batches_left = opt.n_epochs * len(dataloader) - batches_done
+        <a id="change">time_left = datetime.timedelta(seconds=batches_left * (time.time() - start_time)/ (batches_done + 1))</a>
+
+        &#47&#47 Print log
+        sys.stdout.write("\r[Epoch %d/%d] [Batch %d/%d] [D VAE_loss: %f, LR_loss: %f] [G loss: %f, pixel: %f, latent: %f] ETA: %s" %
+                                                        <a id="change">(epoch, opt.n_epochs,
+                                                        i, len(dataloader),
+                                                        loss_D_VAE.item(), loss_D_LR.item(),
+                                                        loss_GE.item(), loss_pixel.item(),
+                                                        loss_latent.item(), time_left)</a>)
+
+        if batches_done % opt.sample_interval == 0:
+            sample_images(batches_done)</code></pre><img src="31692739.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/61228f3243eaee39cba31a9abd2afc6ead9612a8#diff-d3e1c4411b6f580293411b1726cd987c27fcb1ea04379afb16679af9a663983bL134' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 61228f3243eaee39cba31a9abd2afc6ead9612a8</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/bicyclegan/bicyclegan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/68e3699215df53a6bd57675c75d937f2d3a75891#diff-1efbb074e9144e933df83b7468263505d8489ef9524a0bbf927f99be6aebcfadL823' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 68e3699215df53a6bd57675c75d937f2d3a75891</div><div id='time'> Time: 2017-01-19</div><div id='author'> Author: alexsavio@gmail.com</div><div id='file'> File Name: nilearn/datasets/atlas.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fetch_atlas_allen_2011</div><BR><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/4888cb7a5299f7eed9214ddc70871dc05ea0f4d2#diff-daf83987604b2fc2b5e24489ce9856f42ab1265ee61e58e7f31da1a264ae7c95L299' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: 4888cb7a5299f7eed9214ddc70871dc05ea0f4d2</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: model/ft_ResNet50/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

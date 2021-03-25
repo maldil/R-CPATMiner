@@ -1,0 +1,35 @@
+<html><h3>d750d66fb998a44316000908f213ae73c53de97f,examples/shrec17/dataset.py,CacheNPY,__call__,#CacheNPY#,194
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            try: return np.load(npy_path.format(i))
+            except OSError: exists[i] = False
+
+        <a id="change">print("transform...", end="\r")</a>
+        try:
+            img = self.transform(file_path)
+        except:
+            print(file_path)</code></pre><h3>After Change</h3><pre><code class='java'>
+            try: return np.load(npy_path.format(i))
+            except OSError: exists[i] = False
+
+        <a id="change">if self.pick_randomly:
+            img = self.check_trans(file_path)
+            np.save(npy_path.format(exists.index(False)), img)
+
+            return img
+
+       </a> output = []
+        <a id="change">for i in range(self.repeat):
+            try:
+                img = np.load(npy_path.format(i))
+            except (OSError, FileNotFoundError):
+                img = self.check_trans(file_path)
+                np.save(npy_path.format(i), img)
+            output.append(img)
+
+       </a> return output
+
+    def __repr__(self):
+        return self.__class__.__name__ + &quot(prefix={0}, transform={1})&quot.format(self.prefix, self.transform)</code></pre><img src="14356655.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jonas-koehler/s2cnn/commit/d750d66fb998a44316000908f213ae73c53de97f#diff-696d86065c8b69de9284aebd9229bb1fc82c63846341a0730248dbcc59b15cf1L201' target='_blank'>Link</a></div><div id='project'> Project Name: jonas-koehler/s2cnn</div><div id='commit'> Commit Name: d750d66fb998a44316000908f213ae73c53de97f</div><div id='time'> Time: 2018-03-03</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: examples/shrec17/dataset.py</div><div id='class'> Class Name: CacheNPY</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/ece383696800b9b34854df27a65a3d1d74669952#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: ece383696800b9b34854df27a65a3d1d74669952</div><div id='time'> Time: 2020-05-28</div><div id='author'> Author: alexmxu@alexs-mbp-3.attlocal.net</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/163eb7df13667e21b0e02a2706e18d1f53eee610#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 163eb7df13667e21b0e02a2706e18d1f53eee610</div><div id='time'> Time: 2020-01-29</div><div id='author'> Author: alexmxu99@gmail.com</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                np.random.seed(id)
+                np.random.shuffle(train_data)
+                return dataiter(train_data)
+            <a id="change">provider(cfg.nr_dpflows, cfg.proj_name, mpfunc)</a>
+            def mpdataiter():
+                dataiter = receiver(cfg.proj_name)
+                for data in dataiter:</code></pre><h3>After Change</h3><pre><code class='java'>
+            return dataiter(train_data)
+        else:
+            from tfflat.data_provider import DataFromList, MultiProcessMapDataZMQ, BatchData
+            <a id="change">dp = MultiProcessMapDataZMQ( DataFromList(train_data), 10, Preprocessing )</a>
+            <a id="change">dp = BatchData(dp, cfg.batch_size // cfg.nr_aug)</a>
+            <a id="change">dp.reset_state()</a>
+            <a id="change">dataiter = dp.get_data()</a>
+            <a id="change">return dataiter</a>
+
+    def make_network(self, is_train):
+        if is_train:</code></pre>

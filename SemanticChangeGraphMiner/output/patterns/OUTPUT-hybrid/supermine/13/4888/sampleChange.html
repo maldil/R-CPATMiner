@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        fig.append_trace({&quotx&quot: df.index, &quoty&quot: df["mean_1"][sample].values,
+                          &quottype&quot: &quotscatter&quot, &quotname&quot: sample}, 1, 1)
+
+    <a id="change">for sample in df["mean_2"].columns:
+        fig.append_trace({&quotx&quot: df.index, &quoty&quot: df["mean_2"][sample].values,
+                          &quottype&quot: &quotscatter&quot, &quotname&quot: sample}, 1, 2)
+
+
+   </a> fig[&quotlayout&quot].update(
+                     yaxis = dict(range=quality_range, autorange=True, title="Quality score"),
+                     xaxis1 = dict(title=&quotPosition forward read&quot),
+                     xaxis2 = dict(autorange=&quotreversed&quot,title=&quotPosition reverse read&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+def get_pe_read_quality_plot(df,quality_range,colorscale=&quotViridis&quot, **kwargs):
+
+    N= len(df["mean_1"].columns)
+    <a id="change">c= [&quothsl(&quot+str(h)+&quot,50%&quot+&quot,50%)&quot for h in np.linspace(0, 360, N+1)]</a>
+
+    fig = tools.make_subplots(rows=1, cols=2, shared_yaxes=True)
+
+    for i,sample in enumerate(df["mean_1"].columns):</code></pre>

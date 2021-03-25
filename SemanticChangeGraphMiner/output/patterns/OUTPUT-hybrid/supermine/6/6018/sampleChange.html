@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                            " &quot%s.%s&quot instead."
+                            % (cls.__name__, self.__func__.__name__))
+
+        <a id="change">evaldict = self.__func__.__globals__.copy()</a>
+        evaldict[&quot_call_&quot] = self.__func__
+        evaldict[&quot_cls_&quot] = cls
+        <a id="change">fun = FunctionMakerDropFirstArg.create(
+            self.__func__, "return _call_(_cls_, %(shortsignature)s)",
+            evaldict, __wrapped__=self.__func__)</a>
+        fun.__func__ = self.__func__  &#47&#47 Doctests need the orginal function
+        <a id="change">return fun</a>
+
+
+class FunctionMakerDropFirstArg(decorator.FunctionMaker):
+    def __init__(self, *args, **kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise TypeError("Class-only method called on an instance. Use"
+                            " &quot%s.%s&quot instead."
+                            % (cls.__name__, self.__func__.__name__))
+        <a id="change">return super().__get__(obj, cls)</a>
+</code></pre>

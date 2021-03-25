@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return features
+
+
+<a id="change">pipeline = Pipeline([
+    &#47&#47 Extract the subject & body
+    (&quotsubjectbody&quot, SubjectBodyExtractor()),
+
+    &#47&#47 Use ColumnTransformer to combine the features from subject and body
+    (&quotunion&quot, ColumnTransformer(
+        [
+            &#47&#47 Pulling features from the post&quots subject line (first column)
+            (&quotsubject&quot, TfidfVectorizer(min_df=50), 0),
+
+            &#47&#47 Pipeline for standard bag-of-words model for body (second column)
+            (&quotbody_bow&quot, Pipeline([
+                (&quottfidf&quot, TfidfVectorizer()),
+                (&quotbest&quot, TruncatedSVD(n_components=50)),
+            ]), 1),
+
+            &#47&#47 Pipeline for pulling ad hoc features from post&quots body
+            (&quotbody_stats&quot, Pipeline([
+                (&quotstats&quot, TextStats()),  &#47&#47 returns a list of dicts
+                (&quotvect&quot, DictVectorizer()),  &#47&#47 list of dicts -&gt; feature matrix
+            ]), 1),
+        ],
+
+        &#47&#47 weight components in ColumnTransformer
+        transformer_weights={
+            &quotsubject&quot: 0.8,
+            &quotbody_bow&quot: 0.5,
+            &quotbody_stats&quot: 1.0,
+        }
+    )),
+
+    &#47&#47 Use a SVC classifier on the combined features
+    (&quotsvc&quot, LinearSVC(dual=False)),
+], verbose=True)</a>
+
+&#47&#47 limit the list of categories to make running this example faster.
+categories = [&quotalt.atheism&quot, &quottalk.religion.misc&quot]
+X_train, y_train = fetch_20newsgroups(random_state=1,</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Each feature comprises meta information about that post, such as the subject,
+&#47&#47 and the body of the news post.
+
+<a id="change">print(X_train[0])</a>
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Creating transformers
+&#47&#47 ---------------------</code></pre>

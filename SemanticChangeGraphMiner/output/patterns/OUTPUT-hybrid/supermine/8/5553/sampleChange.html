@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            path: The filepath of the model.
+            **kwargs: Arguments passed to torch.save method.
+        &quot&quot&quot
+        <a id="change">torch.save(self.net.state_dict(), path, **kwargs)</a>
+
+    def load_model_weights(self, path, **kwargs):
+        &quot&quot&quotLoad model weights.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            path: The filepath of the model.
+            **kwargs: Arguments passed to torch.save method.
+        &quot&quot&quot
+        <a id="change">if self.cuda is not False:
+            &#47&#47 If we don&quott do this, torch will move g to default gpu.
+            &#47&#47 Remove this when bug is fixed...
+            self.net.cpu()
+            torch.save(self.net.state_dict(), path, **kwargs)
+            to_cuda(self.net, self.cuda)
+        else:
+            torch.save(self.net.state_dict(), path, **kwargs)
+
+   </a> def load_model_weights(self, path, **kwargs):
+        &quot&quot&quotLoad model weights.
+
+        Parameters:</code></pre>

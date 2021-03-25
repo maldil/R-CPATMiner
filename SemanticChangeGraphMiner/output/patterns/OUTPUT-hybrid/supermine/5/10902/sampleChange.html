@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return np.squeeze(
+                np.asarray(_fast_nl_means_denoising_2d(image, **nlm_kwargs)))
+        else:
+            <a id="change">return np.squeeze(
+                np.asarray(_nl_means_denoising_2d(image, **nlm_kwargs)))</a>
+    else:  &#47&#47 3-D grayscale
+        if fast_mode:
+            return np.asarray(_fast_nl_means_denoising_3d(image, **nlm_kwargs))
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+             &quotchange to preserve_range=False. To avoid this warning, &quot
+             &quotexplicitly specify the preserve_range parameter.&quot,
+             stacklevel=2)
+        <a id="change">preserve_range = True</a>
+
+    <a id="change">image = convert_to_float(image, preserve_range)</a>
+
+    kwargs = dict(s=patch_size, d=patch_distance, h=h, var=sigma * sigma)
+    if multichannel:  &#47&#47 2-D images
+        if fast_mode:
+            return _fast_nl_means_denoising_2d(image, **kwargs)
+        else:
+            <a id="change">return _nl_means_denoising_2d(image, **kwargs)</a>
+    else:  &#47&#47 3-D grayscale
+        if fast_mode:
+            return _fast_nl_means_denoising_3d(image, **kwargs)
+        else:</code></pre>

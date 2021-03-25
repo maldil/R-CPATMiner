@@ -1,0 +1,43 @@
+digraph G {
+subgraph cluster0 {
+1 [label="reshape" a="32" s="2343,2386" l="8,2" shape="box"];
+3 [label="Assignment:=" a="7" s="2336" l="1" shape="box"];
+4 [label="matrix" a="32" s="2308,2320" l="7,1" shape="box"];
+6 [label="PrefixExpression:!" a="38" s="2100" l="1" shape="box"];
+7 [label="IfStatement" a="25" s="2141,2257" l="4,2" shape="diamond"];
+9 [label="SimpleName" a="42" s="" l="" shape="ellipse"];
+10 [label="isinstance" a="32" s="2101,2130" l="11,1" shape="box"];
+12 [label="FieldAccess" a="22" s="2118" l="12" shape="box"];
+13 [label="IfStatement" a="25" s="2096,2131" l="4,2" shape="diamond"];
+14 [label="SimpleName" a="42" s="2112" l="5" shape="ellipse"];
+15 [label="SimpleName" a="42" s="2337" l="5" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="flatten" a="32" s="2054" l="9" shape="box"];
+5 [label="array" a="32" s="2041,2052" l="6,1" shape="box"];
+8 [label="IfStatement" a="25" s="1880,2019" l="4,2" shape="diamond"];
+11 [label="FieldAccess" a="22" s="1906" l="12" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 3 [label="_para_"];
+4 -> 5 [label="_map_"];
+4 -> 1 [label="_para_"];
+5 -> 2 [label="_recv_"];
+6 -> 9 [label="_def_"];
+7 -> 8 [label="_map_"];
+7 -> 3 [label="_control_"];
+7 -> 1 [label="_control_"];
+7 -> 4 [label="_control_"];
+8 -> 5 [label="_control_"];
+8 -> 2 [label="_control_"];
+9 -> 13 [label="_cond_"];
+10 -> 6 [label="_para_"];
+12 -> 10 [label="_para_"];
+12 -> 11 [label="_map_"];
+13 -> 7 [label="_control_"];
+14 -> 10 [label="_para_"];
+15 -> 1 [label="_recv_"];
+}

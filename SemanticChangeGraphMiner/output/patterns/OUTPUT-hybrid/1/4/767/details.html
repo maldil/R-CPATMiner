@@ -1,0 +1,35 @@
+<html><h3>c55c07ac94dcaff834f940d8a3a4df372f354121,nilearn/plotting/img_plotting.py,,_crop_colorbar,#,208
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        cbar_vmin = cbar_tick_locs.min()
+    new_tick_locs = np.linspace(cbar_vmin, cbar_vmax,
+                                len(cbar_tick_locs))
+    <a id="change">cbar.ax.set_ylim(cbar.norm(cbar_vmin), cbar.norm(cbar_vmax))</a>
+    outline = cbar.outline.get_xy()
+    outline[:2, 1] += cbar.norm(cbar_vmin)
+    outline[2:6, 1] -= (1. - cbar.norm(cbar_vmax))
+    outline[6:, 1] += cbar.norm(cbar_vmin)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 matplotlib &gt;= 3.2.0 no longer normalizes axes between 0 and 1
+    &#47&#47 See https://matplotlib.org/3.2.1/api/prev_api_changes/api_changes_3.2.0.html
+    <a id="change">if LooseVersion(matplotlib.__version__) &gt;= LooseVersion("3.2.0"):
+        cbar.ax.set_ylim(cbar_vmin, cbar_vmax)
+        X, _ = cbar._mesh()
+        new_X = np.array([X[0], X[-1]])
+        new_Y = np.array([[cbar_vmin, cbar_vmin], [cbar_vmax, cbar_vmax]])
+        xy = cbar._outline(new_X, new_Y)
+        cbar.outline.set_xy(xy)
+    else:
+        cbar.ax.set_ylim(cbar.norm(cbar_vmin), cbar.norm(cbar_vmax))
+        outline = cbar.outline.get_xy()
+        outline[:2, 1] += cbar.norm(cbar_vmin)
+        outline[2:6, 1] -= (1. - cbar.norm(cbar_vmax))
+        outline[6:, 1] += cbar.norm(cbar_vmin)
+        cbar.outline.set_xy(outline)
+
+   </a> cbar.set_ticks(new_tick_locs, update_ticks=True)
+
+
+def plot_img(img, cut_coords=None, output_file=None, display_mode=&quotortho&quot,</code></pre><img src="3761375.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/c55c07ac94dcaff834f940d8a3a4df372f354121#diff-94cfb3db2e8d3016f3b6850b4943c90c6d0dbce93997772f3ce67fff57276187L219' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: c55c07ac94dcaff834f940d8a3a4df372f354121</div><div id='time'> Time: 2020-05-02</div><div id='author'> Author: ari.e.kahn@gmail.com</div><div id='file'> File Name: nilearn/plotting/img_plotting.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _crop_colorbar</div><BR><BR><div id='link'><a href='https://github.com/arviz-devs/arviz/commit/63838200064baa7d755735319854e5dbaa919bcd#diff-016a7179f0f7ea6f9991c6c4b7a251640098a746af0221a78985564528e32c5bL170' target='_blank'>Link</a></div><div id='project'> Project Name: arviz-devs/arviz</div><div id='commit'> Commit Name: 63838200064baa7d755735319854e5dbaa919bcd</div><div id='time'> Time: 2020-04-06</div><div id='author'> Author: aloctavodia@gmail.com</div><div id='file'> File Name: arviz/plots/backends/matplotlib/traceplot.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: plot_trace</div><BR>

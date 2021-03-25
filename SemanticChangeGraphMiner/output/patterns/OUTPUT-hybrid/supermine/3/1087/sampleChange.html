@@ -1,0 +1,90 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+    &#47&#47 Search range for previous beat: number of samples forward/backward to look
+    search_window   = numpy.round(numpy.arange(-2 * period, <a id="change">-</a>period/2 + 1))
+
+    &#47&#47 TODO:   2012-11-07 15:25:30 by Brian McFee &lt;brm2132@columbia.edu&gt;
+    &#47&#47  make a better variable name for this
+
+    &#47&#47 Make a score window, which begins biased toward start_bpm and skewed 
+    &#47&#47txwt   = numpy.exp(-0.5 * (tightness * (numpy.log(-search_window) - numpy.log(period)))**2)
+
+    txwt    = - tightness * numpy.abs(numpy.log(-search_window) - numpy.log(period))**2
+
+    &#47&#47 Are we on the first beat?
+    first_beat      = True
+
+    &#47&#47 Forward step
+    for i in xrange(len(localscore)):
+        time_range          = i + search_window
+
+        &#47&#47 Are we reaching back before time 0?
+        z_pad               = numpy.maximum(0, numpy.minimum(- time_range[0], len(search_window)))
+        &#47&#47 max
+        &#47&#47       0
+        &#47&#47       min
+        &#47&#47           -time_range[0]          (2 * period - i)        &#47&#47 for big enough i, this wins
+        &#47&#47           len(search_window)      (3 * period / 2)
+
+        &#47&#47 Search over all possible predecessors and apply transition weighting
+        &#47&#47 txwt + [zeros(1, zpad), cumscore(time_range[zpad:])]
+        score_candidates                = txwt.copy()
+        score_candidates[z_pad:]        = score_candidates[z_pad:] + cumscore[time_range[z_pad:]]
+
+        &#47&#47 Find the best predecessor beat
+        beat_location       = numpy.argmax(score_candidates)
+        current_score       = score_candidates[beat_location]
+
+        &#47&#47 Add the local score
+        &#47&#47cumscore[i]         = alpha * current_score + (1-alpha) * localscore[i]
+        cumscore[i]         = current_score + localscore[i] - alpha
+
+        &#47&#47 Special case the first onset.  Stop if the localscore is small
+
+        if first_beat and localscore[i] &lt; 0.01 * max_localscore:
+            backlink[i]     = -1
+        else:
+            backlink[i]     = time_range[beat_location]
+            first_beat      = False
+            pass
+        pass
+
+    &#47&#47     TODO:   2012-11-07 16:30:23 by Brian McFee &lt;brm2132@columbia.edu&gt;
+    &#47&#47 pick up here 
+
+    &#47&#47&#47&#47&#47&#47 Get the last beat
+    maxes                   = librosa.localmax(cumscore)
+    max_indices             = numpy.nonzero(maxes)[0]
+    peak_scores             = cumscore[max_indices]
+
+    &#47&#47 TODO:   2012-11-07 16:29:29 by Brian McFee &lt;brm2132@columbia.edu&gt;
+    &#47&#47   what is this sorcery?
+    median_score            = numpy.median(peak_scores)
+    bestendposs             = numpy.nonzero(cumscore * maxes &gt; 0.5 * median_score)[0]
+
+    &#47&#47 The last of these is the last beat (since score generally increases)
+    bestendx                = numpy.max(bestendposs)
+
+    b                       = [int(bestendx)]
+    backlink = backlink.astype(int)
+    while backlink[b[-1]] &gt;= 0:
+        b = numpy.concatenate((b, [backlink[b[-1]]]), axis=0)
+        pass
+
+    <a id="change">return b[::-1]</a>
+
+def onset_estimate_bpm(onsets, sampling_rate=8000, hop_length=32, start_bpm=120):
+
+    auto_correlation_size   = 4.0</code></pre><h3>After Change</h3><pre><code class='java'>
+        b.append(backlink[b[-1]])
+        pass
+
+    <a id="change">b.reverse()</a>
+    return numpy.array(b)
+
+def onset_estimate_bpm(onsets, sampling_rate=8000, hop_length=32, start_bpm=120):
+</code></pre>

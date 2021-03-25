@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        if v &lt; self.threshold:
+            pixelBlocks[&quotoutput_pixels&quot] = pixelBlocks[&quotr1_pixels&quot].astype(props[&quotpixelType&quot])
+            pixelBlocks[&quotoutput_mask&quot] = <a id="change">pixelBlocks[&quotr1_mask&quot].astype(&quotu1&quot)</a>
+        else: 
+            pixelBlocks[&quotoutput_pixels&quot] = pixelBlocks[&quotr2_pixels&quot].astype(props[&quotpixelType&quot])
+            pixelBlocks[&quotoutput_mask&quot] = pixelBlocks[&quotr2_mask&quot].astype(&quotu1&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.emit("Trace|Request cell-size|{0}\n".format(v))
+        
+        if v &lt; self.threshold:
+            <a id="change">sPixels = &quotr1_pixels&quot</a>
+            sMask = &quotr1_mask&quot
+            nBands = self.inBands1
+        else:
+            sPixels = &quotr2_pixels&quot
+            sMask = &quotr2_mask&quot
+            nBands = self.inBands2
+
+        <a id="change">if self.outBands == nBands:
+            p = pixelBlocks[sPixels]
+            m = pixelBlocks[sMask]
+        else:
+            p = pixelBlocks[sPixels][0:self.outBands, :, :]
+            m = pixelBlocks[sMask][0:self.outBands, :, :]
+
+       </a> pixelBlocks[&quotoutput_pixels&quot] = p.astype(props[&quotpixelType&quot])
+        pixelBlocks[&quotoutput_mask&quot] = m.astype(&quotu1&quot)
+        return pixelBlocks
+</code></pre>

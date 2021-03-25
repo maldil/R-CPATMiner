@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Pick the type of process
+        if self.surrogate_type  == &quotgaussian&quot:
+            regr_sfc = <a id="change">gaussian_process.GaussianProcess(theta0=50.,thetaL=8.,thetaU=100.)</a>
+            regr_thr = gaussian_process.GaussianProcess(theta0=15.,thetaL=8.,thetaU=100.)                
+            thr_surrogate = regr_thr.fit(xy, thr)
+            sfc_surrogate = regr_sfc.fit(xy, sfc)  
+            
+        elif self.surrogate_type  == &quotknn&quot:
+            regr_sfc = neighbors.KNeighborsRegressor(n_neighbors=1,weights=&quotdistance&quot)
+            regr_thr = neighbors.KNeighborsRegressor(n_neighbors=1,weights=&quotdistance&quot)
+            sfc_surrogate = regr_sfc.fit(xy, sfc)
+            thr_surrogate = regr_thr.fit(xy, thr)  
+    
+        elif self.surrogate_type  == &quotsvr&quot:
+            regr_thr = svm.SVR(C=500.)
+            regr_sfc = svm.SVR(C=500.)
+            sfc_surrogate  = regr_sfc.fit(xy, sfc)
+            thr_surrogate  = regr_thr.fit(xy, thr)           
+        
+        
+        &#47&#47 Save the output
+        <a id="change">self.sfc_surrogate</a>    = sfc_surrogate
+        self.thrust_surrogate = thr_surrogate     </code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Pick the type of process
+        if self.surrogate_type  == &quotgaussian&quot: 
+            gp_kernel_RQ = RationalQuadratic(length_scale=1.0, alpha=1.0)
+            regr_sfc = <a id="change">gaussian_process.GaussianProcessRegressor(kernel=gp_kernel_RQ,normalize_y=True)</a>
+            regr_thr = gaussian_process.GaussianProcessRegressor(kernel=gp_kernel_RQ)      
+            thr_surrogate = regr_thr.fit(xy, thr)
+            sfc_surrogate = regr_sfc.fit(xy, sfc)  
+            
+        elif self.surrogate_type  == &quotknn&quot:
+            regr_sfc = neighbors.KNeighborsRegressor(n_neighbors=1,weights=&quotdistance&quot)
+            regr_thr = neighbors.KNeighborsRegressor(n_neighbors=1,weights=&quotdistance&quot)
+            sfc_surrogate = regr_sfc.fit(xy, sfc)
+            thr_surrogate = regr_thr.fit(xy, thr)  
+    
+        elif self.surrogate_type  == &quotsvr&quot:
+            regr_thr = svm.SVR(C=500.)
+            regr_sfc = svm.SVR(C=500.)
+            sfc_surrogate  = regr_sfc.fit(xy, sfc)
+            thr_surrogate  = regr_thr.fit(xy, thr)           
+        
+        
+        &#47&#47 Save the output
+        <a id="change">self.sfc_surrogate</a>    = sfc_surrogate
+        self.thrust_surrogate = thr_surrogate     </code></pre>

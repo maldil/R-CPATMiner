@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        is_list = isinstance(sequence, list)
+        if isinstance(sequence, list):  &#47&#47 need condition here for type checking
+            sequence = Objects(sequence)
+            others = tuple(<a id="change">Objects</a>(sq) if <a id="change">isinstance(sq, list)</a> else sq for sq in others)
+        sequences = (sequence,) + tuple(others)
+        sizes = itertools.repeat(size) if isinstance(size, int) else size
+        indices = numpy.arange(len(sequence))</code></pre><h3>After Change</h3><pre><code class='java'>
+            subseqs = []
+            for sequence in sequences:
+                if isinstance(sequence, list):
+                    <a id="change">subseq = [sequence[i] for i in idx_batch]</a>
+                elif isinstance(sequence, tuple):
+                    subseq = tuple(sequence[i] for i in idx_batch)  &#47&#47 type: ignore
+                else:
+                    subseq = sequence[idx_batch]  &#47&#47 type: ignore</code></pre>

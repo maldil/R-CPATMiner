@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x_emb = torch.transpose(x_emb, 1, -1)
+
+        &#47&#47 compute sequence masks
+        x_mask = <a id="change">torch.unsqueeze(sequence_mask(x_lengths, x.shape[1]),
+                                 1).to(x.dtype)</a>
+
+        <a id="change">y_mask = torch.unsqueeze(sequence_mask(y_lengths, None),
+                                 1).to(x_mask.dtype)</a>
+
+        &#47&#47 encoder pass
+        o_en = self.encoder(x_emb, x_mask)
+
+        &#47&#47 duration predictor pass
+        o_dr_log = self.duration_predictor(o_en.detach(), x_mask)
+
+        &#47&#47 expand o_en with durations
+        o_en_ex, attn = self.expand_encoder_outputs(o_en, dr, x_mask, y_mask)
+
+        &#47&#47 positional encoding
+        if hasattr(self, &quotpos_encoder&quot):
+            o_en_ex = self.pos_encoder(o_en_ex, y_mask)
+
+        &#47&#47 decoder pass
+        <a id="change">o_de = self.decoder(o_en_ex, y_mask)</a>
+
+        return o_de, o_dr_log.squeeze(1), attn.transpose(1, 2)
+
+    def inference(self, x, x_lengths, g=None):  &#47&#47 pylint: disable=unused-argument</code></pre><h3>After Change</h3><pre><code class='java'>
+        return o_de, attn.transpose(1, 2)
+
+    def forward(self, x, x_lengths, y_lengths, dr, g=None):  &#47&#47 pylint: disable=unused-argument
+        <a id="change">o_en</a>, o_en_dp, x_mask, g = self._forward_encoder(x, x_lengths, g)
+        o_dr_log = self.duration_predictor(o_en_dp.detach(), x_mask)
+        o_de, attn= self._forward_decoder(o_en, o_en_dp, dr, x_mask, y_lengths, g=g)
+        return o_de, o_dr_log.squeeze(1), attn</code></pre>

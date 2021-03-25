@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def __init__(self, args, input_dim, observation_dim, transition_bias):
+    sigma2 = .1 if args.sigma2 is None else args.sigma2
+    <a id="change">if torch.cuda.is_available():
+      self.rnn_model = NormalRNN(input_dim, args.rnn_hidden_size,
+                                 args.rnn_depth, args.rnn_dropout,
+                                 observation_dim).cuda()
+      self.rnn_init_hidden = nn.Parameter(
+          torch.zeros(1, args.rnn_hidden_size).cuda())
+      self.sigma2 = nn.Parameter(sigma2 * torch.ones(observation_dim).cuda())
+    else:
+      self.rnn_model = NormalRNN(input_dim, args.rnn_hidden_size,
+                                 args.rnn_depth, args.rnn_dropout,
+                                 observation_dim)
+      self.rnn_init_hidden = nn.Parameter(torch.zeros(1, args.rnn_hidden_size))
+      self.sigma2 = nn.Parameter(sigma2 * torch.ones(observation_dim))
+   </a> self.transition_bias = transition_bias
+
+  def save(self, filepath):
+    Save the model to a file.</code></pre><h3>After Change</h3><pre><code class='java'>
+        torch.zeros(1, args.rnn_hidden_size).to(self.device))
+    sigma2 = .1 if args.sigma2 is None else args.sigma2
+    self.sigma2 = nn.Parameter(
+        sigma2 * <a id="change">torch.ones(observation_dim).to(self.device)</a>)
+    self.transition_bias = transition_bias
+
+  def save(self, filepath):</code></pre>

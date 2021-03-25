@@ -1,0 +1,22 @@
+<html><h3>4a45e9ae54615c9da540039ae59da6b4fce941a1,test/geometry/test_homography.py,TestFindHomographyDLTIter,test_dirty_points_and_gradcheck,#TestFindHomographyDLTIter#,132
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def test_dirty_points_and_gradcheck(self, batch_size, device):
+        &#47&#47 generate input data
+        dtype = torch.float64
+        H = (<a id="change">torch</a>.eye(3, device=device)[None].repeat(batch_size, 1, 1) +
+             0.3 * torch.rand(batch_size, 3, 3, device=device))
+        H = H / H[:, 2:3, 2:3]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    @pytest.mark.parametrize("batch_size", [1, 2])
+    def test_dirty_points_and_gradcheck(self, batch_size, device, dtype):
+        &#47&#47 generate input data
+        points_src = <a id="change">torch.rand(batch_size, 10, 2, device=device, dtype=dtype)</a>
+        H = kornia.eye_like(3, points_src)
+        <a id="change">H = H * 0.3 * torch.rand_like(H)</a>
+        H = H / H[:, 2:3, 2:3]
+
+        points_src = 100. * torch.rand(batch_size, 20, 2, device=device, dtype=dtype)
+        points_dst = kornia.transform_points(H, points_src)</code></pre><img src="31330575.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arraiy/torchgeometry/commit/4a45e9ae54615c9da540039ae59da6b4fce941a1#diff-1c2cfa32df23d90842e398af087d9c43d986fe7eb2327bc34ab89099ca9761e4L127' target='_blank'>Link</a></div><div id='project'> Project Name: arraiy/torchgeometry</div><div id='commit'> Commit Name: 4a45e9ae54615c9da540039ae59da6b4fce941a1</div><div id='time'> Time: 2020-11-25</div><div id='author'> Author: edgar.riba@gmail.com</div><div id='file'> File Name: test/geometry/test_homography.py</div><div id='class'> Class Name: TestFindHomographyDLTIter</div><div id='method'> Method Name: test_dirty_points_and_gradcheck</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/a7d92f7020dfe8854430ef13ed2923b2606a6262#diff-80a11d6c58dfefa22cb7fe542b1dddb91ab537422b26c834f3c0ae182d0d8cadL396' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: a7d92f7020dfe8854430ef13ed2923b2606a6262</div><div id='time'> Time: 2017-05-11</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: th_random_choice</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/93663c2cc8c0c8bc3c6f28c27679707305948c80#diff-2547d012aa59f5d9db847542db1dd2f24103a28d392d5de85f969ba5ef1b130dL5' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 93663c2cc8c0c8bc3c6f28c27679707305948c80</div><div id='time'> Time: 2010-05-11</div><div id='author'> Author: lpc@cmu.edu</div><div id='file'> File Name: tests/test_texture.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_cooccurence</div><BR>

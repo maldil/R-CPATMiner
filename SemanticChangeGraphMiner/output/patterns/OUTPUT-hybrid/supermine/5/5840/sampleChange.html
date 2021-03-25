@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        A_v = A*0.25/np.pi*T
+        v   = np.sum(A_v,axis=1)
+        
+        Lfi = -T * <a id="change">(np.sin(twist_tc)-v)</a>
+        Lfk =  T * np.cos(twist_tc)   
+        Lft = -Lfi*np.sin(twist_tc)+Lfk*np.cos(twist_tc)
+        Dg  = <a id="change">Lfi</a>*<a id="change">np.cos(twist_tc)</a>+Lfk*np.sin(twist_tc)
+            
+        L  = deltax * Lft
+        D  = deltax * Dg</code></pre><h3>After Change</h3><pre><code class='java'>
+    deltax = span/n
+    
+    sin_aoa = np.sin(aoa)
+    cos_aoa = <a id="change">np.cos(aoa)</a>
+
+    if orientation == False :
+
+        &#47&#47 discretizing the wing sections into panels            
+        i              = np.arange(0,n)
+        section_length = dchord/span*(span-(i+1)*deltax+deltax/2) + tip_chord
+        twist_distri   = twist_rc + i/float(n)*(twist_tc-twist_rc)
+        
+        ya = np.atleast_2d((i)*deltax)
+        yb = np.atleast_2d((i+1)*deltax)
+        xa = np.atleast_2d(((i+1)*deltax-deltax/2)*np.tan(sweep) + 0.25*section_length)
+        x  = np.atleast_2d(((i+1)*deltax-deltax/2)*np.tan(sweep) + 0.75*section_length)
+        y  = np.atleast_2d(((i+1)*deltax-deltax/2))      
+                
+        RHS  = np.atleast_2d(np.sin(twist_distri+aoa))
+        
+        A = (whav(x,y,xa.T,ya.T)-whav(x,y,xa.T,yb.T)\
+            -whav(x,y,xa.T,-ya.T)+whav(x,y,xa.T,-yb.T))*0.25/np.pi
+    
+        &#47&#47 Vortex strength computation by matrix inversion
+        T = np.linalg.solve(A.T,RHS.T).T
+        
+        &#47&#47 Calculating the effective velocty         
+        A_v = A*0.25/np.pi*T
+        v   = np.sum(A_v,axis=1)
+        
+        Lfi = -T * (sin_aoa-v)
+        Lfk =  T * cos_aoa 
+        Lft = -Lfi * sin_aoa + Lfk * cos_aoa
+        Dg  =  Lfi * cos_aoa + <a id="change">Lfk</a> * sin_aoa
+            
+        L  = deltax * Lft
+        D  = deltax * Dg</code></pre>

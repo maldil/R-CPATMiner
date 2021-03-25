@@ -1,0 +1,111 @@
+<html><h3>0a8e27413d721bf8d753e5e6061cc24f5bf6474f,train.py,,eval_model,#,489
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    model.eval()
+    idx = np.random.randint(0, len(y))
+    length = <a id="change">input_lengths[idx].data.cpu().numpy()[0]</a>
+
+    &#47&#47 (T,)
+    y_target = y[idx].view(-1).data.cpu().numpy()[:length]
+
+    if c is not None:
+        c = c[idx, :, :length].unsqueeze(0)
+        assert c.dim() == 3
+        print("Shape of local conditioning features: {}".format(c.size()))
+    if g is not None:
+        &#47&#47 TODO: test
+        g = g[idx]
+        print("Shape of global conditioning features: {}".format(g.size()))
+
+    &#47&#47 Dummy silence
+    if is_mulaw_quantize(hparams.input_type):
+        initial_value = P.mulaw_quantize(0, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        initial_value = P.mulaw(0.0, hparams.quantize_channels)
+    else:
+        initial_value = 0.0
+    print("Intial value:", initial_value)
+
+    &#47&#47 (C,)
+    if is_mulaw_quantize(hparams.input_type):
+        initial_input = np_utils.to_categorical(
+            initial_value, num_classes=hparams.quantize_channels).astype(np.float32)
+        initial_input = Variable(torch.from_numpy(initial_input)).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = Variable(torch.zeros(1, 1, 1).fill_(initial_value))
+    initial_input = initial_input.cuda() if use_cuda else initial_input
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        y_hat = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        y_hat = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        <a id="change">y_hat</a> = y_hat.view(-1).cpu().data.numpy()
+
+    &#47&#47 Save audio
+    os.makedirs(eval_dir, exist_ok=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    model.eval()
+    idx = np.random.randint(0, len(y))
+    length = <a id="change">input_lengths[idx].data.cpu().item()</a>
+
+    &#47&#47 (T,)
+    y_target = y[idx].view(-1).data.cpu().numpy()[:length]
+
+    if c is not None:
+        c = c[idx, :, :length].unsqueeze(0)
+        assert c.dim() == 3
+        print("Shape of local conditioning features: {}".format(c.size()))
+    if g is not None:
+        &#47&#47 TODO: test
+        g = g[idx]
+        print("Shape of global conditioning features: {}".format(g.size()))
+
+    &#47&#47 Dummy silence
+    if is_mulaw_quantize(hparams.input_type):
+        initial_value = P.mulaw_quantize(0, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        initial_value = P.mulaw(0.0, hparams.quantize_channels)
+    else:
+        initial_value = 0.0
+    print("Intial value:", initial_value)
+
+    &#47&#47 (C,)
+    if is_mulaw_quantize(hparams.input_type):
+        initial_input = np_utils.to_categorical(
+            initial_value, num_classes=hparams.quantize_channels).astype(np.float32)
+        initial_input = torch.from_numpy(initial_input).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = torch.zeros(1, 1, 1).fill_(initial_value)
+    initial_input = initial_input.to(device)
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        y_hat = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        y_hat = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        <a id="change">y_hat</a> = y_hat.view(-1).cpu().data.numpy()
+
+    &#47&#47 Save audio
+    os.makedirs(eval_dir, exist_ok=True)</code></pre><img src="3781259.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/0a8e27413d721bf8d753e5e6061cc24f5bf6474f#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L486' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 0a8e27413d721bf8d753e5e6061cc24f5bf6474f</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_model</div><BR><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/0a8e27413d721bf8d753e5e6061cc24f5bf6474f#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L556' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 0a8e27413d721bf8d753e5e6061cc24f5bf6474f</div><div id='time'> Time: 2018-05-04</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: save_states</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/e4f051b6cce414997a97b896276563c4e361d0b8#diff-32fb06e050c63f14e11e04aa4a3aeb163fe49c2fcdd82a2333ab8a129be6cc89L39' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: e4f051b6cce414997a97b896276563c4e361d0b8</div><div id='time'> Time: 2018-04-27</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch09/01_cartpole_dqn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: calc_target</div><BR>

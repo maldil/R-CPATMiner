@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                if set(cpd_as_factor.variables) != set([node].extend(parents)):
+                    raise ValueError(&quotThe cpd has wrong variables associated with it.&quot)
+                if cpd.marginalize(node) != np.ones(<a id="change">np.prod(cpd.cardinality[1:])</a>):
+                    raise ValueError(&quotThe values of the cpd are not correct&quot)
+
+                for var in cpd.variables:</code></pre><h3>After Change</h3><pre><code class='java'>
+                cpd = model.get_cpd(node)
+                cpd_as_factor = cpd.to_factor()
+                parents = model.predecessors(node)
+                <a id="change">self.cardinality[node]</a> = cpd.variable_card
+
+                &#47&#47 TODO: Add these checks
+                &#47&#47 if set(cpd_as_factor.variables) != set([node].extend(parents)):</code></pre>

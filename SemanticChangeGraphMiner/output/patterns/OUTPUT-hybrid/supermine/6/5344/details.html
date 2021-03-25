@@ -1,0 +1,21 @@
+<html><h3>21fa4e7e38567e083f98c559f8f2ae0c5573ba0f,ch15/lib/model.py,AgentA2C,__call__,#AgentA2C#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        mu_v, var_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        <a id="change">sigma = torch.sqrt(var_v).data.cpu().numpy()</a>
+        actions = np.random.normal(mu, sigma)
+        actions = np.clip(actions, -1, 1)
+        return actions, agent_states
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        mu_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        logstd = <a id="change">self.net.logstd.data.cpu().numpy()</a>
+        actions = mu + np.exp(logstd) * np.random.normal(size=logstd.shape)
+        actions = np.clip(actions, -1, 1)
+        return actions, agent_states
+</code></pre><img src="23142240.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/21fa4e7e38567e083f98c559f8f2ae0c5573ba0f#diff-5b11d8d5e38eb7500f28786a7683124ada1c5505b7e16322c43110e29d5ca488L50' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 21fa4e7e38567e083f98c559f8f2ae0c5573ba0f</div><div id='time'> Time: 2018-02-11</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/lib/model.py</div><div id='class'> Class Name: AgentA2C</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/64bbca62322389c2ac3a4677b152de593ab4f9f5#diff-3e7d6852b1aa97c09df6d3d39cfd9401d9a43250d80968a30f2f01909d793d7eL51' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 64bbca62322389c2ac3a4677b152de593ab4f9f5</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test_video.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: extract_features</div><BR>

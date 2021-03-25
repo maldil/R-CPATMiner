@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        shutil.copy(tile_dir, test_dir)
+    &#47&#47&#47&#47&#47&#47 for train
+    writer = tf.python_io.TFRecordWriter(FLAGS.train_rd_path)
+    <a id="change">grouped = split(train_df, &quotfilename&quot)</a>
+
+    <a id="change">for group in grouped:
+        tf_example = create_tf_example(group, train_dir)
+        writer.write(tf_example.SerializeToString())
+   </a> writer.close()
+    output_train= op.join(os.getcwd(),FLAGS.train_rd_path)
+    print(&quotSuccessfully created the TFRecords: {}&quot.format(output_train))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                    y = ["{}.jpg".format(tile), width, height, cl_str, bbox[0], bbox[1], bbox[2], bbox[3]]
+                    tf_tiles_info.append(y)
+    &#47&#47train_len = 0.8
+    <a id="change">tf_array = np.array(tf_tiles_info)</a>
+    split_index = int(len(tf_tiles_info) *0.8 )
+    tf_train = <a id="change">tf_array[0: split_index]</a>
+    tf_test = <a id="change">tf_array[split_index, :]</a>
+    print("You have {} training tiles and {} test tiles ready".format(
+    len(set(list(tf_train[:,1]))), len(set(list(tf_test[:,1])))))
+    tiles_dir = op.join(os.getcwd(), &quottiles&quot)
+    train_dir = op.join(os.getcwd(), &quotimages&quot, &quottrain&quot)</code></pre>

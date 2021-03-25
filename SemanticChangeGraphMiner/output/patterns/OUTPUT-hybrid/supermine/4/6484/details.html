@@ -1,0 +1,29 @@
+<html><h3>6d506202920745291cc89d1e31de62ddcc3e375a,thinc/layers/lstm.py,,LSTM,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if bi:
+        if nO is not None:
+            nO //= 2
+        model = <a id="change">with_padded(
+            clone(
+                bidirectional(recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout))),
+                depth
+            )
+        )</a>
+    else:
+        model = <a id="change">with_padded(clone(recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout)), depth))</a>
+    <a id="change">return cast(Model[Padded, Padded], model)</a>
+
+
+@registry.layers("PyTorchLSTM.v0")
+def PyTorchLSTM(</code></pre><h3>After Change</h3><pre><code class='java'>
+    model = recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout))
+    if bi:
+        model = bidirectional(model)
+    <a id="change">return clone(model, depth)</a>
+
+
+@registry.layers("PyTorchLSTM.v0")
+def PyTorchLSTM(</code></pre><img src="25634939.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/6d506202920745291cc89d1e31de62ddcc3e375a#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L28' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 6d506202920745291cc89d1e31de62ddcc3e375a</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: LSTM</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/1889b4a71bc4c0fae2249e19854994620f82a75f#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L27' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 1889b4a71bc4c0fae2249e19854994620f82a75f</div><div id='time'> Time: 2020-01-12</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PyTorchBiLSTM</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/a6d60deb6cca4b50ef29dcaf8931e5b476de8063#diff-f7127807803d7175aa1263d52b99d871273669b57cf723f4189f2f7bbb24bf87L59' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: a6d60deb6cca4b50ef29dcaf8931e5b476de8063</div><div id='time'> Time: 2020-12-04</div><div id='author'> Author: svlandeg@users.noreply.github.com</div><div id='file'> File Name: thinc/layers/lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PyTorchLSTM</div><BR>

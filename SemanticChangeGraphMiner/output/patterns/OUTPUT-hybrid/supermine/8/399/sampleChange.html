@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    tensor_input = False
+    if torch.is_tensor(y0):
+        tensor_input = True
+        <a id="change">y0 = (y0,)</a>
+        _base_nontuple_func_ = func
+        func = lambda t, y: (_base_nontuple_func_(t, y[0]),)
+    assert isinstance(y0, tuple), &quoty0 must be either a torch.Tensor or a tuple&quot
+    <a id="change">for y0_ in y0:
+        assert torch.is_tensor(y0_), &quoteach element must be a torch.Tensor but received {}&quot.format(type(y0_))
+
+   </a> if _decreasing(t):
+        t = -t
+        _base_reverse_func = func
+        func = lambda t, y: tuple(-f_ for f_ in _base_reverse_func(-t, y))</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not torch.is_tensor(y0):
+        assert isinstance(y0, tuple), &quoty0 must be either a torch.Tensor or a tuple&quot
+        tensor_input = False
+        shapes = <a id="change">[y0_.shape for y0_ in y0]</a>
+        y0 = torch.cat([y0_.reshape(-1) for y0_ in y0])
+        <a id="change">func = _TupleFunc(func, shapes)</a>
+    if not torch.is_floating_point(y0):
+        raise TypeError(&quot`y0` must be a floating point Tensor but is a {}&quot.format(y0.type()))
+
+    if _decreasing(t):</code></pre>

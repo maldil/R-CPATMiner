@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      STDOUT.write(&quottoken %6s: %s\n&quot % kind_token)
+      end = match.end()
+    if end &lt; len(line):
+      STDOUT.write(&quotUnmatched: %s\n&quot % <a id="change">repr(line[end:])</a>)
+  return
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not line:
+      STDOUT.write(&quot\n&quot)
+    tokens = list(Tokenize(line))
+    <a id="change">if not tokens:
+      continue
+   </a> if all(kind in (&quotnative&quot, &quotpunct&quot, &quotspace&quot) for (kind, token) in tokens):
+      STDOUT.write(<a id="change">&quot%s\n&quot % &quot &quot.join(token for (kind, token) in tokens
+                                     if kind == &quotnative&quot)</a>)
+    else:
+      STDERR.write(&quot%s\n&quot % line)
+  return</code></pre>

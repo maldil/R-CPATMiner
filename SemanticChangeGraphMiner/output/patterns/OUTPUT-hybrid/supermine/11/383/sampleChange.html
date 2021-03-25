@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        predicted_label: The predicted label of the query
+        
+        indices = self.select(query)
+        votes = np.atleast_2d(<a id="change">predictions[indices]</a>)
+        predicted_label = majority_voting_rule(votes)
+        &#47&#47 classifier_ensemble = self._get_classifier_ensemble(indices)
+        &#47&#47 predicted_label = majority_voting(classifier_ensemble, query)</code></pre><h3>After Change</h3><pre><code class='java'>
+            predictions = predictions.reshape(1, -1)
+
+        selected_classifiers = self.select(query)
+        <a id="change">votes = predictions[np.arange(predictions.shape[0])[:, None], selected_classifiers]</a>
+        predicted_label = majority_voting_rule(votes)
+
+        return predicted_label
+</code></pre>

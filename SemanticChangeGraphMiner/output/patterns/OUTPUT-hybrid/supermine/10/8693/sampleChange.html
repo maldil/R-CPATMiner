@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for tag, word in zip(tags, sentence):
+            word = word[0]
+            if tag == "I_W":
+                <a id="change">tokenized_sentence = tokenized_sentence + u"_" + word</a>
+            else:
+                tokenized_sentence = tokenized_sentence + word
+            <a id="change">tokenized_sentence += " "</a>
+        format_sentence = &quot&quot
+        <a id="change">for word in tokenized_sentence.split("_"):
+            if word not in self.punctuation:
+                format_sentence += word[: -1] + "_"
+       </a> tokenized_sentence = format_sentence[:-1]
+        return tokenized_sentence
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        tokens = Transformer.transform(sentence)
+        tags = self.model.tag(tokens)
+        <a id="change">tokens = [item[0] for item in tokens]</a>
+        output = []
+        for tag, token in zip(tags, tokens):
+            if tag == "I_W":
+               output[-1] = output[-1] + u" " + token</code></pre>

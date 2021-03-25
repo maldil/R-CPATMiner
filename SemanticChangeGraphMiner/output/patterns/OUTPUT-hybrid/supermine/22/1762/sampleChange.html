@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        atom_data:
+        y_grad:
+    
+    <a id="change">atom = chainer.Variable(atom_data)</a>
+    readout.reset_state()
+    <a id="change">y = readout(atom)</a>
+    <a id="change">y.grad = y_grad</a>
+    <a id="change">y.backward()</a>
+
+    def f():
+        readout.reset_state()
+        return readout(atom_data).data,
+
+    <a id="change">gx, = gradient_check.numerical_grad(f, (atom.data, ), (y.grad, ))</a>
+    numpy.testing.assert_allclose(cuda.to_cpu(gx), cuda.to_cpu(atom.grad),
+                                  atol=1e-2, rtol=1e-2)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        readout.reset_state()
+        return readout(atom_data),
+
+    <a id="change">gradient_check.check_backward(
+        f, (atom_data), y_grad, atol=1e-1, rtol=1e-1)</a>
+
+    &#47&#47 gx, = gradient_check.numerical_grad(f, (atom.data, ), (y.grad, ))
+    &#47&#47 numpy.testing.assert_allclose(cuda.to_cpu(gx), cuda.to_cpu(atom.grad),
+    &#47&#47                               atol=1e-2, rtol=1e-2)</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            Riemannian exponential.
+        
+        eigvals, eigvecs = gs.linalg.eigh(base_point)
+        transp_eigvecs = <a id="change">gs.einsum(&quot...ij-&gt;...ji&quot, eigvecs)</a>
+        rotated_tangent_vec = gs.matmul(transp_eigvecs, tangent_vec)
+        rotated_tangent_vec = gs.matmul(rotated_tangent_vec, eigvecs)
+
+        ones = gs.ones(eigvals.shape)</code></pre><h3>After Change</h3><pre><code class='java'>
+            Riemannian exponential.
+        
+        eigvals, eigvecs = gs.linalg.eigh(base_point)
+        transp_eigvecs = <a id="change">Matrices.transpose(eigvecs)</a>
+        rotated_tangent_vec = Matrices.mul(transp_eigvecs, tangent_vec,
+                                           eigvecs)
+        coefficients = 1 / (eigvals[..., :, None] + eigvals[..., None, :])
+        rotated_sylvester = rotated_tangent_vec * coefficients</code></pre>

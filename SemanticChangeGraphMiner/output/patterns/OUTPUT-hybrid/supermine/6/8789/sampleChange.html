@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        
+        if self._boosted:
+            <a id="change">if self._target is None:
+                self._prediction = 0.
+                self._next_q = 0.
+                self._idx = 0
+           </a> fit = self._fit_boosted
+        else:
+            fit = self._fit
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self._target is None:
+                self._target = reward
+            else:
+                q = <a id="change">self.approximator.predict(next_state)</a>
+                if np.any(absorbing):
+                    q *= 1 - absorbing.reshape(-1, 1)
+
+                max_q = np.max(q, axis=1)
+                <a id="change">self._target = reward + self.mdp_info.gamma * max_q</a>
+
+            self.approximator.fit(state, action, self._target, **self._fit_params)
+</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  with sam.SamReader(in_sam) as sam_reader:
+    reads = sam_reader.query(r)
+    <a id="change">pos_seq_pairs = sorted(
+        (read.alignment.position.position, read.aligned_sequence)
+        for read in reads)</a>
+    if not pos_seq_pairs:
+      print(&quotNo overlapping reads found for&quot, argv[2])
+      sys.exit(0)
+
+    <a id="change">left_position = pos_seq_pairs[0][0]</a>
+    for start, seq in pos_seq_pairs:
+      print_read(left_position, start, position, seq)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    return -1
+  in_sam = argv[1]
+  query = argv[2]
+  print(<a id="change">&quot\n&quot.join(ascii_pileup(in_sam, query))</a>)
+
+
+if __name__ == &quot__main__&quot:</code></pre>

@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                save_filename = &quot%s_net_%s.pth&quot % (which_epoch, name)
+                save_path = os.path.join(self.save_dir, save_filename)
+                net = getattr(self, &quotnet&quot + name)
+                <a id="change">if len(self.gpu_ids) &gt; 0 and torch.cuda.is_available():
+                    net.module.load_state_dict(torch.load(save_path))
+                else:
+                    net.load_state_dict(torch.load(save_path))
+
+    &#47&#47 print network information
+   </a> def print_networks(self, verbose):
+        print(&quot---------- Networks initialized -------------&quot)
+        for name in self.model_names:
+            if isinstance(name, str):</code></pre><h3>After Change</h3><pre><code class='java'>
+                    net = net.module
+                &#47&#47 if you are using PyTorch newer than 0.4 (e.g., built from
+                &#47&#47 GitHub source), you can remove str() on self.device
+                state_dict = <a id="change">torch.load(save_path, map_location=str(self.device))</a>
+                &#47&#47 patch InstanceNorm checkpoints prior to 0.4
+                for key in state_dict:
+                    self.__patch_instance_norm_state_dict(state_dict, net, key.split(&quot.&quot))
+                <a id="change">net.load_state_dict(state_dict)</a>
+
+    &#47&#47 print network information
+    def print_networks(self, verbose):
+        print(&quot---------- Networks initialized -------------&quot)</code></pre>

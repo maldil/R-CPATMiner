@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        m.fit(x, y)
+
+        p = m.predict(numpy.array([[3, 4], [41, 29]]))
+        <a id="change">assert_array_almost_equal(numpy.array([-0.341626, -5.374394]), p, decimal=5)</a>
+
+    def test_toy_hinge_fit(self, toy_data):
+        x, y = toy_data
+        m = self.svm_model</code></pre><h3>After Change</h3><pre><code class='java'>
+        m.set_params(pairs="next")
+        y = y.copy()
+        y["time"] = numpy.arange(1, 7)
+        <a id="change">sd = numpy.std(x, axis=0)</a>
+        m.fit(<a id="change">x / sd</a>, y)
+
+        <a id="change">p = m.predict(toy_test_data / sd)</a>
+        expected = numpy.array([-0.033523879826, -1.878228488294, -2.410824233892])
+        assert_array_almost_equal(expected, p, decimal=5)
+
+    def test_toy_hinge_fit(self, toy_data):</code></pre>

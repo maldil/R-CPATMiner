@@ -1,0 +1,52 @@
+<html><h3>39dce4bad4cd2a6de06dd5c84f97cd0624865b11,networks/resample2d_package/build.py,,,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+import torch
+import torch.utils.ffi
+
+<a id="change">strBasepath</a> = <a id="change">os.path.split(os.path.abspath(__file__))[0]</a> + &quot/&quot
+strHeaders = []
+strSources = []
+strDefines = []
+strObjects = []
+
+if torch.cuda.is_available() == True:
+    strHeaders += [&quotsrc/Resample2d_cuda.h&quot]
+    strSources += [&quotsrc/Resample2d_cuda.c&quot]
+    strDefines += [(&quotWITH_CUDA&quot, None)]
+    strObjects += [&quotsrc/Resample2d_kernel.o&quot]
+
+<a id="change">ffi</a> = torch.utils.ffi.create_extension(
+    name=&quot_ext.resample2d&quot,
+    headers=strHeaders,
+    sources=strSources,
+    verbose=False,
+    with_cuda=<a id="change">any(strDefine[0] == &quotWITH_CUDA&quot for strDefine in strDefines)</a>,
+    package=False,
+    relative_to=strBasepath,
+    include_dirs=[<a id="change">os.path.expandvars(&quot$CUDA_HOME&quot) + &quot/include&quot</a>],
+    define_macros=strDefines,
+    extra_objects=[os.path.join(strBasepath, strObject) for strObject in strObjects]
+)</code></pre><h3>After Change</h3><pre><code class='java'>
+import torch
+import torch.utils.ffi
+
+<a id="change">this_folder</a> = <a id="change">os.path.dirname(os.path.abspath(__file__))</a> + &quot/&quot
+
+Headers = []
+Sources = []
+<a id="change">Defines</a> = []
+Objects = []
+
+if torch.cuda.is_available() == True:
+    Headers += [&quotsrc/Resample2d_cuda.h&quot]
+    Sources += [&quotsrc/Resample2d_cuda.c&quot]
+    Defines += [(&quotWITH_CUDA&quot, None)]
+    Objects += [&quotsrc/Resample2d_kernel.o&quot]
+
+<a id="change">ffi</a> = torch.utils.ffi.create_extension(
+    name=&quot_ext.resample2d&quot,
+    headers=Headers,
+    sources=Sources,</code></pre><img src="3872895.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NVIDIA/flownet2-pytorch/commit/39dce4bad4cd2a6de06dd5c84f97cd0624865b11#diff-f7a36b86cd181fef9d67b920d876c6cbb6ed334cd68d4d1fbf423c42cb5913aeL5' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/flownet2-pytorch</div><div id='commit'> Commit Name: 39dce4bad4cd2a6de06dd5c84f97cd0624865b11</div><div id='time'> Time: 2017-12-05</div><div id='author'> Author: freda@gcf-maxwell-041.nvidia.com</div><div id='file'> File Name: networks/resample2d_package/build.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/NVIDIA/flownet2-pytorch/commit/39dce4bad4cd2a6de06dd5c84f97cd0624865b11#diff-f7a36b86cd181fef9d67b920d876c6cbb6ed334cd68d4d1fbf423c42cb5913aeL5' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/flownet2-pytorch</div><div id='commit'> Commit Name: 39dce4bad4cd2a6de06dd5c84f97cd0624865b11</div><div id='time'> Time: 2017-12-05</div><div id='author'> Author: freda@gcf-maxwell-041.nvidia.com</div><div id='file'> File Name: networks/resample2d_package/build.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/NVIDIA/flownet2-pytorch/commit/39dce4bad4cd2a6de06dd5c84f97cd0624865b11#diff-c1d494fedf70f2414f4d56024ca78106515f49b6b700cdf3e73ffe561d2a7b73L5' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/flownet2-pytorch</div><div id='commit'> Commit Name: 39dce4bad4cd2a6de06dd5c84f97cd0624865b11</div><div id='time'> Time: 2017-12-05</div><div id='author'> Author: freda@gcf-maxwell-041.nvidia.com</div><div id='file'> File Name: networks/channelnorm_package/build.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/NVIDIA/flownet2-pytorch/commit/39dce4bad4cd2a6de06dd5c84f97cd0624865b11#diff-1a0a8ce2644e052235d41b100dc1e4462a385452d5d8733c832def941afbcf84L5' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/flownet2-pytorch</div><div id='commit'> Commit Name: 39dce4bad4cd2a6de06dd5c84f97cd0624865b11</div><div id='time'> Time: 2017-12-05</div><div id='author'> Author: freda@gcf-maxwell-041.nvidia.com</div><div id='file'> File Name: networks/correlation_package/build.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

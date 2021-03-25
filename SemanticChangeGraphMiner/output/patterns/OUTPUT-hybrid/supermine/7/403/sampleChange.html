@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 even with the prop = 0, the overlap makes it so that there are 2 words
+    assert cut_by_words("test test test", 2, 1, .5) == ["test test ",
+                                                        "test test"]
+    <a id="change">assert cut_by_words("test test test", 1, 2, .5) == ["test ", "test test ",
+                                                        "test test test"]</a>
+    &#47&#47 again, although we only want 1 word per chunk the overlap makes it so
+    &#47&#47 that the 2nd doc has 2 words and the 3rd has 3 words
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    assert cut_by_words("test test test", 2, 1, .5) == ["test test ",
+                                                        "test test"]
+    <a id="change">try:
+        _ = cut_by_words("test test test", 1, 2, .5)
+        raise AssertionError("did not throw error")
+    except AssertionError as error:
+        assert str(error) == OVERLAP_LARGE_MESSAGE
+
+
+</a>def test_cut_by_words_proportion():
+    assert cut_by_words("test test test", 2, 0, 0) == ["test test ", "test"]
+    assert cut_by_words("test test test", 2, 0, .5) == ["test test ", "test"]
+    assert cut_by_words("test test test", 2, 0, 1) == ["test test test"]</code></pre>

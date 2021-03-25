@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Update memory and neighbor loader with ground-truth state.
+        memory.update_state(src, pos_dst, t, msg)
+        neighbor_loader.insert(src, pos_dst, t, msg)
+        <a id="change">neighbor_loader.insert(pos_dst, src, t, msg)</a>
+
+        loss.backward()
+        optimizer.step()
+        memory.detach()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Get updated memory of all nodes involved in the computation.
+        z, last_update = memory(n_id)
+        z = gnn(z, last_update, edge_index, data.t[e_id], <a id="change">data.msg[e_id]</a>)
+
+        pos_out = link_pred(z[assoc[src]], z[assoc[pos_dst]])
+        neg_out = link_pred(z[assoc[src]], z[assoc[neg_dst]])</code></pre>

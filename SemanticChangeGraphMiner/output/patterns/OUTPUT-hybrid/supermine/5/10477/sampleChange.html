@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        resample_seconds = load_kwargs.pop(&quotresample_seconds&quot, 60)
+        load_kwargs[&quotsections&quot] = load_kwargs.pop(
+            &quotsections&quot, mains.good_sections())
+        <a id="change">load_kwargs.setdefault(&quotresample&quot, True)</a>
+        load_kwargs.setdefault(&quotsample_period&quot, resample_seconds)
+        timeframes = []
+        building_path = &quot/building{}&quot.format(mains.building())
+        mains_data_location = &quot{}/elec/meter1&quot.format(building_path)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if &quotresample_seconds&quot in load_kwargs:
+            warn("&quotresample_seconds&quot is deprecated."
+                 "  Please use &quotsample_period&quot instead.")
+            <a id="change">load_kwargs[&quotsample_period&quot] = load_kwargs.pop(&quotresample_seconds&quot)</a>
+
+        load_kwargs.setdefault(&quotsample_period&quot, 60)
+        resample_seconds = load_kwargs[&quotsample_period&quot]
+        load_kwargs[&quotsections&quot] = load_kwargs.pop(</code></pre>

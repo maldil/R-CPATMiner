@@ -1,0 +1,47 @@
+<html><h3>6b07ae6f8e587fd27f9b30ec4922e255b428a794,enthought/chaco/tools/traits_tool.py,TraitsTool,normal_left_dclick,#TraitsTool#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 then we add its non-container components to the list of candidates;
+        &#47&#47 any nested containers are lower priority than primary plot components.
+        candidates = []
+        <a id="change">component = self.component</a>
+        if isinstance(component, BasePlotContainer) or isinstance(component, BaseXYPlot):
+            candidates = get_nested_components(self.component)
+        elif isinstance(component, PlotAxis):
+            candidates = [(component, (0,0))]
+        else:
+            &#47&#47 We don&quott support clicking on unrecognized components
+            return
+
+        &#47&#47 Hittest against all the candidate and take the first one
+        item = None
+        for candidate, offset in candidates:
+            if isinstance(candidate, PlotAxis):
+                if candidate.is_in(x-offset[0], y-offset[1]):
+                    item = candidate
+                    break
+            elif isinstance(candidate, BaseXYPlot):
+                <a id="change">if candidate.hittest((x-offset[0], y-offset[1])):
+                    item = candidate
+                    break
+
+       </a> if item:
+            self.component.active_tool = self
+            item.edit_traits(kind="livemodal")
+            event.handled = True</code></pre><h3>After Change</h3><pre><code class='java'>
+            
+        if item is not None:
+            self.component.active_tool = self
+            <a id="change">if item.__class__ in self.views:
+                item.edit_traits(kind="livemodal",
+                                 view=self.views[item.__class__],
+                                 parent=event.window.control)
+            else:
+                item.edit_traits(kind="livemodal",
+                                 parent=event.window.control)
+           </a> event.handled = True
+            self.component.active_tool = None
+            item.request_redraw()
+</code></pre><img src="2274914.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/6b07ae6f8e587fd27f9b30ec4922e255b428a794#diff-1ba79836c770af55114c98b177c4c909815183ae4cda7cec941d2a918c2c38d7L72' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 6b07ae6f8e587fd27f9b30ec4922e255b428a794</div><div id='time'> Time: 2008-08-27</div><div id='author'> Author: kammeyer@651a555e-23ca-0310-84fe-ca9f7c59d2ea</div><div id='file'> File Name: enthought/chaco/tools/traits_tool.py</div><div id='class'> Class Name: TraitsTool</div><div id='method'> Method Name: normal_left_dclick</div><BR><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/19f6bfac9d39794db025dc53f8921346f58080b9#diff-a597aecc59e41b41f533f66301835a79e40040cef4cd699cd8e069233c4d67c7L12' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 19f6bfac9d39794db025dc53f8921346f58080b9</div><div id='time'> Time: 2018-09-17</div><div id='author'> Author: meinhardt.tim@gmail.com</div><div id='file'> File Name: enjoy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/HsinYingLee/DRIT/commit/8776ca2dcfa98412a6dafc33d360ee1ba0d1b551#diff-e5dcc7e9ea231b852d8e5d57623ff2834ac9ea3e96408e44b8857b4d379530aaL11' target='_blank'>Link</a></div><div id='project'> Project Name: HsinYingLee/DRIT</div><div id='commit'> Commit Name: 8776ca2dcfa98412a6dafc33d360ee1ba0d1b551</div><div id='time'> Time: 2018-07-25</div><div id='author'> Author: james371507@gmail.com</div><div id='file'> File Name: src/test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/ilastik/ilastik/commit/8861dfa21d1cfd487b7a6eb7508885f084f58e6c#diff-ed86935734c388c9b8c9fd5e6f928e328def31f53e02b15ac06e7c34ac30e9deL223' target='_blank'>Link</a></div><div id='project'> Project Name: ilastik/ilastik</div><div id='commit'> Commit Name: 8861dfa21d1cfd487b7a6eb7508885f084f58e6c</div><div id='time'> Time: 2019-07-10</div><div id='author'> Author: tomaz.vieira@embl.de</div><div id='file'> File Name: ilastik/applets/dataSelection/datasetInfoEditorWidget.py</div><div id='class'> Class Name: DatasetInfoEditorWidget</div><div id='method'> Method Name: get_new_axes_tags</div><BR>

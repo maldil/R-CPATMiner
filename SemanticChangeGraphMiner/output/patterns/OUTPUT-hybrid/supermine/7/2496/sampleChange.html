@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                C = SO3.clebsch_gordan(l, l_1, l_2).type(torch.get_default_dtype()) * (2 * l + 1) ** 0.5
+                if l_1 == 0 or l_2 == 0:
+                    m = C.view(2 * l + 1, 2 * l + 1)
+                    <a id="change">assert (m - torch.eye(2 * l + 1, dtype=C.dtype)).abs().max() &lt; 1e-10, m.numpy().round(3)</a>
+                else:
+                    self.register_buffer("cg_{}_{}_{}".format(l, l_1, l_2), C)
+
+        self.Rs_out = Rs_out</code></pre><h3>After Change</h3><pre><code class='java'>
+                C = SO3.clebsch_gordan(l, l_1, l_2).type(torch.get_default_dtype()) * (2 * l + 1) ** 0.5
+                if l_1 == 0 or l_2 == 0:
+                    m = C.view(2 * l + 1, 2 * l + 1)
+                    <a id="change">if C.dtype == torch.float:
+                        assert (m - torch.eye(2 * l + 1, dtype=C.dtype)).abs().max() &lt; 1e-7, m.numpy().round(3)
+                    else:
+                        assert (m - torch.eye(2 * l + 1, dtype=C.dtype)).abs().max() &lt; 1e-10, m.numpy().round(3)
+               </a> else:
+                    self.register_buffer("cg_{}_{}_{}".format(l, l_1, l_2), C)
+
+        self.Rs_out = Rs_out</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test_can_use_combination_of_all_as_new_columns(self):
+        a, c, m = column_sizes(self.table)
+        order = <a id="change">([random.randrange(a) for _ in self.domain.attributes] +
+                 [random.randrange(a, a + c) for _ in self.domain.class_vars] +
+                 [random.randrange(-m + 1, 0) for _ in self.domain.metas])</a>
+        random.shuffle(order)
+        vars = list(self.domain.variables) + list(self.domain.metas[::-1])
+        vars = [vars[i] for i in order]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test_can_use_combination_of_all_as_new_columns(self):
+        a, c, m = column_sizes(self.table)
+        order = (list(<a id="change">range(a+c)</a>) + list(range(-m+1, 0)))
+        random. shuffle(order)
+        vars = list(self.domain.variables) + list(self.domain.metas[::-1])
+        atrs = [vars[<a id="change">order[i]</a>] for i in range(a)]
+        cv = <a id="change">[vars[order[i]] for i in range(a, a+c)]</a>
+        metas = [vars[<a id="change">order[i]</a>] for i in range(a+c, a+c+m-1)]
+
+        new_domain = self.create_domain(atrs, cv, metas)
+        new_table = data.Table.from_table(new_domain, self.table)</code></pre>

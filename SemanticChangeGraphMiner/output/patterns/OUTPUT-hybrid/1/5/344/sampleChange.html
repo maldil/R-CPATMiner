@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            real_validity = discriminator(real_imgs)
+            real_validity.backward(valid)
+            &#47&#47 Train on fake images
+            fake_validity = <a id="change">discriminator(fake_imgs)</a>
+            fake_validity.backward(fake)
+
+            d_loss = real_validity - fake_validity
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 Generate a batch of images
+            fake_imgs = generator(z)
+            &#47&#47 Adversarial loss
+            loss_D = -torch.mean(discriminator(real_imgs)) + <a id="change">torch.mean(discriminator(fake_imgs))</a>
+
+            loss_D.backward()
+            optimizer_D.step()
+</code></pre>

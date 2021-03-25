@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                raise FileNotFoundError(
+                    &quotSplit arff %s does not exist!&quot % filename
+                )
+            <a id="change">splits</a>, meta = scipy.io.arff.loadarff(filename)
+            name = meta.name
+
+            repetitions = OrderedDict()</code></pre><h3>After Change</h3><pre><code class='java'>
+                raise FileNotFoundError(
+                    &quotSplit arff %s does not exist!&quot % filename
+                )
+            <a id="change">file_data = arff.load(open(filename), return_type=arff.DENSE_GEN)</a>
+            splits = file_data[&quotdata&quot]
+            name = file_data[&quotrelation&quot]
+            <a id="change">attrnames = [attr[0] for attr in file_data[&quotattributes&quot]]</a>
+
+            repetitions = OrderedDict()
+
+            type_idx = attrnames.index(&quottype&quot)</code></pre>

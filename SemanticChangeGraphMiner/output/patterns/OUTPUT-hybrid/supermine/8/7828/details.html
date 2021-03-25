@@ -1,0 +1,26 @@
+<html><h3>916cda3dad76d51ed63803abe26a16a0cd677f56,dit/algorithms/total_correlation.py,,total_correlation,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            rvs = range(dist.outcome_length())
+            rv_names = False
+
+        <a id="change">d = dist.marginal(rvs, rv_names=rv_names)</a>
+    else:
+        msg = "The total correlation is applicable to joint distributions."
+        raise ditException(msg)
+
+    marginals = [ d.marginal([i]) <a id="change">for</a> i in range(d.outcome_length()) ]
+
+    <a id="change">T = sum( H(m) for m in marginals ) - H(d)</a>
+
+    return T</code></pre><h3>After Change</h3><pre><code class='java'>
+        msg = "The total correlation is applicable to joint distributions."
+        raise ditException(msg)
+
+    one = <a id="change">sum([ H(dist, [i], crvs, rv_names) for i in rvs ])</a>
+    two = H(dist, rvs, crvs, rv_names)
+    T = one - two
+
+    return T</code></pre><img src="30160141.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dit/dit/commit/916cda3dad76d51ed63803abe26a16a0cd677f56#diff-509093795f285d5520586a0d078f2d19cad5bd09ee55d0e755972181b76afb4bL37' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 916cda3dad76d51ed63803abe26a16a0cd677f56</div><div id='time'> Time: 2013-10-02</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/algorithms/total_correlation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: total_correlation</div><BR><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L10' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/06777db554db441e1ec2aa2fb8c5d40565a1ba0f#diff-2b5fc4fe03ee71c09a4c105b0d7398f3d04ab769f6ac535b05fe9d12619b1805L92' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 06777db554db441e1ec2aa2fb8c5d40565a1ba0f</div><div id='time'> Time: 2019-07-07</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/point_kernel.py</div><div id='class'> Class Name: SE3PointKernel</div><div id='method'> Method Name: __init__</div><BR>

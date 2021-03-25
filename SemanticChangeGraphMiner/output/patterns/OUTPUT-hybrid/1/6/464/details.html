@@ -1,0 +1,116 @@
+<html><h3>3b3ae2828a74b8c973a0e2197c7911390b728b50,recipy/log.py,,log_init,#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    global RUN_ID
+
+    &#47&#47 Open the database
+    <a id="change">db</a> = open_or_create_db()
+
+    &#47&#47 Create the unique ID for this run
+    guid = str(uuid.uuid4())
+
+
+
+    &#47&#47 Get general metadata, environment info, etc
+    run = {"unique_id": guid,
+        "author": getpass.getuser(),
+        "description": "",
+        "inputs": [],
+        "outputs": [],
+        "script": scriptpath,
+        "command": sys.executable,
+        "environment": [platform.platform(), "python " + sys.version.split(&quot\n&quot)[0]],
+        "date": datetime.datetime.utcnow(),
+        "command_args": " ".join(cmd_args)}
+
+    if not option_set(&quotignored metadata&quot, &quotgit&quot):
+        try:
+            repo = Repo(scriptpath, search_parent_directories=True)
+            run["gitrepo"] = repo.working_dir
+            run["gitcommit"] =  repo.head.commit.hexsha
+            run["gitorigin"] = get_origin(repo)
+
+            if not option_set(&quotignored metadata&quot, &quotdiff&quot):
+                whole_diff = &quot&quot
+                diffs = repo.index.diff(None, create_patch=True)
+                for diff in diffs:
+                    whole_diff += "\n\n\n" + diff.diff.decode("utf-8")
+
+                run[&quotdiff&quot] = whole_diff
+        except (InvalidGitRepositoryError, ValueError):
+            &#47&#47 We can&quott store git info for some reason, so just skip it
+            pass
+
+    &#47&#47 Put basics into DB
+    RUN_ID = db.insert(run)
+
+    &#47&#47 Print message
+    if not option_set(&quotgeneral&quot, &quotquiet&quot):
+        print("recipy run inserted, with ID %s" % (guid))
+
+    <a id="change">db.close()</a>
+
+    &#47&#47 Register exception hook so exceptions can be logged
+    sys.excepthook = log_exception
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 A RUN_ID could have already been assigned.
+    &#47&#47 This happens when a patched module was imported before recipy was
+    &#47&#47 imported.
+    <a id="change">if not RUN_ID:
+        &#47&#47 Open the database
+        db = open_or_create_db()
+
+        &#47&#47 Create the unique ID for this run
+        guid = str(uuid.uuid4())
+
+        &#47&#47 Get general metadata, environment info, etc
+        run = {
+            "unique_id": guid,
+            "author": getpass.getuser(),
+            "description": "",
+            "inputs": [],
+            "outputs": [],
+            "script": scriptpath,
+            "command": sys.executable,
+            "environment": [platform.platform(), "python " + sys.version.split(&quot\n&quot)[0]],
+            "date": datetime.datetime.utcnow(),
+            "command_args": " ".join(cmd_args),
+            "warnings": []
+        }
+
+        if not option_set(&quotignored metadata&quot, &quotgit&quot):
+            try:
+                repo = Repo(scriptpath, search_parent_directories=True)
+                run["gitrepo"] = repo.working_dir
+                run["gitcommit"] = repo.head.commit.hexsha
+                run["gitorigin"] = get_origin(repo)
+
+                if not option_set(&quotignored metadata&quot, &quotdiff&quot):
+                    whole_diff = &quot&quot
+                    diffs = repo.index.diff(None, create_patch=True)
+                    for diff in diffs:
+                        whole_diff += "\n\n\n" + diff.diff.decode("utf-8")
+
+                    run[&quotdiff&quot] = whole_diff
+            except (InvalidGitRepositoryError, ValueError):
+                &#47&#47 We can&quott store git info for some reason, so just skip it
+                pass
+
+        &#47&#47 Put basics into DB
+        RUN_ID = db.insert(run)
+
+        &#47&#47 Print message
+        if not option_set(&quotgeneral&quot, &quotquiet&quot):
+            print("recipy run inserted, with ID %s" % (guid))
+
+        db.close()
+
+        &#47&#47 Register exception hook so exceptions can be logged
+        sys.excepthook = log_exception
+
+</a>def log_input(filename, source):
+    if type(filename) is not str:
+        try:
+            filename = filename.name</code></pre><img src="2608871.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/recipy/recipy/commit/3b3ae2828a74b8c973a0e2197c7911390b728b50#diff-feef3f540264a9594f528376e19a749677c1b5cc38485b2874cd3cc999ed3dfdL46' target='_blank'>Link</a></div><div id='project'> Project Name: recipy/recipy</div><div id='commit'> Commit Name: 3b3ae2828a74b8c973a0e2197c7911390b728b50</div><div id='time'> Time: 2016-03-23</div><div id='author'> Author: j.vanderzwaan@esciencecenter.nl</div><div id='file'> File Name: recipy/log.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_init</div><BR><BR><div id='link'><a href='https://github.com/gooofy/zamia-speech/commit/85861ea5c5320518267405bef050a0dab933e069#diff-18503b8903f2767f212ad86a33581279f1058ee8c8a5950a3f7bb521ba866068L45' target='_blank'>Link</a></div><div id='project'> Project Name: gooofy/zamia-speech</div><div id='commit'> Commit Name: 85861ea5c5320518267405bef050a0dab933e069</div><div id='time'> Time: 2018-02-17</div><div id='author'> Author: guenter@zamia.org</div><div id='file'> File Name: phone_gen.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/8fb0987926a8e86c17ac516106b7a81c97b26505#diff-f4d61a5c1ff0065d01c1265a1c7ac798ebf8ea65bc7cb66bb513de987f549617L15' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 8fb0987926a8e86c17ac516106b7a81c97b26505</div><div id='time'> Time: 2017-01-12</div><div id='author'> Author: stephenhbach@gmail.com</div><div id='file'> File Name: snorkel/models/meta.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: set_sqlite_pragma</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    bins     = np.linspace(-0.5, 0.5, np.ceil(1./resolution), endpoint=False)
+  
+    <a id="change">counts</a>, tuning = np.histogram(residual, bins)
+    
+    &#47&#47 return the histogram peak
+    return tuning[np.argmax(counts)]</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Only count magnitude where frequency is &gt; 0
+    pitch_mask = pitch &gt; 0
+    
+    <a id="change">threshold = np.median(mag[pitch_mask])</a>
+    
+    return librosa.feature.pitch_tuning( pitch[(mag &gt; threshold) & pitch_mask], 
+                                            resolution=resolution, 
+                                            bins_per_octave=bins_per_octave)</code></pre>

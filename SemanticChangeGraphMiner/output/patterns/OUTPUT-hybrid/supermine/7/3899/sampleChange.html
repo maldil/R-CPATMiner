@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    image = Image.open(&quot&quot)
+    no_alpha_image = image.convert(&quotRGB&quot)
+    draw = ImageDraw.Draw(no_alpha_image)
+    <a id="change">for region in find_regions(no_alpha_image, [0,255,0]):
+        draw.rectangle(expand_bounding(no_alpha_image, region), outline=(0, 255, 0))
+   </a> no_alpha_image.show()</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47&#47&#47&#47&#47 END OF ORIGINAL
+
+    &#47&#47&#47&#47&#47&#47 With new mask region finder
+    ori_array = <a id="change">np.asarray(no_alpha_image)</a>
+    ori_array = np.array(ori_array / 255.0)
+    ori_array = np.expand_dims(ori_array, axis=0)
+    mask = get_mask(ori_array, <a id="change">[0.0, 1.0, 0.0]</a>)
+    <a id="change">regions = region_by_mask(mask)</a>
+    for region in regions:
+        draw.rectangle(expand_bounding_mk2(no_alpha_image, region), outline=(0, 255, 0))
+    no_alpha_image.show()
+    &#47&#47&#47&#47&#47&#47 END OF NEW MASK REGION FINDER</code></pre>

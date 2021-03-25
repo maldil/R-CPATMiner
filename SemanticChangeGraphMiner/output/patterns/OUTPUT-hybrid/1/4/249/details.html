@@ -1,0 +1,35 @@
+<html><h3>f5598a18d5c79e49b0af807ac9845250e1f9824a,app/grandchallenge/archives/models.py,Archive,delete,#Archive#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            images_to_remove
+        )
+
+        <a id="change">Patient.objects.filter(
+            study__image__in=images_to_remove
+        ).distinct().exclude(pk__in=protected_patient_ids).delete(
+            *args, **kwargs
+        )</a>
+        Study.objects.filter(image__in=images_to_remove).distinct().exclude(
+            pk__in=protected_study_ids
+        ).delete(*args, **kwargs)
+        images_to_remove.delete(*args, **kwargs)</code></pre><h3>After Change</h3><pre><code class='java'>
+            images_to_remove
+        )
+
+        <a id="change">with transaction.atomic():
+            Patient.objects.filter(
+                study__image__in=images_to_remove
+            ).distinct().exclude(pk__in=protected_patient_ids).delete(
+                *args, **kwargs
+            )
+            Study.objects.filter(
+                image__in=images_to_remove
+            ).distinct().exclude(pk__in=protected_study_ids).delete(
+                *args, **kwargs
+            )
+            images_to_remove.delete(*args, **kwargs)
+
+            super().delete(*args, **kwargs)</a>
+</code></pre><img src="1415152.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/f5598a18d5c79e49b0af807ac9845250e1f9824a#diff-abb6adddad8f92214b0c29e42179f4137ad6230c778d277992edcfac52afe005L63' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: f5598a18d5c79e49b0af807ac9845250e1f9824a</div><div id='time'> Time: 2019-09-10</div><div id='author'> Author: harm.van.zeeland@gmail.com</div><div id='file'> File Name: app/grandchallenge/archives/models.py</div><div id='class'> Class Name: Archive</div><div id='method'> Method Name: delete</div><BR><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/c610126cc645933cc24fd4f6548ed953caa6d857#diff-d3b89bd629e3a053ff4dc3607a0b078fd14735f4ac35e38e9f4b234b42108faaL86' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: c610126cc645933cc24fd4f6548ed953caa6d857</div><div id='time'> Time: 2018-06-27</div><div id='author'> Author: pkcakeout@gmail.com</div><div id='file'> File Name: app/tests/cases_tests/test_background_tasks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_staged_uploaded_file_cleanup_interferes_with_image_build</div><BR>

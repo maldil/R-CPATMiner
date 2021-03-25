@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def dropEvent(self, dropEvent):
+        urls = dropEvent.mimeData().urls()
+        filepaths = list(<a id="change">map(QUrl.toLocalFile, urls)</a>)
+        filepaths = <a id="change">list(map(str, filepaths))</a>
+        self.addFilesRequestedDrop.emit(filepaths)
+
+    def scrollContentsBy(self, dx, dy):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+        filepaths = [Path(QUrl.toLocalFile(url)) for url in dropEvent.mimeData().urls()]
+        starting_lane_index = self.rowAt(dropEvent.pos().y())
+        &#47&#47 Last row is the button.
+        <a id="change">if starting_lane_index == self.model().rowCount() - 1:
+            starting_lane_index = -1
+
+       </a> self.addFilesRequestedDrop.emit(filepaths, starting_lane_index)
+
+    def scrollContentsBy(self, dx, dy):
+        </code></pre>

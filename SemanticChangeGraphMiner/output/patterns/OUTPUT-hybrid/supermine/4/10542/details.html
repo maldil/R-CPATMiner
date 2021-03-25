@@ -1,0 +1,28 @@
+<html><h3>44f637a6fc9ab8d1e69b293e26425be0cdabc499,patches/sitecustomize.py,,init,#,9
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+kernel_integrations_var = os.getenv("KAGGLE_KERNEL_INTEGRATIONS")
+
+def init():
+    bq_user_jwt = <a id="change">os.getenv("KAGGLE_USER_SECRETS_TOKEN")</a>
+    if kaggle_proxy_token or bq_user_jwt:
+        from google.auth import credentials, environment_vars
+        from google.cloud import bigquery
+        from google.cloud.bigquery._http import Connection</code></pre><h3>After Change</h3><pre><code class='java'>
+kernel_integrations_var = os.getenv("KAGGLE_KERNEL_INTEGRATIONS")
+
+def init():
+    is_jwe_set = <a id="change">"KAGGLE_USER_SECRETS_TOKEN" in os.environ</a>
+    if kaggle_proxy_token or is_jwe_set:
+        init_bigquery()
+    <a id="change">if is_jwe_set:
+        if get_integrations().has_gcs():
+            init_gcs()
+
+
+</a>def init_bigquery():
+    from google.auth import credentials, environment_vars
+    from google.cloud import bigquery
+    from google.cloud.bigquery._http import Connection</code></pre><img src="39022419.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Kaggle/docker-python/commit/44f637a6fc9ab8d1e69b293e26425be0cdabc499#diff-7ad333d1673b7a08411ce23923ffe855ab3fe7934feae73a21c4dfd05c21967dL9' target='_blank'>Link</a></div><div id='project'> Project Name: Kaggle/docker-python</div><div id='commit'> Commit Name: 44f637a6fc9ab8d1e69b293e26425be0cdabc499</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: ifigotin@google.com</div><div id='file'> File Name: patches/sitecustomize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: init</div><BR><BR><div id='link'><a href='https://github.com/regel/loudml/commit/0b823df0bf0c82cf1458b7f2dc3b24628e011795#diff-ba626a1fcf8d8f111ef2bf1c8454999a76f8507a149cb7bcc53edaa4989f0f58L12' target='_blank'>Link</a></div><div id='project'> Project Name: regel/loudml</div><div id='commit'> Commit Name: 0b823df0bf0c82cf1458b7f2dc3b24628e011795</div><div id='time'> Time: 2019-09-29</div><div id='author'> Author: sebastien.regel@gmail.com</div><div id='file'> File Name: loudml/setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/nilearn/nilearn/commit/9df22084c5753cd5b3480afddee054dcdd774438#diff-1efbb074e9144e933df83b7468263505d8489ef9524a0bbf927f99be6aebcfadL201' target='_blank'>Link</a></div><div id='project'> Project Name: nilearn/nilearn</div><div id='commit'> Commit Name: 9df22084c5753cd5b3480afddee054dcdd774438</div><div id='time'> Time: 2017-05-29</div><div id='author'> Author: dkamalakarreddy@gmail.com</div><div id='file'> File Name: nilearn/datasets/atlas.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fetch_atlas_harvard_oxford</div><BR>

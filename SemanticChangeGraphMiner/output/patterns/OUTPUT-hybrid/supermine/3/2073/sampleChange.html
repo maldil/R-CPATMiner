@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Normalize by variance
+    oscillation_var = np.var(oscillation)
+    <a id="change">noise_var = np.var(noise)</a>
+    noise = np.sqrt(noise**2 * oscillation_var /
+                    (noise_var * ratio_osc_var)) * np.sign(noise)
+
+    &#47&#47 Combine oscillation and noise</code></pre><h3>After Change</h3><pre><code class='java'>
+    oscillation = sim_oscillation(n_seconds, fs, freq, rdsym=rdsym)
+
+    &#47&#47 Normalize & combine signal
+    <a id="change">oscillation</a>, noise = normalize_by_variance(oscillation, noise, ratio_osc_var)
+    osc = oscillation + noise
+
+    return osc</code></pre>

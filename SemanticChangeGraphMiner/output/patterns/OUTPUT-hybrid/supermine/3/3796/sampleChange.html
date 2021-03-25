@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            output tensor of size (B, C, M, N, 2) such that:
+            C[b, c, m, n, :] = A[b, c, m, n, :] * B[m, n, :]
+    
+    <a id="change">A, B = A.contiguous(), B.contiguous()</a>
+    if A.size()[-3:] != B.size():
+        raise RuntimeError(&quotThe filters are not compatible for multiplication!&quot)
+
+    if not iscomplex(A) or not iscomplex(B):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if isreal(B):
+        if inplace:
+            <a id="change">return A.mul_(B)</a>
+        else:
+            return A * B
+    else:
+        C = A.new(A.size())</code></pre>

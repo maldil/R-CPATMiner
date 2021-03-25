@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    layer = model.layers[0]
+    pad = model.get_attr("pad")
+    lengths = layer.ops.asarray([len(seq) for seq in seqs_in])
+    X, bp_layer = layer.begin_update(<a id="change">layer.ops.flatten(seqs_in, pad=pad)</a>)
+
+    def backprop(d_seqs_out: OutputType) -&gt; InputType:
+        d_X = bp_layer(layer.ops.flatten(d_seqs_out, pad=pad))</code></pre><h3>After Change</h3><pre><code class='java'>
+    layer = model.layers[0]
+    pad = model.get_attr("pad")
+    lengths = layer.ops.asarray([len(seq) for seq in Xs])
+    Xf = <a id="change">layer.ops.flatten(Xs, pad=pad)</a>
+    <a id="change">Yf, get_dXf = layer(Xf, is_train)</a>
+
+    def backprop(dYs: OutputType) -&gt; InputType:
+        dYf = layer.ops.flatten(dXs, pad=pad)
+        dXf = get_dXf(dYf)</code></pre>

@@ -1,0 +1,33 @@
+<html><h3>72f3f5bf50ed2d91cdcfbe2cf47120a2df8883cd,nilmtk/elecmeter.py,ElecMeter,_get_stat_from_cache_or_compute,#ElecMeter#,415
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        key_for_cached_stat = self.key_for_cached_stat(results_obj.name)
+        if loader_kwargs.get(&quotpreprocessing&quot) is None:
+            cached_stat = self.get_cached_stat(key_for_cached_stat)
+            <a id="change">for section in sections:
+                try:
+                    row = cached_stat.loc[section.start]
+                except KeyError:
+                    sections_to_compute.append(section)
+                else:
+                    end_time = row[&quotend&quot]
+                    if end_time == section.end:
+                        usable_sections_from_cache = (
+                            usable_sections_from_cache.append(row))
+                    else:
+                        sections_to_compute.append(section)
+       </a> else:
+            sections_to_compute = sections
+
+        if not sections_to_compute:</code></pre><h3>After Change</h3><pre><code class='java'>
+            
+            &#47&#47 Get sections_to_compute
+            sections_to_compute = set(sections) - set(results_obj.timeframes())
+            <a id="change">sections_to_compute = list(sections_to_compute)</a>
+            <a id="change">sections_to_compute.sort()</a>
+        else:
+            sections_to_compute = sections
+
+        if not results_obj._data.empty:</code></pre><img src="9728868.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/72f3f5bf50ed2d91cdcfbe2cf47120a2df8883cd#diff-a971749d15e3650612d931071655e1aaa68f3744097600135ec5c2b5fe3f0732L429' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 72f3f5bf50ed2d91cdcfbe2cf47120a2df8883cd</div><div id='time'> Time: 2014-11-26</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/elecmeter.py</div><div id='class'> Class Name: ElecMeter</div><div id='method'> Method Name: _get_stat_from_cache_or_compute</div><BR><BR><div id='link'><a href='https://github.com/invesalius/invesalius3/commit/b331b9f29062a0e888dafc7a7d19ca8fa53286c1#diff-1b96edeb58f2477a39d8d682867ab87577e413032b4e8005ff5820df369b9a97L8' target='_blank'>Link</a></div><div id='project'> Project Name: invesalius/invesalius3</div><div id='commit'> Commit Name: b331b9f29062a0e888dafc7a7d19ca8fa53286c1</div><div id='time'> Time: 2020-03-23</div><div id='author'> Author: totonixsame@gmail.com</div><div id='file'> File Name: invesalius/segmentation/brain/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_plaidml_devices</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/7b7b6121a7fe03d9af2e1a78f3d03ae27d70d13f#diff-0526d5df5f0aad8cecacca821fe51f94654e38a04555c2332ca67a012daec7ecL165' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 7b7b6121a7fe03d9af2e1a78f3d03ae27d70d13f</div><div id='time'> Time: 2017-11-29</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/audit/file_upload.py</div><div id='class'> Class Name: file_upload</div><div id='method'> Method Name: _generate_urls</div><BR>

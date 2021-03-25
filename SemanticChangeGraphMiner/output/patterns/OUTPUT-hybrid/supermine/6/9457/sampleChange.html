@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def subtypes(hg, edge):
+    ont_edges = hg.search((const.type_of_pred, &quot*&quot, edge))
+    <a id="change">return tuple([ont_edge[1] for ont_edge in ont_edges])</a>
+
+
+def supertypes(hg, edge):
+    ont_edges = hg.serch((const.type_of_pred, edge, &quot*&quot))</code></pre><h3>After Change</h3><pre><code class='java'>
+def subtypes(hg, edge, deep=False):
+    ont_edges = hg.search((const.type_of_pred, &quot*&quot, edge))
+    subs = set([ont_edge[1] for ont_edge in ont_edges])
+    <a id="change">if deep:
+        new_subs = set()
+        for sub in subs:
+            new_subs |= subtypes(hg, sub, deep=True)
+        subs |= new_subs
+   </a> <a id="change">return subs</a>
+
+
+def supertypes(hg, edge, deep=False):
+    ont_edges = hg.search((const.type_of_pred, edge, &quot*&quot))</code></pre>

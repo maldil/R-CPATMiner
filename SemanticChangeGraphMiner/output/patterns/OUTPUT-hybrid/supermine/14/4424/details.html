@@ -1,0 +1,51 @@
+<html><h3>c343409098b4f4b8396119d9f26e040e479a0e2b,labs/08/speech_recognition_eval.py,,,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+parser.add_argument("gold", type=str, help="Path to gold data.")
+args = parser.parse_args()
+
+<a id="change">with open(args.system, "r", encoding="utf-8") as system_file:
+    system = [line.rstrip("\n") for line in system_file]
+
+</a>with open(args.gold, "r", encoding="utf-8") as gold_file:
+    gold = [line.rstrip("\n") for line in gold_file]
+
+if len(system) &lt; len(gold):
+    raise RuntimeError("The system output is shorter than gold data: {} vs {}.".format(len(system), len(gold)))
+
+score = 0
+for i in range(len(gold)):
+    gold_sentence = gold[i].split(" ")
+    system_sentence = system[i].split(" ")
+    <a id="change">score</a> += edit_distance(gold_sentence, system_sentence) / len(gold_sentence)
+
+print("Average normalized edit distance: {:.2f}%".format(100 * score / len(gold)))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            )
+    return a[-1][-1]
+
+<a id="change">if __name__ == "__main__":
+    &#47&#47 Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("predictions", type=str, help="Path to predicted output.")
+    parser.add_argument("dataset", type=str, help="Which dataset to evaluate (&quotdev&quot, &quottest&quot).")
+    args = parser.parse_args([] if "__file__" not in globals() else None)
+
+    gold = getattr(TimitMFCC(), args.dataset).data["letters"]
+
+    with open(args.predictions, "r", encoding="utf-8") as predictions_file:
+        predictions = [line.rstrip("\n") for line in predictions_file]
+
+    if len(predictions) &lt; len(gold):
+        raise RuntimeError("The predictions are shorter than gold data: {} vs {}.".format(len(predictions), len(gold)))
+
+    score = 0
+    for i in range(len(gold)):
+        gold_sentence = [TimitMFCC.LETTERS[letter] for letter in gold[i]]
+        predicted_sentence = predictions[i].split(" ")
+        score += edit_distance(gold_sentence, predicted_sentence) / len(gold_sentence)
+
+    print("Average normalized edit distance: {:.2f}%".format(100 * score / len(gold)))</a>
+</code></pre><img src="19285508.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ufal/npfl114/commit/c343409098b4f4b8396119d9f26e040e479a0e2b#diff-94d40439703e58f8185b11815ecf2316af953fb40679a728e28f388b7e618db8L18' target='_blank'>Link</a></div><div id='project'> Project Name: ufal/npfl114</div><div id='commit'> Commit Name: c343409098b4f4b8396119d9f26e040e479a0e2b</div><div id='time'> Time: 2020-04-20</div><div id='author'> Author: milan@strakovi.com</div><div id='file'> File Name: labs/08/speech_recognition_eval.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/ml-on-gcp/commit/8079adae33711e4886a625df3f0ae9860739f7b9#diff-d14af158fd6ca06ea342c9ee12428ba4a41e4b893af1be9f4f09a946bc978ab1L42' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/ml-on-gcp</div><div id='commit'> Commit Name: 8079adae33711e4886a625df3f0ae9860739f7b9</div><div id='time'> Time: 2019-09-03</div><div id='author'> Author: yuhanliu@google.com</div><div id='file'> File Name: example_zoo/tools/process.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/metalbubble/moments_models/commit/5212f598c3d65670a0399afe0a7434e91a5556aa#diff-fa16e16954ea3c9cac606d42eb4ee7b49f5ff1431e2e851a95b9c8f11087d2eaL47' target='_blank'>Link</a></div><div id='project'> Project Name: metalbubble/moments_models</div><div id='commit'> Commit Name: 5212f598c3d65670a0399afe0a7434e91a5556aa</div><div id='time'> Time: 2018-01-15</div><div id='author'> Author: alexandonian@gmail.com</div><div id='file'> File Name: test_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

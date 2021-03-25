@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+discriminator.apply(weights_init_normal)
+
+&#47&#47 Configure data loader
+<a id="change">os.makedirs(&quot../../data/cifar10&quot, exist_ok=True)</a>
+cifar_loader = torch.utils.data.DataLoader(
+    datasets.CIFAR10(&quot../../data/cifar10&quot, train=True, download=True,
+                   transform=transforms.Compose([
+                       transforms.Resize(opt.img_size),</code></pre><h3>After Change</h3><pre><code class='java'>
+transforms_ = [ transforms.Resize((opt.img_size, opt.img_size), Image.BICUBIC),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) ]
+transforms_lr = <a id="change">[ transforms.Resize((opt.img_size//4, opt.img_size//4), Image.BICUBIC),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) ]</a>
+<a id="change">dataloader = DataLoader(ImageDataset("../../data/%s" % opt.dataset_name,
+                        transforms_x=transforms_, transforms_lr=transforms_lr),
+                        batch_size=opt.batch_size, shuffle=True, num_workers=opt.n_cpu)</a>
+
+&#47&#47 Optimizers
+optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))</code></pre>

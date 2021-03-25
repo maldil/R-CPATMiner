@@ -1,0 +1,38 @@
+<html><h3>7029fcc6ff92856d43119a56b9d3367ae0fd7b55,container_registry/container_analysis/samples_test.py,TestContainerAnalysisSamples,test_pubsub,#TestContainerAnalysisSamples#,130
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
+        tries = 0
+        success = False
+        <a id="change">while not success and tries &lt; TRY_LIMIT:
+            print(tries)
+            tries += 1
+            receiver = samples.MessageReceiver()
+            client.subscribe(subscription_name, receiver.pubsub_callback)
+
+            &#47&#47 test adding 3 more occurrences
+            total_created = 3
+            for _ in range(total_created):
+                occ = samples.create_occurrence(self.image_url,
+                                                self.note_id,
+                                                PROJECT_ID,
+                                                PROJECT_ID)
+                sleep(SLEEP_TIME)
+                samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+                sleep(SLEEP_TIME)
+            print(&quotdone. msg_count = {}&quot.format(receiver.msg_count))
+            success = receiver.msg_count == total_created
+       </a> assert receiver.msg_count == total_created
+        &#47&#47 clean up
+        client.delete_subscription(subscription_name)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        except AlreadyExists:
+            pass
+
+        subscription_id = <a id="change">&quotcontainer-analysis-test-{}&quot.format(uuid.uuid4())</a>
+        subscription_name = client.subscription_path(PROJECT_ID,
+                                                     subscription_id)
+        samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
+</code></pre><img src="9265581.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/7029fcc6ff92856d43119a56b9d3367ae0fd7b55#diff-82c2fe665613d75fce2ecfd9c5247bdfb07126ae266d58fb3072257d21444f6cL141' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 7029fcc6ff92856d43119a56b9d3367ae0fd7b55</div><div id='time'> Time: 2020-04-21</div><div id='author'> Author: tmatsuo@google.com</div><div id='file'> File Name: container_registry/container_analysis/samples_test.py</div><div id='class'> Class Name: TestContainerAnalysisSamples</div><div id='method'> Method Name: test_pubsub</div><BR><BR><div id='link'><a href='https://github.com/shibing624/pycorrector/commit/b9b28080281ff6bbf613620559709f762fd3ef0b#diff-ba47e34bfd0a64ade91111786676be23f3c9bcb8931bf6cebb60f66611a9064dL75' target='_blank'>Link</a></div><div id='project'> Project Name: shibing624/pycorrector</div><div id='commit'> Commit Name: b9b28080281ff6bbf613620559709f762fd3ef0b</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: 507153809@qq.com</div><div id='file'> File Name: pycorrector/rnn_lm/infer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ppl</div><BR><BR><div id='link'><a href='https://github.com/automl/auto-sklearn/commit/68b022cb9d24eb4e9b8341887e8ff1c9f9fda405#diff-0fec84578fbd1cf8aa8f53d400a6e596496a3a8b547a877292de6d01e9e19c6fL831' target='_blank'>Link</a></div><div id='project'> Project Name: automl/auto-sklearn</div><div id='commit'> Commit Name: 68b022cb9d24eb4e9b8341887e8ff1c9f9fda405</div><div id='time'> Time: 2020-12-11</div><div id='author'> Author: 44504424+franchuterivera@users.noreply.github.com</div><div id='file'> File Name: test/test_pipeline/test_classification.py</div><div id='class'> Class Name: SimpleClassificationPipelineTest</div><div id='method'> Method Name: test_fit_instantiates_component</div><BR><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR>

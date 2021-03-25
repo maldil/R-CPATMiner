@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def draw_se_read_quality(Quality_se):
+    f, ax = plt.subplots(1, 1)
+    <a id="change">Quality_se.plot(legend=False, ax=ax)</a>
+    ax.set_ylabel(&quotQuality score&quot)
+    ax.set_xlabel(&quotPostition&quot)
+    ax.set_ylim([min_quality, max_quality])
+    &#47&#47 again, kwargs should be added to this function</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47,
+
+def draw_se_read_quality(df,quality_range,**kwargs):
+    <a id="change">return offline.plot(
+        df.iplot(
+            asFigure=True,
+            kind="line",
+            layout = go.Layout(
+                yaxis = dict(range=quality_range, autorange=True, title="Quality score"),
+                xaxis = dict(title=&quotPosition read&quot),
+                            )
+                    ),**kwargs,**PLOTLY_PARAMS
+
+                    )</a>
+
+
+    &#47&#47 f, ax = plt.subplots(1, 1)
+    &#47&#47 Quality_se.plot(legend=False, ax=ax)</code></pre>

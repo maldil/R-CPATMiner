@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    obs_shape = envs[0].observation_space.shape
+    act_n = envs[0].action_space.n
+
+    net_policy = <a id="change">common.AtariA2C(obs_shape, act_n)</a>
+
+    net_em = i2a.EnvironmentModel(obs_shape, act_n)
+    net_em.load_state_dict(torch.load(args.em, map_location=lambda storage, loc: storage))
+
+    net_i2a = i2a.I2A(obs_shape, act_n, net_em, net_policy, ROLLOUTS_STEPS)
+
+    <a id="change">if args.cuda:
+        net_policy.cuda()
+        net_em.cuda()
+        net_i2a.cuda()
+
+   </a> print(net_i2a)
+
+    obs = envs[0].reset()
+    obs_v = ptan.agent.default_states_preprocessor([obs], cuda=args.cuda)</code></pre><h3>After Change</h3><pre><code class='java'>
+    obs_shape = envs[0].observation_space.shape
+    act_n = envs[0].action_space.n
+
+    net_policy = <a id="change">common</a>.AtariA2C(obs_shape, act_n).to(device)
+
+    net_em = i2a.EnvironmentModel(obs_shape, act_n)
+    net_em.load_state_dict(torch.load(args.em, map_location=lambda storage, loc: storage))
+    net_em = net_em.to(device)
+
+    net_i2a = <a id="change">i2a.I2A(obs_shape, act_n, net_em, net_policy, ROLLOUTS_STEPS).to(device)</a>
+    print(net_i2a)
+
+    obs = envs[0].reset()
+    obs_v = ptan.agent.default_states_preprocessor([obs]).to(device)</code></pre>

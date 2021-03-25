@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        signals = signals.copy()
+
+    if normalize:
+        <a id="change">if signals.shape[0] == 1:
+            warnings.warn(&quotStandardization of 3D signal has been requested but &quot
+                &quotwould lead to zero values. Skipping.&quot)
+            return signals
+
+       </a> if not detrend:
+            &#47&#47 remove mean if not already detrended
+            signals = signals - signals.mean(axis=0)
+
+        std = np.sqrt(<a id="change">(signals ** 2).sum(axis=0)</a>)
+        std[std &lt; np.finfo(np.float).eps] = 1.  &#47&#47 avoid numerical problems
+        signals /= std
+    return signals</code></pre><h3>After Change</h3><pre><code class='java'>
+        copy of signals, standardized.
+    
+
+    <a id="change">if standardize not in [True, False, &quotpsc&quot, &quotzscore&quot]:
+        raise ValueError(&quot{} is no valid standardize strategy.&quot
+                         .format(standardize))
+
+   </a> if detrend:
+        signals = _detrend(signals, inplace=False)
+    else:
+        signals = signals.copy()
+
+    if standardize:
+        <a id="change">if signals.shape[0] == 1:
+            warnings.warn(&quotStandardization of 3D signal has been requested but&quot
+                          &quot would lead to zero values. Skipping.&quot)
+            return signals
+
+        elif (standardize == &quotzscore&quot) or (standardize is True):
+            if not detrend:
+                &#47&#47 remove mean if not already detrended
+                signals = signals - signals.mean(axis=0)
+
+            std = signals.std(axis=0)
+            std[std &lt; np.finfo(np.float).eps] = 1.  &#47&#47 avoid numerical problems
+            signals /= std
+
+        elif standardize == &quotpsc&quot:
+            mean_signal = signals.mean(axis=0)
+            invalid_ix = mean_signal &lt; np.finfo(np.float).eps
+            signals = (signals / mean_signal) * 100
+            signals -= 100
+
+            if np.any(invalid_ix):
+                warnings.warn(&quotpsc standardization strategy is meaningless &quot
+                              &quotfor features that have a mean of 0 or &quot
+                              &quotless. These time series are set to 0.&quot)
+                signals[:, invalid_ix] = 0
+
+   </a> return signals
+
+
+def _mean_of_squares(signals, n_batches=20):</code></pre>

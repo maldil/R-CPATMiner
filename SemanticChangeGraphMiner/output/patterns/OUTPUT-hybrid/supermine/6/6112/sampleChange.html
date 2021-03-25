@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        z = np.dot(input, self.weight.T) + self.bias
+
+        &#47&#47 Softmax implemented in log domain
+        log_tilde_z = z - <a id="change">logsumexp(z, axis=1)[:, None]</a>
+
+        return log_tilde_z
+
+    def predict(self, input=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+        z = np.dot(input, self.weight.T) + self.bias
+
+        &#47&#47 Softmax implemented in log domain
+        log_tilde_z = z - <a id="change">logsumexp(z, axis=1, keepdims=True)</a>
+
+        return log_tilde_z
+
+    def predict(self, input=None):</code></pre>

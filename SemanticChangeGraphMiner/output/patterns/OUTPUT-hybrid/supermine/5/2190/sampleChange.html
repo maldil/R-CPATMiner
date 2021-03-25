@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.init_points += list(map(list, zip(*l)))
+
+        &#47&#47 Create empty list to store the new values of the function
+        y_init = <a id="change">[]</a>
+
+        &#47&#47 Evaluate target function at all initialization
+        &#47&#47 points (random + explore)
+        for x in self.init_points:
+
+            y_init.append(self.f(**dict(zip(self.keys, x))))
+
+            if self.verbose:
+                self.plog.print_step(x, y_init[-1])
+
+        &#47&#47 Append any other points passed by the self.initialize method (these
+        &#47&#47 also have a corresponding target value passed by the user).
+        self.init_points += self.x_init
+
+        &#47&#47 Append the target value of self.initialize method.
+        <a id="change">y_init += self.y_init</a>
+
+        &#47&#47 Turn it into np array and store.
+        self.X = np.asarray(self.init_points)
+        self.Y = np.asarray(y_init)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Evaluate target function at all initialization
+        &#47&#47 points (random + explore)
+        for x in self.init_points:
+            <a id="change">self.X = np.vstack((self.X, np.asarray(x).reshape((1, -1))))</a>
+            self.Y = np.append(self.Y, self.f(**dict(zip(self.keys, x))))
+
+            if self.verbose:
+                self.plog.print_step(x, y_init[-1])</code></pre>

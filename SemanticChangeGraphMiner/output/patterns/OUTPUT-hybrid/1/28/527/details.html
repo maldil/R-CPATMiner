@@ -1,0 +1,63 @@
+<html><h3>b597d0e35c0cc7c9180e56090c9cd3d9dc913586,sbin/db_mgmt_json.py,,process_cve_item,#,77
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        else:
+                            &#47&#47 If the cpe_match did not have any of the version start/end modifiers,
+                            &#47&#47 add the CPE string as it is.
+                            <a id="change">cve[&quotvulnerable_product&quot].append(cpeuri["cpe23Uri"])</a>
+                            <a id="change">cve[&quotvulnerable_configuration&quot].append(cpeuri["cpe23Uri"])</a>
+                    else:
+                        cve[&quotvulnerable_configuration&quot].append(cpeuri["cpe23Uri"])
+
+            if &quotchildren&quot in cpe:
+                for child in cpe[&quotchildren&quot]:
+                    if &quotcpe_match&quot in child:
+                        for cpeuri in child[&quotcpe_match&quot]:
+                            if cpeuri[&quotvulnerable&quot]:
+                                query, version_info = get_cpe_info(cpeuri)
+                                if query != {}:
+                                    query["id"] = hashlib.sha1(cpeuri["cpe23Uri"].encode("utf-8") + version_info.encode("utf-8")).hexdigest()
+                                    cpe_info = db.getCPEVersionInformation(query)
+
+                                    if cpe_info:
+                                        if cpe_info["cpe_name"]:
+                                            for vulnerable_version in cpe_info["cpe_name"]:
+                                                cve[&quotvulnerable_product&quot].append(vulnerable_version["cpe23Uri"])
+                                                cve[&quotvulnerable_configuration&quot].append(vulnerable_version["cpe23Uri"])
+                                        else:
+                                            <a id="change">cve[&quotvulnerable_product&quot].append(cpeuri["cpe23Uri"])</a>
+                                            <a id="change">cve[&quotvulnerable_configuration&quot].append(cpeuri["cpe23Uri"])</a>
+                                else:
+                                    &#47&#47 If the cpe_match did not have any of the version start/end modifiers,
+                                    &#47&#47 add the CPE string as it is.
+                                    cve[&quotvulnerable_product&quot].append(cpeuri["cpe23Uri"])</code></pre><h3>After Change</h3><pre><code class='java'>
+                        else:
+                            &#47&#47 If the cpe_match did not have any of the version start/end modifiers,
+                            &#47&#47 add the CPE string as it is.
+                            <a id="change">cve</a> = <a id="change">add_if_missing(cve, "vulnerable_product", cpeuri["cpe23Uri"])</a>
+                            <a id="change">cve</a> = <a id="change">add_if_missing(cve, "vulnerable_configuration", cpeuri["cpe23Uri"])</a>
+                    else:
+                        cve = add_if_missing(cve, "vulnerable_configuration", cpeuri["cpe23Uri"])
+            if &quotchildren&quot in cpe:
+                for child in cpe[&quotchildren&quot]:
+                    if &quotcpe_match&quot in child:
+                        for cpeuri in child[&quotcpe_match&quot]:
+                            if cpeuri[&quotvulnerable&quot]:
+                                query, version_info = get_cpe_info(cpeuri)
+                                if query != {}:
+                                    query["id"] = hashlib.sha1(cpeuri["cpe23Uri"].encode("utf-8") + version_info.encode("utf-8")).hexdigest()
+                                    cpe_info = db.getCPEVersionInformation(query)
+                                    if cpe_info:
+                                        if cpe_info["cpe_name"]:
+                                            for vulnerable_version in cpe_info["cpe_name"]:
+                                                cve = add_if_missing(cve, "vulnerable_product", vulnerable_version["cpe23Uri"])
+                                                cve = add_if_missing(cve, "vulnerable_configuration", vulnerable_version["cpe23Uri"])
+                                        else:
+                                            <a id="change">cve</a> = <a id="change">add_if_missing(cve, "vulnerable_product", cpeuri["cpe23Uri"])</a>
+                                            cve = <a id="change">add_if_missing(cve, "vulnerable_configuration", cpeuri["cpe23Uri"])</a>
+                                else:
+                                    &#47&#47 If the cpe_match did not have any of the version start/end modifiers,
+                                    &#47&#47 add the CPE string as it is.
+                                    cve = add_if_missing(cve, "vulnerable_product", cpeuri["cpe23Uri"])</code></pre><img src="2845291.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/b597d0e35c0cc7c9180e56090c9cd3d9dc913586#diff-5a77e35d325d1b26ac482ace3c39032f4be2e6cb634dc6c42eaa4402ac88e98fL80' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: b597d0e35c0cc7c9180e56090c9cd3d9dc913586</div><div id='time'> Time: 2019-11-07</div><div id='author'> Author: sami.kairajarvi@gmail.com</div><div id='file'> File Name: sbin/db_mgmt_json.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: process_cve_item</div><BR><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/b597d0e35c0cc7c9180e56090c9cd3d9dc913586#diff-5a77e35d325d1b26ac482ace3c39032f4be2e6cb634dc6c42eaa4402ac88e98fL80' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: b597d0e35c0cc7c9180e56090c9cd3d9dc913586</div><div id='time'> Time: 2019-11-07</div><div id='author'> Author: sami.kairajarvi@gmail.com</div><div id='file'> File Name: sbin/db_mgmt_json.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: process_cve_item</div><BR>

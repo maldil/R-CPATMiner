@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not self.skip:
+            self.former = in_data.narrow(1, 0, self.c//2)
+            self.former_in_mask = torch.mul(self.former, self.mask)
+            self.target = <a id="change">in_data</a>.narrow(1, self.c // 2, self.c // 2).detach().cuda() &#47&#47 the latter part
+            <a id="change">self.target</a> = self.target * self.strength
+            self.loss = self.criterion(self.former_in_mask * self.strength, self.target)
+        else:
+            self.loss = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 For each iteration, we input GT, then I. That means we get the self.target in the first forward. And in this forward, self.loss is dummy!
+            &#47&#47 In the second forward, we input the corresponding I, then self.loss is working as expected. The self.target is the corresponding GT.
+            self.loss = self.criterion(self.former_in_mask * self.strength, self.target.expand_as(self.former_in_mask).type_as(self.former_in_mask))
+            self.target = <a id="change">in_data.narrow(1, self.c // 2, self.c // 2).detach()</a> &#47&#47 the latter part
+            <a id="change">self.target</a> = self.target * self.strength
+        else:
+            self.loss = 0
+        self.output = in_data</code></pre>

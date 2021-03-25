@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not torch.is_tensor(img):
+        raise TypeError(f"Input type is not a torch.Tensor. Got {type(img)}")
+    img_shape = img.shape
+    if <a id="change">len(img_shape)</a> == 3 or len(img_shape) == 4:
+        pixel_dif1 = img[..., 1:, :] - img[..., :-1, :]
+        pixel_dif2 = img[..., :, 1:] - img[..., :, :-1]
+        reduce_axes = (-3, -2, -1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not isinstance(img, torch.Tensor):
+        raise TypeError(f"Input type is not a torch.Tensor. Got {type(img)}")
+
+    <a id="change">if len(img.shape) &lt; 3 or len(img.shape) &gt; 4:
+        raise ValueError(
+            f"Expected input tensor to be of ndim 3 or 4, but got {len(img.shape)}."
+        )
+
+   </a> pixel_dif1 = img[..., 1:, :] - img[..., :-1, :]
+    pixel_dif2 = img[..., :, 1:] - img[..., :, :-1]
+
+    reduce_axes = (-3, -2, -1)</code></pre>

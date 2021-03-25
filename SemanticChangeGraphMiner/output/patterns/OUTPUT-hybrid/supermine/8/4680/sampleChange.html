@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _utils._extrema, out_dtype, default, pass_positions=True
+    )
+
+    extrema_lbl = <a id="change">{k: extrema_lbl[k] for k in extrema_lbl.dtype.names}</a>
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = (
+        extrema_lbl["min_val"],
+        extrema_lbl["max_val"],
+        extrema_lbl["min_pos"],
+        extrema_lbl["max_pos"]
+    )</a>
+
+    return result
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+
+    extrema_lbl = collections.OrderedDict(<a id="change">[
+        (k, extrema_lbl[k]) for k in type_mapping.keys()
+    ]</a>)
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = tuple(extrema_lbl.values())</a>
+
+    return result
+
+</code></pre>

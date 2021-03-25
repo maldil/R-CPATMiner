@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        labels = load_labels(building_dir)
+
+        &#47&#47 Remove dud channels
+        dud_channels_for_building = <a id="change">DUD_CHANNELS.get(building_number)</a>
+        for chan in dud_channels_for_building:
+            labels.pop(chan)
+
+        &#47&#47 Convert appliance names from REDD to nilmtk standard names</code></pre><h3>After Change</h3><pre><code class='java'>
+        labels = load_labels(building_dir)
+
+        &#47&#47 Remove dud channels
+        <a id="change">try:
+            dud_channels_for_building = DUD_CHANNELS[building_number]
+        except KeyError:
+            &#47&#47 DUD_CHANNELS doesn&quott specify dud channels for all buildings
+            pass
+        else:
+            for dud_chan in dud_channels_for_building:
+                labels.pop(dud_chan)
+
+        &#47&#47 Convert appliance names from REDD to nilmtk standard names
+       </a> appliance_metadata = {}
+        for chan, label in labels.iteritems():
+            nilmtk_appliance = APPLIANCE_NAME_MAP.get(label)
+            if nilmtk_appliance is not None:</code></pre>

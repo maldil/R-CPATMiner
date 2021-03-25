@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+dataset = []
+data_size = 0
+print(&quotRead image...&quot)
+for i in <a id="change">range(len(file_list))</a>:
+    if i % 100 == 0:
+        print(i)
+    img = cv2.imread(<a id="change">file_list[i]</a>, cv2.IMREAD_UNCHANGED)
+    dataset.append(img)
+    data_size += img.nbytes
+map_size = data_size * 10</code></pre><h3>After Change</h3><pre><code class='java'>
+
+print(&quotFinish reading image - {}.\nWrite to lmdb...&quot.format(len(file_list)))
+with env.begin(write=True) as txn:  &#47&#47 txn is a Transaction object
+    for i, v in <a id="change">enumerate(file_list)</a>:
+        if i % 100 == 0:
+            print(i)
+        img_name = os.path.splitext(os.path.basename(v))[0]</code></pre>

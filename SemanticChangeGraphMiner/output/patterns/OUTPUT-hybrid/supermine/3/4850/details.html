@@ -1,0 +1,41 @@
+<html><h3>2d34259281a6251cbdc67103ce8a1310010b8ceb,orbit/controller.py,Controller,evaluate,#Controller#,177
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      ValueError: If no checkpoint found in `self.checkpoint_manager.directory`.
+      ValueError: If `evaluator` is not provided.
+    
+    if <a id="change">self.evaluator is None:
+</a>      raise ValueError("`evaluator` must be provided to call `evaluate()` "
+                       "method.")
+
+    steps = steps or -1
+    current_step = self.global_step.numpy()
+    if steps &gt; 0:
+      logging.info("Running %s steps of evaluation at train step: %s", steps,
+                   current_step)
+      steps = tf.convert_to_tensor(steps, dtype=tf.int32)
+    else:
+      logging.info("Evaluating at train step: %s", current_step)
+
+    with self.eval_summary_manager.summary_writer().as_default():
+      eval_outputs = self.evaluator.evaluate(steps)
+
+    <a id="change">if eval_outputs:
+      eval_outputs = tf.nest.map_structure(utils.get_value, eval_outputs)
+
+   </a> info = "step: {}        evaluation metric: {}".format(
+        current_step, eval_outputs)
+    _log_info(info)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    eval_output = tf.nest.map_structure(utils.get_value, eval_output or {})
+    elapsed = time.time() - start
+
+    <a id="change">_log(f" eval | step: {current_step: 6d} | "
+         f"eval time: {elapsed: 6.1f} | "
+         f"output: {_format_output(eval_output)}")</a>
+
+    self.eval_summary_manager.write_summaries(eval_output)
+    self.eval_summary_manager.flush()
+</code></pre><img src="20739836.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/2d34259281a6251cbdc67103ce8a1310010b8ceb#diff-eddc4d38eb70465911a56ee00c3e555dc96cbc58603c64201db59855c841709aL177' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 2d34259281a6251cbdc67103ce8a1310010b8ceb</div><div id='time'> Time: 2020-10-05</div><div id='author'> Author: dhr@google.com</div><div id='file'> File Name: orbit/controller.py</div><div id='class'> Class Name: Controller</div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/2d34259281a6251cbdc67103ce8a1310010b8ceb#diff-eddc4d38eb70465911a56ee00c3e555dc96cbc58603c64201db59855c841709aL144' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 2d34259281a6251cbdc67103ce8a1310010b8ceb</div><div id='time'> Time: 2020-10-05</div><div id='author'> Author: dhr@google.com</div><div id='file'> File Name: orbit/controller.py</div><div id='class'> Class Name: Controller</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/2d34259281a6251cbdc67103ce8a1310010b8ceb#diff-eddc4d38eb70465911a56ee00c3e555dc96cbc58603c64201db59855c841709aL315' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 2d34259281a6251cbdc67103ce8a1310010b8ceb</div><div id='time'> Time: 2020-10-05</div><div id='author'> Author: dhr@google.com</div><div id='file'> File Name: orbit/controller.py</div><div id='class'> Class Name: Controller</div><div id='method'> Method Name: _train_n_steps</div><BR>

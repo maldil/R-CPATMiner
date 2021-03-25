@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier in the pool
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">competences = np.zeros(self.n_classifiers)</a>
+
+        <a id="change">for clf_index in range(self.n_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                results_neighbors = self.processed_dsel[idx_neighbors, clf_index]
+                indices_errors = np.where(results_neighbors == 0)[0]
+                if indices_errors.size != 0:
+                    competences[clf_index] = np.min(indices_errors)
+                else:
+                    competences[clf_index] = self.k
+       </a> return competences
+
+    def select(self, competences):
+        Selects all base classifiers that obtained a local accuracy of 100% in the region of competence</code></pre><h3>After Change</h3><pre><code class='java'>
+                      The competence level estimated for each base classifier in the pool
+        
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        results_neighbors = self.processed_dsel[idx_neighbors, :]
+
+        &#47&#47 Get the shape of the vector in order to know the number of samples, base classifiers and neighbors considered.
+        shape = results_neighbors.shape
+
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)
+        <a id="change">competences = np.argmax(results_neighbors == 0, axis=1)</a>
+
+        &#47&#47 indices_errors = np.where(results_neighbors == 0)[0]
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47</code></pre>

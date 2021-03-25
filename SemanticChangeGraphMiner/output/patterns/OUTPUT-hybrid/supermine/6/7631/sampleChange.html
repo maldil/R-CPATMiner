@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        [{&quotintel&quot: &quotintel_0&quot, &quotgrade&quot: &quotgrade_1&quot, &quotdiff&quot: &quotdiff_1&quot},
+        {&quotintel&quot:  &quotintel_1&quot, &quotgrade&quot: &quotgrade_0&quot, &quotdiff&quot: &quotdiff_0&quot}]
+        
+        <a id="change">sampled = []</a>
+        for _ in range(size):
+            particle = {}
+            for node in self.topological_order:
+                cpd = self.cpds[node]
+                if cpd.evidence:
+                    evid = []
+                    for var in cpd.evidence:
+                        evid.append(particle[var])
+                    weights = cpd.reduce(evid, inplace=False).values
+                else:
+                    weights = cpd.values
+                particle[node] = sample_discrete(cpd.variables[cpd.variable], weights)
+            <a id="change">sampled.append(particle)</a>
+        return sampled
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        0  diff_1  intel_0  grade_1
+        1  diff_1  intel_0  grade_2
+        
+        <a id="change">sampled = DataFrame(index=range(0, size),
+                            columns=self.topological_order)</a>
+        for i in range(size):
+            particle = {}
+            for node in self.topological_order:
+                cpd = self.cpds[node]</code></pre>

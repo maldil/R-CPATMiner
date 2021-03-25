@@ -1,0 +1,25 @@
+<html><h3>c109b0066d2a0292ac6040154898cda7b595d20a,recognition/partial_fc/pytorch/partial_classifier.py,DistSampleClassifier,sample,#DistSampleClassifier#,53
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                torch.randperm(self.num_local, out=self.perm)
+                start = self.num_local - self.num_sample
+                index = torch.cat((positive, self.perm[start:]))
+                <a id="change">index = torch.unique(index, sorted=False)</a>
+                start = index.size()[0] - self.num_sample
+                index = index[start:]
+            else:
+                index = positive
+
+            index = <a id="change">torch.sort(index)[0].long()</a>
+            self.index = index
+            total_label[P] = torch.searchsorted(index, total_label[P])
+            self.sub_weight = Parameter(self.weight[index])</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.num_sample - positive.size(0) &gt;= 0:
+                perm = torch.rand(self.num_local,device=cfg.local_rank)
+                perm[positive] = 2.0
+                index = <a id="change">torch.topk(perm,k=self.num_sample)[1]</a>
+                index = index.sort()[0]
+            else:
+                index = positive</code></pre><img src="24998168.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/deepinsight/insightface/commit/c109b0066d2a0292ac6040154898cda7b595d20a#diff-7bc972e715ec12fa644fe19cdb9d47514f444e2f8e3513bbb0e91f05173e2ffbL1' target='_blank'>Link</a></div><div id='project'> Project Name: deepinsight/insightface</div><div id='commit'> Commit Name: c109b0066d2a0292ac6040154898cda7b595d20a</div><div id='time'> Time: 2020-11-10</div><div id='author'> Author: 43001198+xiaoyang-coder@users.noreply.github.com</div><div id='file'> File Name: recognition/partial_fc/pytorch/partial_classifier.py</div><div id='class'> Class Name: DistSampleClassifier</div><div id='method'> Method Name: sample</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/3d416c2af588e4cf45962a9e8529a5b4fe042a10#diff-e3e28f5d5ebe407006423f2f09c84b9432fa8f19c3ab53524efac787c2f509feL72' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 3d416c2af588e4cf45962a9e8529a5b4fe042a10</div><div id='time'> Time: 2019-10-07</div><div id='author'> Author: lapchevsky.k@gmail.com</div><div id='file'> File Name: se3cnn/util/dataset/crystals.py</div><div id='class'> Class Name: CrystalCIF</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/51321f39fcc1698c011d2f0351474cdec1707a47#diff-97881f884dd61de4cafa81d99538897be4699e6b7fec1a69dbc2d0e9c06f3ec1L182' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 51321f39fcc1698c011d2f0351474cdec1707a47</div><div id='time'> Time: 2019-12-20</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/training_statistics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: NLL</div><BR>

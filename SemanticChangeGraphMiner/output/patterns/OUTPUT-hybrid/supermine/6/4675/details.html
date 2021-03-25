@@ -1,0 +1,43 @@
+<html><h3>c9fd2c425cb873508ba16221819574400ad2443e,dask_image/ndmeasure/__init__.py,,extrema,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _utils._extrema, out_dtype, default, pass_positions=True
+    )
+
+    extrema_lbl = <a id="change">{k: extrema_lbl[k] for k in extrema_lbl.dtype.names}</a>
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = (
+        extrema_lbl["min_val"],
+        extrema_lbl["max_val"],
+        extrema_lbl["min_pos"],
+        extrema_lbl["max_pos"]
+    )</a>
+
+    return result
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    )
+
+    extrema_lbl = collections.OrderedDict([
+        (k, extrema_lbl[k]) <a id="change">for</a> k in type_mapping.keys()
+    ])
+
+    for pos_key in ["min_pos", "max_pos"]:</code></pre><img src="19958385.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/c9fd2c425cb873508ba16221819574400ad2443e#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L101' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: c9fd2c425cb873508ba16221819574400ad2443e</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extrema</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-8900c0e1cb75b4171b1763d7502f4de71e92505ef8ff8b757c282336313e84aeL44' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/fixtures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_featureset</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/a81db6daadd1304e96916c34a894d83dd4dc75bd#diff-e30d05af267fcba64311305c2241bcd4145c104c9cce44d7753bba6e949f1c71L248' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: a81db6daadd1304e96916c34a894d83dd4dc75bd</div><div id='time'> Time: 2017-06-28</div><div id='author'> Author: iaroslav.email@gmail.com</div><div id='file'> File Name: skopt/wrappers/scikit_learn.py</div><div id='class'> Class Name: SkoptSearchCV</div><div id='method'> Method Name: step</div><BR>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            weight_history.append(feature_weights)
+
+            <a id="change">feature_weights = [(x - mn)/(rg) for x in feature_weights]</a>
+            distance_weights += feature_weights
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if iteration == 0:
+                no_diff = False
+            else:
+                <a id="change">for i in range(len(feature_weights)):
+                    &#47&#47previous array of feature_weights
+                    prev = weight_history[len(weight_history)-1]
+                    diff = abs(prev[i] - feature_weights[i])
+                    &#47&#47 first encounter of value that has difference greater than threshold, set no_diff to False, and break out of checking loop
+                    if diff &gt;= 0.0001:
+                        no_diff = False
+                        break;
+           </a> if no_diff:
+                break;
+
+            mx = max(feature_weights)</code></pre>

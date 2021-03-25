@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    params = edict(getattr(prosr, args.model + &quot_params&quot))
+    params.cmd = edict(vars(args))
+
+    <a id="change">pprint(params)</a>
+
+    params.cmd.experiment_id = &quot{}_{}&quot.format(args.model, args.name)
+    checkpoint_dir = osp.join(CHECKPOINT_DIR, params.cmd.experiment_id)
+    if not osp.isdir(checkpoint_dir):</code></pre><h3>After Change</h3><pre><code class='java'>
+            try:
+                params = edict(yaml.load(stream))
+            except yaml.YAMLError as exc:
+                <a id="change">print(exc)</a>
+                sys.exit(0)
+    else:
+        params = edict(getattr(prosr, args.model + &quot_params&quot))
+</code></pre>

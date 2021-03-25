@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for spec_file in spec_files:
+        name = spec_file.attname
+        imgfield = spec_file._imgfield
+        <a id="change">if imgfield:
+            newfile = imgfield.storage.open(imgfield.name)
+            img = Image.open(newfile)
+            img, format = spec_file.field.process(img, spec_file)
+            if format != &quotJPEG&quot:
+                imgfile = img_to_fobj(img, format)
+            else:
+                imgfile = img_to_fobj(img, format,
+                                      quality=int(spec_file.field.quality),
+                                      optimize=True)
+            content = ContentFile(imgfile.read())
+            newfile.close()
+            name = str(imgfield)
+            imgfield.storage.delete(name)
+            imgfield.storage.save(name, content)
+            if not created:
+                spec_file._delete()
+                spec_file._create()
+
+
+</a>def _post_delete_handler(sender, instance=None, **kwargs):
+    assert instance._get_pk_val() is not None, "%s object can&quott be deleted because its %s attribute is set to None." % (instance._meta.object_name, instance._meta.pk.attname)
+    spec_files = get_spec_files(instance)
+    for spec_file in spec_files:</code></pre><h3>After Change</h3><pre><code class='java'>
+    for spec_file in spec_files:
+        if not created:
+            spec_file._delete()
+        <a id="change">if spec_file.field.pre_cache:
+            spec_file._create()
+
+
+</a>def _post_delete_handler(sender, instance=None, **kwargs):
+    assert instance._get_pk_val() is not None, "%s object can&quott be deleted because its %s attribute is set to None." % (instance._meta.object_name, instance._meta.pk.attname)
+    spec_files = get_spec_files(instance)
+    for spec_file in spec_files:</code></pre>

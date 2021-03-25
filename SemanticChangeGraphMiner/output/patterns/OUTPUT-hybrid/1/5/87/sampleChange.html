@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    opt.tell(x1, 3.)
+    x2 = opt.ask()  &#47&#47 random point
+    assert x1 != x2
+    <a id="change">opt.tell(x2, 4.)</a>
+    &#47&#47 this is the first non-random point
+    x3 = opt.ask()
+    assert x2 != x3
+    x4 = opt.ask()</code></pre><h3>After Change</h3><pre><code class='java'>
+    x2 = opt.ask()  &#47&#47 random point
+    assert x1 != x2
+    print("tell2")
+    r2 = <a id="change">opt.tell(x2, 4.)</a>
+    assert len(r2.models) == 1
+    &#47&#47 this is the first non-random point
+    x3 = opt.ask()
+    assert x2 != x3
+    x4 = opt.ask()
+    &#47&#47 no new information was added so should be the same
+    assert x3 == x4
+    r3 = <a id="change">opt.tell(x3, 1.)</a>
+    assert len(r3.models) == 2
+</code></pre>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        weights = (
+            tf.reduce_sum(input_tensor=class_weights * tf.cast(targets, dtype=tf.float32), axis=1)
+        )
+        <a id="change">weights</a> *= <a id="change">tf.cast(tf.reduce_prod(input_tensor=tf.shape(input=weights)), dtype=tf.float32) / tf.reduce_sum(
+            input_tensor=weights
+        )</a>
+        losses *= tf.expand_dims(weights, 1)
+    return losses
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        weights = tf.reduce_sum(
+            input_tensor=class_weights * tf.cast(targets, dtype=tf.float32), axis=1
+        )
+        <a id="change">weights</a> *= tf.math.divide_no_nan(
+            tf.cast(
+                tf.reduce_prod(input_tensor=tf.shape(input=weights)), dtype=tf.float32
+            ),
+            <a id="change">tf.reduce_sum(input_tensor=weights)</a>,
+        )
+        losses *= tf.expand_dims(weights, 1)
+    return losses</code></pre>

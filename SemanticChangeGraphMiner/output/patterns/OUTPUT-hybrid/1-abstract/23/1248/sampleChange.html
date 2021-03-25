@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        y = self.outputs["y"]
+        self.remove_all()
+
+        <a id="change">OptimizeRule.replace_variable(graph, y, ConstantVariable(np.arccosh(x0.copy().change_order(y.order).data), y.order))</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    def fold_constance(self, graph: Graph):
+        <a id="change">x0</a> = self.inputs["x0"]  &#47&#47 type: ConstantVariable
+        y = self.outputs["y"]
+        self.remove_all()
+
+        <a id="change">y_new</a> = <a id="change">ConstantVariable(x0.data, x0.order).change_order(y.order)</a>
+        y_new.data = np.arccosh(y_new.data)
+        <a id="change">OptimizeRule.replace_variable(graph, y, y_new)</a>
+</code></pre>

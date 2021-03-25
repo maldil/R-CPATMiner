@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 transpose to make S(sequence) x B (batch)
+        output = classifier(input.t(), seq_lengths)
+        <a id="change">print(i, output.size())</a>
+        print(target.size())
+
+        pred = output.data.max(1, keepdim=True)[1]
+        correct += pred.eq(target.data.view_as(pred)).cpu().sum()</code></pre><h3>After Change</h3><pre><code class='java'>
+    if name:
+        input, seq_lengths, target = make_variables([name], [])
+        output = classifier(input, seq_lengths)
+        pred = <a id="change">output</a>.data.max(1, keepdim=True)[1]
+        <a id="change">country_id = pred.cpu().numpy()[0][0]</a>
+        print(name, "is", train_dataset.get_country(country_id))
+        return
+
+    print("evaluating trained model ...")</code></pre>

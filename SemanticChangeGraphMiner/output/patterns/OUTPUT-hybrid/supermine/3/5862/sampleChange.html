@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47emotions = emotions.unsqueeze(1)
+        if att2:
+            att_emotions = <a id="change">[]</a>
+            alpha = []
+            for t in emotions:
+                att_em, alpha_ = self.matchatt(emotions,t,mask=umask)
+                att_emotions.append(att_em.unsqueeze(0))
+                alpha.append(alpha_[:,0,:])
+            <a id="change">att_emotions = torch.cat(att_emotions,dim=0)</a>
+            hidden = F.relu(self.linear(att_emotions))
+        else:
+            hidden = F.relu(self.linear(emotions))
+        &#47&#47hidden = F.relu(self.linear2(hidden))</code></pre><h3>After Change</h3><pre><code class='java'>
+        qmask = torch.FloatTensor([[1,0],[0,1],[1,0]]).type(T1.type())
+        qmask = qmask.unsqueeze(1).expand(-1, T1.size(1), -1)
+
+        umask = torch.FloatTensor([1,1,1]).type(<a id="change">T1.type()</a>)
+        umask = umask.expand(-1, T1.size(1))
+
+        emotions_f, alpha_f = self.dialog_rnn_f(U, qmask) &#47&#47 seq_len, batch, D_e</code></pre>

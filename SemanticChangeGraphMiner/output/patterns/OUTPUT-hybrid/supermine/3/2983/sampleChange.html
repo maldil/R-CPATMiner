@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    opt.zero_grad()
+    for p, p_update in zip(net.parameters(), weighted_noise):
+        update = p_update / (len(batch_reward) * NOISE_STD)
+        <a id="change">p.grad = Variable(update)</a>
+&#47&#47        p.data += LEARNING_RATE * update
+&#47&#47        m_updates.append(torch.norm(update))
+    opt.step()
+    writer.add_scalar("update_l2", np.mean(m_updates), step_idx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    for p, p_update in zip(net.parameters(), weighted_noise):
+        update = p_update / (len(batch_reward) * NOISE_STD)
+        p.data += LEARNING_RATE * update
+        <a id="change">m_updates.append(torch.norm(update))</a>
+    writer.add_scalar("update_l2", np.mean(m_updates), step_idx)
+
+
+if __name__ == "__main__":</code></pre>

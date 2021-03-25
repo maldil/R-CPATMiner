@@ -1,0 +1,107 @@
+<html><h3>de00082780be884fc90e0113d323bfd63006ffba,main.py,Model,build,#Model#,249
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        hparams.MAX_N_SIGNAL,
+                        -1, hparams.FEATURE_SIZE])
+
+                <a id="change">s_separated_signals_valid</a> = tf.expand_dims(tf.complex(
+                    <a id="change">tf.cos(s_mixed_signals_phase)</a>,
+                    tf.sin(s_mixed_signals_phase)), 1)
+                s_separated_signals *= tf.expm1(s_separated_signals_log_valid)
+                <a id="change">s_valid_snr</a> = tf.reduce_mean(ops.batch_snr(
+                    s_src_signals, s_separated_signals_valid, is_complex=True))
+
+
+        &#47&#47 ===============
+        &#47&#47 prepare summary
+        &#47&#47 TODO add impl & summary for word error rate
+
+        &#47&#47 FIXME gan_loss summary is broken
+        with tf.name_scope(&quottrain_summary&quot):
+            s_loss_summary_t = tf.summary.scalar(&quotloss&quot, s_train_loss)
+            s_snr_summary_t = tf.summary.scalar(&quotSNR&quot, s_train_snr)
+
+        with tf.name_scope(&quotvalid_summary&quot):
+            s_loss_summary_v = tf.summary.scalar(&quotloss&quot, s_valid_loss)
+            s_snr_summary_v = tf.summary.scalar(&quotSNR&quot, s_valid_snr)
+
+        &#47&#47 apply optimizer
+        ozer = hparams.get_optimizer()(
+            learn_rate=hparams.LR, lr_decay=hparams.LR_DECAY)
+
+        v_params_li = tf.trainable_variables()
+
+        op_sgd_step = ozer.minimize(
+            s_train_loss, var_list=v_params_li)
+        self.op_init_params = tf.variables_initializer(v_params_li)
+        self.op_init_states = tf.variables_initializer(
+            list(self.s_states_di.values()))
+
+        self.train_feed_keys = [
+            s_src_signals, s_dropout_keep]
+        train_summary = tf.summary.merge(
+            [s_loss_summary_t, s_snr_summary_t])
+        self.train_fetches = [
+            train_summary,
+            dict(loss=s_train_loss, SNR=s_train_snr),
+            op_sgd_step]
+
+        self.valid_feed_keys = self.train_feed_keys
+        <a id="change">valid_summary</a> = tf.summary.merge([s_loss_summary_v, s_snr_summary_v])
+        self.valid_fetches = [
+            valid_summary,
+            dict(loss=s_valid_loss, SNR=s_valid_snr)]</code></pre><h3>After Change</h3><pre><code class='java'>
+            s_separated_signals_pwr_infer = tf.expm1(
+                s_separated_signals_log_valid)
+
+            <a id="change">s_separated_signals_valid</a> = tf.complex(
+                <a id="change">tf.cos(s_mixed_signals_phase) * s_separated_signals_pwr_valid</a>,
+                <a id="change">tf.sin(s_mixed_signals_phase) * s_separated_signals_pwr_valid</a>)
+            s_separated_signals_infer = tf.complex(
+                tf.cos(s_mixed_signals_phase) * s_separated_signals_pwr_infer,
+                tf.sin(s_mixed_signals_phase) * s_separated_signals_pwr_infer)
+            <a id="change">s_valid_snr</a> = tf.reduce_mean(ops.batch_snr(
+                s_src_signals, s_separated_signals_valid, is_complex=True))
+
+
+        &#47&#47 ===============
+        &#47&#47 prepare summary
+        &#47&#47 TODO add impl & summary for word error rate
+
+        &#47&#47 FIXME gan_loss summary is broken
+        with tf.name_scope(&quottrain_summary&quot):
+            s_loss_summary_t = tf.summary.scalar(&quotloss&quot, s_train_loss)
+            s_snr_summary_t = tf.summary.scalar(&quotSNR&quot, s_train_snr)
+
+        with tf.name_scope(&quotvalid_summary&quot):
+            s_loss_summary_v = tf.summary.scalar(&quotloss&quot, s_valid_loss)
+            s_snr_summary_v = tf.summary.scalar(&quotSNR&quot, s_valid_snr)
+
+        &#47&#47 apply optimizer
+        ozer = hparams.get_optimizer()(
+            learn_rate=hparams.LR, lr_decay=hparams.LR_DECAY)
+
+        v_params_li = tf.trainable_variables()
+
+        op_sgd_step = ozer.minimize(
+            s_train_loss, var_list=v_params_li)
+        self.op_init_params = tf.variables_initializer(v_params_li)
+        self.op_init_states = tf.variables_initializer(
+            list(self.s_states_di.values()))
+
+        self.train_feed_keys = [
+            s_src_signals, s_dropout_keep]
+        train_summary = tf.summary.merge(
+            [s_loss_summary_t, s_snr_summary_t])
+        self.train_fetches = [
+            train_summary,
+            dict(loss=s_train_loss, SNR=s_train_snr),
+            op_sgd_step]
+
+        self.valid_feed_keys = self.train_feed_keys
+        <a id="change">valid_summary</a> = tf.summary.merge([s_loss_summary_v, s_snr_summary_v])
+        self.valid_fetches = [
+            valid_summary,
+            dict(loss=s_valid_loss, SNR=s_valid_snr)]</code></pre><img src="3003437.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L261' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: build</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/4d72ce3bc21cfce8075b31ac78269d81be25050f#diff-f6f2b54adcec3633f0968f992ae42671bb2274401ec6a34c3193952d3772a5d7L66' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 4d72ce3bc21cfce8075b31ac78269d81be25050f</div><div id='time'> Time: 2016-01-30</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Fidelity_Zero/Drag/parasite_drag_wing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: parasite_drag_wing</div><BR><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L261' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: build</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/76697588ed6da82c507a68074e63a30b809a8a99#diff-9a45bbd84db204ea6cbf4116d108bec0bdff7eff89b5305ba39be6b727ff84c4L61' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 76697588ed6da82c507a68074e63a30b809a8a99</div><div id='time'> Time: 2017-11-03</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/weissinger_vortex_lattice.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: weissinger_vortex_lattice</div><BR>

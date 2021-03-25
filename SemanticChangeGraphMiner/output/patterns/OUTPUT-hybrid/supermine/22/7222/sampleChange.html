@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                len0 = len(col_list)
+                value_array = np.array([base ** (len0 - 1 - i) for i in range(len0)])
+
+            <a id="change">X[col] = np.dot(X[col_list].values, value_array.T)</a>
+            <a id="change">out_cols = [col0 for col0 in out_cols if col0 not in col_list]</a>
+
+        X = <a id="change">X.reindex(columns=out_cols + cols)</a>
+
+        return X
+
+    def col_transform(self, col, digits):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for col in cols:
+            col_list = [col0 for col0 in out_cols if str(col0).startswith(str(col))]
+            <a id="change">insert_at = out_cols.index(col_list[0])</a>
+
+            if base == 1:
+                value_array = np.array([int(col0.split(&quot_&quot)[-1]) for col0 in col_list])
+            else:
+                len0 = len(col_list)
+                value_array = np.array([base ** (len0 - 1 - i) for i in range(len0)])
+            <a id="change">X.insert(insert_at,col,np.dot(X[col_list].values, value_array.T))</a>
+            <a id="change">X.drop(col_list, axis=1, inplace=True)</a>
+            <a id="change">out_cols = X.columns.values.tolist()</a>
+
+        return X
+
+    def col_transform(self, col, digits):</code></pre>

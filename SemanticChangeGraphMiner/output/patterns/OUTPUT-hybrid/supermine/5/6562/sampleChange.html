@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    epoch=epoch, batch=i)
+
+    &#47&#47 Update learning rates
+    <a id="change">lr_scheduler_G.step()</a>
+    lr_scheduler_D_VAE.step()
+    lr_scheduler_D_LR.step()
+
+    if opt.checkpoint_interval != -1 and epoch % opt.checkpoint_interval == 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Print log
+        sys.stdout.write("\r[Epoch %d/%d] [Batch %d/%d] [D VAE_loss: %f, LR_loss: %f] [G loss: %f, pixel: %f, latent: %f] ETA: %s" %
+                                                        <a id="change">(epoch, opt.n_epochs,
+                                                        i, len(dataloader),
+                                                        loss_D_VAE.item(), loss_D_LR.item(),
+                                                        loss_GE.item(), loss_pixel.item(),
+                                                        loss_latent.item(), time_left)</a>)
+
+        if batches_done % opt.sample_interval == 0:
+            sample_images(batches_done)</code></pre>

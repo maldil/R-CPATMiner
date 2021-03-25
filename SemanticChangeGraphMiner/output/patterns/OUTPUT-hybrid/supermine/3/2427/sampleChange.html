@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    column = model.get_attr("column")
+    W = cast(Array2d, model.get_param("W"))
+    vector_table = _get_vectors(model.ops, <a id="change">model.get_attr("lang")</a>)
+    if ids.ndim &gt;= 2:
+        ids = model.ops.as_contig(ids[:, column])
+    vectors = vector_table[ids * (ids &lt; vector_table.shape[0])]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    if model.has_attr("dropout_rate"):
+        <a id="change">dropout = model.get_attr("dropout_rate")</a>
+    else:
+        dropout = None
+    column = model.get_attr("column")
+    W = cast(Array2d, model.get_param("W"))</code></pre>

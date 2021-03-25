@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+import matplotlib.pyplot as plt
+
+f, ax = plt.subplots()
+<a id="change">ax.boxplot(all_scores, vert=False)</a>
+ax.set_yticklabels([&quotone-hot\nencoding&quot, &quotsimilarity\nencoding&quot])
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 We can see that encoding the data using a SimilarityEncoder instead of
+&#47&#47 OneHotEncoder helps a lot in improving the cross validation score!</code></pre><h3>After Change</h3><pre><code class='java'>
+from sklearn.model_selection import StratifiedKFold
+
+cv = StratifiedKFold(n_splits=3, random_state=12, shuffle=True)
+<a id="change">all_scores = {}</a>
+for method in [&quotone-hot&quot, &quotsimilarity&quot]:
+    pipeline = make_pipeline(method)
+    &#47&#47 Now predict the census region of each participant
+    scores = cross_val_score(pipeline, df, y, cv=cv)
+    <a id="change">all_scores[method] = scores</a>
+
+    print(&quot%s encoding&quot % method)
+    print(&quotAccuracy score:  mean: %.3f; std: %.3f\n&quot
+          % (np.mean(scores), np.std(scores)))
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+&#47&#47 Plot the results
+&#47&#47 ------------------
+import seaborn
+ax = <a id="change">seaborn.boxplot(data=pd.DataFrame(all_scores), orient=&quoth&quot)</a>
+import matplotlib.pyplot as plt
+plt.ylabel(&quotEncoding&quot, size=17)
+plt.xlabel(&quotPrediction accuracy&quot, size=17)
+plt.yticks(size=17)</code></pre>

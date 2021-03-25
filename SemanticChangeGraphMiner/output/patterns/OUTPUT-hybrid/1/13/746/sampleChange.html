@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _name(msg):
+        return &quot%s.%s_%s&quot % (name, &quotsgd&quot, msg)
+
+    <a id="change">rval</a> = scope.sklearn_DecisionTreeClassifier(
+        criterion=hp.choice(
+            _name(&quotcriterion&quot),
+            [&quotgini&quot, &quotentropy&quot]) if criterion is None else criterion,
+        splitter=hp.choice(
+            _name(&quotsplitter&quot),
+            [&quotbest&quot, &quotrandom&quot]) if splitter is None else splitter,
+        max_features=hp.choice(
+            _name(&quotmax_features&quot),
+            [&quotsqrt&quot, &quotlog2&quot,
+             None]) if max_features is None else max_features,
+        max_depth=max_depth,
+        min_samples_split=<a id="change">hp.quniform(
+            _name(&quotmin_samples_split&quot),
+            1, 10, 1)</a> if min_samples_split is None else min_samples_split,
+        min_samples_leaf=<a id="change">hp.quniform(
+            _name(&quotmin_samples_leaf&quot),
+            1, 5, 1)</a> if min_samples_leaf is None else min_samples_leaf,
+        presort=presort,
+        random_state=_random_state(_name(&quotrstate&quot), random_state),
+        )</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _name(msg):
+        return &quot%s.%s_%s&quot % (name, &quotsgd&quot, msg)
+
+    <a id="change">rval</a> = scope.sklearn_DecisionTreeClassifier(
+        criterion=hp.choice(
+            _name(&quotcriterion&quot),
+            [&quotgini&quot, &quotentropy&quot]) if criterion is None else criterion,
+        splitter=hp.choice(
+            _name(&quotsplitter&quot),
+            [&quotbest&quot, &quotrandom&quot]) if splitter is None else splitter,
+        max_features=hp.choice(
+            _name(&quotmax_features&quot),
+            [&quotsqrt&quot, &quotlog2&quot,
+             None]) if max_features is None else max_features,
+        max_depth=max_depth,
+        min_samples_split=<a id="change">scope.int(hp.quniform(
+            _name(&quotmin_samples_split&quot),
+            1, 10, 1))</a> if min_samples_split is None else min_samples_split,
+        min_samples_leaf=<a id="change">scope.int(hp.quniform(
+            _name(&quotmin_samples_leaf&quot),
+            1, 5, 1))</a> if min_samples_leaf is None else min_samples_leaf,
+        presort=presort,
+        random_state=_random_state(_name(&quotrstate&quot), random_state),
+        )</code></pre>

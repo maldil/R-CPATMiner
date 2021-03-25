@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 dropout
+        if self.dropout is not None:
+            z = <a id="change">self.dropout(z)</a>
+
+        return z
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        y = self.conv(*args, **kwargs)  &#47&#47 [batch, channel, ...]
+
+        if self.scalar_act is None and self.gate_act is None:
+            <a id="change">return y</a>
+
+        batch = y.size(0)
+        size = y.size()[2:]
+</code></pre>

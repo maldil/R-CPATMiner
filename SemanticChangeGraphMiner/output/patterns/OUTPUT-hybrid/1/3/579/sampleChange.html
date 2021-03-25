@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            I = slice(i*splits, (i+1)*splits, 1)
+
+            score = np.mean(test_scores[I])
+            score_std = <a id="change">np.std(test_scores[I])</a>
+
+            self.cv_results_[&quotparams&quot].append(self._skopt_to_dict(param_space, params))
+            self.cv_results_[&quotmean_test_score&quot].append(score)
+            self.cv_results_[&quotstd_test_score&quot].append(score_std)</code></pre><h3>After Change</h3><pre><code class='java'>
+            for name, result in out_and_name:
+                self.cv_results_[name].append(result[I])
+                self.cv_results_[&quotmean_&quot + name].append(np.mean(result[I]))
+                self.cv_results_[&quotstd_&quot + name].append(<a id="change">np.std(result[I])</a>)
+
+            score = np.mean(test_scores[I])
+</code></pre>

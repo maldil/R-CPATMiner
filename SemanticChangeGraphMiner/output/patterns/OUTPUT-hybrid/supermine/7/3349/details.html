@@ -1,0 +1,39 @@
+<html><h3>eb9b33646872a2565dae65b17e9cb908e886386a,algorithm/rating/SlopeOne.py,SlopeOne,predict,#SlopeOne#,30
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+    def predict(self,u,i):
+        <a id="change">for u in self.dao.testSet_u.keys():
+            if SymmetricMatrix.contains(u) == True:&#47&#47should use another interface
+                itemList = self.dao.row(u)&gt;0
+                for item in self.dao.testSet_u[u].keys():
+                    pass
+            else:
+                for item in self.dao.testSet_u[u].keys():
+                    pred = self.dao.itemMeans[item]
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+    def predict(self,u,i):
+        <a id="change">itemDict = {}</a>
+        &#47&#47 check if the user existed in trainSet or not
+        if self.dao.containsUser(u) == True:
+            for item in self.dao.row(u).valuse():
+                if item.values() &gt; 0:
+                    itemDict[item] = <a id="change">item.values()</a>
+                else:
+                    continue
+            Sum = 0
+            freqSum = 0
+            for item2 in itemDict.keys():
+                Sum = Sum + ((itemDict[item2] + self.diffAverage[u][item2]) * self.freq[u][item2])
+                freqSum = freqSum + self.freq[u][item2]
+            <a id="change">pred = Sum/freqSum</a>
+
+        else:
+            pred = self.dao.itemMeans[u]
+</code></pre><img src="14609886.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Coder-Yu/RecQ/commit/eb9b33646872a2565dae65b17e9cb908e886386a#diff-e35e8d48d0f6d2246edab42ff5100f97c29f2d843b5a1bb53bf30f1cd8c25a0bL29' target='_blank'>Link</a></div><div id='project'> Project Name: Coder-Yu/RecQ</div><div id='commit'> Commit Name: eb9b33646872a2565dae65b17e9cb908e886386a</div><div id='time'> Time: 2016-11-12</div><div id='author'> Author: 156698920@qq.com</div><div id='file'> File Name: algorithm/rating/SlopeOne.py</div><div id='class'> Class Name: SlopeOne</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/openai/gym/commit/9a7f9129892390247cfbcacdc12ab4157371af37#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L9' target='_blank'>Link</a></div><div id='project'> Project Name: openai/gym</div><div id='commit'> Commit Name: 9a7f9129892390247cfbcacdc12ab4157371af37</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: 1315874+dniku@users.noreply.github.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b46c893e2c0f9cd505b597c2ff215a0df04b6050#diff-05a01ce0503407dc9169caee0a0fdf0a97d6724ba90ef37b32beff27304e65fbL173' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b46c893e2c0f9cd505b597c2ff215a0df04b6050</div><div id='time'> Time: 2020-05-19</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_likelihood</div><BR>

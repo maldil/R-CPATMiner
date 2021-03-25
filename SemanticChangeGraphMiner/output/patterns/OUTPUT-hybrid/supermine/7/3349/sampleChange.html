@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+    def predict(self,u,i):
+        <a id="change">for u in self.dao.testSet_u.keys():
+            if SymmetricMatrix.contains(u) == True:&#47&#47should use another interface
+                itemList = self.dao.row(u)&gt;0
+                for item in self.dao.testSet_u[u].keys():
+                    pass
+            else:
+                for item in self.dao.testSet_u[u].keys():
+                    pred = self.dao.itemMeans[item]
+</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+    def predict(self,u,i):
+        <a id="change">itemDict = {}</a>
+        &#47&#47 check if the user existed in trainSet or not
+        if self.dao.containsUser(u) == True:
+            for item in self.dao.row(u).valuse():
+                if item.values() &gt; 0:
+                    itemDict[item] = <a id="change">item.values()</a>
+                else:
+                    continue
+            Sum = 0
+            freqSum = 0
+            for item2 in itemDict.keys():
+                Sum = Sum + ((itemDict[item2] + self.diffAverage[u][item2]) * self.freq[u][item2])
+                freqSum = freqSum + self.freq[u][item2]
+            <a id="change">pred = Sum/freqSum</a>
+
+        else:
+            pred = self.dao.itemMeans[u]
+</code></pre>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.opt.add_mask2input:
+                &#47&#47 make it 4 dimensions.
+                &#47&#47 Mention: the extra dim, the masked part is filled with 0, non-mask part is filled with 1.
+                real_B = torch.cat([self.real_B, <a id="change">(1 - self.mask_global).expand(self.real_B.size(0), 1, self.real_B.size(2), self.real_B.size(3)).type_as(self.real_B)</a>], dim=1)
+            else:
+                real_B = self.real_B
+            self.netG(real_B) &#47&#47 input ground truth</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.opt.add_mask2input:
+                &#47&#47 make it 4 dimensions.
+                &#47&#47 Mention: the extra dim, the masked part is filled with 0, non-mask part is filled with 1.
+                real_B = torch.cat([self.real_B, <a id="change">(~self.mask_global).expand(self.real_B.size(0), 1, self.real_B.size(2), self.real_B.size(3)).type_as(self.real_B)</a>], dim=1)
+            else:
+                real_B = self.real_B
+            self.netG(real_B) &#47&#47 input ground truth</code></pre>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    agree_est   = agree_est[idx]
+
+    &#47&#47 Find the pairs in agreement
+    <a id="change">matches     = float((agree_ref & agree_est).sum())</a>
+    precision   = matches / agree_est.sum()
+    recall      = matches / agree_ref.sum()
+    f_measure   = util.f_measure(precision, recall, beta=beta)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    matches     = 0.0
+    n_agree_ref = 0.0
+    n_agree_est = 0.0
+    <a id="change">for i in xrange(len(y_ref)):
+        for j in xrange(i + 1, len(y_ref)):
+            &#47&#47 Do i and j match in reference?
+            ref_match = (y_ref[i] == y_ref[j])
+            n_agree_ref += ref_match
+
+            &#47&#47 Or in estimate?
+            est_match = (y_est[i] == y_est[j])
+            n_agree_est += est_match
+
+            &#47&#47 If both, we have agreement
+            matches += (ref_match & est_match)
+            
+   </a> precision   = matches / n_agree_est
+    recall      = matches / n_agree_ref
+    f_measure   = util.f_measure(precision, recall, beta=beta)
+</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                                    noise[
+                                                                    self.UPSAMPLE_COUNT * mgc_index:self.UPSAMPLE_COUNT * mgc_index + 2 * self.UPSAMPLE_COUNT])
+
+                loss = dy.l1_distance(output, <a id="change">dy.inputVector(wave[
+                                                             self.UPSAMPLE_COUNT * mgc_index:self.UPSAMPLE_COUNT * mgc_index + self.UPSAMPLE_COUNT])</a>)
+                losses.append(loss)
+                cnt += self.UPSAMPLE_COUNT
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                                                    self.UPSAMPLE_COUNT * mgc_index:self.UPSAMPLE_COUNT * mgc_index + 2 * self.UPSAMPLE_COUNT])
+
+                &#47&#47 reconstruction error
+                <a id="change">t_vect = wave[self.UPSAMPLE_COUNT * mgc_index:self.UPSAMPLE_COUNT * mgc_index + self.UPSAMPLE_COUNT]</a>
+                loss = dy.squared_distance(output, <a id="change">dy.inputVector(t_vect)</a>)
+                &#47&#47 dynamic error
+                o1 = dy.pickrange(output, 0, self.UPSAMPLE_COUNT - 1)
+                o2 = dy.pickrange(output, 1, self.UPSAMPLE_COUNT)</code></pre>

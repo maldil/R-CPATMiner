@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @Slot()
+    def _bisect_next(self):
+        &#47&#47 this is executed in the working thread
+        <a id="change">try:
+            self.mid = mid = self.bisection.search_mid_point(
+                interrupt=self.should_stop.is_set)
+        except MozRegressionError:
+            self._finish_on_exception(self.bisection)
+            return
+        except StopIteration:
+            return
+
+        &#47&#47 if our last answer was skip, and that the next build
+        &#47&#47 to use is not chosen yet, ask to choose it.
+       </a> if (self._next_build_index is None and
+                self.test_runner.verdict == &quots&quot and
+                len(self.bisection.build_range) &gt; 3):
+            self.choose_next_build.emit()</code></pre><h3>After Change</h3><pre><code class='java'>
+    @Slot()
+    def _bisect_next(self):
+        &#47&#47 this is executed in the working thread
+        <a id="change">if self.test_runner.verdict != &quotr&quot:
+            try:
+                self.mid = self.bisection.search_mid_point(
+                    interrupt=self.should_stop.is_set)
+            except MozRegressionError:
+                self._finish_on_exception(self.bisection)
+                return
+            except StopIteration:
+                return
+
+        &#47&#47 if our last answer was skip, and that the next build
+        &#47&#47 to use is not chosen yet, ask to choose it.
+       </a> if (self._next_build_index is None and
+                self.test_runner.verdict == &quots&quot and
+                len(self.bisection.build_range) &gt; 3):
+            self.choose_next_build.emit()</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                     "the unknown category -1 when encode %s" % (col,))
+
+        for switch in self.ordinal_encoder.mapping:
+            <a id="change">col_dict = {col_pair[1]: col_pair[0] for col_pair in switch.get(&quotmapping&quot)}</a>
+            X[switch.get(&quotcol&quot)] = X[switch.get(&quotcol&quot)].apply(lambda x: col_dict.get(x)).astype(switch.get(&quotdata_type&quot))
+
+        return X if self.return_df else X.values
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                     "the unknown category -1 when encode %s" % (col,))
+
+        for switch in self.ordinal_encoder.mapping:
+            <a id="change">column_mapping = switch.get(&quotmapping&quot)</a>
+            <a id="change">inverse = pd.Series(data=column_mapping.index, index=column_mapping.get_values())</a>
+            X[switch.get(&quotcol&quot)] = X[switch.get(&quotcol&quot)].map(inverse).astype(switch.get(&quotdata_type&quot))
+
+        return X if self.return_df else X.values
+</code></pre>

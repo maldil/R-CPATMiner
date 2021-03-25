@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for switch in mapping:
+            col = switch.get(&quotcol&quot)
+            mod = switch.get(&quotmapping&quot)
+            <a id="change">new_columns = []</a>
+            <a id="change">for i in range(len(mod.columns)):
+                c = mod.columns[i]
+                new_col = str(col) + &quot_%d&quot % (i, )
+
+                X.loc[:, new_col] = mod[c].loc[X[col]].values
+                new_columns.append(new_col)
+           </a> old_column_index = cols.index(col)
+            <a id="change">cols[old_column_index: old_column_index + 1]</a> = new_columns
+
+        cols = [&quotintercept&quot] + cols
+        <a id="change">X = X.reindex(columns=cols)</a>
+
+        <a id="change">return X</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        
+
+        <a id="change">X</a> = X_in.copy(deep=True)
+
+        cols = X.columns.values.tolist()
+
+        X[&quotintercept&quot] = pd.Series([1] * X.shape[0], index=X.index)
+
+        for switch in mapping:
+            col = switch.get(&quotcol&quot)
+            <a id="change">mod</a> = switch.get(&quotmapping&quot)
+
+            <a id="change">base_df = mod.loc[X[col]]</a>
+            <a id="change">base_df.set_index(X.index, inplace=True)</a>
+            <a id="change">X = pd.concat([base_df, X], axis=1)</a>
+
+            old_column_index = cols.index(col)
+            cols[old_column_index: old_column_index + 1] = <a id="change">mod.columns</a>
+
+        cols = [&quotintercept&quot] + cols
+
+        <a id="change">return X.reindex(columns=cols)</a>
+</code></pre>

@@ -1,0 +1,54 @@
+<html><h3>a35efe5121d35160a7f1ff8ca25af2c4eb035b99,pgmpy/models/ClusterGraph.py,ClusterGraph,check_model,#ClusterGraph#,242
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for factor in self.factors:
+            for variable, cardinality in zip(factor.scope(), factor.cardinality):
+                if <a id="change">((self.cardinalities[variable]) and
+                        (self.cardinalities[variable] != cardinality))</a>:
+                    raise CardinalityError(
+                        &quotCardinality of variable %s not matching among factors&quot % variable)
+                else:
+                    <a id="change">self.cardinalities[variable] = cardinality</a>
+
+        return True
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            factor = factor_product(factor, *[self.factors[i] for i in range(1, len(self.factors))])
+            return np.sum(factor.values)
+
+    def check_model(<a id="change">self</a>):
+        
+        Check the model for various errors. This method checks for the following
+        errors. In the same time also updates the cardinalities of all the random
+        variables.
+
+        * Checks if clique potentials are defined for all the cliques or not.
+        * Check for running intersection property is not done explicitly over
+        here as it done in the add_edges method.
+
+        Returns
+        -------
+        check: boolean
+            True if all the checks are passed
+        
+        for clique in self.nodes():
+            if self.get_factors(clique):
+                pass
+            else:
+                raise ValueError(&quotFactors for all the cliques or clusters not&quot
+                                 &quotdefined.&quot)
+
+        if len(self.factors) != len(self.nodes()):
+            raise ValueError(&quotOne to one mapping of factor to clique or cluster&quot
+                             &quotis not there.&quot)
+
+        <a id="change">cardinalities = self.get_cardinality()</a>
+        for factor in self.factors:
+            for variable, cardinality in zip(factor.scope(), factor.cardinality):
+                if (<a id="change">cardinalities[variable] != cardin</a>ality):
+                    raise CardinalityError(
+                        &quotCardinality of variable %s not matching among factors&quot % variable)
+        return True</code></pre><img src="4008017.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/a35efe5121d35160a7f1ff8ca25af2c4eb035b99#diff-2ef30465a3cc9b5e9979ed8068ffab8c72c78a0597e7d8779ed2b7f2adf9b253L242' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: a35efe5121d35160a7f1ff8ca25af2c4eb035b99</div><div id='time'> Time: 2015-10-15</div><div id='author'> Author: yashuseth2503@gmail.com</div><div id='file'> File Name: pgmpy/models/ClusterGraph.py</div><div id='class'> Class Name: ClusterGraph</div><div id='method'> Method Name: check_model</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/d33fd8b1c3df6f3336a92d70fc855ccf2260c672#diff-054133edc3de05f054f1a2973a5e6b6ad2879baa93dff47418bd49842544ad87L180' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: d33fd8b1c3df6f3336a92d70fc855ccf2260c672</div><div id='time'> Time: 2015-10-15</div><div id='author'> Author: yashuseth2503@gmail.com</div><div id='file'> File Name: pgmpy/models/MarkovModel.py</div><div id='class'> Class Name: MarkovModel</div><div id='method'> Method Name: check_model</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/c4c31851ba38fb2428efd625d055aabd9e9c45f9#diff-ce49a881a11cfc253f09a45bac460281fbaffe0bcf357b69f4228ff55ea98563L145' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: c4c31851ba38fb2428efd625d055aabd9e9c45f9</div><div id='time'> Time: 2015-10-15</div><div id='author'> Author: yashuseth2503@gmail.com</div><div id='file'> File Name: pgmpy/models/FactorGraph.py</div><div id='class'> Class Name: FactorGraph</div><div id='method'> Method Name: check_model</div><BR>

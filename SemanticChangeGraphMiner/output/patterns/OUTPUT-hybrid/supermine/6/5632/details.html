@@ -1,0 +1,20 @@
+<html><h3>fc56073588771c81b4e134bff54195f5e74e6b43,thinc/backends/ops.py,Ops,multibatch,#,73
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if is_list and isinstance(subseq, Objects):
+                    subseq = subseq.data
+                subseqs.append(subseq)
+            queue.append(<a id="change">tuple(subseqs)</a>)
+            i += batch_size
+        return queue
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            subseqs = []
+            for sequence in sequences:
+                if isinstance(sequence, list):
+                    <a id="change">subseq = [sequence[i] for i in idx_batch]</a>
+                elif isinstance(sequence, tuple):
+                    subseq = tuple(sequence[i] for i in idx_batch)  &#47&#47 type: ignore
+                else:
+                    subseq = sequence[idx_batch]  &#47&#47 type: ignore</code></pre><img src="23751178.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/fc56073588771c81b4e134bff54195f5e74e6b43#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L83' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: fc56073588771c81b4e134bff54195f5e74e6b43</div><div id='time'> Time: 2020-01-21</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: multibatch</div><BR><BR><div id='link'><a href='https://github.com/dit/dit/commit/041473983e93820efe5e10b635ff0bc8634f712f#diff-75df609d35691d0bad9e8209c057f116c2c8e0316b1bcc5d9921bb93a4070352L302' target='_blank'>Link</a></div><div id='project'> Project Name: dit/dit</div><div id='commit'> Commit Name: 041473983e93820efe5e10b635ff0bc8634f712f</div><div id='time'> Time: 2017-07-06</div><div id='author'> Author: ryangregoryjames@gmail.com</div><div id='file'> File Name: dit/profiles/information_partitions.py</div><div id='class'> Class Name: DependencyDecomposition</div><div id='method'> Method Name: _partition</div><BR><BR><div id='link'><a href='https://github.com/arogozhnikov/einops/commit/f700314b855b2c1bb1bb3b8930289b6db62dca91#diff-0c99c4eda1d9767e3967a1e1fbae23b1df5eec81727bce9a90c4e57fdbea56e9L400' target='_blank'>Link</a></div><div id='project'> Project Name: arogozhnikov/einops</div><div id='commit'> Commit Name: f700314b855b2c1bb1bb3b8930289b6db62dca91</div><div id='time'> Time: 2019-05-10</div><div id='author'> Author: stefan.saftescu@gmail.com</div><div id='file'> File Name: einops/_backends.py</div><div id='class'> Class Name: TensorflowBackend</div><div id='method'> Method Name: shape</div><BR>

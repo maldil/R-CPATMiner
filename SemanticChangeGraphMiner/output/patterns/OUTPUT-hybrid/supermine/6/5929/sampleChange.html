@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            prob = self.model.predict_real(X_pool)
+            min_margin = np.inf
+            for j in range(len(prob)):
+                <a id="change">m1_id = np.argmax(prob[j])</a>
+                <a id="change">m2_id = np.argmax(np.delete(prob[j], m1_id))</a>
+                margin = prob[j][m1_id] - prob[j][m2_id]
+                if margin &lt; min_margin:
+                    min_margin = margin
+                    ask_id = j</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                &#47&#47 Find 2 largest decision values
+                ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]
+            <a id="change">margin = np.abs(np.abs(dvalue[:, ind[0]]) - np.abs(dvalue[:, ind[1]]))</a>
+            ask_id = np.argmin(margin)
+
+        return unlabeled_entry_ids[ask_id]
+</code></pre>

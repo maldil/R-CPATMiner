@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Converting an image with depth = 1 to depth = 3, repeating the same values
+            &#47&#47 For some reason PIL complains when I want to save channel image as jpg without
+            &#47&#47 additional format in the .save()
+            <a id="change">im = np.repeat(im, 3, axis=0)</a>
+            &#47&#47 Convert to values to range 1-255 and W,H, D
+        &#47&#47 A bandaid fix to an issue with gradcam
+        if im.shape[0] == 3 and np.max(im) == 1:
+            im = im.transpose(1, 2, 0) * 255</code></pre><h3>After Change</h3><pre><code class='java'>
+        im_as_arr (Numpy array): Matrix of shape DxWxH
+        path (str): Path to the image
+    
+    <a id="change">if isinstance(im, (np.ndarray, np.generic)):
+        im = format_np_output(im)
+        im = Image.fromarray(im)
+   </a> im.save(path)
+
+
+def preprocess_image(pil_im, resize_im=True):</code></pre>

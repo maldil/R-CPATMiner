@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        config: ConfigScope or ConfigDict or basestring
+            The corresponding named config.
+        
+        <a id="change">for config_name, config in ingredient.named_configs.items():
+            yield join_paths(ingredient.path, config_name), config
+
+   </a> def get_experiment_info(self):
+        Get a dictionary with information about this experiment.
+
+        Contains:</code></pre><h3>After Change</h3><pre><code class='java'>
+        config: ConfigScope or ConfigDict or basestring
+            The corresponding named config.
+        
+        <a id="change">for ingredient, _ in self.traverse_ingredients():
+            for config_name, config in ingredient.named_configs.items():
+                config_name = join_paths(ingredient.path, config_name)
+                config_name = self.post_process_name(config_name, ingredient)
+                yield config_name, config
+
+   </a> def get_experiment_info(self):
+        Get a dictionary with information about this experiment.
+
+        Contains:</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            Thrown when the provided annotations are not valid.
+    &quot&quot&quot
+    &#47&#47 If reference or estimated onsets are empty, warn because metric will be 0
+    <a id="change">if reference_onsets.size == 0:
+        warnings.warn("Reference onsets are empty.")
+   </a> if estimated_onsets.size == 0:
+        warnings.warn("Estimated onsets are empty.")
+    for onsets in [reference_onsets, estimated_onsets]:
+        util.validate_events(onsets, MAX_TIME)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if reference_tempi.size != 2:
+        raise ValueError("Reference tempi must have two values.")
+    
+    <a id="change">if estimated_tempi.size != 2:
+        raise ValueError("Estimated tempi must have two values.")
+    
+   </a> if np.any(reference_tempi &lt;= 0):
+        warnings.warn(&quotDetected non-positive reference tempo&quot)
+
+    if reference_weight &lt; 0 or reference_weight &gt; 1:</code></pre>

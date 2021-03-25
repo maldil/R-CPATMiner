@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47    self.coords = th_iterproduct(fixed_size[0], fixed_size[1])
+
+    def __call__(self, x, y=None):
+        <a id="change">shear = random.uniform(-self.shear_range, self.shear_range)</a>
+        shear_matrix = torch.FloatTensor([[1, -math.sin(shear), 0],
+                                          [0, math.cos(shear), 0],
+                                          [0, 0, 1]])
+        if self.lazy:</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            x_transformed = th_affine2d(x, 
+                                        shear_matrix,
+                                        mode=<a id="change">self.interp[0]</a>)
+            if y is not None:
+                y_transformed = th_affine2d(y, 
+                                            shear_matrix,
+                                            mode=<a id="change">self.interp[1]</a>)
+                return x_transformed, y_transformed
+            else:
+                return x_transformed</code></pre>

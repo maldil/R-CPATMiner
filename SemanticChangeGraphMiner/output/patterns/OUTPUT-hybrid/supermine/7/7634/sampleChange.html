@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 retrieve the necessary parameters from the query string
+    query_dict = parse_qs(imagery.lower())
+    image_format = query_dict[&quotformat&quot][0].split(&quot/&quot)[1]
+    wms_srs = <a id="change">query_dict</a>[<a id="change">&quotsrs&quot</a>][0]
+
+    &#47&#47 find our tile bounding box
+    bound = bounds(*[int(t) for t in tile.split(&quot-&quot)])</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 retrieve the necessary parameters from the query string
+    query_dict = parse_qs(imagery.lower())
+    image_format = query_dict.get(&quotformat&quot)[0].split(&quot/&quot)[1]
+    <a id="change">wms_version = query_dict.get(&quotversion&quot)[0]</a>
+    <a id="change">if wms_version == &quot1.3.0&quot:
+        wms_srs = query_dict.get(&quotcrs&quot)[0]
+    else:
+        wms_srs = query_dict.get(&quotsrs&quot)[0]
+
+    &#47&#47 find our tile bounding box
+   </a> bound = bounds(*[int(t) for t in tile.split(&quot-&quot)])
+    p1 = Proj({&quotinit&quot: &quotepsg:4326&quot})
+    p2 = Proj({&quotinit&quot: wms_srs})
+</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not self.use_features_in_secondary:
+            self.meta_regr_.fit(meta_features, y)
+        elif sparse.issparse(X):
+            <a id="change">self.meta_regr_.fit(sparse.hstack((X, meta_features)), y)</a>
+        else:
+            self.meta_regr_.fit(np.hstack((X, meta_features)), y)
+        &#47&#47 Retrain base models on all data
+        for regr in self.regr_:</code></pre><h3>After Change</h3><pre><code class='java'>
+                if sample_weight is None:
+                    instance.fit(X[train_idx], y[train_idx])
+                else:
+                    instance.fit(X[train_idx], <a id="change">y[train_idx]</a>,
+                                 sample_weight=sample_weight[train_idx])
+                y_pred = instance.predict(X[holdout_idx])
+                meta_features[holdout_idx, i] = y_pred</code></pre>

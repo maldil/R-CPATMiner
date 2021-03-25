@@ -1,0 +1,30 @@
+<html><h3>d8dd8caeec861648813ae7b1112b3faf7f85a326,mnist/main.py,Net,forward,#Net#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.fc2 = nn.Linear(50, 10)
+
+    def forward(self, x):
+        x = F.relu(F.max_pool2d(<a id="change">self.conv1(x)</a>, 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(<a id="change">self.conv2(x)</a>), 2))
+        x = x.view(-1, 320)
+        <a id="change">x</a> = F.relu(self.fc1(x))
+        x = F.dropout(x, training=self.training)
+        <a id="change">x</a> = self.fc2(x)
+        return F.log_softmax(x, dim=1)
+
+def train(args, model, device, train_loader, optimizer, epoch):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.fc2 = nn.Linear(500, 10)
+
+    def forward(self, x):
+        x = F.relu(<a id="change">self.conv1(x)</a>)
+        x = F.max_pool2d(x, 2, 2)
+        x = F.relu(<a id="change">self.conv2(x)</a>)
+        x = F.max_pool2d(x, 2, 2)
+        x = x.view(-1, 4*4*50)
+        <a id="change">x</a> = F.relu(self.fc1(x))
+        <a id="change">x</a> = self.fc2(x)
+        return F.log_softmax(x, dim=1)
+    
+def train(args, model, device, train_loader, optimizer, epoch):</code></pre><img src="2056639.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/d8dd8caeec861648813ae7b1112b3faf7f85a326#diff-78f568436f0215e79aa67be416d1bed4f6e36f9308b341fa406ee3bcff8ff0afL18' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: d8dd8caeec861648813ae7b1112b3faf7f85a326</div><div id='time'> Time: 2018-12-12</div><div id='author'> Author: 33121121+surgan12@users.noreply.github.com</div><div id='file'> File Name: mnist/main.py</div><div id='class'> Class Name: Net</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/rusty1s/pytorch_geometric/commit/a7fd67bd27f83cf7c9438626bb642e1928dbe814#diff-05ac240edfd0fea877155a2fa204806f522d56553a873a06e4f5a9030884a7baL34' target='_blank'>Link</a></div><div id='project'> Project Name: rusty1s/pytorch_geometric</div><div id='commit'> Commit Name: a7fd67bd27f83cf7c9438626bb642e1928dbe814</div><div id='time'> Time: 2020-09-23</div><div id='author'> Author: matthias.fey@tu-dortmund.de</div><div id='file'> File Name: examples/ppi.py</div><div id='class'> Class Name: Net</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/0634306968ed7f28e2b11b69d3b2df348b8ec53c#diff-78f568436f0215e79aa67be416d1bed4f6e36f9308b341fa406ee3bcff8ff0afL19' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: 0634306968ed7f28e2b11b69d3b2df348b8ec53c</div><div id='time'> Time: 2019-11-11</div><div id='author'> Author: fedor.shabashev@gmail.com</div><div id='file'> File Name: mnist/main.py</div><div id='class'> Class Name: Net</div><div id='method'> Method Name: forward</div><BR>

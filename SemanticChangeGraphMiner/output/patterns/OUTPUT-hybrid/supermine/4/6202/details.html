@@ -1,0 +1,20 @@
+<html><h3>2b38855e22530bab3e66dda77c4fc653c141c1d1,codes/models/modules/sft_arch.py,,,#,95
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    sft_net = sft_net.cuda()
+    seg = torch.load(&quot../../../data/samples_segprob/OST_013_bic.pth&quot)
+    seg = seg.cuda()
+    <a id="change">shared_cond = cond_net(Variable(seg, volatile=True))</a>
+
+    img = cv2.imread(&quot../../../data/samples/OST_013.png&quot, cv2.IMREAD_UNCHANGED)
+    img = img * 1.0 / 255
+    img = torch.from_numpy(np.transpose(img[:, :, [2, 1, 0]], (2, 0, 1))).float()</code></pre><h3>After Change</h3><pre><code class='java'>
+    img_LR = img_LR.cuda()
+
+    seg = torch.load(&quot/mnt/SSD/xtwang/BasicSR_datasets/OST/test/bicseg/OST300/OST_013.pth&quot)
+    seg = <a id="change">seg</a>.unsqueeze(<a id="change">0</a>).cuda()
+
+    output = sft_net((Variable(img_LR, volatile=True), Variable(seg))).data.float().cpu()
+    output.squeeze_()</code></pre><img src="25332146.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/2b38855e22530bab3e66dda77c4fc653c141c1d1#diff-9b2210ae27e62d86aab823e558a7e2c0fc27c87202c27cbff3d2155ba19098bfL106' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 2b38855e22530bab3e66dda77c4fc653c141c1d1</div><div id='time'> Time: 2018-06-11</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/modules/sft_arch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7#diff-13b50db4e17eecc27131342e1828da26b0d88a948a61d844a396e77d3377f01dL52' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 0b0eabbfd972c9e3f6323bff9d39ac5fc3ba9cc7</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/Translator.py</div><div id='class'> Class Name: Translator</div><div id='method'> Method Name: translate_batch</div><BR><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/827978583ed23cdbd98422e39fb3f50e961eb9d9#diff-1ab03ba30d73b3d04dc31385d7a4640161026fa0282c7f361f938483066d1fefL80' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 827978583ed23cdbd98422e39fb3f50e961eb9d9</div><div id='time'> Time: 2018-01-10</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: synthesis.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wavegen</div><BR>

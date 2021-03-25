@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def read_samples_by_string(self, path):
+        for tokens in self.read_tokens(path):
+            source = []
+            <a id="change">target = []</a>
+            for token in tokens:
+                <a id="change">target.append(token)</a>
+                if self.config.enable_data_dropout:
+                    &#47&#47 Random dropout words from the input
+                    dropout_token = (token in FCEReader.DROPOUT_TOKENS and random.random() &lt; self.dropout_prob)
+                    replace_token = (token in FCEReader.REPLACEMENTS and random.random() &lt; self.replacement_prob)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.UNKNOWN_ID = self.token_2_id[FCEReader.UNKNOWN_TOKEN]
+
+    def read_samples_by_string(self, path):
+        <a id="change">with open(path, &quotr&quot, encoding=&quotutf-8&quot) as f:
+            line_src = f.readline()
+            line_dst = f.readline()
+            if line_src and line_dst:
+                source = line_src.lower()[5:].strip().split()
+                target = line_dst.lower()[5:].strip().split()
+                if self.config.enable_data_dropout:
+                    new_source = []
+                    for token in source:
+                        &#47&#47 Random dropout words from the input
+                        dropout_token = (token in FCEReader.DROPOUT_TOKENS and random.random() &lt; self.dropout_prob)
+                        replace_token = (token in FCEReader.REPLACEMENTS and random.random() &lt; self.replacement_prob)
+                        if replace_token:
+                            new_source.append(FCEReader.REPLACEMENTS[source])
+                        elif not dropout_token:
+                            new_source.append(token)
+                    source = new_source
+                yield source, target
+
+   </a> def unknown_token(self):
+        return FCEReader.UNKNOWN_TOKEN
+
+    def read_tokens(self, path):</code></pre>

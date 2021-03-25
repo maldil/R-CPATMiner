@@ -1,0 +1,38 @@
+<html><h3>8182ea386e6529a1a2294d8e2d33fc040d0cbfb2,deepctr/inputs.py,,get_linear_logit,#,153
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    _, dense_input_list = input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix)
+
+    if len(linear_emb_list[0]) &gt; 1:
+        linear_term = concat_fun([add(linear_emb) <a id="change">for</a> linear_emb in linear_emb_list])
+    elif len(linear_emb_list[0]) == 1:
+        <a id="change">linear_term = concat_fun([linear_emb[0] for linear_emb in linear_emb_list])</a>
+    else:
+        linear_term = None
+
+    if len(dense_input_list) &gt; 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+    _, dense_input_list = input_from_feature_columns(features,feature_columns,1,l2_reg,init_std,seed,prefix=prefix)
+
+    linear_logit_list = []
+    <a id="change">for i in range(units):
+
+        if len(linear_emb_list[0])&gt;0 and len(dense_input_list) &gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=2)([sparse_input,dense_input])
+        elif len(linear_emb_list[0])&gt;0:
+            sparse_input = concat_fun(linear_emb_list[i])
+            linear_logit = Linear(l2_reg,mode=0)(sparse_input)
+        elif len(dense_input_list) &gt;0:
+            dense_input = concat_fun(dense_input_list)
+            linear_logit = Linear(l2_reg,mode=1)(dense_input)
+        else:
+            raise NotImplementedError
+        linear_logit_list.append(linear_logit)
+
+   </a> return concat_fun(linear_logit_list)
+
+def embedding_lookup(sparse_embedding_dict,sparse_input_dict,sparse_feature_columns,return_feat_list=(), mask_feat_list=()):
+    embedding_vec_list = []</code></pre><img src="29481473.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/ece383696800b9b34854df27a65a3d1d74669952#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: ece383696800b9b34854df27a65a3d1d74669952</div><div id='time'> Time: 2020-05-28</div><div id='author'> Author: alexmxu@alexs-mbp-3.attlocal.net</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/shenweichen/DeepCTR/commit/8182ea386e6529a1a2294d8e2d33fc040d0cbfb2#diff-d1d4cce994b0eb5d0c37a7602b14d2590fcfa3a4d2de7376dd541557ad5d3a34L155' target='_blank'>Link</a></div><div id='project'> Project Name: shenweichen/DeepCTR</div><div id='commit'> Commit Name: 8182ea386e6529a1a2294d8e2d33fc040d0cbfb2</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: wcshen1994@163.com</div><div id='file'> File Name: deepctr/inputs.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_linear_logit</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/scikit-rebate/commit/163eb7df13667e21b0e02a2706e18d1f53eee610#diff-df0dbfba1607e74ba063eeba9b6e233ef4ea97e926e669ff238f38249731b1a1L112' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/scikit-rebate</div><div id='commit'> Commit Name: 163eb7df13667e21b0e02a2706e18d1f53eee610</div><div id='time'> Time: 2020-01-29</div><div id='author'> Author: alexmxu99@gmail.com</div><div id='file'> File Name: skrebate/iterrelief.py</div><div id='class'> Class Name: IterRelief</div><div id='method'> Method Name: fit</div><BR>

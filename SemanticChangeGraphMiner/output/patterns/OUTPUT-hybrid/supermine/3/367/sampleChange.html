@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @override_settings(SOUNDS_PATH=tempfile.mkdtemp())
+    def test_stereofy_failed(self, *args):
+        tmp_directory = self.pre_test()
+        <a id="change">FreesoundAudioProcessor(sound_id=Sound.objects.first().id, tmp_directory=tmp_directory).process()</a>
+        &#47&#47 processing will fail because stereofy can&quott work with generated random audio file or sterefy can&quott be found
+        self.sound.refresh_from_db()
+        self.assertEqual(self.sound.processing_state, "FA")
+        self.assertEqual(self.sound.processing_ongoing_state, "FI")</code></pre><h3>After Change</h3><pre><code class='java'>
+    @override_settings(SOUNDS_PATH=tempfile.mkdtemp())
+    def test_stereofy_failed(self, *args):
+        tmp_directory = self.pre_test()
+        <a id="change">result = FreesoundAudioProcessor(sound_id=Sound.objects.first().id, tmp_directory=tmp_directory).process()</a>
+        &#47&#47 processing will fail because stereofy can&quott work with generated random audio file or sterefy can&quott be found
+        self.assertFalse(result)  &#47&#47 Processing failed, retutned False
+        self.sound.refresh_from_db()
+        self.assertEqual(self.sound.processing_state, "FA")</code></pre>

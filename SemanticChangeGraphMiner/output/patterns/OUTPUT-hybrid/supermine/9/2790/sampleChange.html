@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    text = "LosAngeles start."
+    heads = [1, 1, 0]
+    tokens = en_tokenizer(text)
+    doc = get_doc(tokens.vocab, [t.text <a id="change">for</a> t in tokens], heads=heads)
+
+    assert len(doc) == 3
+    assert len(str(doc)) == 19</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_doc_split(en_vocab):
+    <a id="change">words = ["LosAngeles", "start", "."]</a>
+    heads = [1, 1, 0]
+    <a id="change">doc = get_doc(en_vocab, words=words, heads=heads)</a>
+    assert len(doc) == 3
+    assert len(str(doc)) == 19
+    assert doc[0].head.text == "start"
+    assert doc[1].head.text == "."</code></pre>

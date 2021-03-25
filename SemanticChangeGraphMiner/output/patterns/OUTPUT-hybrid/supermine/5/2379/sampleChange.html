@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                f&quotnp.max(np.abs(beamforming_vector)) = {value}&quot
+            )
+    else:
+        beamforming_vector = <a id="change">np.stack(list(
+            pb.speech_enhancement.get_single_source_bf_vector(
+                method,
+                target_psd_matrix=target_psd[:, k, :, :],
+                noise_psd_matrix=interference_psd[:, k, :, :],
+            ) for k in range(K)
+        ), axis=1)</a>
+
+    return beamforming_vector
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            )
+
+        beamforming_vector = list()
+        <a id="change">for k in range(K - 1):
+            if denominator_matrix_for_bf is None:
+                denominator_matrix = None
+            elif denominator_matrix_for_bf == &quotnoise&quot:
+                denominator_matrix = target_psd[:, -1, :, :]
+            elif denominator_matrix_for_bf == &quotinterference&quot:
+                denominator_matrix = interference_psd[:, k, :, :]
+
+            beamforming_vector.append(
+                pb.speech_enhancement.get_single_source_bf_vector(
+                    method,
+                    target_psd_matrix=target_psd[:, k, :, :],
+                    noise_psd_matrix=denominator_matrix,
+                )
+            )
+
+       </a> beamforming_vector = np.stack(beamforming_vector, axis=1)
+
+    return beamforming_vector
+</code></pre>

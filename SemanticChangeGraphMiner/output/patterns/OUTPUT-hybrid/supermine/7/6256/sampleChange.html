@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        tfgrad = tf.gradients(objective, argument)
+
+        <a id="change">if not isinstance(argument, list):
+            def grad(x):
+                feed_dict = {argument: x}
+                return self._session.run(tfgrad[0], feed_dict)
+        else:
+            def grad(x):
+                feed_dict = {i: d for i, d in zip(argument, x)}
+                return self._session.run(tfgrad, feed_dict)
+
+       </a> return grad
+
+    @Backend._assert_backend_available
+    def compute_hessian(self, objective, argument):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_gradient(self, function, arguments):
+        <a id="change">flattened_arguments = flatten_arguments(arguments)</a>
+        gradient = tf.gradients(function, flattened_arguments)
+
+        if len(flattened_arguments) == 1:
+            (argument,) = flattened_arguments</code></pre>

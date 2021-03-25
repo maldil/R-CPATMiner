@@ -1,0 +1,20 @@
+<html><h3>85d5c30d2186d07857d1f0fb7c269eb08d2b7d79,deslib/des/des_clustering.py,DESClustering,classify_with_ds,#DESClustering#,227
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        predicted_label: The predicted label of the query
+        
+        indices = self.select(query)
+        votes = np.atleast_2d(<a id="change">predictions[indices]</a>)
+        predicted_label = majority_voting_rule(votes)
+        &#47&#47 classifier_ensemble = self._get_classifier_ensemble(indices)
+        &#47&#47 predicted_label = majority_voting(classifier_ensemble, query)</code></pre><h3>After Change</h3><pre><code class='java'>
+            predictions = predictions.reshape(1, -1)
+
+        selected_classifiers = self.select(query)
+        <a id="change">votes = predictions[np.arange(predictions.shape[0])[:, None], selected_classifiers]</a>
+        predicted_label = majority_voting_rule(votes)
+
+        return predicted_label
+</code></pre><img src="1862206.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/85d5c30d2186d07857d1f0fb7c269eb08d2b7d79#diff-8f7a6bbb5cc4b2c27507b741ab3849957f6e35ee2de8ef4d6566aaa92617c5c8L212' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 85d5c30d2186d07857d1f0fb7c269eb08d2b7d79</div><div id='time'> Time: 2018-04-07</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_clustering.py</div><div id='class'> Class Name: DESClustering</div><div id='method'> Method Name: classify_with_ds</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/adfcd7c21f3f2fc6077eb00abf4887cd2d567880#diff-94a1701a6014217bb8cdeb38df7630507985fd11d214cb28ebe726c4458f4001L239' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: adfcd7c21f3f2fc6077eb00abf4887cd2d567880</div><div id='time'> Time: 2018-04-06</div><div id='author'> Author: luiz.gh@gmail.com</div><div id='file'> File Name: deslib/dcs/base.py</div><div id='class'> Class Name: DCS</div><div id='method'> Method Name: predict_proba_with_ds</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/85d5c30d2186d07857d1f0fb7c269eb08d2b7d79#diff-8f7a6bbb5cc4b2c27507b741ab3849957f6e35ee2de8ef4d6566aaa92617c5c8L227' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 85d5c30d2186d07857d1f0fb7c269eb08d2b7d79</div><div id='time'> Time: 2018-04-07</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_clustering.py</div><div id='class'> Class Name: DESClustering</div><div id='method'> Method Name: classify_with_ds</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/7177e36e8c3851b9f7d1c38fd1b560cdbb292268#diff-94a1701a6014217bb8cdeb38df7630507985fd11d214cb28ebe726c4458f4001L190' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 7177e36e8c3851b9f7d1c38fd1b560cdbb292268</div><div id='time'> Time: 2018-03-26</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/base.py</div><div id='class'> Class Name: DCS</div><div id='method'> Method Name: classify_instance</div><BR>

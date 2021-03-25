@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        channel) as values.
+    
+    &#47&#47 Initialize empty feature array for all channels
+    <a id="change">all_feature_lists = {feature: [0.] * ts.n_channels
+                         for feature in features_to_use}</a>
+    for (t_i, m_i, e_i), i in zip(ts.channels(), range(ts.n_channels)):
+        feature_graph = generate_dask_graph(t_i, m_i, e_i)
+        feature_graph.update(ts.meta_features)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 series in serial.
+        feature_values[:, i] = dask.async.get_sync(feature_graph, features_to_use)
+
+    index = pd.MultiIndex.from_product(<a id="change">(features_to_use, range(ts.n_channels))</a>,
+                                       names=(&quotfeature&quot, &quotchannel&quot))
+    return pd.Series(feature_values.ravel(), index=index)
+</code></pre>

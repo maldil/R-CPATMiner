@@ -1,0 +1,19 @@
+<html><h3>dd9512019c67fdb06c0e53991608d36ca5cdf920,loss.py,GeneratorAdversarialWithContentLoss,forward,#GeneratorAdversarialWithContentLoss#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        features_target = self.loss_network(target_images)
+        content_loss = self.mse_loss(features_input, features_target)
+        image_loss = self.mse_loss(out_images, target_images)
+        g_tv_loss = (((<a id="change">out_images[:, :, :-1, :]</a> - out_images[:, :, 1:, :]) ** 2 + (
+        out_images[:, :, :, :-1] - out_images[:, :, :, 1:]) ** 2) ** 1.25).mean()
+        if self.using_l1:
+            &#47&#47 L1 Loss</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward(self, out_labels, out_images, target_images):
+        &#47&#47 Adversarial Loss
+        adversarial_loss = torch.mean(<a id="change">torch.log(1 - out_labels)</a>)
+        &#47&#47 Content Loss
+        features_input = self.loss_network(out_images)
+        features_target = self.loss_network(target_images)</code></pre><img src="30197992.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/dd9512019c67fdb06c0e53991608d36ca5cdf920#diff-5417214fd82eddc828782e56401ffa056e917ad8ae14669fb0b704cd9dcad2bfL38' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: dd9512019c67fdb06c0e53991608d36ca5cdf920</div><div id='time'> Time: 2017-12-02</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: loss.py</div><div id='class'> Class Name: GeneratorAdversarialWithContentLoss</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/inspirehep/magpie/commit/7b881943c322c1a98eaab359b3ee9b148c9c3268#diff-0a7198803710d37200c756a55f2f649c019cdc0828d7ffce9cb05df578db405aL49' target='_blank'>Link</a></div><div id='project'> Project Name: inspirehep/magpie</div><div id='commit'> Commit Name: 7b881943c322c1a98eaab359b3ee9b148c9c3268</div><div id='time'> Time: 2015-12-16</div><div id='author'> Author: jan.stypka@cern.ch</div><div id='file'> File Name: magpie/base/global_index.py</div><div id='class'> Class Name: GlobalFrequencyIndex</div><div id='method'> Method Name: _get_word_idf</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b46c893e2c0f9cd505b597c2ff215a0df04b6050#diff-05a01ce0503407dc9169caee0a0fdf0a97d6724ba90ef37b32beff27304e65fbL173' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b46c893e2c0f9cd505b597c2ff215a0df04b6050</div><div id='time'> Time: 2020-05-19</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: lifelines/fitters/npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log_likelihood</div><BR>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        assert o.dtype == x.dtype
+        dtype = o.dtype
+
+        <a id="change">if dtype == o.backend.float16:
+            nptype = np.float16
+        elif dtype == o.backend.float32:
+            nptype = np.float32
+        elif dtype == o.backend.float64:
+            nptype = np.float64
+        else:
+            raise ValueError(
+                "expected dtype to be float16, float32 or float64, found &quot{dtype}&quot"
+            )
+
+       </a> threshold = nptype(threshold)
+        offset = nptype(1.0)
+
+        if included_in == "lower":</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        
+        (o, x), restore_type = ep.astensors_(inputs, starting_points)
+        <a id="change">del inputs</a>
+
+        criterion = get_criterion(criterion)
+        is_adversarial = get_is_adversarial(criterion, model)
+</code></pre>

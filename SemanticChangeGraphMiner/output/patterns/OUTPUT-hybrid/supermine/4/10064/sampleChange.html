@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def initialize(self, opt):
+        BaseDataLoader.initialize(self, opt)
+        self.fineSize = opt.fineSize
+        transform = <a id="change">transforms.Compose([
+            &#47&#47 TODO: Scale
+            transforms.Scale(opt.loadSize),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5),
+                                 (0.5, 0.5, 0.5))])</a>
+
+        &#47&#47 Dataset A
+        dataset = ImageFolder(root=opt.dataroot + &quot/&quot + opt.phase,
+                              transform=transform, return_paths=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5),
+                                 (0.5, 0.5, 0.5))]
+        <a id="change">if opt.isTrain and not opt.no_flip:
+            transformations.insert(1, transforms.RandomHorizontalFlip())
+       </a> transform = transforms.Compose(transformations)
+
+        &#47&#47 Dataset A
+        dataset = ImageFolder(root=opt.dataroot + &quot/&quot + opt.phase,</code></pre>

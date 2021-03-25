@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            g.fit(X)
+
+    def _compute_log_likelihood(self, X):
+        return <a id="change">np</a>.array([g.score(X) for g in self.gmms_]).T
+
+    def _generate_sample_from_state(self, state, random_state=None):
+        return self.gmms_[state].sample(1, random_state=random_state).flatten()</code></pre><h3>After Change</h3><pre><code class='java'>
+        n_samples, _ = X.shape
+        res = np.zeros((n_samples, self.n_components))
+
+        <a id="change">for i in range(self.n_components):
+            log_denses = self._compute_log_weighted_gaussian_densities(X, i)
+            res[:, i] = logsumexp(log_denses, axis=1)
+
+       </a> return res
+
+    def _initialize_sufficient_statistics(self):
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()</code></pre>

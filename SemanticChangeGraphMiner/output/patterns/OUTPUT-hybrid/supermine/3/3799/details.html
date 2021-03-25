@@ -1,0 +1,19 @@
+<html><h3>8f2f0408337cf96ca3d737075068d870a3d0a36c,mordecai/geoparse.py,Geoparser,batch_geoparse,#Geoparser#,1029
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47processed = pool.map(self.geoparse, nlped_docs)
+        &#47&#47pool.close()
+        &#47&#47pool.join()
+        processed = [self.geoparse(i) <a id="change">for</a> i in nlped_docs]
+        return processed
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            print("batch_geoparsed should be used with threaded searches. Please set `threads=True` when initializing the geoparser.")
+        nlped_docs = list(nlp.pipe(text_list, as_tuples=False, n_threads=multiprocessing.cpu_count()))
+        processed = []
+        for i in <a id="change">tqdm(nlped_docs, disable=not self.progress)</a>:
+            p = self.geoparse(i)
+            processed.append(p)
+        return processed</code></pre><img src="16718414.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/openeventdata/mordecai/commit/8f2f0408337cf96ca3d737075068d870a3d0a36c#diff-aa69da5cdb5088bbac44897826d3106c1c8c7700d29932c12e0c657e853faf54L1034' target='_blank'>Link</a></div><div id='project'> Project Name: openeventdata/mordecai</div><div id='commit'> Commit Name: 8f2f0408337cf96ca3d737075068d870a3d0a36c</div><div id='time'> Time: 2018-07-02</div><div id='author'> Author: ahalterman0@gmail.com</div><div id='file'> File Name: mordecai/geoparse.py</div><div id='class'> Class Name: Geoparser</div><div id='method'> Method Name: batch_geoparse</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/SfmLearner-Pytorch/commit/2a74e12fec206dd222f98cd3ac2a15c48ebdf0a9#diff-a4834320005da2142dd8c6342076445453ff4a25b8bdf23a0a2518a6641a14caL68' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/SfmLearner-Pytorch</div><div id='commit'> Commit Name: 2a74e12fec206dd222f98cd3ac2a15c48ebdf0a9</div><div id='time'> Time: 2019-02-18</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: data/prepare_train_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/153e513a7de088160b4a567e2b9528f8fcc1d436#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L360' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: 153e513a7de088160b4a567e2b9528f8fcc1d436</div><div id='time'> Time: 2018-04-05</div><div id='author'> Author: vandesande.bram@gmail.com</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: InvertedRankingDatabase</div><div id='method'> Method Name: invert</div><BR>

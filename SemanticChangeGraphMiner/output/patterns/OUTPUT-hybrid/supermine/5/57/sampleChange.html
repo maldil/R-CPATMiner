@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def clean(path):
+    for name in MOD_NAMES:
+        name = name.replace(".", "/")
+        <a id="change">for ext in ["so", "html", "cpp", "c"]:
+            file_path = path / f"{name}.{ext}"
+            if file_path.exists():
+                file_path.unlink()
+
+
+</a>def setup_package():
+    root = Path(__file__).parent
+
+    if len(sys.argv) &gt; 1 and sys.argv[1] == "clean":</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def clean(path):
+    <a id="change">for path in path.glob("**/*"):
+        if path.is_file() and path.suffix in (".so", ".cpp"):
+            print(f"Deleting {path.name}")
+            path.unlink()
+
+
+</a>def setup_package():
+    root = Path(__file__).parent
+
+    if len(sys.argv) &gt; 1 and sys.argv[1] == "clean":</code></pre>

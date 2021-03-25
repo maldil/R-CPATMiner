@@ -1,0 +1,27 @@
+<html><h3>14c2381207c5972359b2af450a233730ff877ee1,TTS/bin/train_wavegrad.py,,train,#,84
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 backward pass with loss scaling
+        optimizer.zero_grad()
+
+        <a id="change">if amp is not None:
+            with amp.scale_loss(loss, optimizer) as scaled_loss:
+                scaled_loss.backward()
+        else:
+            loss.backward()
+
+       </a> if c.clip_grad &gt; 0:
+            grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           c.clip_grad)
+        optimizer.step()</code></pre><h3>After Change</h3><pre><code class='java'>
+            scaler.update()
+        else:
+            loss.backward()
+            <a id="change">grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(),
+                                           c.clip_grad)</a>
+            optimizer.step()
+
+
+</code></pre><img src="10137646.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mozilla/TTS/commit/14c2381207c5972359b2af450a233730ff877ee1#diff-44ef5e27027c0acdbc370fec9b077b138914e7d694e7d3322b458df1f5616f3dL104' target='_blank'>Link</a></div><div id='project'> Project Name: mozilla/TTS</div><div id='commit'> Commit Name: 14c2381207c5972359b2af450a233730ff877ee1</div><div id='time'> Time: 2020-10-29</div><div id='author'> Author: erogol@hotmail.com</div><div id='file'> File Name: TTS/bin/train_wavegrad.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/376b01c2e338ec63e638f62a76d67f6a9323e47c#diff-c34d59512d21510b260b855fe4ad7ad06200765ef8696aeda8d4e0a794a97c94L109' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 376b01c2e338ec63e638f62a76d67f6a9323e47c</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/deep/DeepCoral/DeepCoral.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/e2a50c54a397f5912e596b2c56a35ff9442031bc#diff-249f1482b76af3cd5e776178b09d96ff38b795e4a899ffb6dae742272d8bdaf1L26' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: e2a50c54a397f5912e596b2c56a35ff9442031bc</div><div id='time'> Time: 2018-05-07</div><div id='author'> Author: havard@DN0a22c460.SUNet</div><div id='file'> File Name: pycox/models/high_level.py</div><div id='class'> Class Name: CoxPHLinear</div><div id='method'> Method Name: __init__</div><BR>

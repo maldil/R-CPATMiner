@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i, meter in enumerate(metergroup.submeters().meters):
+            print("Training model for submeter &quot{}&quot".format(meter))
+            <a id="change">for chunk in meter.power_series(**load_kwargs):
+                num_total_states = num_states_dict.get(meter)
+                if num_total_states is not None:
+                    num_on_states = num_total_states - 1
+                else:
+                    num_on_states = None
+                self.train_on_chunk(
+                    chunk, meter, max_num_clusters, num_on_states)
+                break  &#47&#47 TODO handle multiple chunks per appliance
+
+        &#47&#47 Get centroids
+        &#47&#47 If we import sklearn at the top of the file then auto doc fails.
+       </a> from sklearn.utils.extmath import cartesian
+        centroids = [model[&quotstates&quot] for model in self.model]
+        self.state_combinations = cartesian(centroids)
+        &#47&#47 self.state_combinations is a 2D array</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 Check to see if there are any more chunks.
+            &#47&#47 TODO handle multiple chunks per appliance.
+            <a id="change">try:
+                power_series.next()
+            except StopIteration:
+                pass
+            else:
+                warn("The current implementation of CombinatorialOptimisation"
+                     " can only handle a single chunk.  But there are multiple"
+                     " chunks available.  So have only trained on the"
+                     " first chunk!")
+
+        &#47&#47 Get centroids
+        &#47&#47 If we import sklearn at the top of the file then auto doc fails.
+       </a> from sklearn.utils.extmath import cartesian
+        centroids = [model[&quotstates&quot] for model in self.model]
+        self.state_combinations = cartesian(centroids)
+        &#47&#47 self.state_combinations is a 2D array</code></pre>

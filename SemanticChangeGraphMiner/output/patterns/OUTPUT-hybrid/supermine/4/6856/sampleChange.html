@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.nH = nH
+        self.nM = nM  &#47&#47 model size: the length of the embeddings
+        self.nD = nM // nH
+        self.linears = [with_reshape(Affine(nM, nM)) <a id="change">for</a> i in range(4)]
+        self._layers = list(self.linears)
+
+    def begin_update(self, input, drop=0.0):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.nD = nM // nH
+        self.get_queries = with_reshape(Affine(nM, nM))
+        self.get_keys = with_reshape(Affine(nM, nM))
+        <a id="change">self.get_values = with_reshape(Affine(nM, nM))</a>
+        self.get_output = with_reshape(Affine(nM, nM))
+        self._layers = [self.get_queries, self.get_keys, self.get_values, self.get_output]
+
+    def begin_update(self, input, drop=0.0):</code></pre>

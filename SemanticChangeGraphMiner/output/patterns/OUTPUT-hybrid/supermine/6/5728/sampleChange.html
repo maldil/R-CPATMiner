@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def build_encoder(self):
+        &#47&#47 Encoder
+        <a id="change">encoder</a> = <a id="change">Sequential()</a>
+
+        encoder.add(Flatten(input_shape=self.img_shape))
+        encoder.add(Dense(512))
+        encoder.add(LeakyReLU(alpha=0.2))
+        encoder.add(BatchNormalization(momentum=0.8))
+        <a id="change">encoder.add(Dense(512))</a>
+        <a id="change">encoder.add(LeakyReLU(alpha=0.2))</a>
+        encoder.add(BatchNormalization(momentum=0.8))
+        encoder.add(Dense(self.encoded_dim))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        h = LeakyReLU(alpha=0.2)(h)
+        mu = Dense(self.latent_dim)(h)
+        log_var = Dense(self.latent_dim)(h)
+        <a id="change">latent_repr = merge([mu, log_var],
+                mode=lambda p: p[0] + K.random_normal(K.shape(p[0])) * K.exp(p[1] / 2),
+                output_shape=lambda p: p[0])</a>
+
+        return Model(img, latent_repr)
+</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        os.chmod(multi_bleu_path, 0o755)
+    except:
+        logger.info("Unable to fetch multi-bleu.perl script, using local.")
+        metrics_dir = <a id="change">os.path.dirname(os.path.realpath(__file__))</a>
+        <a id="change">bin_dir = os.path.abspath(os.path.join(metrics_dir, "..", "..", "bin"))</a>
+        multi_bleu_path = <a id="change">os</a>.path.join(bin_dir, "tools/multi-bleu.perl")
+
+    &#47&#47 Dump hypotheses and references to tempfiles
+    hypothesis_file = tempfile.NamedTemporaryFile()</code></pre><h3>After Change</h3><pre><code class='java'>
+        os.chmod(multi_bleu_path, 0o755)
+    except:
+        logger.warning("Unable to fetch multi-bleu.perl script")
+        <a id="change">return None</a>
+
+    &#47&#47 Dump hypotheses and references to tempfiles
+    hypothesis_file = tempfile.NamedTemporaryFile()
+    hypothesis_file.write("\n".join(hypotheses).encode("utf-8"))</code></pre>

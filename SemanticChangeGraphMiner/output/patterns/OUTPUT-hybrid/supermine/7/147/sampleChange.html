@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &gt;&gt;&gt; assert sample_rate == 8000
+    
+    in_signal = torch.classes.torchaudio.TensorSignal(tensor, sample_rate, channels_first)
+    <a id="change">out_signal = torch.ops.torchaudio.sox_effects_apply_effects_tensor(in_signal, effects)</a>
+    <a id="change">return out_signal.get_tensor(), out_signal.get_sample_rate()</a>
+
+
+@_mod_utils.requires_module(&quottorchaudio._torchaudio&quot)
+def apply_effects_file(</code></pre><h3>After Change</h3><pre><code class='java'>
+        &gt;&gt;&gt; waveform, sample_rate = transform(waveform, input_sample_rate)
+        &gt;&gt;&gt; assert sample_rate == 8000
+    
+    <a id="change">return torch.ops.torchaudio.sox_effects_apply_effects_tensor(
+        tensor, sample_rate, effects, channels_first)</a>
+
+
+@_mod_utils.requires_module(&quottorchaudio._torchaudio&quot)
+def apply_effects_file(</code></pre>

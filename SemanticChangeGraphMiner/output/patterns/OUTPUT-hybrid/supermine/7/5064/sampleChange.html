@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.show_toolbar(request):
+            toolbar = DebugToolbar(request)
+            for panel in toolbar.panels:
+                panel.enabled = <a id="change">panel.dom_id() not in request.COOKIES</a>
+                <a id="change">if not panel.enabled:
+                    continue
+               </a> panel.enable_instrumentation()
+                panel.process_request(request)
+            self.__class__.debug_toolbars[threading.current_thread().ident] = toolbar
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            panel.enable_instrumentation()
+        for panel in toolbar.enabled_panels:
+            response = panel.process_request(request)
+            <a id="change">if response:
+                break
+       </a> self.__class__.debug_toolbars[threading.current_thread().ident] = toolbar
+        return response
+
+    def process_view(self, request, view_func, view_args, view_kwargs):</code></pre>

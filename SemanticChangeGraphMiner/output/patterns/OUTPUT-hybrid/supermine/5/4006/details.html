@@ -1,0 +1,19 @@
+<html><h3>b078a27def328cfc16dc7ab17f2537b8593544f1,models/shift_net/shiftnet_model.py,ShiftNetModel,set_input,#ShiftNetModel#,114
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        &#47&#47 For masking inputs with offline random masks.
+        if not self.opt.isTrain and self.opt.offline_testing:
+            self.mask_global = Image.open(os.path.join(&quotmasks&quot, <a id="change">os</a>.path.splitext(os.path.basename(self.image_paths[0]))[0]+&quot_mask.png&quot))
+            self.mask_global = transforms.ToTensor()(self.mask_global).unsqueeze(0).type_as(real_A).byte()
+            
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        real_B = input[&quotB&quot].to(self.device)
+        &#47&#47 directly load mask offline
+        &#47&#47 TODO: make masks variant each image in a batch
+        self.mask_global = <a id="change">input</a>[<a id="change">&quotM&quot</a>].to(self.device).byte()
+        self.mask_global = self.mask_global.narrow(0,0,1).narrow(1,0,1)
+
+        &#47&#47 create mask online</code></pre><img src="17594372.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/b078a27def328cfc16dc7ab17f2537b8593544f1#diff-3593d3c22804297f9aa605639394e11e289937373f7ebbd8fc528958f153d380L1' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: b078a27def328cfc16dc7ab17f2537b8593544f1</div><div id='time'> Time: 2019-04-27</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/shiftnet_model.py</div><div id='class'> Class Name: ShiftNetModel</div><div id='method'> Method Name: set_input</div><BR><BR><div id='link'><a href='https://github.com/developmentseed/label-maker/commit/6533f4a2123077c55d3a0c8bc04bb5e71c8b36de#diff-a3cf2bee64f8ef73b5f976ef9cb3b16e75715783b8beccbfcd5a5c8804406bdeL91' target='_blank'>Link</a></div><div id='project'> Project Name: developmentseed/label-maker</div><div id='commit'> Commit Name: 6533f4a2123077c55d3a0c8bc04bb5e71c8b36de</div><div id='time'> Time: 2018-05-08</div><div id='author'> Author: jreiberkyle@users.noreply.github.com</div><div id='file'> File Name: label_maker/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: is_tif</div><BR><BR><div id='link'><a href='https://github.com/developmentseed/label-maker/commit/f4d4d575203f952dd003a6b2398cd01e02669fc1#diff-b966a0b65972069b5a1cfd8ad6ec853b25ea6e2586fa1379a22168b2cf85a880L69' target='_blank'>Link</a></div><div id='project'> Project Name: developmentseed/label-maker</div><div id='commit'> Commit Name: f4d4d575203f952dd003a6b2398cd01e02669fc1</div><div id='time'> Time: 2018-02-25</div><div id='author'> Author: drew@developmentseed.org</div><div id='file'> File Name: label_maker/images.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: download_images</div><BR>

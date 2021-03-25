@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    evidenceProcessThread = EvidenceProcess(evidenceProcessQueue, outputProcessQueue, config)
+    evidenceProcessThread.start()
+    evidenceProcessQueue.close()
+    <a id="change">outputProcessQueue.put(&quot30|main|Started Evidence thread&quot)</a>
+
+    &#47&#47 Profile thread
+    &#47&#47 Create the queue for the profile thread
+    profilerProcessQueue = Queue()</code></pre><h3>After Change</h3><pre><code class='java'>
+        cursesProcessQueue = Queue()
+        cursesProcessThread = CursesProcess(cursesProcessQueue, outputProcessQueue, args.verbose, args.debug, config)
+        cursesProcessThread.start()
+        outputProcessQueue.put(<a id="change">&quot30|main|Started Curses thread [PID {}]&quot.format(cursesProcessThread.pid)</a>)
+    elif not args.nologfiles:
+        &#47&#47 By parameter, this is True. Then check the conf. Only create the logs if the conf file says True
+        do_logs = read_configuration(config, &quotparameters&quot, &quotcreate_log_files&quot)</code></pre>

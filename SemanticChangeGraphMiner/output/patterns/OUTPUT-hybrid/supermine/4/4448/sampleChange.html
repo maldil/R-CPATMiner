@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+print(&quotTraining net...&quot)
+validation_split = 0.15
+<a id="change">X_train</a>, X_test, y_train, y_test = train_test_split(images, labels,
+                                                    test_size=validation_split, random_state=42, stratify=labels)
+train_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(X_train, y_train)
+test_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(X_test, y_test)</code></pre><h3>After Change</h3><pre><code class='java'>
+print(&quotPreparing training/testing data...&quot)
+train_images, train_labels = dataset.get_training_data()
+train_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(train_images, train_labels)
+<a id="change">test_images, test_labels = dataset.get_test_data()</a>
+test_gen = DataGenerator(time_delay=dataset.get_time_delay()).fit(test_images, test_labels)
+
+print(&quotTraining net...&quot)
+model = ConvolutionalLstmNN(target_dimensions, channels, dataset.get_emotion_index_map(), time_delay=dataset.get_time_delay())</code></pre>

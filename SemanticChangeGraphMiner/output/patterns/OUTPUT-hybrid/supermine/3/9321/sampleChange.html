@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _interp_fit(self, y0, y1, k, dt):
+        Fit an interpolating polynomial to the results of a Runge-Kutta step.
+        y_mid = y0 + <a id="change">k</a>.matmul(dt * self.mid).view_as(y0).type_as(y0)  &#47&#47 mid is float64 so cast back
+        f0 = k[..., 0]
+        f1 = k[..., -1]
+        return _interp_fit(y0, y1, y_mid, f0, f1, dt)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _interp_fit(self, y0, y1, k, dt):
+        Fit an interpolating polynomial to the results of a Runge-Kutta step.
+        dt = <a id="change">dt.type_as(y0)</a>
+        y_mid = y0 + <a id="change">k.matmul(dt * self.mid).view_as(y0)</a>
+        f0 = k[..., 0]
+        f1 = k[..., -1]
+        return _interp_fit(y0, y1, y_mid, f0, f1, dt)
+</code></pre>

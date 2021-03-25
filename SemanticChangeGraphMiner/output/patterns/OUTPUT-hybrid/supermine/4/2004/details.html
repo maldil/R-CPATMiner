@@ -1,0 +1,39 @@
+<html><h3>83579d7761d6bc995e1e6e90cd376191e648081e,ristretto/nmf/rnmf_fhals.py,,rnmf_fhals,#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            if niter == 0: fitold = fit               
+            
+            <a id="change">fitchange = abs(fitold - fit)</a>
+            fitold = fit
+            
+            if verbose == True:
+                print(&quotIteration: %s fit: %s, fitchange: %s&quot %(niter, fit, fitchange))        </code></pre><h3>After Change</h3><pre><code class='java'>
+    fit = []
+    
+    for niter in range(maxiter):
+        <a id="change">violation = 0.0</a>
+
+        &#47&#47 Pointer to updated factor matrix 
+        if niter != 0: W = Wtemp    
+
+        &#47&#47 Update factor matrix H
+        WtW = W.T.dot(W)
+        AtW = A.T.dot(W)
+        
+        violation += _rfhals_update(Ht, WtW, AtW)                        
+        Ht /= sci.maximum(epsi, sci.linalg.norm(Ht, axis=0))
+
+        &#47&#47 Update factor matrix W
+        HHt = Ht.T.dot(Ht)
+        AHt = Q.dot(A.dot(Ht)) &#47&#47 Rotate AHt back to high-dimensional space
+
+        W = Q.dot(W) &#47&#47 Rotate W back to high-dimensional space
+        violation += _rfhals_update(W, HHt, AHt)
+        <a id="change">print(violation)</a>
+        
+        &#47&#47 Project W to low-dimensional space
+        Wtemp = Q.T.dot(W)  
+        </code></pre><img src="9549653.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/83579d7761d6bc995e1e6e90cd376191e648081e#diff-a7485c17070a9cba432799a84a959a871b5269d32890cf9c10cee5ddf32a2f9bL136' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: 83579d7761d6bc995e1e6e90cd376191e648081e</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: Benli11@users.noreply.github.com</div><div id='file'> File Name: ristretto/nmf/rnmf_fhals.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rnmf_fhals</div><BR><BR><div id='link'><a href='https://github.com/abhiskk/fast-neural-style/commit/851a5832065cb2988c23023b429137e1f54b5335#diff-10334d8932c9177b19b43aea7155b53a7f4e39a0fb8ab95605b96de5ef94deaeL29' target='_blank'>Link</a></div><div id='project'> Project Name: abhiskk/fast-neural-style</div><div id='commit'> Commit Name: 851a5832065cb2988c23023b429137e1f54b5335</div><div id='time'> Time: 2017-04-03</div><div id='author'> Author: abhishekkadiyan@gmail.com</div><div id='file'> File Name: neural_style/neural_style.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/statsmodels/statsmodels/commit/a1a0caf27341fd560101ae643bb7df1dc4dfcf46#diff-77c277b6b1a2536ee5ac658de74efd33aa38477e8a689413c0a65bceb02a4decL311' target='_blank'>Link</a></div><div id='project'> Project Name: statsmodels/statsmodels</div><div id='commit'> Commit Name: a1a0caf27341fd560101ae643bb7df1dc4dfcf46</div><div id='time'> Time: 2020-07-02</div><div id='author'> Author: kevin.k.sheppard@gmail.com</div><div id='file'> File Name: statsmodels/stats/tests/test_corrpsd.py</div><div id='class'> Class Name: Test_Factor</div><div id='method'> Method Name: test_corr_nearest_factor_sparse</div><BR>

@@ -1,0 +1,43 @@
+<html><h3>a91b4632b2e85bc3d0df94381562546db7a194b5,src/Model.py,Model,inferBatch,#Model#,245
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 decode, optionally save RNN output
+        numBatchElements = len(batch.imgs)
+        evalRnnOutput = self.dump or calcProbability
+        <a id="change">evalList = [self.decoder] + ([self.ctcIn3dTBC] if evalRnnOutput else [])</a>
+        feedDict = {self.inputImgs: batch.imgs, self.seqLen: [Model.maxTextLen] * numBatchElements,
+                    self.is_train: False}
+        evalRes = self.sess.run(evalList, feedDict)
+        decoded = evalRes[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+        numBatchElements = len(batch.imgs)
+
+        &#47&#47 put tensors to be evaluated into list
+        <a id="change">evalList = []</a>
+
+        if self.decoderType == DecoderType.WordBeamSearch:
+            <a id="change">evalList.append(self.wbsInput)</a>
+        else:
+            evalList.append(self.decoder)
+
+        <a id="change">if self.dump or calcProbability:
+            evalList.append(self.ctcIn3dTBC)
+
+        &#47&#47 dict containing all tensor fed into the model
+       </a> feedDict = {self.inputImgs: batch.imgs, self.seqLen: [Model.maxTextLen] * numBatchElements,
+                    self.is_train: False}
+
+        &#47&#47 evaluate model
+        evalRes = self.sess.run(evalList, feedDict)
+
+        &#47&#47 TF decoders: decoding already done in TF graph
+        if self.decoderType != DecoderType.WordBeamSearch:
+            decoded = evalRes[0]
+        &#47&#47 word beam search decoder: decoding is done in C++ function compute()
+        else:
+            <a id="change">decoded = self.decoder.compute(evalRes[0])</a>
+
+        &#47&#47 map labels (numbers) to character string
+        texts = self.decoderOutputToText(decoded, numBatchElements)
+</code></pre><img src="27960746.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/githubharald/SimpleHTR/commit/a91b4632b2e85bc3d0df94381562546db7a194b5#diff-d19209026b4e67af0efda8d1cecb44fc6a45c90e4df89352fbffb1b049463cdbL241' target='_blank'>Link</a></div><div id='project'> Project Name: githubharald/SimpleHTR</div><div id='commit'> Commit Name: a91b4632b2e85bc3d0df94381562546db7a194b5</div><div id='time'> Time: 2021-02-17</div><div id='author'> Author: harald@newpc.com</div><div id='file'> File Name: src/Model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: inferBatch</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/6edc4e4cf3c2ed91ef5d2f57759f53645644628c#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L7' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 6edc4e4cf3c2ed91ef5d2f57759f53645644628c</div><div id='time'> Time: 2019-05-05</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/kenshohara/3D-ResNets-PyTorch/commit/f27993c9ecae9cc8d714baa86cb595ed393c1a35#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L97' target='_blank'>Link</a></div><div id='project'> Project Name: kenshohara/3D-ResNets-PyTorch</div><div id='commit'> Commit Name: f27993c9ecae9cc8d714baa86cb595ed393c1a35</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: kensho.hara@aist.go.jp</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_train_utils</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/8d63d75858cc6df30ea19c55f0da955d8d46f53a#diff-8a306ac5079751dfe7b1a864b1d8365a5e832f847f73d197c1cb64c7d1e299f0L629' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 8d63d75858cc6df30ea19c55f0da955d8d46f53a</div><div id='time'> Time: 2018-07-26</div><div id='author'> Author: daviddelaiglesiacastro@gmail.com</div><div id='file'> File Name: pyntcloud/core_class.py</div><div id='class'> Class Name: PyntCloud</div><div id='method'> Method Name: plot</div><BR><BR><div id='link'><a href='https://github.com/githubharald/SimpleHTR/commit/a91b4632b2e85bc3d0df94381562546db7a194b5#diff-d19209026b4e67af0efda8d1cecb44fc6a45c90e4df89352fbffb1b049463cdbL245' target='_blank'>Link</a></div><div id='project'> Project Name: githubharald/SimpleHTR</div><div id='commit'> Commit Name: a91b4632b2e85bc3d0df94381562546db7a194b5</div><div id='time'> Time: 2021-02-17</div><div id='author'> Author: harald@newpc.com</div><div id='file'> File Name: src/Model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: inferBatch</div><BR>

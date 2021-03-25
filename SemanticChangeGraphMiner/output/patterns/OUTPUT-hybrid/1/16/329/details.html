@@ -1,0 +1,89 @@
+<html><h3>a6da312bef19e23357650acd3f18bc76e09fc499,librosa/feature.py,,ifptrack,#,584
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 The mask selects out constant regions + active borders
+        mask   = ~np.pad(matches[:, t], 1, mode=&quotconstant&quot)
+        
+        <a id="change">starts</a> = <a id="change">np</a>.argwhere(matches[:, t] & mask[:-2]).squeeze()
+        ends   = np.argwhere(matches[:, t] & mask[2:]).squeeze()
+        
+        &#47&#47 Set up inner loop    
+        frqs = np.zeros_like(starts, dtype=float)
+        <a id="change">mags</a> = np.zeros_like(starts, dtype=float)
+        
+        for i, (u, v) in enumerate(zip(starts, ends)):
+            &#47&#47 Weight frequencies by energy
+            weights = np.abs(D[u:v+1, t])
+            mags[i] = weights.sum()
+            
+            &#47&#47 Compute the weighted average frequency.
+            &#47&#47 FIXME: is this the right thing to do? 
+            &#47&#47 These are frquencies... shouldn&quott be a 
+            &#47&#47 weighted geometric average?
+            frqs[i] = weights.dot(if_gram[u:v+1, t])
+            if mags[i] &gt; 0:
+                frqs[i] /= mags[i]
+            
+        &#47&#47 Clip outside the ramp zones
+        idx        = (fmax[-1] &lt; frqs) | (frqs &lt; fmin[0])
+        mags[idx]  = 0
+        frqs[idx]  = 0
+        
+        &#47&#47 Ramp down at the high end
+        idx        = (fmax[-1] &gt; frqs) & (frqs &gt; fmax[0])
+        mags[idx] *= (fmax[-1] - frqs[idx]) / (fmax[-1] - fmax[0])
+        
+        &#47&#47 Ramp up from the bottom end
+        idx        = (fmin[-1] &gt; frqs) & (frqs &gt; fmin[0])
+        mags[idx] *= (frqs[idx] - fmin[0]) / (fmin[-1] - fmin[0])
+        
+        &#47&#47 Assign pitch and magnitude to their center bin
+        bins                = np.round(0.5 * (starts+ends)).astype(int)
+        <a id="change">pitches[bins, t]</a>    = frqs
+        magnitudes[bins, t] = mags
+
+    return pitches, magnitudes, D</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 The mask selects out constant regions + active borders
+        mask   = ~np.pad(matches[:, t], 1, mode=&quotconstant&quot)
+        
+        <a id="change">starts</a> = <a id="change">np.argwhere(matches[:, t] & mask[:-2])</a>
+        ends   = np.argwhere(matches[:, t] & mask[2:])
+        
+        &#47&#47 Set up inner loop    
+        frqs = np.zeros_like(starts, dtype=float)
+        <a id="change">mags</a> = np.zeros_like(starts, dtype=float)
+        
+        for i, (u, v) in enumerate(zip(starts, ends)):
+            &#47&#47 Weight frequencies by energy
+            weights = np.abs(D[u:v+1, t])
+            mags[i] = weights.sum()
+            
+            &#47&#47 Compute the weighted average frequency.
+            &#47&#47 FIXME: is this the right thing to do? 
+            &#47&#47 These are frquencies... shouldn&quott be a 
+            &#47&#47 weighted geometric average?
+            frqs[i] = weights.dot(if_gram[u:v+1, t])
+            if mags[i] &gt; 0:
+                frqs[i] /= mags[i]
+            
+        &#47&#47 Clip outside the ramp zones
+        idx        = (fmax[-1] &lt; frqs) | (frqs &lt; fmin[0])
+        mags[idx]  = 0
+        frqs[idx]  = 0
+        
+        &#47&#47 Ramp down at the high end
+        idx        = (fmax[-1] &gt; frqs) & (frqs &gt; fmax[0])
+        mags[idx] *= (fmax[-1] - frqs[idx]) / (fmax[-1] - fmax[0])
+        
+        &#47&#47 Ramp up from the bottom end
+        idx        = (fmin[-1] &gt; frqs) & (frqs &gt; fmin[0])
+        mags[idx] *= (frqs[idx] - fmin[0]) / (fmin[-1] - fmin[0])
+        
+        &#47&#47 Assign pitch and magnitude to their center bin
+        bins                = np.round(0.5 * (starts+ends)).astype(int)
+        <a id="change">pitches[bins, t]</a>    = frqs
+        magnitudes[bins, t] = mags
+
+    return pitches, magnitudes, D</code></pre><img src="1822747.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/a6da312bef19e23357650acd3f18bc76e09fc499#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L663' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: a6da312bef19e23357650acd3f18bc76e09fc499</div><div id='time'> Time: 2013-11-22</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ifptrack</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/74ed014804075d039299a5588b3b5dbdc154fe5d#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L320' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 74ed014804075d039299a5588b3b5dbdc154fe5d</div><div id='time'> Time: 2014-01-16</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ifptrack</div><BR>

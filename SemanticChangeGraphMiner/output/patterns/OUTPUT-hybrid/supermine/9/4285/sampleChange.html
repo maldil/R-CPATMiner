@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    break  &#47&#47 break the outer loop as well
+
+            if end_branch:
+                <a id="change">if len(branch_queue) &gt; 0:
+                    pdbqt_lines.append(branch_queue.pop())
+               </a> if old_roots:
+                    current_root = old_roots.pop()
+                else:  &#47&#47 go to next disconnected fragment
+                    next_frag = (frag for frag_num, frag in enumerate(frags)</code></pre><h3>After Change</h3><pre><code class='java'>
+    mol = Chem.Mol(mol)
+
+    &#47&#47 if flexible molecule contains multiple fragments write them separately
+    <a id="change">if flexible and len(Chem.GetMolFrags(mol)) &gt; 1:
+        return &quot&quot.join(MolToPDBQTBlock(frag, flexible=flexible, addHs=addHs,
+                                       computeCharges=computeCharges)
+                       for frag in Chem.GetMolFrags(mol, asMols=True))
+
+    &#47&#47 Identify donors and acceptors for atom typing
+    &#47&#47 Acceptors
+   </a> patt = Chem.MolFromSmarts(&quot[$([O;H1;v2]),&quot
+                              &quot$([O;H0;v2;!$(O=N-*),&quot
+                              &quot$([O;-;!$(*-N=O)]),&quot
+                              &quot$([o;+0])]),&quot
+                              &quot$([n;+0;!X3;!$([n;H1](cc)cc),&quot
+                              &quot$([$([N;H0]&#47&#47[C&v4])]),&quot
+                              &quot$([N&v3;H0;$(Nc)])]),&quot
+                              &quot$([F;$(F-[&#47&#476]);!$(FC[F,Cl,Br,I])])]&quot)
+    acceptors = list(map(lambda x: x[0],
+                         mol.GetSubstructMatches(patt, maxMatches=mol.GetNumAtoms())))
+    &#47&#47 Donors
+    patt = Chem.MolFromSmarts(&quot[$([N&!H0&v3,N&!H0&+1&v4,n&H1&+0,$([$([Nv3](-C)(-C)-C)]),&quot
+                              &quot$([$(n[n;H1]),&quot
+                              &quot$(nc[n;H1])])]),&quot
+                              &#47&#47 Guanidine can be tautormeic - e.g. Arginine
+                              &quot$([NX3,NX2]([!O,!S])!@C(!@[NX3,NX2]([!O,!S]))!@[NX3,NX2]([!O,!S])),&quot
+                              &quot$([O,S;H1;+0])]&quot)
+    donors = list(map(lambda x: x[0],
+                      mol.GetSubstructMatches(patt, maxMatches=mol.GetNumAtoms())))
+    if addHs:
+        mol = Chem.AddHs(mol, addCoords=True, onlyOnAtoms=donors, )
+    if addHs or computeCharges:
+        AllChem.ComputeGasteigerCharges(mol)
+
+    atom_lines = PDBQTAtomLines(mol, donors, acceptors)
+    assert len(atom_lines) == mol.GetNumAtoms()
+
+    pdbqt_lines = []
+
+    &#47&#47 vina scores
+    if (mol.HasProp(&quotvina_affinity&quot) and mol.HasProp(&quotvina_rmsd_lb&quot) and
+            mol.HasProp(&quotvina_rmsd_lb&quot)):
+        pdbqt_lines.append(&quotREMARK VINA RESULT:  &quot +
+                           (&quot%.1f&quot % float(mol.GetProp(&quotvina_affinity&quot))).rjust(8) +
+                           (&quot%.3f&quot % float(mol.GetProp(&quotvina_rmsd_lb&quot))).rjust(11) +
+                           (&quot%.3f&quot % float(mol.GetProp(&quotvina_rmsd_ub&quot))).rjust(11))
+
+    pdbqt_lines.append(&quotREMARK  Name = &quot +
+                       (mol.GetProp(&quot_Name&quot) if mol.HasProp(&quot_Name&quot) else &quot&quot))
+    if flexible:
+        &#47&#47 Find rotatable bonds
+        rot_bond = Chem.MolFromSmarts(&quot[!$(*&#47&#47*)&!D1&!$(C(F)(F)F)&&quot
+                                      &quot!$(C(Cl)(Cl)Cl)&&quot
+                                      &quot!$(C(Br)(Br)Br)&&quot
+                                      &quot!$(C([CH3])([CH3])[CH3])&&quot
+                                      &quot!$([CD3](=[N,O,S])-!@[&#47&#477,O,S!D1])&&quot
+                                      &quot!$([&#47&#477,O,S!D1]-!@[CD3]=[N,O,S])&&quot
+                                      &quot!$([CD3](=[N+])-!@[&#47&#477!D1])&&quot
+                                      &quot!$([&#47&#477!D1]-!@[CD3]=[N+])]-!@[!$(*&#47&#47*)&&quot
+                                      &quot!D1&!$(C(F)(F)F)&&quot
+                                      &quot!$(C(Cl)(Cl)Cl)&&quot
+                                      &quot!$(C(Br)(Br)Br)&&quot
+                                      &quot!$(C([CH3])([CH3])[CH3])]&quot)
+        bond_atoms = list(mol.GetSubstructMatches(rot_bond))
+        num_torsions = len(bond_atoms)
+
+        &#47&#47 Active torsions header
+        pdbqt_lines.append(&quotREMARK  %i active torsions:&quot % num_torsions)
+        pdbqt_lines.append(&quotREMARK  status: (\&quotA\&quot for Active; \&quotI\&quot for Inactive)&quot)
+        for i, (a1, a2) in enumerate(bond_atoms):
+            pdbqt_lines.append(&quotREMARK%5.0i  A    between atoms: _%i  and  _%i&quot
+                               % (i + 1, a1 + 1, a2 + 1))
+
+        &#47&#47 Fragment molecule on bonds to ge rigid fragments
+        bond_ids = [mol.GetBondBetweenAtoms(a1, a2).GetIdx()
+                    for a1, a2 in bond_atoms]
+        <a id="change">if bond_ids:
+            mol_rigid_frags = Chem.FragmentOnBonds(mol, bond_ids, addDummies=False)
+        else:
+            mol_rigid_frags = mol
+       </a> frags = list(Chem.GetMolFrags(mol_rigid_frags))
+
+        def weigh_frags(frag):
+            sort by the fragment size and the number of bonds (secondary)</code></pre>

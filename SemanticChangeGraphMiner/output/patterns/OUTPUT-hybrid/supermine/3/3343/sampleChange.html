@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if landmarks_type == LandmarksType._3D:
+            self.depth_prediciton_net = ResNetDepth()
+
+            <a id="change">depth_weights = load_url(models_urls[&quotdepth&quot], map_location=lambda storage, loc: storage)</a>
+            depth_dict = {
+                k.replace(&quotmodule.&quot, &quot&quot): v <a id="change">for</a> k,
+                v in depth_weights[&quotstate_dict&quot].items()}
+            self.depth_prediciton_net.load_state_dict(depth_dict)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Initialiase the depth prediciton network
+        if landmarks_type == LandmarksType._3D:
+            self.depth_prediciton_net = <a id="change">torch.jit.load(load_file_from_url(models_urls[&quotdepth&quot]))</a>
+
+            self.depth_prediciton_net.to(device)
+            self.depth_prediciton_net.eval()</code></pre>

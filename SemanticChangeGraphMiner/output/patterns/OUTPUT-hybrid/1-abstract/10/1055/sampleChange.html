@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            regression_diff - 0.5 / 9.0
+        )
+
+        <a id="change">regression_losses.append(regression_loss[positive_indices, :].mean())</a>
+
+
+    return torch.stack(classification_losses).mean(), torch.stack(regression_losses).mean()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            0.5 * 9.0 * torch.pow(regression_diff, 2),
+            regression_diff - 0.5 / 9.0
+        )
+        <a id="change">if positive_indices.sum() &gt; 0:
+            regression_losses.append(regression_loss[positive_indices, :].mean())
+        else:
+            regression_losses.append(torch.Tensor([0]).float().cuda())
+
+   </a> return torch.stack(classification_losses).mean(), torch.stack(regression_losses).mean()
+</code></pre>

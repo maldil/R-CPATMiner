@@ -1,0 +1,99 @@
+<html><h3>f972e4237e2a8615c80950f2b987924256586e5c,train.py,,,#,11
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+trainer.cuda()
+train_loader_a, train_loader_b, test_loader_a, test_loader_b = get_all_data_loaders(config)
+train_display_images_a = Variable(torch.stack([train_loader_a.dataset[i] for i in range(display_size)]).cuda())
+<a id="change">train_display_images_b</a> = <a id="change">Variable(torch.stack([train_loader_b.dataset[i] for i in range(display_size)]).cuda())</a>
+test_display_images_a = Variable(torch.stack([test_loader_a.dataset[i] for i in range(display_size)]).cuda())
+test_display_images_b = Variable(torch.stack([test_loader_b.dataset[i] for i in range(display_size)]).cuda())
+
+&#47&#47 Setup logger and output folders
+model_name = os.path.splitext(os.path.basename(opts.config))[0]
+train_writer = tensorboardX.SummaryWriter(os.path.join(opts.output_path + "/logs", model_name))
+output_directory = os.path.join(opts.output_path + "/outputs", model_name)
+checkpoint_directory, image_directory = prepare_sub_folder(output_directory)
+shutil.copy(opts.config, os.path.join(output_directory, &quotconfig.yaml&quot)) &#47&#47 copy config file to output folder
+
+&#47&#47 Start training
+iterations = trainer.resume(checkpoint_directory, hyperparameters=config) if opts.resume else 0
+while True:
+    for it, (images_a, images_b) in enumerate(zip(train_loader_a, train_loader_b)):
+        trainer.update_learning_rate()
+        images_a, images_b = Variable(images_a.cuda()), Variable(images_b.cuda())
+
+        &#47&#47 Main training code
+        trainer.dis_update(images_a, images_b, config)
+        trainer.gen_update(images_a, images_b, config)
+
+        &#47&#47 Dump training stats in log file
+        if (iterations + 1) % config[&quotlog_iter&quot] == 0:
+            print("Iteration: %08d/%08d" % (iterations + 1, max_iter))
+            write_loss(iterations, trainer, train_writer)
+
+        &#47&#47 Write images
+        if (iterations + 1) % config[&quotimage_save_iter&quot] == 0:
+            with torch.no_grad():
+                test_image_outputs = trainer.sample(test_display_images_a, test_display_images_b)
+                <a id="change">train_image_outputs</a> = trainer.sample(train_display_images_a, train_display_images_b)
+            write_2images(test_image_outputs, display_size, image_directory, &quottest_%08d&quot % (iterations + 1))
+            write_2images(train_image_outputs, display_size, image_directory, &quottrain_%08d&quot % (iterations + 1))
+            &#47&#47 HTML
+            write_html(output_directory + "/index.html", iterations + 1, config[&quotimage_save_iter&quot], &quotimages&quot)
+
+        if (iterations + 1) % config[&quotimage_display_iter&quot] == 0:
+            with torch.no_grad():
+                <a id="change">image_outputs</a> = trainer.sample(train_display_images_a, train_display_images_b)
+            write_2images(image_outputs, display_size, image_directory, &quottrain_current&quot)
+
+        &#47&#47 Save network weights</code></pre><h3>After Change</h3><pre><code class='java'>
+trainer.cuda()
+train_loader_a, train_loader_b, test_loader_a, test_loader_b = get_all_data_loaders(config)
+train_display_images_a = torch.stack([train_loader_a.dataset[i] for i in range(display_size)]).cuda()
+<a id="change">train_display_images_b</a> = <a id="change">torch.stack([train_loader_b.dataset[i] for i in range(display_size)]).cuda()</a>
+test_display_images_a = torch.stack([test_loader_a.dataset[i] for i in range(display_size)]).cuda()
+test_display_images_b = torch.stack([test_loader_b.dataset[i] for i in range(display_size)]).cuda()
+
+&#47&#47 Setup logger and output folders
+model_name = os.path.splitext(os.path.basename(opts.config))[0]
+train_writer = tensorboardX.SummaryWriter(os.path.join(opts.output_path + "/logs", model_name))
+output_directory = os.path.join(opts.output_path + "/outputs", model_name)
+checkpoint_directory, image_directory = prepare_sub_folder(output_directory)
+shutil.copy(opts.config, os.path.join(output_directory, &quotconfig.yaml&quot)) &#47&#47 copy config file to output folder
+
+&#47&#47 Start training
+iterations = trainer.resume(checkpoint_directory, hyperparameters=config) if opts.resume else 0
+while True:
+    for it, (images_a, images_b) in enumerate(zip(train_loader_a, train_loader_b)):
+        trainer.update_learning_rate()
+        images_a, images_b = images_a.cuda().detach(), images_b.cuda().detach()
+
+        with Timer("Elapsed time in update: %f"):
+            &#47&#47 Main training code
+            trainer.dis_update(images_a, images_b, config)
+            trainer.gen_update(images_a, images_b, config)
+            torch.cuda.synchronize()
+
+        &#47&#47 Dump training stats in log file
+        if (iterations + 1) % config[&quotlog_iter&quot] == 0:
+            print("Iteration: %08d/%08d" % (iterations + 1, max_iter))
+            write_loss(iterations, trainer, train_writer)
+
+        &#47&#47 Write images
+        if (iterations + 1) % config[&quotimage_save_iter&quot] == 0:
+            with torch.no_grad():
+                test_image_outputs = trainer.sample(test_display_images_a, test_display_images_b)
+                <a id="change">train_image_outputs</a> = trainer.sample(train_display_images_a, train_display_images_b)
+            write_2images(test_image_outputs, display_size, image_directory, &quottest_%08d&quot % (iterations + 1))
+            write_2images(train_image_outputs, display_size, image_directory, &quottrain_%08d&quot % (iterations + 1))
+            &#47&#47 HTML
+            write_html(output_directory + "/index.html", iterations + 1, config[&quotimage_save_iter&quot], &quotimages&quot)
+
+        if (iterations + 1) % config[&quotimage_display_iter&quot] == 0:
+            with torch.no_grad():
+                <a id="change">image_outputs</a> = trainer.sample(train_display_images_a, train_display_images_b)
+            write_2images(image_outputs, display_size, image_directory, &quottrain_current&quot)
+
+        &#47&#47 Save network weights</code></pre><img src="3072535.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NVlabs/MUNIT/commit/f972e4237e2a8615c80950f2b987924256586e5c#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L44' target='_blank'>Link</a></div><div id='project'> Project Name: NVlabs/MUNIT</div><div id='commit'> Commit Name: f972e4237e2a8615c80950f2b987924256586e5c</div><div id='time'> Time: 2018-07-27</div><div id='author'> Author: mingyu.liu.tw@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/2321f8789713a086978f6e37d088bd00aa60e5f0#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L27' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: 2321f8789713a086978f6e37d088bd00aa60e5f0</div><div id='time'> Time: 2020-03-07</div><div id='author'> Author: amitmoryossef@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR>

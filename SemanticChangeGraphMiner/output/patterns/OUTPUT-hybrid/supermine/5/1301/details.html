@@ -1,0 +1,62 @@
+<html><h3>1ec0207376e3dcece97812f8ae40bc8d7ec9b208,stimulus_presentation/generate_spatial_gratings.py,,,#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 next make an outlet
+outlet = StreamOutlet(info)
+
+<a id="change">trials = pd.read_csv(&quot/home/hubert/Downloads/electrode-benchmark 2/stimulus.csv&quot,
+                     index_col=0)</a>
+
+start = time()
+
+n_trials = <a id="change">len(trials)</a>
+record_duration = np.float32(options.duration)
+
+
+&#47&#47 graphics
+mywin = visual.Window([1920, 1080], monitor="testMonitor", units="deg",
+                      fullscr=True)
+grating = visual.GratingStim(win=mywin, mask=&quotcircle&quot, size=40, sf=4)
+fixation = visual.GratingStim(win=mywin, size=0.2, pos=[0, 0], sf=0,
+                              rgb=[1, 0, 0])
+
+rs = np.random.RandomState(42)
+
+core.wait(2)
+
+for ii, trial in trials.iterrows():
+
+    &#47&#47 onset
+    fre = trials[&quotFrequency&quot].iloc[ii]
+    contrast = trials[&quotContrast&quot].iloc[ii]
+    ori = trials[&quotOrientation&quot].iloc[ii]
+    grating.sf = 4 * fre + 0.1
+    grating.ori = ori
+    grating.contrast = contrast
+    grating.draw()
+    fixation.draw()
+
+    &#47&#47 Send marker
+    outlet.push_sample([fre + 1, contrast, ori], local_clock())
+    mywin.flip()
+
+    &#47&#47 offset
+    core.wait(<a id="change">trials</a>[&quotDuration&quot].iloc[ii])
+    fixation.draw()
+    outlet.push_sample([fre + 3, contrast, ori], local_clock())
+    mywin.flip()</code></pre><h3>After Change</h3><pre><code class='java'>
+record_duration = np.float32(options.duration)
+
+&#47&#47 Setup trial list
+<a id="change">frequency = np.random.binomial(1, 0.5, n_trials)</a>
+contrast = np.ones(n_trials, dtype=int)
+orientation = np.random.randint(0, 4, n_trials) * 45
+
+trials = pd.DataFrame(<a id="change">dict(frequency=frequency,
+                           contrast=contrast,
+                           orientation=orientation)</a>)
+
+&#47&#47 graphics
+mywin = visual.Window([1920, 1080], monitor="testMonitor", units="deg",</code></pre><img src="7331375.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/alexandrebarachant/muse-lsl/commit/1ec0207376e3dcece97812f8ae40bc8d7ec9b208#diff-2dee6ac300955b3f59bbec03cf22b3ef7d5310f4c9c2b1971c8dcf630c9dca6dL43' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/muse-lsl</div><div id='commit'> Commit Name: 1ec0207376e3dcece97812f8ae40bc8d7ec9b208</div><div id='time'> Time: 2017-11-10</div><div id='author'> Author: hubert@interaxon.ca</div><div id='file'> File Name: stimulus_presentation/generate_spatial_gratings.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/634bd0d68cb30d25705a049d46aa72e9a64e9dbd#diff-45e4db0cb3122ad265d50801af51bbb1aa9714bed31d715c580c3c831e7787ffL197' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: 634bd0d68cb30d25705a049d46aa72e9a64e9dbd</div><div id='time'> Time: 2011-04-06</div><div id='author'> Author: rob@cogit8.org</div><div id='file'> File Name: debug_toolbar/panels/sql.py</div><div id='class'> Class Name: SQLDebugPanel</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/d29f055713636c5629ddb7f48805536d39e550cb#diff-45e4db0cb3122ad265d50801af51bbb1aa9714bed31d715c580c3c831e7787ffL145' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: d29f055713636c5629ddb7f48805536d39e550cb</div><div id='time'> Time: 2011-03-24</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/sql.py</div><div id='class'> Class Name: SQLDebugPanel</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                imwrite(output_path, sr_img)
+
+    def forward_pass(self, file_path):
+        lr_img = <a id="change">imread(str(file_path)) / 255.0</a>
+        lr_img = np.expand_dims(lr_img, axis=0)
+        sr_img = self.model.rdn.predict(lr_img)
+        return np.clip(sr_img, 0, 1) * 255
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def forward_pass(self, file_path):
+        lr_img = imread(file_path)
+        if <a id="change">lr_img.shape[2]</a> == 3:
+            lr_img = lr_img / 255.0
+            lr_img = np.expand_dims(lr_img, axis=0)
+            sr_img = self.model.rdn.predict(lr_img)</code></pre>

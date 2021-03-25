@@ -1,0 +1,36 @@
+<html><h3>981e4266d4ea816b08a762193bd52f40cd1a3242,examples/mnist/keras/mnist_inference.py,,inference,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  output_file = tf.gfile.GFile("{}/part-{:05d}".format(args.output, worker_num), mode=&quotw&quot)
+
+  while True:
+    <a id="change">try:
+      &#47&#47 get images and labels from tf.data.Dataset
+      img, lbl = sess.run([&quotinf_image:0&quot, &quotinf_image:1&quot])
+
+      &#47&#47 inference by feeding these images and labels into the input tensors
+      &#47&#47 you can view the exported model signatures via:
+      &#47&#47     saved_model_cli show --dir &lt;export_dir&gt; --all
+
+      &#47&#47 note that we feed directly into the graph tensors (bypassing the exported signatures)
+      &#47&#47 these tensors will be shown in the "name" field of the signature definitions
+
+      outputs = sess.run([&quotdense_2/Softmax:0&quot], feed_dict={&quotPlaceholder:0&quot: img})
+      for p in outputs[0]:
+        output_file.write("{}\n".format(np.argmax(p)))
+    except tf.errors.OutOfRangeError:
+      break
+
+ </a> output_file.close()
+
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+  for batch in ds:
+    predictions = predict(conv2d_input=batch[0])
+    labels = np.reshape(batch[1], -1).astype(np.int)
+    preds = np.argmax(<a id="change">predictions[&quotdense_1&quot]</a>, axis=1)
+    for x in zip(labels, preds):
+      output_file.write("{} {}\n".format(x[0], x[1]))
+</code></pre><img src="26515781.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/yahoo/TensorFlowOnSpark/commit/981e4266d4ea816b08a762193bd52f40cd1a3242#diff-7857eb2c64f2736ea05c2ed40163537d6773d61a7cc0c45005baa8ca2a0bb565L36' target='_blank'>Link</a></div><div id='project'> Project Name: yahoo/TensorFlowOnSpark</div><div id='commit'> Commit Name: 981e4266d4ea816b08a762193bd52f40cd1a3242</div><div id='time'> Time: 2019-08-07</div><div id='author'> Author: leewyang@verizonmedia.com</div><div id='file'> File Name: examples/mnist/keras/mnist_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/f87d98c6aa5a8dd8958c8b9e3ec6262c091acd28#diff-832cb3901a30c7c0bbcfd6354e648b4041992ef5de92c85d945e90511cfdd587L18' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: f87d98c6aa5a8dd8958c8b9e3ec6262c091acd28</div><div id='time'> Time: 2018-04-02</div><div id='author'> Author: bjones@ece.msstate.edu</div><div id='file'> File Name: PyInstaller/loader/rthooks/pyi_rth_qt5.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/developmentseed/label-maker/commit/4b8f9a14f8c1a6d58b6979e17d9f3dd9b3cd063c#diff-a3cf2bee64f8ef73b5f976ef9cb3b16e75715783b8beccbfcd5a5c8804406bdeL142' target='_blank'>Link</a></div><div id='project'> Project Name: developmentseed/label-maker</div><div id='commit'> Commit Name: 4b8f9a14f8c1a6d58b6979e17d9f3dd9b3cd063c</div><div id='time'> Time: 2020-08-17</div><div id='author'> Author: marthamorrissey93@gmail.com</div><div id='file'> File Name: label_maker/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_tile_tif</div><BR><BR><div id='link'><a href='https://github.com/openeventdata/mordecai/commit/963200b8ecdf80eeacb546991c645111319cb1af#diff-aa69da5cdb5088bbac44897826d3106c1c8c7700d29932c12e0c657e853faf54L526' target='_blank'>Link</a></div><div id='project'> Project Name: openeventdata/mordecai</div><div id='commit'> Commit Name: 963200b8ecdf80eeacb546991c645111319cb1af</div><div id='time'> Time: 2017-10-26</div><div id='author'> Author: ahalterman0@gmail.com</div><div id='file'> File Name: mordecai/geoparse.py</div><div id='class'> Class Name: Geoparse</div><div id='method'> Method Name: geoparse</div><BR>

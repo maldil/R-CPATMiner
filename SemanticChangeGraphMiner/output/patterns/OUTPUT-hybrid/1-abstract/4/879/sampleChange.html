@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 options
+parser = argparse.ArgumentParser()
+parser.add_argument(&quot-opt&quot, type=str, required=True, help=&quotPath to options JSON file.&quot)
+args = <a id="change">parser.parse_args()</a>
+options_path = args.opt
+opt = option.parse(options_path, is_train=True)
+
+util.mkdir_and_rename(opt[&quotpath&quot][&quotexperiments_root&quot])  &#47&#47 rename old experiments if exists</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 options
+parser = argparse.ArgumentParser()
+parser.add_argument(&quot-opt&quot, type=str, required=True, help=&quotPath to options JSON file.&quot)
+opt = option.parse(<a id="change">parser.parse_args().opt</a>, is_train=True)
+
+util.mkdir_and_rename(opt[&quotpath&quot][&quotexperiments_root&quot])  &#47&#47 rename old experiments if exists
+util.mkdirs((path for key, path in opt[&quotpath&quot].items() if not key == &quotexperiments_root&quot and \</code></pre>

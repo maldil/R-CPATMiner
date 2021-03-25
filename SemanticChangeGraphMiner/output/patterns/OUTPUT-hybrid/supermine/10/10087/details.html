@@ -1,0 +1,32 @@
+<html><h3>1002cfbcc9f8182404fb058f959d625de2eabbfc,deslib/dcs/rank.py,Rank,estimate_competence,#Rank#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dists, idx_neighbors = self._get_region_competence(query)
+        competences = np.zeros(self.n_classifiers)
+
+        <a id="change">for clf_index in range(self.n_classifiers):
+
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                &#47&#47 count the number of correctly classified samples in the
+                &#47&#47 neighborhood.
+                for counter, index in enumerate(idx_neighbors):
+                    if self.processed_dsel[index][clf_index]:
+                        continue
+                    else:
+                        competences[clf_index] = counter
+                        break
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 add an row with zero for the case where the base classifier correctly classifies the whole neighborhood.
+        &#47&#47 That way the search will always find a zero after comparing to self.K + 1
+        addition = np.zeros((shape[0], shape[2]))
+        <a id="change">results_neighbors = np.insert(results_neighbors, shape[1], addition, axis=1)</a>
+        <a id="change">competences = np.argmax(results_neighbors == 0, axis=1)</a>
+
+        &#47&#47 competences = np.zeros(self.n_classifiers)
+        &#47&#47
+        &#47&#47 for clf_index in range(self.n_classifiers):</code></pre><img src="38079588.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/1002cfbcc9f8182404fb058f959d625de2eabbfc#diff-f725eea8a8cfd270dc9a67e16ed52700e6bfaa5121f5ef13eea92afe7896c09aL87' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 1002cfbcc9f8182404fb058f959d625de2eabbfc</div><div id='time'> Time: 2018-03-22</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/rank.py</div><div id='class'> Class Name: Rank</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/20f388cfe01635a2073723c5c4ffd6dd7a87fbb2#diff-ede2a3389f55bc62e19f594496e58466639a9aa4939f25dd1aa7098ef2b46fdaL154' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 20f388cfe01635a2073723c5c4ffd6dd7a87fbb2</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: cedric.renggli@gmail.com</div><div id='file'> File Name: tensorflow_hub/tools/module_search/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: knn_errorrate_loo</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/20f388cfe01635a2073723c5c4ffd6dd7a87fbb2#diff-ede2a3389f55bc62e19f594496e58466639a9aa4939f25dd1aa7098ef2b46fdaL118' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 20f388cfe01635a2073723c5c4ffd6dd7a87fbb2</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: cedric.renggli@gmail.com</div><div id='file'> File Name: tensorflow_hub/tools/module_search/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: knn_errorrate</div><BR>

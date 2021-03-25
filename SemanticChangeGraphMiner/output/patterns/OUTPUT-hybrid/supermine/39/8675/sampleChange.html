@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        img_pair = self.transform(Image.open(self.files[index % len(self.files)]))
+        _, h, w = img_pair.shape
+        <a id="change">half_w = int(w/2)</a>
+
+        item_A = img_pair[:, :, :half_w]
+        item_B = img_pair[:, :, half_w:]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        img = Image.open(self.files[index % len(self.files)])
+        w, h = img.size
+        <a id="change">img_A = img.crop((0, 0, w/2, h))</a>
+        <a id="change">img_B = img.crop((w/2, 0, w, h))</a>
+
+        <a id="change">if np.random.random() &lt; 0.5:
+            img_A = Image.fromarray(np.array(img_A)[:, ::-1, :], &quotRGB&quot)
+            img_B = Image.fromarray(np.array(img_B)[:, ::-1, :], &quotRGB&quot)
+
+       </a> <a id="change">img_A = self.transform(img_A)</a>
+        <a id="change">img_B = self.transform(img_B)</a>
+
+        return {&quotA&quot: img_A, &quotB&quot: img_B}
+
+    def __len__(self):</code></pre>

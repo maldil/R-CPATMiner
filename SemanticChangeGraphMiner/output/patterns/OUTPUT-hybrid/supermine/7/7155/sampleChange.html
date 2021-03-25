@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+patients = list(set([x[:x.find(&quot_&quot)] for x in lines]))
+
+random.shuffle(patients)
+train_cnt = int(0.82 * <a id="change">len(patients)</a>) &#47&#47 this will became 70% of all data
+train_patients = set(patients[:train_cnt])
+val_patients = set(patients[train_cnt:])
+assert len(train_patients & val_patients) == 0</code></pre><h3>After Change</h3><pre><code class='java'>
+
+val_patients = set()
+with open("mimic3models/valset.csv", "r") as valset_file:
+    <a id="change">for line in valset_file:
+        x, y = line.split(&quot,&quot)
+        if int(y) == 1:
+            val_patients.add(x)
+
+</a>has_header = False
+if args.task in [&quotphenotyping&quot, &quotmultitask&quot]:
+    has_header = True
+</code></pre>

@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return TemplateResponse(request, template_name, context, status=500)
+
+
+<a id="change">urlpatterns = [
+    &#47&#47 main page
+    url(r&quot^$&quot, comicmain, name=&quothome&quot),
+    url(
+        r&quot^robots\.txt/$&quot,
+        TemplateView.as_view(
+            template_name=&quotrobots.txt&quot, content_type=&quottext/plain&quot
+        ),
+    ),
+    url(settings.ADMIN_URL, admin.site.urls),
+    url(r&quot^site/&quot, include(&quotgrandchallenge.core.urls&quot), name=&quotsite&quot),
+    &#47&#47 Do not change the namespace without updating the view names in
+    &#47&#47 evaluation.serializers
+    url(r&quot^api/&quot, include(&quotgrandchallenge.api.urls&quot, namespace=&quotapi&quot)),
+    &#47&#47 Used for logging in and managing grandchallenge.profiles. This is done on the framework
+    &#47&#47 level because it is too hard to get this all under each project
+    url(r&quot^accounts/&quot, include(&quotgrandchallenge.profiles.urls&quot)),
+    url(r&quot^socialauth/&quot, include(&quotsocial_django.urls&quot, namespace=&quotsocial&quot)),
+    url(
+        r&quot^challenges/&quot,
+        include(&quotgrandchallenge.challenges.urls&quot, namespace=&quotchallenges&quot)
+    ),
+    &#47&#47 ========== catch all ====================
+    &#47&#47 when all other urls have been checked, try to load page from main project
+    &#47&#47 keep this url at the bottom of this list, because urls are checked in
+    &#47&#47 order
+    url(r&quot^(?P&lt;page_title&gt;[\w-]+)/$&quot, comicmain, name=&quotmainproject-home&quot),
+    url(r&quot^media/(?P&lt;challenge_short_name&gt;[\w-]+)/(?P&lt;path&gt;.*</a>)$&quot, serve),
+]
+if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:
+    import debug_toolbar</code></pre><h3>After Change</h3><pre><code class='java'>
+    return TemplateResponse(request, template_name, context, status=500)
+
+
+<a id="change">urlpatterns = [
+    &#47&#47 main page
+    url(r&quot^$&quot, comicmain, name=&quothome&quot),
+    url(
+        r&quot^robots\.txt/$&quot,
+        TemplateView.as_view(
+            template_name=&quotrobots.txt&quot, content_type=&quottext/plain&quot
+        ),
+    ),
+    url(settings.ADMIN_URL, admin.site.urls),
+    url(r&quot^site/&quot, include(&quotgrandchallenge.core.urls&quot), name=&quotsite&quot),
+    &#47&#47 Do not change the namespace without updating the view names in
+    &#47&#47 evaluation.serializers
+    url(r&quot^api/&quot, include(&quotgrandchallenge.api.urls&quot, namespace=&quotapi&quot)),
+    &#47&#47 Used for logging in and managing grandchallenge.profiles. This is done on the framework
+    &#47&#47 level because it is too hard to get this all under each project
+    url(r&quot^accounts/&quot, include(&quotgrandchallenge.profiles.urls&quot)),
+    url(r&quot^socialauth/&quot, include(&quotsocial_django.urls&quot, namespace=&quotsocial&quot)),
+    url(
+        r&quot^challenges/&quot,
+        include(&quotgrandchallenge.challenges.urls&quot, namespace=&quotchallenges&quot),
+    ),
+    re_path(
+        r"^(?i)all_challenges/$",
+        RedirectView.as_view(pattern_name="challenges:list", permanent=False),
+    ),
+    &#47&#47 ========== catch all ====================
+    &#47&#47 when all other urls have been checked, try to load page from main project
+    &#47&#47 keep this url at the bottom of this list, because urls are checked in
+    &#47&#47 order
+    url(r&quot^(?P&lt;page_title&gt;[\w-]+)/$&quot, comicmain, name=&quotmainproject-home&quot),
+    url(r&quot^media/(?P&lt;challenge_short_name&gt;[\w-]+)/(?P&lt;path&gt;.*</a>)$&quot, serve),
+]
+if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:
+    import debug_toolbar</code></pre>

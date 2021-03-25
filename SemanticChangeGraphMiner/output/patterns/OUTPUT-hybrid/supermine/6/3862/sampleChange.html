@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    xp = cuda.get_array_module(mask)
+
+    &#47&#47 CuPy does not support argwhere yet
+    <a id="change">mask = cuda.to_cpu(mask)</a>
+
+    bbox = []
+    <a id="change">for msk in mask:
+        where = np.argwhere(msk)
+        if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+        bbox.append((y_min, x_min, y_max, x_max))
+   </a> if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(ys_i) == 0:
+            continue
+        y_min = ys_i.min()
+        <a id="change">x_min = xs_i.min()</a>
+        y_max = ys_i.max() + 1
+        x_max = xs_i.max() + 1
+        bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)
+    return bbox</code></pre>

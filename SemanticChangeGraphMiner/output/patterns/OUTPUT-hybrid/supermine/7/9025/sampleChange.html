@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ValueError(&quotIf supplied, axis must be in (0, 1)&quot)
+
+    if density is None:
+        <a id="change">density = 1.0 / 3</a>
+
+    Omega = _sketches.sparse_random_map(A, l, axis, density, random_state)
+
+    &#47&#47 project A onto Omega
+    if axis == 0:
+        <a id="change">return safe_sparse_dot(Omega.T, A)</a>
+    return safe_sparse_dot(A, Omega)
+
+
+def fast_johnson_lindenstrauss(A, l, axis=1, random_state=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(&quotIf supplied, axis must be in (0, 1)&quot)
+
+    if density is None:
+        density = <a id="change">A.shape[0] / log(A.shape[0])</a>
+
+    &#47&#47 construct sparse sketch
+    Omega = _sketches.sparse_random_map(A, l, axis, density, random_state)
+
+    &#47&#47 project A onto Omega
+    if axis == 0:
+        Q = safe_sparse_dot(Omega.T, A)
+    else:
+        Q = safe_sparse_dot(A, Omega)
+
+    if n_subspace is not None:
+        Q = perform_subspace_iterations(A, Q, n_iter=n_subspace, axis=axis)
+
+    <a id="change">return Q</a>
+
+def fast_johnson_lindenstrauss(A, l, axis=1, random_state=None):
+    
+</code></pre>

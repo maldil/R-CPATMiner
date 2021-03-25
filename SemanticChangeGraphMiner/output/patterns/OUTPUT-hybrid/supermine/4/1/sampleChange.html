@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return np.exp(-self.predict_cumulative_hazard(df, baseline_hazard_, batch_size, verbose))
+
+    def predict_cumulative_hazard_at_times(self, times, df, batch_size=512, return_df=True):
+        <a id="change">raise NotImplementedError("This isn&quott as relevant when we have broken the propotionality.")</a>
+
+    def concordance_index(self, df, g_preds=None, batch_size=256):
+        raise NotImplementedError()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            Pandas dataframe (or numpy matrix) [len(times), len(df)] with cumulative hazard
+            estimates.
+        &quot&quot&quot
+        <a id="change">assert hasattr(self, &quotbaseline_hazard_&quot), &quotNeed to fit model first.&quot</a>
+        if not hasattr(times, &quot__iter__&quot):
+            times = [times]
+        cum_haz = self.predict_cumulative_hazard(df, baseline_hazard_, batch_size, verbose)
+        times_idx = search_sorted_idx(cum_haz.index.values, times)</code></pre>

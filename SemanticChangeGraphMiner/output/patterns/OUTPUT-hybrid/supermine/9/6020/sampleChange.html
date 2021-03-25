@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  x_indices = _to_float32(x_indices)
+
+  height_width_flat = _flatten_spatial_dimensions(height_width_predictions)
+  <a id="change">offsets_flat = _flatten_spatial_dimensions(offset_predictions)</a>
+
+  height_width = tf.gather(height_width_flat, peak_spatial_indices,
+                           batch_dims=1)
+  height_width = tf.maximum(height_width, 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  &#47&#47 TF Lite does not support tf.gather with batch_dims &gt; 0, so we need to use
+  &#47&#47 tf_gather_nd instead and here we prepare the indices for that.
+  combined_indices = tf.stack(<a id="change">[
+      _multi_range(batch_size, value_repetitions=num_boxes),
+      tf.reshape(y_indices, [-1]),
+      tf.reshape(x_indices, [-1])
+  ]</a>, axis=1)
+  new_height_width = tf.gather_nd(height_width_predictions, combined_indices)
+  <a id="change">new_height_width = tf.reshape(new_height_width, [batch_size, num_boxes, -1])</a>
+
+  new_offsets = tf.gather_nd(offset_predictions, combined_indices)
+  offsets = tf.reshape(new_offsets, [batch_size, num_boxes, -1])
+</code></pre>

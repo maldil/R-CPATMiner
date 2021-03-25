@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return False
+    
+    def get_measures(self):
+        string = &quot\tloss: %.4f,&quot % <a id="change">self.loss[-1]</a>
+        if self.verbose.__class__ is dict:
+            for name, mm in self.verbose.items():
+                string += &quot\t%s:&quot % name
+                for sc in mm.scores:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for name, mm in measures.items():
+            string += &quot\t%s:&quot % name
+            scores = mm.scores
+            <a id="change">if not hasattr(scores[-1], &quot__iter__&quot):
+                scores = [scores]
+           </a> for sc in mm.scores:
+                string += &quot %.4f,&quot % sc[-1]
+        return string[:-1]
+</code></pre>

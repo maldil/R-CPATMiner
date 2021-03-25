@@ -1,0 +1,31 @@
+<html><h3>aa6af82f458acf3f853e5174d34b11d319eea1c0,unbalanced_dataset/under_sampling/instance_hardness_threshold.py,InstanceHardnessThreshold,transform,#InstanceHardnessThreshold#,189
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            mask = probabilities &gt;= self.threshold
+        elif self.kind_sel == &quotmaj&quot:
+            ratios = np.zeros(100, )
+            <a id="change">probs = np.linspace(0., 1., 100)</a>
+
+            <a id="change">for i, p in enumerate(probs):
+                ratios[i] = self.stats_c_[self.min_c_] / np.count_nonzero(np.logical_or(probabilities &gt;= p, y == self.min_c_))
+                ratios = np.abs(ratios - self.ratio)
+
+           </a> threshold = <a id="change">probs[ratios.argmin()]</a>
+            mask = np.logical_or(probabilities &gt;= self.threshold, y == self.min_c_)
+
+        X_resampled = X[mask]
+        y_resampled = y[mask]</code></pre><h3>After Change</h3><pre><code class='java'>
+            mask = probabilities &gt;= self.ratio_
+        elif self.kind_sel == &quotmaj&quot:
+            min_count = np.sum(y == self.min_c_)
+            <a id="change">max_count = len(y) - min_count</a>
+            rem_count = max_count - (min_count / self.ratio_)
+
+            <a id="change">threshold = np.percentile(probabilities[y != self.min_c_], 
+                    100*(rem_count/max_count))</a>
+            mask = np.logical_or(probabilities &gt;= threshold, y == self.min_c_)
+
+        X_resampled = X[mask]
+        y_resampled = y[mask]</code></pre><img src="16284409.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/imbalanced-learn/commit/aa6af82f458acf3f853e5174d34b11d319eea1c0#diff-771e1f1d61d44bb681ce8c7052e222e5960c7de4b91706569e0b88e5127db21cL189' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/imbalanced-learn</div><div id='commit'> Commit Name: aa6af82f458acf3f853e5174d34b11d319eea1c0</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: victor.dvro@gmail.com</div><div id='file'> File Name: unbalanced_dataset/under_sampling/instance_hardness_threshold.py</div><div id='class'> Class Name: InstanceHardnessThreshold</div><div id='method'> Method Name: transform</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/59ec6660464bd378b20d4ae200c7614133a9a38b#diff-1da77a1e515a06956f2402a626f20d1605f6c245dfc6da7a2304fdade3d54125L54' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 59ec6660464bd378b20d4ae200c7614133a9a38b</div><div id='time'> Time: 2019-08-26</div><div id='author'> Author: hc.wang96@gmail.com</div><div id='file'> File Name: pyntcloud/samplers/points.py</div><div id='class'> Class Name: FarthestPointsSampler</div><div id='method'> Method Name: compute</div><BR><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/900b9a7f2884aaf419e62508be7497b0ad3e1f62#diff-1516e23205a74c8bcb7f842f8260f7c9118246fc6a6b12bd5b7fb16810cefa04L368' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 900b9a7f2884aaf419e62508be7497b0ad3e1f62</div><div id='time'> Time: 2021-02-24</div><div id='author'> Author: debo@fb.com</div><div id='file'> File Name: pytext/metric_reporters/squad_metric_reporter.py</div><div id='class'> Class Name: SquadMetricReporter</div><div id='method'> Method Name: _unnumberize</div><BR>

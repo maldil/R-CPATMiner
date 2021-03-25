@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    clients.append(Client(&quotCarol&quot, server.pubkey))
+
+    c = clients[0]
+    <a id="change">c.fit(X[0], y[0], n_iter=60, eta=0.1)</a>
+    print(&quotTrain&quot, mean_square_error(c.predict(X[0]), y[0]))
+    print(&quotTest&quot, mean_square_error(c.predict(X_test), y_test))
+
+    &#47&#47 Each client trains a linear regressor on its own data</code></pre><h3>After Change</h3><pre><code class='java'>
+    print(aggr)
+    for (i, c) in enumerate(clients):
+        c.weights = aggr
+        <a id="change">y_pred = c.predict(X_test)</a>
+        print(mean_square_error(<a id="change">y_pred</a>, y_test))
+
+
+</code></pre>

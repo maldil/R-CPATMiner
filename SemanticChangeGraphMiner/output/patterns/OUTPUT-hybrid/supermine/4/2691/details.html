@@ -1,0 +1,26 @@
+<html><h3>cbbcea8795e8da754a5b3ffb1a08ef66afd84eef,dask_image/ndmeasure/_utils.py,,_ravel_shape_indices,#,54
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    )
+
+    indices = list(indices)
+    for i in _pycompat.irange(<a id="change">len(indices)</a>):
+        indices[i] *= dtype.type(numpy.prod(indices[i].shape[i + 1:]))
+    indices = dask.array.stack(indices).sum(axis=0)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Gets the raveled indices shaped like input.
+    
+
+    <a id="change">indices = sum([
+        dask.array.arange(
+            0, numpy.prod(dimensions[i:]), numpy.prod(dimensions[i + 1:]),
+            dtype=dtype, chunks=c
+        )[i * (None,) + (slice(None),) + (len(dimensions) - i - 1) * (None,)]
+        for i, c in enumerate(chunks)
+    ])</a>
+
+    return indices
+
+</code></pre><img src="11983141.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/cbbcea8795e8da754a5b3ffb1a08ef66afd84eef#diff-60a374c703dcf39413713f8dd108028587228bb7e3205616d19a8734f40bc05aL59' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: cbbcea8795e8da754a5b3ffb1a08ef66afd84eef</div><div id='time'> Time: 2018-09-02</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _ravel_shape_indices</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/e949a7462a0552c36e13f5d0d9147c4fc52cee32#diff-5bb04d9e6a5375e8431f1fc75174e9290f4a6d569fbc4e7456818cc33e63a6daL315' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: e949a7462a0552c36e13f5d0d9147c4fc52cee32</div><div id='time'> Time: 2015-08-14</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sync</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/cbbcea8795e8da754a5b3ffb1a08ef66afd84eef#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L57' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: cbbcea8795e8da754a5b3ffb1a08ef66afd84eef</div><div id='time'> Time: 2018-09-02</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR>

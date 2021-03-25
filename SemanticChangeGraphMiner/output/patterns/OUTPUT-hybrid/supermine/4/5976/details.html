@@ -1,0 +1,20 @@
+<html><h3>d95f630a7b7f88621bc4abb4ac92692647f03781,main.py,,flow2rgb,#,339
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        normalized_flow_map = flow_map / (np.abs(flow_map).max())
+    rgb_map[:,:,0] += normalized_flow_map[0]
+    rgb_map[:,:,1] -= 0.5*(normalized_flow_map[0] + normalized_flow_map[1])
+    rgb_map[<a id="change">:,:,2</a>] += normalized_flow_map[1]
+    return rgb_map.clip(0,1)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def flow2rgb(flow_map, max_value):
+    <a id="change">flow_map_np = flow_map.detach().cpu().numpy()</a>
+    _, h, w = flow_map_np.shape
+    flow_map_np[:,(flow_map_np[0] == 0) & (flow_map_np[1] == 0)] = float(&quotnan&quot)
+    rgb_map = np.ones((3,h,w)).astype(np.float32)
+    if max_value is not None:</code></pre><img src="24555878.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L340' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: flow2rgb</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/21fa4e7e38567e083f98c559f8f2ae0c5573ba0f#diff-5b11d8d5e38eb7500f28786a7683124ada1c5505b7e16322c43110e29d5ca488L56' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 21fa4e7e38567e083f98c559f8f2ae0c5573ba0f</div><div id='time'> Time: 2018-02-11</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/lib/model.py</div><div id='class'> Class Name: AgentA2C</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/190d9b204a1a4798f0723c8d8d37ac5ac950909e#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL37' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 190d9b204a1a4798f0723c8d8d37ac5ac950909e</div><div id='time'> Time: 2019-05-08</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHitSingle</div><div id='method'> Method Name: predict_survival_function</div><BR>

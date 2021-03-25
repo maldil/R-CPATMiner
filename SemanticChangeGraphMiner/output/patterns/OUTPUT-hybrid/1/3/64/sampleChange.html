@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            values = self.value_network(state0_batch)
+            value_loss = tf.reduce_mean(tf.square(values - value_target))
+        advantage = tf.stop_gradient(action_logprob - new_softq + values)
+        with <a id="change">tf.GradientTape()</a> as actor_tape:
+            _, action_logprob = self.actor_network(state0_batch)
+            actor_loss = tf.reduce_mean(action_logprob * advantage)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        with tf.GradientTape() as softq_tape:
+            softq = self.softq_network(state0_batch, action_batch)
+            softq_loss = tf.reduce_mean(tf.square(softq - softq_targets))
+        with <a id="change">tf.GradientTape()</a> as value_tape:
+            values = self.value_network(state0_batch)
+        with tf.GradientTape() as actor_tape:
+            actions, action_logprob = self.actor_network(state0_batch)</code></pre>

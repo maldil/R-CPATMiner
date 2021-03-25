@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 -- Forward
+        
+        enc_output = <a id="change">self.dropout(self.position_enc(self.src_word_emb(src_seq)))</a>
+        enc_output = self.layer_norm(enc_output)
+
+        for enc_layer in self.layer_stack:
+            enc_output, enc_slf_attn = enc_layer(enc_output, slf_attn_mask=src_mask)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 -- Forward
+        enc_output = self.src_word_emb(src_seq)
+        <a id="change">if self.scale_emb:
+            enc_output *= self.d_model ** 0.5
+       </a> enc_output = self.dropout(self.position_enc(enc_output))
+        enc_output = self.layer_norm(enc_output)
+
+        for enc_layer in self.layer_stack:</code></pre>

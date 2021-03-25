@@ -1,0 +1,60 @@
+<html><h3>82833059b7ee72896c07489bfc0369079ccedd77,algo/ppo.py,PPO,update,#PPO#,31
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                         self.max_grad_norm)
+                self.optimizer.step()
+
+        <a id="change">return value_loss, action_loss, dist_entropy</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        value_loss_epoch = 0
+        action_loss_epoch = 0
+        <a id="change">dist_entropy_epoch = 0</a>
+
+        for e in range(self.ppo_epoch):
+            if hasattr(self.actor_critic, &quotgru&quot):
+                data_generator = rollouts.recurrent_generator(
+                    advantages, self.num_mini_batch)
+            else:
+                data_generator = rollouts.feed_forward_generator(
+                    advantages, self.num_mini_batch)
+
+            for sample in data_generator:
+                observations_batch, states_batch, actions_batch, \
+                   return_batch, masks_batch, old_action_log_probs_batch, \
+                        adv_targ = sample
+
+                &#47&#47 Reshape to do in a single forward pass for all steps
+                values, action_log_probs, dist_entropy, states = self.actor_critic.evaluate_actions(
+                    observations_batch, states_batch,
+                    masks_batch, actions_batch)
+
+                ratio = torch.exp(action_log_probs - old_action_log_probs_batch)
+                surr1 = ratio * adv_targ
+                surr2 = torch.clamp(ratio, 1.0 - self.clip_param,
+                                           1.0 + self.clip_param) * adv_targ
+                action_loss = -torch.min(surr1, surr2).mean()
+
+                value_loss = (return_batch - values).pow(2).mean()
+
+                self.optimizer.zero_grad()
+                (value_loss * self.value_loss_coef + action_loss -
+                 dist_entropy * self.entropy_coef).backward()
+                nn.utils.clip_grad_norm_(self.actor_critic.parameters(),
+                                         self.max_grad_norm)
+                self.optimizer.step()
+
+                <a id="change">value_loss_epoch += value_loss.item()</a>
+                <a id="change">action_loss_epoch += action_loss.item()</a>
+                dist_entropy_epoch += dist_entropy.item()
+                
+        num_updates = self.ppo_epoch * self.num_mini_batch
+
+        value_loss_epoch /= num_updates
+        <a id="change">action_loss_epoch /= num_updates</a>
+        dist_entropy_epoch /= num_updates
+
+        <a id="change">return value_loss_epoch, action_loss_epoch, dist_entropy_epoch</a>
+</code></pre><img src="19164708.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/commit/82833059b7ee72896c07489bfc0369079ccedd77#diff-f64b7b593ad63cb575792316f2e4bce638651f1910af267c86def02e764caf6aL31' target='_blank'>Link</a></div><div id='project'> Project Name: ikostrikov/pytorch-a2c-ppo-acktr</div><div id='commit'> Commit Name: 82833059b7ee72896c07489bfc0369079ccedd77</div><div id='time'> Time: 2018-05-21</div><div id='author'> Author: ikostrikov@gmail.com</div><div id='file'> File Name: algo/ppo.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: update</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L43' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_epoch</div><BR><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/15b19130a9162feb9153a2f38c5c8b0af02c6a1d#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L80' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 15b19130a9162feb9153a2f38c5c8b0af02c6a1d</div><div id='time'> Time: 2018-08-21</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: eval_epoch</div><BR>

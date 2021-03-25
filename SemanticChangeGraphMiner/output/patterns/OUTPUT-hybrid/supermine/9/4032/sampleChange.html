@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    min_len = min([a.size for a in ancestors])
+    arrays = np.array([a[:min_len] for a in ancestors])
+    arg_min = np.argmin(arrays[:-1] == arrays[1:], axis=1)
+    <a id="change">val = np.min(arg_min[np.nonzero(arg_min)])</a>
+    return min_len - val
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    spans = [_to_span(i) for i in c]
+    ancestors = [np.array(span.sentence.xpath.split("/")) for span in spans]
+    min_len = min([a.size for a in ancestors])
+    <a id="change">ancestor = ancestors[0]</a>
+    ind = 0  &#47&#47 all the ancestors are common up to this index (exclusive).
+    while ind &lt; min_len:
+        <a id="change">if not all([a[ind] == ancestor[ind] for a in ancestors]):
+            break
+       </a> <a id="change">ind += 1</a>
+    return min_len - ind
+</code></pre>

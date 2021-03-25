@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    model.add(Dense(32))
+    model.add(Activation(&quotrelu&quot))
+    model.add(Dropout(0.5))
+    <a id="change">model.add(Dense(num_classes))</a>
+    model.add(Activation(&quotsoftmax&quot,name=&quotpredictions&quot))
+    return model
+
+def attention_CNN(input_shape, num_classes):</code></pre><h3>After Change</h3><pre><code class='java'>
+    model.add(Convolution2D(filters=16, kernel_size=(7, 7), padding=&quotsame&quot,
+                            name=&quotimage_array&quot, input_shape=input_shape))
+    model.add(BatchNormalization())
+    <a id="change">model.add(Convolution2D(filters=16, kernel_size=(7, 7), padding=&quotsame&quot))</a>
+    <a id="change">model.add(BatchNormalization())</a>
+    model.add(Activation(&quotrelu&quot))
+    <a id="change">model.add(AveragePooling2D(pool_size=(2, 2), padding=&quotsame&quot))</a>
+    model.add(Dropout(.5))
+
+    model.add(Convolution2D(filters=32, kernel_size=(5, 5), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Convolution2D(filters=32, kernel_size=(5, 5), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Activation(&quotrelu&quot))
+    model.add(AveragePooling2D(pool_size=(2, 2), padding=&quotsame&quot))
+    model.add(Dropout(.5))
+
+    model.add(Convolution2D(filters=64, kernel_size=(3, 3), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Convolution2D(filters=64, kernel_size=(3, 3), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Activation(&quotrelu&quot))
+    model.add(AveragePooling2D(pool_size=(2, 2), padding=&quotsame&quot))
+    model.add(Dropout(.5))
+
+    model.add(Convolution2D(filters=128, kernel_size=(3, 3), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Convolution2D(filters=128, kernel_size=(3, 3), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Activation(&quotrelu&quot))
+    model.add(AveragePooling2D(pool_size=(2, 2), padding=&quotsame&quot))
+    model.add(Dropout(.5))
+
+    model.add(Convolution2D(filters=256, kernel_size=(3, 3), padding=&quotsame&quot))
+    model.add(BatchNormalization())
+    model.add(Convolution2D(filters=num_classes, kernel_size=(3, 3), padding=&quotsame&quot))
+    <a id="change">model.add(GlobalAveragePooling2D())</a>
+    model.add(Activation(&quotsoftmax&quot,name=&quotpredictions&quot))
+    return model
+
+</code></pre>

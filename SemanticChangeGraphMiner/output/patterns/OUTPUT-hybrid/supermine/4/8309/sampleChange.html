@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        random_state=j).fit(X)
+            inertia[i, j] = km.inertia_
+
+    inertia = <a id="change">inertia.mean(axis=1)</a>
+    <a id="change">failure_msg = ("Inertia %r should be decreasing"
+                   " when n_init is increasing.") % list(inertia)</a>
+    for i in range(len(n_init_range) - 1):
+        assert inertia[i] &gt;= inertia[i + 1], failure_msg
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 inertia each time
+        km = KMeans(n_clusters=n_clusters, init="random", n_init=n_init,
+                    random_state=0, max_iter=1).fit(X)
+        <a id="change">assert km.inertia_ &lt;= previous_inertia</a>
+
+
+def test_k_means_function():
+    &#47&#47 test calling the k_means function directly</code></pre>

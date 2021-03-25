@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            u, s, vt = svd(X + G, full_matrices=False)
+            XNew = u.dot(vt)
+        else:
+            <a id="change">XNew = np.zeros(np.shape(X))</a>
+            <a id="change">for i in xrange(self._k):
+                &#47&#47 q, r = np.linalg.qr(Y[i])
+                &#47&#47 XNew[i] = np.dot(q, np.diag(np.sign(np.sign(np.diag(r))+.5)))
+                u, s, vt = svd(X[i] + G[i], full_matrices=False)
+                XNew[i] = u.dot(vt)
+       </a> return XNew
+
+    def norm(self, X, G):
+        &#47&#47 Norm on the tangent space is simply the Euclidean norm.</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Compute the polar factorization of Y = X+G
+        u, s, vt = svd(X + G, full_matrices=False)
+        <a id="change">return multiprod(u, vt)</a>
+
+    def norm(self, X, G):
+        &#47&#47 Norm on the tangent space is simply the Euclidean norm.
+        return np.linalg.norm(G)</code></pre>

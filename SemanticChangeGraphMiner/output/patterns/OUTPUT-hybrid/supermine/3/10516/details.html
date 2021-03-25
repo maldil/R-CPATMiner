@@ -1,0 +1,27 @@
+<html><h3>14a7c84fa56c32eb7f4bbe057ce118cbff6ce8fd,skvideo/measure/scene.py,,_scenedet_intensity,#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    detected_scenes = [0]
+
+    &#47&#47 grayscale
+    luminancedata = <a id="change">rgb2gray(videodata)</a>
+
+    numFrames, height, width, channels = luminancedata.shape
+
+    luminancedata = luminancedata[:, :, :, 0]
+
+    for t in range(0, numFrames-1):
+        <a id="change">hist1, bins = np.histogram(luminancedata[t], bins=256, range=(0, 255))</a>
+        hist2, bins = np.histogram(luminancedata[t+1], bins=256, range=(0, 255))
+
+        hist1 = hist1.astype(np.float)
+        hist2 = hist2.astype(np.float)</code></pre><h3>After Change</h3><pre><code class='java'>
+    numFrames, height, width, channels = videodata.shape
+
+    for t in range(0, numFrames-1):
+        frame0 = <a id="change">videodata</a>[t].astype(np.float)
+        frame1 = videodata[t+1].astype(np.float)
+
+        delta = np.sum(np.abs(frame1 - frame0)/(height * width * channels))</code></pre><img src="38996371.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-video/scikit-video/commit/14a7c84fa56c32eb7f4bbe057ce118cbff6ce8fd#diff-18c97cd87579b5b8ee38ba35180e24eab119ab41c45aaa72513b2a98a767aa23L63' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-video/scikit-video</div><div id='commit'> Commit Name: 14a7c84fa56c32eb7f4bbe057ce118cbff6ce8fd</div><div id='time'> Time: 2016-11-16</div><div id='author'> Author: tgoodall@utexas.edu</div><div id='file'> File Name: skvideo/measure/scene.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _scenedet_intensity</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/8acad22ff31d44b17651003db49791640d9b0b41#diff-c696c7802839e2b82c408bdb00170c739bd7becadbb0778fefaa5170a9a78401L164' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: 8acad22ff31d44b17651003db49791640d9b0b41</div><div id='time'> Time: 2021-01-21</div><div id='author'> Author: charlie_cha@outlook.com</div><div id='file'> File Name: skimage/color/colorlabel.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _label2rgb_overlay</div><BR><BR><div id='link'><a href='https://github.com/scikit-video/scikit-video/commit/01b2c738910f6080119029d1de100fb3d0e11118#diff-18c97cd87579b5b8ee38ba35180e24eab119ab41c45aaa72513b2a98a767aa23L63' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-video/scikit-video</div><div id='commit'> Commit Name: 01b2c738910f6080119029d1de100fb3d0e11118</div><div id='time'> Time: 2017-09-01</div><div id='author'> Author: tgoodall@utexas.edu</div><div id='file'> File Name: skvideo/measure/scene.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _scenedet_histogram</div><BR>

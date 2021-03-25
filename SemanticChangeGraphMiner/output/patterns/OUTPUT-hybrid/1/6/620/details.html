@@ -1,0 +1,81 @@
+<html><h3>37156b8de4c8f4017f23283ec3446dff9a179eef,models/densenet_efficient.py,_EfficientDensenetBottleneckFn,forward,#_EfficientDensenetBottleneckFn#,303
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def forward(self, bn_weight, bn_bias, *inputs):
+        &#47&#47 Save the current BN statistics for later
+        prev_running_mean = self.running_mean.clone()
+        <a id="change">prev_running_var</a> = self.running_var.clone()
+
+        &#47&#47 Create tensors that use shared allocations
+        &#47&#47 One for the concatenation output (bn_input)
+        &#47&#47 One for the ReLU output (relu_output)
+        all_num_channels = [input.size(1) for input in inputs]
+        size = list(inputs[0].size())
+        for num_channels in all_num_channels[1:]:
+            size[1] += num_channels
+        storage = self.shared_allocation_1.storage_for(inputs[0])
+        bn_input_var = Variable(type(inputs[0])(storage).resize_(size), volatile=True)
+        relu_output = type(inputs[0])(storage).resize_(size)
+
+        &#47&#47 Create variable, using existing storage
+        torch.cat(inputs, dim=1, out=bn_input_var.data)
+
+        &#47&#47 Do batch norm
+        bn_weight_var = Variable(bn_weight, volatile=True)
+        bn_bias_var = Variable(bn_bias, volatile=True)
+        bn_output_var = F.batch_norm(bn_input_var, self.running_mean, self.running_var,
+                                     bn_weight_var, bn_bias_var, training=self.training,
+                                     momentum=self.momentum, eps=self.eps)
+
+        &#47&#47 Do ReLU - and have the output be in the intermediate storage
+        torch.clamp(bn_output_var.data, 0, 1e100, out=relu_output)
+
+        self.save_for_backward(bn_weight, bn_bias, *inputs)
+        
+        &#47&#47 restore the BN statistics for later
+        self.running_mean.copy_(prev_running_mean)
+        <a id="change">self.running_var.copy_(prev_running_var)</a>
+        return relu_output
+
+    def prepare_backward(self):
+        bn_weight, bn_bias = self.saved_tensors[:2]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.training:
+            &#47&#47 Save the current BN statistics for later
+            prev_running_mean = self.running_mean.clone()
+            <a id="change">prev_running_var</a> = self.running_var.clone()
+
+        &#47&#47 Create tensors that use shared allocations
+        &#47&#47 One for the concatenation output (bn_input)
+        &#47&#47 One for the ReLU output (relu_output)
+        all_num_channels = [input.size(1) for input in inputs]
+        size = list(inputs[0].size())
+        for num_channels in all_num_channels[1:]:
+            size[1] += num_channels
+        storage = self.shared_allocation_1.storage_for(inputs[0])
+        bn_input_var = Variable(type(inputs[0])(storage).resize_(size), volatile=True)
+        relu_output = type(inputs[0])(storage).resize_(size)
+
+        &#47&#47 Create variable, using existing storage
+        torch.cat(inputs, dim=1, out=bn_input_var.data)
+
+        &#47&#47 Do batch norm
+        bn_weight_var = Variable(bn_weight, volatile=True)
+        bn_bias_var = Variable(bn_bias, volatile=True)
+        bn_output_var = F.batch_norm(bn_input_var, self.running_mean, self.running_var,
+                                     bn_weight_var, bn_bias_var, training=self.training,
+                                     momentum=self.momentum, eps=self.eps)
+
+        &#47&#47 Do ReLU - and have the output be in the intermediate storage
+        torch.clamp(bn_output_var.data, 0, 1e100, out=relu_output)
+
+        self.save_for_backward(bn_weight, bn_bias, *inputs)
+        <a id="change">if self.training:
+            &#47&#47 restore the BN statistics for later
+            self.running_mean.copy_(prev_running_mean)
+            self.running_var.copy_(prev_running_var)
+       </a> return relu_output
+
+    def prepare_backward(self):
+        bn_weight, bn_bias = self.saved_tensors[:2]</code></pre><img src="3068856.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/37156b8de4c8f4017f23283ec3446dff9a179eef#diff-e5796de3a79360949a789b92b811a03c2e8ff41fafafe245037bd58250b4bab2L303' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: 37156b8de4c8f4017f23283ec3446dff9a179eef</div><div id='time'> Time: 2018-03-13</div><div id='author'> Author: changmaocheng@163.com</div><div id='file'> File Name: models/densenet_efficient.py</div><div id='class'> Class Name: _EfficientDensenetBottleneckFn</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/aa9d6f27fa64a0496fb344bb194611a0a9917648#diff-ab194f49b3f13c89de26d37e12f009fc644275b722df650e98f4c7810256270bL67' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: aa9d6f27fa64a0496fb344bb194611a0a9917648</div><div id='time'> Time: 2018-05-07</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/SR_model.py</div><div id='class'> Class Name: SRModel</div><div id='method'> Method Name: feed_data</div><BR>

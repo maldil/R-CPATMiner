@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    CMC_tmp = evaluate(query_feature[i],query_label[i],query_cam[i],gallery_feature,gallery_label,gallery_cam)
+    if CMC_tmp[0]==-1:
+        continue
+    CMC = <a id="change">torch.cat((CMC,CMC_tmp.view(1,len(CMC_tmp))), 0)</a>
+    print(i, CMC_tmp[0])
+
+CMC = CMC.float()
+CMC = CMC.mean(dim=0) &#47&#47average CMC</code></pre><h3>After Change</h3><pre><code class='java'>
+gallery_cam = result[&quotgallery_cam&quot][0]
+gallery_label = result[&quotgallery_label&quot][0]
+
+CMC = torch.IntTensor(<a id="change">len(gallery_label)</a>).zero_()
+ap = 0.0
+&#47&#47print(query_label)
+for i in range(len(query_label)):
+    ap_tmp, CMC_tmp = evaluate(query_feature[i],query_label[i],query_cam[i],gallery_feature,gallery_label,gallery_cam)
+    if CMC_tmp[0]==-1:
+        continue
+    <a id="change">CMC = CMC + CMC_tmp</a>
+    ap += ap_tmp
+    print(i, CMC_tmp[0])
+
+CMC = CMC.float()</code></pre>

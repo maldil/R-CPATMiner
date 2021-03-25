@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return y[:n]
+
+    if len(y) &lt; n:
+        return np.pad(y, (0, n - <a id="change">len(y)</a>), **kwargs)
+
+    return y
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return data[slices]
+
+    elif n &lt; size:
+        lengths = [<a id="change">(0, 0)</a>] * data.ndim
+        lengths[axis] = (0, size - n)
+        return <a id="change">np.pad(data, lengths, **kwargs)</a>
+
+    return data
+
+</code></pre>

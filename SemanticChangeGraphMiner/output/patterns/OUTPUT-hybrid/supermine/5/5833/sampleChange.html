@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _tools_changed(self):
+        classes = [eval(class_name) for class_name in self.tools]
+        &#47&#47 Remove all tools that are not in the enabled list in self.tools
+        <a id="change">for tool in self.plot.tools:
+            if tool.__class__ not in classes:
+                self.plot.tools.remove(tool)
+            else:
+                classes.remove(tool.__class__)
+        &#47&#47 Create new instances of tools for the remaining tool classes
+       </a> for cls in classes:
+            self.plot.tools.append(cls(self.plot))
+        return
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        classes = [eval(class_name) for class_name in self.tools]
+
+        &#47&#47 Remove all tools from the plot
+        <a id="change">plot_tools = self.plot.tools</a>
+        <a id="change">for tool in plot_tools:
+            plot_tools.remove(tool)
+
+        &#47&#47 Create new instances for the selected tool classes
+       </a> for cls in classes:
+            self.plot.tools.append(cls(self.plot))
+
+</code></pre>

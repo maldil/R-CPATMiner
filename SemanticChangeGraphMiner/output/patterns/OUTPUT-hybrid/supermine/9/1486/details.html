@@ -1,0 +1,69 @@
+<html><h3>b7990885d8b26b9404fd9ce952b0b2f005019594,california_housing/feature_engineering.py,,,#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+plt.legend() 
+plt.show()
+
+<a id="change">attributes = [&quotmedian_house_value&quot, &quotmedian_income&quot, &quottotal_rooms&quot, &quothousing_median_age&quot]</a>
+
+scatter_matrix(housing[attributes], figsize=(12,8))
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 passing data in for imputation and one hot encoding
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+
+city_lat_long = <a id="change">pd.read_csv(&quotcal_cities_lat_long.csv&quot)</a>
+city_pop_data = pd.read_csv(&quotcal_populations_city.csv&quot)
+county_pop_data = pd.read_csv(&quotcal_populations_county.csv&quot)
+
+
+
+original, had to change because we only want to deal with cities we have
+both location and population data on.
+
+city_coords = {}
+for dat in city_lat_long.iterrows():
+    row = dat[1]
+    city_coords[row[&quotName&quot]] = (float(row[&quotLatitude&quot]), float(row[&quotLongitude&quot]))
+
+&#47&#47how we deiscovered the need for the change
+present = []
+absent = []
+for city in city_coords.keys():
+    if city in city_pop_data[&quotCity&quot].values:
+        present.append(city)
+    else:
+        absent.append(city)
+len(present)
+len(absent)
+absent
+
+
+city_coords = {}
+
+<a id="change">for dat in city_lat_long.iterrows():
+    row = dat[1]
+    if row[&quotName&quot] not in city_pop_data[&quotCity&quot].values:   
+        continue           
+    else: 
+        city_coords[row[&quotName&quot]] = (float(row[&quotLatitude&quot]), float(row[&quotLongitude&quot]))
+
+
+&#47&#47clean pop
+&#47&#47fill in the missing 1980s values with avg rate of change
+&#47&#47make a dictonary of cities lat/long pass in a tuple of lat/longs
+&#47&#47for a given point and do the comparison
+
+&#47&#47two functions
+&#47&#471. take two lat long tuples as input
+	&#47&#47return the distance between the two
+    &#47&#47vincenty(tuple1, tuple2)
+
+
+&#47&#47example below
+</a>newport_ri = (41.49008, -71.312796)
+cleveland_oh = (41.499498, -81.695391)
+x = vincenty(newport_ri, cleveland_oh)
+x &#47&#47distance stored in km, see units on printing</code></pre><img src="7791286.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/CNuge/kaggle-code/commit/b7990885d8b26b9404fd9ce952b0b2f005019594#diff-98e1d888948d2fb9ceba7250296619639269b2d8c5bec5737f959d9d670bfd88L23' target='_blank'>Link</a></div><div id='project'> Project Name: CNuge/kaggle-code</div><div id='commit'> Commit Name: b7990885d8b26b9404fd9ce952b0b2f005019594</div><div id='time'> Time: 2018-01-12</div><div id='author'> Author: nugentc@uoguelph.ca</div><div id='file'> File Name: california_housing/feature_engineering.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/e626254b74ecb6dc71396c1b35237b53a5e35163#diff-1baa74d77918013501c0f4cf775b28e0133f8dbe2da52b8555ea0c8b034d0d45L22' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: e626254b74ecb6dc71396c1b35237b53a5e35163</div><div id='time'> Time: 2017-08-23</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: oddt/datasets.py</div><div id='class'> Class Name: pdbbind</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/penn-ml-benchmarks/commit/862f99942ce1eefe93f0cfd1bcf3ade031679cd4#diff-2bb29ca735e72028f47fd1c2c294fb2bc81ed72b8cded6e901b8151b28e68347L26' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/penn-ml-benchmarks</div><div id='commit'> Commit Name: 862f99942ce1eefe93f0cfd1bcf3ade031679cd4</div><div id='time'> Time: 2020-09-03</div><div id='author'> Author: grixor@gmail.com</div><div id='file'> File Name: pmlb/dataset_lists.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

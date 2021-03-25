@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 compute output
+        output = model(input_var)
+        rgb_flow = flow2rgb(args.div_flow * <a id="change">output</a>.data[<a id="change">0</a>].cpu().numpy(), max_value=args.max_flow)
+        to_save = (rgb_flow * 255).astype(np.uint8)
+        imsave(save_path/(img1_file.namebase[:-2] + &quot_flow.png&quot), to_save)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if args.bidirectional:
+            &#47&#47 feed inverted pair along with normal pair
+            inverted_input_var = torch.autograd.Variable(<a id="change">torch</a>.cat([img2, img1],<a id="change">0</a>).cuda(), volatile=True).unsqueeze(0)
+            <a id="change">input_var = torch.cat([input_var, inverted_input_var])</a>
+
+        &#47&#47 compute output
+        output = model(input_var)
+        if not args.no_resize:</code></pre>

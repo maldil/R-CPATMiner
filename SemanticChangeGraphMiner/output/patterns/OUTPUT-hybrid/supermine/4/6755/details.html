@@ -1,0 +1,21 @@
+<html><h3>74a19e6fe453401c5abbce5f0fd52dfa326dcddf,models/shift_net/InnerCos.py,InnerCos,forward,#InnerCos#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not self.skip:
+            self.former = in_data.narrow(1, 0, self.c//2)
+            self.former_in_mask = torch.mul(self.former, self.mask)
+            self.target = <a id="change">in_data</a>.narrow(1, self.c // 2, self.c // 2).detach().cuda() &#47&#47 the latter part
+            <a id="change">self.target</a> = self.target * self.strength
+            self.loss = self.criterion(self.former_in_mask * self.strength, self.target)
+        else:
+            self.loss = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 For each iteration, we input GT, then I. That means we get the self.target in the first forward. And in this forward, self.loss is dummy!
+            &#47&#47 In the second forward, we input the corresponding I, then self.loss is working as expected. The self.target is the corresponding GT.
+            self.loss = self.criterion(self.former_in_mask * self.strength, self.target.expand_as(self.former_in_mask).type_as(self.former_in_mask))
+            self.target = <a id="change">in_data.narrow(1, self.c // 2, self.c // 2).detach()</a> &#47&#47 the latter part
+            <a id="change">self.target</a> = self.target * self.strength
+        else:
+            self.loss = 0
+        self.output = in_data</code></pre><img src="26533110.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/74a19e6fe453401c5abbce5f0fd52dfa326dcddf#diff-2cf5720dfb52a0e27c71ccd65338f50c66436a1c653e14afa30b0ec984360465L28' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: 74a19e6fe453401c5abbce5f0fd52dfa326dcddf</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/shift_net/InnerCos.py</div><div id='class'> Class Name: InnerCos</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/jantic/DeOldify/commit/819c73e2c09db24a8f166fc5df2b2ab0d2fa66c5#diff-24a9a3f78bc924566884670ebb9ae41e9e135f2f570b8c8fd872a28d3d7406e1L71' target='_blank'>Link</a></div><div id='project'> Project Name: jantic/DeOldify</div><div id='commit'> Commit Name: 819c73e2c09db24a8f166fc5df2b2ab0d2fa66c5</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: jsa169@gmail.com</div><div id='file'> File Name: fasterai/tensorboard.py</div><div id='class'> Class Name: HistogramTBRequest</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/20712af71d88097e43dcf56f9ac8b7d60ebacda5#diff-02c26cdc93bed585f4e563df8b7382be6521c404d88fb970de7c58f16595055bL160' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 20712af71d88097e43dcf56f9ac8b7d60ebacda5</div><div id='time'> Time: 2018-05-25</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/munit/munit.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

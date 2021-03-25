@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        context = super().get_template_context(
+            data=data, renderer_context=renderer_context
+        )
+        context.update(<a id="change">{"form": renderer_context["form_class"]}</a>)
+        return context
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        )
+        form = renderer_context["form_class"]
+
+        <a id="change">try:
+            context.update({"form": form})
+        except AttributeError:
+            &#47&#47 The context is not a dictionary, a list instead. This happens
+            &#47&#47 if no pagination class is used.
+            context = {"results": context, "form": form}
+
+       </a> return context
+
+
+class WorkstationsViewSet(ModelViewSet):</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    _psi2_exp1 = (np.square(Z[:,None,:]-Z[None,:,:])/lengthscale2).sum(axis=-1)/(-4.) &#47&#47MxM
+    Z_hat = (Z[:,None,:]+Z[None,:,:])/2. &#47&#47MxMxQ
+    denom = 1./(2.*S+lengthscale2)
+    <a id="change">_psi2_exp2</a> = <a id="change">-(np.square(mu)*denom).sum(axis=-1)[:,None,None]+2.*np.einsum(&quotnq,moq,nq-&gt;nmo&quot,mu,Z_hat,denom)-np.einsum(&quotmoq,nq-&gt;nmo&quot,np.square(Z_hat),denom)</a>
+    _psi2 = variance*variance*np.exp(_psi2_logdenom[:,None,None]+_psi2_exp1[None,:,:]+_psi2_exp2)
+
+
+    return _psi2</code></pre><h3>After Change</h3><pre><code class='java'>
+    _psi2_exp1 = (np.square(Z[:,None,:]-Z[None,:,:])/lengthscale2).sum(axis=-1)/(-4.) &#47&#47MxM
+    Z_hat = (Z[:,None,:]+Z[None,:,:])/2. &#47&#47MxMxQ
+    denom = 1./(2.*S+lengthscale2)
+    <a id="change">_psi2_exp2</a> = -(np.square(mu)*denom).sum(axis=-1)[:,None,None]+(2*(mu*denom).dot(Z_hat.reshape(M*M,Q).T) - denom.dot(<a id="change">np</a>.square(Z_hat).reshape(M*M,Q).T)).reshape(N,M,M)
+    _psi2 = variance*variance*np.exp(_psi2_logdenom[:,None,None]+_psi2_exp1[None,:,:]+_psi2_exp2)
+    return _psi2
+</code></pre>

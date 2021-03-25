@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        log_pdf = self.complex_bingham.log_pdf(y[..., None, :, :])
+
+        affiliation = <a id="change">np.log(self.weight) + log_pdf</a>
+        <a id="change">affiliation -= np.max(affiliation, axis=-2, keepdims=True)</a>
+        <a id="change">np.exp(affiliation, out=affiliation)</a>
+        <a id="change">denominator = np.maximum(
+            np.einsum("...kn-&gt;...n", affiliation)[..., None, :],
+            np.finfo(affiliation.dtype).tiny,
+        )</a>
+        affiliation /= denominator
+
+        if affiliation_eps != 0:
+            <a id="change">affiliation = np.clip(
+                affiliation, affiliation_eps, 1 - affiliation_eps
+            )</a>
+
+        return affiliation
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            affiliation_eps:
+        Returns: Affiliations with shape (..., K, T).
+        
+        affiliation = <a id="change">log_pdf_to_affiliation(
+                self.weight,
+                self.complex_bingham.log_pdf(y[..., None, :, :]),
+                source_activity_mask=None,
+                affiliation_eps=affiliation_eps,
+        )</a>
+
+        return affiliation
+
+</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def is_tif(imagery):
+    Determine if an imagery path has a valid tif extension
+    return <a id="change">op.splitext(imagery)[1].lower()</a> in [&quot.tif&quot, &quot.tiff&quot, &quot.vrt&quot]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def is_tif(imagery):
+    Determine if an imagery path leads to a valid tif
+    <a id="change">try:
+        with rasterio.open(imagery) as test_ds:
+            if test_ds.meta[&quotdriver&quot] != &quotGTiff&quot:
+                &#47&#47 rasterio can open path, but it is not a tif
+                is_tif = False
+            else:
+                is_tif = True
+    except rasterio._err.CPLE_HttpResponseError:
+        &#47&#47 rasterio cannot opent path. this is the case for a
+        &#47&#47 tile service
+        is_tif = False
+
+   </a> return is_tif
+</code></pre>

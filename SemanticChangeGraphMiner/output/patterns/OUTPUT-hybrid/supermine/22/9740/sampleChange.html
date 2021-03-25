@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __call__(self, x, y=None):
+        h_idx = random.randint(0,x.size(1)-self.crop_size[0])
+        w_idx = random.randint(0,x.size(2)-self.crop_size[1])
+        <a id="change">x = x[:, h_idx:(h_idx+self.crop_size[0]),w_idx:(w_idx+self.crop_size[1])]</a>
+        <a id="change">if y is not None:
+            y = y[:, h_idx:(h_idx+self.crop_size[0]),w_idx:(w_idx+self.crop_size[1])] 
+            return x, y
+        else:
+            return x
+
+
+</a>class SpecialCrop(object):
+
+    def __init__(self, crop_size, crop_type=0):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+    def __call__(self, *inputs):
+        h_idx = random.randint(0,inputs[0].size(1)-self.crop_size[0])
+        w_idx = random.randint(0,inputs[1].size(2)-self.crop_size[1])
+        <a id="change">outputs = []</a>
+        <a id="change">for idx, _input in enumerate(inputs):
+            _input = _input[:, h_idx:(h_idx+self.crop_size[0]),w_idx:(w_idx+self.crop_size[1])]
+            outputs.append(_input)
+       </a> <a id="change">return outputs if idx &gt; 1 else outputs[0]</a>
+
+
+class SpecialCrop(object):
+</code></pre>

@@ -1,0 +1,40 @@
+<html><h3>9f200d963b9646fb50326f7cf6788021ddfe955d,kraken/lib/models.py,,load_any,#,172
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    seq = None
+
+    fname = abspath(expandvars(expanduser(fname)))
+    <a id="change">try:
+        seq = load_pronn(fname)
+        seq.kind = &quotproto-pyrnn&quot
+        return seq
+    except:
+        try:
+            seq = load_tlstm(fname)
+            return seq
+        except Exception as e:
+            if PY2:
+                try:
+                    seq = load_pyrnn(fname)
+                    seq.kind = &quotpyrnn&quot
+                    return seq
+                except Exception as e:
+                    raise
+            else:
+                raise
+
+</a>def load_clstm(fname):
+    
+    Loads a CLSTM model in protobuf format and instantiates an object
+    implementing the kraken.lib.SeqRecognizer interface.</code></pre><h3>After Change</h3><pre><code class='java'>
+        nn = TorchVGSLModel.load_clstm_model(fname)
+        kind = &quotclstm&quot
+    if not nn:
+        raise KrakenInvalidModelException(<a id="change">&quotFile {} not loadable by any parser.&quot.format(fname)</a>)
+    <a id="change">seq = TorchSeqRecognizer(nn)</a>
+    seq.kind = kind
+    return seq
+
+def load_pronn(fname):</code></pre><img src="38072741.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/9f200d963b9646fb50326f7cf6788021ddfe955d#diff-9975a6153e850a64994f1148df08250aa1c334fb11056db8516e45b54429eabbL131' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 9f200d963b9646fb50326f7cf6788021ddfe955d</div><div id='time'> Time: 2018-04-08</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/models.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_any</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/64624fb2b46a228fef1141e1ded84e52acccaf6e#diff-ef020b7bd15cfff74c994f512b150fca388fb00f959dd4137f939bce7c3ecf1fL78' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 64624fb2b46a228fef1141e1ded84e52acccaf6e</div><div id='time'> Time: 2015-06-09</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: bin/mahotas-features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/fperazzi/proSR/commit/6b7b82ff60b8ca7a26b50e50210a06a46bdc848a#diff-b42fe8ef840a4879fb7b86af4192c9bab660b2e58b18cb4046b36f56ff08ef95L131' target='_blank'>Link</a></div><div id='project'> Project Name: fperazzi/proSR</div><div id='commit'> Commit Name: 6b7b82ff60b8ca7a26b50e50210a06a46bdc848a</div><div id='time'> Time: 2018-07-09</div><div id='author'> Author: fperazzi@adobe.com</div><div id='file'> File Name: lib/prosr/models/generators.py</div><div id='class'> Class Name: ProSR</div><div id='method'> Method Name: forward</div><BR>

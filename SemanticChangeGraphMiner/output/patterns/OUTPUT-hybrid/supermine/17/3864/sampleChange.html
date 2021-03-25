@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    net = model.ModelA2C(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    if args.cuda:
+        <a id="change">net.cuda()</a>
+    print(net)
+
+    writer = SummaryWriter(comment="-ppo_" + args.name)
+    agent = model.AgentA2C(net, cuda=args.cuda)</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_env = gym.make(ENV_ID)
+
+    net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    <a id="change">net_crt = model.ModelCritic(envs[0].observation_space.shape[0])</a>
+    if args.cuda:
+        net_act.cuda()
+        <a id="change">net_crt.cuda()</a>
+    print(net_act)
+    <a id="change">print(net_crt)</a>
+
+    writer = SummaryWriter(comment="-ppo_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=args.cuda)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)
+
+    opt_act = optim.Adam(net_act.parameters(), lr=LEARNING_RATE_ACTOR)
+    <a id="change">opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)</a>
+
+    batch = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+            for step_idx, exp in enumerate(exp_source):
+                rewards_steps = exp_source.pop_rewards_steps()
+                if rewards_steps:
+                    rewards, steps = zip(*rewards_steps)
+                    tb_tracker.track("episode_steps", np.mean(steps), step_idx)
+                    tracker.reward(np.mean(rewards), step_idx)
+
+                if step_idx % TEST_ITERS == 0:
+                    ts = time.time()
+                    rewards, steps = test_net(net_act, test_env, cuda=args.cuda)
+                    print("Test done is %.2f sec, reward %.3f, steps %d" % (
+                        time.time() - ts, rewards, steps))
+                    writer.add_scalar("test_reward", rewards, step_idx)
+                    writer.add_scalar("test_steps", steps, step_idx)
+                    if best_reward is None or best_reward &lt; rewards:
+                        if best_reward is not None:
+                            print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                            name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                            fname = os.path.join(save_path, name)
+                            torch.save(net.state_dict(), fname)
+                        best_reward = rewards
+
+                batch.append(exp)
+                if len(batch) &lt; BATCH_SIZE:
+                    continue
+
+                states_v, actions_v, vals_ref_v = \
+                    common.unpack_batch_a2c(batch, <a id="change">net_crt</a>, last_val_gamma=GAMMA ** REWARD_STEPS, cuda=args.cuda)
+                batch.clear()
+
+                <a id="change">opt_crt</a>.zero_grad()
+                value_v = net_crt(states_v)
+                loss_value_v = F.mse_loss(value_v, vals_ref_v)
+                loss_value_v.backward()
+                <a id="change">opt_crt</a>.step()
+
+                opt_act.zero_grad()
+                mu_v, var_v = net_act(states_v)</code></pre>

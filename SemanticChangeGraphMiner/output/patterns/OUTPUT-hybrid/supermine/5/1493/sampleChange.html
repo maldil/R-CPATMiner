@@ -1,0 +1,13 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+       W = self._lda.coef_
+       self._W = numpy.dot(numpy.dot(W.T,numpy.linalg.pinv(numpy.dot(W,W.T))),W)
+       ts = numpy.dot(ts,self._W)
+       <a id="change">cov = self._ts.inverse_transform(ts)</a>
+       <a id="change">return cov</a></code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def fit_transform(self,X,y=None):
+        ts = self._fit_lda(X,y)
+        <a id="change">return self._retro_project(ts)</a></code></pre>

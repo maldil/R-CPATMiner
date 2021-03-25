@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def initialize_logging(self, tensorboard_logdir):
+        for weight_var in itertools.chain([self.W_conv_init], self.W_conv_intermediate, [self.W_conv_final]):
+            tf.histogram_summary(weight_var.name, weight_var)
+        <a id="change">tf.scalar_summary("accuracy", self.accuracy)</a>
+        tf.scalar_summary("log_likelihood_cost", self.log_likelihood_cost)
+        self.summaries = tf.merge_all_summaries()
+        self.summary_writer = tf.train.SummaryWriter(tensorboard_logdir, self.session.graph_def)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                [self.W_conv_init],
+                self.W_conv_intermediate,
+                [self.W_conv_final])]
+        accuracy = <a id="change">tf.scalar_summary("accuracy", self.accuracy)</a>
+        cost = tf.scalar_summary("log_likelihood_cost", self.log_likelihood_cost)
+        self.weight_summaries = tf.merge_summary(weight_summaries)
+        self.accuracy_summaries = tf.merge_summary([accuracy, cost])
+        self.test_summary_writer = tf.train.SummaryWriter(os.path.join(tensorboard_logdir, "test"), self.session.graph)</code></pre>

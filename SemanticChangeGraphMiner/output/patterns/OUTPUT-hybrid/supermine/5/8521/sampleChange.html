@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47                    validation_data=(testX, Y_test),
+&#47&#47                    nb_val_samples=testX.shape[0], verbose=1)
+
+<a id="change">yPreds = model.predict(testX)</a>
+yPred = np.argmax(yPreds, axis=1)
+yTrue = testY
+
+accuracy = metrics.accuracy_score(yTrue, yPred) * 100</code></pre><h3>After Change</h3><pre><code class='java'>
+                   callbacks=[ModelCheckpoint("weights/DenseNet-40-12-CIFAR10.h5", monitor="val_acc", save_best_only=True,
+                                              save_weights_only=True)],
+                   validation_data=test_generator.flow(testX, testY, batch_size=batch_size),
+                   nb_val_samples=<a id="change">testX.shape[0]</a>, verbose=1)
+
+scores = model.evaluate_generator(test_generator.flow(testX, testY, nb_epoch), testX.shape[0])
+print("Accuracy = %f" % (100 * scores[1]))</code></pre>

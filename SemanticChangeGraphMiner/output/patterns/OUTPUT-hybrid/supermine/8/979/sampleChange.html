@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for model_type in classifier_types:
+        model = build_model.build_model_from_featureset(fset,
+                                                        model_type=model_type)
+        <a id="change">preds = predict.predict_data_files(TS_CLASS_PATHS,
+                                           list(fset.data_vars), model,
+                                           custom_features_script=None)</a>
+        if preds.prediction.values.ravel()[0].dtype == np.dtype(&quotfloat&quot):
+            assert(all(preds.prediction.class_label == [b&quotclass1&quot, b&quotclass2&quot,
+                                                        b&quotclass3&quot]))
+            assert(preds.prediction.values.shape ==</code></pre><h3>After Change</h3><pre><code class='java'>
+    for model_type in classifier_types:
+        model = build_model.build_model_from_featureset(fset,
+                                                        model_type=model_type)
+        <a id="change">preds = prediction_task(TS_CLASS_PATHS, list(fset.data_vars), model,
+                                custom_features_script=None)().get()</a>
+        if preds.prediction.values.ravel()[0].dtype == np.dtype(&quotfloat&quot):
+            assert(all(preds.prediction.class_label == [b&quotclass1&quot, b&quotclass2&quot,
+                                                        b&quotclass3&quot]))
+            assert(preds.prediction.values.shape ==</code></pre>

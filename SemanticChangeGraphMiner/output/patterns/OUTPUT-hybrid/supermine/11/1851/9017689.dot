@@ -1,0 +1,34 @@
+digraph G {
+subgraph cluster0 {
+1 [label="get_loss" a="32" s="4619,4655" l="9,1" shape="box"];
+6 [label="FieldAccess" a="22" s="4628" l="8" shape="box"];
+8 [label="Assignment:=" a="7" s="4618" l="1" shape="box"];
+9 [label="SimpleName" a="42" s="4647" l="8" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="reduce_sum" a="32" s="4597,4621" l="11,1" shape="box"];
+3 [label="InfixExpression:a" a="27" s="4610" l="3" shape="box"];
+4 [label="InfixExpression:a" a="27" s="4622" l="3" shape="box"];
+5 [label="reduce_sum" a="32" s="4636,4655" l="11,1" shape="box"];
+7 [label="Assignment:=" a="7" s="4584" l="1" shape="box"];
+10 [label="SimpleName" a="42" s="4613" l="8" shape="ellipse"];
+11 [label="SimpleName" a="42" s="4647" l="8" shape="ellipse"];
+12 [label="SimpleName" a="42" s="4586" l="10" shape="ellipse"];
+13 [label="SimpleName" a="42" s="4625" l="10" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 8 [label="_para_"];
+2 -> 4 [label="_para_"];
+3 -> 2 [label="_para_"];
+4 -> 7 [label="_para_"];
+5 -> 4 [label="_para_"];
+6 -> 1 [label="_para_"];
+9 -> 1 [label="_para_"];
+10 -> 3 [label="_para_"];
+11 -> 5 [label="_para_"];
+12 -> 2 [label="_recv_"];
+13 -> 5 [label="_recv_"];
+}

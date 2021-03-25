@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket = <a id="change">storage</a>.Client().bucket(bucket_name)
+    bucket.create()
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.patch()</code></pre><h3>After Change</h3><pre><code class='java'>
+def bucket():
+    bucket = None
+    while bucket is None or bucket.exists():
+        <a id="change">storage_client</a> = <a id="change">storage.Client()</a>
+        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket = <a id="change">storage_client.bucket(bucket_name)</a>
+        bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    storage_client.create_bucket(bucket)
+    yield bucket
+    time.sleep(3)</code></pre>

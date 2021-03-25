@@ -1,0 +1,27 @@
+<html><h3>cf8a3fb30547d6e980ecd8182f64a51df8e55c62,python/dgl/backend/pytorch/tensor.py,,pack_padded_tensor,#,248
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    device = input.device
+    index = []
+    for i, l in enumerate(lengths):
+        <a id="change">index.extend(range(i * max_len, i * max_len + l))</a>
+    index = th.tensor(index).to(device)
+    return gather_row(input.view(batch_size * max_len, -1), index)
+
+def boolean_mask(input, mask):</code></pre><h3>After Change</h3><pre><code class='java'>
+    max_len = input.shape[1]
+    device = input.device
+    if not is_tensor(lengths):
+        <a id="change">lengths = th.tensor(lengths, dtype=th.int64, device=device)</a>
+    else:
+        lengths = lengths.to(device)
+    input = input.view(-1, *input.shape[2:])
+    out_len = lengths.sum().item()
+    index = th.ones(out_len, dtype=th.int64, device=device)
+    <a id="change">cum_lengths</a> = th.cumsum(lengths, 0)
+    index[<a id="change">cum_lengths[:-1]</a>] += (max_len - lengths[:-1])
+    index = th.cumsum(index, 0) - 1
+    return input[index]
+</code></pre><img src="25604230.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L230' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pad_packed_tensor</div><BR><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/1549b25b3b199a90e83ad1569258d61315c5dcb0#diff-471a491404c6c17cf38ab84668859cb39943b0cd85275be4baae41fe86a560a2L80' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 1549b25b3b199a90e83ad1569258d61315c5dcb0</div><div id='time'> Time: 2017-06-27</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/extractors/models.py</div><div id='class'> Class Name: TensorFlowInceptionV3Extractor</div><div id='method'> Method Name: _extract</div><BR>

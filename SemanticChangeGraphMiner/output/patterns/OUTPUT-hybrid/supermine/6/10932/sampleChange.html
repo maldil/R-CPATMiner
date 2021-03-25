@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dataset_name = &quotfsl&quot
+    &#47&#47 Environment variables
+    default_paths = []
+    <a id="change">for env_var in [&quotFSL_DIR&quot, &quotFSLDIR&quot]:
+        path = os.getenv(env_var)
+        if path is not None:
+            default_paths.extend(path.split(&quot:&quot))
+   </a> data_dir = _get_dataset_dir(dataset_name, data_dir=data_dir,
+                                default_paths=default_paths, verbose=verbose)
+    opts = {&quotuncompress&quot: True}
+    root = os.path.join(&quotdata&quot, &quotatlases&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    root = os.path.join(&quotdata&quot, &quotatlases&quot)
+
+    if atlas_name[0] == &quotc&quot:
+        <a id="change">if &quotcort-maxprob&quot in atlas_name and symmetric_split:
+            split_name = atlas_name.split(&quotcort&quot)
+            atlas_name = &quotcortl&quot + split_name[1]
+            label_file = &quotHarvardOxford-Cortical-Lateralized.xml&quot
+            lateralized = True
+        else:
+            label_file = &quotHarvardOxford-Cortical.xml&quot
+            lateralized = False
+   </a> else:
+        label_file = &quotHarvardOxford-Subcortical.xml&quot
+        lateralized = False
+    label_file = os.path.join(root, label_file)</code></pre>

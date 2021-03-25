@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Each process has one BrowserWindow, and each BrowserWindow
+        &#47&#47 has one named pipe where it can accept commands.
+        self.pipe_name = NAMED_PIPE % 0000  &#47&#47 os.getpid()
+        <a id="change">if not os.path.exists(self.pipe_name):
+            os.mkfifo(self.pipe_name)
+
+        &#47&#47 For some reason, regular open() doesn&quott always work on named pipes
+        &#47&#47 and sometimes hangs. Use os.open instead.
+       </a> self.cmdpipe = os.open(self.pipe_name, os.O_RDONLY | os.O_NONBLOCK)
+
+    def check_pipe(self):
+        &#47&#47 Loop reading all data available.</code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            os.unlink(self.cmdsockname)
+        except OSError:
+            <a id="change">if os.path.exists(self.cmdsockname):
+                raise
+
+        &#47&#47 Create a UDS socket
+       </a> self.cmdsock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+        &#47&#47 Bind the socket to the port
+        self.cmdsock.bind(self.cmdsockname)</code></pre>

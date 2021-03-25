@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            losses = tf.nn.sigmoid_cross_entropy_with_logits(
+                tf.reshape(self.logits2, [-1, M, JX]), tf.cast(self.wy, &quotfloat&quot))  &#47&#47 [N, M, JX]
+            num_pos = tf.reduce_sum(tf.cast(self.wy, &quotfloat&quot))
+            num_neg = <a id="change">tf.reduce_sum(tf.cast(self.x_mask, &quotfloat&quot))</a> - num_pos
+            <a id="change">damp_ratio = num_pos / num_neg</a>
+            <a id="change">dampened_losses = losses * ((tf.cast(self.x_mask, &quotfloat&quot) - tf.cast(self.wy, &quotfloat&quot)) * damp_ratio + tf.cast(self.wy, &quotfloat&quot))</a>
+            new_losses = tf.reduce_sum(dampened_losses, [1, 2])
+            ce_loss = tf.reduce_mean(loss_mask * new_losses)
+            tf.add_to_collection(&quotlosses&quot, ce_loss)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            if config.na:
+                na = tf.reshape(self.na, [-1, 1])
+                concat_y = tf.concat(1, [na, tf.reshape(self.wy, [-1, M * JX])])
+                losses = <a id="change">tf.nn.softmax_cross_entropy_with_logits(self.concat_logits, tf.cast(concat_y, &quotfloat&quot))</a>
+            else:
+                losses = tf.nn.softmax_cross_entropy_with_logits(
+                    self.logits2, tf.cast(tf.reshape(self.wy, [-1, M * JX]), &quotfloat&quot))
+            ce_loss = tf.reduce_mean(loss_mask * losses)</code></pre>

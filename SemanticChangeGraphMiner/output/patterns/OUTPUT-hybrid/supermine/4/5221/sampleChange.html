@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                 name=&quotlstm_right_&quot + str(stack_index)
+                                 )(predictions_right)
+
+    <a id="change">predictions = merge((predictions_left, predictions_center, predictions_right),
+                        mode=&quotconcat&quot)</a>
+    predictions = Dense(num_dense, activation=&quotrelu&quot)(predictions)
+    pitch_prediction = Dense(num_pitches, activation=&quotsoftmax&quot,
+                             name=&quotpitch_prediction&quot)(predictions)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                            output_dim=num_dense, name=&quotembedding_right&quot)
+
+    predictions_left = TimeDistributed(embedding_left)(concatenate([left_features, left_metas]))
+    predictions_right = TimeDistributed(embedding_right)(concatenate(<a id="change">[right_features, right_metas]</a>))
+
+    predictions_center = concatenate([central_features, central_metas])
+</code></pre>

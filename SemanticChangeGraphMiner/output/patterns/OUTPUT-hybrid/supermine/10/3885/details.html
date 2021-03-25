@@ -1,0 +1,27 @@
+<html><h3>f742426e2280a5699171ee759b7809617218d505,basenji/blocks.py,,attention,#,333
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  &#47&#47 batch norm
+  if batch_norm:
+    z = <a id="change">tf.keras.layers.BatchNormalization(
+      momentum=bn_momentum,
+      gamma_initializer=&quotzeros&quot,
+      fused=True)(z)</a>
+
+  &#47&#47 residual add
+  current = tf.keras.layers.Add()([current,z])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  &#47&#47 batch norm
+  if batch_norm:
+    <a id="change">if bn_type == &quotsync&quot:
+      bn_layer = tf.keras.layers.experimental.SyncBatchNormalization
+    else:
+      bn_layer = tf.keras.layers.BatchNormalization
+   </a> z = bn_layer(
+      momentum=bn_momentum,
+      gamma_initializer=&quotzeros&quot)(z)
+</code></pre><img src="17108497.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/calico/basenji/commit/f742426e2280a5699171ee759b7809617218d505#diff-2de82dff33dc5dcc3fa12951405acd64ce2dff13e5ae475f968ec7044e6a7030L378' target='_blank'>Link</a></div><div id='project'> Project Name: calico/basenji</div><div id='commit'> Commit Name: f742426e2280a5699171ee759b7809617218d505</div><div id='time'> Time: 2020-08-18</div><div id='author'> Author: drk@calicolabs.com</div><div id='file'> File Name: basenji/blocks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: attention</div><BR><BR><div id='link'><a href='https://github.com/calico/basenji/commit/f742426e2280a5699171ee759b7809617218d505#diff-2de82dff33dc5dcc3fa12951405acd64ce2dff13e5ae475f968ec7044e6a7030L65' target='_blank'>Link</a></div><div id='project'> Project Name: calico/basenji</div><div id='commit'> Commit Name: f742426e2280a5699171ee759b7809617218d505</div><div id='time'> Time: 2020-08-18</div><div id='author'> Author: drk@calicolabs.com</div><div id='file'> File Name: basenji/blocks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: conv_block</div><BR><BR><div id='link'><a href='https://github.com/calico/basenji/commit/f742426e2280a5699171ee759b7809617218d505#diff-2de82dff33dc5dcc3fa12951405acd64ce2dff13e5ae475f968ec7044e6a7030L119' target='_blank'>Link</a></div><div id='project'> Project Name: calico/basenji</div><div id='commit'> Commit Name: f742426e2280a5699171ee759b7809617218d505</div><div id='time'> Time: 2020-08-18</div><div id='author'> Author: drk@calicolabs.com</div><div id='file'> File Name: basenji/blocks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: conv_block_2d</div><BR>

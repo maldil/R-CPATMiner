@@ -1,0 +1,42 @@
+<html><h3>f7b260e965e277d62d2f54847671d06b1763fb21,tests/python/pants_test/integration/log_output_integration_test.py,LogOutputIntegrationTest,test_completed_log_output,#LogOutputIntegrationTest#,29
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return tmpdir_relative
+
+    def test_completed_log_output(self) -&gt; None:
+        <a id="change">build_root = get_buildroot()</a>
+        <a id="change">with temporary_dir(root_dir=build_root) as tmpdir:
+            tmpdir_relative = self._prepare_sources(tmpdir, build_root)
+
+            test_run_result = self.run_pants(
+                [
+                    "--no-dynamic-ui",
+                    "--backend-packages=[&quotpants.backend.python&quot, &quotpants.backend.python.typecheck.mypy&quot]",
+                    "-ldebug",
+                    "typecheck",
+                    f"{tmpdir_relative}/src/python/project",
+                ]
+            )
+
+            assert "[DEBUG] Starting: Run MyPy on" in test_run_result.stderr
+            assert "[DEBUG] Completed: Run MyPy on" in test_run_result.stderr</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            ),
+            "src/python/project/BUILD": "python_library()",
+        }
+        <a id="change">with self.setup_tmpdir(sources) as tmpdir:
+            result = self.run_pants(
+                [
+                    "--no-dynamic-ui",
+                    "--backend-packages=[&quotpants.backend.python&quot, &quotpants.backend.python.typecheck.mypy&quot]",
+                    "-ldebug",
+                    "typecheck",
+                    f"{tmpdir}/src/python/project",
+                ]
+            )
+
+       </a> assert "[DEBUG] Starting: Run MyPy on" in result.stderr
+        assert "[DEBUG] Completed: Run MyPy on" in result.stderr
+</code></pre><img src="23514054.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-35e34c3a41cdd9a11021ec36a5d415868bb7c44d58d569d791455c61f55796deL10' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: tests/python/pants_test/integration/log_output_integration_test.py</div><div id='class'> Class Name: LogOutputIntegrationTest</div><div id='method'> Method Name: test_completed_log_output</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-29882c6b6129122cae86f6770cc40526d50ab11f52506d59763ca54c244a00beL215' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/python/rules/coverage_integration_test.py</div><div id='class'> Class Name: CoverageIntegrationTest</div><div id='method'> Method Name: test_coverage_raw</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-29882c6b6129122cae86f6770cc40526d50ab11f52506d59763ca54c244a00beL222' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/python/rules/coverage_integration_test.py</div><div id='class'> Class Name: CoverageIntegrationTest</div><div id='method'> Method Name: test_coverage_html_xml_json</div><BR>

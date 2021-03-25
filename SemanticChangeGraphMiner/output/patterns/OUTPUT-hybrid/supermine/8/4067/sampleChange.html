@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def setup_es():
+    try:
+        <a id="change">if &quotServer&quot in parser.sections():
+            es_ip = parser.get(&quotServer&quot, &quotgeonames&quot)
+        else:
+            es_ip = os.environ[&quotELASTIC_PORT_9200_TCP_ADDR&quot]
+
+       </a> es_url = &quothttp://{}:{}/&quot.format(es_ip, &quot9200&quot)
+        CLIENT = Elasticsearch(es_url)
+        S = Search(CLIENT)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def setup_es():
+    try:
+        es_ip = parser.get(&quotServer&quot, &quotgeonames_host&quot)
+        <a id="change">es_port = parser.get(&quotServer&quot, &quotgeonames_port&quot)</a>
+
+        es_url = &quothttp://{}:{}/&quot.format(es_ip, es_port)
+        CLIENT = Elasticsearch(es_url)
+        S = Search(CLIENT)</code></pre>

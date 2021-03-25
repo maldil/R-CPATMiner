@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+maintain_averages_op = tf.group(ema.apply(all_params))
+
+&#47&#47 sample from the model
+x_sample = tf.placeholder(tf.float32, shape=<a id="change">(args.sample_batch_size, 32, 32, 3)</a>)
+gen_par = model(x_sample, ema=ema, dropout_p=0, **model_opt)
+new_x_gen = nn.sample_from_discretized_mix_logistic(gen_par, args.nr_logistic_mix)
+def sample_from_model(sess):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 initialize data loaders for train/test splits
+DataLoader = {&quotcifar&quot:cifar10_data.DataLoader, &quotimagenet&quot:imagenet_data.DataLoader}[args.data_set]
+<a id="change">train_data = DataLoader(args.data_dir, &quottrain&quot, args.batch_size * args.nr_gpu, rng=rng, shuffle=True)</a>
+test_data = DataLoader(args.data_dir, &quottest&quot, args.batch_size * args.nr_gpu, shuffle=False)
+obs_shape = train_data.get_observation_size() &#47&#47 e.g. a tuple (32,32,3)
+
+&#47&#47 create the model</code></pre>

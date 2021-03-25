@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47   this fails if ac_window &gt; length of song   
+
+    bpms                    = 60.0 * fft_resolution / (numpy.arange(1, ac_window+1))
+    x_corr_weighting        = numpy.exp(-0.5 * (<a id="change">(numpy.log2(bpms) - numpy.log2(start_bpm))</a> / bpm_std)**2)
+
+    &#47&#47 Compute the weighted autocorrelation
+    x_corr                  = <a id="change">x_corr * x_corr_weighting</a>
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks                 = librosa.localmax(x_corr)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    mincol      = max(0,    maxcol - numpy.round(DURATION * fft_res))
+
+    &#47&#47 Use auto-correlation out of 4 seconds (empirically set??)
+    ac_window   = numpy.round(<a id="change">AC_SIZE * fft_res</a>)
+
+    &#47&#47 Compute the autocorrelation
+    x_corr      = librosa.autocorrelate(onsets[mincol:maxcol], ac_window)
+
+
+    &#47&#47   FIXME:  2013-01-25 08:55:40 by Brian McFee &lt;brm2132@columbia.edu&gt;
+    &#47&#47   this fails if ac_window &gt; length of song   
+    &#47&#47 re-weight the autocorrelation by log-normal prior
+    bpms    = 60.0 * fft_res / (numpy.arange(1, ac_window+1))
+
+    &#47&#47 Smooth the autocorrelation by a log-normal distribution
+    x_corr  = x_corr * numpy.exp(-0.5 * <a id="change">((numpy.log2(bpms / start_bpm)) / BPM_STD)</a>**2)
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks = librosa.localmax(x_corr)</code></pre>

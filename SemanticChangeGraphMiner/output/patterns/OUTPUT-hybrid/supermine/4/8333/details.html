@@ -1,0 +1,24 @@
+<html><h3>1e619d91956c813d2328a5460da0a273fe135905,hook/zmes_hook_helpers/face.py,Face,detect,#Face#,123
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        matched_face_rects = []
+
+        for idx,face_encoding in enumerate(face_encodings):
+            preds = <a id="change">self</a>.svm_model.predict_proba([face_encoding])[0]
+
+            print (preds, self.svm_model.classes_)
+            best_pred_ndx = np.argmax(preds)
+            <a id="change">best_pred = preds[best_pred_ndx]</a>
+            loc = face_locations[idx]
+
+            if best_pred &gt;= g.config[&quotface_recog_min_confidence&quot]:
+                 matched_face_names.append(self.svm_model.classes_[best_pred_ndx])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Use the KNN model to find the best matches for the test face
+        closest_distances = self.knn.kneighbors(face_encodings, n_neighbors=1)
+        are_matches = [<a id="change">closest_distances[0][i][0]</a> &lt;= g.config[&quotface_recog_dist_threshold&quot] for i in range(len(face_locations))]
+
+        matched_face_names = []
+        matched_face_rects = []</code></pre><img src="32514672.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL1' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/imbalanced-learn/commit/9b31677971ef20cb033e787cdaac6f639a728e05#diff-5a8642cdcdc04e9111d1ce34d2bbaf0b0e962b16fc0903162b3fe4258317dc69L133' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/imbalanced-learn</div><div id='commit'> Commit Name: 9b31677971ef20cb033e787cdaac6f639a728e05</div><div id='time'> Time: 2019-11-17</div><div id='author'> Author: redoykhan555@gmail.com</div><div id='file'> File Name: imblearn/under_sampling/_prototype_selection/_instance_hardness_threshold.py</div><div id='class'> Class Name: InstanceHardnessThreshold</div><div id='method'> Method Name: _fit_resample</div><BR><BR><div id='link'><a href='https://github.com/nishitpatel01/Fake_News_Detection/commit/99973b2eb7ee37508b81154154652ab282ea061d#diff-6f842d240a289d472e8243926bc87694d3337605a3f284a1ec47c94af50cce7aL162' target='_blank'>Link</a></div><div id='project'> Project Name: nishitpatel01/Fake_News_Detection</div><div id='commit'> Commit Name: 99973b2eb7ee37508b81154154652ab282ea061d</div><div id='time'> Time: 2017-12-10</div><div id='author'> Author: nkp3@illinois.edu</div><div id='file'> File Name: classifier.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

@@ -1,0 +1,21 @@
+<html><h3>bc4a0ecb1c146647632c3add2de814a64ab9d44a,pixel_cnn_pp/nn.py,,deconv2d,#,219
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            m_init, v_init = tf.nn.moments(x, [0,1,2])
+            scale_init = init_scale / tf.sqrt(v_init + 1e-10)
+            with tf.control_dependencies([g.assign(g * scale_init), b.assign_add(-m_init * scale_init)]):
+                <a id="change">x = tf.identity(x)</a>
+
+        &#47&#47 apply nonlinearity
+        if nonlinearity is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+            scale_init = init_scale / tf.sqrt(v_init + 1e-10)
+            with tf.control_dependencies([g.assign(g * scale_init), b.assign_add(-m_init * scale_init)]):
+                &#47&#47 x = tf.identity(x)
+                W = <a id="change">tf.reshape(g, [1, 1, num_filters, 1])</a> * tf.nn.l2_normalize(V, [0, 1, 3])
+                x = tf.nn.conv2d_transpose(x_, W, target_shape, <a id="change">[1] + stride + [1]</a>, padding=pad)
+                <a id="change">x = tf.nn.bias_add(x, b)</a>
+
+        &#47&#47 apply nonlinearity
+        if nonlinearity is not None:</code></pre><img src="18523259.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/bc4a0ecb1c146647632c3add2de814a64ab9d44a#diff-e758567cbb4d22941e5bdfef128b13ab0f6631d91785cbe68cfca00c5ed5fa57L222' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: bc4a0ecb1c146647632c3add2de814a64ab9d44a</div><div id='time'> Time: 2018-06-18</div><div id='author'> Author: feanorliu@tencent.com</div><div id='file'> File Name: pixel_cnn_pp/nn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: deconv2d</div><BR><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/bc4a0ecb1c146647632c3add2de814a64ab9d44a#diff-e758567cbb4d22941e5bdfef128b13ab0f6631d91785cbe68cfca00c5ed5fa57L164' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: bc4a0ecb1c146647632c3add2de814a64ab9d44a</div><div id='time'> Time: 2018-06-18</div><div id='author'> Author: feanorliu@tencent.com</div><div id='file'> File Name: pixel_cnn_pp/nn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: dense</div><BR><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/bc4a0ecb1c146647632c3add2de814a64ab9d44a#diff-e758567cbb4d22941e5bdfef128b13ab0f6631d91785cbe68cfca00c5ed5fa57L193' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: bc4a0ecb1c146647632c3add2de814a64ab9d44a</div><div id='time'> Time: 2018-06-18</div><div id='author'> Author: feanorliu@tencent.com</div><div id='file'> File Name: pixel_cnn_pp/nn.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: conv2d</div><BR>

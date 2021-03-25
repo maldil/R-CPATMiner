@@ -1,0 +1,30 @@
+<html><h3>285dc85691241532cd976e04a089f409e44d7493,src/detection/tensor/detector.py,Detector,detect_multiple,#Detector#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            answers = []
+            for image in image_array_list:
+                predictions = <a id="change">self.sess.run(softmax_tensor, {&quotDecodeJpeg:0&quot: image})</a>
+                predictions = np.squeeze(predictions)
+                answer = {}
+                <a id="change">for node_id in range(len(predictions)):
+                    answer[self.labels[node_id]] = predictions[node_id]
+               </a> answers.append(answer)
+            return answers
+
+    @staticmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with tf.device("/gpu:0"):
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            threads = <a id="change">[pool.apply_async(operation, args=(self.sess, softmax_tensor, image_array_list[i],)) for i in
+                       range(10)]</a>
+            results = []
+            <a id="change">for x in threads:
+                results.append(x.get())
+
+           </a> return results
+
+    @staticmethod
+    def _pil_to_tf(image):</code></pre><img src="16488026.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/geometalab/OSMDeepOD/commit/285dc85691241532cd976e04a089f409e44d7493#diff-4659640477888188b13cd750fdad422ee222076e276edffc439f35faebe1f5d0L40' target='_blank'>Link</a></div><div id='project'> Project Name: geometalab/OSMDeepOD</div><div id='commit'> Commit Name: 285dc85691241532cd976e04a089f409e44d7493</div><div id='time'> Time: 2016-08-12</div><div id='author'> Author: samuel.kurath@gmail.com</div><div id='file'> File Name: src/detection/tensor/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect_multiple</div><BR><BR><div id='link'><a href='https://github.com/geometalab/OSMDeepOD/commit/59d84cd18324aa86373091c8a0c262e6536d32fe#diff-4659640477888188b13cd750fdad422ee222076e276edffc439f35faebe1f5d0L29' target='_blank'>Link</a></div><div id='project'> Project Name: geometalab/OSMDeepOD</div><div id='commit'> Commit Name: 59d84cd18324aa86373091c8a0c262e6536d32fe</div><div id='time'> Time: 2016-08-12</div><div id='author'> Author: samuel.kurath@gmail.com</div><div id='file'> File Name: src/detection/tensor/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect</div><BR><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/420747a2f5f6f23b84f62f9a00481ef53a4a4623#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L83' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: 420747a2f5f6f23b84f62f9a00481ef53a4a4623</div><div id='time'> Time: 2016-11-11</div><div id='author'> Author: tim@Tims-MacBook-Pro.local</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_from_model</div><BR>

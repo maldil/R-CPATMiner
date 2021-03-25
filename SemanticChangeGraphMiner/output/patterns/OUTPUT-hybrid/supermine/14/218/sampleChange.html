@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.up5 = UNetUp(256, 64)
+
+
+        final = <a id="change">[   nn.Upsample(scale_factor=2),
+                    nn.Conv2d(128, out_channels, 3, 1, 1),
+                    nn.Tanh() ]</a>
+        <a id="change">self.final = nn.Sequential(*final)</a>
+
+    def forward(self, x):
+        &#47&#47 U-Net generator with skip connections from encoder to decoder
+        d1 = self.down1(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.up7 = UNetUp(256, 64)
+
+
+        <a id="change">self.final</a> = <a id="change">nn.Sequential(
+            nn.Upsample(scale_factor=2),
+            nn.ZeroPad2d((1, 0, 1, 0)),
+            nn.Conv2d(128, out_channels, 4, padding=1),
+            nn.Tanh()
+        )</a>
+
+
+    def forward(self, x):
+        &#47&#47 U-Net generator with skip connections from encoder to decoder</code></pre>

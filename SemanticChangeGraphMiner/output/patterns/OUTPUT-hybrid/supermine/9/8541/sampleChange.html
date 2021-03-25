@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    model.eval()
+
+    d0 = <a id="change">images.shape[0]</a>
+    if batch_size &gt; d0:
+        print((&quotWarning: batch size is bigger than the data size. &quot
+               &quotSetting batch size to data size&quot))
+        batch_size = d0</code></pre><h3>After Change</h3><pre><code class='java'>
+        end = start + batch_size
+        
+        &#47&#47 real batch of images here
+        images = <a id="change">np.array([imread(str(fn)).astype(np.float32) for fn in files[start:end]])</a>
+        <a id="change">images = images.transpose((0, 3, 1, 2))</a>
+        images /= 255
+        
+        batch = torch.from_numpy(images).type(torch.FloatTensor)
+        batch = Variable(batch, volatile=True)</code></pre>

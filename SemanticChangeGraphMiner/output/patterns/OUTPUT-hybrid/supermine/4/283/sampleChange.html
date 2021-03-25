@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    binaries = []
+    for usblib in [getattr(usb.backend, be)._lib for be in backends]:
+        if usblib is not None:
+            binaries = <a id="change">[(usblib._name, &quot&quot)]</a>
+
+except (ValueError, usb.core.USBError) as exc:
+    logger.warning("%s", exc)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    binaries = []
+    for usblib in [getattr(usb.backend, be)._lib for be in backends]:
+        if usblib is not None:
+            <a id="change">binaries = _resolveCtypesImports([os.path.basename(usblib._name)])</a>
+            assert len(binaries[0]) == 3
+            binaries = [(binaries[0][1], &quot&quot)]
+
+except (ValueError, usb.core.USBError) as exc:</code></pre>

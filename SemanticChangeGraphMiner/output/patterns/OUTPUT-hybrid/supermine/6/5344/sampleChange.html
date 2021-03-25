@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        mu_v, var_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        <a id="change">sigma = torch.sqrt(var_v).data.cpu().numpy()</a>
+        actions = np.random.normal(mu, sigma)
+        actions = np.clip(actions, -1, 1)
+        return actions, agent_states
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        mu_v = self.net(states_v)
+        mu = mu_v.data.cpu().numpy()
+        logstd = <a id="change">self.net.logstd.data.cpu().numpy()</a>
+        actions = mu + np.exp(logstd) * np.random.normal(size=logstd.shape)
+        actions = np.clip(actions, -1, 1)
+        return actions, agent_states
+</code></pre>

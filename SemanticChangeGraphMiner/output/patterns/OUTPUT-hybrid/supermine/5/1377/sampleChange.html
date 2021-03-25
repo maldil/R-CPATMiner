@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Create a minimization operation for policy update (SVGD).
+
+        action_tensors = [tf.expand_dims(self.policy.actions(self._observations_ph), -2)
+                          <a id="change">for</a> _ in <a id="change">range(self._kernel_n_particles)</a>]
+        actions = tf.concat(action_tensors, 1)
+
+        assert_shape(</code></pre><h3>After Change</h3><pre><code class='java'>
+        Create a minimization operation for policy update (SVGD).
+
+        actions = self.policy.actions(
+            <a id="change">tf.tile(
+                self._observations_ph,
+                (self._kernel_n_particles,
+                 *np.ones_like(self._observation_shape)))</a>)
+        <a id="change">actions = tf.reshape(
+            actions,
+            (-1, self._kernel_n_particles, *self._observation_shape))</a>
+
+        assert_shape(
+            actions, (None, self._kernel_n_particles, *self._action_shape))
+</code></pre>

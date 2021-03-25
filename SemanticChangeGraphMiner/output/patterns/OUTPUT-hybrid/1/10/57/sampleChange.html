@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    if max_sample_period is not None:
+        &#47&#47 add an &quotoff&quot entry whenever data is lost for &gt; self.max_sample_period
+        <a id="change">time_delta</a> = <a id="change">np.diff(series.index.values)</a>
+        <a id="change">dropout_dates</a> = series.index[:-1][time_delta &gt; max_sample_period]
+        max_sample_period_secs = max_sample_period / np.timedelta64(1, &quots&quot)
+        insert_offs = pd.Series(False,
+                                index=dropout_dates +</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if max_sample_period is not None:
+        &#47&#47 add an &quotoff&quot entry whenever data is lost for &gt; self.max_sample_period
+        <a id="change">time_delta</a> = <a id="change">np.diff(series.index.values)</a> / np.timedelta64(1, &quots&quot)
+        <a id="change">dropout_dates</a> = series.index[:-1][time_delta &gt; max_sample_period]
+        insert_offs = pd.Series(False,
+                                index=dropout_dates +
+                                pd.DateOffset(seconds=max_sample_period))</code></pre>

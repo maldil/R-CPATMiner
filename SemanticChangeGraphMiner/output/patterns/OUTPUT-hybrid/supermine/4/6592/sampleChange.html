@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for frame in trace:
+        params = map(escape, frame[0].rsplit(os.path.sep, 1) + list(frame[1:]))
+        try:
+            stacktrace.append(<a id="change">u&quot&lt;span class="path"&gt;{0}/&lt;/span&gt;&lt;span class="file"&gt;{1}&lt;/span&gt; in &lt;span class="func"&gt;{3}&lt;/span&gt;(&lt;span class="lineno"&gt;{2}&lt;/span&gt;)\n  &lt;span class="code"&gt;{4}&lt;/span&gt;&quot.format(*params)</a>)
+        except IndexError:
+            &#47&#47 This frame doesn&quott have the expected format, so skip it and move on to the next one
+            continue</code></pre><h3>After Change</h3><pre><code class='java'>
+    stacktrace = []
+    for frame in trace:
+        params = map(escape, frame[0].rsplit(os.path.sep, 1) + list(frame[1:]))
+        <a id="change">params_dict = dict((unicode(idx), v) for idx, v in enumerate(params))</a>
+        try:
+            stacktrace.append(u&quot&lt;span class="path"&gt;%(0)s/&lt;/span&gt;&quot
+                              u&quot&lt;span class="file"&gt;%(1)s&lt;/span&gt;&quot
+                              u&quot in &lt;span class="func"&gt;%(3)s&lt;/span&gt;&quot</code></pre>

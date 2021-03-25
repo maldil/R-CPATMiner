@@ -1,0 +1,41 @@
+<html><h3>d8ab8131e19498c2b9bed8d218e4e46eedc7cf21,librosa/tf_agc.py,,tf_agc,#,106
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                f2a = melfb(sample_rate, len(frame), num_frequency_bands, mel_filter_width)
+                f2a = f2a[:,:(round(len(frame)/2) + 1)]
+
+                n   = <a id="change">f2a.shape[0]</a>
+                
+                &#47&#47 initialze the state vector
+                state   = numpy.zeros( (n, 1) )
+                fbg     = numpy.zeros( (n, 1) )</code></pre><h3>After Change</h3><pre><code class='java'>
+                pass
+
+            &#47&#47 FFT each frame
+            D = <a id="change">scipy.fft(frame)</a>
+
+            &#47&#47 multiply by f2a
+            audiogram = numpy.dot(f2a, numpy.abs(D))
+
+            &#47&#47&#47&#47 DPWE
+            &#47&#47             state = max([alpha*state,audgram(:,i)],[],2);
+            &#47&#47             fbg(:,i) = state;
+            &#47&#47 ...
+            &#47&#47
+            <a id="change">state = numpy.maximum(alpha * state, audiogram)</a>
+
+            &#47&#47E = diag(1./(sf2a+(sf2a==0))) * f2a&quot * fbg;
+            E   = normalize_f2a * numpy.dot(f2a.T, state);
+
+            &#47&#47% Remove any zeros in E (shouldn&quott be any, but who knows?)
+            &#47&#47E(E(:)&lt;=0) = min(E(E(:)&gt;0));
+
+            &#47&#47% invert back to waveform
+            &#47&#47y = istft(D./E);
+
+            y = scipy.ifft(<a id="change">D/E</a>)
+
+            pass
+        pass</code></pre><img src="32098362.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/d8ab8131e19498c2b9bed8d218e4e46eedc7cf21#diff-af9205dff8054388c5cc5df35f98fcb9c7d49ace38c5ac9cf0b864cb00a37d6eL131' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: d8ab8131e19498c2b9bed8d218e4e46eedc7cf21</div><div id='time'> Time: 2012-10-20</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/tf_agc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: tf_agc</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/c18f5c4bf4e6ed16fa82264636d440174c59fbca#diff-c49b8660958f8ae6f4b060c6f2f98e7d1a003103974c4434d7673d538f3480e8L313' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: c18f5c4bf4e6ed16fa82264636d440174c59fbca</div><div id='time'> Time: 2013-11-15</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/core.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ifgram</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/320cbfd379a8e8de6ff49eeba35ca16750e80d38#diff-a049e12bb4a0916876dafe207b2943bcb904796584478f19a2a350f0f979bcf1L394' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 320cbfd379a8e8de6ff49eeba35ca16750e80d38</div><div id='time'> Time: 2015-08-25</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/core/audio.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: autocorrelate</div><BR>

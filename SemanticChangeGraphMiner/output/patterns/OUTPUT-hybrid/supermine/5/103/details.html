@@ -1,0 +1,39 @@
+<html><h3>75a053cd12ec210c70e5140289e2106434e60d62,w3af/core/controllers/core_helpers/status.py,CoreStatus,calculate_eta,#CoreStatus#,338
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    queue_size,
+                    adjustment_ratio)
+
+            <a id="change">om.out.debug(msg % args)</a>
+
+            return None
+
+        if input_speed &gt;= output_speed:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if adjustment is None:
+            adjustment = Adjustment(known=1.0, unknown=1.0)
+
+        <a id="change">if output_speed == 0 and input_speed == 0:
+            &#47&#47 The consumer has finished
+            eta = 0.0
+
+            self.log_calculate_eta(eta, input_speed, output_speed, queue_size,
+                                   _type, adjustment, average)
+
+            return eta
+
+       </a> if output_speed == 0 and input_speed != 0:
+            &#47&#47 The output speed is zero, this is a very strange case... it will
+            &#47&#47 be impossible to calculate the ETA, just remove "I&quotll be there
+            &#47&#47 in 5 minutes" (just like the pizza delivery when you call them
+            &#47&#47 because you&quotre hungry)
+            &#47&#47
+            &#47&#47 The next time the code calls calculate_eta() the output_speed
+            &#47&#47 will (most likely) be different from zero and it will be possible
+            &#47&#47 to calculate a real ETA
+            <a id="change">eta = 5 * 60.0</a>
+
+            self.log_calculate_eta(eta, input_speed, output_speed, queue_size,
+                                   _type, adjustment, average)
+</code></pre><img src="838788.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/75a053cd12ec210c70e5140289e2106434e60d62#diff-87fdc322b6ef1018551f7fbf61ab4866a56c0caf501d3fd9e58ca7328d5043e7L1' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 75a053cd12ec210c70e5140289e2106434e60d62</div><div id='time'> Time: 2018-07-23</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/controllers/core_helpers/status.py</div><div id='class'> Class Name: CoreStatus</div><div id='method'> Method Name: calculate_eta</div><BR><BR><div id='link'><a href='https://github.com/KrishnaswamyLab/PHATE/commit/e5a98adc53c682047bd6873c127c9c94588b28ab#diff-33d42cc50fe1b3acd3aed401816f031af5727849c68091181736865a5019f05eL87' target='_blank'>Link</a></div><div id='project'> Project Name: KrishnaswamyLab/PHATE</div><div id='commit'> Commit Name: e5a98adc53c682047bd6873c127c9c94588b28ab</div><div id='time'> Time: 2019-12-01</div><div id='author'> Author: scottgigante@gmail.com</div><div id='file'> File Name: Python/phate/mds.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: embed_MDS</div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/5e357b6dbb7ce3fcb945cd88b45156115e51faf7#diff-f6d0c7dd046ce2638a3e8d234eef699acb10744aefa8b59baad4c54983fba117L598' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 5e357b6dbb7ce3fcb945cd88b45156115e51faf7</div><div id='time'> Time: 2019-08-15</div><div id='author'> Author: h.goebel@crazy-compilers.com</div><div id='file'> File Name: PyInstaller/depend/analysis.py</div><div id='class'> Class Name: PyiModuleGraph</div><div id='method'> Method Name: add_hiddenimports</div><BR><BR><div id='link'><a href='https://github.com/automl/ParameterImportance/commit/5642a433101c10200ce6bb73358ae236f367750a#diff-379179bc5131dfa8ada9c31712acf1696626f9021cda2ecab3eac41be5085895L166' target='_blank'>Link</a></div><div id='project'> Project Name: automl/ParameterImportance</div><div id='commit'> Commit Name: 5642a433101c10200ce6bb73358ae236f367750a</div><div id='time'> Time: 2019-04-22</div><div id='author'> Author: jo.ma@posteo.de</div><div id='file'> File Name: pimp/evaluator/local_parameter_importance.py</div><div id='class'> Class Name: LPI</div><div id='method'> Method Name: run</div><BR>

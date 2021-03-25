@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dataset_eval = core.evaluate(n_episodes=ep_per_run)
+        print(&quotpolicy parameters: &quot, policy.get_weights())
+        J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+        <a id="change">print(&quotJ at iteration &quot + str(i) + &quot: &quot + str(np.mean(J)))</a>
+
+
+if __name__ == &quot__main__&quot:
+</code></pre><h3>After Change</h3><pre><code class='java'>
+def experiment(alg, n_epochs, n_iterations, ep_per_run):
+    np.random.seed()
+
+    <a id="change">logger = Logger(alg.__name__, results_dir=None)</a>
+    <a id="change">logger.strong_line()</a>
+    <a id="change">logger.info(&quotExperiment Algorithm: &quot + alg.__name__)</a>
+
+    &#47&#47 MDP
+    mdp = LQR.generate(dimensions=1)
+
+    approximator = Regressor(LinearApproximator,
+                             input_shape=mdp.info.observation_space.shape,
+                             output_shape=mdp.info.action_space.shape)
+
+    sigma = Regressor(LinearApproximator,
+                      input_shape=mdp.info.observation_space.shape,
+                      output_shape=mdp.info.action_space.shape)
+
+    sigma_weights = 2 * np.ones(sigma.weights_size)
+    sigma.set_weights(sigma_weights)
+
+    policy = StateStdGaussianPolicy(approximator, sigma)
+
+    &#47&#47 Agent
+    optimizer = AdaptiveOptimizer(eps=.01)
+    algorithm_params = dict(optimizer=optimizer)
+    agent = alg(mdp.info, policy, **algorithm_params)
+
+    &#47&#47 Train
+    core = Core(agent, mdp)
+    dataset_eval = core.evaluate(n_episodes=ep_per_run)
+    J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+    logger.epoch_info(0, J=np.mean(J), policy_weights=policy.get_weights())
+
+    for i in trange(n_epochs, leave=False):
+        core.learn(n_episodes=n_iterations * ep_per_run,
+                   n_episodes_per_fit=ep_per_run)
+        dataset_eval = core.evaluate(n_episodes=ep_per_run)
+        J = compute_J(dataset_eval, gamma=mdp.info.gamma)
+        <a id="change">logger.epoch_info(i+1, J=np.mean(J), policy_weights=policy.get_weights())</a>
+
+
+if __name__ == &quot__main__&quot:
+    algs = [REINFORCE, GPOMDP, eNAC]</code></pre>

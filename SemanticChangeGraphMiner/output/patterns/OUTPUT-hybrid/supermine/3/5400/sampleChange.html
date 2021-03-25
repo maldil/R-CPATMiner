@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+			self.__load_params()
+
+		&#47&#47 Create Theano shared variables.
+		<a id="change">self.theano_params = OrderedDict()</a>
+		for name, value in self.init_params.items():
+			self.theano_params[name] = theano.shared(value, name)
+		
+		self.create_minibatch_structure()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+		&#47&#47 Create Theano shared variables.
+		self.params = {name: theano.shared(value, name)
+				<a id="change">for</a> name, value in self.param_init_values.items()}
+		
+		self._create_minibatch_structure()
+		self._create_onestep_structure()</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      dtype=tf.float32,
+      shape=(batch_size, image_height, image_width, 3))
+
+  <a id="change">image_info_per_image = [
+      [image_height, image_width],
+      [image_height, image_width],
+      [1.0, 1.0],
+      [0.0, 0.0]]</a>
+  if batch_size == 1:
+    images_info = tf.constant([image_info_per_image], dtype=tf.float32)
+  else:
+    images_info = tf.constant(</code></pre><h3>After Change</h3><pre><code class='java'>
+      [image_shape,
+       image_shape,
+       tf.constant([1.0, 1.0], dtype=tf.float32),
+       <a id="change">tf.constant([0.0, 0.0], dtype=tf.float32)</a>])
+  if batch_size == 1:
+    images_info = tf.expand_dims(image_info_per_image, axis=0)
+  else:</code></pre>

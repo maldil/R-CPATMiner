@@ -1,0 +1,21 @@
+<html><h3>eb6443ada2af9240e8f1826b43ef755736dd9b0b,pose/models/hourglass.py,HourglassNet,forward,#HourglassNet#,168
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                fc_ = self.fc_[i](x)
+                score_ = self.score_[i](score)
+                x = y + fc_ + score_
+                <a id="change">y = x.clone()</a>
+
+        return out
+
+def hg1(**kwargs):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 y = x.clone()
+        for i in range(self.num_stacks):
+            y = self.hg[i](x)
+            <a id="change">y = self.res[i](y)</a>
+            y = self.fc[i](y)
+            score = self.score[i](y)
+            out.append(score)
+            if i &lt; self.num_stacks-1:</code></pre><img src="17595487.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/eb6443ada2af9240e8f1826b43ef755736dd9b0b#diff-fde96327ac4bdd98b62c36b62782bcd614bba2297db107daa03a5a52d6a50f45L165' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: eb6443ada2af9240e8f1826b43ef755736dd9b0b</div><div id='time'> Time: 2017-05-29</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: pose/models/hourglass.py</div><div id='class'> Class Name: HourglassNet</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/d2c500803a9d7141a3933d0f4804d9635cd7bfc6#diff-5e6eebf2c435a47bcbb2e61fc96c8bae9bebb52910f359ab8f064829a9a64100L21' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: d2c500803a9d7141a3933d0f4804d9635cd7bfc6</div><div id='time'> Time: 2018-12-13</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/soft_shift_net/innerSoftShiftTripleModule.py</div><div id='class'> Class Name: InnerSoftShiftTripleModule</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/Zhaoyi-Yan/Shift-Net_pytorch/commit/dc9aafd83851f7c55c6fe61702e281856ec023ca#diff-abdc21ce99efdb199d82860bb37609b41fe209e56f030ef883e5ac86f2137346L16' target='_blank'>Link</a></div><div id='project'> Project Name: Zhaoyi-Yan/Shift-Net_pytorch</div><div id='commit'> Commit Name: dc9aafd83851f7c55c6fe61702e281856ec023ca</div><div id='time'> Time: 2018-12-13</div><div id='author'> Author: yanzhaoyi@outlook.com</div><div id='file'> File Name: models/accelerated_shift_net/accelerated_InnerShiftTripleFunction.py</div><div id='class'> Class Name: AcceleratedInnerShiftTripleFunction</div><div id='method'> Method Name: forward</div><BR>

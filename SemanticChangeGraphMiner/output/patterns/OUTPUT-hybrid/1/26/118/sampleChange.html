@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 important step
+&#47&#47 tf.initialize_all_variables() no long valid from
+&#47&#47 2017-03-02 if using tensorflow &gt;= 0.12
+<a id="change">sess.run(tf.global_variables_initializer())</a>
+
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})</code></pre><h3>After Change</h3><pre><code class='java'>
+                                              reduction_indices=[1]))       &#47&#47 loss
+train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+
+<a id="change">sess</a> = tf.Session()
+&#47&#47 important step
+&#47&#47 tf.initialize_all_variables() no long valid from
+&#47&#47 2017-03-02 if using tensorflow &gt;= 0.12
+<a id="change">if int((tf.__version__).split(&quot.&quot)[1]) &lt; 12:
+    init = tf.initialize_all_variables()
+else:
+    init = tf.global_variables_initializer()
+sess</a><a id="change">.run(init)</a>
+
+for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})</code></pre>

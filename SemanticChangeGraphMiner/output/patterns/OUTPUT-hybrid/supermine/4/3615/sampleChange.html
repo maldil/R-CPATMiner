@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        _check_contiguous(x, mean, var, weight, bias)
+        _check(_ext.bn_forward_cuda,
+               x, mean, var,
+               <a id="change">weight if weight is not None else x.new()</a>,
+               bias if bias is not None else x.new(),
+               x, x, ctx.eps)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Prepare inputs
+        count = _count_samples(x) * (ctx.master_queue.maxsize + 1)
+        <a id="change">x = x.contiguous()</a>
+        weight = <a id="change">weight.contiguous() if ctx.affine else x.new_empty(0)</a>
+        bias = bias.contiguous() if ctx.affine else x.new_empty(0)
+
+        if ctx.training:
+            mean, var = backend.mean_var(x)</code></pre>

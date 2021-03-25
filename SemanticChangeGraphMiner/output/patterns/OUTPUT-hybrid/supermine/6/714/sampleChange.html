@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        languages: Optional[List[str]] = None,
+        dense_feat: Optional[List[List[float]]] = None,
+    ) -&gt; torch.Tensor:
+        <a id="change">if dense_feat is None:
+            raise RuntimeError("Expect dense feature.")
+
+       </a> inputs: ScriptBatchInput = ScriptBatchInput(
+            texts=resolve_texts(texts, multi_texts),
+            tokens=squeeze_2d(tokens),
+            languages=squeeze_1d(languages),
+        )
+        &#47&#47 call model
+        <a id="change">dense_feat = self.normalizer.normalize(dense_feat)</a>
+        dense_tensor = torch.tensor(dense_feat, dtype=torch.float)
+
+        sentence_embedding = self._forward(inputs, dense_tensor)
+        if self.concat_dense:</code></pre><h3>After Change</h3><pre><code class='java'>
+        languages: Optional[List[str]] = None,
+        dense_feat: Optional[List[List[float]]] = None,
+    ):
+        <a id="change">return self.forward_impl(
+            texts,
+            multi_texts,
+            tokens,
+            languages,
+            dense_feat,
+        )</a>
+
+    @torch.jit.script_method
+    def make_prediction(
+        self,</code></pre>

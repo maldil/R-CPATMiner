@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def test_dirty_points_and_gradcheck(self, batch_size, device):
+        &#47&#47 generate input data
+        dtype = torch.float64
+        H = (<a id="change">torch</a>.eye(3, device=device)[None].repeat(batch_size, 1, 1) +
+             0.3 * torch.rand(batch_size, 3, 3, device=device))
+        H = H / H[:, 2:3, 2:3]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    @pytest.mark.parametrize("batch_size", [1, 2])
+    def test_dirty_points_and_gradcheck(self, batch_size, device, dtype):
+        &#47&#47 generate input data
+        points_src = <a id="change">torch.rand(batch_size, 10, 2, device=device, dtype=dtype)</a>
+        H = kornia.eye_like(3, points_src)
+        <a id="change">H = H * 0.3 * torch.rand_like(H)</a>
+        H = H / H[:, 2:3, 2:3]
+
+        points_src = 100. * torch.rand(batch_size, 20, 2, device=device, dtype=dtype)
+        points_dst = kornia.transform_points(H, points_src)</code></pre>

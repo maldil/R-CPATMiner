@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+	             sampler=CrossSampler(),
+	             nc_class_params=None,
+	             n_models=10):
+		<a id="change">self.predictors = []</a>
+		<a id="change">self.n_models = n_models</a>
+		<a id="change">self.cp_class = cp_class</a>
+		<a id="change">self.nc_class = nc_class</a>
+		<a id="change">self.nc_class_params</a> = nc_class_params if nc_class_params else {}
+		<a id="change">self.sampler</a> = sampler
+
+	def fit(self, x, y):
+		self.predictors = []</code></pre><h3>After Change</h3><pre><code class='java'>
+	Examples
+	--------
+	
+	def __init__(<a id="change">self</a>,
+				 predictor,
+				 n_models=10):
+		<a id="change">super(CrossConformalClassifier, self).__init__(predictor,
+													   CrossSampler(),
+													   n_models)</a>
+
+	def predict(self, x, significance=None):
+		predictions = np.dstack([p.predict(x, significance=None)
+		                         for p in self.predictors])</code></pre>

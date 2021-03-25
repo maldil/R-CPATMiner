@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            features = self.model(input_data)
+            if &quotestimates&quot not in features:
+                raise ValueError("This model is not a mask estimation model!")
+            <a id="change">features = (
+                (features[&quotestimates&quot] + 1e-6) / 
+                (input_data[&quotmagnitude_spectrogram&quot].unsqueeze(-1) + 1e-6)
+            ).squeeze(0)</a>
+        <a id="change">features = features.permute(3, 1, 0, 2)</a>
+        <a id="change">features = features.data.cpu().numpy()</a>
+        return features
+
+    def run(self, features=None):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.metadata[&quotnum_channels&quot] == 1:
+                embedding = embedding.transpose(0, -2)
+            embedding = embedding.squeeze(0).transpose(0, 1)
+        return <a id="change">embedding.cpu().data.numpy()</a>
+</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Return the output of the wrapped PyTorch model for the given input,
+    along with a callback to handle the backward pass.
+    
+    <a id="change">convert_inputs</a> = <a id="change">model.get_attr("convert_inputs")</a> or _convert_inputs
+    convert_outputs = model.get_attr("convert_outputs") or _convert_outputs
+
+    Xtorch, get_dX = convert_inputs(model, X, is_train)</code></pre><h3>After Change</h3><pre><code class='java'>
+    Return the output of the wrapped PyTorch model for the given input,
+    along with a callback to handle the backward pass.
+    
+    <a id="change">convert_inputs</a> = <a id="change">model.get_attr("convert_inputs")</a>
+    convert_outputs = model.get_attr("convert_outputs")
+
+    Xtorch, get_dX = convert_inputs(model, X, is_train)
+    Ytorch, torch_backprop = model.shims[0](Xtorch, is_train)</code></pre>

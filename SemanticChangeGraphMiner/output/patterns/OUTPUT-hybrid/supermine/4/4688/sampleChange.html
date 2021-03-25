@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        targets = Variable(targets.type(Tensor), requires_grad=False)
+        optimizer.zero_grad()
+
+        loss = <a id="change">model(imgs, targets)</a>
+
+        loss.backward()
+        optimizer.step()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        targets = Variable(targets.type(Tensor), requires_grad=False)
+
+        loss = 0
+        <a id="change">for i in range(subdivisions):
+            optimizer.zero_grad()
+            sub_imgs = imgs[i*sub_batch: (i+1)*sub_batch]
+            sub_targets = targets[i*sub_batch: (i+1)*sub_batch]
+
+            loss += model(sub_imgs, sub_targets)
+
+       </a> loss.backward()
+        optimizer.step()
+
+    if epoch % opt.checkpoint_interval == 0:</code></pre>

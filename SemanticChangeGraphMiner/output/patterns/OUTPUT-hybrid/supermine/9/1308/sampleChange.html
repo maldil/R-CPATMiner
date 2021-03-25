@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        dH, dW = stride, stride
+        input_windows = img.unfold(1, kH, dH).unfold(2, kW, dW)
+
+        i_1, i_2, i_3, i_4, i_5 = <a id="change">input_windows.size(0)</a>, <a id="change">input_windows.size(1)</a>, <a id="change">input_windows.size(
+            2)</a>, input_windows.size(3), input_windows.size(4)
+
+        if with_indexes:
+            input_windows = input_windows.permute(1, 2, 0, 3, 4).contiguous().view(i_2 * i_3, i_1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        dH, dW = stride, stride
+        input_windows = img.unfold(1, kH, dH).unfold(2, kW, dW)
+
+        i_1, i_2, i_3, i_4, i_5 = <a id="change">input_windows.size()</a>
+
+        if with_indexes:
+            input_windows = input_windows.permute(1, 2, 0, 3, 4).contiguous().view(i_2 * i_3, i_1)
+            return input_windows, i_2, i_3, i_1</code></pre>

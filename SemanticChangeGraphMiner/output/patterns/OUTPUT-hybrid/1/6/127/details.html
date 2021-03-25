@@ -1,0 +1,19 @@
+<html><h3>cd48957b671f2799c19578f73025da50dd100de5,lib/model/rpn/rpn.py,_RPN,forward,#_RPN#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            fg_cnt = 0
+            self.rpn_loss_cls = 0
+            for i in range(batch_size):
+                <a id="change">rpn_keep</a> = <a id="change">rpn_label</a>[i].ne(-1).nonzero().squeeze()
+                rpn_keep_v = Variable(rpn_keep)
+                rpn_cls_score_single = torch.index_select(rpn_cls_score[i], 0, rpn_keep_v)
+                rpn_label_tmp = torch.index_select(rpn_label[i], 0, rpn_keep)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 self.rpn_loss_cls /= batch_size
+
+            <a id="change">rpn_keep</a> = Variable(<a id="change">rpn_label</a>.view(-1).ne(-1).nonzero().view(-1))
+            rpn_cls_score = torch.index_select(rpn_cls_score.view(-1,2), 0, rpn_keep)
+            rpn_label = torch.index_select(rpn_label.view(-1), 0, rpn_keep.data)
+            rpn_label = Variable(rpn_label.long())</code></pre><img src="956734.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jwyang/faster-rcnn.pytorch/commit/cd48957b671f2799c19578f73025da50dd100de5#diff-48fcee808ec027ba3e633fda9dd5568e04b5b72c88aed7d1d0fd398c1d456466L58' target='_blank'>Link</a></div><div id='project'> Project Name: jwyang/faster-rcnn.pytorch</div><div id='commit'> Commit Name: cd48957b671f2799c19578f73025da50dd100de5</div><div id='time'> Time: 2017-09-05</div><div id='author'> Author: jlu347@jarvis.cc.gatech.edu</div><div id='file'> File Name: lib/model/rpn/rpn.py</div><div id='class'> Class Name: _RPN</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/tyiannak/pyAudioAnalysis/commit/89226df0622975e169ebe2d2b831cf9e2902f0b6#diff-7641ac9576004c5bb3a4f35c1e0a58c2cd07e32efddf4596a6fdf926093a125cL120' target='_blank'>Link</a></div><div id='project'> Project Name: tyiannak/pyAudioAnalysis</div><div id='commit'> Commit Name: 89226df0622975e169ebe2d2b831cf9e2902f0b6</div><div id='time'> Time: 2019-11-19</div><div id='author'> Author: dsgou@hotmail.gr</div><div id='file'> File Name: pyAudioAnalysis/ShortTermFeatures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: spectral_rolloff</div><BR><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/705f18ad64ed33e5a19623c36417115233da92c7#diff-fc3a3622c61d3c41d8015a7ee0b2f835c8b0eb8cdc43044fd1b48c0ce5228a85L52' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: 705f18ad64ed33e5a19623c36417115233da92c7</div><div id='time'> Time: 2020-08-31</div><div id='author'> Author: tristandeleu@users.noreply.github.com</div><div id='file'> File Name: maml_rl/baseline.py</div><div id='class'> Class Name: LinearFeatureBaseline</div><div id='method'> Method Name: fit</div><BR>

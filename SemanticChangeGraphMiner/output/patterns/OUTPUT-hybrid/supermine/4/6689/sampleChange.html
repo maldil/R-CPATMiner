@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        pipe_in.stdout.close()
+                        pipe_out.terminate()
+                        pipe_in.terminate()
+                        <a id="change">del pipe_in</a>
+                        del pipe_out
+                        raise IOError(error)
+        pipe_out.stdin.close()
+        pipe_in.stdout.close()</code></pre><h3>After Change</h3><pre><code class='java'>
+                if len(raw_image) != nbytes:
+                    last = True
+                    X = X[:count]
+                    batch_shape = <a id="change">(count, height, width, 3)</a>
+                    <a id="change">img_placeholder = tf.placeholder(tf.float32, shape=batch_shape,
+                                                     name=&quotimg_placeholder&quot)</a>
+                    <a id="change">preds = transform.net(img_placeholder)</a>
+                    break
+
+                image = numpy.fromstring(raw_image, dtype=&quotuint8&quot)
+                image = image.reshape((height, width, 3))</code></pre>

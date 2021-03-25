@@ -1,0 +1,30 @@
+<html><h3>2767c948afa434f863df3b5eb1946a032dfba588,spotlight/sequence/representations.py,CNNNet,user_representation,#CNNNet#,324
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                     (dilation - 1))
+
+            x = F.pad(x, (0, 0, receptive_field_width - 1, 0))
+            x = <a id="change">F.tanh(cnn_layer(x))</a>
+
+        x = x.squeeze(3)
+
+        return x[:, :, :-1], x[:, :, -1]</code></pre><h3>After Change</h3><pre><code class='java'>
+                         (0, 0, 1, 0))
+        x = F.pad(sequence_embeddings,
+                  (0, 0, receptive_field_width, 0))
+        x = <a id="change">F.tanh(self.cnn_layers[0](x)) + residual</a>
+
+        for (cnn_layer, kernel_width, dilation) in zip(self.cnn_layers[1:],
+                                                       self.kernel_width[1:],
+                                                       self.dilation[1:]):
+            receptive_field_width = (kernel_width +
+                                     (kernel_width - 1) *
+                                     (dilation - 1))
+            residual = x
+            x = F.pad(x, (0, 0, receptive_field_width - 1, 0))
+            x = <a id="change">F.tanh(cnn_layer(x))</a> + residual
+
+        x = x.squeeze(3)
+</code></pre><img src="36795265.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/2767c948afa434f863df3b5eb1946a032dfba588#diff-f656be4a1ec4df1b52d8d646b5d94252e036bd7e153fda7fc9ef6416695dc7f9L343' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: 2767c948afa434f863df3b5eb1946a032dfba588</div><div id='time'> Time: 2017-07-13</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/sequence/representations.py</div><div id='class'> Class Name: CNNNet</div><div id='method'> Method Name: user_representation</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/14dff43845b836f7e94035ca42f967a484dfb8a3#diff-b00d750feaea09e6da2f92048a9d4be219d51a1864dd342c65b39c7c93798147L265' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 14dff43845b836f7e94035ca42f967a484dfb8a3</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/backends/ops.py</div><div id='class'> Class Name: Ops</div><div id='method'> Method Name: lstm</div><BR><BR><div id='link'><a href='https://github.com/sony/nnabla-examples/commit/93ddba439d54cda15f22ffd9ca52318cfba01475#diff-fd888aea1d9bb293278102cc4639f3380c219ad2ed9a2dbd792343590e991b2eL39' target='_blank'>Link</a></div><div id='project'> Project Name: sony/nnabla-examples</div><div id='commit'> Commit Name: 93ddba439d54cda15f22ffd9ca52318cfba01475</div><div id='time'> Time: 2019-05-14</div><div id='author'> Author: Akio.Hayakawa@sony.com</div><div id='file'> File Name: speech-synthesis/WaveNet/model.py</div><div id='class'> Class Name: waveNet</div><div id='method'> Method Name: residual_block</div><BR>

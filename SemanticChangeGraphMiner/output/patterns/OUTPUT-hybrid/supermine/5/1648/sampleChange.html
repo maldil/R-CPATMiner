@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                  hidden state.
+        :rtype: torch.Tensor
+        
+        return <a id="change">(
+            torch.matmul(h, self.weights.data, out=out)
+            .add_(self.visible_bias.data)
+            .sigmoid_()
+        )</a>
+
+    @auto_unsqueeze_arg(1)
+    def prob_h_given_v(self, v, out=None):
+        Given a visible unit configuration, compute the probability</code></pre><h3>After Change</h3><pre><code class='java'>
+                  hidden state.
+        :rtype: torch.Tensor
+        
+        return <a id="change">(
+            torch.matmul(h, self.weights.data, out=out)
+            .add_(self.visible_bias.data)
+            .sigmoid_()
+            .clamp_(min=0, max=1)
+        )</a>
+
+    @auto_unsqueeze_arg(1)
+    def prob_h_given_v(self, v, out=None):
+        Given a visible unit configuration, compute the probability</code></pre>

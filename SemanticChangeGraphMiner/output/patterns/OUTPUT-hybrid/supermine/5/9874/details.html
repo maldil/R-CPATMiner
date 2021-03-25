@@ -1,0 +1,23 @@
+<html><h3>5f078112011a66a93432cb6d38c03935a10f382e,tensorly/decomposition/candecomp_parafac.py,,non_negative_parafac,#,427
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if normalize_factors:
+                weights = tl.norm(factor, order=2, axis=0)
+                weights = tl.where(tl.abs(weights) &lt;= tl.eps(tensor.dtype), 
+                                   tl.ones(<a id="change">tl.shape(weights)</a>, **tl.context(factors[0])),
+                                   weights)
+                factor = factor/<a id="change">(tl.reshape(weights, (1, -1)))</a>
+
+            factors[mode] = factor
+
+        if tol:</code></pre><h3>After Change</h3><pre><code class='java'>
+            factors[mode] = factor
+
+        if normalize_factors:
+            <a id="change">weights, factors = kruskal_normalise((weights, factors))</a>
+
+        if tol:
+            &#47&#47 ||tensor - rec||^2 = ||tensor||^2 + ||rec||^2 - 2*&lt;tensor, rec&gt;
+            factors_norm = kruskal_norm((weights, factors))</code></pre><img src="37564821.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/5f078112011a66a93432cb6d38c03935a10f382e#diff-62ccdba6294fdae2d58d248d4af399f9c0fcd90f6fa3626059a71f2e728eb196L486' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: 5f078112011a66a93432cb6d38c03935a10f382e</div><div id='time'> Time: 2020-07-10</div><div id='author'> Author: git@ameyer.me</div><div id='file'> File Name: tensorly/decomposition/candecomp_parafac.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_negative_parafac</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/b9927f30cb9c92040c30d0fe8c735d8baea167b2#diff-d9d023afb253a6e42aecdf8460b7c8fb54104e41717b2703805d7b94457677a9L62' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: b9927f30cb9c92040c30d0fe8c735d8baea167b2</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gconvbn</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/f3d66c98e15a8d48ba1b546b53d74af6f1535ecf#diff-ba848d0dcee34e7643736fa7c9730c769b7991e8c00df9f340db24dd7e0ad236L227' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: f3d66c98e15a8d48ba1b546b53d74af6f1535ecf</div><div id='time'> Time: 2020-07-18</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Missions/Segments/Ground/Common.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: solve_residuals</div><BR>

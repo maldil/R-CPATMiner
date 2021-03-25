@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            var_bool = adata.raw.var.index.isin(var_names)
+            print(var_names, var_symbol)
+        else:
+            var_bool = <a id="change">adata.var.index.isin(var_names)</a>
+        matrix = X[:, var_bool]
+        from scipy.sparse import issparse
+        if issparse(matrix):
+            matrix = matrix.toarray()</code></pre><h3>After Change</h3><pre><code class='java'>
+        if use_raw:
+            var_idx = adata.raw.var_names.get_indexer(var_names)
+        else:
+            <a id="change">var_idx = adata.var_names.get_indexer(var_names)</a>
+
+        &#47&#47 for backed AnnData is important that the indices are ordered
+        <a id="change">var_order = np.argsort(var_idx)</a>
+        matrix = X[:, var_idx[var_order]]
+        from scipy.sparse import issparse
+
+        if issparse(matrix):
+            matrix = matrix.toarray()
+        df = df.join(
+            pd.DataFrame(
+                matrix, columns=<a id="change">np.array(var_symbol)[var_order]</a>, index=adata.obs.index
+            )
+        )
+</code></pre>

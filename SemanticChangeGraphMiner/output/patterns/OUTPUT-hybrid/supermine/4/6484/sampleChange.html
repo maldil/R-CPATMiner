@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if bi:
+        if nO is not None:
+            nO //= 2
+        model = <a id="change">with_padded(
+            clone(
+                bidirectional(recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout))),
+                depth
+            )
+        )</a>
+    else:
+        model = <a id="change">with_padded(clone(recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout)), depth))</a>
+    <a id="change">return cast(Model[Padded, Padded], model)</a>
+
+
+@registry.layers("PyTorchLSTM.v0")
+def PyTorchLSTM(</code></pre><h3>After Change</h3><pre><code class='java'>
+    model = recurrent(LSTM_step(nO=nO, nI=nI, dropout=dropout))
+    if bi:
+        model = bidirectional(model)
+    <a id="change">return clone(model, depth)</a>
+
+
+@registry.layers("PyTorchLSTM.v0")
+def PyTorchLSTM(</code></pre>

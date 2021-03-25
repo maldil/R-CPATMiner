@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            inputs = inputs[:, crop[0]:crop[2], crop[1]:crop[3], :]
+
+        &#47&#47 Classify
+        caffe_in = <a id="change">np.asarray([self.preprocess(self.inputs[0], in_)
+                    for in_ in inputs])</a>
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+
+        &#47&#47 For oversampling, average predictions across crops.</code></pre><h3>After Change</h3><pre><code class='java'>
+                     for N images and C classes.
+        
+        &#47&#47 Scale to standardize input dimensions.
+        input_ = np.zeros(<a id="change">(len(inputs),
+            self.image_dims[0], self.image_dims[1], inputs[0].shape[2])</a>,
+            dtype=np.float32)
+        for ix, in_ in enumerate(inputs):
+            input_[ix] = caffe.io.resize_image(in_, self.image_dims)</code></pre>

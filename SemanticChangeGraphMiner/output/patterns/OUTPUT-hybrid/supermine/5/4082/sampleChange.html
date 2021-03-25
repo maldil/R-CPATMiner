@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                      &quottemplates/gce_vms.py&quot)
+  dm_template_dict = {
+      &quotimports&quot: [{&quotpath&quot: path}],
+      &quotresources&quot: <a id="change">[{
+          &quottype&quot: path,
+          &quotname&quot: deployment_name,
+          &quotproperties&quot: {
+              &quotgce_instances&quot: gce_instances,
+              &quotfirewall_rules&quot: config.project.get(&quotgce_firewall_rules&quot, []),
+          }
+      }]</a>
+  }
+  utils.run_deployment(dm_template_dict, deployment_name, project_id,
+                       is_deployed(config.project))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                         deployed)
+  except subprocess.CalledProcessError:
+    &#47&#47 Only retry vm deployment for updates
+    <a id="change">if not deployed:
+      raise
+
+    &#47&#47 TODO: check error message for whether failure was specifically
+    &#47&#47 due to vm running
+   </a> <a id="change">logging.info((&quotPotential failure due to updating a running vm. &quot
+                  &quotRetrying with vm shutdown.&quot))</a>
+
+    vm_names_to_shutdown = [
+        info[&quotname&quot] for info in config.project.get(&quotgenerated_fields&quot, {}).get(
+            &quotgce_instance_info&quot, [])</code></pre>

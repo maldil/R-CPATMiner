@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 The first byte represent the coarse-label.
+        &#47&#47 Extract the second byte that&quots the fine-label and convert it from uint8-&gt;int32.
+        result["label"] = <a id="change">tf.cast(
+            tf.slice(record_bytes, [1], [label_bytes - 1]), tf.int32)</a>
+
+        &#47&#47 The remaining bytes after the label represent the image, which we reshape
+        &#47&#47 from [depth * height * width] to [depth, height, width].
+        depth_major = tf.reshape(
+            tf.slice(record_bytes, [label_bytes], [image_bytes]),
+            [result["depth"], result["height"], result["width"]])
+
+        &#47&#47 Convert from [depth, height, width] to [height, width, depth].
+        <a id="change">image</a> = tf.cast(tf.transpose(depth_major, [1, 2, 0]), tf.float32)
+
+        &#47&#47 Convert from [0, 255] -&gt; [0, 1]
+        image = tf.divide(image, 255.0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 The first byte represent the coarse-label.
+        &#47&#47 Extract the second byte that&quots the fine-label and convert it from uint8-&gt;int32.
+        result["label"] = tf.squeeze(
+            <a id="change">tf.cast(tf.slice(record_bytes, [1], [label_bytes - 1]), tf.int32)</a>)
+
+        &#47&#47 The remaining bytes after the label represent the image, which we reshape
+        &#47&#47 from [depth * height * width] to [depth, height, width].
+        depth_major = tf.reshape(
+            tf.slice(record_bytes, [label_bytes], [image_bytes]),
+            [result["depth"], result["height"], result["width"]])
+
+        &#47&#47 Convert from [depth, height, width] to [height, width, depth].
+        <a id="change">image</a> = tf.cast(tf.transpose(depth_major, [1, 2, 0]), tf.float32)
+
+        &#47&#47 Convert from [0, 255] -&gt; [0, 1]
+        image = tf.divide(image, 255.0)</code></pre>

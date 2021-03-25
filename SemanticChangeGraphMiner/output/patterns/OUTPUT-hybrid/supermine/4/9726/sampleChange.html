@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    ax.plot(sigmas, mus, label="Efficient frontier")
+
+    if show_assets:
+        <a id="change">ax.scatter(
+            np.sqrt(np.diag(cla.cov_matrix)),
+            cla.expected_returns,
+            s=30,
+            color="k",
+            label="assets",
+        )</a>
+
+    ax.scatter(optimal_risk, optimal_ret, marker="x", s=100, color="r", label="optimal")
+    ax.legend()
+    ax.set_xlabel("Volatility")</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if isinstance(opt, CLA):
+        ax = _plot_cla(opt, points, show_assets=show_assets)
+    elif <a id="change">isinstance</a>(opt, EfficientFrontier):
+        ax = _plot_ef(opt, ef_param, ef_param_range, show_assets=show_assets)
+    else:
+        raise NotImplementedError("Please pass EfficientFrontier or CLA object")</code></pre>

@@ -1,0 +1,25 @@
+<html><h3>10f95c7c122a9c48f10369adfaf5775e89912c7b,trunk/SUAVE/Methods/Propulsion/electric_motor_sizing.py,,optimize_kv,#,130
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bnds = [(lb,ub)]
+    
+    &#47&#47 constraints 
+    <a id="change">cons = ({&quottype&quot: &quotineq&quot, &quotfun&quot: lambda x: ((v-omeg/x[0])*(1.-etam*v*x[0]/omeg))/io - 0.001})</a> &#47&#47 Added a tolerance on resistance, cant be less than 0.001 ohms  
+    
+    &#47&#47 solve 
+    sol  = minimize(objective,(0.5), method = &quotSLSQP&quot,bounds = bnds, constraints = cons ) </code></pre><h3>After Change</h3><pre><code class='java'>
+    cons1 = [{&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_1,&quotargs&quot: args},
+            {&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_2,&quotargs&quot: args}]
+    
+    <a id="change">cons2 = [{&quottype&quot:&quoteq&quot, &quotfun&quot: constraint_2,&quotargs&quot: args}]</a> 
+    
+    bnds = ((0.001, 100), (0.001, 10))
+    sol = minimize(objective, [0.5, 0.1], args=(v , omeg,  etam , Q , io) , method=&quotSLSQP&quot, bounds=bnds, tol=1e-6, constraints=cons1) 
+    
+    if sol.success == False:
+        <a id="change">sol = minimize(objective, [0.5, 0.1], args=(v , omeg,  etam , Q , io) , method=&quotSLSQP&quot, bounds=bnds, tol=1e-6, constraints=cons2)</a>         
+    
+    return sol.x   
+  </code></pre><img src="7049650.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/10f95c7c122a9c48f10369adfaf5775e89912c7b#diff-41512b0cd9e893065f53dcbb14f712d09318f6c0d228e02123da87e26b781c40L145' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 10f95c7c122a9c48f10369adfaf5775e89912c7b</div><div id='time'> Time: 2020-09-01</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Propulsion/electric_motor_sizing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: optimize_kv</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/647c40d3314a0ca90eb4b3ad9ab7791215e49792#diff-41512b0cd9e893065f53dcbb14f712d09318f6c0d228e02123da87e26b781c40L145' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 647c40d3314a0ca90eb4b3ad9ab7791215e49792</div><div id='time'> Time: 2020-09-28</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Propulsion/electric_motor_sizing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: optimize_kv</div><BR><BR><div id='link'><a href='https://github.com/jnothman/UpSetPlot/commit/f2f419b89221602dc31c69de32df1cba281db481#diff-d3985b50d796cbea735e6d37167cda98c0ed3f1c4c0edde5e3af79a8867260eeL91' target='_blank'>Link</a></div><div id='project'> Project Name: jnothman/UpSetPlot</div><div id='commit'> Commit Name: f2f419b89221602dc31c69de32df1cba281db481</div><div id='time'> Time: 2019-05-30</div><div id='author'> Author: joel.nothman@gmail.com</div><div id='file'> File Name: upsetplot/tests/test_data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_from_contents</div><BR>

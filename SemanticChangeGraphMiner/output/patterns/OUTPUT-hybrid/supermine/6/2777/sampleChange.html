@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 at runtime. :)
+            &#47&#47
+            &#47&#47 If we need to rewrite it...
+            <a id="change">if not is_win:
+                &#47&#47 To permit string munging, decode the encoded bytes output by
+                &#47&#47 this command (i.e., enable the "universal_newlines" option).
+                &#47&#47 Note that:
+                &#47&#47
+                &#47&#47 On Fedora, the default loaders cache is /usr/lib64, but the
+                &#47&#47 libdir is actually /lib64. To get around this, we pass the
+                &#47&#47 path to the loader command, and it will create a cache with
+                &#47&#47 the right path.
+                cachedata = exec_command_stdout(gdk_pixbuf_query_loaders,
+                                                *loader_libs)
+
+                cd = []
+                prefix = &quot"&quot + os.path.join(libdir, &quotgdk-pixbuf-2.0&quot, &quot2.10.0&quot)
+                plen = len(prefix)
+
+                &#47&#47 For each line in the updated loader cache...
+                for line in cachedata.splitlines():
+                    if line.startswith(&quot&#47&#47&quot):
+                        continue
+                    if line.startswith(prefix):
+                        line = &quot"@executable_path/&quot + cachedest + line[plen:]
+                    cd.append(line)
+
+                cachedata = u&quot\n&quot.join(cd)
+
+                &#47&#47 Write the updated loader cache to this file.
+                with open_file(cachefile, &quotw&quot) as fp:
+                    fp.write(cachedata)
+            &#47&#47 Else, GdkPixbuf will do the right thing on Windows, so no changes
+            &#47&#47 to the loader cache are required. For efficiency and reliability,
+            &#47&#47 this command&quots encoded byte output is written as is without being
+            &#47&#47 decoded.
+            else:
+                with open_file(cachefile, &quotwb&quot) as fp:
+                    fp.write(subprocess.check_output(gdk_pixbuf_query_loaders))
+
+            &#47&#47 Bundle this loader cache with this frozen application.
+           </a> datas.append((cachefile, cachedest))
+        &#47&#47 Else, loader detection is unsupported on this platform.
+        else:
+            logger.warning(</code></pre><h3>After Change</h3><pre><code class='java'>
+            prefix = &quot"&quot + os.path.join(libdir, &quotgdk-pixbuf-2.0&quot, &quot2.10.0&quot)
+            plen = len(prefix)
+
+            win_prefix = &quot"&quot + &quot\\\\&quot.join(<a id="change">[&quotlib&quot, &quotgdk-pixbuf-2.0&quot, &quot2.10.0&quot]</a>)
+            <a id="change">win_plen = len(win_prefix)</a>
+
+            &#47&#47 For each line in the updated loader cache...
+            for line in cachedata.splitlines():
+                if line.startswith(&quot&#47&#47&quot):</code></pre>

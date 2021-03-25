@@ -1,0 +1,30 @@
+<html><h3>285dc85691241532cd976e04a089f409e44d7493,src/detection/tensor/detector.py,Detector,detect_multiple,#Detector#,40
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            answers = []
+            for image in image_array_list:
+                predictions = self.sess.run(softmax_tensor, <a id="change">{&quotDecodeJpeg:0&quot: image}</a>)
+                predictions = np.squeeze(predictions)
+                answer = <a id="change">{}</a>
+                <a id="change">for node_id in range(len(predictions)):
+                    answer[self.labels[node_id]] = predictions[node_id]
+               </a> answers.append(answer)
+            return answers
+
+    @staticmethod</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with tf.device("/gpu:0"):
+            softmax_tensor = self.sess.graph.get_tensor_by_name(&quotfinal_result:0&quot)
+            <a id="change">threads = [pool.apply_async(operation, args=(self.sess, softmax_tensor, image_array_list[i],)) for i in
+                       range(10)]</a>
+            results = []
+            <a id="change">for x in threads:
+                results.append(x.get())
+
+           </a> return results
+
+    @staticmethod
+    def _pil_to_tf(image):</code></pre><img src="591245.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/geometalab/OSMDeepOD/commit/285dc85691241532cd976e04a089f409e44d7493#diff-4659640477888188b13cd750fdad422ee222076e276edffc439f35faebe1f5d0L40' target='_blank'>Link</a></div><div id='project'> Project Name: geometalab/OSMDeepOD</div><div id='commit'> Commit Name: 285dc85691241532cd976e04a089f409e44d7493</div><div id='time'> Time: 2016-08-12</div><div id='author'> Author: samuel.kurath@gmail.com</div><div id='file'> File Name: src/detection/tensor/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect_multiple</div><BR><BR><div id='link'><a href='https://github.com/geometalab/OSMDeepOD/commit/285dc85691241532cd976e04a089f409e44d7493#diff-4659640477888188b13cd750fdad422ee222076e276edffc439f35faebe1f5d0L40' target='_blank'>Link</a></div><div id='project'> Project Name: geometalab/OSMDeepOD</div><div id='commit'> Commit Name: 285dc85691241532cd976e04a089f409e44d7493</div><div id='time'> Time: 2016-08-12</div><div id='author'> Author: samuel.kurath@gmail.com</div><div id='file'> File Name: src/detection/tensor/detector.py</div><div id='class'> Class Name: Detector</div><div id='method'> Method Name: detect_multiple</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/1a8e10d0a88e25aa8b3ca9d7ea31225439d348a7#diff-014d4d57aab87d8860f64e4c5af4902b345f64c9354cac90fcc13f33815b3d80L155' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 1a8e10d0a88e25aa8b3ca9d7ea31225439d348a7</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_para_to_group</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/d3fd161765b9c9652fab403bcc59fcbc8e40cfe9#diff-014d4d57aab87d8860f64e4c5af4902b345f64c9354cac90fcc13f33815b3d80L209' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: d3fd161765b9c9652fab403bcc59fcbc8e40cfe9</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/topword.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_group_to_group</div><BR>

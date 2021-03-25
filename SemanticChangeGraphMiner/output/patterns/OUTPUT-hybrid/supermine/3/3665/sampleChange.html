@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+               69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
+               87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101,
+               102, 103)
+    <a id="change">new_mol = Chem.RWMol(new_mol)</a>
+    for atom in new_mol.GetAtoms():
+        &#47&#47 HACK: termini oxygens get matched twice due to removal from templates
+        &#47&#47 Terminus treatment
+        if atom.GetPDBResidueInfo().GetName().strip() == &quotOXT&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if removeHs and atomicnum == 1:
+            removal_queue.append(aix)
+        &#47&#47 Remove waters
+        elif <a id="change">removeHOHs</a> and atomicnum in [1,8] and atom.GetPDBResidueInfo().GetResidueName() == &quotHOH&quot:
+            removal_queue.append(aix)
+        &#47&#47 Break bonds with metals
+        elif disconnect_metals and atomicnum in METALS:</code></pre>

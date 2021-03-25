@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ranker.train_order = all_train_order
+        &#47&#47 return the result of the computation
+        log_info(&quotTraining pass %d / %d / %d done.&quot % (pass_no, data_offset, data_len))
+        <a id="change">return pickle.dumps((ranker.get_weights(), ranker.get_diagnostics()), pickle.HIGHEST_PROTOCOL)</a>
+
+
+def run_worker(head_host, head_port, debug_out=None):
+    &#47&#47 setup debugging output, if applicable</code></pre><h3>After Change</h3><pre><code class='java'>
+        ranker = self.ranker_inst
+        tstart = time.time()
+        ranker.set_weights(pickle.loads(w))
+        log_info(<a id="change">&quotWeights loading: %f secs.&quot % (time.time() - tstart)</a>)
+        &#47&#47 save rest of the training data to temporary variables, set just the
+        &#47&#47 required portion for computation
+        all_train_das = ranker.train_das
+        ranker.train_das = ranker.train_das[data_offset:data_offset + data_len]
+        all_train_trees = ranker.train_trees
+        ranker.train_trees = ranker.train_trees[data_offset:data_offset + data_len]
+        all_train_feats = ranker.train_feats
+        ranker.train_feats = ranker.train_feats[data_offset:data_offset + data_len]
+        all_train_sents = ranker.train_sents
+        ranker.train_sents = ranker.train_sents[data_offset:data_offset + data_len]
+        all_train_order = ranker.train_order
+        ranker.train_order = range(len(ranker.train_trees))
+        if ranker.randomize:
+            rnd.seed(rnd_seed)
+            rnd.shuffle(ranker.train_order)
+        &#47&#47 do the actual computation (update w)
+        ranker._training_pass(pass_no)
+        &#47&#47 return the rest of the training data to member variables
+        ranker.train_das = all_train_das
+        ranker.train_trees = all_train_trees
+        ranker.train_feats = all_train_feats
+        ranker.train_sents = all_train_sents
+        ranker.train_order = all_train_order
+        &#47&#47 return the result of the computation
+        log_info(&quotTraining pass %d / %d / %d done.&quot % (pass_no, data_offset, data_len))
+        tstart = time.time()
+        dump = pickle.dumps((ranker.get_weights(), ranker.get_diagnostics()), pickle.HIGHEST_PROTOCOL)
+        log_info(<a id="change">&quotWeights saving: %f secs.&quot % (time.time() - tstart)</a>)
+        return dump
+
+</code></pre>

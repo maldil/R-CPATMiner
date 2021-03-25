@@ -1,0 +1,36 @@
+<html><h3>b0d50f3cccf54888ed59292f3213bea9b2f15dcf,spotlight/factorization/implicit.py,ImplicitFactorizationModel,fit,#ImplicitFactorizationModel#,110
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+         self._num_items) = (interactions.num_users,
+                             interactions.num_items)
+
+        <a id="change">self._net = gpu(
+            BilinearNet(self._num_users,
+                        self._num_items,
+                        self._embedding_dim,
+                        sparse=self._sparse),
+            self._use_cuda
+        )</a>
+
+        if self._optimizer is None:
+            <a id="change">self._optimizer = optim.Adam(
+                self._net.parameters(),
+                weight_decay=self._l2,
+                lr=self._learning_rate
+            )</a>
+        else:
+            self._optimizer = self._optimizer_func(self._net.parameters())
+
+        if self._loss == &quotpointwise&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        user_ids = interactions.user_ids.astype(np.int64)
+        item_ids = interactions.item_ids.astype(np.int64)
+
+        <a id="change">if not self._initialized:
+            self._initialize(interactions)
+
+       </a> self._check_input(user_ids, item_ids)
+
+        for epoch_num in range(self._n_iter):
+</code></pre><img src="1915836.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/b0d50f3cccf54888ed59292f3213bea9b2f15dcf#diff-dd1a4554bf56bdf8bb54e9a3d9c8898f86a08e67e9341b3fd61b2f4d54ca8b2aL110' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: b0d50f3cccf54888ed59292f3213bea9b2f15dcf</div><div id='time'> Time: 2017-07-31</div><div id='author'> Author: ethanrosenthal@gmail.com</div><div id='file'> File Name: spotlight/factorization/implicit.py</div><div id='class'> Class Name: ImplicitFactorizationModel</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/7a82079d10379287ba4e6e42e21b5b3ce8f541bc#diff-392cef7e9655e0bab0699bf9163817dea33789ce355eb2331632a38381263e31L100' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: 7a82079d10379287ba4e6e42e21b5b3ce8f541bc</div><div id='time'> Time: 2017-07-13</div><div id='author'> Author: maciej.kula@gmail.com</div><div id='file'> File Name: spotlight/sequence/implicit.py</div><div id='class'> Class Name: ImplicitSequenceModel</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/maciejkula/spotlight/commit/b0d50f3cccf54888ed59292f3213bea9b2f15dcf#diff-1d074553c8360eeb4748d829e86a653cdba4e5fda01ae13e8095bcf928f8d973L100' target='_blank'>Link</a></div><div id='project'> Project Name: maciejkula/spotlight</div><div id='commit'> Commit Name: b0d50f3cccf54888ed59292f3213bea9b2f15dcf</div><div id='time'> Time: 2017-07-31</div><div id='author'> Author: ethanrosenthal@gmail.com</div><div id='file'> File Name: spotlight/factorization/explicit.py</div><div id='class'> Class Name: ExplicitFactorizationModel</div><div id='method'> Method Name: fit</div><BR>

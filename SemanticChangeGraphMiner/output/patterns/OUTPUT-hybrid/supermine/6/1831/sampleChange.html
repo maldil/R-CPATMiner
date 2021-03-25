@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    tmp = []
+    num_visible = train_samples.shape[-1]
+    <a id="change">for i in range(train_samples.shape[0]):
+        flag = 0
+        for j in range(num_visible):
+            if train_bases[i][j] != "Z":
+                flag = 1
+                break
+        if flag == 0:
+            tmp.append(train_samples[i])
+   </a> z_samples = torch.zeros(len(tmp), num_visible, dtype=torch.double)
+    for i in range(len(tmp)):
+        for j in range(num_visible):
+            z_samples[i][j] = tmp[i][j]</code></pre><h3>After Change</h3><pre><code class='java'>
+    :returns: The samples in the data that are only in the reference basis.
+    :rtype: torch.Tensor
+    
+    <a id="change">idx = (
+        torch.tensor(train_bases == "Z", dtype=torch.uint8)
+        .all(dim=1)
+        .to(train_samples.device)
+    )</a>
+    z_samples = <a id="change">train_samples[idx]</a>
+    return z_samples
+</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        result_ref.append(last_gae + val)
+
+    adv_v = Variable(torch.FloatTensor(list(reversed(result_adv))))
+    <a id="change">ref_v</a> = Variable(<a id="change">torch.FloatTensor(list(reversed(result_ref)))</a>)
+    <a id="change">if cuda:
+        adv_v = adv_v.cuda()
+        ref_v = ref_v.cuda()
+   </a> return adv_v, ref_v
+
+
+if __name__ == "__main__":</code></pre><h3>After Change</h3><pre><code class='java'>
+        result_ref.append(last_gae + val)
+
+    adv_v = torch.FloatTensor(list(reversed(result_adv))).to(device)
+    <a id="change">ref_v</a> = <a id="change">torch</a>.FloatTensor(list(reversed(result_ref))).to(device)
+    return adv_v, ref_v
+
+</code></pre>

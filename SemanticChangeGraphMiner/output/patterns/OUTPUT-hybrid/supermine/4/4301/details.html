@@ -1,0 +1,72 @@
+<html><h3>410992318552115d2e3de84844bf523012e3e98e,thumt/utils/hooks.py,,_evaluate,#,133
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    with graph.as_default():
+        features = input_fn()
+        refs = features["references"]
+        <a id="change">placeholders = {
+            "source": tf.placeholder(tf.int32, [None, None], "source"),
+            "source_length": tf.placeholder(tf.int32, [None], "source_length")
+        }</a>
+        predictions = eval_fn(placeholders)
+        predictions = predictions[0][:, 0, :]
+
+        all_refs = [[] for _ in range(len(refs))]
+        all_outputs = []
+
+        sess_creator = tf.train.ChiefSessionCreator(
+            checkpoint_dir=path,
+            config=config
+        )
+
+        with tf.train.MonitoredSession(session_creator=sess_creator) as sess:
+            while not sess.should_stop():
+                feats = sess.run(features)
+                outputs = sess.run(predictions, feed_dict={
+                    placeholders["source"]: feats["source"],
+                    placeholders["source_length"]: feats["source_length"]
+                })
+                &#47&#47 shape: [batch, len]
+                outputs = <a id="change">outputs.tolist()</a>
+                &#47&#47 shape: ([batch, len], ..., [batch, len])
+                references = [item.tolist() for item in feats["references"]]
+
+                all_outputs.extend(outputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    with graph.as_default():
+        features = input_fn()
+        refs = features["references"]
+        placeholders = <a id="change">[]</a>
+        for i in range(len(device_list)):
+            placeholders.append({
+                "source": tf.placeholder(tf.int32, [None, None],
+                                         "source_%d" % i),
+                "source_length": tf.placeholder(tf.int32, [None],
+                                                "source_length_%d" % i)
+            })
+        predictions = parallel.data_parallelism(
+            device_list, eval_fn, placeholders)
+        predictions = [pred[0][:, 0, :] for pred in predictions]
+
+        all_refs = [[] for _ in range(len(refs))]
+        all_outputs = []
+
+        sess_creator = tf.train.ChiefSessionCreator(
+            checkpoint_dir=path,
+            config=config
+        )
+
+        with tf.train.MonitoredSession(session_creator=sess_creator) as sess:
+            while not sess.should_stop():
+                feats = sess.run(features)
+                inp_feats = {
+                    "source": feats["source"],
+                    "source_length": feats["source_length"]
+                }
+                <a id="change">op, feed_dict = _shard_features(inp_feats, placeholders,
+                                                predictions)</a>
+                &#47&#47 A list of numpy array with shape: [batch, len]
+                outputs = sess.run(op, feed_dict=feed_dict)
+
+                for shard in outputs:</code></pre><img src="18775550.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/THUNLP-MT/THUMT/commit/410992318552115d2e3de84844bf523012e3e98e#diff-cb60f0cf6c37bb3f911c8bbba2ac2784a894d963f0f26925463f38972caaf3e3L138' target='_blank'>Link</a></div><div id='project'> Project Name: THUNLP-MT/THUMT</div><div id='commit'> Commit Name: 410992318552115d2e3de84844bf523012e3e98e</div><div id='time'> Time: 2019-11-26</div><div id='author'> Author: cg847519328@163.com</div><div id='file'> File Name: thumt/utils/hooks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _evaluate</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b18e95863def3c4b60b248503e78c95e97675b38#diff-157f0c94d83b58806e298a82b763a427a61f5ebd583373109ac7a49596ec9225L52' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b18e95863def3c4b60b248503e78c95e97675b38</div><div id='time'> Time: 2016-08-18</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/tests/test_forest_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_tree_based_minimize</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14#diff-a1a14690bd4d0db68da6b27026209aa1ee45066f7ce9125d736e3b406d0059ceL10' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: 0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14</div><div id='time'> Time: 2019-11-20</div><div id='author'> Author: premy@cogent.co.jp</div><div id='file'> File Name: tasks/save_reload_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

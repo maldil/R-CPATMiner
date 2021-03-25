@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 use the container&quots mapper instead. 
+        
+        mapper = getattr(self.plot, self.axis + "_mapper")
+        <a id="change">if isinstance(mapper, GridMapper) \
+                and self.plot.container is not None:
+            return getattr(self.plot.container, self.axis + "_mapper")
+
+    &#47&#47------------------------------------------------------------------------
+    &#47&#47 Property getter/setters
+    &#47&#47------------------------------------------------------------------------
+        
+   </a> @cached_property
+    def _get_plot(self):
+        return self.component    
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        mapper = getattr(self.plot, self.axis + "_mapper")
+        
+        <a id="change">if isinstance(mapper, GridMapper):
+            if self.axis == &quotindex&quot:
+                return mapper._xmapper
+            else:
+                return mapper._ymapper
+        else:
+            return mapper
+
+    &#47&#47------------------------------------------------------------------------
+    &#47&#47 Property getter/setters
+    &#47&#47------------------------------------------------------------------------
+        
+   </a> @cached_property
+    def _get_plot(self):
+        return self.component    
+</code></pre>

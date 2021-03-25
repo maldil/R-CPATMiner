@@ -1,0 +1,98 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                    int(C), ldc)
+    cublasCheckStatus(status)
+
+<a id="change">cublasDgeam.__doc__ = _GEAM_doc.substitute(precision=&quotdouble precision&quot,
+                                           real=&quotreal&quot,
+                                           num_type=&quotnumpy.float64&quot,
+                                           alpha_data=&quotnp.float64(np.random.rand())&quot,
+                                           beta_data=&quotnp.float64(np.random.rand())&quot,
+                                           a_data_1=&quotnp.random.rand(2, 3).astype(np.float64)&quot,
+                                           b_data_1=&quotnp.random.rand(2, 3).astype(np.float64)&quot,
+                                           a_data_2=&quotnp.random.rand(2, 3).astype(np.float64)&quot,
+                                           b_data_2=&quotnp.random.rand(3, 2).astype(np.float64)&quot,
+                                           c_data_1=&quotalpha*a+beta*b&quot,
+                                           c_data_2=&quotalpha*a.T+beta*b&quot,
+                                           func=&quotcublasDgeam&quot)</a>
+
+if _cublas_version &gt;= 5000:
+    _libcublas.cublasCgeam.restype = int
+    _libcublas.cublasCgeam.argtypes = [_types.handle,</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47&#47&#47&#47&#47 BLAS-like extension routines &#47&#47&#47&#47&#47&#47
+
+&#47&#47 SGEAM, DGEAM, CGEAM, ZGEAM
+<a id="change">_GEAM_doc = Template(
+
+    Matrix-matrix addition/transposition (${precision} ${real}).
+
+    Computes the sum of two ${precision} ${real} scaled and possibly (conjugate)
+    transposed matrices.
+
+    Parameters
+    ----------
+    handle : int
+        CUBLAS context
+    transa, transb : char
+        &quott&quot if they are transposed, &quotc&quot if they are conjugate transposed,
+        &quotn&quot if otherwise.
+    m : int
+        Number of rows in `A` and `C`.
+    n : int
+        Number of columns in `B` and `C`.
+    alpha : ${num_type}
+        Constant by which to scale `A`.
+    A : ctypes.c_void_p
+        Pointer to first matrix operand (`A`).
+    lda : int
+        Leading dimension of `A`.
+    beta : ${num_type}
+        Constant by which to scale `B`.
+    B : ctypes.c_void_p
+        Pointer to second matrix operand (`B`).
+    ldb : int
+        Leading dimension of `A`.
+    C : ctypes.c_void_p
+        Pointer to result matrix (`C`).
+    ldc : int
+        Leading dimension of `C`.
+
+    Examples
+    --------
+    &gt;&gt;&gt; import pycuda.autoinit
+    &gt;&gt;&gt; import pycuda.gpuarray as gpuarray
+    &gt;&gt;&gt; import numpy as np
+    &gt;&gt;&gt; alpha = ${alpha_data}
+    &gt;&gt;&gt; beta = ${beta_data}
+    &gt;&gt;&gt; a = ${a_data_1}
+    &gt;&gt;&gt; b = ${b_data_1}
+    &gt;&gt;&gt; c = ${c_data_1}
+    &gt;&gt;&gt; a_gpu = gpuarray.to_gpu(a)
+    &gt;&gt;&gt; b_gpu = gpuarray.to_gpu(b)
+    &gt;&gt;&gt; c_gpu = gpuarray.empty(c.shape, c.dtype)
+    &gt;&gt;&gt; h = cublasCreate()
+    &gt;&gt;&gt; ${func}(h, &quotn&quot, &quotn&quot, c.shape[0], c.shape[1], alpha, a_gpu.gpudata, a.shape[0], beta, b_gpu.gpudata, b.shape[0], c_gpu.gpudata, c.shape[0])
+    &gt;&gt;&gt; np.allclose(c_gpu.get(), c)
+    True
+    &gt;&gt;&gt; a = ${a_data_2}
+    &gt;&gt;&gt; b = ${b_data_2}
+    &gt;&gt;&gt; c = ${c_data_2}
+    &gt;&gt;&gt; a_gpu = gpuarray.to_gpu(a.T.copy())
+    &gt;&gt;&gt; b_gpu = gpuarray.to_gpu(b.T.copy())
+    &gt;&gt;&gt; c_gpu = gpuarray.empty(c.T.shape, c.dtype)
+    &gt;&gt;&gt; transa = &quotc&quot if np.iscomplexobj(a) else &quott&quot
+    &gt;&gt;&gt; ${func}(h, transa, &quotn&quot, c.shape[0], c.shape[1], alpha, a_gpu.gpudata, a.shape[0], beta, b_gpu.gpudata, b.shape[0], c_gpu.gpudata, c.shape[0])
+    &gt;&gt;&gt; np.allclose(c_gpu.get().T, c)
+    True
+    &gt;&gt;&gt; cublasDestroy(h)
+
+    References
+    ----------
+    `cublas&lt;t&gt;geam &lt;http://docs.nvidia.com/cuda/cublas/&#47&#47cublas-lt-t-gt-geam&gt;`_
+)</a>
+
+if _cublas_version &gt;= 5000:
+    _libcublas.cublasSgeam.restype = int
+    _libcublas.cublasSgeam.argtypes = [_types.handle,</code></pre>

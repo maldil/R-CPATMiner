@@ -1,0 +1,81 @@
+<html><h3>aeb30f6e0bbf78b886312e8e6e21b82ecdf169e5,samples/dqn_tweaks_atari.py,,,#,62
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            tb.log_value("qvals_mean", batches_sum_q0 / batches_count, step=idx)
+            batches_count = 0
+            <a id="change">batches_sum_total_reward = </a>batches_sum_q0 = 0.0
+
+            tb.log_value("loss", np.mean(losses), step=idx)
+            tb.log_value("epsilon", action_selector.epsilon, step=idx)</code></pre><h3>After Change</h3><pre><code class='java'>
+    use_target_dqn = run.getboolean("dqn", "target_dqn", fallback=False)
+    use_double_dqn = run.getboolean("dqn", "double_dqn", fallback=False)
+
+    <a id="change">if not use_target_dqn and not use_double_dqn:
+        preprocessor = experience.QLearningPreprocessor.simple_dqn(model)
+    elif use_target_dqn:
+        preprocessor = experience.QLearningPreprocessor.target_dqn(model, target_net.target_model)
+    elif use_target_dqn and use_double_dqn:
+        preprocessor = experience.QLearningPreprocessor.double_dqn(model, target_net.target_model)
+    else:
+        raise RuntimeError("Wrong combination of target/double DQN parameters")
+
+    &#47&#47 running sums of batch values
+    &#47&#47 batches_count = 0
+    &#47&#47 batches_sum_q0 = 0.0
+    &#47&#47
+    &#47&#47 def batch_to_train(batch):
+    &#47&#47     
+    &#47&#47     Convert batch into training data using bellman&quots equation
+    &#47&#47     :param batch: list of tuples with Experience instances
+    &#47&#47     :return:
+    &#47&#47     
+    &#47&#47     v0_data = []
+    &#47&#47     vL_data = []
+    &#47&#47
+    &#47&#47     for exps in batch:
+    &#47&#47         v0_data.append(exps[0].state)
+    &#47&#47         vL_data.append(exps[-1].state)
+    &#47&#47
+    &#47&#47     states_t = torch.from_numpy(np.array(v0_data, dtype=np.float32))
+    &#47&#47     v0 = Variable(states_t)
+    &#47&#47     vL = Variable(torch.from_numpy(np.array(vL_data, dtype=np.float32)))
+    &#47&#47     if params.cuda_enabled:
+    &#47&#47         v0 = v0.cuda()
+    &#47&#47         vL = vL.cuda()
+    &#47&#47
+    &#47&#47     q0 = model(v0).data
+    &#47&#47
+    &#47&#47     global batches_count, batches_sum_q0
+    &#47&#47     batches_count += 1
+    &#47&#47     batches_sum_q0 += q0.mean()
+    &#47&#47
+    &#47&#47     if use_target_dqn and use_double_dqn:
+    &#47&#47         qL = model(vL)
+    &#47&#47         actions = qL.data.cpu().max(1)[1].squeeze().numpy()
+    &#47&#47         qL = target_model(vL).data.cpu().numpy()
+    &#47&#47         total_rewards = qL[range(qL.shape[0]), actions]
+    &#47&#47     &#47&#47 only target is in use: use best value from it
+    &#47&#47     elif use_target_dqn:
+    &#47&#47         q = target_model(vL)
+    &#47&#47         total_rewards = q.data.max(1)[0].squeeze().cpu().numpy()
+    &#47&#47     else:
+    &#47&#47         q = model(vL)
+    &#47&#47         total_rewards = q.data.max(1)[0].squeeze().cpu().numpy()
+    &#47&#47     for idx, exps in enumerate(batch):
+    &#47&#47         &#47&#47 game is done, no final reward
+    &#47&#47         if exps[-1].done:
+    &#47&#47             total_reward = 0.0
+    &#47&#47         else:
+    &#47&#47             total_reward = total_rewards[idx]
+    &#47&#47         for exp in reversed(exps[:-1]):
+    &#47&#47             total_reward = exp.reward + GAMMA * total_reward
+    &#47&#47         q0[idx][exps[0].action] = total_reward
+    &#47&#47     return states_t, q0
+
+   </a> reward_sma = utils.SMAQueue(run.getint("stop", "mean_games", fallback=100))
+    speed_mon = utils.SpeedMonitor(run.getint("learning", "batch_size"))
+
+    try:</code></pre><img src="28767638.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Shmuma/ptan/commit/aeb30f6e0bbf78b886312e8e6e21b82ecdf169e5#diff-eed50cc071db35132e28e738f6e4bcc79d6f5c79afd5d618cb6a367c8a2878eeL98' target='_blank'>Link</a></div><div id='project'> Project Name: Shmuma/ptan</div><div id='commit'> Commit Name: aeb30f6e0bbf78b886312e8e6e21b82ecdf169e5</div><div id='time'> Time: 2017-05-22</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: samples/dqn_tweaks_atari.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/arogozhnikov/einops/commit/680f4831e6c8f3102be8d99056b746b48ce34051#diff-25331d16adc33b1de8749c4aea6d39ff87c43b8cdea8ebe9afcd03a518a8f0b9L243' target='_blank'>Link</a></div><div id='project'> Project Name: arogozhnikov/einops</div><div id='commit'> Commit Name: 680f4831e6c8f3102be8d99056b746b48ce34051</div><div id='time'> Time: 2018-09-27</div><div id='author'> Author: iamfullofspam@gmail.com</div><div id='file'> File Name: einops.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: reduce</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/b37fdf43bd950c4872d8ea39975d98a1b5d75866#diff-a10f91b4f318450612d7015ec60d7752cc8ab176e48f7051a5a518021bcb6b6fL180' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: b37fdf43bd950c4872d8ea39975d98a1b5d75866</div><div id='time'> Time: 2019-03-02</div><div id='author'> Author: github@jan-schlueter.de</div><div id='file'> File Name: kymatio/scattering2d/backend/backend_torch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cdgmm</div><BR>

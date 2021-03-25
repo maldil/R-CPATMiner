@@ -1,0 +1,30 @@
+<html><h3>005968dcfbd2a8f70d8ea3957c8abba60a12492d,pliers/filters/video.py,FrameSamplingFilter,_filter,#FrameSamplingFilter#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                             key=lambda i: diffs[i],
+                             reverse=True)[:self.top_n]
+
+        <a id="change">frame_index = sorted(list(set(video.frame_index).intersection(new_idx)))</a>
+
+        return VideoFrameCollectionStim(filename=video.filename,
+                                        clip=video.clip,
+                                        frame_index=frame_index)</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(FrameSamplingFilter, self).__init__()
+
+    def _filter(self, video):
+        <a id="change">if not isinstance(video, VideoStim):
+            raise TypeError(&quotCurrently, frame sampling is only supported for &quot
+                            &quotcomplete VideoStim inputs.&quot)
+
+       </a> if self.every is not None:
+            new_idx = range(video.n_frames)[::self.every]
+        elif self.hertz is not None:
+            interval = video.fps / float(self.hertz)
+            new_idx = np.arange(0, video.n_frames, interval).astype(int)
+            <a id="change">new_idx = list(new_idx)</a>
+        elif self.top_n is not None:
+            import cv2
+            diffs = []
+            for i, img in enumerate(video.frames):</code></pre><img src="15120822.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/005968dcfbd2a8f70d8ea3957c8abba60a12492d#diff-cab8d93a5b65c74d870192defe3bf6647a9e5e3ec36e75836b7dbeba5bf44fabL40' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 005968dcfbd2a8f70d8ea3957c8abba60a12492d</div><div id='time'> Time: 2018-05-15</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/filters/video.py</div><div id='class'> Class Name: FrameSamplingFilter</div><div id='method'> Method Name: _filter</div><BR><BR><div id='link'><a href='https://github.com/sentinel-hub/eo-learn/commit/412dd41ebd8f3573ba5762a13f5e80d8244a1d89#diff-f7532a8b1f3bad6e878ae9b30853c6c714cd0647243cbbe831e657353070669eL849' target='_blank'>Link</a></div><div id='project'> Project Name: sentinel-hub/eo-learn</div><div id='commit'> Commit Name: 412dd41ebd8f3573ba5762a13f5e80d8244a1d89</div><div id='time'> Time: 2019-12-24</div><div id='author'> Author: jovan.visnjic@sinergise.com</div><div id='file'> File Name: core/eolearn/core/eodata.py</div><div id='class'> Class Name: EOPatch</div><div id='method'> Method Name: save_aws_new</div><BR><BR><div id='link'><a href='https://github.com/IDSIA/sacred/commit/17178a3849dea9c5b1f2b4d589c894a92c5d3726#diff-4ca3be3aa8777e2e93919cb910ebc78598f2748dd08ad6be23457ce9d1f17830L80' target='_blank'>Link</a></div><div id='project'> Project Name: IDSIA/sacred</div><div id='commit'> Commit Name: 17178a3849dea9c5b1f2b4d589c894a92c5d3726</div><div id='time'> Time: 2014-07-14</div><div id='author'> Author: klaus@idsia.ch</div><div id='file'> File Name: sacred/custom_containers.py</div><div id='class'> Class Name: DogmaticDict</div><div id='method'> Method Name: __init__</div><BR>

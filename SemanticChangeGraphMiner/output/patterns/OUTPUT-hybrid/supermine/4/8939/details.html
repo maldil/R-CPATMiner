@@ -1,0 +1,33 @@
+<html><h3>2c6ce0ebfa9537246878e8fb9144e0c879fca17d,cube/models/vocoder.py,BeeCoder,synthesize,#BeeCoder#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def synthesize(self, mgc, batch_size, sample=True, temperature=1.0):
+        synth = []
+        dy.renew_cg()
+        <a id="change">history = dy.inputVector([127 for x in range(self.HISTORY)])</a>
+        last_proc = 0
+        for mgc_index in range(len(mgc)):
+            curr_proc = int((mgc_index + 1) * 100 / len(mgc))
+            if curr_proc % 5 == 0 and curr_proc != last_proc:
+                while last_proc &lt; curr_proc:
+                    last_proc += 5
+                    sys.stdout.write(&quot &quot + str(last_proc))
+                    sys.stdout.flush()
+            <a id="change">pred_probs = self._predict_one(mgc[mgc_index], history, runtime=True)</a>
+            <a id="change">for output in pred_probs:
+                synth.append(self._pick_sample(output.npvalue(), temperature=temperature))
+
+           </a> hist = synth[-self.HISTORY:]
+            dy.renew_cg()
+            history = (dy.inputVector(hist) - 127.0) / 128.0
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            [output_real, output_imag] = self._predict_one(mgc[mgc_index], last_fft=last_fft, runtime=True)
+
+            last_fft = np.zeros(self.FFT_SIZE, dtype=np.complex)
+            out_real = <a id="change">output_real.value()</a>
+            out_imag = output_imag.value()
+            for ii in range(self.FFT_SIZE):
+                last_fft[ii] = np.complex(out_real[ii], out_imag[ii])
+                predicted[mgc_index, ii] = np.complex(out_real[ii], out_imag[ii])</code></pre><img src="34997462.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L52' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/e2239ff7bb6234e409bf3676acb45b74d8c34e9d#diff-0db256bea91c8e6097cec60d1f7b2ad617852d490b1cc882a6ba351fe32cf09bL206' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: e2239ff7bb6234e409bf3676acb45b74d8c34e9d</div><div id='time'> Time: 2017-10-16</div><div id='author'> Author: hunterhector@gmail.com</div><div id='file'> File Name: 15-vae/vae-lm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/f1ac81075ac88cf1fb9f701fc1ee78696edd078f#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L68' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: f1ac81075ac88cf1fb9f701fc1ee78696edd078f</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: boros@adobe.com</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR>

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return policy_net, value_net
+
+def save_model(policy_net, value_net, to_path):
+    <a id="change">if ac_rl.use_gpu:
+        policy_net.cpu(), value_net.cpu()
+    
+   </a> dirname = os.path.dirname(to_path)
+    if not(dirname):
+        os.makedirs(dirname)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    dirname = os.path.dirname(to_path)
+    if not(os.path.isdir(dirname)):
+        os.makedirs(dirname)
+    torch.save(<a id="change">acmodel.state_dict()</a>, to_path)</code></pre>

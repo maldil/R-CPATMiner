@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            examples=indices, batch_size=batch_size).get_request_iterator()
+        for req in req_itor:
+            data_pt = dataset.get_data(handle, req)
+            <a id="change">yield data_pt</a>
+        dataset.close(handle)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for req in req_itor:
+            data_pt = dataset.get_data(handle, req)
+            max_len = max(map(len, data_pt[0]))
+            spectra_li = <a id="change">[np.pad(
+                x, [(0, max_len - len(x)), (0, 0)],
+                mode=&quotconstant&quot) for x in data_pt[0]]</a>
+            spectra = np.stack(spectra_li)
+            spectra = np.reshape(
+                spectra, [
+                    hparams.BATCH_SIZE,</code></pre>

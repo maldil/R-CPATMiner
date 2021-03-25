@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    update_not_existing_kwargs(kwargs, pl.defaults.confidence_interval)
+    _, percs = helper_predict_with_model(self, Xgrid, plot_raw, apply_link, (lower, upper), which_data_ycols, **predict_kw)
+
+    <a id="change">return dict(gpconfidence=pl.fill_between(canvas, Xgrid, percs[0], percs[1], **kwargs))</a>
+
+    
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+                                                 (lower, upper), 
+                                                 ycols, predict_kw)
+    
+            <a id="change">fills = []</a>
+            for d in ycols:
+                fills.append(pl.fill_between(canvas, Xgrid[:,free_dims[0]], percs[0][:,d], percs[1][:,d], **kwargs))
+            <a id="change">return dict(gpconfidence=fills)</a>
+        else:
+            pass &#47&#47Nothing to plot!
+    else:
+        raise RuntimeError(&quotCan only plot confidence interval in one input dimension&quot)</code></pre>

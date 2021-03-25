@@ -1,0 +1,30 @@
+<html><h3>451b2f16acd7dcc8a38cddeff9383143184906fc,cirq/circuits/circuit_operation.py,CircuitOperation,repeat,#CircuitOperation#,207
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 As CircuitOperation is immutable, this can safely return the original.
+            return self
+        repetitions = int(repetitions)
+        <a id="change">if protocols.is_measurement(self.circuit):
+            raise NotImplementedError(&quotLoops over measurements are not supported.&quot)
+       </a> return self.replace(repetitions=self.repetitions * repetitions)
+
+    def __pow__(self, power: int) -&gt; &quotCircuitOperation&quot:
+        return self.repeat(power)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 The eventual number of repetitions of the returned CircuitOperation.
+        final_repetitions = self.repetitions * repetitions
+
+        <a id="change">if repetition_ids is None:
+            repetition_ids = default_repetition_ids(expected_repetition_id_length)
+        elif len(repetition_ids) != expected_repetition_id_length:
+            raise ValueError(
+                f&quotExpected repetition_ids={repetition_ids} length to be &quot
+                f&quot{expected_repetition_id_length}&quot
+            )
+
+        &#47&#47 If `self.repetition_ids` is None, this will just return `repetition_ids`.
+       </a> repetition_ids = cartesian_product_of_string_lists(repetition_ids, self.repetition_ids)
+
+        return self.replace(repetitions=final_repetitions, repetition_ids=repetition_ids)
+</code></pre><img src="1216274.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/quantumlib/Cirq/commit/451b2f16acd7dcc8a38cddeff9383143184906fc#diff-49aa0b3666b200620d5b38be19ffce1583cb48e6072772302426313a92aad514L208' target='_blank'>Link</a></div><div id='project'> Project Name: quantumlib/Cirq</div><div id='commit'> Commit Name: 451b2f16acd7dcc8a38cddeff9383143184906fc</div><div id='time'> Time: 2021-02-08</div><div id='author'> Author: smitsanghavi@users.noreply.github.com</div><div id='file'> File Name: cirq/circuits/circuit_operation.py</div><div id='class'> Class Name: CircuitOperation</div><div id='method'> Method Name: repeat</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/670b85c9e9cec05210e8596bc1fb9ca66787162f#diff-fea489154c629a45ec01030d191f20465e809124a24260ac35fb884bc855140fL345' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 670b85c9e9cec05210e8596bc1fb9ca66787162f</div><div id='time'> Time: 2020-04-19</div><div id='author'> Author: 50599110+lrjball@users.noreply.github.com</div><div id='file'> File Name: sklearn/compose/_column_transformer.py</div><div id='class'> Class Name: ColumnTransformer</div><div id='method'> Method Name: get_feature_names</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/b6396da5697e1bdfc7327d785cf3418cc4016d3b#diff-4ea30782af362bae656bfcb7d510bca770df668806a55999e61b0aaf7c845490L43' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: b6396da5697e1bdfc7327d785cf3418cc4016d3b</div><div id='time'> Time: 2016-02-22</div><div id='author'> Author: git@sweichwald.de</div><div id='file'> File Name: pymanopt/tools/autodiff/_autograd.py</div><div id='class'> Class Name: AutogradBackend</div><div id='method'> Method Name: compute_hessian</div><BR>

@@ -1,0 +1,27 @@
+<html><h3>25ca9c249fd3e11bb166b42ffeb2433036964bd1,brian2/codegen/generators/GSL_generator.py,GSLWeaveCodeGenerator,write_dataholder,#GSLWeaveCodeGenerator#,350
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return &quotconst double _gsl_{var}_f{ind}&quot.format(var=var, ind=ind)
+
+    def write_dataholder(self, var):
+        <a id="change">try:
+            var_obj = self.variables[var]
+        except:
+            var_obj = self.other_variables[var]
+       </a> <a id="change">dtype = self.generator.c_data_type(var_obj.dtype)</a>
+        if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj, access_data=True)
+            restrict = self.generator.restrict
+            if var_obj.scalar:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for var_obj in variables_in_vector:
+            if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+            <a id="change">code += [&quot\t&quot+self.write_dataholder_single(var_obj)]</a>
+        code += [&quot\n};&quot]
+        <a id="change">return (&quot\n&quot).join(code)</a>
+
+    def to_replace_vector_vars(self, variables_in_vector):
+        to_replace = {}
+        for var_obj in variables_in_vector:</code></pre><img src="14558094.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL349' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/enthought/chaco/commit/449fb9fcb6a6e9935e275a140ea3efb9c2e8de61#diff-c1d52170f944adbe10f2137002402c915af676fd93aa07840c57b08094fd90e9L99' target='_blank'>Link</a></div><div id='project'> Project Name: enthought/chaco</div><div id='commit'> Commit Name: 449fb9fcb6a6e9935e275a140ea3efb9c2e8de61</div><div id='time'> Time: 2013-05-16</div><div id='author'> Author: cwebster@enthought.com</div><div id='file'> File Name: chaco/array_plot_data.py</div><div id='class'> Class Name: ArrayPlotData</div><div id='method'> Method Name: set_data</div><BR><BR><div id='link'><a href='https://github.com/mil-tokyo/webdnn/commit/634c2049b8f95c45495811197346964e0826df2e#diff-d6f213bb49469c5e4ff2a4847a5e30d369b4874712006a0b9672f45e9acf2eb2L93' target='_blank'>Link</a></div><div id='project'> Project Name: mil-tokyo/webdnn</div><div id='commit'> Commit Name: 634c2049b8f95c45495811197346964e0826df2e</div><div id='time'> Time: 2018-11-18</div><div id='author'> Author: hidaka@mi.t.u-tokyo.ac.jp</div><div id='file'> File Name: src/graph_transpiler/webdnn/backend/interface/generator.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generate_descriptor</div><BR><BR><div id='link'><a href='https://github.com/alfredfrancis/ai-chatbot-framework/commit/d68beca6f553622b92f2709cf984023dbf284e98#diff-7451e3e880705ce7341e01a58d3961da701f5b7c469480c75d41495732649b1fL55' target='_blank'>Link</a></div><div id='project'> Project Name: alfredfrancis/ai-chatbot-framework</div><div id='commit'> Commit Name: d68beca6f553622b92f2709cf984023dbf284e98</div><div id='time'> Time: 2016-12-23</div><div id='author'> Author: alfred.francis@pearldatadirect.com</div><div id='file'> File Name: core/intentClassifier.py</div><div id='class'> Class Name: IntentClassifier</div><div id='method'> Method Name: predict</div><BR>

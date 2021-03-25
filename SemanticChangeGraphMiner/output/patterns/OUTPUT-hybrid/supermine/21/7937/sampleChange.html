@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    rval = scope.sklearn_SVC(
+        kernel=&quotpoly&quot,
+        C=<a id="change">hp.lognormal(
+            _name(&quotC&quot),
+            np.log(1.0),
+            np.log(4.0))</a> if C is None else C,
+        gamma=hp.lognormal(
+            _name(&quotgamma&quot),
+            np.log(1.0),
+            np.log(3.0)) if gamma is None else gamma,
+        coef0=hp.normal(
+            _name(&quotcoef0&quot),
+            0.0,
+            1.0) if coef0 is None else coef0,
+        degree=hp.quniform(
+            _name(&quotdegree&quot),
+            low=1.5,
+            high=6.5,
+            q=1) if degree is None else degree,
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=<a id="change">hp.lognormal(
+            _name(&quottol&quot),
+            np.log(1e-3),
+            np.log(10))</a> if tol is None else tol,
+        &#47&#47 -- this is basically only here to prevent
+        &#47&#47    an infinite loop in libsvm&quots solver.
+        &#47&#47    A more useful control mechanism might be a timer
+        &#47&#47    or a kill mesg to a sub-process or something...
+        max_iter=scope.patience_param(scope.int(
+            hp.qloguniform(
+                _name(&quotmax_iter&quot),
+                <a id="change">np.log(1000)</a>,
+                <a id="change">np.log(100000)</a>,
+                q=10,
+                ))) if max_iter is None else max_iter,
+        verbose=verbose,</code></pre><h3>After Change</h3><pre><code class='java'>
+            q=1) if degree is None else degree,
+        shrinking=hp_bool(
+            _name(&quotshrinking&quot)) if shrinking is None else shrinking,
+        tol=<a id="change">_svc_tol(name)</a> if tol is None else tol,
+        max_iter=_svc_max_iter(name) if max_iter is None else max_iter,
+        verbose=verbose,
+        cache_size=cache_size,</code></pre>

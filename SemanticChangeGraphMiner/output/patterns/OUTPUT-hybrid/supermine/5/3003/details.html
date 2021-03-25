@@ -1,0 +1,38 @@
+<html><h3>7c0c307a2a8fbdb9b0eb82c275ca8c977aae90f3,decensor.py,Decensor,decensor_all_images_in_folder,#Decensor#,42
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    &#47&#47since the original image might not be a png, test multiple file formats
+                    valid_formats = {".png", ".jpg", ".jpeg"}
+                    found_valid = False
+                    <a id="change">for valid_format in valid_formats:
+                        test_file_name = os.path.splitext(file_name)[0] + valid_format
+                        ori_file_path = os.path.join(ori_dir, test_file_name)
+                        if os.path.isfile(ori_file_path):
+                            found_valid = True
+                            ori_img = Image.open(ori_file_path)
+                            self.decensor_image(ori_img, colored_img, file_name)
+                            continue
+                   </a> if not found_valid:
+                        print("Corresponding original, uncolored image not found in {ori_file_path}. \nCheck if it exists and is in the PNG or JPG format.".format(ori_file_path = ori_file_path))
+                else:
+                    self.decensor_image(colored_img, colored_img, file_name)</code></pre><h3>After Change</h3><pre><code class='java'>
+                    ori_dir = self.args.decensor_input_original_path
+                    &#47&#47since the original image might not be a png, test multiple file formats
+                    valid_formats = {".png", ".jpg", ".jpeg"}
+                    <a id="change">for test_file_name in os.listdir(ori_dir):
+                        test_bn, test_ext = os.path.splitext(test_file_name)
+                        if (test_bn == color_bn) and (test_ext.casefold() in valid_formats):
+                            ori_file_path = os.path.join(ori_dir, test_file_name)
+                            found_valid = True
+                            ori_img = Image.open(ori_file_path)
+                            self.decensor_image(ori_img, colored_img, file_name)
+                            break
+                    else: &#47&#47for...else, i.e if the loop finished without encountering break
+                        print("Corresponding original, uncolored image not found in {}.".format(ori_file_path))
+                        print("Check if it exists and is in the PNG or JPG format.")
+               </a> else:
+                    self.decensor_image(colored_img, colored_img, file_name)
+        print("--------------------------------------------------------------------------")
+</code></pre><img src="13624396.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/deeppomf/DeepCreamPy/commit/7c0c307a2a8fbdb9b0eb82c275ca8c977aae90f3#diff-b993ef21760b88fe80f7ebfb596f360c609c726f7987598440a12c13caf8367aL50' target='_blank'>Link</a></div><div id='project'> Project Name: deeppomf/DeepCreamPy</div><div id='commit'> Commit Name: 7c0c307a2a8fbdb9b0eb82c275ca8c977aae90f3</div><div id='time'> Time: 2018-10-30</div><div id='author'> Author: harjit@harjit.moe</div><div id='file'> File Name: decensor.py</div><div id='class'> Class Name: Decensor</div><div id='method'> Method Name: decensor_all_images_in_folder</div><BR><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/bef7dd92cbdd2c81a7d89786b9a76b011f1bc086#diff-fc3a3622c61d3c41d8015a7ee0b2f835c8b0eb8cdc43044fd1b48c0ce5228a85L29' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: bef7dd92cbdd2c81a7d89786b9a76b011f1bc086</div><div id='time'> Time: 2018-06-19</div><div id='author'> Author: tristan.deleu@gmail.com</div><div id='file'> File Name: maml_rl/baseline.py</div><div id='class'> Class Name: LinearFeatureBaseline</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/aff9e3e323c620b2f9f16625fde60d831b47b596#diff-d16b46c32a1d25043b77993a65464fa47174595ea6e30c5db322bc61b46684e4L15' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: aff9e3e323c620b2f9f16625fde60d831b47b596</div><div id='time'> Time: 2016-10-02</div><div id='author'> Author: ryneeverett@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/templates/views.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: template_source</div><BR>

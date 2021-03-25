@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return x
+
+    def forward(self, h_t):
+        <a id="change">mu</a> = <a id="change">F.tanh(self.fc(h_t))</a>
+        <a id="change">l_t</a> = <a id="change">F.tanh(self.gaussian(mu))</a>
+
+        return mu, l_t
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return x
+
+    def forward(self, h_t):
+        <a id="change">mu</a> = <a id="change">F</a>.tanh(self.fc(h_t)).detach()
+        <a id="change">l_t</a> = <a id="change">F</a>.tanh(self.gaussian(mu)).detach()
+
+        return mu, l_t
+</code></pre>

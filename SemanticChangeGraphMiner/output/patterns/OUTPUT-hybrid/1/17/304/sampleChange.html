@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if args.dataset == &quotcifar10&quot:
+            dataset = datasets.CIFAR10
+
+        train_loader = <a id="change">torch.utils.data.DataLoader(
+            dataset(dataset_folder, train=True, download=True,
+                           transform=transforms.Compose([
+                               transforms.ToTensor()
+                           ])),
+            batch_size=args.batch_size, shuffle=True, **kwargs)</a>
+
+        test_loader = torch.utils.data.DataLoader(
+            dataset(dataset_folder, train=False, transform=transforms.Compose([
+                transforms.ToTensor()</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+        ])
+        if args.augment:
+            transform_train = transforms.Compose(<a id="change">[
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+            ]</a>)
+
+            transform_test = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+            ])
+        train_loader = <a id="change">torch.utils.data.DataLoader(
+            dataset(dataset_folder, train=True, download=True,
+                           transform=transform_train),
+            batch_size=args.batch_size, shuffle=True, **kwargs)</a>
+
+        test_loader = torch.utils.data.DataLoader(
+            dataset(dataset_folder, train=False, transform=transform_test),
+            batch_size=args.batch_size, shuffle=False, **kwargs)</code></pre>

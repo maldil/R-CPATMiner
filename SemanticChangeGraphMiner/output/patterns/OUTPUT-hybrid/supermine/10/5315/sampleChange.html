@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        a_pa = [self._pa[i](features) for i in range(self._n_output)]
+        a_pa = torch.stack(a_pa, dim=0)
+        mean_a_pa = a_pa.mean(0)
+        softmax = <a id="change">[F.softmax(a_pv + a_pa[i] - mean_a_pa, -1) for i in range(self._n_output)]</a>
+        softmax = <a id="change">torch.stack(softmax, dim=1)</a>
+
+        if not get_distribution:
+            q = torch.empty(softmax.shape[:-1])
+            for i in range(softmax.shape[0]):</code></pre><h3>After Change</h3><pre><code class='java'>
+        a_pa = torch.stack(a_pa, dim=1)
+        a_pv = a_pv.unsqueeze(1).repeat(1, self._n_output, 1)
+        mean_a_pa = a_pa.mean(1, keepdim=True).repeat(1, self._n_output, 1)
+        softmax = <a id="change">F.softmax(a_pv + a_pa - mean_a_pa, dim=-1)</a>
+
+        if not get_distribution:
+            q = torch.empty(softmax.shape[:-1])
+            for i in range(softmax.shape[0]):</code></pre>

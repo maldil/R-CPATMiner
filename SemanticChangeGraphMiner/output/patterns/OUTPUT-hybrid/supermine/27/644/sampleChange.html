@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    if z_gpu.dtype == np.complex64:
+        <a id="change">use_double = 0</a>
+    elif z_gpu.dtype == np.complex128:
+        <a id="change">use_double = 1</a>
+    else:
+        raise ValueError(&quotunsupported type&quot)
+   
+    &#47&#47 Get block/grid sizes; the number of threads per block is limited
+    &#47&#47 to 128 because the kernel defined above uses too many
+    &#47&#47 registers to be invoked more threads per block:
+    dev = misc.get_current_device()
+    max_threads_per_block = 128
+    block_dim, grid_dim = \
+               misc.select_block_grid_sizes(dev, z_gpu.shape, max_threads_per_block)
+
+    &#47&#47 Set this to False when debugging to make sure the compiled kernel is
+    &#47&#47 not cached:
+    <a id="change">cache_dir=None</a>
+    <a id="change">expi_mod = \
+             SourceModule(expi_template.substitute(use_double=use_double),
+                          cache_dir=cache_dir,
+                          options=["-I", install_headers])</a>
+    <a id="change">expi_func = expi_mod.get_function("expi_array")</a>
+
+    e_gpu = gpuarray.empty_like(z_gpu)
+    expi_func(z_gpu, e_gpu,
+              np.uint32(z_gpu.size),</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(&quotunsupported type&quot)
+    op = &quote[i] = expi(z[i])&quot
+   
+    <a id="change">try:
+        func = expi.cache[z_gpu.dtype]
+    except KeyError:
+        func = elementwise.ElementwiseKernel(args, op,
+                                 options=["-I", install_headers],
+                                 preamble=&quot&#47&#47include "cuSpecialFuncs.h"&quot)
+        expi.cache[z_gpu.dtype] = func
+
+   </a> e_gpu = gpuarray.empty_like(z_gpu)
+    func(z_gpu, e_gpu)
+
+    return e_gpu</code></pre>

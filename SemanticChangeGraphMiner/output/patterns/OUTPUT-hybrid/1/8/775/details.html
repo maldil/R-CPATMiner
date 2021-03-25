@@ -1,0 +1,46 @@
+<html><h3>51894da4d9c4c4186c1b4ce34b2cf53737f0dab5,rnaseq/src/run_SamToFastq.py,,,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+subprocess.check_call(&quotmkfifo /tmp/read1_pipe /tmp/read2_pipe /tmp/read0_pipe&quot, shell=True)
+
+&#47&#47 Set gzip streams
+<a id="change">subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; /tmp/read1_pipe &gt; &quot+fastq1+&quot &&quot, shell=True)</a>
+<a id="change">subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; /tmp/read2_pipe &gt; &quot+fastq2+&quot &&quot, shell=True)</a>
+subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; /tmp/read0_pipe &gt; &quot+fastq0+&quot &&quot, shell=True)
+
+&#47&#47 SamToFastq (write to pipes)
+subprocess.check_call(&quotjava -jar -Xmx8g /picard-tools/picard.jar SamToFastq INPUT=&quot+args.bam_file\</code></pre><h3>After Change</h3><pre><code class='java'>
+    os.makedirs(args.output_dir)
+
+&#47&#47 Make named pipes for gzip
+<a id="change">with cd(args.output_dir):
+    fastq1 = args.prefix+&quot_1.fastq.gz&quot
+    fastq2 = args.prefix+&quot_2.fastq.gz&quot
+    fastq0 = args.prefix+&quot_unpaired.fastq.gz&quot
+
+    subprocess.check_call(&quotmkfifo read1_pipe read2_pipe read0_pipe&quot, shell=True)
+
+    &#47&#47 Set gzip streams
+    subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; read1_pipe &gt; &quot+fastq1+&quot &&quot, shell=True)
+    subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; read2_pipe &gt; &quot+fastq2+&quot &&quot, shell=True)
+    subprocess.check_call(&quotgzip -&quot+args.gzip+&quot -c &lt; read0_pipe &gt; &quot+fastq0+&quot &&quot, shell=True)
+
+    &#47&#47 SamToFastq (write to pipes)
+    subprocess.check_call(&quotjava -jar -Xmx8g /opt/picard-tools/picard.jar SamToFastq INPUT=&quot+args.bam_file\
+        +&quot INCLUDE_NON_PF_READS=&quot+args.include_non_pf_reads\
+        +&quot INCLUDE_NON_PRIMARY_ALIGNMENTS=&quot+args.include_non_primary_alignments\
+        +&quot VALIDATION_STRINGENCY=SILENT FASTQ=read1_pipe SECOND_END_FASTQ=read2_pipe UNPAIRED_FASTQ=read0_pipe&quot, shell=True)
+
+    &#47&#47 Delete named pipes
+    subprocess.check_call(&quotrm read1_pipe read2_pipe read0_pipe&quot, shell=True)
+
+    &#47&#47 Delete unpaired reads FASTQ if empty
+    with open(fastq0, &quotrb&quot) as f0:
+        f0.seek(-4,2)
+        if struct.unpack(&quot&lt;I&quot, f0.read(4))[0]==0:  &#47&#47 empty file
+            os.remove(fastq0)
+
+</a>print(&quot[&quot+datetime.now().strftime("%b %d %H:%M:%S")+&quot] Finished SamToFastq&quot, flush=True)
+</code></pre><img src="3780953.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/broadinstitute/gtex-pipeline/commit/51894da4d9c4c4186c1b4ce34b2cf53737f0dab5#diff-70c1c69f4c10a1ca13f2b23bd6b36af810c07a57dde201aa27dba2edb90e0d97L10' target='_blank'>Link</a></div><div id='project'> Project Name: broadinstitute/gtex-pipeline</div><div id='commit'> Commit Name: 51894da4d9c4c4186c1b4ce34b2cf53737f0dab5</div><div id='time'> Time: 2016-09-22</div><div id='author'> Author: francois@broadinstitute.org</div><div id='file'> File Name: rnaseq/src/run_SamToFastq.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

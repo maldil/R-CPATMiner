@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    warnings.simplefilter("ignore")
+    
+    for i, e in enumerate(input_files):
+        <a id="change">print(&quotprocessing file %d/%d: %s&quot % (i+1, len(input_files), e))</a>
+        base, _ = os.path.splitext(os.path.basename(e))
+        seg2csv(seg(e), &quot%s/%s.csv&quot % (odir, base))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+input_files = []
+for e in args.input:
+    if e.startswith("http"):
+        <a id="change">input_files += [e]</a>
+    else:
+        input_files += glob.glob(e)
+assert len(input_files) &gt; 0, "No existing media selected for analysis! Bad values provided to -i ({})".format(args.input)
+
+odir = args.output_directory
+assert os.access(odir, os.W_OK), &quotDirectory %s is not writable!&quot % odir
+
+&#47&#47 Do processings
+from inaSpeechSegmenter import Segmenter, seg2csv, to_parse
+
+&#47&#47 load neural network into memory, may last few seconds
+seg = Segmenter()
+
+&#47&#47 case of a file of files
+files = to_parse(input_files)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    &#47&#47print(&quotprocessing file %d/%d: %s&quot % (i+1, len(input_files), e))
+    base = [os.path.splitext(os.path.basename(e)) <a id="change">for</a> e in files]
+    base = <a id="change">[base[i][0] for i in range(len(base))]</a>
+    if len(odir) &gt; 0:
+        fout = [&quot%s/%s.csv&quot % (odir, elem) <a id="change">for</a> elem in base]
+    seg2csv(seg(files), fout)
+
+</code></pre>

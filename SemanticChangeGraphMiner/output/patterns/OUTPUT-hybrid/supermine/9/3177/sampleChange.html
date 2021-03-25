@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot
+    if type(X) is np.recarray:
+        _check_ts(X[&quotts&quot])
+    elif <a id="change">type</a>(X) is list or type(X) is np.ndarray:
+        _check_ts(X)
+    else:
+        <a id="change">raise TypeError</a>
+
+def _check_ts(X):
+    Nvars = np.array([np.row_stack(X[i]).shape[1] for i in range(len(X))])
+    assert len(np.unique(Nvars)) == 1</code></pre><h3>After Change</h3><pre><code class='java'>
+    Xt, Xs = get_ts_data_parts(X)
+    if Xs is not None:
+        assert len(Xt) == len(Xs)
+    <a id="change">N_tvars = np.array([np.row_stack(Xt[i]).shape[1] for i in range(len(Xt))])</a>
+    assert len(np.unique(N_tvars)) == 1
+
+def ts_stats(Xt, y, fs = 1.0, class_labels = None):
+    &quot&quot&quot</code></pre>

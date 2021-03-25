@@ -1,0 +1,22 @@
+<html><h3>472796edf924009e92c6b6d53c40a168ac12cec6,utils.py,,non_max_suppression,#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
+        detections = torch.cat((image_pred[:, :5], class_conf.float(), class_pred.float()), 1)
+        &#47&#47 Iterate through all predicted classes
+        for c in <a id="change">detections[:, -1].unique()</a>:
+            &#47&#47 Get the detections with the particular class
+            detections_class = detections[detections[:, -1] == c]
+            &#47&#47 Sort the detections by maximum objectness confidence</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
+        detections = torch.cat((image_pred[:, :5], class_conf.float(), class_pred.float()), 1)
+        &#47&#47 Iterate through all predicted classes
+        <a id="change">unique_labels = detections[:, -1].cpu().unique()</a>
+        <a id="change">if prediction.is_cuda:
+            unique_labels = unique_labels.cuda()
+       </a> for c in unique_labels:
+            &#47&#47 Get the detections with the particular class
+            detections_class = detections[detections[:, -1] == c]
+            &#47&#47 Sort the detections by maximum objectness confidence</code></pre><img src="8611171.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/472796edf924009e92c6b6d53c40a168ac12cec6#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL73' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 472796edf924009e92c6b6d53c40a168ac12cec6</div><div id='time'> Time: 2018-05-27</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_max_suppression</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/1309ae7802aede445fa4bf943eee09422724e8e6#diff-d6576c7d3d2a4a19ab944a31ee219c8187f672ea13e85fe559f55cf0f15ba45fL66' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 1309ae7802aede445fa4bf943eee09422724e8e6</div><div id='time'> Time: 2016-03-08</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/evaluate/scoring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scoring</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/1ac01c049faee3044894bd3428ac6021b069d516#diff-d6576c7d3d2a4a19ab944a31ee219c8187f672ea13e85fe559f55cf0f15ba45fL66' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 1ac01c049faee3044894bd3428ac6021b069d516</div><div id='time'> Time: 2016-03-16</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/evaluate/scoring.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scoring</div><BR>

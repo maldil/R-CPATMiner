@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        np.reshape(waveform, [1, -1]), steps=1)[0], axis=0)
+      top_n_class_names = YAMNetTest._yamnet_classes[
+        np.argsort(prediction)[-top_n:]]
+      <a id="change">self.assertIn(expected_class_name, top_n_class_names)</a>
+
+  def testZeros(self):
+    self.clip_test(
+        waveform=np.zeros((1, int(3 * params.SAMPLE_RATE))),</code></pre><h3>After Change</h3><pre><code class='java'>
+  def clip_test(self, waveform, expected_class_name, top_n=10):
+    Run the model on the waveform, check that expected class is in top-n.
+    predictions, embeddings, log_mel_spectrogram = YAMNetTest._yamnet(waveform)
+    <a id="change">clip_predictions = np.mean(predictions, axis=0)</a>
+    top_n_indices = np.argsort(clip_predictions)[-top_n:]
+    top_n_scores = clip_predictions[top_n_indices]
+    top_n_class_names = YAMNetTest._yamnet_classes[top_n_indices]
+    top_n_predictions = list(zip(top_n_class_names, top_n_scores))</code></pre>

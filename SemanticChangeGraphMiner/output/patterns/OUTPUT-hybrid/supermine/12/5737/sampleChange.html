@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 pylint: disable=unexpected-keyword-arg
+        policy_opt_input_values = self._policy_opt_inputs._replace(
+            obs_var=samples_data[&quotobservations&quot],
+            action_var=<a id="change">samples_data[&quotactions&quot]</a>,
+            reward_var=samples_data[&quotrewards&quot],
+            valid_var=samples_data[&quotvalids&quot],
+            feat_diff=self._feat_diff,</code></pre><h3>After Change</h3><pre><code class='java'>
+            list(np.ndarray): Flatten policy optimization input values.
+
+        
+        <a id="change">agent_infos = episodes.padded_agent_infos</a>
+        policy_state_info_list = [
+            agent_infos[k] for k in self.policy.state_info_keys
+        ]
+
+        <a id="change">actions = [
+            self._env_spec.action_space.flatten_n(act)
+            for act in episodes.actions_list
+        ]</a>
+        <a id="change">padded_actions = episodes.pad_to_last(np.concatenate(actions))</a>
+
+        &#47&#47 pylint: disable=unexpected-keyword-arg
+        policy_opt_input_values = self._policy_opt_inputs._replace(
+            obs_var=<a id="change">episodes.padded_observations</a>,
+            action_var=padded_actions,
+            reward_var=<a id="change">episodes.padded_rewards</a>,
+            valid_var=episodes.valids,
+            feat_diff=self._feat_diff,
+            param_eta=self._param_eta,</code></pre>

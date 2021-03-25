@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        low_harmonic_mean = hmean([spearman_score[&quotlow&quot], pearson_score[&quotlow&quot]])
+        high_harmonic_mean = hmean([spearman_score[&quothigh&quot], pearson_score[&quothigh&quot]])
+
+    <a id="change">return pd.Series(
+        [acc_harmonic_mean, low_harmonic_mean, high_harmonic_mean],
+        index=[&quotacc&quot, &quotlow&quot, &quothigh&quot]
+    )</a>
+
+
+def evaluate_semeval_monolingual(vectors, lang):
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+    measure was 0 or negative. Otherwise, take a harmonic mean of a Pearson correlation coefficient
+    and a Spearman correlation coefficient.
+    
+    <a id="change">intervals = [&quotacc&quot, &quotlow&quot, &quothigh&quot]</a>
+    scores = []
+    for interval in intervals:
+        if any(np.isnan(x) for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(float(&quotNaN&quot))
+        elif any(x &lt;= 0 for x in [spearman_score[interval], pearson_score[interval]]):
+            scores.append(0)
+        else:
+            scores.append(hmean([spearman_score[interval], pearson_score[interval]]))
+
+    <a id="change">return pd.Series(
+        scores,
+        index=intervals
+    )</a>
+
+
+def evaluate_semeval_monolingual(vectors, lang):
+    </code></pre>

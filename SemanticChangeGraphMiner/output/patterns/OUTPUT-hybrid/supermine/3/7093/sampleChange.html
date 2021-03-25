@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_leaf_components_registers_compose_kernel_variable_properties(module_callable, expected_param_dicts):
+    module = module_callable()
+    for path, variable in leaf_components(module).items():
+        param_name = path.split(&quot.&quot)[-3] + &quot.&quot + <a id="change">path</a>.split(<a id="change">&quot.&quot</a>)[-2] + &quot.&quot + path.split(&quot.&quot)[-1]
+        assert isinstance(variable, gpflow.Parameter)
+        np.testing.assert_equal(variable.value().numpy(), expected_param_dicts[param_name][&quotvalue&quot])
+        assert variable.trainable == expected_param_dicts[param_name][&quottrainable&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_leaf_components_registers_compose_kernel_variable_properties(module_callable, expected_param_dicts):
+    module = module_callable()
+    leaf_components_dict = leaf_components(module)
+    <a id="change">assert len(leaf_components_dict) &gt; 0</a>
+    for path, variable in leaf_components_dict.items():
+        path_as_list = path.split(&quot.&quot)
+        param_name = path_as_list[-3] + &quot.&quot + path_as_list[-2] + &quot.&quot + path_as_list[-1]
+        assert isinstance(variable, gpflow.Parameter)</code></pre>

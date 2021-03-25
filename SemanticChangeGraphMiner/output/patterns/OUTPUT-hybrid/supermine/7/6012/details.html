@@ -1,0 +1,31 @@
+<html><h3>f3e7b16ce89d4e737e7608996df2bd241d594a58,se3cnn/blocks/gated_block.py,GatedBlock,forward,#GatedBlock#,96
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+        &#47&#47 convolution
+        <a id="change">z = self.conv(x)</a>
+
+        &#47&#47 gate
+        if self.scalar_act is not None or self.gate_act is not None:
+            z = torch.utils.checkpoint.checkpoint(gate, z) if self.checkpoint else gate(z)
+
+        &#47&#47 stride
+        <a id="change">if self.stride &gt; 1:
+            z = low_pass_filter(z, self.stride, self.stride)
+
+        &#47&#47 dropout
+       </a> if self.dropout is not None:
+            z = self.dropout(z)
+
+        return z</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if self.gate_act is not None:
+            g = y[:, size_out:]
+            <a id="change">assert g.size(1) == sum(self.repr_out[1:])</a>
+            g = self.gate_act(g)
+            begin_g = 0  &#47&#47 index of first scalar gate capsule
+
+        z = y.new_empty(batch, size_out, *size)</code></pre><img src="24801948.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/f3e7b16ce89d4e737e7608996df2bd241d594a58#diff-d05293b7c9aed2a225b26adbff49319c835ecf69fb3f9721a170bdf3ae6eb81aL39' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: f3e7b16ce89d4e737e7608996df2bd241d594a58</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/blocks/gated_block.py</div><div id='class'> Class Name: GatedBlock</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b649cc365040d9cd63631c763d1c485dfe981399#diff-5b86956216e2540fe93140c9ea516d9c8e0128b81b963bf585456505e871c98dL38' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b649cc365040d9cd63631c763d1c485dfe981399</div><div id='time'> Time: 2020-05-11</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: experiments/working_npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_turnball_intervals</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/ec35eaac297d1f59eba15a8eb4abba0dc9222fbe#diff-157f0c94d83b58806e298a82b763a427a61f5ebd583373109ac7a49596ec9225L45' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: ec35eaac297d1f59eba15a8eb4abba0dc9222fbe</div><div id='time'> Time: 2016-08-17</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: skopt/tests/test_forest_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_minimize</div><BR>

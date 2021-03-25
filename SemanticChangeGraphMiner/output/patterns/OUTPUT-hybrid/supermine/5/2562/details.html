@@ -1,0 +1,30 @@
+<html><h3>fb43d1f4a64b77f8b64134460b0c77cb5f79e185,t3f/autodiff.py,,hessian_vector_product,#,72
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    left = decompositions.orthogonalize_tt_cores(x)
+    right = decompositions.orthogonalize_tt_cores(left, left_to_right=False)
+    vector_projected = riemannian.project(vector, x)
+    deltas = <a id="change">[right.tt_cores[0]] + [tf.zeros_like(cc) for cc in right.tt_cores[1:]]</a>
+    x_projection = riemannian.deltas_to_tangent_space(deltas, x, left, right)
+    cores_grad = <a id="change">tf.gradients(func(x_projection), deltas)</a>
+    vec_deltas = riemannian.tangent_space_to_deltas(vector_projected)
+    products = [tf.reduce_sum(a * b) for a, b in zip(cores_grad, vec_deltas)]
+    grad_times_vec = tf.add_n(products)
+    second_cores_grad = tf.gradients(grad_times_vec, deltas)</code></pre><h3>After Change</h3><pre><code class='java'>
+  with tf.name_scope(name, values=all_cores):
+    left = decompositions.orthogonalize_tt_cores(x)
+    right = decompositions.orthogonalize_tt_cores(left, left_to_right=False)
+    <a id="change">deltas = [right.tt_cores[0]]</a>
+    deltas += [tf.zeros_like(cc) for cc in right.tt_cores[1:]]
+    x_projection = riemannian.deltas_to_tangent_space(deltas, x, left, right)
+    function_value = func(x_projection)
+    <a id="change">if debug:
+      assert_op = _is_invariant_to_input_transforms(function_value, func(right))
+    else:
+      assert_op = None
+   </a> with tf.control_dependencies([assert_op]):
+      vector_projected = riemannian.project(vector, x)
+    cores_grad = tf.gradients(function_value, deltas)
+    vec_deltas = riemannian.tangent_space_to_deltas(vector_projected)</code></pre><img src="11532090.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Bihaqo/t3f/commit/fb43d1f4a64b77f8b64134460b0c77cb5f79e185#diff-d6d1275d9d6d622ca4bb4f761e2b5f9cb0abe47c35a6eaeda5a88a8431ea8b87L115' target='_blank'>Link</a></div><div id='project'> Project Name: Bihaqo/t3f</div><div id='commit'> Commit Name: fb43d1f4a64b77f8b64134460b0c77cb5f79e185</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: sasha.v.novikov@gmail.com</div><div id='file'> File Name: t3f/autodiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: hessian_vector_product</div><BR><BR><div id='link'><a href='https://github.com/Bihaqo/t3f/commit/fb43d1f4a64b77f8b64134460b0c77cb5f79e185#diff-d6d1275d9d6d622ca4bb4f761e2b5f9cb0abe47c35a6eaeda5a88a8431ea8b87L65' target='_blank'>Link</a></div><div id='project'> Project Name: Bihaqo/t3f</div><div id='commit'> Commit Name: fb43d1f4a64b77f8b64134460b0c77cb5f79e185</div><div id='time'> Time: 2018-10-31</div><div id='author'> Author: sasha.v.novikov@gmail.com</div><div id='file'> File Name: t3f/autodiff.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gradients</div><BR><BR><div id='link'><a href='https://github.com/chris-chris/pysc2-examples/commit/48d178cfbb60e5b0004f63b2eca37b2449bb6c67#diff-b23290c5a5b8fd8a0e0b906a3bffc5ff6930e5dff2799638f9170c94d742e120L26' target='_blank'>Link</a></div><div id='project'> Project Name: chris-chris/pysc2-examples</div><div id='commit'> Commit Name: 48d178cfbb60e5b0004f63b2eca37b2449bb6c67</div><div id='time'> Time: 2017-10-31</div><div id='author'> Author: sjhshy@gmail.com</div><div id='file'> File Name: a2c/a2c.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: __init__</div><BR>

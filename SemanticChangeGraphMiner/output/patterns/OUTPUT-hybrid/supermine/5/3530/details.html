@@ -1,0 +1,32 @@
+<html><h3>0a7bbb0f733a33a072aa1327dc4699d317d4ce56,trunk/SUAVE/Optimization/Nexus.py,Nexus,finite_difference,#Nexus#,156
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        grad_obj = (grad_obj - obj)/(1e-8)
+        
+        for ii in xrange(0,conlen):
+            <a id="change">jac_con[ii,:]  = (jac_con[ii,:]  - con[ii])/(1e-6)</a>
+            
+        
+        return grad_obj.astype(float), jac_con.astype(float)
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        grad_obj = np.zeros(inplen)
+        jac_con  = np.zeros((inplen,conlen))
+        
+        con2 = (con*<a id="change">np.ones_like(jac_con)</a>)
+        
+        for ii in xrange(0,inplen):
+            newx     = x*1.0
+            newx[ii] = newx[ii]+ 1e-8
+            
+            grad_obj[ii]  = self.objective(newx)
+            jac_con[ii,:] = self.all_constraints(newx)
+        
+        grad_obj = (grad_obj - obj)/(1e-8)
+        
+        <a id="change">jac_con = (jac_con - con2).T/(1e-8)</a>
+        
+        grad_obj = grad_obj.astype(float)
+        jac_con  = jac_con.astype(float)
+        </code></pre><img src="15498924.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/0a7bbb0f733a33a072aa1327dc4699d317d4ce56#diff-e430e1a11a526cc036c7b56cb23f373a279d805dd95e540859ad0bcf3df32275L159' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 0a7bbb0f733a33a072aa1327dc4699d317d4ce56</div><div id='time'> Time: 2015-09-21</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Optimization/Nexus.py</div><div id='class'> Class Name: Nexus</div><div id='method'> Method Name: finite_difference</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/9b994a2c4d364804ea5311e5e0ae3a80d12f4711#diff-07fb6005eff0b5976ffca638d033099a1b7d02a66ffcb0968266bb27a0fab835L213' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 9b994a2c4d364804ea5311e5e0ae3a80d12f4711</div><div id='time'> Time: 2019-04-08</div><div id='author'> Author: timdmacdo@gmail.com</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Drag/parasite_drag_wing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: compute_parasite_drag</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/4026d5fded446bd0f0c7397c92d59af27576f565#diff-de15def2127058486575a90d44e0d20c8eb2869ddedc985719c70ebc571a0b3eL197' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 4026d5fded446bd0f0c7397c92d59af27576f565</div><div id='time'> Time: 2017-12-12</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Components/Energy/Converters/Combustor.py</div><div id='class'> Class Name: Combustor</div><div id='method'> Method Name: compute_rayleigh</div><BR>

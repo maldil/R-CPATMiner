@@ -1,0 +1,32 @@
+<html><h3>e3a249cd2de8b2518470021db0f579e26cafbfba,aif360/sklearn/inprocessing/adversarial_debiasing.py,AdversarialDebiasing,decision_function,#AdversarialDebiasing#,185
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n_samples = X.shape[0]
+        groups, _ = check_groups(X, self.prot_attr_)
+        le = LabelEncoder().fit(self.groups_)
+        <a id="change">groups = le.transform(groups)</a>
+
+        samples_covered = 0
+        scores = np.empty((n_samples, len(self.classes_)))
+        while samples_covered &lt; n_samples:
+            start = samples_covered
+            end = samples_covered + self.batch_size
+            if end &gt; n_samples:
+                end = n_samples
+
+            batch_ids = np.arange(start, end)
+            batch_features = X[batch_ids]
+            batch_prot_attr = <a id="change">groups[batch_ids]</a>
+
+            batch_feed_dict = {self.input_ph: batch_features,
+                               self.keep_prob: 1.0}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                              feed_dict=batch_feed_dict)
+            samples_covered += len(batch_features)
+
+        return <a id="change">scores.ravel()</a> if scores.shape[1] == 1 else scores
+
+    def predict_proba(self, X):
+        decision = self.decision_function(X)</code></pre><img src="17595180.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/e3a249cd2de8b2518470021db0f579e26cafbfba#diff-cb0e7994f57b06a68c1e8cdf4ececa2089e279700573e6ce98017d9e166f1e91L185' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: e3a249cd2de8b2518470021db0f579e26cafbfba</div><div id='time'> Time: 2020-02-19</div><div id='author'> Author: hoffman.sc@gmail.com</div><div id='file'> File Name: aif360/sklearn/inprocessing/adversarial_debiasing.py</div><div id='class'> Class Name: AdversarialDebiasing</div><div id='method'> Method Name: decision_function</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/09bfc1b3ef8494cf17a192bbe83df576ccdac86f#diff-3ad0d8aa15df7281b3485f9a5f7686ed51de4c49bda38a1f910a790489b0ccaaL44' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 09bfc1b3ef8494cf17a192bbe83df576ccdac86f</div><div id='time'> Time: 2016-06-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/test_predict.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_predict_classification</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-e1a27676784cf7aa41a4ac9f06c18f2f6df9a8b30ab752f3871ffc000fe7072aL46' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/featurize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: featurize_single_ts</div><BR><BR><div id='link'><a href='https://github.com/lmcinnes/pynndescent/commit/c1c31db36facdf8d557f4dcc69866ac86814b83f#diff-db9824f558d2d2dff121f6cf56c63a5d019a6bb2e7388f2f0089e1b2d77d50e9L900' target='_blank'>Link</a></div><div id='project'> Project Name: lmcinnes/pynndescent</div><div id='commit'> Commit Name: c1c31db36facdf8d557f4dcc69866ac86814b83f</div><div id='time'> Time: 2020-09-01</div><div id='author'> Author: leland.mcinnes@gmail.com</div><div id='file'> File Name: pynndescent/pynndescent_.py</div><div id='class'> Class Name: NNDescent</div><div id='method'> Method Name: _init_search_graph</div><BR><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR>

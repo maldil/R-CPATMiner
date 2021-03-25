@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        preds = model.predict(feature_df)
+
+    if len(preds.shape) == 1:
+        return <a id="change">pd.Series(preds, index=feature_df.index, name=&quotprediction&quot)</a>
+    else:
+        if isinstance(model, GridSearchCV):
+            columns = model.best_estimator_.classes_
+        else:
+            columns = model.classes_
+        return <a id="change">pd.DataFrame(preds, index=feature_df.index, columns=columns)</a>
+
+
+def predict_data_files(ts_paths, features_to_use, model,
+                       custom_features_script=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            columns = model.classes_
+        predset[&quotclass_label&quot] = columns
+        predset[&quotprediction&quot] = (<a id="change">[&quotname&quot, &quotclass_label&quot]</a>, preds)
+    return predset
+
+</code></pre>

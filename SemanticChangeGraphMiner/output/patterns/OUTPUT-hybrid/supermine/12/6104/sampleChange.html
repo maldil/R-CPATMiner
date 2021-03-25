@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return pybind11.get_include(self.user)
+
+
+ext_modules = <a id="change">[
+    Extension(
+        &quotbrainiak.factoranalysis.tfa_extension&quot,
+        [&quotbrainiak/factoranalysis/tfa_extension.cpp&quot],
+        include_dirs=[
+            &#47&#47 Path to pybind11 headers
+            get_pybind_include(),
+            get_pybind_include(user=True)
+        ],
+    ),
+]</a>
+
+
+&#47&#47 As of Python 3.6, CCompiler has a `has_flag` method.
+&#47&#47 cf http://bugs.python.org/issue26689</code></pre><h3>After Change</h3><pre><code class='java'>
+        import pybind11
+        return pybind11.get_include(self.user).startswith(x)
+
+ext_modules = <a id="change">[
+    Extension(
+        &quotbrainiak.factoranalysis.tfa_extension&quot,
+        [&quotbrainiak/factoranalysis/tfa_extension.cpp&quot],
+        include_dirs=[
+            &#47&#47 Path to pybind11 headers
+            get_pybind_include(),
+            get_pybind_include(user=True)
+        ],
+    ),
+    Extension(
+        &quotbrainiak.fcma.fcma_extension&quot,
+        [&quotbrainiak/fcma/src/fcma_extension.cc&quot],
+        include_dirs=[
+            &#47&#47 Path to pybind11 headers
+            get_pybind_include(),
+            get_pybind_include(user=True)
+        ],
+    ),
+    Extension(
+        &quotbrainiak.fcma.cython_blas&quot,
+        [&quotbrainiak/fcma/cython_blas.pyx&quot],
+    ),
+]</a>
+
+
+&#47&#47 As of Python 3.6, CCompiler has a `has_flag` method.
+&#47&#47 cf http://bugs.python.org/issue26689</code></pre>

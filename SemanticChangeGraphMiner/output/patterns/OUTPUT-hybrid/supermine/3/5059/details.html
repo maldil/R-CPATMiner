@@ -1,0 +1,22 @@
+<html><h3>99abcc6e9b57f441999ce10dbc31ca1bed79c356,ch15/04_train_ppo.py,,,#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                surr_obj_v = adv_v * torch.exp(logprob_pi_v - logprob_old_pi_v)
+                clipped_surr_v = torch.clamp(surr_obj_v, 1.0 - PPO_EPS, 1.0 + PPO_EPS)
+                loss_policy_v = -torch.min(surr_obj_v, clipped_surr_v).mean()
+                entropy_loss_v = ENTROPY_BETA * (-(<a id="change">torch.log(2*math.pi*var_v)</a> + 1)/2).mean()
+
+                loss_v = <a id="change">loss_policy_v</a> + entropy_loss_v + loss_value_v
+                loss_v.backward()
+                optimizer.step()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        net_act.cuda()
+        net_crt.cuda()
+    print(net_act)
+    <a id="change">print(net_crt)</a>
+
+    writer = SummaryWriter(comment="-ppo_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=args.cuda)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)</code></pre><img src="21959309.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/99abcc6e9b57f441999ce10dbc31ca1bed79c356#diff-873b69a7f89c68ea9c0d52d89625377325892ce836ebab6a614f27a0a3a9021fL65' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 99abcc6e9b57f441999ce10dbc31ca1bed79c356</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/04_train_ppo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/hunkim/PyTorchZeroToAll/commit/e6acec63de2d3e6dff20422e8b07837d33a7e670#diff-cd0ac7a7cf497b89f85140738bddbc2aed9d662b0b9045fd442f47c3bf6d8623L15' target='_blank'>Link</a></div><div id='project'> Project Name: hunkim/PyTorchZeroToAll</div><div id='commit'> Commit Name: e6acec63de2d3e6dff20422e8b07837d33a7e670</div><div id='time'> Time: 2019-06-21</div><div id='author'> Author: hameedabdulrashid@gmail.com</div><div id='file'> File Name: 09_01_softmax_loss.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/4296a765125fff6491892a1bb70fb32ac516dae6#diff-6121a23c8673ba40b82f4d680f1af65e316feb8d0c88e68ecf77cfc1129d5d3fL64' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 4296a765125fff6491892a1bb70fb32ac516dae6</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/01_train_a2c.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/jostmey/rwa/commit/66de7491bd7e16a072e2d1302df1f88c277dae2e#diff-27e421b87f69b4c02403a4485730123bcdcab610493aba32ffafc40b53c2e5b8L34' target='_blank'>Link</a></div><div id='project'> Project Name: jostmey/rwa</div><div id='commit'> Commit Name: 66de7491bd7e16a072e2d1302df1f88c277dae2e</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: jostmey@gmail.com</div><div id='file'> File Name: adding_problem_100/rwa_model/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

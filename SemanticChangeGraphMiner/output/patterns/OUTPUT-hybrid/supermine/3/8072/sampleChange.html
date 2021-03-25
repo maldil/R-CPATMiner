@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        new_X = self.discretizer(X, self._filter_continuous_features(X, for_discretization_clmns)) \
+        if self.__discretize is True else X
+
+        <a id="change">data = new_X.assign(label=y_true)</a>
+        data_as_r_frame = self.__r_frame(self.__s_apply(data, self.__as_factor))
+        self.__model = self.__r_sbrl.sbrl(data_as_r_frame, **self.model_params)
+        return self.__model
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        data = self.discretizer(X, self._filter_continuous_features(X, for_discretization_clmns)) \
+        if self.__discretize is True else X
+
+        <a id="change">data.assign(label=y_true)</a>
+        data_as_r_frame = self.__r_frame(self.__s_apply(data, self.__as_factor))
+        self.__model = self.__r_sbrl.sbrl(data_as_r_frame, **self.model_params)
+        return self.__model
+</code></pre>

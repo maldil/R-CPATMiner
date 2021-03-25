@@ -1,0 +1,23 @@
+<html><h3>f388923837f92a9de81b97898eadde495353331b,astroML/density_estimation/gauss_mixture.py,GaussianMixture1D,__init__,#GaussianMixture1D#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        weight of component distributions (default = 1)
+    
+    def __init__(self, means=0, sigmas=1, weights=1):
+        components = <a id="change">len(means)</a>
+        self._gmm = GaussianMixture(components, covariance_type=&quotspherical&quot)
+
+        self._gmm.weights_ = weights / weights.sum()
+        self._gmm.means_ = means.reshape(-1, 1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        weight of component distributions (default = 1)
+    
+    def __init__(self, means=0, sigmas=1, weights=1):
+        data = <a id="change">np.array([t for t in np.broadcast(means, sigmas, weights)])</a>
+
+        components = <a id="change">data.shape[0]</a>
+        self._gmm = GaussianMixture(components, covariance_type=&quotspherical&quot)
+
+        self._gmm.means_ = data[:, :1]
+        self._gmm.weights_ = data[:, 2] / data[:, 2].sum()</code></pre><img src="25044492.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/f388923837f92a9de81b97898eadde495353331b#diff-122c1355ed3ef969705713dddf92fa1753f8935cd2721ddfc41996f3f5735760L19' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: f388923837f92a9de81b97898eadde495353331b</div><div id='time'> Time: 2018-11-16</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/density_estimation/gauss_mixture.py</div><div id='class'> Class Name: GaussianMixture1D</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/b171c97f2974ef3f884ad9674de137eda7023875#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L55' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: b171c97f2974ef3f884ad9674de137eda7023875</div><div id='time'> Time: 2015-03-01</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updateRasterInfo</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/1b3de6b301f962db0271fdad1bbb5036880b7fbc#diff-cf2a0c95f50e663b3a41fc1e810f07f9d38149f7560264b8796e068674018300L128' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 1b3de6b301f962db0271fdad1bbb5036880b7fbc</div><div id='time'> Time: 2019-10-12</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/preprocessing/label_transforms.py</div><div id='class'> Class Name: LabTransPCHazard</div><div id='method'> Method Name: __init__</div><BR>

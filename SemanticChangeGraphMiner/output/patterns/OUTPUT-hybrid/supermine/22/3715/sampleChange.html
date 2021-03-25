@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+parser = argparse.ArgumentParser(description=&quotProcesses and downloads TED-LIUMv2 dataset.&quot)
+parser.add_argument("--target-dir", default=&quotTEDLIUM_dataset/&quot, type=str, help="Directory to store the dataset.")
+parser.add_argument("--tar-path", type=str, help="Path to the TEDLIUM_release tar if downloaded (Optional).")
+<a id="change">parser.add_argument(&quot--sample-rate&quot, default=16000, type=int, help=&quotSample rate&quot)</a>
+<a id="change">parser.add_argument(&quot--min-duration&quot, default=1, type=int,
+                    help=&quotPrunes training samples shorter than the min duration (given in seconds, default 1)&quot)</a>
+<a id="change">parser.add_argument(&quot--max-duration&quot, default=15, type=int,
+                    help=&quotPrunes training samples longer than the max duration (given in seconds, default 15)&quot)</a>
+args = parser.parse_args()
+
+TED_LIUM_V2_DL_URL = "http://www.openslr.org/resources/19/TEDLIUM_release2.tar.gz"
+</code></pre><h3>After Change</h3><pre><code class='java'>
+from deepspeech_pytorch.data.utils import create_manifest
+
+parser = argparse.ArgumentParser(description=&quotProcesses and downloads TED-LIUMv2 dataset.&quot)
+<a id="change">parser = add_data_opts(parser)</a>
+parser.add_argument("--target-dir", default=&quotTEDLIUM_dataset/&quot, type=str, help="Directory to store the dataset.")
+parser.add_argument("--tar-path", type=str, help="Path to the TEDLIUM_release tar if downloaded (Optional).")
+args = parser.parse_args()
+</code></pre>

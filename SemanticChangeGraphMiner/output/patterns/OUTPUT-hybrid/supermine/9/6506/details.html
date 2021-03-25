@@ -1,0 +1,46 @@
+<html><h3>7ee672fda5a01e29375439b6a18fb1971f90d3c5,pymanopt/autodiff/backends/_tensorflow.py,_TensorFlowBackend,compute_hessian,#_TensorFlowBackend#,92
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_hessian(self, objective, argument):
+        <a id="change">if not isinstance(argument, list):
+            argA = tf.zeros_like(argument)
+            tfhess = _hessian_vector_product(objective, [argument], [argA])
+
+            def hess(x, a):
+                feed_dict = {argument: x, argA: a}
+                return self._session.run(tfhess[0], feed_dict)
+        else:
+            argA = [tf.zeros_like(arg) for arg in argument]
+            tfhess = _hessian_vector_product(objective, argument, argA)
+
+            def hess(x, a):
+                feed_dict = {i: d for i, d in zip(argument+argA, x+a)}
+                return self._session.run(tfhess, feed_dict)
+
+       </a> return hess
+
+
+TensorFlow = make_graph_backend_decorator(_TensorFlowBackend)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_hessian(self, function, arguments):
+        <a id="change">flattened_arguments = flatten_arguments(arguments)</a>
+
+        <a id="change">if len(flattened_arguments) == 1:
+            (argument,) = flattened_arguments
+            zeros = tf.zeros_like(argument)
+            hessian = _hessian_vector_product(function, [argument], [zeros])
+
+            def unary_hessian(point, vector):
+                feed_dict = {argument: point, zeros: vector}
+                return self._session.run(hessian[0], feed_dict)
+            return unary_hessian
+
+       </a> zeros = [tf.zeros_like(argument) for argument in flattened_arguments]
+        hessian = _hessian_vector_product(function, flattened_arguments, zeros)
+
+        def nary_hessian(points, vectors):</code></pre><img src="25682437.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/7ee672fda5a01e29375439b6a18fb1971f90d3c5#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L93' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 7ee672fda5a01e29375439b6a18fb1971f90d3c5</div><div id='time'> Time: 2020-01-27</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: compute_hessian</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/e97a5389cd4169b54ded7eb173fc0d4d3f4cf8d5#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L70' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: e97a5389cd4169b54ded7eb173fc0d4d3f4cf8d5</div><div id='time'> Time: 2020-01-27</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/c766ed7709046b9d0377bd5e07f8d0a363c26cb8#diff-5942de32c6eafd6bf7be396f109b20163e68f164d20bb329610ef6aa10eac3c0L33' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: c766ed7709046b9d0377bd5e07f8d0a363c26cb8</div><div id='time'> Time: 2019-03-23</div><div id='author'> Author: tdonoghue@ucsd.edu</div><div id='file'> File Name: neurodsp/sim/combined.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sim_combined</div><BR>

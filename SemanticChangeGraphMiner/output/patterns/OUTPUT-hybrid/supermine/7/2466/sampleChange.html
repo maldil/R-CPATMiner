@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    indices = np.transpose(np.where(X))
+    keys = []
+    l = []
+    <a id="change">last_i = None</a>
+    for i, j in indices:
+        <a id="change">if last_i != None and last_i != i:
+            keys.append(l)
+            l = []
+       </a> l.append(j)
+        last_i = i
+    keys.append(l)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 get list of indices of non-zero elements
+    indices = np.transpose(np.where(X))
+    keys = []
+    <a id="change">for _, js in itertools.groupby(indices, lambda ij: ij[0]):
+        keys.append([j for _, j in js])
+
+   </a> assert len(X) == len(keys)
+
+    return keys
+</code></pre>

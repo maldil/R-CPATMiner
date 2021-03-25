@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print(&quot Batch: {}/{}&quot.format(batch, batches), end=&quot &quot)
+            res = sess.run(opt_operations)
+            global_step = res[&quotglobal_step&quot]
+            <a id="change">print(&quotCost:&quot, res[&quotcost&quot], &quotGlobal step&quot, global_step, )</a>
+            summary_writer.add_summary(res[&quotsummary&quot], global_step)
+
+        &#47&#47 Save the variables to disk
+        save_path = saver.save(sess, checkpoint_paths, global_step)</code></pre><h3>After Change</h3><pre><code class='java'>
+            print_log(&quotBatch: {}/{}&quot.format(batch, batches), run_id)
+            res = sess.run(opt_operations)
+            global_step = res[&quotglobal_step&quot]
+            print_log(<a id="change">&quotCost: {} Global step: {}&quot
+                      .format(res[&quotcost&quot], global_step)</a>, run_id)
+            summary_writer.add_summary(res[&quotsummary&quot], global_step)
+
+        &#47&#47 Save the variables to disk</code></pre>

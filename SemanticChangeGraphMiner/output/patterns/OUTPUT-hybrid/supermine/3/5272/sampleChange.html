@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    results = ext.transform(imgs)
+    df = merge_results(results, format=&quotwide&quot, extractor_names=&quotmulti&quot)
+    assert df.shape == (2, 19)
+    <a id="change">assert df[&quotTensorFlowKerasInceptionV3Extractor&quot].loc[
+        0, &quotGranny_Smith&quot] == 0.9737075</a>
+    assert df[&quotTensorFlowKerasInceptionV3Extractor&quot].loc[
+        1, &quotWindsor_tie&quot] == 0.64234024
+    assert 4.2 in df[(&quotonset&quot, np.nan)].values
+    assert 1 in df[(&quotduration&quot, np.nan)].values</code></pre><h3>After Change</h3><pre><code class='java'>
+    true = 0.9737075
+    pred = df[&quotTensorFlowKerasInceptionV3Extractor&quot].loc[0, &quotGranny_Smith&quot]
+    np.isclose(true, pred, 1e-05)
+    <a id="change">true = 0.64234024</a>
+    pred = df[&quotTensorFlowKerasInceptionV3Extractor&quot].loc[1, &quotWindsor_tie&quot]
+    <a id="change">np.isclose(true, pred, 1e-05)</a>
+    assert 4.2 in df[(&quotonset&quot, np.nan)].values
+    assert 1 in df[(&quotduration&quot, np.nan)].values
+
+</code></pre>

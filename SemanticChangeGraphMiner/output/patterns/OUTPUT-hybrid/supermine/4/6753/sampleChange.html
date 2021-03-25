@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+       Bioinformatics, 34(8), 1304-1312 (2018).
+    
+    basepairs = []
+    <a id="change">opened_brackets = {}</a>
+
+    &#47&#47 Iterate through input string and extract base pairs
+    for pos, symbol in enumerate(dot_bracket_notation):
+
+        if symbol in _OPENING_BRACKETS:
+            &#47&#47 Add opening residues to list (separate list for each
+            &#47&#47 bracket type)
+            index = _OPENING_BRACKETS.index(symbol)
+            if index not in opened_brackets:
+                opened_brackets[index] = []
+            opened_brackets[index].append(pos)
+
+        elif symbol in _CLOSING_BRACKETS:
+            &#47&#47 For each closing bracket, the the basepair consists out of
+            &#47&#47 the current index and the last index added to the list in
+            &#47&#47 `opened_brackets` corresponding to the same bracket type.
+            index = _CLOSING_BRACKETS.index(symbol)
+            basepairs.append((opened_brackets[index].pop(), pos))
+
+        else:
+            if symbol != ".":
+                raise ValueError(
+                    f"&quot{symbol}&quot is an invalid character for DBL-notation."
+                )
+
+    for _, not_closed in <a id="change">opened_brackets.items()</a>:
+        if not_closed != []:
+            raise ValueError(
+                "Invalid DBL-notation! Not all opening brackets have a "</code></pre><h3>After Change</h3><pre><code class='java'>
+       Bioinformatics, 34(8), 1304-1312 (2018).
+    
+    basepairs = []
+    opened_brackets = [[] <a id="change">for</a> _ in range(<a id="change">len(_OPENING_BRACKETS)</a>)]
+
+    &#47&#47 Iterate through input string and extract base pairs
+    for pos, symbol in enumerate(dot_bracket_notation):</code></pre>

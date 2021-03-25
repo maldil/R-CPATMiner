@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    See :class:`~kornia.filters.Sobel` for details.
+    
+    <a id="change">return Sobel(normalized, eps)(input)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise TypeError("Input type is not a torch.Tensor. Got {}"
+                        .format(type(input)))
+
+    <a id="change">if not len(input.shape) == 4:
+        raise ValueError("Invalid input shape, we expect BxCxHxW. Got: {}"
+                         .format(input.shape))
+
+    &#47&#47 comput the x/y gradients
+   </a> edges: torch.Tensor = spatial_gradient(input, normalized=normalized)
+
+    &#47&#47 unpack the edges
+    gx: torch.Tensor = edges[:, :, 0]
+    gy: torch.Tensor = edges[<a id="change">:, :, 1</a>]
+
+    &#47&#47 compute gradient maginitude
+    magnitude: torch.Tensor = torch.sqrt(gx * gx + gy * gy + eps)
+
+    <a id="change">return magnitude</a>
+
+
+class SpatialGradient(nn.Module):
+    rComputes the first order image derivative in both x and y using a Sobel</code></pre>

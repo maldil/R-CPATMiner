@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    nn.load_parameters("styleGAN2_G_params.h5")
+    rgb_output = generate(batch_size, style_noises,
+                          args.stochastic_seed, args.truncation_psi)
+    <a id="change">rgb_output.forward()</a>
+
+    &#47&#47 convert to uint8 to save an image file
+    image = convert_images_to_uint8(rgb_output, drange=[-1, 1])
+    if args.output_filename is None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        rnd = np.random.RandomState(args.seed_mix)
+        z2 = rnd.randn(batch_size, 512)
+        style_noises = [nn.NdArray.from_numpy_array(z)]
+        <a id="change">style_noises += [nn.NdArray.from_numpy_array(z2)]</a>
+    else:
+        &#47&#47 no style mixing (single noise / style is used)
+        print(f"using style noise seed {args.seed} for entire layers.")
+        style_noises = [nn.NdArray.from_numpy_array(z) for _ in range(2)]
+
+    nn.set_auto_forward(True)
+    nn.load_parameters("styleGAN2_G_params.h5")
+    rgb_output = generate(batch_size, style_noises,
+                          args.stochastic_seed, args.mix_after, args.truncation_psi)
+
+    &#47&#47 convert to uint8 to save an image file
+    image = convert_images_to_uint8(rgb_output, drange=[-1, 1])
+    if args.output_filename is None:
+        if not args.mixing:
+            filename = f"seed{args.seed}"
+        else:
+            filename = f"seed{args.seed}_{args.seed_mix}"
+    else:
+        filename = args.output_filename
+
+    os.makedirs(args.output_dir, exist_ok=True)
+
+    for i in range(batch_size):
+        filepath = os.path.join(args.output_dir, f&quot{filename}_{i}.png&quot)
+        imsave(filepath, <a id="change">image[i]</a>, channel_first=True)
+        print(f"Genetation completed. Saved {filepath}.")
+
+</code></pre>

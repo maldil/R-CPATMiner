@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return grad_input, grad_target
+
+def dice_coeff(input, target):
+    <a id="change">return DiceCoeff().forward(input, target)</a>
+
+class DiceLoss(_Loss):
+    def forward(self, input, target):
+        return 1 - dice_coeff(F.sigmoid(input), target)</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        s = Variable(torch.FloatTensor(1).zero_())
+
+    <a id="change">for i, c in enumerate(zip(input, target)):
+        s = s + DiceCoeff().forward(c[0], c[1])
+
+   </a> return s / (i+1)
+
+
+class DiceLoss(_Loss):</code></pre>

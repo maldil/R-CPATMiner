@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            "expected 1D or 2D with size 1 in the second dim"
+        )
+
+    if targets.max() != len(<a id="change">torch.unique(targets)</a>) - 1:
+        if raise_class_labels_mismatch:
+            raise Exception(
+                "`targets` maximum does not represent number of classes"</code></pre><h3>After Change</h3><pre><code class='java'>
+        targets = torch.from_numpy(targets)
+
+    &#47&#47 @TODO: move to process_multiclass_components ?
+    <a id="change">if outputs.dim() == targets.dim() + 1:
+        &#47&#47 looks like we have scores/probabilities in our outputs
+        &#47&#47 let&quots convert them to final model predictions
+        num_classes = max(
+            outputs.shape[argmax_dim], int(targets.max().detach().item() + 1)
+        )
+        outputs = torch.argmax(outputs, dim=argmax_dim)
+   </a> if num_classes is None:
+        &#47&#47 as far as we expect the outputs/targets tensors to be int64
+        &#47&#47 we could find number of classes as max available number
+        num_classes = max(</code></pre>

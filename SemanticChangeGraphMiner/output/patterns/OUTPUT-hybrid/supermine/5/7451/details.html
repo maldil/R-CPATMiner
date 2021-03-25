@@ -1,0 +1,21 @@
+<html><h3>83d80c5a19326a516b4ab54339c27f8cac349693,data_utils/lazy_loader.py,,make_lazy,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not torch.distributed._initialized or torch.distributed.get_rank() == 0:
+        with open(datapath, &quotw&quot) as f:
+            f.write(&quot&quot.join(strs))
+        str_ends = <a id="change">list(accumulate(map(len, strs)))</a>
+        pkl.dump(str_ends, open(lenpath, &quotwb&quot))
+    else:
+        while not os.path.exists(lenpath):
+            time.sleep(1)</code></pre><h3>After Change</h3><pre><code class='java'>
+            str_cnt = 0
+            for s in strs:
+                f.write(s.encode(&quotutf-8&quot))
+                <a id="change">str_cnt += len(s)</a>
+                str_ends.append(str_cnt)
+        pkl.dump(str_ends, open(lenpath, &quotwb&quot))
+    else:
+        while not os.path.exists(lenpath):</code></pre><img src="28765814.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NVIDIA/sentiment-discovery/commit/83d80c5a19326a516b4ab54339c27f8cac349693#diff-6fc3374fcee26481b869b10321daa5f595daab615a8d88db1e972df655748bc8L32' target='_blank'>Link</a></div><div id='project'> Project Name: NVIDIA/sentiment-discovery</div><div id='commit'> Commit Name: 83d80c5a19326a516b4ab54339c27f8cac349693</div><div id='time'> Time: 2018-06-14</div><div id='author'> Author: raulpuric@berkeley.edu</div><div id='file'> File Name: data_utils/lazy_loader.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: make_lazy</div><BR><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/4888cb7a5299f7eed9214ddc70871dc05ea0f4d2#diff-daf83987604b2fc2b5e24489ce9856f42ab1265ee61e58e7f31da1a264ae7c95L299' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: 4888cb7a5299f7eed9214ddc70871dc05ea0f4d2</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: model/ft_ResNet50/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/4888cb7a5299f7eed9214ddc70871dc05ea0f4d2#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L301' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: 4888cb7a5299f7eed9214ddc70871dc05ea0f4d2</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

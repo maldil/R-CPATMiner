@@ -1,0 +1,44 @@
+<html><h3>96a364e27fe2d4cb55328150a2c4b2d97acc8f3f,sklearn/calibration.py,CalibratedClassifierCV,fit,#CalibratedClassifierCV#,164
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                  "sample weights will only be used for the "
+                                  "calibration itself." % estimator_name)
+
+            <a id="change">for train, test in cv.split(X, y):
+                this_estimator = clone(base_estimator)
+
+                if sample_weight is not None and base_estimator_supports_sw:
+                    this_estimator.fit(X[train], y[train],
+                                       sample_weight=sample_weight[train])
+                else:
+                    this_estimator.fit(X[train], y[train])
+
+                calibrated_classifier = _CalibratedClassifier(
+                    this_estimator, method=self.method, classes=self.classes_)
+                sw = None if sample_weight is None else sample_weight[test]
+                calibrated_classifier.fit(X[test], y[test], sample_weight=sw)
+                self.calibrated_classifiers_.append(calibrated_classifier)
+
+       </a> return self
+
+    def predict_proba(self, X):
+        Posterior probabilities of classification</code></pre><h3>After Change</h3><pre><code class='java'>
+            parallel = Parallel(n_jobs=self.n_jobs, verbose=self.verbose,
+                                pre_dispatch=self.pre_dispatch)
+
+            <a id="change">self.calibrated_classifiers_ = parallel(delayed(
+                _fit_calibrated_classifer)(clone(base_estimator),
+                                           X, y,
+                                           train=train, test=test,
+                                           method=self.method,
+                                           classes=self.classes_,
+                                           supports_sw=supports_sw,
+                                           sample_weight=sample_weight)
+                                                    for train, test
+                                                    in cv.split(X, y))</a>
+
+        return self
+
+    def predict_proba(self, X):</code></pre><img src="6438498.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/96a364e27fe2d4cb55328150a2c4b2d97acc8f3f#diff-9c906e0569935543542ea4bf9376685cff7a69575e556325dc34557d6714d20fL185' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 96a364e27fe2d4cb55328150a2c4b2d97acc8f3f</div><div id='time'> Time: 2020-07-26</div><div id='author'> Author: git@jjerphan.xyz</div><div id='file'> File Name: sklearn/calibration.py</div><div id='class'> Class Name: CalibratedClassifierCV</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/6a9b9a282e8698f7a8c5d66c0e42851bd0c53d2b#diff-7306b790b31cd46e0674e54dae7d7cd11494bd5e9e1215ca37ac71651340b06fL105' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: 6a9b9a282e8698f7a8c5d66c0e42851bd0c53d2b</div><div id='time'> Time: 2019-12-23</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: tests/grads_utils.py</div><div id='class'> Class Name: ComplexGradsUtils</div><div id='method'> Method Name: transform_bases</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/6a40871d5bd21bd8786bc340008dfa8d8bf02b05#diff-937b224556da3b70df7fdbc59066ae1ed8e57ca862808cd34320b3feb68cd364L8' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: 6a40871d5bd21bd8786bc340008dfa8d8bf02b05</div><div id='time'> Time: 2020-03-17</div><div id='author'> Author: 62071377+Msubboti@users.noreply.github.com</div><div id='file'> File Name: Print_List_of_Odd_Numbers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

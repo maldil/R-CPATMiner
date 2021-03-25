@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not op.isdir(test_dir):
+        makedirs(test_dir)
+
+    for tile in list(tf_train[<a id="change">:,1</a>]):
+        tile_dir = op.join(tiles_dir, tile)
+        shutil.copy(tile_dir, train_dir)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    column_name = [&quotfilename&quot, &quotwidth&quot, &quotheight&quot, &quotclass&quot, &quotxmin&quot, &quotymin&quot, &quotxmax&quot, &quotymax&quot]
+    df = pd.DataFrame(tf_tiles_info, columns=column_name)
+    &#47&#47shuffle the dataframe
+    df = <a id="change">df.sample(frac=1)</a>
+    <a id="change">train_df = df[:split_index]</a>
+    test_df = df[split_index:]
+    print("You have {} training tiles and {} test tiles ready".format(
+    len(set(train_df[&quotfilename&quot])), len(set(test_df[&quotfilename&quot]))))
+    &#47&#47 train_df.to_csv("train_df.csv")</code></pre>

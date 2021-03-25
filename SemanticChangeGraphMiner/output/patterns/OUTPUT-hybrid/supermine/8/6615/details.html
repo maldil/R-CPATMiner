@@ -1,0 +1,44 @@
+<html><h3>4c07803bccf4096b6458bb88d877b88700fa194c,PyInstaller/hooks/hook-numpy.py,,,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47excludedimports = ["numpy.testing"]
+
+&#47&#47 FIXME check if this workaround is still necessary!
+<a id="change">if is_win:
+    from PyInstaller.utils.win32.winutils import extend_system_path
+    from distutils.sysconfig import get_python_lib
+    &#47&#47 SciPy/Numpy Windows builds from http://www.lfd.uci.edu/~gohlke/pythonlibs
+    &#47&#47 contain some dlls in directory like C:\Python27\Lib\site-packages\numpy\core\
+    numpy_core_paths = [os.path.join(get_python_lib(), &quotnumpy&quot, &quotcore&quot)]
+    &#47&#47 In virtualenv numpy might be installed directly in real prefix path.
+    &#47&#47 Then include this path too.
+    if is_venv:
+        numpy_core_paths.append(
+            os.path.join(base_prefix, &quotLib&quot, &quotsite-packages&quot, &quotnumpy&quot, &quotcore&quot)
+        )
+    extend_system_path(numpy_core_paths)
+    del numpy_core_paths
+
+&#47&#47 if we bundle the testing module, this will cause
+&#47&#47 `scipy` to be pulled in unintentionally but numpy imports
+&#47&#47 numpy.testing at the top level for historical reasons.
+&#47&#47 excludedimports = collect_submodules(&quotnumpy.testing&quot)
+
+</a>binaries = []
+
+&#47&#47 package the DLL bundle that official numpy wheels for Windows ship
+&#47&#47 The DLL bundle will either be in extra-dll on windows proper</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 Submodules PyInstaller can&quott detect (probably because they&quotre only imported
+&#47&#47 by extension modules which PyInstaller can&quott read).
+hiddenimports = [&quotnumpy.core._dtype_ctypes&quot]
+<a id="change">if is_conda:
+    hiddenimports.append("six")
+
+&#47&#47 Remove testing and building code and packages which are referenced throughout
+&#47&#47 NumPy but aren&quott really dependencies.
+</a>excludedimports = [
+    "scipy",
+    "pytest",
+    "nose",</code></pre><img src="26163951.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/4c07803bccf4096b6458bb88d877b88700fa194c#diff-6436d9ef11bb11c7e9a335af8e7ea1f89c2f679e93dcd7f00961ae419572f446L22' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 4c07803bccf4096b6458bb88d877b88700fa194c</div><div id='time'> Time: 2021-01-27</div><div id='author'> Author: 30940778+bwoodsend@users.noreply.github.com</div><div id='file'> File Name: PyInstaller/hooks/hook-numpy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/06c181beaaca9b1f01714a327d366584c03855d5#diff-48c63fed1df525c20904371dd446ffbcebe2ef66a1ff1bc638658c92c6c7a59bL97' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 06c181beaaca9b1f01714a327d366584c03855d5</div><div id='time'> Time: 2020-09-30</div><div id='author'> Author: rok.mandeljc@gmail.com</div><div id='file'> File Name: PyInstaller/hooks/hook-PySide2.QtWebEngineWidgets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pyinstaller/pyinstaller/commit/06c181beaaca9b1f01714a327d366584c03855d5#diff-ed257956f4c9fcbce1b765d7fd4c6a6558ce8d4771b0094bd011769a3f2091f0L79' target='_blank'>Link</a></div><div id='project'> Project Name: pyinstaller/pyinstaller</div><div id='commit'> Commit Name: 06c181beaaca9b1f01714a327d366584c03855d5</div><div id='time'> Time: 2020-09-30</div><div id='author'> Author: rok.mandeljc@gmail.com</div><div id='file'> File Name: PyInstaller/hooks/hook-PyQt5.QtWebEngineWidgets.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

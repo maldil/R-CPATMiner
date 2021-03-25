@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    return v1_cls
+
+  &#47&#47 Recursively search superclasses to swap in the right Keras class.
+  <a id="change">cls.__bases__ = tuple(
+      swap_class(base, v2_cls, v1_cls, use_v2) for base in cls.__bases__)</a>
+  return cls
+
+
+def disallow_legacy_graph(cls_name, method_name):</code></pre><h3>After Change</h3><pre><code class='java'>
+    return v2_cls if use_v2 else v1_cls
+
+  &#47&#47 Recursively search superclasses to swap in the right Keras class.
+  <a id="change">new_bases = []</a>
+  <a id="change">for base in cls.__bases__:
+    if ((use_v2 and issubclass(base, v1_cls)
+         or (not use_v2 and issubclass(base, v2_cls)))):
+      new_base = swap_class(base, v2_cls, v1_cls, use_v2)
+    else:
+      new_base = base
+    new_bases.append(new_base)
+ </a> <a id="change">cls.__bases__ = tuple(new_bases)</a>
+  return cls
+
+
+def disallow_legacy_graph(cls_name, method_name):</code></pre>

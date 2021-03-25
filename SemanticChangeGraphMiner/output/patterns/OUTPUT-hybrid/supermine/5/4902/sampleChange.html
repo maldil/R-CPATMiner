@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 layer_outputs = [func([model_inputs, 0.])[0] for func in funcs]
+    layer_outputs = [func(list_inputs)[0] for func in funcs]
+    for layer_activations in layer_outputs:
+        <a id="change">activations.append(layer_activations)</a>
+        &#47&#47 if print_shape_only:
+        &#47&#47     print(layer_activations.shape)
+        &#47&#47 else:
+        &#47&#47     print(layer_activations)</code></pre><h3>After Change</h3><pre><code class='java'>
+               layer.name == layer_name or layer_name is None]  &#47&#47 all layer outputs
+
+    &#47&#47 we remove the placeholders (Inputs node in Keras). Not the most elegant though..
+    outputs = [output <a id="change">for</a> output in outputs if &quotinput_&quot not in output.name]
+
+    funcs = [K.function(inp + [K.learning_phase()], [out]) for out in outputs]  &#47&#47 evaluation functions
+
+    if model_multi_inputs_cond:
+        list_inputs = []
+        list_inputs.extend(model_inputs)
+        list_inputs.append(0.)
+    else:
+        list_inputs = [model_inputs, 0.]
+
+    &#47&#47 Learning phase. 0 = Test mode (no dropout or batch normalization)
+    &#47&#47 layer_outputs = [func([model_inputs, 0.])[0] for func in funcs]
+    activations = [func(list_inputs)[0] for func in funcs]
+    layer_names = [output.name for output in outputs]
+
+    <a id="change">result = dict(zip(layer_names, activations))</a>
+    return result
+
+
+def display_activations(activations):</code></pre>

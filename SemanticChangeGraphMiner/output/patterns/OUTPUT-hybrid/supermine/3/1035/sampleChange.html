@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    psi0 = (variance*(np.square(mu)+S)).sum(axis=1)
+    psi1 = np.dot(mu,(variance*Z).T)
+    if not return_psi2_n:
+        psi2 = np.dot(S.sum(axis=0)*<a id="change">np.square(variance)</a>*Z,Z.T)+ tdot(psi1.T)
+    else:
+        raise NotImplementedError
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Zv = variance * Z
+    psi1 = np.dot(mu,Zv.T)
+    if return_psi2_n:
+        psi2 = psi1[:,:,None] * psi1[:,None,:] + np.dot(S[:,None,:] * Zv[<a id="change">None,:,:</a>], Zv.T)
+    else:
+        psi2 = np.dot(S.sum(axis=0) * Zv, Zv.T) + tdot(psi1.T)
+</code></pre>

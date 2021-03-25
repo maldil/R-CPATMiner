@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._epoch_paths = deque(maxlen=self._max_num_epoch_paths_saved)
+
+    def get_diagnostics(self):
+        <a id="change">return OrderedDict([
+            (&quotnum steps total&quot, self._num_steps_total),
+            (&quotnum paths total&quot, self._num_paths_total),
+        ])</a>
+
+    def get_snapshot(self):
+        return dict(
+            env=self._env,</code></pre><h3>After Change</h3><pre><code class='java'>
+        self._epoch_paths = deque(maxlen=self._max_num_epoch_paths_saved)
+
+    def get_diagnostics(self):
+        <a id="change">path_lens = [len(path[&quotactions&quot]) for path in self._epoch_paths]</a>
+        <a id="change">stats = OrderedDict([
+            (&quotnum steps total&quot, self._num_steps_total),
+            (&quotnum paths total&quot, self._num_paths_total),
+        ])</a>
+        <a id="change">stats.update(create_stats_ordered_dict(
+            "path length",
+            path_lens,
+            always_show_all_stats=True,
+        ))</a>
+        <a id="change">return stats</a>
+
+    def get_snapshot(self):
+        return dict(
+            env=self._env,</code></pre>

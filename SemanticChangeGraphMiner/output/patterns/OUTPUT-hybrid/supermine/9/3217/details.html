@@ -1,0 +1,30 @@
+<html><h3>e81142f0869321cd8792e13bfc4f6fb85d9f1efc,libact/query_strategies/uncertainty_sampling.py,UncertaintySampling,make_query,#UncertaintySampling#,62
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 O(NK) + O(N)
+            prob = self.model.predict_real(X_pool)
+            min_margin = np.inf
+            <a id="change">for j in range(len(prob)):
+                m1_id = np.argmax(prob[j])
+                m2_id = np.argmax(np.delete(prob[j], m1_id))
+                margin = prob[j][m1_id] - prob[j][m2_id]
+                if margin &lt; min_margin:
+                    min_margin = margin
+                    ask_id = j
+
+       </a> else:
+            raise ValueError(
+                "Invalid method &quot%s&quot (available choices: (&quotlc&quot, &quotsm&quot, &quotle&quot)"
+                % self.method</code></pre><h3>After Change</h3><pre><code class='java'>
+                ind = [0, 1]
+            else:
+                &#47&#47 Find 2 largest decision values
+                <a id="change">ind = np.partition(-np.abs(dvalue), 2, axis=1)[:2]</a>
+            margin = <a id="change">np.abs(np.abs(dvalue[:, ind[0]]) - np.abs(dvalue[:, ind[1]]))</a>
+            <a id="change">ask_id = np.argmin(margin)</a>
+
+        return unlabeled_entry_ids[ask_id]
+
+    def get_model(self):</code></pre><img src="14411482.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e81142f0869321cd8792e13bfc4f6fb85d9f1efc#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L59' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e81142f0869321cd8792e13bfc4f6fb85d9f1efc</div><div id='time'> Time: 2015-12-22</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR><BR><div id='link'><a href='https://github.com/statsmodels/statsmodels/commit/1bb7f603f00783801b57d114c0eeea0c55950174#diff-1e6b00f68bacb6f93ede502358f45669c1e95c046da214c148ffe5266c454742L142' target='_blank'>Link</a></div><div id='project'> Project Name: statsmodels/statsmodels</div><div id='commit'> Commit Name: 1bb7f603f00783801b57d114c0eeea0c55950174</div><div id='time'> Time: 2020-08-25</div><div id='author'> Author: ezequiels.90@gmail.com</div><div id='file'> File Name: statsmodels/robust/scale.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _qn_naive</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/e2f51920215f2c3be39de713626d1288c607eb75#diff-ea08f73e0837595a9dcef28e8a38b3ff70326bbe2f95339facbef1c1b33efd2bL7' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: e2f51920215f2c3be39de713626d1288c607eb75</div><div id='time'> Time: 2015-12-28</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: test/test_auto_encoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rank1_auto_encoder</div><BR>

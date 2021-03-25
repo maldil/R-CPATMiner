@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            em._x,em._y,em._id,em._info = _evalmon
+            _solver._evalmon[le:] = em[le:]
+            del em
+            <a id="change">self._allSolvers[len(results)]</a> = _solver &#47&#47XXX: update not replace?
+        return
+
+    def __update_bestSolver(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quotreplace allSolvers with solvers found in results&quot
+        &#47&#47NOTE: apparently, monitors internal to the solver don&quott work as well
+        &#47&#47 reconnect monitors; save all solvers
+        fcalls = [<a id="change">getattr</a>(s, <a id="change">&quot_fcalls&quot</a>, [0])[0] for s in self._allSolvers]
+        from mystic.monitors import Monitor
+        while results: &#47&#47XXX: option to not save allSolvers? skip this and _copy
+            _solver, _stepmon, _evalmon = results.pop()
+            lr = len(results)
+            sm, em = Monitor(), Monitor()
+            s = self._allSolvers[lr]
+            ls, le = len(s._stepmon), len(s._evalmon)
+            &#47&#47 gather old and new results in monitors
+            _solver._stepmon[:] = s._stepmon
+            sm._x,sm._y,sm._id,sm._info = _stepmon
+            _solver._stepmon[ls:] = sm[ls:]
+            del sm
+            _solver._evalmon[:] = s._evalmon
+            em._x,em._y,em._id,em._info = _evalmon
+            _solver._evalmon[le:] = em[le:]
+            del em
+            if not _solver._fcalls[0]: <a id="change">_solver._fcalls[0] = fcalls[lr]</a>
+            self._allSolvers[lr] = _solver &#47&#47XXX: update not replace?
+        return
+
+    def __update_bestSolver(self):</code></pre>

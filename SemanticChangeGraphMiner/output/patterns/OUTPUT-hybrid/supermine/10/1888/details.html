@@ -1,0 +1,32 @@
+<html><h3>7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec,pyntcloud/io/las.py,,read_las,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    data: dict
+        Elements as pandas DataFrames.
+    
+    <a id="change">if laspy is None:
+        raise ImportError("laspy is needed for reading .las files.")
+   </a> data = <a id="change">{}</a>
+
+    with laspy.file.File(filename) as las:
+        data["points"] = pd.DataFrame(las.points["point"])
+        data["points"].columns = (x.lower() <a id="change">for</a> x in data["points"].columns)
+        &#47&#47 because laspy do something strange with scale
+        <a id="change">data["points"].loc[:, ["x", "y", "z"]] *= las.header.scale</a>
+        data = convert_location_to_dtype(data, xyz_dtype)
+        data = convert_color_to_dtype(data, rgb_dtype)
+        data["las_header"] = las.header
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    if backend == "pylas":
+        data = read_las_with_pylas(filename)
+    elif <a id="change">backend == "laspy</a>":
+        data = read_las_with_laspy(filename)
+    else:
+        <a id="change">raise ValueError(f"Unsupported backend. Expected one of [&quotpylas&quot, &quotlaspy&quot] but got {backend}")</a>
+    data = convert_location_to_dtype(data, xyz_dtype)
+    data = convert_color_to_dtype(data, rgb_dtype)
+    return data
+</code></pre><img src="9277196.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec#diff-ff911c1c91b963203f3c1d08913155f86610ed2c7e1749752fc192293666c778L49' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 7c5daf825bcb84e6f750a6d6fad3a2626c4ea5ec</div><div id='time'> Time: 2020-10-06</div><div id='author'> Author: sebastian.bullinger@iosb.fraunhofer.de</div><div id='file'> File Name: pyntcloud/io/las.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_las</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/b171c97f2974ef3f884ad9674de137eda7023875#diff-80c881f66f7f146292fdf3e899038133273bd1bb4ba57342ab41c8dc72621250L55' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: b171c97f2974ef3f884ad9674de137eda7023875</div><div id='time'> Time: 2015-03-01</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/LinearSpectralUnmixing.py</div><div id='class'> Class Name: LinearSpectralUnmixing</div><div id='method'> Method Name: updateRasterInfo</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/57c4306d9282b8d3fc815336c86c7af64f75a756#diff-c4f973dff9f496c749afd30aad42b4fd103823ba1fbee82e00ee15d06775cfa8L150' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 57c4306d9282b8d3fc815336c86c7af64f75a756</div><div id='time'> Time: 2015-10-03</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/plotting/gpy_plot/gp_plots.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _plot_confidence</div><BR>

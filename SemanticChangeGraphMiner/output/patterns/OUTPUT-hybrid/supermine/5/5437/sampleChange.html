@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        Returns (num_task, num_samples, 1, num_bases, sequence_length) deeplift score array.
+        
+        <a id="change">if sys.version_info[0] != 2:
+            raise RuntimeError("DeepLIFT requires Python2!")
+       </a> assert len(np.shape(X)) == 4 and np.shape(X)[1] == 1
+        from deeplift.conversion import keras_conversion as kc
+        from deeplift.blobs import NonlinearMxtsMode
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        score_func = deeplift_model.get_target_contribs_func(
+            find_scores_layer_idx=0)
+        &#47&#47 use a 40% GC reference
+        input_references = [<a id="change">np.array([0.3, 0.2, 0.2, 0.3])[None, None, :, None]</a>]
+        &#47&#47 get deeplift scores
+        deeplift_scores = np.zeros((self.num_tasks,) + X.shape)
+        for i in range(self.num_tasks):</code></pre>

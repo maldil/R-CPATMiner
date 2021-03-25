@@ -1,0 +1,28 @@
+<html><h3>e9d5373461b0a037716722a461cb12416aa5d1bc,evaluate.py,,,#,44
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    CMC_tmp = evaluate(query_feature[i],query_label[i],query_cam[i],gallery_feature,gallery_label,gallery_cam)
+    if CMC_tmp[0]==-1:
+        continue
+    CMC = <a id="change">torch.cat((CMC,CMC_tmp.view(1,len(CMC_tmp))), 0)</a>
+    print(i, CMC_tmp[0])
+
+CMC = CMC.float()
+CMC = CMC.mean(dim=0) &#47&#47average CMC</code></pre><h3>After Change</h3><pre><code class='java'>
+gallery_cam = result[&quotgallery_cam&quot][0]
+gallery_label = result[&quotgallery_label&quot][0]
+
+CMC = torch.IntTensor(<a id="change">len(gallery_label)</a>).zero_()
+ap = 0.0
+&#47&#47print(query_label)
+for i in range(len(query_label)):
+    ap_tmp, CMC_tmp = evaluate(query_feature[i],query_label[i],query_cam[i],gallery_feature,gallery_label,gallery_cam)
+    if CMC_tmp[0]==-1:
+        continue
+    <a id="change">CMC = CMC + CMC_tmp</a>
+    ap += ap_tmp
+    print(i, CMC_tmp[0])
+
+CMC = CMC.float()</code></pre><img src="9261788.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/e9d5373461b0a037716722a461cb12416aa5d1bc#diff-24edcdcba3747a424b769b374189e8346f6c2f7bdb1e16d2d9ffbe9b926d45a7L45' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: e9d5373461b0a037716722a461cb12416aa5d1bc</div><div id='time'> Time: 2018-01-01</div><div id='author'> Author: zzheng@joo-ml1-dev.j.cinglevue.com</div><div id='file'> File Name: evaluate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/HyperGAN/HyperGAN/commit/0389fda574d618ec22b488208a1d597a18d7ce72#diff-6dc6d9702e9042e567a1a0e506ca63f2c0ce7f4d2f73217a7ceab357820ab00dL196' target='_blank'>Link</a></div><div id='project'> Project Name: HyperGAN/HyperGAN</div><div id='commit'> Commit Name: 0389fda574d618ec22b488208a1d597a18d7ce72</div><div id='time'> Time: 2020-12-24</div><div id='author'> Author: martyn@255bits.com</div><div id='file'> File Name: examples/next-frame.py</div><div id='class'> Class Name: NextFrameGAN</div><div id='method'> Method Name: forward_pass</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/012daf57ac31d82366323e7ec27ab7c2cb678a09#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL49' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 012daf57ac31d82366323e7ec27ab7c2cb678a09</div><div id='time'> Time: 2018-05-27</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_max_suppression</div><BR>

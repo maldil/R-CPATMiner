@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_add_to_predict_results_dict():
+    Test add data to predict results dict
+    for suffix in ["targets.npy", "features.csv"]:
+        <a id="change">shutil.copy(
+            pjoin(DATA_PATH, "test_%s" % suffix),
+            pjoin(cfg.FEATURES_FOLDER, "TEST001_%s" % suffix))</a>
+    results_dict = {}
+    pred.add_to_predict_results_dict_classification_proba(
+        results_dict, [[0.2, 0.5, 0.3]], "TT.dat",
+        [1, 2, 3], {&quotf1&quot: 2}, "TEST001", 5)</code></pre><h3>After Change</h3><pre><code class='java'>
+    Test add data to predict results dict
+    results_dict = {}
+    preds = pd.Series({&quotclass1&quot: 0.2, &quotclass2&quot: 0.5, &quotclass3&quot: 0.3}, name=0)
+    ts_data = np.array([<a id="change">[1., 2., 3.]</a>, [4., 5., 6.]])
+    predict.add_to_predict_results_dict_classification_proba(
+        results_dict, preds, "TT.dat",
+        ts_data, {&quotf1&quot: 2}, "TEST001", 5)</code></pre>

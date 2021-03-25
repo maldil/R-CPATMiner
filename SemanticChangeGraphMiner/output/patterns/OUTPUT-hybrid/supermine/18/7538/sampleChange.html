@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        from sklearn.neighbors import NearestNeighbors
+
+        &#47&#47 Find the nearest neighbour of every point
+        <a id="change">print("Finding nearest neighbour...", end="")</a>
+        nn = NearestNeighbors(n_neighbors=2)
+        nn.fit(self.x)
+        nns = nn.kneighbors(self.x, return_distance=False)[:, 1]
+        print("done!")</code></pre><h3>After Change</h3><pre><code class='java'>
+        nns = nn.kneighbors(self.x, return_distance=False)[:, 1]
+
+        &#47&#47 Send the information to is_tomek function to get boolean vector back
+        <a id="change">if self.verbose==True:
+            print("Looking for majority Tomek links...")
+       </a> links = self.is_tomek(self.y, nns, self.minc, self.verbose)
+
+        <a id="change">if self.verbose==True:
+            print("Under-sampling performed: " + str(Counter(self.y[logical_not(links)])))
+
+        &#47&#47 Return data set without majority Tomek links.
+       </a> return self.x[logical_not(links)], self.y[logical_not(links)]
+
+class ClusterCentroids(UnbalancedDataset):
+    </code></pre>

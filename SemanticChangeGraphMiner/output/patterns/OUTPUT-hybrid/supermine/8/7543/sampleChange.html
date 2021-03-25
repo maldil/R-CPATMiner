@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_overlapping():
+    stride = 16
+    features = <a id="change">(14, 14)</a>
+    img_info = keras.backend.variable([[224, 224, 3]])
+    gt_boxes = numpy.zeros((91, 4))
+    gt_boxes = keras.backend.variable(gt_boxes)
+    img_info = img_info[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+    inds_inside, all_inside_anchors = anchor_target.inside_image(
+        all_anchors, img_info[0], allowed_border=1)
+
+    <a id="change">all_inside_anchors = keras_rcnn.backend.clip(all_inside_anchors, img_info[0][:2])</a>
+
+    a, max_overlaps, gt_argmax_overlaps_inds = anchor_target.overlapping(
+        all_inside_anchors, gt_boxes, inds_inside)
+</code></pre>

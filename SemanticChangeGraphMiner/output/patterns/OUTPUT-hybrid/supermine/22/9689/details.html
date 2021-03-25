@@ -1,0 +1,111 @@
+<html><h3>d5b0cd8e7960c247bb7c5b7c832358f8831780fb,ch15/05_train_acktr.py,,,#,55
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    net_crt = model.ModelCritic(envs[0].observation_space.shape[0])
+    <a id="change">if args.cuda:
+        net_act.cuda()
+        net_crt.cuda()
+   </a> print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-acktr_" + args.name)
+    agent = model.AgentA2C(net_act, cuda=<a id="change">args</a>.cuda)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)
+
+    opt_act = kfac.KFACOptimizer(net_act, lr=LEARNING_RATE_ACTOR)
+    opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    batch = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+            for step_idx, exp in enumerate(exp_source):
+                rewards_steps = exp_source.pop_rewards_steps()
+                if rewards_steps:
+                    rewards, steps = zip(*rewards_steps)
+                    tb_tracker.track("episode_steps", np.mean(steps), step_idx)
+                    tracker.reward(np.mean(rewards), step_idx)
+
+                if step_idx % TEST_ITERS == 0:
+                    ts = time.time()
+                    rewards, steps = test_net(net_act, test_env, cuda=<a id="change">args</a>.cuda)
+                    print("Test done in %.2f sec, reward %.3f, steps %d" % (
+                        time.time() - ts, rewards, steps))
+                    writer.add_scalar("test_reward", rewards, step_idx)
+                    writer.add_scalar("test_steps", steps, step_idx)
+                    if best_reward is None or best_reward &lt; rewards:
+                        if best_reward is not None:
+                            print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                            name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                            fname = os.path.join(save_path, name)
+                            torch.save(net_act.state_dict(), fname)
+                        best_reward = rewards
+
+                batch.append(exp)
+                if len(batch) &lt; BATCH_SIZE:
+                    continue
+
+                states_v, actions_v, vals_ref_v = \
+                    common.unpack_batch_a2c(batch, net_crt, last_val_gamma=GAMMA ** REWARD_STEPS, cuda=<a id="change">args</a>.cuda)
+                batch.clear()
+
+                opt_crt.zero_grad()</code></pre><h3>After Change</h3><pre><code class='java'>
+    envs = [gym.make(args.env) for _ in range(ENVS_COUNT)]
+    test_env = gym.make(args.env)
+
+    <a id="change">net_act</a> = <a id="change">model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0]).to(device)</a>
+    net_crt = <a id="change">model.ModelCritic(envs[0].observation_space.shape[0]).to(device)</a>
+    print(net_act)
+    print(net_crt)
+
+    writer = SummaryWriter(comment="-acktr_" + args.name)
+    agent = model.AgentA2C(net_act, device=<a id="change">device</a>)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(envs, agent, GAMMA, steps_count=REWARD_STEPS)
+
+    opt_act = kfac.KFACOptimizer(net_act, lr=LEARNING_RATE_ACTOR)
+    opt_crt = optim.Adam(net_crt.parameters(), lr=LEARNING_RATE_CRITIC)
+
+    batch = []
+    best_reward = None
+    with ptan.common.utils.RewardTracker(writer) as tracker:
+        with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+            for step_idx, exp in enumerate(exp_source):
+                rewards_steps = exp_source.pop_rewards_steps()
+                if rewards_steps:
+                    rewards, steps = zip(*rewards_steps)
+                    tb_tracker.track("episode_steps", np.mean(steps), step_idx)
+                    tracker.reward(np.mean(rewards), step_idx)
+
+                if step_idx % TEST_ITERS == 0:
+                    ts = time.time()
+                    rewards, steps = test_net(net_act, test_env, device=<a id="change">device</a>)
+                    print("Test done in %.2f sec, reward %.3f, steps %d" % (
+                        time.time() - ts, rewards, steps))
+                    writer.add_scalar("test_reward", rewards, step_idx)
+                    writer.add_scalar("test_steps", steps, step_idx)
+                    if best_reward is None or best_reward &lt; rewards:
+                        if best_reward is not None:
+                            print("Best reward updated: %.3f -&gt; %.3f" % (best_reward, rewards))
+                            name = "best_%+.3f_%d.dat" % (rewards, step_idx)
+                            fname = os.path.join(save_path, name)
+                            torch.save(net_act.state_dict(), fname)
+                        best_reward = rewards
+
+                batch.append(exp)
+                if len(batch) &lt; BATCH_SIZE:
+                    continue
+
+                states_v, actions_v, vals_ref_v = \
+                    common.unpack_batch_a2c(batch, net_crt, last_val_gamma=GAMMA ** REWARD_STEPS, device=<a id="change">device</a>)
+                batch.clear()
+
+                opt_crt.zero_grad()
+                value_v = net_crt(states_v)
+                loss_value_v = F.mse_loss(<a id="change">value_v.squeeze(-1)</a>, vals_ref_v)
+                loss_value_v.backward()
+                opt_crt.step()
+</code></pre><img src="37344585.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 21</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-b5b31cfa22e323f47e41c0c68ffe64f6c5ab488fd2090ea058a26335dc3ed981L60' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/05_train_acktr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/d5b0cd8e7960c247bb7c5b7c832358f8831780fb#diff-6121a23c8673ba40b82f4d680f1af65e316feb8d0c88e68ecf77cfc1129d5d3fL60' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: d5b0cd8e7960c247bb7c5b7c832358f8831780fb</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/01_train_a2c.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/1e9c3ee592be5e11dcce932a73009488d6f85474#diff-4167e56f1146ee4586776221565ff5ec0cdeed70670f15816d5f232f757fbd6aL81' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 1e9c3ee592be5e11dcce932a73009488d6f85474</div><div id='time'> Time: 2018-04-29</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch17/02_imag.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

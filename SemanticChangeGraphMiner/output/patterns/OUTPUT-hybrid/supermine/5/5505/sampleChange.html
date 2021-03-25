@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        )
+
+        affiliation = (
+            <a id="change">unsqueeze</a>(<a id="change">np.log(self.weight)</a>, self.weight_constant_axis)
+            + self.spatial_weight * cacg_log_pdf
+            + self.spectral_weight * vmf_log_pdf
+        )
+        <a id="change">affiliation -= np.max(affiliation, axis=-2, keepdims=True)</a>
+        np.exp(affiliation, out=affiliation)
+        denominator = np.maximum(
+            np.einsum("...kt-&gt;...t", affiliation)[..., None, :],
+            np.finfo(affiliation.dtype).tiny,</code></pre><h3>After Change</h3><pre><code class='java'>
+            np.reshape(vmf_log_pdf, (num_classes, F, T)), (1, 0, 2)
+        )
+
+        <a id="change">if inline_permutation_alignment:
+            affiliation \
+                = log_pdf_to_affiliation_for_integration_models_with_inline_pa(
+                    weight=unsqueeze(self.weight, self.weight_constant_axis),
+                    spatial_log_pdf=self.spatial_weight * cacg_log_pdf,
+                    spectral_log_pdf=self.spectral_weight * vmf_log_pdf,
+                )
+        else:
+            affiliation = log_pdf_to_affiliation(
+                weight=unsqueeze(self.weight, self.weight_constant_axis),
+                log_pdf=(
+                    self.spatial_weight * cacg_log_pdf
+                    + self.spectral_weight * vmf_log_pdf
+                ),
+            )
+
+       </a> return affiliation, quadratic_form
+
+
+class VMFCACGMMTrainer:</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            tokens=squeeze_2d(tokens),
+            languages=squeeze_1d(languages),
+        )
+        <a id="change">return self._forward(inputs)</a>
+
+    @torch.jit.script_method
+    def make_prediction(
+        self,</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 this should only be present in EmbeddingModuleWithDense
+        dense_feat: Optional[List[List[float]]] = None,
+    ) -&gt; torch.Tensor:
+        <a id="change">return self.forward_impl(
+            texts,
+            multi_texts,
+            tokens,
+            languages,
+            dense_feat,
+        )</a>
+
+    @torch.jit.script_method
+    def make_prediction(
+        self,</code></pre>

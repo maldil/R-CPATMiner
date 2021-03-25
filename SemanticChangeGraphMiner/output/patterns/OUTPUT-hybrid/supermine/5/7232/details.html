@@ -1,0 +1,59 @@
+<html><h3>94f2c9d4bd78723440418b6ea914012d83b00bed,tests/test_utilities.py,,test_generate_predictions,#,444
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def test_generate_predictions():
+    for (use_feature_hashing, use_threshold, test_on_subset, all_probabilities,
+         string_labels) in <a id="change">product(*[[True, False], [True, False],
+                                     [True, False], [True, False],
+                                     [True, False]])</a>:
+        if use_threshold and all_probabilities:
+            continue
+        yield (check_generate_predictions, use_feature_hashing,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def test_generate_predictions():
+    <a id="change">for (use_regression,
+         string_labels,
+         num_labels,
+         use_probability,
+         use_pos_label_str,
+         test_on_subset,
+         use_threshold,
+         predict_labels,
+         use_stdout,
+         multiple_input_files) in product([True, False],
+                                          [True, False],
+                                          [2, 4],
+                                          [True, False],
+                                          [True, False],
+                                          [True, False],
+                                          [True, False],
+                                          [True, False],
+                                          [True, False],
+                                          [True, False]):
+        &#47&#47 skip testing conditions that will raise exceptions
+        &#47&#47 in `generate_predictions`
+        if (use_threshold and num_labels != 2 or
+                use_threshold and predict_labels or
+                use_regression and string_labels):
+            continue
+        yield (check_generate_predictions,
+               use_regression,
+               string_labels,
+               num_labels,
+               use_probability,
+               use_pos_label_str,
+               test_on_subset,
+               use_threshold,
+               predict_labels,
+               use_stdout,
+               multiple_input_files)
+
+
+</a>def test_generate_predictions_console_bad_input_ext():
+    lc = LogCapture()
+    lc.begin()
+</code></pre><img src="28054776.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EducationalTestingService/skll/commit/94f2c9d4bd78723440418b6ea914012d83b00bed#diff-b259521308ad9b898000f4fea3040c6196bee7fd89e8608a85606e86c8c2c70bL445' target='_blank'>Link</a></div><div id='project'> Project Name: EducationalTestingService/skll</div><div id='commit'> Commit Name: 94f2c9d4bd78723440418b6ea914012d83b00bed</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: nmadnani@ets.org</div><div id='file'> File Name: tests/test_utilities.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_generate_predictions</div><BR><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/a10212a69685b846f0fa45a4458697b3cb55a9b2#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L253' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: a10212a69685b846f0fa45a4458697b3cb55a9b2</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca25da7c55ba436ab557410d5f2e2e9b557d2840#diff-054133edc3de05f054f1a2973a5e6b6ad2879baa93dff47418bd49842544ad87L412' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca25da7c55ba436ab557410d5f2e2e9b557d2840</div><div id='time'> Time: 2015-03-02</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/models/MarkovModel.py</div><div id='class'> Class Name: MarkovModel</div><div id='method'> Method Name: to_junction_tree</div><BR>

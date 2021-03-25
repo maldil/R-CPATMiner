@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    fmri_img = nibabel.Nifti1Image(data, affine=np.eye(4))
+
+    <a id="change">for method in [&quotkmeans&quot, &quotward&quot, &quotcomplete&quot, &quotaverage&quot]:
+        parcellator = Parcellations(method=method, n_parcels=parcels)
+        parcellator.fit(fmri_img)
+        &#47&#47 transform to signals
+        signals = parcellator.transform(fmri_img)
+        &#47&#47 Test if the signals extracted are of same shape as inputs
+        &#47&#47 Here, we take index 0 since we return list even for single subject
+        assert_equal(signals[0].shape, (fmri_img.shape[3], parcels))
+
+
+</a>def test_parcellations_transform_multi_nifti_images():
+    data = np.ones((10, 11, 12, 10))
+    data[6, 7, 8] = 2
+    data[9, 10, 11] = 3</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    fmri_img = nibabel.Nifti1Image(data, affine=np.eye(4))
+
+    <a id="change">if LooseVersion(sklearn.__version__) &gt;= LooseVersion(&quot0.15&quot):
+        for method in [&quotkmeans&quot, &quotward&quot, &quotcomplete&quot, &quotaverage&quot]:
+            parcellator = Parcellations(method=method, n_parcels=parcels)
+            parcellator.fit(fmri_img)
+            &#47&#47 transform to signals
+            signals = parcellator.transform(fmri_img)
+            &#47&#47 Test if the signals extracted are of same shape as inputs
+            &#47&#47 Here, we take index 0 since we return list even for single
+            &#47&#47 subject
+            assert_equal(signals[0].shape, (fmri_img.shape[3], parcels))
+    else:
+        parcellator2 = Parcellations(method=&quotward&quot, n_parcels=parcels)
+        parcellator2.fit(fmri_img)
+        signals2 = parcellator.transform(fmri_img)
+        assert_equal(signals[0].shape, (fmri_img.shape[3], parcels))
+
+
+</a>def test_parcellations_transform_multi_nifti_images():
+    data = np.ones((10, 11, 12, 10))
+    data[6, 7, 8] = 2
+    data[9, 10, 11] = 3</code></pre>

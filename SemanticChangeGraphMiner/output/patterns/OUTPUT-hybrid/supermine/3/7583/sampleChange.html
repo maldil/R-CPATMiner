@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    sys.stdout.flush()
+            pred_probs = self._predict_one(mgc[mgc_index], history, runtime=True)
+            for output in pred_probs:
+                synth.append(self._pick_sample(<a id="change">output.npvalue()</a>, temperature=temperature))
+
+            hist = synth[-self.HISTORY:]
+            dy.renew_cg()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            last_fft = np.zeros(self.FFT_SIZE, dtype=np.complex)
+            out_real = output_real.value()
+            <a id="change">out_imag = output_imag.value()</a>
+            for ii in range(self.FFT_SIZE):
+                last_fft[ii] = np.complex(out_real[ii], <a id="change">out_imag[ii]</a>)
+                predicted[mgc_index, ii] = np.complex(out_real[ii], out_imag[ii])
+
+        synth = self.vocoder.ifft(predicted, sample_rate=self.params.target_sample_rate)</code></pre>

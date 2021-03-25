@@ -1,0 +1,21 @@
+<html><h3>9a8ef5aa68c0db3f90c22bd0849147fb463dfbfb,chainercv/links/model/light_head_rcnn/light_head_rcnn_train_chain.py,LightHeadRCNNTrainChain,__call__,#LightHeadRCNNTrainChain#,76
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        rpn_features, roi_features = self.light_head_rcnn.extractor(imgs)
+        rpn_locs, rpn_scores, rois, roi_indices, anchor = \
+            self.light_head_rcnn.rpn(rpn_features, img_size, scales)
+        <a id="change">rpn_locs = F.concat(rpn_locs, axis=0)</a>
+        rpn_scores = F.concat(rpn_scores, axis=0)
+
+        gt_rpn_locs = []
+        gt_rpn_labels = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        rpn_features, roi_features = self.light_head_rcnn.extractor(imgs)
+        rpn_locs, rpn_scores, rois, roi_indices, anchor = \
+            self.light_head_rcnn.rpn(rpn_features, img_size, scales)
+        <a id="change">rpn_locs = rpn_locs.reshape((-1, rpn_locs.shape[2]))</a>
+        rpn_scores = rpn_scores.reshape((-1, rpn_scores.shape[2]))
+
+        gt_rpn_locs = []
+        gt_rpn_labels = []</code></pre><img src="10578721.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/9a8ef5aa68c0db3f90c22bd0849147fb463dfbfb#diff-d7f490759aece5ccb7c0c756c05498c5bbf92a3bc68a6accaea9b6d1a6a764a9L119' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 9a8ef5aa68c0db3f90c22bd0849147fb463dfbfb</div><div id='time'> Time: 2019-06-27</div><div id='author'> Author: shingogo@hotmail.co.jp</div><div id='file'> File Name: chainercv/links/model/light_head_rcnn/light_head_rcnn_train_chain.py</div><div id='class'> Class Name: LightHeadRCNNTrainChain</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/b9927f30cb9c92040c30d0fe8c735d8baea167b2#diff-d9d023afb253a6e42aecdf8460b7c8fb54104e41717b2703805d7b94457677a9L62' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: b9927f30cb9c92040c30d0fe8c735d8baea167b2</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gconvbn</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/7537cc093489dc1b38d52c8b0f5d9dd543c8c7fe#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L223' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: 7537cc093489dc1b38d52c8b0f5d9dd543c8c7fe</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR><BR><div id='link'><a href='https://github.com/taehoonlee/tensornets/commit/eb3851cd7f9a3dcfac089ada84802f4c4e05d7cb#diff-cf1acdb9a550f3350223aec4854e4e71f92ed640e108ac1148d361266e360487L71' target='_blank'>Link</a></div><div id='project'> Project Name: taehoonlee/tensornets</div><div id='commit'> Commit Name: eb3851cd7f9a3dcfac089ada84802f4c4e05d7cb</div><div id='time'> Time: 2018-03-18</div><div id='author'> Author: me@taehoonlee.com</div><div id='file'> File Name: tensornets/references/rcnns.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rp_net</div><BR>

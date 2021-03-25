@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        elif acq_optimizer == "lbfgs":
+            best = np.inf
+
+            <a id="change">for j in range(n_restarts_optimizer):
+                x0 = space.transform(space.rvs(n_samples=1,
+                                               random_state=rng))[0]
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    x, a, _ = fmin_l_bfgs_b(
+                        gaussian_acquisition_1D, x0,
+                        args=(gp, np.min(yi), acq_func, xi, kappa),
+                        bounds=space.transformed_bounds,
+                        approx_grad=False,
+                        maxiter=20)
+
+                if a &lt; best:
+                    next_x, best = x, a
+
+        &#47&#47 lbfg should handle this but just in case there are precision errors.
+       </a> next_x = np.clip(
+            next_x, transformed_bounds[:, 0], transformed_bounds[:, 1])
+        next_x = space.inverse_transform(next_x.reshape((1, -1)))[0]
+        yi.append(func(next_x))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    maxiter=20) for x in x0)
+                results = parallel(jobs)
+
+            cand_xs = np.array([r[0] <a id="change">for</a> r in results])
+            <a id="change">cand_acqs = np.array([r[1] for r in results])</a>
+            best_ind = np.argmin(cand_acqs)
+            a = cand_acqs[best_ind]
+            if a &lt; best:
+                next_x, best = cand_xs[best_ind], a</code></pre>

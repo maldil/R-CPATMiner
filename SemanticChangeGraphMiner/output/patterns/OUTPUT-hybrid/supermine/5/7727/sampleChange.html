@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        obs = env.reset()
+
+    time.sleep(args.pause)
+    <a id="change">renderer = env.render()</a>
+    if args.gif:
+        frames.append(numpy.moveaxis(env.render("rgb_array"), 2, 0))
+
+    action = agent.get_action(obs)
+    obs, reward, done, _ = env.step(action)
+    agent.analyze_feedback(reward, done)
+
+    if renderer.window is None:
+        if args.gif:
+            print("Saving gif... ", end="")
+            write_gif(numpy.array(frames), args.gif+".gif", fps=1/args.pause)
+            print("Done.")
+        <a id="change">break</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+done = True
+
+<a id="change">for episode in range(args.episodes):
+    obs = env.reset()
+
+    while True:
+        time.sleep(args.pause)
+        env.render(&quothuman&quot)
+        if args.gif:
+            frames.append(numpy.moveaxis(env.render("rgb_array"), 2, 0))
+
+        action = agent.get_action(obs)
+        obs, reward, done, _ = env.step(action)
+        agent.analyze_feedback(reward, done)
+
+        if done:
+            break
+
+</a>if args.gif:
+    print("Saving gif... ", end="")
+    write_gif(numpy.array(frames), args.gif+".gif", fps=1/args.pause)
+</code></pre>

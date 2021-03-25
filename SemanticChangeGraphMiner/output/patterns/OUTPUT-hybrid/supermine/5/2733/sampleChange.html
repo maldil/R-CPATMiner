@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.losses = []
+        for key, val in loss_dictionary.items():
+            <a id="change">if &quotclass&quot in val:
+                loss_class = getattr(loss, val[&quotclass&quot])
+            else:
+                loss_class = getattr(loss, key)
+           </a> weight = 1 if &quotweight&quot not in val else val[&quotweight&quot]
+            keys = loss_class.DEFAULT_KEYS if &quotkeys&quot not in val else val[&quotkeys&quot]
+            args = [] if &quotargs&quot not in val else val[&quotargs&quot]
+            kwargs = {} if &quotkwargs&quot not in val else val[&quotkwargs&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+            loss_class = getattr(loss, _loss_name)
+            weight = 1 if &quotweight&quot not in val else val[&quotweight&quot]
+            keys = loss_class.DEFAULT_KEYS if &quotkeys&quot not in val else val[&quotkeys&quot]
+            args = [] if &quotargs&quot not in val else <a id="change">copy.deepcopy(val[&quotargs&quot])</a>
+            kwargs = {} if &quotkwargs&quot not in val else copy.deepcopy(val[&quotkwargs&quot])
+            if _loss_name in [&quotCombinationInvariantLoss&quot, &quotPermutationInvariantLoss&quot]:
+                args[0] = getattr(loss, args[0])()
+</code></pre>

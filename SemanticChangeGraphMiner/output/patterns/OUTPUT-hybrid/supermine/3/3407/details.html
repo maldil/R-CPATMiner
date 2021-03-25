@@ -1,0 +1,26 @@
+<html><h3>e6bbf54046cf4567e88cb130300b6b78ec88cb27,test_imagenet.py,,validate,#,95
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 measure accuracy and record loss
+            prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            losses.update(loss.data[0], <a id="change">input.size(0)</a>)
+            top1.update(prec1[0], input.size(0))
+            top5.update(prec5[0], input.size(0))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            count = target.new_tensor([target.shape[0]],dtype=torch.long)
+            if dist.is_initialized():
+              dist.all_reduce(count, dist.reduce_op.SUM)
+            <a id="change">for meter,val in (losses,loss), (top1,prec1), (top5,prec5):
+              if dist.is_initialized():
+                dist.all_reduce(val, dist.reduce_op.SUM)
+              val /= count.item()
+              meter.update(val.item(), count.item())
+            
+            &#47&#47 measure elapsed time
+           </a> batch_time.update(time.time() - end)
+            end = time.time()
+
+            if i % args.print_freq == 0:</code></pre><img src="14719170.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mapillary/inplace_abn/commit/e6bbf54046cf4567e88cb130300b6b78ec88cb27#diff-da60e8ade9599a15b323c80fc6bed3fa60a2c6c6dc32f0a62839dae0cdbdf82cL98' target='_blank'>Link</a></div><div id='project'> Project Name: mapillary/inplace_abn</div><div id='commit'> Commit Name: e6bbf54046cf4567e88cb130300b6b78ec88cb27</div><div id='time'> Time: 2018-11-28</div><div id='author'> Author: samuel@mapillary.com</div><div id='file'> File Name: test_imagenet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-0d5670c5f2a5fcf1725f9db7564e16eeb4669ea8b33c1560f28c55affc6cf2a3L37' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/mrr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mrr</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/9c309a959052ec40cf92cf4baa3894f5118cf8c4#diff-96c9865e97651dada84c1a0027cbe9124208d3c0a48420dc6911b85549a6ae6cL46' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: 9c309a959052ec40cf92cf4baa3894f5118cf8c4</div><div id='time'> Time: 2019-07-08</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/blocks/point_gated_block.py</div><div id='class'> Class Name: PointGatedBlock</div><div id='method'> Method Name: forward</div><BR>

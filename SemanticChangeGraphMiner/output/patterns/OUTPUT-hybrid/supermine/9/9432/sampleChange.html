@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            x_categories = numpy.array([[[0., 1.]]])
+
+            <a id="change">x_masks = numpy.ones((1, 1, 28, 28))</a>
+        else:
+            x_categories = x_categories[:, ~cropped]
+
+            x_masks = x_masks[:, ~cropped]</code></pre><h3>After Change</h3><pre><code class='java'>
+        x_bounding_boxes = x_bounding_boxes[:, ~cropped]
+
+        if x_bounding_boxes.shape == (self.batch_size, 0, 4):
+            <a id="change">x_bounding_boxes = numpy.zeros((self.batch_size, 1, 4))</a>
+
+            x_bounding_boxes[..., 0, 1] = 1
+            <a id="change">x_bounding_boxes[..., 0, 3] = 1</a>
+
+            x_categories = numpy.zeros((self.batch_size, 0, self.n_categories))
+
+            x_categories[..., 0, 0] = 1</code></pre>

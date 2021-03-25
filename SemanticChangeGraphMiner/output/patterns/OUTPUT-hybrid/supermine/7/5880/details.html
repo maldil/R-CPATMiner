@@ -1,0 +1,23 @@
+<html><h3>b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6,skimage/color/colorconv.py,,rgba2rgb,#,163
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    out = np.empty_like(channels)
+
+    for ichan in range(channels.shape[-1]):
+        <a id="change">out</a>[..., ichan] = np.clip(
+            (1 - alpha) * background[ichan] + alpha * channels[..., ichan],
+            a_min=0, a_max=1)
+    return out</code></pre><h3>After Change</h3><pre><code class='java'>
+    if len(background) != 3:
+        raise ValueError(&quotbackground must be an array-like containing 3 RGB &quot
+                         f&quotvalues. Got {len(background)} items&quot)
+    <a id="change">if np.any(background &lt; 0) or np.any(background &gt; 1):
+        raise ValueError(&quotbackground RGB values must be floats between &quot
+                         &quot0 and 1.&quot)
+
+   </a> background = background[np.newaxis, ...]
+    alpha = arr[..., -1, np.newaxis]
+    channels = arr[np.newaxis, ..., :-1]
+</code></pre><img src="24329328.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-image/scikit-image/commit/b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6#diff-a5b79edf6268ee850675946c603a0c03fac862574ab9ac2a661031049ea628e3L188' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-image/scikit-image</div><div id='commit'> Commit Name: b8a5e5db6c2c0ff9540d84c11c05b21fc6023ae6</div><div id='time'> Time: 2020-05-04</div><div id='author'> Author: rfezzani@gmail.com</div><div id='file'> File Name: skimage/color/colorconv.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rgba2rgb</div><BR><BR><div id='link'><a href='https://github.com/craffel/mir_eval/commit/3241912f4160c47e55e25f5812c8493d1f581fca#diff-e345ef8aefe9584ac9004ae3d55c19c00b514059bc764cff7b67b349d7ffd538L548' target='_blank'>Link</a></div><div id='project'> Project Name: craffel/mir_eval</div><div id='commit'> Commit Name: 3241912f4160c47e55e25f5812c8493d1f581fca</div><div id='time'> Time: 2014-04-23</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: mir_eval/util.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate_intervals</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/a25eae5ec137b743faefc6f733b9bbc8fcb1011b#diff-955d28881832469ea2b02793af25ea54cee186fcbfc2828a65539b6e7f566f00L44' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: a25eae5ec137b743faefc6f733b9bbc8fcb1011b</div><div id='time'> Time: 2014-12-23</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/inference/ExactInference.py</div><div id='class'> Class Name: VariableElimination</div><div id='method'> Method Name: query</div><BR>

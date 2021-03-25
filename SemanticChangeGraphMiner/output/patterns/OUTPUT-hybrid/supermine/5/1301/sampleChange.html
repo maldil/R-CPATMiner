@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 next make an outlet
+outlet = StreamOutlet(info)
+
+<a id="change">trials = pd.read_csv(&quot/home/hubert/Downloads/electrode-benchmark 2/stimulus.csv&quot,
+                     index_col=0)</a>
+
+start = time()
+
+n_trials = <a id="change">len(trials)</a>
+record_duration = np.float32(options.duration)
+
+
+&#47&#47 graphics
+mywin = visual.Window([1920, 1080], monitor="testMonitor", units="deg",
+                      fullscr=True)
+grating = visual.GratingStim(win=mywin, mask=&quotcircle&quot, size=40, sf=4)
+fixation = visual.GratingStim(win=mywin, size=0.2, pos=[0, 0], sf=0,
+                              rgb=[1, 0, 0])
+
+rs = np.random.RandomState(42)
+
+core.wait(2)
+
+for ii, trial in trials.iterrows():
+
+    &#47&#47 onset
+    fre = trials[&quotFrequency&quot].iloc[ii]
+    contrast = trials[&quotContrast&quot].iloc[ii]
+    ori = trials[&quotOrientation&quot].iloc[ii]
+    grating.sf = 4 * fre + 0.1
+    grating.ori = ori
+    grating.contrast = contrast
+    grating.draw()
+    fixation.draw()
+
+    &#47&#47 Send marker
+    outlet.push_sample([fre + 1, contrast, ori], local_clock())
+    mywin.flip()
+
+    &#47&#47 offset
+    core.wait(<a id="change">trials</a>[&quotDuration&quot].iloc[ii])
+    fixation.draw()
+    outlet.push_sample([fre + 3, contrast, ori], local_clock())
+    mywin.flip()</code></pre><h3>After Change</h3><pre><code class='java'>
+record_duration = np.float32(options.duration)
+
+&#47&#47 Setup trial list
+<a id="change">frequency = np.random.binomial(1, 0.5, n_trials)</a>
+contrast = np.ones(n_trials, dtype=int)
+orientation = np.random.randint(0, 4, n_trials) * 45
+
+trials = pd.DataFrame(<a id="change">dict(frequency=frequency,
+                           contrast=contrast,
+                           orientation=orientation)</a>)
+
+&#47&#47 graphics
+mywin = visual.Window([1920, 1080], monitor="testMonitor", units="deg",</code></pre>

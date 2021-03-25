@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                force_text(toolbar.render_toolbar() + self.tag))
+            if response.get(&quotContent-Length&quot, None):
+                response[&quotContent-Length&quot] = len(response.content)
+        <a id="change">del self.__class__.debug_toolbars[ident]</a>
+        return response
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            new_response = panel.process_response(request, response)
+            if new_response:
+                response = new_response
+        <a id="change">for panel in reversed(toolbar.enabled_panels):
+            panel.disable_instrumentation()
+       </a> if (&quotgzip&quot not in response.get(&quotContent-Encoding&quot, &quot&quot) and
+                response.get(&quotContent-Type&quot, &quot&quot).split(&quot;&quot)[0] in _HTML_TYPES):
+            response.content = replace_insensitive(
+                force_text(response.content, encoding=settings.DEFAULT_CHARSET),</code></pre>

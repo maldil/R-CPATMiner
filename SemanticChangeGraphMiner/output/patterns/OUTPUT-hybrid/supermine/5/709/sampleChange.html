@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        super().__init__()
+        self.factor = factor
+        self.residual_dense = Conv1d(input_size, hidden_size, 1)
+        <a id="change">self.conv</a> = nn.ModuleList([
+            <a id="change">Conv1d(input_size, hidden_size, 3, dilation=1, padding=1)</a>,
+            Conv1d(hidden_size, hidden_size, 3, dilation=2, padding=2),
+            Conv1d(hidden_size, hidden_size, 3, dilation=4, padding=4),
+        ])</code></pre><h3>After Change</h3><pre><code class='java'>
+        super().__init__()
+        self.factor = factor
+        self.residual_dense = weight_norm(Conv1d(input_size, hidden_size, 1))
+        <a id="change">self.conv</a> = nn.ModuleList([
+            <a id="change">weight_norm(Conv1d(input_size, hidden_size, 3, dilation=1, padding=1))</a>,
+            weight_norm(Conv1d(hidden_size, hidden_size, 3, dilation=2, padding=2)),
+            weight_norm(Conv1d(hidden_size, hidden_size, 3, dilation=4, padding=4)),
+        ])</code></pre>

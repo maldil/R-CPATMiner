@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            
+        conditions.aerodynamics.lift_coefficient                                 = inviscid_lift
+        conditions.aerodynamics.lift_breakdown                                   = Data()
+        conditions.aerodynamics.lift_breakdown.compressible_wings                = <a id="change">Data()</a>
+        conditions.aerodynamics.lift_breakdown.total                             = inviscid_lift        
+        conditions.aerodynamics.lift_breakdown.compressible_wings[&quotmain_wing&quot]   = inviscid_lift &#47&#47 currently using vehicle drag for wing        
+                                                                           
+        &#47&#47 Inviscid drag, zeros are a placeholder for possible future implementation</code></pre><h3>After Change</h3><pre><code class='java'>
+        state.conditions.aerodynamics.lift_breakdown.compressible_wings  = inviscid_lift
+        
+        &#47&#47 Inviscid drag, zeros are a placeholder for possible future implementation
+        <a id="change">inviscid_drag                                              = np.zeros([data_len,1])</a>       
+        state.conditions.aerodynamics.inviscid_drag_coefficient    = inviscid_drag
+        
+        return inviscid_lift, inviscid_drag</code></pre>

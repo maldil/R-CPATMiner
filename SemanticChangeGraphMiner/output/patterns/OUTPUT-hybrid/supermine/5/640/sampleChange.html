@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def my_metric(y_input, y_target):
+    assert len(y_input) == len(y_target)
+    correct = 0
+    <a id="change">for y0, y1 in zip(y_input, y_target):
+        if np.array_equal(y0, y1):
+            correct += 1
+   </a> return correct / len(y_input)
+
+
+def my_metric2(y_input, y_target):</code></pre><h3>After Change</h3><pre><code class='java'>
+    pred = torch.argmax(output, dim=1)
+    assert pred.shape[0] == len(target)
+    correct = 0
+    correct += <a id="change">torch.sum(pred == target).item()</a>
+    return correct / len(target)
+
+def my_metric2(output, target, k=3):
+    pred = torch.topk(output, k, dim=1)[1]</code></pre>

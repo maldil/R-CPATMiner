@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            ({&quottcp.srcport&quot: 1025, &quottcp.dstport&quot: 1025},  {&quottshark_tcp_nonpriv_port_other_in&quot})):
+        test_data = {field: None for field in WS_FIELDS}
+        test_data.update(test_ports)
+        <a id="change">mac_df</a> = <a id="change">pd.DataFrame([test_data])</a>
+        ports = instance._tshark_ports(&quotin&quot, mac_df)
+        assert test_output == {col for col, val in ports.items() if val == 1}
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            ({&quottcp.srcport&quot: 1025, &quottcp.dstport&quot: 1025},  {&quottshark_tcp_nonpriv_port_other_in&quot})):
+        test_data = {field: None for field in WS_FIELDS}
+        test_data.update(test_ports)
+        <a id="change">mac_df</a> = <a id="change">recast_df(pd.DataFrame([test_data]))</a>
+        ports = instance._tshark_ports(&quotin&quot, mac_df)
+        assert test_output == {col for col, val in ports.items() if val == 1}
+
+</code></pre>

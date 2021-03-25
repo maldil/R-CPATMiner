@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &quot&quot&quot
+
+    N, K = np.shape(S)
+    freq = <a id="change">np.transpose(np.linspace(0, sr/2, N))</a>
+
+    slope = np.zeros((1, K))
+    intercept = np.zeros((1, K))
+
+    for k in range(0, K):
+        p = np.polyfit(freq, S[:, k], order)
+        slope[:, k] = p[0]
+        <a id="change">intercept[:, k] = p[1]</a>
+
+    return (slope, intercept)
+
+&#47&#47 - End Features added by BWalburn</code></pre><h3>After Change</h3><pre><code class='java'>
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        <a id="change">coefficients = np.concatenate([[np.polyfit(freq_t, S_t, order)]
+                                       for (freq_t, S_t) in zip(freq.T, S.T)],
+                                      axis=0).T</a>
+
+    return coefficients
+
+&#47&#47 - End Features added by BWalburn</code></pre>

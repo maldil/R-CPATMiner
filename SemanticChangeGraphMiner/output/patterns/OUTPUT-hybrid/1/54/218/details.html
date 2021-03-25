@@ -1,0 +1,68 @@
+<html><h3>c3a2b85b98dc441f97703c426d5bd75568b0ce10,keras_rcnn/layers/losses/_rcnn.py,RCNNRegressionLoss,compute_regression_loss,#,64
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        indices_r = a[:, :2]
+        indices_c = a[:, 2:]
+        indices_0 = keras.backend.concatenate([indices_r, <a id="change">indices_c * 4</a>], 1)
+        indices_1 = keras.backend.concatenate([indices_r, indices_c * 4 + 1], 1)
+        indices_2 = <a id="change">keras.backend.concatenate([indices_r, indices_c * 4 + 2], 1)</a>
+        indices_3 = keras.backend.concatenate([indices_r, indices_c * 4 + 3], 1)
+        <a id="change">indices</a> = keras.backend.concatenate([indices_0,
+                                            indices_1,
+                                            indices_2,
+                                            indices_3], 0)
+        <a id="change">updates</a> = keras.backend.ones_like(indices, dtype=keras.backend.floatx())
+        <a id="change">labels</a> = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output, dtype=&quotfloat32&quot), indices, updates[:, 0])
+
+        <a id="change">inside_mul</a> = inside_weights * keras.backend.abs(output - target) * labels
+        <a id="change">smooth_l1_sign</a> = keras.backend.cast(keras.backend.less(inside_mul, 1.0 / sigma2), keras.backend.floatx())
+
+        <a id="change">smooth_l1_option1</a> = (inside_mul * inside_mul) * (0.5 * sigma2)
+        <a id="change">smooth_l1_option2</a> = inside_mul - (0.5 / sigma2)
+
+        <a id="change">smooth_l1_result</a> = (smooth_l1_option1 * smooth_l1_sign)
+        <a id="change">smooth_l1_result</a> += (smooth_l1_option2 * (1.0 - smooth_l1_sign))
+
+        <a id="change">loss</a> = outside_weights * smooth_l1_result
+        epsilon = 1e-4
+        <a id="change">b</a> = keras.backend.sum(epsilon + labels)
+        <a id="change">loss</a> = tensorflow.reduce_sum(loss) / b
+
+        return loss
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        a = keras.backend.cast(a, &quotint32&quot)
+
+        rr = a[:, :2]
+        <a id="change">cc</a> = a[:, 2:]
+
+        indices = [
+            keras.backend.concatenate([rr, cc * 4 + 0], 1),
+            <a id="change">keras.backend.concatenate([rr, cc * 4 + 1], 1)</a>,
+            keras.backend.concatenate([rr, cc * 4 + 2], 1),
+            keras.backend.concatenate([rr, cc * 4 + 3], 1)
+        ]
+
+        <a id="change">indices</a> = keras.backend.concatenate(indices, 0)
+
+        <a id="change">updates</a> = keras.backend.ones_like(indices, dtype=keras.backend.floatx())
+        <a id="change">labels</a> = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output, dtype=&quotfloat32&quot), indices, updates[:, 0])
+
+        <a id="change">inside_mul</a> = inside_weights * keras.backend.abs(output - target) * labels
+        <a id="change">smooth_l1_sign</a> = keras.backend.cast(keras.backend.less(inside_mul, 1.0 / sigma2), keras.backend.floatx())
+
+        <a id="change">smooth_l1_option1</a> = (inside_mul * inside_mul) * (0.5 * sigma2)
+        <a id="change">smooth_l1_option2</a> = inside_mul - (0.5 / sigma2)
+
+        <a id="change">smooth_l1_result</a> = (smooth_l1_option1 * smooth_l1_sign)
+        <a id="change">smooth_l1_result</a> += (smooth_l1_option2 * (1.0 - smooth_l1_sign))
+
+        <a id="change">loss</a> = outside_weights * smooth_l1_result
+        epsilon = 1e-4
+        <a id="change">b</a> = keras.backend.sum(epsilon + labels)
+        <a id="change">loss</a> = tensorflow.reduce_sum(loss) / b
+
+        return loss
+</code></pre><img src="1325788.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/broadinstitute/keras-rcnn/commit/c3a2b85b98dc441f97703c426d5bd75568b0ce10#diff-f8204673c8c47486ee4c90ca21f1d077faf5f76713356cfa7dc78e79542863a5L84' target='_blank'>Link</a></div><div id='project'> Project Name: broadinstitute/keras-rcnn</div><div id='commit'> Commit Name: c3a2b85b98dc441f97703c426d5bd75568b0ce10</div><div id='time'> Time: 2017-11-14</div><div id='author'> Author: allen.goodman@icloud.com</div><div id='file'> File Name: keras_rcnn/layers/losses/_rcnn.py</div><div id='class'> Class Name: RCNNRegressionLoss</div><div id='method'> Method Name: compute_regression_loss</div><BR>

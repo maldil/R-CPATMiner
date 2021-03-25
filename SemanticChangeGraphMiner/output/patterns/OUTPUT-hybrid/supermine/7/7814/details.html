@@ -1,0 +1,20 @@
+<html><h3>9439f5215fde61ee40910b0320ff4dd8d28571e2,fancyimpute/bayesian_ridge_regression.py,BayesianRidgeRegression,predict_dist,#BayesianRidgeRegression#,84
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            X_ones = X
+        mus = self.predict(X)
+        covar = <a id="change">self.sigma_squared_estimate * self.inverse_covariance</a>
+        sigmas_squared = self.sigma_squared_estimate + <a id="change">np.sum(
+            np.dot(X_ones, covar) * X_ones, axis=1)</a>
+        return mus, sigmas_squared
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        rescaled_X = dot(X_ones, self.covar)
+        rescaled_X *= X_ones
+        sigmas_squared = <a id="change">rescaled_X.sum(axis=1)</a>
+        sigmas_squared += self.sigma_squared_estimate
+        return mus, sigmas_squared
+</code></pre><img src="30098859.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/9439f5215fde61ee40910b0320ff4dd8d28571e2#diff-92b1ff4ba66ed960cee6922719e930b2caf4cac4a4ce531b517a7837cfbaab56L84' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 9439f5215fde61ee40910b0320ff4dd8d28571e2</div><div id='time'> Time: 2016-01-10</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/bayesian_ridge_regression.py</div><div id='class'> Class Name: BayesianRidgeRegression</div><div id='method'> Method Name: predict_dist</div><BR><BR><div id='link'><a href='https://github.com/iskandr/fancyimpute/commit/9439f5215fde61ee40910b0320ff4dd8d28571e2#diff-92b1ff4ba66ed960cee6922719e930b2caf4cac4a4ce531b517a7837cfbaab56L84' target='_blank'>Link</a></div><div id='project'> Project Name: iskandr/fancyimpute</div><div id='commit'> Commit Name: 9439f5215fde61ee40910b0320ff4dd8d28571e2</div><div id='time'> Time: 2016-01-10</div><div id='author'> Author: alex.rubinsteyn@gmail.com</div><div id='file'> File Name: fancyimpute/bayesian_ridge_regression.py</div><div id='class'> Class Name: BayesianRidgeRegression</div><div id='method'> Method Name: predict_dist</div><BR><BR><div id='link'><a href='https://github.com/glm-tools/pyglmnet/commit/4d302bc9fda66b8352b7d2956cd22714c6959096#diff-cc78bf166299339921d4c5dadf0499912041bb7b8415db1f800a54870a6fb141L390' target='_blank'>Link</a></div><div id='project'> Project Name: glm-tools/pyglmnet</div><div id='commit'> Commit Name: 4d302bc9fda66b8352b7d2956cd22714c6959096</div><div id='time'> Time: 2020-08-16</div><div id='author'> Author: giovanni.det@gmail.com</div><div id='file'> File Name: pyglmnet/pyglmnet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gradhess_logloss_1d</div><BR><BR><div id='link'><a href='https://github.com/glm-tools/pyglmnet/commit/c35829c9a7624fe9722543fb874d0aa2a7b8fb61#diff-cc78bf166299339921d4c5dadf0499912041bb7b8415db1f800a54870a6fb141L366' target='_blank'>Link</a></div><div id='project'> Project Name: glm-tools/pyglmnet</div><div id='commit'> Commit Name: c35829c9a7624fe9722543fb874d0aa2a7b8fb61</div><div id='time'> Time: 2020-08-16</div><div id='author'> Author: giovanni.det@gmail.com</div><div id='file'> File Name: pyglmnet/pyglmnet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gradhess_logloss_1d</div><BR>

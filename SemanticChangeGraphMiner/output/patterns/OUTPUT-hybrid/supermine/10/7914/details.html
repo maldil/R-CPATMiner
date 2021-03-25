@@ -1,0 +1,42 @@
+<html><h3>688e56c09d028c0a956d1434ee16c60aea820de1,scripts/ina_speech_segmenter.py,,,#,37
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    for i, e in enumerate(input_files):
+        print(&quotprocessing file %d/%d: %s&quot % (i+1, len(input_files), e))
+        <a id="change">base</a>, _ = os.path.splitext(os.path.basename(e))
+        seg2csv(seg(e), &quot%s/%s.csv&quot % (odir, base))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+input_files = []
+for e in args.input:
+    if e.startswith("http"):
+        <a id="change">input_files += [e]</a>
+    else:
+        input_files += glob.glob(e)
+assert len(input_files) &gt; 0, "No existing media selected for analysis! Bad values provided to -i ({})".format(args.input)
+
+odir = args.output_directory
+assert os.access(odir, os.W_OK), &quotDirectory %s is not writable!&quot % odir
+
+&#47&#47 Do processings
+from inaSpeechSegmenter import Segmenter, seg2csv, to_parse
+
+&#47&#47 load neural network into memory, may last few seconds
+seg = Segmenter()
+
+&#47&#47 case of a file of files
+<a id="change">files = to_parse(input_files)</a>
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    &#47&#47print(&quotprocessing file %d/%d: %s&quot % (i+1, len(input_files), e))
+    base = [os.path.splitext(os.path.basename(e)) <a id="change">for</a> e in files]
+    base = <a id="change">[base[i][0] for i in range(len(base))]</a>
+    if len(odir) &gt; 0:
+        <a id="change">fout = [&quot%s/%s.csv&quot % (odir, elem) for elem in base]</a>
+    seg2csv(seg(files), fout)
+
+
+</code></pre><img src="30619603.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ina-foss/inaSpeechSegmenter/commit/688e56c09d028c0a956d1434ee16c60aea820de1#diff-51d478e134ba42256fa8fa3b708b64ce68fdfc7ee35ebdeaf385a97855b62ea8L37' target='_blank'>Link</a></div><div id='project'> Project Name: ina-foss/inaSpeechSegmenter</div><div id='commit'> Commit Name: 688e56c09d028c0a956d1434ee16c60aea820de1</div><div id='time'> Time: 2018-04-19</div><div id='author'> Author: eliottlechapt@yahoo.fr</div><div id='file'> File Name: scripts/ina_speech_segmenter.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/d8e36306e055a69328b67372615b1e05abb298c2#diff-97881f884dd61de4cafa81d99538897be4699e6b7fec1a69dbc2d0e9c06f3ec1L65' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: d8e36306e055a69328b67372615b1e05abb298c2</div><div id='time'> Time: 2019-07-11</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/training_statistics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rotate_psi</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/b0699b34e2b16cb3abbd22c397077cc6c21ef279#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL265' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: b0699b34e2b16cb3abbd22c397077cc6c21ef279</div><div id='time'> Time: 2016-11-30</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR>

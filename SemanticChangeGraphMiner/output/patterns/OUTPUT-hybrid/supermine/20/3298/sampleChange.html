@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            return False
+
+    def __ne__(self, other):
+        <a id="change">return not self.__eq__(other)</a>
+
+    def __repr__(self):
+        return "Feature (" + str(self.name) + " on " + str(self.candidate) + ")"
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        except AttributeError:
+            return False
+
+    def __ne__(<a id="change">self</a>, other):
+        <a id="change">try:
+            return self.candidate != other.candidate or self.name != other.name
+        except AttributeError:
+            return True
+
+   </a> def __hash__(self):
+        return hash(self.candidate) + hash(self.name)
+</code></pre>

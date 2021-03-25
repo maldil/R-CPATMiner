@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    digest_contents = await Get(DigestContents, Digest, stripped_sources.snapshot.digest)
+    imports_per_file = tuple(
+        find_python_imports(file_content.content.decode(), module_name=module.module)
+        for <a id="change">file_content</a>, <a id="change">module</a> in <a id="change">zip(digest_contents, modules)</a>
+    )
+    owner_per_import = await MultiGet(
+        Get(PythonModuleOwner, PythonModule(imported_module))
+        for file_imports in imports_per_file</code></pre><h3>After Change</h3><pre><code class='java'>
+    digest_contents = await Get(DigestContents, Digest, stripped_sources.snapshot.digest)
+
+    owner_requests: List[Get[PythonModuleOwner, PythonModule]] = []
+    for file_content, module in <a id="change">zip(digest_contents, modules)</a>:
+        file_imports_obj = find_python_imports(
+            file_content.content.decode(), module_name=module.module
+        )</code></pre>

@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        jitter = np.zeros_like(rgb_img)
+        jitter[:,:,1] = noise
+
+        <a id="change">if self.should_activate(self):
+            image_name = self.get_name_path(&quotnoisy&quot)
+            noisy_image = cv2.add(self.image, jitter)
+            combined = np.vstack((self.image[:math.ceil(height/2),:,:], noisy_image[math.ceil(height/2):,:,:]))
+            cv2.imwrite(image_name,combined)
+
+   </a> def brighten(self):
+        print("Brightening...")
+        image_for_brightening = Image.fromarray(self.image)
+        enhancer = ImageEnhance.Brightness(image_for_brightening)</code></pre><h3>After Change</h3><pre><code class='java'>
+        noise = np.random.randint(0,50, (height, width))
+        jitter = np.zeros_like(rgb_img)
+        jitter[:,:,1] = noise
+        <a id="change">image_name</a> = self.get_name_path(&quotnoisy&quot)
+        noisy_image = cv2.add(self.image, jitter)
+        <a id="change">combined</a> = np.vstack((self.image[:math.ceil(height/2),:,:], noisy_image[math.ceil(height/2):,:,:]))
+        print(image_name)
+        <a id="change">cv2.imwrite(image_name,combined)</a>
+
+    def brighten(self, max_brighten=13):
+        print("Brightening...")
+        image_for_brightening = Image.fromarray(self.image)</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        super(BasicBlock_noshortcut, self).__init__()
+        self.conv1 = conv3x3(in_planes, planes, stride)
+        self.bn1 = nn.BatchNorm2d(planes)
+        <a id="change">self.conv2</a> = <a id="change">conv3x3(planes, planes)</a>
+        self.bn2 = nn.BatchNorm2d(planes)
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(BasicBlock_noshortcut, self).__init__()
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1   = nn.BatchNorm2d(planes)
+        <a id="change">self.conv2</a> = <a id="change">nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)</a>
+        self.bn2   = nn.BatchNorm2d(planes)
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))</code></pre>

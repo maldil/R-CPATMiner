@@ -1,0 +1,25 @@
+<html><h3>e25ce99878d2b5c151ed8fde92276fbb2cb338b2,deslib/des/knop.py,KNOP,select,#KNOP#,137
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 If all weights is equals to zero, it means that no classifier was selected. Hence, use all of them with equal
+        &#47&#47 weights.
+        if np.sum(weights) == 0:
+            <a id="change">weights = np.ones(self.n_classifiers, dtype=int)</a>
+
+        <a id="change">votes = np.array([], dtype=int)</a>
+        for clf_idx, clf in enumerate(self.pool_classifiers):
+            <a id="change">votes = np.hstack(
+                (votes, np.ones(weights[clf_idx], dtype=int) * clf.predict(query)[0]))</a>
+
+        return votes
+
+    def classify_instance(self, query, predictions):</code></pre><h3>After Change</h3><pre><code class='java'>
+        indices = (competence &gt; 0)
+
+        &#47&#47 For the rows that are all False (i.e., no base classifier was selected, select all classifiers (set all True)
+        <a id="change">indices[~np.any(indices, axis=1), :]</a> = True
+        &#47&#47
+        &#47&#47 output_profile_query = self._output_profile_transform(query)
+        &#47&#47 weights = self.estimate_competence(output_profile_query.reshape(1, -1))</code></pre><img src="27409122.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-4aa9336c477916c68a0a0c1dd39a6df0343168ed578ac17b07ab57957c50d302L137' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knop.py</div><div id='class'> Class Name: KNOP</div><div id='method'> Method Name: select</div><BR><BR><div id='link'><a href='https://github.com/geomstats/geomstats/commit/315990901cdcdca241013ee5e6c581391bae2523#diff-fb08d78939d176309b96de2a44530e9c4360c565605b4d65e428a3d319542732L749' target='_blank'>Link</a></div><div id='project'> Project Name: geomstats/geomstats</div><div id='commit'> Commit Name: 315990901cdcdca241013ee5e6c581391bae2523</div><div id='time'> Time: 2020-12-15</div><div id='author'> Author: yann.thanwerdas@gmail.com</div><div id='file'> File Name: geomstats/geometry/spd_matrices.py</div><div id='class'> Class Name: SPDMetricBuresWasserstein</div><div id='method'> Method Name: exp</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/e25ce99878d2b5c151ed8fde92276fbb2cb338b2#diff-418b7e06c6963d234362daf596e7ecf369548db4acebef3dd2ed15c37ac1c1eeL99' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: e25ce99878d2b5c151ed8fde92276fbb2cb338b2</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/knora_u.py</div><div id='class'> Class Name: KNORAU</div><div id='method'> Method Name: select</div><BR>

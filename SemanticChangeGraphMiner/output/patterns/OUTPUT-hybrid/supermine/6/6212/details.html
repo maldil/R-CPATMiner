@@ -1,0 +1,70 @@
+<html><h3>c9fd2c425cb873508ba16221819574400ad2443e,dask_image/ndmeasure/__init__.py,,extrema,#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ("max_val", input.dtype),
+        ("max_pos", numpy.int)
+    ])
+    default = numpy.zeros((), out_dtype)[<a id="change">()</a>]
+
+    extrema_lbl = labeled_comprehension(
+        input, labels, index,
+        _utils._extrema, out_dtype, default, pass_positions=True
+    )
+
+    extrema_lbl = {k: extrema_lbl[k] for k in extrema_lbl.dtype.names}
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = (
+        extrema_lbl["min_val"],
+        extrema_lbl["max_val"],
+        extrema_lbl["min_pos"],
+        extrema_lbl["max_pos"]
+    )</a>
+
+    return result
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    )
+
+    extrema_lbl = collections.OrderedDict([
+        (k, extrema_lbl[k]) <a id="change">for</a> k in type_mapping.keys()
+    ])
+
+    for pos_key in ["min_pos", "max_pos"]:
+        pos_1d = extrema_lbl[pos_key]
+        if not pos_1d.ndim:
+            pos_1d = pos_1d[None]
+
+        pos_nd = _utils._unravel_index(pos_1d, input.shape)
+
+        if index.ndim == 0:
+            pos_nd = dask.array.squeeze(pos_nd)
+        elif index.ndim &gt; 1:
+            pos_nd = pos_nd.reshape(
+                (int(numpy.prod(pos_nd.shape[:-1])), pos_nd.shape[-1])
+            )
+
+        extrema_lbl[pos_key] = pos_nd
+
+    <a id="change">result = tuple(extrema_lbl.values())</a>
+
+    return result
+
+</code></pre><img src="25341762.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/c9fd2c425cb873508ba16221819574400ad2443e#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L101' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: c9fd2c425cb873508ba16221819574400ad2443e</div><div id='time'> Time: 2018-09-30</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: extrema</div><BR><BR><div id='link'><a href='https://github.com/ANSSI-FR/SecuML/commit/39efccc696a1c20745a52cc50935cdc24f92230d#diff-9c9e860332234350df6b572d0965d9f654c8902d2f09e8a57f2fc229a73f1e11L51' target='_blank'>Link</a></div><div id='project'> Project Name: ANSSI-FR/SecuML</div><div id='commit'> Commit Name: 39efccc696a1c20745a52cc50935cdc24f92230d</div><div id='time'> Time: 2019-05-09</div><div id='author'> Author: anael.beaugnon@ssi.gouv.fr</div><div id='file'> File Name: secuml/exp/data/features.py</div><div id='class'> Class Name: FeaturesFromExp</div><div id='method'> Method Name: get_matrix</div><BR><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-1ce4b6309bc5eacc0914bdafff9c0aeecefbe346c9963006c00ae848dd8ea4e2L120' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/adjoint.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: odeint_adjoint</div><BR>

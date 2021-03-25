@@ -1,0 +1,25 @@
+<html><h3>2bae518e899657e536572fa59df6e1587795e397,librosa/feature.py,,line_features,#,332
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    intercept = np.zeros((1, K))
+
+    for k in range(0, K):
+        <a id="change">p = np.polyfit(freq, S[:, k], order)</a>
+        slope[:, k] = p[0]
+        <a id="change">intercept[:, k] = p[1]</a>
+
+    return (slope, intercept)
+
+&#47&#47 - End Features added by BWalburn</code></pre><h3>After Change</h3><pre><code class='java'>
+    if freq.ndim == 1:
+        coefficients = np.polyfit(freq, S, order)
+    else:
+        <a id="change">coefficients = np.concatenate([[np.polyfit(freq_t, S_t, order)]
+                                       for (freq_t, S_t) in zip(freq.T, S.T)],
+                                      axis=0).T</a>
+
+    return coefficients
+
+&#47&#47 - End Features added by BWalburn</code></pre><img src="23523415.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/60c2e01bfc93bc01da21b79ebe9f222e601e1931#diff-35c177116306959429a401a00a1fc3a638f7c1d77a19d7b93feda9ae6eb3480dL12' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 60c2e01bfc93bc01da21b79ebe9f222e601e1931</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering2d/core/scattering2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scattering2d</div><BR><BR><div id='link'><a href='https://github.com/keunwoochoi/kapre/commit/fe8a6175dc98c7bc3b667fe88afcb5c2a4c94169#diff-05bc302f37b3e89ef01404a0817dc09cec4cfa614684505c5a528733e3dcc7e2L144' target='_blank'>Link</a></div><div id='project'> Project Name: keunwoochoi/kapre</div><div id='commit'> Commit Name: fe8a6175dc98c7bc3b667fe88afcb5c2a4c94169</div><div id='time'> Time: 2017-01-17</div><div id='author'> Author: gnuchoi+github@gmail.com</div><div id='file'> File Name: kapre/stft.py</div><div id='class'> Class Name: Stft</div><div id='method'> Method Name: call</div><BR>

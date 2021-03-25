@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    functor=get_logit_function(model,target_layer_idx)
+    &#47&#471. get the wildtype predictions (n,1)                                                                                                                                                         
+    wild_type_logits=np.asarray(get_logit(functor,X))
+    wild_type_logits=<a id="change">np.squeeze(wild_type_logits,axis=2)</a>
+    &#47&#472. expand the wt array to dimensions: (num_samples,1,sequence_length)                                                                                                                         
+    &#47&#47Initialize mutants array to the same shape                                                                                                                                                              
+    output_dim=wild_type_logits.shape+X.shape[2:4]
+    wt_expanded=np.empty(output_dim)
+    mutants_expanded=np.empty(output_dim)
+    empty_onehot=np.zeros(output_dim[3])
+    &#47&#473. Iterate through all tasks, positions                                                                                                                                                                 
+    <a id="change">for task_index in range(output_dim[0]):
+        for sample_index in range(output_dim[1]):
+            print("task:"+str(task_index)+" sample:"+str(sample_index))
+            &#47&#47fill in wild type logit values into an array of dim (task,sequence_length,num_bases)                                                                                                                    
+            wt_logit_for_task_sample=wild_type_logits[task_index][sample_index]
+            wt_expanded[task_index][sample_index]=np.tile(wt_logit_for_task_sample,(output_dim[2],output_dim[3]))
+            &#47&#47mutagenize each position                                                                                                                                                                            
+            for base_pos in range(output_dim[2]):
+                &#47&#47for each position, iterate through the 4 bases                                                                                                                                                  
+                for base_letter in range(output_dim[3]):
+                    cur_base=np.copy(empty_onehot)
+                    cur_base[base_letter]=1
+                    Xtmp=np.copy(np.expand_dims(X[sample_index],axis=0))
+                    Xtmp[0][0][base_pos]=cur_base
+                    &#47&#47get the logit of Xtmp                                                                                                                                                                              
+                    mutants_expanded[task_index][sample_index][base_pos][base_letter]=np.squeeze(get_logit(functor,Xtmp)[task_index])
+    &#47&#47subtract wt_expanded from mutants_expanded
+   </a> ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values
+    ism_vals_mean=np.expand_dims(np.mean(ism_vals,axis=3),axis=3)
+    ism_vals_normed=ism_vals-ism_vals_mean</code></pre><h3>After Change</h3><pre><code class='java'>
+                Xtmp=np.array(np.expand_dims(X[sample_index],axis=0))
+                Xtmp[0][0][base_pos]=cur_base
+                &#47&#47get the logit of Xtmp
+                <a id="change">Xtmp_logit=np.squeeze(preact_function(Xtmp),axis=0)</a>
+                mutants_expanded[sample_index][0][base_pos][base_letter]=Xtmp_logit[task_index]
+    &#47&#47subtract wt_expanded from mutants_expanded
+    ism_vals=mutants_expanded-wt_expanded
+    &#47&#47For each position subtract the mean ISM score for that position from each of the 4 values</code></pre>

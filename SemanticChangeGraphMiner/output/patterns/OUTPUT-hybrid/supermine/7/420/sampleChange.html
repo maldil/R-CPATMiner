@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    re: float representing Fraction of Energy Correctly Assigned
+    &quot&quot&quot
+
+    <a id="change">fraction = np.array([])</a>
+    total_energy_predicted = np.sum(predicted_power.values)
+
+    for appliance in predicted_power:
+
+        <a id="change">appliance_energy_predicted = np.sum(predicted_power[appliance].values)</a>
+
+        appliance_energy_ground_truth = np.sum(
+            df_appliances_ground_truth[appliance].values)
+        total_energy_ground_truth = np.sum(df_appliances_ground_truth.values)
+
+        <a id="change">fraction = np.append(
+            fraction, np.min(
+                [appliance_energy_predicted / total_energy_predicted,
+                 appliance_energy_ground_truth /
+                 total_energy_ground_truth
+                 ]))</a>
+
+    return np.sum(fraction)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    fractions = []
+    for meter_instance in predictions_submeters.instance():
+        <a id="change">fraction = min(fraction_per_meter_predictions[meter_instance],
+                       fraction_per_meter_ground_truth[meter_instance])</a>
+        fractions.append(fraction)
+
+    return sum(fractions)
+</code></pre>

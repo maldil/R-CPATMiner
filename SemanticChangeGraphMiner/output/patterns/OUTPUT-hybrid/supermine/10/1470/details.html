@@ -1,0 +1,38 @@
+<html><h3>18857c333e04b6815ec1f2ab9fcec1c0a0ae7bfd,cube/models/vocoder.py,BeeCoder,__init__,#BeeCoder#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        self.mlp = [hidden_w, hidden_b]
+
+        self.output_w = <a id="change">self.model.add_parameters((2, input_size))</a>
+        self.output_b = self.model.add_parameters((2))
+
+        self.trainer = dy.AdamTrainer(self.model, alpha=params.learning_rate)
+        self.dio = DatasetIO()</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.upsample_w = []
+        self.upsample_b = []
+        for ii in range(self.UPSAMPLE_COUNT):
+            self.upsample_w.append(<a id="change">self.model.add_parameters((self.params.mgc_order, self.params.mgc_order))</a>)
+            self.upsample_b.append(self.model.add_parameters((self.params.mgc_order)))
+
+        hidden_w = []
+        hidden_b = []
+        for layer_size in self.HIDDEN_SIZE:
+            hidden_w.append(self.model.add_parameters((layer_size, input_size)))
+            hidden_b.append(self.model.add_parameters((layer_size)))
+            input_size = layer_size
+
+        &#47&#47 self.networks.append([hidden_w, hidden_b])
+
+        self.mlp = [hidden_w, hidden_b]
+
+        self.mean_w = self.model.add_parameters((1, input_size))
+        self.mean_b = self.model.add_parameters((1))
+        self.stdev_w = <a id="change">self.model.add_parameters((1, input_size))</a>
+        self.stdev_b = <a id="change">self.model.add_parameters((1))</a>
+
+        self.trainer = dy.AdamTrainer(self.model, alpha=params.learning_rate)
+        self.dio = DatasetIO()
+        self.vocoder = MelVocoder()</code></pre><img src="7777398.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 12</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/18857c333e04b6815ec1f2ab9fcec1c0a0ae7bfd#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L25' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 18857c333e04b6815ec1f2ab9fcec1c0a0ae7bfd</div><div id='time'> Time: 2018-11-01</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/18857c333e04b6815ec1f2ab9fcec1c0a0ae7bfd#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L25' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 18857c333e04b6815ec1f2ab9fcec1c0a0ae7bfd</div><div id='time'> Time: 2018-11-01</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/28e74f1163eda466a7728aa728919bf9dc8a0f15#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L25' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 28e74f1163eda466a7728aa728919bf9dc8a0f15</div><div id='time'> Time: 2018-11-01</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L24' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: __init__</div><BR>

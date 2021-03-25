@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Instantiate transformers
+    loaded_transformers = {}
+    <a id="change">for name, parameters in transformers:
+        for source in [pliers.converters, pliers.filters, pliers.extractors]:
+            if hasattr(source, name):
+                trans = getattr(source, name)(**parameters)
+                loaded_transformers[trans] = (name, parameters)
+                break
+        else:
+            raise ValueError("Transformer name could not be found")
+
+    &#47&#47 Transform stimuli
+   </a> results = pd.DataFrame({&quottime_extracted&quot:[datetime.datetime.now()]})
+    for trans in loaded_transformers.keys():
+        for stim in stimuli:
+            if trans._stim_matches_input_types(stim):</code></pre><h3>After Change</h3><pre><code class='java'>
+    stimuli = load_stims(stimuli)
+
+    &#47&#47 Get transformers
+    loaded_transformers = <a id="change">{get_transformer(name, **params): (name, params)
+                           for name, params in transformers}</a>
+
+    &#47&#47 Transform stimuli
+    results = pd.DataFrame({&quottime_extracted&quot:[datetime.datetime.now()]})
+    for trans in loaded_transformers.keys():</code></pre>

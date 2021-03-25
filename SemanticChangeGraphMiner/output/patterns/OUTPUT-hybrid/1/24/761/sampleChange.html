@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        filter = Filter()
+
+        if price_index:
+            <a id="change">data_frame</a> = <a id="change">data_frame.resample(&quotB&quot)</a>           &#47&#47 resample into business days
+            data_frame = calculations.calculate_returns(data_frame)
+
+        data_frame.index = pandas.to_datetime(data_frame.index)
+        <a id="change">data_frame</a> = filter.filter_time_series_by_holidays(data_frame, cal)
+
+        monthly_seasonality = calculations.average_by_month_day_by_bus_day(data_frame, cal)
+        monthly_seasonality = monthly_seasonality.loc[month_list]
+
+        if partition_by_month:
+            <a id="change">monthly_seasonality</a> = monthly_seasonality.unstack(level=0)
+
+            if add_average:
+               monthly_seasonality[&quotAvg&quot] = monthly_seasonality.mean(axis=1)
+
+        if cum is True:
+            if partition_by_month:
+                monthly_seasonality.loc[0] = numpy.zeros(len(monthly_seasonality.columns))
+                &#47&#47 monthly_seasonality.index = monthly_seasonality.index + 1       &#47&#47 shifting index
+                <a id="change">monthly_seasonality</a> = monthly_seasonality.sort_index()
+
+            <a id="change">monthly_seasonality</a> = calculations.create_mult_index(monthly_seasonality)
+
+        return monthly_seasonality
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        filter = Filter()
+
+        if price_index:
+            <a id="change">data_frame</a> = <a id="change">data_frame.resample(&quotB&quot).mean()</a>           &#47&#47 resample into business days
+            data_frame = calculations.calculate_returns(data_frame)
+
+        data_frame.index = pandas.to_datetime(data_frame.index)
+        <a id="change">data_frame</a> = filter.filter_time_series_by_holidays(data_frame, cal)
+
+        monthly_seasonality = calculations.average_by_month_day_by_bus_day(data_frame, cal)
+        monthly_seasonality = monthly_seasonality.loc[month_list]
+
+        if partition_by_month:
+            <a id="change">monthly_seasonality</a> = monthly_seasonality.unstack(level=0)
+
+            if add_average:
+               monthly_seasonality[&quotAvg&quot] = monthly_seasonality.mean(axis=1)
+
+        if cum is True:
+            if partition_by_month:
+                monthly_seasonality.loc[0] = numpy.zeros(len(monthly_seasonality.columns))
+                &#47&#47 monthly_seasonality.index = monthly_seasonality.index + 1       &#47&#47 shifting index
+                <a id="change">monthly_seasonality</a> = monthly_seasonality.sort_index()
+
+            <a id="change">monthly_seasonality</a> = calculations.create_mult_index(monthly_seasonality)
+
+        return monthly_seasonality
+</code></pre>

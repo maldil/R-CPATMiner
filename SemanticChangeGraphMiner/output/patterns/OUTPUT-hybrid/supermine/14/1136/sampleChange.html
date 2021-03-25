@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    A = A.dot(A.conj().T)
+    U, s, Vh = rsvd(A, k=k, p=5, q=2)
+    Ak = U.dot(np.diag(s).dot(Vh))
+    <a id="change">percent_error = 100 * np.linalg.norm(A - Ak) / np.linalg.norm(A)</a>
+
+    assert percent_error &lt; atol_float64
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 test transposed
+    A = A[:, :50].conj().T
+
+    <a id="change">U</a>, s, Vt = rsvd(A, k, oversample=5, n_subspace=2)
+    <a id="change">Ak = U.dot(np.diag(s).dot(Vt))</a>
+
+    assert relative_error(A, Ak) &lt; atol_float64
+</code></pre>

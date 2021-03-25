@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    elif not dropout_token:
+                        source.append(token)
+                else:
+                    <a id="change">source.append(token)</a>
+            yield source, target
+
+    def unknown_token(self):
+        return FCEReader.UNKNOWN_TOKEN</code></pre><h3>After Change</h3><pre><code class='java'>
+            line_src = f.readline()
+            line_dst = f.readline()
+            if line_src and line_dst:
+                source = <a id="change">line_src</a>.lower()[5:].strip().split()
+                target = line_dst.lower()[5:].strip().split()
+                if self.config.enable_data_dropout:
+                    new_source = []</code></pre>

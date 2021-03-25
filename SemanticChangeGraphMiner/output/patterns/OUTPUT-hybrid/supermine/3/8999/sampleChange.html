@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for r in rng:
+            model = clf.fit(X_train.ix[:, 0:r], y_train)
+            if predict_proba == True:
+                y_train_predict = <a id="change">clf.predict_proba(X_train.ix[:, 0:r])</a>
+                y_test_predict = clf.predict_proba(X_test.ix[:, 0:r])
+            else:
+                y_train_predict = clf.predict(X_train.ix[:, 0:r])
+                y_test_predict = clf.predict(X_test.ix[:, 0:r])</code></pre><h3>After Change</h3><pre><code class='java'>
+    (training_error, test_error): tuple of lists
+    
+
+    <a id="change">if scoring != &quotmisclassification error&quot:
+        from sklearn import metrics
+
+        scoring_func = {
+            &quotaccuracy&quot: metrics.accuracy_score,
+            &quotaverage_precision&quot: metrics.average_precision_score,
+            &quotf1&quot: metrics.f1_score,
+            &quotf1_micro&quot: metrics.f1_score,
+            &quotf1_macro&quot: metrics.f1_score,
+            &quotf1_weighted&quot: metrics.f1_score,
+            &quotf1_samples&quot: metrics.f1_score,
+            &quotlog_loss&quot: metrics.log_loss,
+            &quotprecision&quot: metrics.precision_score,
+            &quotrecall&quot: metrics.recall_score,
+            &quotroc_auc&quot: metrics.roc_auc_score,
+            &quotadjusted_rand_score&quot: metrics.adjusted_rand_score,
+            &quotmean_absolute_error&quot: metrics.mean_absolute_error,
+            &quotmean_squared_error&quot: metrics.mean_squared_error,
+            &quotmedian_absolute_error&quot: metrics.median_absolute_error,
+            &quotr2&quot: metrics.r2_score}
+
+        if not scoring in scoring_func.keys():
+            raise ArgumentError(&quotscoring must be in&quot, scoring_func.keys())
+
+
+    else:
+        def misclf_err(y_predict, y):
+            return  (y_predict != y).sum() / len(y)
+
+        scoring_func = {
+            &quotmisclassification error&quot: misclf_err}
+
+   </a> training_errors = []
+    test_errors = []
+
+    if kind not in (&quottraining_size&quot, &quotn_features&quot):</code></pre>

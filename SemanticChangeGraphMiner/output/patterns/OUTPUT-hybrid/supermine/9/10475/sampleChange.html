@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def test_can_use_metas_as_new_columns(self):
+        _, _, m = column_sizes(self.table)
+        order = <a id="change">[random.randrange(-m + 1, 0) for _ in self.domain.metas]</a>
+        new_metas = [self.domain.metas[::-1][i] for i in order]
+        new_domain = self.create_domain(new_metas, new_metas, new_metas)
+        new_table = data.Table.from_table(new_domain, self.table)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def test_can_use_metas_as_new_columns(self):
+        _, _, m = column_sizes(self.table)
+        order = <a id="change">np.random.permutation(range(-m, 0))</a>
+        new_metas = [self.domain.metas[::-1][i] for i in order]
+        new_domain = self.create_domain(<a id="change">new_metas[0:2]</a>, [new_metas[2]], <a id="change">new_metas[3:5]</a>)
+        new_table = data.Table.from_table(new_domain, self.table)
+
+        self.assert_table_with_filter_matches(</code></pre>

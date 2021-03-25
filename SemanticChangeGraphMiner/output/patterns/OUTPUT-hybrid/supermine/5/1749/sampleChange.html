@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
+        detections = torch.cat((image_pred[:, :5], class_conf.float(), class_pred.float()), 1)
+        &#47&#47 Iterate through all predicted classes
+        for c in <a id="change">detections[:, -1].unique()</a>:
+            &#47&#47 Get the detections with the particular class
+            detections_class = detections[detections[:, -1] == c]
+            &#47&#47 Sort the detections by maximum objectness confidence</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
+        detections = torch.cat((image_pred[:, :5], class_conf.float(), class_pred.float()), 1)
+        &#47&#47 Iterate through all predicted classes
+        <a id="change">unique_labels = detections[:, -1].cpu().unique()</a>
+        <a id="change">if prediction.is_cuda:
+            unique_labels = unique_labels.cuda()
+       </a> for c in unique_labels:
+            &#47&#47 Get the detections with the particular class
+            detections_class = detections[detections[:, -1] == c]
+            &#47&#47 Sort the detections by maximum objectness confidence</code></pre>

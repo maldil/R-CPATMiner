@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        left = []
+        right = []
+        <a id="change">for i in range(self.num_fields):
+            for j in range(i + 1, self.num_fields):
+                left.append(i)
+                right.append(j)
+
+       </a> embeddings_left = tf.gather(params=field_wise_vectors,
+                                    indices=left,
+                                    axis=1)
+        embeddings_right = tf.gather(params=field_wise_vectors,</code></pre><h3>After Change</h3><pre><code class='java'>
+        left = []
+        right = []
+
+        <a id="change">for i, j in itertools.combinations(list(range(self.num_fields)), 2):
+            left.append(i)
+            right.append(j)
+
+       </a> embeddings_left = tf.gather(params=field_wise_vectors,
+                                    indices=left,
+                                    axis=1)
+        embeddings_right = tf.gather(params=field_wise_vectors,</code></pre>

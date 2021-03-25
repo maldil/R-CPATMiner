@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        target_stats = Counter(y)
+        skf = StratifiedKFold(n_splits=self.cv, shuffle=False).split(X, y)
+        <a id="change">probabilities = np.zeros(y.shape[0], dtype=float)</a>
+
+        <a id="change">for train_index, test_index in skf:
+            X_train = _safe_indexing(X, train_index)
+            X_test = _safe_indexing(X, test_index)
+            y_train = _safe_indexing(y, train_index)
+            y_test = _safe_indexing(y, test_index)
+
+            self.estimator_.fit(X_train, y_train)
+
+            probs = self.estimator_.predict_proba(X_test)
+            probabilities[test_index] = probs[range(len(y_test)), y_test]
+
+       </a> idx_under = np.empty((0,), dtype=int)
+
+        for target_class in np.unique(y):
+            if target_class in self.sampling_strategy_.keys():</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.estimator_, X, y, cv=skf, n_jobs=self.n_jobs,
+            method=&quotpredict_proba&quot
+        )
+        <a id="change">probabilities = probabilities[range(len(y)), y]</a>
+
+        idx_under = np.empty((0,), dtype=int)
+
+        for target_class in np.unique(y):</code></pre>

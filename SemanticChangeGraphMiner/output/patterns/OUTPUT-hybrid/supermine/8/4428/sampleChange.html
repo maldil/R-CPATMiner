@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                raise TypeError(&quotCrinacle\&quots Gras measurements are not supported yet!&quot)
+            else:
+                &#47&#47 Read text file for IEM and Ears-711 headphone measurements
+                <a id="change">with open(fp, &quotr&quot, encoding=&quotutf-8&quot) as fh:
+                    s = fh.read()
+
+           </a> freq = []
+            raw = []
+            for line in s.split(&quot\n&quot):
+                if len(line) == 0 or line[0] == &quot*&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+        return file_paths
+
+    def process(self, item, file_paths, target_dir=None):
+        <a id="change">if target_dir is None:
+            raise TypeError(&quot"target_dir" must be given&quot)
+       </a> avg_fr = FrequencyResponse(name=item.true_name)
+        avg_fr.raw = np.zeros(avg_fr.frequency.shape)
+        for fp in file_paths:
+            <a id="change">with open(fp, &quotr&quot, encoding=&quotutf-8&quot) as fh:
+                s = fh.read()
+
+           </a> freq = []
+            raw = []
+            for line in s.split(&quot\n&quot):
+                if len(line) == 0 or line[0] == &quot*&quot:
+                    &#47&#47 Skip empty lines and comments
+                    if &quotC-weighting compensation: On&quot in line:
+                        print(f&quotC-weighted measurement: {item.false_name}&quot)
+                    continue
+
+                frp = line.split(&quot, &quot)
+                if len(frp) == 1:
+                    frp = line.split(&quot\t&quot)
+                <a id="change">if len(frp) == 1:
+                    frp = line.split(&quot &quot)
+               </a> if len(frp) == 2:
+                    f, r = frp
+                elif len(frp) == 3:
+                    f, r, p = frp</code></pre>

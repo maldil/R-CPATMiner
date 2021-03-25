@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if factor == 0:
+            factor = self.zoom_factor
+        if self.axis != &quotvalue&quot:
+            <a id="change">self._zoom_in_mapper(self.component.index_mapper, factor)</a>
+            <a id="change">self._index_factor</a> *= factor
+        if self.axis != &quotindex&quot:
+            <a id="change">self._zoom_in_mapper(self.component.value_mapper, factor)</a>
+            <a id="change">self._value_factor</a> *= factor
+            
+        <a id="change">self._append_state((self._index_factor, self._value_factor))</a>
+    
+    def zoom_out(self, factor=0):
+        if factor == 0:
+            factor = self.zoom_factor</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47  public interface
+    &#47&#47--------------------------------------------------------------------------
+    
+    def zoom_in(<a id="change">self</a>, factor=0):
+        if factor == 0:
+            <a id="change">factor</a> = self.zoom_factor
+            
+        new_index_factor = <a id="change">self._index_factor * factor</a>
+        new_value_factor = self._value_factor * factor
+                    
+        if self.axis == &quotvalue&quot:
+            new_index_factor = self._index_factor
+        elif self.axis == &quotindex&quot:
+            new_value_factor = self._value_factor
+            
+        <a id="change">zoom_state = ZoomState((self._index_factor, self._value_factor),
+                               (new_index_factor, new_value_factor))</a>
+        
+        <a id="change">zoom_state.apply(self)</a>
+        <a id="change">self._append_state(zoom_state)</a>
+    
+    def zoom_out(self, factor=0):
+        if factor == 0:
+            factor = self.zoom_factor</code></pre>

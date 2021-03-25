@@ -1,0 +1,24 @@
+<html><h3>e4deccd98b73c918f582297050ecaf899e5387eb,ristretto/tests/test_lu.py,,test_rlu_float64,#,12
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    m, k = 100, 10
+    A = np.array(np.random.randn(m, k), np.float64)
+    A = A.dot(A.T)
+    <a id="change">A = A[:,0:50]</a>
+    P, L, U, Q = rlu(A, permute=False, k=k, p=5, q=2)
+    Ak = P.dot(L.dot(U)).dot(Q)
+    <a id="change">percent_error = 100 * np.linalg.norm(A - Ak) / np.linalg.norm(A)</a>
+
+    assert percent_error &lt; atol_float64
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 ------------------------------------------------------------------------
+    &#47&#47 test wth permute == True
+    L, U = rlu(A, k, oversample=5, n_subspace=2, permute=True)
+    <a id="change">Ak = L.dot(U)</a>
+
+    assert relative_error(A, Ak) &lt; atol_float64
+
+</code></pre><img src="25042270.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-514e1bc22917f2cf6b2d6f03dc1a0f35089e88eb6c2fde1326e05b47a5d27c35L14' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_lu.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rlu_float64</div><BR><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/e4deccd98b73c918f582297050ecaf899e5387eb#diff-514e1bc22917f2cf6b2d6f03dc1a0f35089e88eb6c2fde1326e05b47a5d27c35L26' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: e4deccd98b73c918f582297050ecaf899e5387eb</div><div id='time'> Time: 2018-05-24</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/tests/test_lu.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_rlu_complex128</div><BR><BR><div id='link'><a href='https://github.com/fabianp/mord/commit/ee143e803c2fa352d1c42c95335773639267f190#diff-2fb9a772e4ecbfd228293ca637c954244c95e295aaa3b1e84fbc8f31bfc777bbL58' target='_blank'>Link</a></div><div id='project'> Project Name: fabianp/mord</div><div id='commit'> Commit Name: ee143e803c2fa352d1c42c95335773639267f190</div><div id='time'> Time: 2015-07-14</div><div id='author'> Author: f@bianp.net</div><div id='file'> File Name: mord/threshold_based.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: grad_margin</div><BR>

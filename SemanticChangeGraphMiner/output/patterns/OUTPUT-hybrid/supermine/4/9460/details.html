@@ -1,0 +1,30 @@
+<html><h3>9da9c8edd24bede6eeeeea8739835ea53ca58cbc,category_encoders/one_hot.py,OneHotEncoder,reverse_dummies,#OneHotEncoder#,293
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out_cols = X.columns.values
+
+        for col in cols:
+            col_list = [col0 <a id="change">for</a> col0 in out_cols if str(col0).startswith(str(col))]
+            prefix_length = len(str(col))+1 &#47&#47 original column name plus underscore
+            if self.use_cat_names:
+                X[col] = 0
+                for tran_col in col_list:
+                    val = tran_col[prefix_length:]
+                    X.loc[X[tran_col] == 1, col] = val
+            else:
+                value_array = np.array([<a id="change">int(col0[prefix_length:])</a> for col0 in col_list])
+                <a id="change">X[col] = np.dot(X[col_list].values, value_array.T)</a>
+            out_cols = [col0 for col0 in out_cols if col0 not in col_list]
+
+        X = X.reindex(columns=out_cols + cols)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                existing_col = column_mapping.get(&quotnew_col_name&quot)
+                val = column_mapping.get(&quotval&quot)
+                X.loc[X[existing_col] == 1, col] = val
+                <a id="change">mapped_columns.append(existing_col)</a>
+
+        out_cols = [col0 for col0 in out_cols if col0 not in mapped_columns]
+
+        return X.reindex(columns=out_cols + cols)</code></pre><img src="36170950.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/categorical-encoding/commit/9da9c8edd24bede6eeeeea8739835ea53ca58cbc#diff-c79bb02bf62bfaa0d7a0fe3ca8376185c502d1c748b0c5cc0c225b166481b3f9L293' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/categorical-encoding</div><div id='commit'> Commit Name: 9da9c8edd24bede6eeeeea8739835ea53ca58cbc</div><div id='time'> Time: 2018-10-21</div><div id='author'> Author: jcastaldo08@gmail.com</div><div id='file'> File Name: category_encoders/one_hot.py</div><div id='class'> Class Name: OneHotEncoder</div><div id='method'> Method Name: reverse_dummies</div><BR><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/c12606499df2c43104528c6019102d24af5c0eb8#diff-46fca0c7c15a248c9a55b8e5d5496cefa346a9b3d125610cffcc0fcd1ba46085L64' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: c12606499df2c43104528c6019102d24af5c0eb8</div><div id='time'> Time: 2014-10-29</div><div id='author'> Author: michael.hanke@gmail.com</div><div id='file'> File Name: mvpa2/datasets/openfmri.py</div><div id='class'> Class Name: OpenFMRIDataset</div><div id='method'> Method Name: get_subj_ids</div><BR><BR><div id='link'><a href='https://github.com/geekcomputers/Python/commit/e1c4e6a7c7db68e123d978bfc56feb057898935f#diff-a17dc8b1db8a3f0d9d502c3c2d7d13001ca5af03ef5419bf371ac130926ce968L46' target='_blank'>Link</a></div><div id='project'> Project Name: geekcomputers/Python</div><div id='commit'> Commit Name: e1c4e6a7c7db68e123d978bfc56feb057898935f</div><div id='time'> Time: 2019-10-24</div><div id='author'> Author: kostasdedesar@penguin</div><div id='file'> File Name: Counting-sort.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/c12606499df2c43104528c6019102d24af5c0eb8#diff-46fca0c7c15a248c9a55b8e5d5496cefa346a9b3d125610cffcc0fcd1ba46085L119' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: c12606499df2c43104528c6019102d24af5c0eb8</div><div id='time'> Time: 2014-10-29</div><div id='author'> Author: michael.hanke@gmail.com</div><div id='file'> File Name: mvpa2/datasets/openfmri.py</div><div id='class'> Class Name: OpenFMRIDataset</div><div id='method'> Method Name: get_bold_run_ids</div><BR>

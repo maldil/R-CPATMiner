@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    opt.trg_pad_idx = data[&quotvocab&quot][&quottrg&quot].vocab.stoi[Constants.PAD_WORD]
+
+    opt.src_vocab_size = len(data[&quotvocab&quot][&quotsrc&quot].vocab)
+    <a id="change">opt.trg_vocab_size = len(data[&quotvocab&quot][&quottrg&quot].vocab)</a>
+    training_data, validation_data = prepare_dataloaders(data, device, opt.batch_size)
+
+    &#47&#47========= Preparing Model =========&#47&#47
+    if opt.embs_share_weight:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if opt.data_pkl:
+        training_data, validation_data = prepare_dataloaders(opt, device)
+    elif <a id="change">all((opt.train_path, opt.val_path))</a>:
+        training_data, validation_data = prepare_dataloaders_from_bpe_files(opt, device)
+    else:
+        <a id="change">raise</a>
+
+    print(opt)
+
+    transformer = Transformer(</code></pre>

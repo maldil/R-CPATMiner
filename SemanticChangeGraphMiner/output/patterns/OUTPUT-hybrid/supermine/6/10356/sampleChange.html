@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        
+        &#47&#47 rdkit molecule must exist
+        <a id="change">self._check_rdkit_molecule()</a>
+
+        &#47&#47 kekulize flag
+        if &quotkekuleSmiles&quot in kwargs and kwargs[&quotkekuleSmiles&quot]:
+            Chem.Kekulize(self.rdkit_molecule)</code></pre><h3>After Change</h3><pre><code class='java'>
+            m.creator = creator
+            yield m
+
+    def to_smiles(<a id="change">self</a>, **kwargs):
+        
+        This function creates and stores the SMILES string for a pre-built molecule.
+
+        Parameters
+        ----------
+        kwargs:
+            The arguments for the rdkit.Chem.MolToSmiles function.
+            The documentation is available at: http://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html&#47&#47rdkit.Chem.rdmolfiles.MolToSmiles
+
+        Notes
+        -----
+            - The rdkit or pybel molecule object must be created in advance.
+            - If only pybel molecule is available, we create an rdkit molecule using its SMILES representation, and then recreate the SMILES string using rdkit arguments.
+            - The molecule will be modified in place.
+            - For rdkit molecule the SMILES string is canocical by default, unless when one requests kekuleSmiles.
+
+        
+        &#47&#47 molecule must exist
+        <a id="change">engine = self._check_original_molecule()</a>
+        if engine == &quotpybel&quot:
+            smiles = <a id="change">self</a>.pybel_molecule.write(&quotsmi&quot).strip().split(&quot\t&quot)[0]
+            self._load_rdkit(smiles, &quotsmiles&quot, from_load=False)
+            self.to_smiles()
+        else:</code></pre>

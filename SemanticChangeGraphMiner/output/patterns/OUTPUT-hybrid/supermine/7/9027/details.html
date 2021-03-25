@@ -1,0 +1,32 @@
+<html><h3>ef29cd9bde8695645d63ae7f568fb298809e7b19,tpot/builtins/dataset_selector.py,DatasetSelector,fit,#DatasetSelector#,43
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        features_i_df = pd.read_csv(self.subset_i, sep=&quot\t&quot, header=0)
+        if isinstance(X, pd.DataFrame): &#47&#47 use columns&quot names
+            self.feature_names = list(X.columns.values)
+            <a id="change">feature_i = [str(val) for val in features_i_df.values.flatten()]</a>
+        elif isinstance(X, np.ndarray): &#47&#47 use index
+            self.feature_names = list(range(X.shape[1]))
+            feature_i = [int(val) for val in features_i_df.values.flatten()]
+        self.feat_list = list(set(feature_i).intersection(set(self.feature_names)))</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        subset_df = pd.read_csv(self.subset_list, header=0, index_col=0)
+
+        <a id="change">if isinstance(self.sel_subset, int):
+            self.sel_subset_name = subset_df.index[self.sel_subset]
+        elif isinstance(self.sel_subset, list):
+            self.sel_subset_name = []
+            for s in self.sel_subset:
+                if isinstance(s, int):
+                    self.sel_subset_name.append(subset_df.index[s])
+                else:
+                    self.sel_subset_name.append(s)
+        else: &#47&#47 self.sel_subset is a string
+            self.sel_subset_name = self.sel_subset
+
+       </a> sel_features = subset_df.loc[self.sel_subset_name, &quotFeatures&quot]
+        if not isinstance(sel_features, str):
+            sel_features = ";".join(sel_features.tolist())
+</code></pre><img src="35146746.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/EpistasisLab/tpot/commit/ef29cd9bde8695645d63ae7f568fb298809e7b19#diff-af09f9926e900caa780b0103b6e5fe571db2074aa4eb6c98ddac9a74465e7ac8L43' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/tpot</div><div id='commit'> Commit Name: ef29cd9bde8695645d63ae7f568fb298809e7b19</div><div id='time'> Time: 2018-10-15</div><div id='author'> Author: weixuanf@pennmedicine.upenn.edu</div><div id='file'> File Name: tpot/builtins/dataset_selector.py</div><div id='class'> Class Name: DatasetSelector</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/146108a2c027ef2e116236ac8722e00a77103597#diff-54981afcbe9e238fe6e8d6b9b4b623fbf4022517cc3320aea418bfe402386719L39' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: 146108a2c027ef2e116236ac8722e00a77103597</div><div id='time'> Time: 2020-01-16</div><div id='author'> Author: svlandeg@users.noreply.github.com</div><div id='file'> File Name: thinc/layers/concatenate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/neurodsp-tools/neurodsp/commit/96e0a7454eebcc95e3c9dfdff6b3682bd23442af#diff-5942de32c6eafd6bf7be396f109b20163e68f164d20bb329610ef6aa10eac3c0L34' target='_blank'>Link</a></div><div id='project'> Project Name: neurodsp-tools/neurodsp</div><div id='commit'> Commit Name: 96e0a7454eebcc95e3c9dfdff6b3682bd23442af</div><div id='time'> Time: 2019-04-30</div><div id='author'> Author: tdonoghue@ucsd.edu</div><div id='file'> File Name: neurodsp/sim/combined.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sim_combined</div><BR>

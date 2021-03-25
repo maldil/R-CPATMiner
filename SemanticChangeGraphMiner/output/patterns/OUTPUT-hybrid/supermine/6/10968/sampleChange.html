@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+           Meeting of the ISMRM; Honolulu. April 22-28
+    
+    &#47&#47 Define weights as diag(sqrt(ng) * msignal ** 2)
+    W = <a id="change">np.diag(ng * msignal ** 2)</a>
+
+    &#47&#47 WLS solution
+    <a id="change">BTW = np.dot(design_matrix.T, W)</a>
+    inv_BT_W_B = np.linalg.pinv(np.dot(BTW, design_matrix))
+    invBTWB_BTW = np.dot(inv_BT_W_B, BTW)
+    params = np.dot(invBTWB_BTW, np.log(msignal))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    w = ng * msignal ** 2
+
+    &#47&#47 BTW = (Bw).T, where w are diag of W
+    BTW = <a id="change">(w[..., None] * design_matrix)</a>.T
+    inv_BT_W_B = np.linalg.pinv(np.einsum(&quot...ij,jk-&gt;...ik&quot, BTW,
+                                          design_matrix))  &#47&#47 dot product
+    invBTWB_BTW = np.einsum(&quot...ij,...jk-&gt;...ik&quot, inv_BT_W_B, BTW)</code></pre>

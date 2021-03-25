@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                   random_state=None, acq="EI", xi=0.01, kappa=1.96,
+                   verbose=False, specs=None, callback=None):
+
+    <a id="change">if callback is not None:
+        if isinstance(callback, Callable):
+            callback = [callback]
+        elif not (isinstance(callback, list) and
+                  all([isinstance(c, Callable) for c in callback])):
+            raise ValueError("callback should be either a callable or "
+                             "a list of callables.")
+
+   </a> rng = check_random_state(random_state)
+    space = Space(dimensions)
+
+    &#47&#47 Initialize with provided points (x0 and y0) and/or random points</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    rng = check_random_state(random_state)
+    space = Space(dimensions)
+    <a id="change">callbacks = check_callback(callback)</a>
+
+    &#47&#47 Initialize with provided points (x0 and y0) and/or random points
+    if n_calls &lt;= 0:
+        raise ValueError(</code></pre>

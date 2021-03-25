@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    )
+    n_layers = len(gcn_lstm_model._layers)
+    n_gc_layers = len(gcn_lstm_model.gc_activations)
+    <a id="change">for i in range(n_gc_layers + 1, n_layers - 3):
+        assert gcn_lstm_model._layers[i].return_sequences == True
+   </a> assert gcn_lstm_model._layers[n_layers - 3].return_sequences == False
+
+
+def test_gcn_lstm_layers():</code></pre><h3>After Change</h3><pre><code class='java'>
+        lstm_activations=["tanh"],
+    )
+    for layer in gcn_lstm_model._lstm_layers[:-1]:
+        <a id="change">assert layer.return_sequences == True</a>
+    assert gcn_lstm_model._lstm_layers[-1].return_sequences == False
+
+
+def test_gcn_lstm_layers():</code></pre>

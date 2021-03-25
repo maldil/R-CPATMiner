@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def load_wav(path):
+    <a id="change">return librosa.core.load(path, sr=hparams.sample_rate)[0]</a>
+
+
+def save_wav(wav, path):
+    wav *= 32767 / max(0.01, np.max(np.abs(wav)))</code></pre><h3>After Change</h3><pre><code class='java'>
+        x = x.astype(np.float32) / signed_int16_max
+    if sr != hparams.sample_rate:
+        x = librosa.resample(x, sr, hparams.sample_rate)
+    x = <a id="change">np.clip(x, -1.0, 1.0)</a>
+    <a id="change">return x</a>
+
+
+def save_wav(wav, path):
+    wav *= 32767 / max(0.01, np.max(np.abs(wav)))</code></pre>

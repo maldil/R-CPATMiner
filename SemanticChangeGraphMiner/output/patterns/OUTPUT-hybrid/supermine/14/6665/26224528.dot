@@ -1,0 +1,41 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Sequential" a="32" s="2669,2686" l="11,1" shape="box"];
+3 [label="FieldAccess" a="22" s="2649" l="10" shape="box"];
+6 [label="FieldAccess" a="22" s="2660" l="8" shape="box"];
+7 [label="{}" a="4" s="2443,2642" l="1,1" shape="box"];
+8 [label="Assignment:=" a="7" s="2659" l="1" shape="box"];
+10 [label="LeakyReLU" a="32" s="2489,2507" l="10,1" shape="box"];
+12 [label="Tanh" a="32" s="2636" l="6" shape="box"];
+14 [label="LeakyReLU" a="32" s="2569,2587" l="10,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Sequential" a="32" s="2381,2590" l="11,1" shape="box"];
+4 [label="FieldAccess" a="22" s="2361" l="10" shape="box"];
+5 [label="FieldAccess" a="22" s="2372" l="8" shape="box"];
+9 [label="LeakyReLU" a="32" s="2437,2455" l="10,1" shape="box"];
+11 [label="Tanh" a="32" s="2584" l="6" shape="box"];
+13 [label="LeakyReLU" a="32" s="2517,2535" l="10,1" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 8 [label="_para_"];
+2 -> 4 [label="_def_"];
+3 -> 4 [label="_map_"];
+5 -> 2 [label="_recv_"];
+6 -> 5 [label="_map_"];
+6 -> 1 [label="_recv_"];
+7 -> 1 [label="_para_"];
+8 -> 3 [label="_def_"];
+9 -> 2 [label="_para_"];
+10 -> 7 [label="_para_"];
+10 -> 9 [label="_map_"];
+11 -> 2 [label="_para_"];
+12 -> 7 [label="_para_"];
+12 -> 11 [label="_map_"];
+13 -> 2 [label="_para_"];
+14 -> 7 [label="_para_"];
+14 -> 13 [label="_map_"];
+}

@@ -1,0 +1,22 @@
+<html><h3>6c7f63e58534ff60c524324a1cf8628c838df772,storage/cloud-client/iam_test.py,,bucket,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+@pytest.fixture
+def bucket():
+    bucket_name = <a id="change">"test-iam-" + str(int(time.time()))</a>
+    bucket = storage.Client().create_bucket(bucket_name)
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.patch()
+    yield bucket</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.fixture
+def bucket():
+    bucket = None
+    while bucket is None or <a id="change">bucket.exists()</a>:
+        bucket_name = <a id="change">"test-iam-{}".format(uuid.uuid4())</a>
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.patch()</code></pre><img src="23601641.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/6c7f63e58534ff60c524324a1cf8628c838df772#diff-47d9f8b8689fddb590eb710aadeb69738f9edec084f40ac46167cdbdd03022d3L35' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 6c7f63e58534ff60c524324a1cf8628c838df772</div><div id='time'> Time: 2020-03-05</div><div id='author'> Author: crwilcox@google.com</div><div id='file'> File Name: storage/cloud-client/iam_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucket</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/29ab5e1965503be3ffe87462e973edf1d457af6e#diff-aa0090b83308c091628d9d5fb29397ba5e5a6c25c4ba7cf95b8ef8d6d2993676L10' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 29ab5e1965503be3ffe87462e973edf1d457af6e</div><div id='time'> Time: 2018-09-06</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/scripts/extract_subimgs_single.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/646012c26db9335f69216c5d8656090c4211f323#diff-df2150750d0514f1d172e7ed23f8486edc94d774a9cb6514e76159c3ac71a0bfL42' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 646012c26db9335f69216c5d8656090c4211f323</div><div id='time'> Time: 2020-03-05</div><div id='author'> Author: crwilcox@google.com</div><div id='file'> File Name: storage/cloud-client/bucket_lock_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: bucket</div><BR>

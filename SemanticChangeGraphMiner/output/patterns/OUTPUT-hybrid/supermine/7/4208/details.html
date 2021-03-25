@@ -1,0 +1,22 @@
+<html><h3>9dfafadcea9f709132bce12341a32ff5e27ec33a,implementations/infogan/infogan.py,,sample_image,#,157
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Sample noise
+    z = Variable(FloatTensor(np.random.normal(0, 1, (n_row**2, opt.latent_dim))))
+    &#47&#47 Get labels ranging from 0 to n_classes for n rows
+    labels = np.array(<a id="change">[num for _ in range(n_row) for num in range(n_row)]</a>)
+    <a id="change">labels = Variable(LongTensor(labels))</a>
+    code_input = Variable(FloatTensor(np.random.uniform(-1, 1, (n_row**2, opt.code_dim))))
+    gen_imgs = generator(z, labels, code_input)
+    save_image(gen_imgs.data, &quotimages/%d.png&quot % batches_done, nrow=n_row, normalize=True)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Get varied c1 and c2
+    zeros = np.zeros((n_row**2, 1))
+    <a id="change">c_varied = np.repeat(np.linspace(-1, 1, n_row)[:, np.newaxis], n_row, 0)</a>
+    c1 = Variable(FloatTensor(np.concatenate((c_varied, zeros), -1)))
+    c2 = Variable(FloatTensor(np.concatenate((zeros, c_varied), -1)))
+    sample1 = generator(static_z, static_label, c1)
+    sample2 = generator(static_z, static_label, c2)</code></pre><img src="18476443.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/9dfafadcea9f709132bce12341a32ff5e27ec33a#diff-1a25c34669bbfa03b9238d7cbb6f22fbb4896e1fa7779271848902ebd250df44L162' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 9dfafadcea9f709132bce12341a32ff5e27ec33a</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/infogan/infogan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR><BR><div id='link'><a href='https://github.com/tflearn/tflearn/commit/44874bed267e008be9bee5d85a4f4040b854d246#diff-27d6df51aac978d6cf88ac1bcce4485fd7a77a1f3f95571b28ad795bea8987efL119' target='_blank'>Link</a></div><div id='project'> Project Name: tflearn/tflearn</div><div id='commit'> Commit Name: 44874bed267e008be9bee5d85a4f4040b854d246</div><div id='time'> Time: 2017-05-25</div><div id='author'> Author: aymeric.damien@gmail.com</div><div id='file'> File Name: examples/images/dcgan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/AIRLab-POLIMI/mushroom/commit/9ddaacb9e73ac061c08403e16ac1a4d5364dca9b#diff-638c36321ef34f484acec0bff559e378acf8c5631d33b6db465d4121d8f0e358L37' target='_blank'>Link</a></div><div id='project'> Project Name: AIRLab-POLIMI/mushroom</div><div id='commit'> Commit Name: 9ddaacb9e73ac061c08403e16ac1a4d5364dca9b</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: carlo.deramo@gmail.com</div><div id='file'> File Name: mushroom_rl/algorithms/value/dqn/rainbow.py</div><div id='class'> Class Name: RainbowNetwork</div><div id='method'> Method Name: forward</div><BR>

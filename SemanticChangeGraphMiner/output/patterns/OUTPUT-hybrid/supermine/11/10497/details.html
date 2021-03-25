@@ -1,0 +1,28 @@
+<html><h3>03f07734648aa9843393f0ebf19c61c2a34c728e,cleverhans/utils_keras.py,KerasModelWrapper,fprop,#KerasModelWrapper#,182
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      new_input = self.model.get_input_at(0)
+
+      &#47&#47 Make a new model that returns each of the layers as output
+      outnodes_last = <a id="change">[x_layer.get_output_at(-1) for x_layer in self.model.layers]</a>
+      outnodes_first = [x_layer.get_output_at(0) for x_layer in self.model.layers]
+      if outnodes_last != outnodes_first:
+        warnings.warn("Mutiple output nodes detected, picking last ones as default."
+                      "This could happen due to using of stacked model.")</code></pre><h3>After Change</h3><pre><code class='java'>
+        warnings.warn("Abstract layer detected, picking last ouput node as default."
+                      "This could happen due to using of stacked model.")
+    
+      <a id="change">layer_outputs = []</a>
+      &#47&#47 For those abstract model layers, return their last output node as default.
+      <a id="change">for x_layer in self.model.layers:
+        if x_layer.name not in abstract_layers:
+          layer_outputs.append(x_layer.output)
+        else:
+          layer_outputs.append(x_layer.get_output_at(-1))
+          
+     </a> self.keras_model = KerasModel(new_input, layer_outputs)
+
+    &#47&#47 and get the outputs for that model on the input x
+    outputs = self.keras_model(x)</code></pre><img src="38985411.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/cleverhans/commit/03f07734648aa9843393f0ebf19c61c2a34c728e#diff-0673ce828ee444296b16d579f1b635a7d357326c8362c1792e9d372f1fb80d6cL182' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/cleverhans</div><div id='commit'> Commit Name: 03f07734648aa9843393f0ebf19c61c2a34c728e</div><div id='time'> Time: 2019-03-13</div><div id='author'> Author: haojie.d.yuan@gmail.com</div><div id='file'> File Name: cleverhans/utils_keras.py</div><div id='class'> Class Name: KerasModelWrapper</div><div id='method'> Method Name: fprop</div><BR><BR><div id='link'><a href='https://github.com/david-abel/simple_rl/commit/fcab3b11c0096803616af4956e49c59be6466d88#diff-c0012ae34802fdc9c0598515adfc975667130ec96511ea45d657a95a349d959cL396' target='_blank'>Link</a></div><div id='project'> Project Name: david-abel/simple_rl</div><div id='commit'> Commit Name: fcab3b11c0096803616af4956e49c59be6466d88</div><div id='time'> Time: 2018-09-07</div><div id='author'> Author: yagneshrevar@gmail.com</div><div id='file'> File Name: simple_rl/tasks/navigation/NavigationWorldMDP.py</div><div id='class'> Class Name: NavigationWorldMDP</div><div id='method'> Method Name: sample_init_states</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/f522e894852f28da0d6b9441ce8e49f486dfbc5f#diff-e418f92de2a3362604bbb2e9bd2334b663f4cd538943864be1681b5112de7b6fL156' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: f522e894852f28da0d6b9441ce8e49f486dfbc5f</div><div id='time'> Time: 2017-06-16</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: choose_small_vocabulary</div><BR>

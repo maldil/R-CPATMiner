@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                ms = (1,) + ms
+            if len(ms) != 3:
+                raise ValueError(&quotMean shape invalid&quot)
+            <a id="change">if ms != self.inputs[in_][1:]:
+                raise ValueError(&quotMean shape incompatible with input shape.&quot)
+       </a> self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+                in_shape = self.inputs[in_][1:]
+                m_min, m_max = mean.min(), mean.max()
+                normal_mean = (mean - m_min) / (m_max - m_min)
+                <a id="change">mean = resize_image(normal_mean.transpose((1,2,0)),
+                        in_shape[1:]).transpose((2,0,1)) * \
+                        (m_max - m_min) + m_min</a>
+        self.mean[in_] = mean
+
+    def set_input_scale(self, in_, scale):
+        </code></pre>

@@ -1,0 +1,27 @@
+<html><h3>5ef0fc3215fb43f5772673b31c51ad8a6582bc39,keras/backend/cntk_backend.py,,reshape,#,1105
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+def reshape(x, shape):
+    <a id="change">shape = tuple([C.InferredDimension if _ == C.FreeDimension else _ for _ in shape])</a>
+    if isinstance(x, C.variables.Parameter):
+        return C.reshape(x, shape)
+    else:
+        num_dynamic_axis = _get_dynamic_axis_num(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def reshape(x, shape):
+    <a id="change">shape_temp = []</a>
+    <a id="change">for _ in shape:
+        if _ == C.FreeDimension:
+            shape_temp.append(C.InferredDimension)
+        else:
+            shape_temp.append(_)
+
+   </a> shape = tuple(shape_temp)
+
+    if isinstance(x, C.variables.Parameter):
+        return C.reshape(x, shape)</code></pre><img src="23749399.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/5ef0fc3215fb43f5772673b31c51ad8a6582bc39#diff-ed1178f3a38747717b4f5d25ca681329e55794e6a03ce198cd1c59a80c443dc7L1106' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 5ef0fc3215fb43f5772673b31c51ad8a6582bc39</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: mechaprabal@gmail.com</div><div id='file'> File Name: keras/backend/cntk_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: reshape</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/5ef0fc3215fb43f5772673b31c51ad8a6582bc39#diff-ed1178f3a38747717b4f5d25ca681329e55794e6a03ce198cd1c59a80c443dc7L705' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: 5ef0fc3215fb43f5772673b31c51ad8a6582bc39</div><div id='time'> Time: 2018-10-20</div><div id='author'> Author: mechaprabal@gmail.com</div><div id='file'> File Name: keras/backend/cntk_backend.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: squeeze</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-7c228ae83c93215fd116bb4586c2da57c7a62773728754ee6b11426e56a2c6d1L97' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/avg_precision.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mean_avg_precision</div><BR>

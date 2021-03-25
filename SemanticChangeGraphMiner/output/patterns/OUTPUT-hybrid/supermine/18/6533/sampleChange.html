@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    command = args.command
+    if command not in {"make", "check"}:
+        raise ValueError(
+            <a id="change">"You should provide a valid command: {{make|check}}. Got {command} instead.".format(command=command)</a>
+        )
+    transforms_info = get_transforms_info()
+    image_only_transforms = {transform: info for transform, info in transforms_info.items() if info["image_only"]}
+    <a id="change">dual_transforms</a> = {transform: info <a id="change">for</a> transform, info in transforms_info.items() if not info["image_only"]}
+    image_only_transforms_links = make_transforms_targets_links(image_only_transforms)
+    <a id="change">dual_transforms_table</a> = make_transforms_targets_table(
+        <a id="change">dual_transforms</a>, header=["Transform"] + [target.value <a id="change">for</a> target in Targets]
+    )
+    <a id="change">if command == "make":
+        print(image_only_transforms_links)
+        print(dual_transforms_table)
+    else:
+        check_docs(args.filepath, image_only_transforms_links, dual_transforms_table)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        check_docs(args.filepath, image_only_transforms_links, dual_transforms_table)
+
+
+<a id="change">if __name__ == "__main__":
+    main()</a>
+</code></pre>

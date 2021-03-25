@@ -1,0 +1,23 @@
+<html><h3>7391aec984c1e9e0899d51e6b0538483c37ec8fb,torchdiffeq/_impl/adjoint.py,,odeint_adjoint,#,115
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        tensor_input = True
+        y0 = (y0,)
+        <a id="change">func = TupleFunc(func)</a>
+
+    params = tuple(func.parameters())
+    if adjoint_buffers:
+        <a id="change">params = params + tuple(buffer for buffer in func.buffers() if buffer.requires_grad)</a>
+    n_tensors = len(y0)
+
+    ys = OdeintAdjointMethod.apply(func, t, rtol, atol, method, options, adjoint_rtol, adjoint_atol, adjoint_method,
+                                   adjoint_options, n_tensors, *params, *y0)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                         adjoint_method, adjoint_options, t.requires_grad, *adjoint_params)
+
+    if not tensor_input:
+        <a id="change">solution = _flat_to_shape(solution, tuple([len(t), *shape] for shape in shapes))</a>
+    return solution
+</code></pre><img src="24208165.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rtqichen/torchdiffeq/commit/7391aec984c1e9e0899d51e6b0538483c37ec8fb#diff-1ce4b6309bc5eacc0914bdafff9c0aeecefbe346c9963006c00ae848dd8ea4e2L120' target='_blank'>Link</a></div><div id='project'> Project Name: rtqichen/torchdiffeq</div><div id='commit'> Commit Name: 7391aec984c1e9e0899d51e6b0538483c37ec8fb</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: 33688385+patrick-kidger@users.noreply.github.com</div><div id='file'> File Name: torchdiffeq/_impl/adjoint.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: odeint_adjoint</div><BR><BR><div id='link'><a href='https://github.com/commonsense/conceptnet5/commit/b4994ec3fb770f695c4c27299dcbb0a0264b9517#diff-6aa1816a051a1fd91c0947878726947436b0e70902cf9881f5df2084ac98f0b0L68' target='_blank'>Link</a></div><div id='project'> Project Name: commonsense/conceptnet5</div><div id='commit'> Commit Name: b4994ec3fb770f695c4c27299dcbb0a0264b9517</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: joanna.teresa.duda@gmail.com</div><div id='file'> File Name: conceptnet5/vectors/evaluation/analogy.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: read_train_pairs_semeval2012</div><BR><BR><div id='link'><a href='https://github.com/keras-team/keras/commit/bf464d7ed9283988fea1f548a11a0171fd2ff364#diff-2ab94514f1a5fedd962ba7f7a9b3113d1eb2a3d96bec2c2b68adabd57004ee5eL103' target='_blank'>Link</a></div><div id='project'> Project Name: keras-team/keras</div><div id='commit'> Commit Name: bf464d7ed9283988fea1f548a11a0171fd2ff364</div><div id='time'> Time: 2021-01-06</div><div id='author'> Author: gardener@tensorflow.org</div><div id='file'> File Name: keras/utils/version_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: swap_class</div><BR>

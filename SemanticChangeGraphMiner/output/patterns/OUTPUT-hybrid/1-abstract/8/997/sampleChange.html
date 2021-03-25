@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    optimizer.zero_grad()
+
+    &#47&#47 Forward
+    fx = <a id="change">model.forward(x.view(len(x), 1))</a>
+    <a id="change">output</a> = loss.forward(fx, y)
+
+    &#47&#47 Backward
+    output.backward()
+
+    &#47&#47 Update parameters
+    optimizer.step()
+
+    return <a id="change">output.data[0]</a>
+
+
+def main():
+    torch.manual_seed(42)</code></pre><h3>After Change</h3><pre><code class='java'>
+    optimizer.zero_grad()
+
+    &#47&#47 Forward
+    fx = <a id="change">model</a>.forward(x.view(len(x), 1)).squeeze()
+    <a id="change">output</a> = loss.forward(fx, y)
+
+    &#47&#47 Backward
+    output.backward()</code></pre>

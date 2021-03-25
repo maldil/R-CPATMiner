@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        m = pixelBlocks[&quotraster_mask&quot]
+
+        pixelBlocks[&quotoutput_pixels&quot] = p[s, s].astype(props[&quotpixelType&quot])
+        pixelBlocks[&quotoutput_mask&quot] = <a id="change">m[s, s].astype(&quotu1&quot)</a>
+
+        self.emit("Trace|Request Raster|{0}\n".format(props))
+        self.emit("Trace|Request Size|{0}\n".format(shape))</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+    def updatePixels(self, tlc, shape, props, **pixelBlocks):
+        s = slice(None, None, <a id="change">max(1, self.factor)</a>)
+        p = pixelBlocks[&quotraster_pixels&quot]
+        m = pixelBlocks[&quotraster_mask&quot]
+
+        if len(p.shape) &lt;= 2 or p.shape[0] == 1:
+            outP = p[s, s]
+            outM = m[s, s]
+        else:
+            outP = p[:, s, s]
+            outM = m[<a id="change">:, s, s</a>]
+
+        pixelBlocks[&quotoutput_pixels&quot] = outP.astype(props[&quotpixelType&quot])
+        <a id="change">pixelBlocks[&quotoutput_mask&quot] = outM.astype(&quotu1&quot)</a>
+
+        self.emit("Trace|FocalStatistics.updatePixels|Request Raster|{0}\n".format(props))
+        self.emit("Trace|FocalStatistics.updatePixels|Request Size|{0}\n".format(shape))</code></pre>

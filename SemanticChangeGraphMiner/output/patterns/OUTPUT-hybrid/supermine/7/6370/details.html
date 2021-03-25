@@ -1,0 +1,26 @@
+<html><h3>9dcac66250b2d26d9b2505ad04841f3f4b8bc2a1,utils/datasets.py,ImageFolder,__getitem__,#ImageFolder#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __getitem__(self, index):
+        img_path = self.files[index % len(self.files)]
+        &#47&#47 Extract image
+        img = <a id="change">lycon.load(img_path)</a>
+        img, _ = pad_to_square(img, 127)
+        &#47&#47 Resize
+        img = lycon.resize(img, height=self.img_size, width=self.img_size, interpolation=lycon.Interpolation.NEAREST)
+        &#47&#47 Channels-first
+        <a id="change">img = np.transpose(img, (2, 0, 1))</a>
+        &#47&#47 As pytorch tensor
+        img = torch.from_numpy(img).float() / 255.0
+
+        return img_path, img</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __getitem__(self, index):
+        img_path = self.files[index % len(self.files)]
+        &#47&#47 Extract image as PyTorch tensor
+        <a id="change">img = transforms.ToTensor()(Image.open(img_path))</a>
+        &#47&#47 Pad to square resolution
+        img, _ = pad_to_square(img, 0)
+        &#47&#47 Resize
+        img = resize(img, self.img_size)</code></pre><img src="25557637.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/9dcac66250b2d26d9b2505ad04841f3f4b8bc2a1#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L1' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 9dcac66250b2d26d9b2505ad04841f3f4b8bc2a1</div><div id='time'> Time: 2019-04-30</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: ImageFolder</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/b591a7aecce5b8de42a0dd7bba62780675d34fce#diff-9963193f39b43b9cfb35ddf270b57ea89d7f4e464d38cb2dec5b22174d0c79f2L39' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: b591a7aecce5b8de42a0dd7bba62780675d34fce</div><div id='time'> Time: 2019-04-30</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: utils/datasets.py</div><div id='class'> Class Name: ImageFolder</div><div id='method'> Method Name: __getitem__</div><BR><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14#diff-a1a14690bd4d0db68da6b27026209aa1ee45066f7ce9125d736e3b406d0059ceL10' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: 0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14</div><div id='time'> Time: 2019-11-20</div><div id='author'> Author: premy@cogent.co.jp</div><div id='file'> File Name: tasks/save_reload_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

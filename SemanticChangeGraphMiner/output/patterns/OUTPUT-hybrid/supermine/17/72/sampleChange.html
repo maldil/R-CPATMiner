@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+
+        dists, idx_neighbors = self._get_region_competence(query)
+        competences = np.zeros(<a id="change">self.n_classifiers</a>)
+
+        <a id="change">for clf_index, clf in enumerate(self.pool_classifiers):
+            &#47&#47 Check if the dynamic frienemy pruning (DFP) should be used used
+            if self.DFP_mask[clf_index]:
+                result = []
+                predicted_label = predictions[clf_index]
+                for index in idx_neighbors:
+                    &#47&#47 Get only neighbors from the same class as predicted by the
+                    &#47&#47 classifier (clf) to form the region of competence
+                    if self.DSEL_target[index] == predicted_label:
+                        result.append(self.processed_dsel[index][clf_index])
+
+                if len(result) == 0:
+                    competences[clf_index] = 0.0
+                else:
+                    competences[clf_index] = np.mean(result)
+
+       </a> return competences
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+
+        _, idx_neighbors = self._get_region_competence(query)
+        <a id="change">idx_neighbors = np.atleast_2d(idx_neighbors)</a>
+        predictions = np.atleast_2d(predictions)
+
+        &#47&#47 Expanding the dimensions of the predictions and target arrays in order to compare both.
+        predictions_3d = np.expand_dims(predictions, axis=1)
+        <a id="change">target_3d = np.expand_dims(self.DSEL_target[idx_neighbors], axis=2)</a>
+        &#47&#47 Create a mask to remove the neighbors belonging to a different class than the predicted by the base classifier
+        mask = (predictions_3d != target_3d)
+        masked_preprocessed = <a id="change">np</a>.ma.MaskedArray(self.processed_dsel[idx_neighbors, :], mask=mask)
+
+        <a id="change">competences_masked = np.mean(masked_preprocessed, axis=1)</a>
+        &#47&#47 Fill 0 to the masked values in the resulting array (when no neighbors belongs to the class predicted by
+        &#47&#47 the corresponding base classifier)
+        competences = np.ma.filled(competences_masked, 0)
+</code></pre>

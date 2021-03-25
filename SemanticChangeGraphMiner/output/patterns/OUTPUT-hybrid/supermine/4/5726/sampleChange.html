@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        root_filename = flow_map[:-8]
+        frame_nb = int(flow_map[-8:-4])
+        img1 = os.path.join(img_dir,root_filename+str(frame_nb).zfill(4)+&quot.png&quot)
+        img2 = os.path.join(img_dir,root_filename+<a id="change">str</a>(frame_nb+1).zfill(4)+&quot.png&quot)
+        flow_map = os.path.join(flow_dir,flow_map)
+        if not (os.path.isfile(os.path.join(dir,img1)) or os.path.isfile(os.path.join(dir,img2))):
+            continue</code></pre><h3>After Change</h3><pre><code class='java'>
+        flow_map = os.path.relpath(flow_map,os.path.join(dataset_dir,flow_dir))
+
+        scene_dir, filename = os.path.split(flow_map)
+        <a id="change">no_ext_filename = os.path.splitext(filename)[0]</a>
+        prefix, frame_nb = <a id="change">no_ext_filename.split(&quot_&quot)</a>
+        frame_nb = int(frame_nb)
+        img1 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb))
+        img2 = os.path.join(img_dir, scene_dir, &quot{}_{:04d}.png&quot.format(prefix, frame_nb + 1))
+        flow_map = os.path.join(flow_dir,flow_map)</code></pre>

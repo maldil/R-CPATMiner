@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 Use Loss=categorical_crossentropy.
+print(&quotCompile model.&quot)
+<a id="change">model.compile(loss=&quotcategorical_crossentropy&quot,
+              optimizer=&quotadam&quot,
+              metrics=[&quotaccuracy&quot])</a>
+
+&#47&#47 Execute face authentication.
+capture = cv2.VideoCapture(0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        cv2.imwrite(file_name, resized_face_image)
+
+        &#47&#47 Transform image to 4 dimension tensor.
+        img = image.img_to_array(image.load_img(file_name, target_size=<a id="change">(img_width, img_height)</a>))
+        x = image.img_to_array(img)
+        x = np.expand_dims(x, axis=0)
+        x = x / 255.0
+
+        &#47&#47 Prediction.
+        preds = model.predict(x)[0]
+        <a id="change">predict_idx = np.argmax(preds)</a>
+
+        &#47&#47 Final judgement.
+        judge = &quotReject&quot</code></pre>

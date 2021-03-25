@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        q1 = q0.reshape(nB, -1, self.nH, self.nD)
+        k0, get_dy0_1 = self.linears[1].begin_update(y0)
+        k1 = k0.reshape(nB, -1, self.nH, self.nD)
+        v0, get_dy0_2 = <a id="change">self.linears[2].begin_update(y0)</a>
+        v1 = v0.reshape(nB, -1, self.nH, self.nD)
+
+        x1, get_dq1_dk1_dv1 = self.attn(q1, k1, v1, mask=mask)
+
+        x2 = x1.reshape(x1.shape[0], x1.shape[1], x1.shape[2]*x1.shape[3])
+        x3, get_dx2 = <a id="change">self</a>.linears[-1].begin_update(x2)
+
+        def finish_update(dx3, sgd=None):
+            dx2 = get_dx2(dx3, sgd=sgd)</code></pre><h3>After Change</h3><pre><code class='java'>
+        nB, nL, nD, nH = x0.shape[0], x0.shape[1], self.nD, self.nH
+        q0, get_dx0 = self.get_queries.begin_update(x0)
+        q1 = q0.reshape(nB, -1, self.nH, self.nD)
+        k0, get_dy0_1 = <a id="change">self.get_keys.begin_update(y0)</a>
+        k1 = k0.reshape(nB, -1, self.nH, self.nD)
+        v0, get_dy0_2 = self.get_values.begin_update(y0)
+        v1 = v0.reshape(nB, -1, self.nH, self.nD)
+</code></pre>

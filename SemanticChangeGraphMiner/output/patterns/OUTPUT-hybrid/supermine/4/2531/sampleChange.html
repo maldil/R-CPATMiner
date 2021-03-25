@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class LabelSerializer(serializers.ModelSerializer):
+
+    def validate(self, attrs):
+        if <a id="change">&quotprefix_key&quot not in attrs</a> and &quotsuffix_key&quot not in attrs:
+            return super().validate(attrs)
+
+        prefix_key = attrs[&quotprefix_key&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        try:
+            context = self.context[&quotrequest&quot].parser_context
+            project_id = context[&quotkwargs&quot][&quotproject_id&quot]
+            label_id = <a id="change">context[&quotkwargs&quot].get(&quotlabel_id&quot)</a>
+        except (AttributeError, KeyError):
+            pass  &#47&#47 unit tests don&quott always have the correct context set up
+        else:
+            conflicting_labels = Label.objects.filter(</code></pre>

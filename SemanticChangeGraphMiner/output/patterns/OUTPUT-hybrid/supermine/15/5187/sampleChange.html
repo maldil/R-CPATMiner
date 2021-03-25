@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def _update_levels(self):
+         Updates the levels cache.
+        
+        <a id="change">low</a>, high = <a id="change">self</a>.value.get_bounds()
+        if <a id="change">self.levels</a> == "auto":
+            <a id="change">self._levels = list(linspace(low, high, 10))</a>
+        elif <a id="change">isinstance(self.levels, int)</a>:
+            <a id="change">self._levels</a> = list(linspace(low, high, self.levels))
+        else:
+            <a id="change">self._levels</a> = self.levels
+        self._level_cache_valid = True
+        self._contour_cache_valid = False
+        self._widths_cache_valid = False
+        self._styles_cache_valid = False
+        <a id="change">self._colors_cache_valid</a> = False
+
+    def _update_widths(self):
+         Updates the widths cache.</code></pre><h3>After Change</h3><pre><code class='java'>
+                self._cached_contours[level].append(transpose(trace))
+        self._contour_cache_valid = True
+
+    def _update_levels(<a id="change">self</a>):
+         Extends the parent method to also invalidate some other things 
+        <a id="change">super</a>(ContourLinePlot, <a id="change">self</a>)._update_levels()
+        self._contour_cache_valid = False
+        self._widths_cache_valid = False
+        self._styles_cache_valid = False</code></pre>

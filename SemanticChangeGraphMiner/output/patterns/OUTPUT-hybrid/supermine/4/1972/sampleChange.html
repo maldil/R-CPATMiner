@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.observation_space = observation_space
+        self.action_space = action_space
+
+        <a id="change">self._dones = np.zeros((self.num_envs,), dtype=np.bool_)</a>
+
+    def seed(self, seeds=None):
+        if seeds is None:
+            seeds = [None for _ in range(self.num_envs)]</code></pre><h3>After Change</h3><pre><code class='java'>
+                                            observation_space=observation_space,
+                                            action_space=action_space,
+                                            **kwargs)
+        <a id="change">for env in self.envs:
+            if not hasattr(env.unwrapped, &quotreset_task&quot):
+                raise ValueError(&quotThe environment provided is not a &quot
+                                 &quotmeta-learning environment. It does not have &quot
+                                 &quotthe method `reset_task` implemented.&quot)
+
+   </a> def reset_task(self, task):
+        for env in self.envs:
+            env.unwrapped.reset_task(task)
+</code></pre>

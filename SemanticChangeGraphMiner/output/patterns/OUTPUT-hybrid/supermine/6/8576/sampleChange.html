@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            if len(difference_mat.size()) == 4:
+                batch, N, _M, _ = difference_mat.size()
+            <a id="change">if len(difference_mat.size()) == 3:
+                N, _M, _ = difference_mat.size()
+
+           </a> size_out = sum(mul * (2 * n + 1) for n, mul in enumerate(self.repr_out))
+
+            if self.gate_act is not None:
+                g = y[:, size_out:]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if self.scalar_act is None and self.gate_act is None:
+            return y
+
+        has_batch = <a id="change">difference_matrix.dim() == 4
+    </a>    <a id="change">if not has_batch:
+            difference_matrix = difference_matrix.unsqueeze(0)
+            y = y.unsqueeze(0)
+
+       </a> batch, N, _M, _ = difference_matrix.size()
+
+        size_out = sum(mul * (2 * l + 1) for l, mul in enumerate(self.repr_out))
+</code></pre>

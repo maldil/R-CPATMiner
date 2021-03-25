@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    left = decompositions.orthogonalize_tt_cores(x)
+    right = decompositions.orthogonalize_tt_cores(left, left_to_right=False)
+    vector_projected = riemannian.project(vector, x)
+    deltas = <a id="change">[right.tt_cores[0]] + [tf.zeros_like(cc) for cc in right.tt_cores[1:]]</a>
+    x_projection = riemannian.deltas_to_tangent_space(deltas, x, left, right)
+    cores_grad = <a id="change">tf.gradients(func(x_projection), deltas)</a>
+    vec_deltas = riemannian.tangent_space_to_deltas(vector_projected)
+    products = [tf.reduce_sum(a * b) for a, b in zip(cores_grad, vec_deltas)]
+    grad_times_vec = tf.add_n(products)
+    second_cores_grad = tf.gradients(grad_times_vec, deltas)</code></pre><h3>After Change</h3><pre><code class='java'>
+  with tf.name_scope(name, values=all_cores):
+    left = decompositions.orthogonalize_tt_cores(x)
+    right = decompositions.orthogonalize_tt_cores(left, left_to_right=False)
+    <a id="change">deltas = [right.tt_cores[0]]</a>
+    deltas += [tf.zeros_like(cc) for cc in right.tt_cores[1:]]
+    x_projection = riemannian.deltas_to_tangent_space(deltas, x, left, right)
+    function_value = func(x_projection)
+    <a id="change">if debug:
+      assert_op = _is_invariant_to_input_transforms(function_value, func(right))
+    else:
+      assert_op = None
+   </a> with tf.control_dependencies([assert_op]):
+      vector_projected = riemannian.project(vector, x)
+    cores_grad = tf.gradients(function_value, deltas)
+    vec_deltas = riemannian.tangent_space_to_deltas(vector_projected)</code></pre>

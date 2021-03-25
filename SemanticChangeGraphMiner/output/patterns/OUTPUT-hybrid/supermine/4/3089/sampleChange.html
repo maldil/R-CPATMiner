@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 catastrophic happened. Note though that we cannot
+    &#47&#47 test feature weights if we are using feature hashing
+    &#47&#47 since model_params is not defined with a featurehasher.
+    <a id="change">if not use_feature_hashing:
+
+        &#47&#47 get the weights for this trained model
+        learned_weights = learner.model_params[0]
+
+        for feature_name in learned_weights:
+            learned_w = math.ceil(learned_weights[feature_name])
+            given_w = math.ceil(weightdict[feature_name])
+            eq_(learned_w, given_w)
+
+    &#47&#47 now generate the predictions on the test FeatureSet
+   </a> predictions = learner.predict(test_fs)
+
+    &#47&#47 now make sure that the predictions are close to
+    &#47&#47 the actual test FeatureSet labels that we generated</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 get the weights for this trained model
+    learned_weights = learner.model_params[0]
+
+    <a id="change">for feature_name in learned_weights:
+        learned_w_ceil = math.ceil(learned_weights[feature_name])
+        given_w_ceil = math.ceil(weightdict[feature_name])
+        learned_w_round = round(learned_weights[feature_name], 0)
+        given_w_round = round(weightdict[feature_name], 0)
+        ceil_equal = learned_w_ceil == given_w_ceil
+        round_equal = learned_w_round == given_w_round
+        either_equal = ceil_equal or round_equal
+        assert either_equal
+
+    &#47&#47 now generate the predictions on the test FeatureSet
+   </a> predictions = learner.predict(test_fs)
+
+    &#47&#47 now make sure that the predictions are close to
+    &#47&#47 the actual test FeatureSet labels that we generated</code></pre>

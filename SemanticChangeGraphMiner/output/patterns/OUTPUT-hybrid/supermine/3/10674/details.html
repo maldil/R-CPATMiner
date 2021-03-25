@@ -1,0 +1,23 @@
+<html><h3>6286ba014120ce05b49302007a0a28feed6d98c4,ants/segmentation/joint_label_fusion.py,,joint_label_fusion,#,20
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not doJif:
+        if len(label_list) != len(atlas_list):
+            raise ValueError("len(label_list) != len(atlas_list)")
+        inlabs = <a id="change">np.sort(np.unique(label_list[0][target_image_mask != 0]))</a>
+        mymask = target_image_mask.clone()
+    else:
+        mymask = target_image_mask
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not doJif:
+        if len(label_list) != len(atlas_list):
+            raise ValueError("len(label_list) != len(atlas_list)")
+        <a id="change">if no_zeroes:
+            for label in label_list:
+                target_image_mask[label == 0] = 0
+       </a> inlabs = set()
+        for label in label_list:
+            values = np.unique(label[target_image_mask != 0 and label != 0])
+            inlabs = inlabs.union(values)</code></pre><img src="39168659.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ANTsX/ANTsPy/commit/6286ba014120ce05b49302007a0a28feed6d98c4#diff-491a136485a82a1ec087158a1811d7c5c7706538d84208ad6fc61f4079a9299cL136' target='_blank'>Link</a></div><div id='project'> Project Name: ANTsX/ANTsPy</div><div id='commit'> Commit Name: 6286ba014120ce05b49302007a0a28feed6d98c4</div><div id='time'> Time: 2020-09-10</div><div id='author'> Author: stnava@gmail.com</div><div id='file'> File Name: ants/segmentation/joint_label_fusion.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: joint_label_fusion</div><BR><BR><div id='link'><a href='https://github.com/akkana/scripts/commit/6aa485ed9568c850d2cfb8987237c066ea93d7ef#diff-d93f658df0bd82bae1a8719350fcbee5bad2a7f2ee197d8e648d9ee4642fcef0L201' target='_blank'>Link</a></div><div id='project'> Project Name: akkana/scripts</div><div id='commit'> Commit Name: 6aa485ed9568c850d2cfb8987237c066ea93d7ef</div><div id='time'> Time: 2020-04-09</div><div id='author'> Author: akkana@shallowsky.com</div><div id='file'> File Name: vote411export.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_vote411_file</div><BR><BR><div id='link'><a href='https://github.com/tensorly/tensorly/commit/f937bbf05fed3d436cd07d159b451d448fe6eba2#diff-9a369b099baae7789b140f00d0013509d33ab7f89d9db618f4efcd8d6b425ad7L293' target='_blank'>Link</a></div><div id='project'> Project Name: tensorly/tensorly</div><div id='commit'> Commit Name: f937bbf05fed3d436cd07d159b451d448fe6eba2</div><div id='time'> Time: 2021-02-06</div><div id='author'> Author: ameyer@ucla.edu</div><div id='file'> File Name: tensorly/backend/mxnet_backend.py</div><div id='class'> Class Name: MxnetBackend</div><div id='method'> Method Name: sort</div><BR>

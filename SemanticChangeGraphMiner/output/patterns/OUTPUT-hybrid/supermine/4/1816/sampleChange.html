@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Sets new rule for order of states
+        if self._all_states_mentioned(node, states):
+            _order = list()
+            <a id="change">for user_given_state in states:
+                for state in self.node[node][&quot_states&quot]:
+                    if state[&quotname&quot] == user_given_state:
+                        _order.append(self.node[node]
+                                      [&quot_states&quot].index(state))
+                        break
+           </a> self.node[node][&quot_rule_for_states&quot] = tuple(_order)
+
+    def get_states(self, node):
+        Returns tuple with states in user-defined order</code></pre><h3>After Change</h3><pre><code class='java'>
+        Sets new rule for order of states
+        if self._all_states_mentioned(node, states):
+            _order = list()
+            <a id="change">for user_given_state, state in itertools.product(
+                    states, self.node[node][&quot_states&quot]):
+                if state[&quotname&quot] == user_given_state:
+                    _order.append(self.node[node]
+                                  [&quot_states&quot].index(state))
+                    break
+           </a> self.node[node][&quot_rule_for_states&quot] = tuple(_order)
+
+    def get_states(self, node):
+        Returns tuple with states in user-defined order</code></pre>

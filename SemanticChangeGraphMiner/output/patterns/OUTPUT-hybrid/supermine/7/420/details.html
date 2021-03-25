@@ -1,0 +1,38 @@
+<html><h3>626173412d4281b693244e0705a787c4e7c08031,nilmtk/metrics.py,,fraction_energy_assigned_correctly,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    re: float representing Fraction of Energy Correctly Assigned
+    &quot&quot&quot
+
+    <a id="change">fraction = np.array([])</a>
+    total_energy_predicted = np.sum(predicted_power.values)
+
+    for appliance in predicted_power:
+
+        <a id="change">appliance_energy_predicted = np.sum(predicted_power[appliance].values)</a>
+
+        appliance_energy_ground_truth = np.sum(
+            df_appliances_ground_truth[appliance].values)
+        total_energy_ground_truth = np.sum(df_appliances_ground_truth.values)
+
+        <a id="change">fraction = np.append(
+            fraction, np.min(
+                [appliance_energy_predicted / total_energy_predicted,
+                 appliance_energy_ground_truth /
+                 total_energy_ground_truth
+                 ]))</a>
+
+    return np.sum(fraction)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    fractions = []
+    for meter_instance in predictions_submeters.instance():
+        <a id="change">fraction = min(fraction_per_meter_predictions[meter_instance],
+                       fraction_per_meter_ground_truth[meter_instance])</a>
+        fractions.append(fraction)
+
+    return sum(fractions)
+</code></pre><img src="2007837.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/626173412d4281b693244e0705a787c4e7c08031#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L92' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 626173412d4281b693244e0705a787c4e7c08031</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fraction_energy_assigned_correctly</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L208' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L179' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: common_ancestor</div><BR>

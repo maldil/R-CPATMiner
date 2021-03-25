@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if visited_bonds:  &#47&#47 probably we dont want to delete all
+        new_mol = Chem.RWMol(new_mol)
+        visited_bonds = set(visited_bonds)
+        for a1_ix, a2_ix in <a id="change">product(range(new_mol.GetNumAtoms()), repeat=2)</a>:
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue</code></pre><h3>After Change</h3><pre><code class='java'>
+        new_mol = Chem.RWMol(new_mol)
+        visited_bonds = set(visited_bonds)
+        bonds_queue = []
+        <a id="change">for bond in new_mol.GetBonds():
+            a1 = bond.GetBeginAtomIdx()
+            a2 = bond.GetEndAtomIdx()
+            if (a1, a2) not in visited_bonds and (a1, a2) not in visited_bonds:
+                bonds_queue.append((a1, a2))
+       </a> for a1_ix, a2_ix in bonds_queue:
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue</code></pre>

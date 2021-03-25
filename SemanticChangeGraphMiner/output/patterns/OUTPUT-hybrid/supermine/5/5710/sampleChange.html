@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                norm = norm.unsqueeze(-1)
+                detached_norm = torch.autograd.Variable(norm.data,
+                                                        requires_grad=False)
+                <a id="change">hidden[hidden_norms &gt; max_norm]</a> *= max_norm/detached_norm
+
+            logits.append(logit)
+            h1tohT.append(hidden)</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 This workaround for PyTorch v0.3.1 does everything in numpy,
+                &#47&#47 because the PyTorch slicing and slice assignment is too
+                &#47&#47 flaky.
+                hidden_norms = <a id="change">hidden_norms.data.cpu().numpy()</a>
+
+                clipped_num += 1
+                if hidden_norms.max() &gt; max_clipped_norm:
+                    max_clipped_norm = hidden_norms.max()
+
+                clip_select = hidden_norms &gt; max_norm
+                <a id="change">clip_norms = hidden_norms[clip_select]</a>
+
+                mask = np.ones(hidden.size())
+                normalizer = max_norm/clip_norms
+                normalizer = normalizer[:, np.newaxis]</code></pre>

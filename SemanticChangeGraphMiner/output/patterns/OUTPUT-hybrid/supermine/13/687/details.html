@@ -1,0 +1,75 @@
+<html><h3>3b84c35aaf6f585222e54e77696ecab639b14692,dlp/risk.py,,categorical_risk_analysis,#,141
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Set up a callback to acknowledge a message. This closes around an event
+    &#47&#47 so that it can signal that it is done and the main thread can continue.
+    <a id="change">job_done = threading.Event()</a>
+
+    def callback(message):
+        try:
+            if (message.attributes[&quotDlpJobName&quot] == operation.name):
+                &#47&#47 This is the message we&quotre looking for, so acknowledge it.
+                message.ack()
+
+                &#47&#47 Now that the job is done, fetch the results and print them.
+                job = dlp.get_dlp_job(operation.name)
+                histogram_buckets = (job.risk_details
+                                        .categorical_stats_result
+                                        .value_frequency_histogram_buckets)
+                &#47&#47 Print bucket stats
+                for i, bucket in enumerate(histogram_buckets):
+                    print(&quotBucket {}:&quot.format(i))
+                    print(&quot   Most common value occurs {} time(s)&quot.format(
+                        bucket.value_frequency_upper_bound))
+                    print(&quot   Least common value occurs {} time(s)&quot.format(
+                        bucket.value_frequency_lower_bound))
+                    print(&quot   {} unique values total.&quot.format(
+                        bucket.bucket_size))
+                    for value in bucket.bucket_values:
+                        print(&quot   Value {} occurs {} time(s)&quot.format(
+                            value.value.integer_value, value.count))
+                &#47&#47 Signal to the main thread that we can exit.
+                job_done.set()
+            else:
+                &#47&#47 This is not the message we&quotre looking for.
+                message.drop()
+        except Exception as e:
+            &#47&#47 Because this is executing in a thread, an exception won&quott be
+            &#47&#47 noted unless we print it manually.
+            print(e)
+            raise
+
+    &#47&#47 Register the callback and wait on the event.
+    subscription.open(callback)
+    <a id="change">finished = job_done.wait(timeout=timeout)</a>
+    <a id="change">if not finished:
+        print(&quotNo event received before the timeout. Please verify that the &quot
+              &quotsubscription provided is subscribed to the topic provided.&quot)
+&#47&#47 [END dlp_categorical_stats]
+
+
+&#47&#47 [START dlp_k_anonymity]
+</a>def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
+                         topic_id, subscription_id, quasi_ids, timeout=300):
+    Uses the Data Loss Prevention API to compute the k-anonymity of a
+        column set in a Google BigQuery table.</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+
+    <a id="change">try:
+        subscription.result(timeout=timeout)
+    except TimeoutError:
+        print(&quotNo event received before the timeout. Please verify that the &quot
+              &quotsubscription provided is subscribed to the topic provided.&quot)
+        subscription.close()
+&#47&#47 [END dlp_categorical_stats]
+
+
+&#47&#47 [START dlp_k_anonymity]
+</a>def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
+                         topic_id, subscription_id, quasi_ids, timeout=300):
+    Uses the Data Loss Prevention API to compute the k-anonymity of a
+        column set in a Google BigQuery table.</code></pre><img src="3263843.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 13</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/3b84c35aaf6f585222e54e77696ecab639b14692#diff-168fe52e62b2a6936111cb0e8471884c497d70add0af2b4e374b11db06809b7eL206' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 3b84c35aaf6f585222e54e77696ecab639b14692</div><div id='time'> Time: 2019-02-04</div><div id='author'> Author: github@engelke.com</div><div id='file'> File Name: dlp/risk.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: categorical_risk_analysis</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/3b84c35aaf6f585222e54e77696ecab639b14692#diff-168fe52e62b2a6936111cb0e8471884c497d70add0af2b4e374b11db06809b7eL330' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 3b84c35aaf6f585222e54e77696ecab639b14692</div><div id='time'> Time: 2019-02-04</div><div id='author'> Author: github@engelke.com</div><div id='file'> File Name: dlp/risk.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: k_anonymity_analysis</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/3b84c35aaf6f585222e54e77696ecab639b14692#diff-168fe52e62b2a6936111cb0e8471884c497d70add0af2b4e374b11db06809b7eL587' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 3b84c35aaf6f585222e54e77696ecab639b14692</div><div id='time'> Time: 2019-02-04</div><div id='author'> Author: github@engelke.com</div><div id='file'> File Name: dlp/risk.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: k_map_estimate_analysis</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/3b84c35aaf6f585222e54e77696ecab639b14692#diff-168fe52e62b2a6936111cb0e8471884c497d70add0af2b4e374b11db06809b7eL88' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 3b84c35aaf6f585222e54e77696ecab639b14692</div><div id='time'> Time: 2019-02-04</div><div id='author'> Author: github@engelke.com</div><div id='file'> File Name: dlp/risk.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: numerical_risk_analysis</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/3b84c35aaf6f585222e54e77696ecab639b14692#diff-168fe52e62b2a6936111cb0e8471884c497d70add0af2b4e374b11db06809b7eL459' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 3b84c35aaf6f585222e54e77696ecab639b14692</div><div id='time'> Time: 2019-02-04</div><div id='author'> Author: github@engelke.com</div><div id='file'> File Name: dlp/risk.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: l_diversity_analysis</div><BR>

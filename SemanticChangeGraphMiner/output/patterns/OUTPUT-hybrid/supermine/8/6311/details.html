@@ -1,0 +1,42 @@
+<html><h3>c08c98415395b76371581432be55381f0f6e2b40,w3af/plugins/audit/format_string.py,format_string,_analyze_result,#format_string#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47
+        &#47&#47   I will only report the vulnerability once.
+        &#47&#47
+        <a id="change">if self._has_no_bug(mutant):
+
+            for error in self.ERROR_STRINGS:
+                &#47&#47 Check if the error string is in the response
+
+                if error in response.body and \
+                error not in mutant.get_original_response_body():
+                    desc = &quotA possible (detection is really hard...) format&quot\
+                          &quot string vulnerability was found at: %s&quot
+                    desc = desc % mutant.found_at()
+                    
+                    v = Vuln.from_mutant(&quotFormat string vulnerability&quot, desc,
+                                         severity.MEDIUM, response.id,
+                                         self.get_name(), mutant)
+                    
+                    v.add_to_highlight(error)
+                    
+                    self.kb_append_uniq(self, &quotformat_string&quot, v)
+                    break
+
+   </a> def _get_string_list(self):
+        
+        :return: This method returns a list of format strings.
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+
+        for error in self.ERROR_STRINGS:
+            &#47&#47 Check if the error string is in the response
+            <a id="change">if error not in response.body:
+                continue
+
+           </a> if error in mutant.get_original_response_body():
+                continue
+
+            desc = (&quotA possible (detection is really hard...) format&quot</code></pre><img src="25459420.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/c08c98415395b76371581432be55381f0f6e2b40#diff-da421d42f214ebd5259e2b883809f4d8a21d35a904e71892c4a336b6ec37177cL65' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: c08c98415395b76371581432be55381f0f6e2b40</div><div id='time'> Time: 2018-01-09</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/audit/format_string.py</div><div id='class'> Class Name: format_string</div><div id='method'> Method Name: _analyze_result</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/5d0b89fa7644bdd51cb4615829cbd329898408a1#diff-56db79a742932fdb31730cd19b3b884a6247a73aa09ff70bc49c8a08020e0bbfL118' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 5d0b89fa7644bdd51cb4615829cbd329898408a1</div><div id='time'> Time: 2019-06-07</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/audit/response_splitting.py</div><div id='class'> Class Name: response_splitting</div><div id='method'> Method Name: _header_was_injected</div><BR><BR><div id='link'><a href='https://github.com/ReactionMechanismGenerator/RMG-Py/commit/c02df66939452dded7d83ac2bb422db76212eb8a#diff-409ae07ed837f8a39031c681f92d76775be0c22868a87598f60befa368e42cb1L170' target='_blank'>Link</a></div><div id='project'> Project Name: ReactionMechanismGenerator/RMG-Py</div><div id='commit'> Commit Name: c02df66939452dded7d83ac2bb422db76212eb8a</div><div id='time'> Time: 2020-04-26</div><div id='author'> Author: kspieker@mit.edu</div><div id='file'> File Name: rmgpy/tools/mergemodels.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: combine_models</div><BR>

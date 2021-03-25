@@ -1,0 +1,22 @@
+<html><h3>7c623c5026672c779a9d2005e0f046f0af8c5567,MultidirectionalHillshade.py,MultidirectionalHillshade,updatePixels,#MultidirectionalHillshade#,109
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47return c * np.clip(255 * (cosZ + cosDelta) / np.sqrt(1 + d2), 0.0, 255.0)
+
+    def updatePixels(self, **pixelBlocks):
+        <a id="change">if not pixelBlocks.has_key("raster_pixels"):
+            raise Exception("No input raster was provided.")
+
+       </a> v = np.array(pixelBlocks[&quotraster_pixels&quot], dtype=&quotfloat&quot)
+        dx, dy = np.gradient(v)
+
+        outBlock = self.getWeightedHillshade(v, 0, dx, dy)</code></pre><h3>After Change</h3><pre><code class='java'>
+        v = np.array(pixelBlocks[&quotraster_pixels&quot], dtype=&quotfloat&quot)
+        dx, dy = np.gradient(v)
+        dx = dx * self.factors[0]
+        dy = dy * <a id="change">self.factors[1]</a>
+
+        outBlock = self.weights[0] * self.getHillshade(v, 0, dx, dy)
+        for i in range(1, 5):</code></pre><img src="38126625.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/7c623c5026672c779a9d2005e0f046f0af8c5567#diff-1033efb9405b10600f1fbcffea7b6b38bc696095f0e58351f2b06ce76ad5d855L80' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 7c623c5026672c779a9d2005e0f046f0af8c5567</div><div id='time'> Time: 2014-08-29</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: MultidirectionalHillshade.py</div><div id='class'> Class Name: MultidirectionalHillshade</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/BVLC/caffe/commit/738c8758e30c6f8bdf9155529aeb431547af65d6#diff-64636ca4ac5bfb3ded466e937fd378a159f81bb7e1f4802b1d3803bab28ecc73L196' target='_blank'>Link</a></div><div id='project'> Project Name: BVLC/caffe</div><div id='commit'> Commit Name: 738c8758e30c6f8bdf9155529aeb431547af65d6</div><div id='time'> Time: 2014-05-19</div><div id='author'> Author: shelhamer@imaginarynumber.net</div><div id='file'> File Name: python/caffe/pycaffe.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _Net_set_mean</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/372cc580b234724920fee6045e0151abb2b8a823#diff-9697302345a2fc79a872275ec41888db74dbe38e1684abfa69b1421a38389526L52' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: 372cc580b234724920fee6045e0151abb2b8a823</div><div id='time'> Time: 2014-09-09</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: Aggregation.py</div><div id='class'> Class Name: Aggregation</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/pysb/pysb/commit/47374cd825213029b578e5a22ba9836c0f55d97a#diff-9e0313a471a2f4efea3e10ad0725f0ebec706b97e75ca1c43e35b2934cf48d2cL35' target='_blank'>Link</a></div><div id='project'> Project Name: pysb/pysb</div><div id='commit'> Commit Name: 47374cd825213029b578e5a22ba9836c0f55d97a</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: oo.ortega2247@gmail.com</div><div id='file'> File Name: pysb/tools/pysb_pyurdme.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _translate_species</div><BR>

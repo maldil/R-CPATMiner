@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        confusion = predicted / actual
+
+        <a id="change">matrix</a> = np.array(
+            <a id="change">[
+                [
+                    torch.sum(torch.isnan(confusion)).item(),
+                    torch.sum(confusion == float("inf")).item(),
+                ],
+                [torch.sum(confusion == 0).item(), torch.sum(confusion == 1).item()],
+            ]</a>
+        )
+
+        if self.confusion_matrix is None:
+            self.confusion_matrix = matrix</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        confusion = predicted / actual
+
+        <a id="change">tn</a> = <a id="change">torch.sum(torch.isnan(confusion)).item()</a>
+        <a id="change">fn</a> = <a id="change">torch.sum(confusion == float("inf")).item()</a>
+        <a id="change">fp</a> = <a id="change">torch.sum(confusion == 0).item()</a>
+        <a id="change">tp</a> = <a id="change">torch.sum(confusion == 1).item()</a>
+
+        <a id="change">matrix</a> = np.array(<a id="change">[[tn, fn], [fp, tp]]</a>)
+
+        if self.confusion_matrix is None:
+            self.confusion_matrix = matrix</code></pre>

@@ -1,0 +1,16 @@
+<html><h3>33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec,transformer/SubLayers.py,PositionwiseFeedForward,forward,#PositionwiseFeedForward#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        output = F.relu(self.w_1(x.transpose(1, 2)))
+        output = self.w_2(output).transpose(2, 1)
+        output = self.dropout(output)
+        return <a id="change">self.layer_norm(output + residual)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        output = self.w_2(F.relu(self.w_1(output)))
+        output = output.transpose(1, 2)
+        output = self.dropout(output)
+        output = <a id="change">self.layer_norm(output + residual)</a>
+        return output
+</code></pre><img src="789305.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec#diff-c2e6f2d92a3d68833db6c545e5d53b5f7850998e08effd9bfdd299a0a944d4d8L74' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/SubLayers.py</div><div id='class'> Class Name: PositionwiseFeedForward</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/OpenNMT/OpenNMT-tf/commit/0748980bd54641e0c674a41b81a4ca19d7ec8149#diff-78564f81397b24fd44ce7ca75d7fa59d0bc28e5f529f74877579db0e00f053e8L77' target='_blank'>Link</a></div><div id='project'> Project Name: OpenNMT/OpenNMT-tf</div><div id='commit'> Commit Name: 0748980bd54641e0c674a41b81a4ca19d7ec8149</div><div id='time'> Time: 2021-02-23</div><div id='author'> Author: guillaumekln@users.noreply.github.com</div><div id='file'> File Name: opennmt/encoders/self_attention_encoder.py</div><div id='class'> Class Name: SelfAttentionEncoder</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/OpenNMT/OpenNMT-tf/commit/0748980bd54641e0c674a41b81a4ca19d7ec8149#diff-c60905dae72132d03a5b0c8b514b10766b681565075afe76acedd57537c3f622L103' target='_blank'>Link</a></div><div id='project'> Project Name: OpenNMT/OpenNMT-tf</div><div id='commit'> Commit Name: 0748980bd54641e0c674a41b81a4ca19d7ec8149</div><div id='time'> Time: 2021-02-23</div><div id='author'> Author: guillaumekln@users.noreply.github.com</div><div id='file'> File Name: opennmt/decoders/self_attention_decoder.py</div><div id='class'> Class Name: SelfAttentionDecoder</div><div id='method'> Method Name: _run</div><BR>

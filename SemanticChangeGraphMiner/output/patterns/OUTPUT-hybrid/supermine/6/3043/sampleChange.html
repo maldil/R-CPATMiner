@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    else:
+        are_inf = np.isinf(elapsed_steps)
+        int_steps = np.asarray(elapsed_steps, dtype=int)
+        <a id="change">if any(are_inf):
+            int_steps[are_inf & (elapsed_steps &lt; 0)] = _iinfo.min
+            int_steps[are_inf & (elapsed_steps &gt; 0)] = _iinfo.max
+       </a> return int_steps
+
+
+DEFAULT_FUNCTIONS = {</code></pre><h3>After Change</h3><pre><code class='java'>
+            if elapsed_steps &gt; 0:
+                return _infinity_int
+            else:
+                <a id="change">return -_infinity_int</a>
+        else:
+            return np.int_(elapsed_steps)
+    else:
+        int_steps = np.asarray(elapsed_steps, dtype=int)</code></pre>

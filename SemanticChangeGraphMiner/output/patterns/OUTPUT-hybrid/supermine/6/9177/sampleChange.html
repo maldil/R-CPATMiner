@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                if isinstance(score[i], float):
+                    features.append(self.names[j])
+                    data.append(score[i])
+                elif <a id="change">isinstance</a>(score[i], dict):
+                    <a id="change">for k in score[i].keys():
+                        features.append(self.names[j] + &quot_&quot + k)
+                        data.append(score[i][k])
+
+           </a> results.append(ExtractorResult([data], stim, self,
+                                           features=features,
+                                           onsets=stim.onset,
+                                           durations=stim.duration))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        results = []
+        for i, stim in enumerate(stims):
+            stim_scores = [<a id="change">s[i]</a> for s in scores]
+            results.append(ExtractorResult(None, stim, self,
+                                           raw=stim_scores))
+        return results</code></pre>

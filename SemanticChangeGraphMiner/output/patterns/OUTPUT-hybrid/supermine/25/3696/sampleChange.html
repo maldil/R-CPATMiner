@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return (info[0], info[1], info[2], info[3])
+
+    def get(self, *args, **kwargs):
+        <a id="change">t = time.time()</a>
+        value = self.cache.get(*args, **kwargs)
+        <a id="change">this_time = time.time() - t</a>
+        <a id="change">self.total_time += this_time * 1000</a>
+        if value is None:
+            <a id="change">self.misses += 1</a>
+        else:
+            <a id="change">self.hits</a> += 1
+        <a id="change">self.gets</a> += 1
+        <a id="change">self.calls.append((this_time, &quotget&quot, args, kwargs, self._get_func_info()))</a>
+        return value
+
+    def set(self, *args, **kwargs):
+        t = time.time()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @send_signal
+    def get(self, *args, **kwargs):
+        <a id="change">return self.cache.get(*args, **kwargs)</a>
+
+    @send_signal
+    def set(self, *args, **kwargs):
+        return self.cache.set(*args, **kwargs)</code></pre>

@@ -1,0 +1,28 @@
+<html><h3>4d302bc9fda66b8352b7d2956cd22714c6959096,pyglmnet/pyglmnet.py,,_gradhess_logloss_1d,#,309
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        grad_mu = _grad_mu(distr, z, eta)
+        hess_mu = np.exp(-z)/expit(z)**2
+
+        partial_beta_a =<a id="change">hess_mu * (1 + np.log(mu + r))</a>
+        partial_beta_b = grad_mu ** 2 / (mu + r)
+        partial_beta_c =  y * (hess_mu / mu - (grad_mu) ** 2 / mu ** 2)
+
+        gk = -np.sum(partial_beta_a+partial_beta_b+partial_beta_c)
+        <a id="change">hk = -np.sum(np.dot(partial_beta_a.T, xk)+np.dot(partial_beta_b.T, xk)+np.dot(partial_beta_c.T, xk))</a>
+
+    elif distr == &quotgamma&quot:
+        raise NotImplementedError(&quotcdfast is not implemented for Gamma &quot
+                                  &quotdistribution&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        hess_mu = np.exp(-z)*expit(z)**2
+
+        partial_beta_0_1 = hess_mu*((r+y)/(r+mu)-(y/mu))
+        partial_beta_0_2 = grad_mu**2 * (y/mu**2 - <a id="change">(r+y)</a>/(r+mu)**2)
+        partial_beta_0 = partial_beta_0_1+partial_beta_0_2
+        gk = <a id="change">np.sum(partial_beta_0)</a>
+        hk = np.dot(partial_beta_0.T, xk**2)
+
+    elif distr == &quotgamma&quot:
+        raise NotImplementedError(&quotcdfast is not implemented for Gamma &quot</code></pre><img src="18024723.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/glm-tools/pyglmnet/commit/4d302bc9fda66b8352b7d2956cd22714c6959096#diff-cc78bf166299339921d4c5dadf0499912041bb7b8415db1f800a54870a6fb141L390' target='_blank'>Link</a></div><div id='project'> Project Name: glm-tools/pyglmnet</div><div id='commit'> Commit Name: 4d302bc9fda66b8352b7d2956cd22714c6959096</div><div id='time'> Time: 2020-08-16</div><div id='author'> Author: giovanni.det@gmail.com</div><div id='file'> File Name: pyglmnet/pyglmnet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gradhess_logloss_1d</div><BR><BR><div id='link'><a href='https://github.com/glm-tools/pyglmnet/commit/c35829c9a7624fe9722543fb874d0aa2a7b8fb61#diff-cc78bf166299339921d4c5dadf0499912041bb7b8415db1f800a54870a6fb141L366' target='_blank'>Link</a></div><div id='project'> Project Name: glm-tools/pyglmnet</div><div id='commit'> Commit Name: c35829c9a7624fe9722543fb874d0aa2a7b8fb61</div><div id='time'> Time: 2020-08-16</div><div id='author'> Author: giovanni.det@gmail.com</div><div id='file'> File Name: pyglmnet/pyglmnet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gradhess_logloss_1d</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/e3f85d146653691809ce1a38388c3f199dbe6e7d#diff-f62059471d662b6dd4f52b72f85de204de892ec5220f037f9543e628c3bf0050L13' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: e3f85d146653691809ce1a38388c3f199dbe6e7d</div><div id='time'> Time: 2015-03-03</div><div id='author'> Author: iamyuanchung@gmail.com</div><div id='file'> File Name: libact/query_strategies/uncertainty_sampling.py</div><div id='class'> Class Name: UncertaintySampling</div><div id='method'> Method Name: make_query</div><BR><BR><div id='link'><a href='https://github.com/glm-tools/pyglmnet/commit/4d302bc9fda66b8352b7d2956cd22714c6959096#diff-cc78bf166299339921d4c5dadf0499912041bb7b8415db1f800a54870a6fb141L390' target='_blank'>Link</a></div><div id='project'> Project Name: glm-tools/pyglmnet</div><div id='commit'> Commit Name: 4d302bc9fda66b8352b7d2956cd22714c6959096</div><div id='time'> Time: 2020-08-16</div><div id='author'> Author: giovanni.det@gmail.com</div><div id='file'> File Name: pyglmnet/pyglmnet.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _gradhess_logloss_1d</div><BR>

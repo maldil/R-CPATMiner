@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        images.append([[img1,img2],flow_map])
+
+    assert(len(images) &gt; 0)
+    <a id="change">random.shuffle(images)</a>
+    <a id="change">split_index = math.floor(len(images)*split/100)</a>
+    assert(split_index &gt;= 0 and split_index &lt;= len(images))
+    return (<a id="change">images[:split_index]</a>, <a id="change">images[split_index+1:]</a>) if split_index &lt; len(images) else (images, [])
+
+def KITTI_loader(root,path_imgs, path_flo):
+    imgs = [os.path.join(root,path) for path in path_imgs]</code></pre><h3>After Change</h3><pre><code class='java'>
+        img_dir = &quotimage_2&quot
+    assert(os.path.isdir(os.path.join(dir,img_dir)))
+
+    <a id="change">images</a> = []
+    for flow_map in glob.iglob(os.path.join(dir,flow_dir,&quot*.png&quot)):
+        flow_map = os.path.basename(flow_map)
+        root_filename = flow_map[:-7]
+        flow_map = os.path.join(flow_dir,flow_map)
+        img1 = os.path.join(img_dir,root_filename+&quot_10.png&quot)
+        img2 = os.path.join(img_dir,root_filename+&quot_11.png&quot)
+        if not (os.path.isfile(os.path.join(dir,img1)) or os.path.isfile(os.path.join(dir,img2))):
+            continue
+        images.append([[img1,img2],flow_map])
+
+    <a id="change">return split2list(images, split, default_split=0.9)</a>
+
+def KITTI_loader(root,path_imgs, path_flo):
+    imgs = [os.path.join(root,path) for path in path_imgs]
+    flo = os.path.join(root,path_flo)</code></pre>

@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def inference_step(self, inputs, model):
+    Performs the forward step.
+    <a id="change">return model(inputs, training=False)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    Performs the forward step.
+    outputs = model(inputs, training=False)
+    if self.task_config.train_data.is_multilabel:
+      outputs = <a id="change">tf.math.sigmoid(outputs)</a>
+    else:
+      outputs = tf.math.softmax(outputs)
+    <a id="change">return outputs</a>
+</code></pre>

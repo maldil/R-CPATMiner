@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            graph = lazyflow.graph.Graph()
+            reader = OperatorWrapper(OpDataSelection, graph=graph, operator_kwargs={&quotforceAxisOrder&quot: False})
+            reader.ProjectFile.setValue(self.projectFile)
+            reader.WorkingDirectory.setValue(<a id="change">os.getcwd()</a>)
+            reader.ProjectDataGroup.setValue(&quotDataSelection/local_data&quot)
+
+            info = DatasetInfo(filepath=fileNameString)</code></pre><h3>After Change</h3><pre><code class='java'>
+            reader = OperatorWrapper(OpDataSelection, graph=Graph(), operator_kwargs={&quotforceAxisOrder&quot: False})
+            reader.WorkingDirectory.setValue(str(Path(empty_project_file.filename).parent))
+
+            reader.Dataset.setValues(<a id="change">[DatasetInfo(filepath=fileNameString, sequence_axis=&quotz&quot)]</a>)
+
+            &#47&#47 Read the test files using the data selection operator and verify the contents
+            imgData3D = reader.Image[0][...].wait()</code></pre>

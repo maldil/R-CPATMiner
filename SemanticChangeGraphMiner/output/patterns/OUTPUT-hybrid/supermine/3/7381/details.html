@@ -1,0 +1,21 @@
+<html><h3>f8df6021a1343d511d4c9b4c108ec5b683ce5487,modAL/batch.py,,select_instance,#,45
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Determine our alpha parameter as |U| / (|U| + |D|). Note that because we
+    &#47&#47 append to X_training and remove from X_uncertainty within `ranked_batch`,
+    &#47&#47 :alpha: is not fixed throughout our model&quots lifetime.
+    n_labeled, n_unlabeled = X_training.shape[0], <a id="change">X_uncertainty.shape[0]</a>
+    alpha = n_unlabeled / (n_unlabeled + n_labeled)
+
+    &#47&#47 Isolate our original unlabeled records from their predicted class uncertainty.
+    unlabeled_records, uncertainty_scores = X_uncertainty[:, :-1], X_uncertainty[:, -1]</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 we selected that row for labeling.
+    n_labeled_records, _ = X_training.shape
+
+    X_uncertainty = <a id="change">X_uncertainty[~np.isnan(X_uncertainty).all(axis=1)]</a>
+    n_unlabeled, _ = X_uncertainty.shape
+
+    &#47&#47 Determine our alpha parameter as |U| / (|U| + |D|). Note that because we
+    &#47&#47 append to X_training and remove from X_uncertainty within `ranked_batch`,</code></pre><img src="28545427.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/f8df6021a1343d511d4c9b4c108ec5b683ce5487#diff-2262fbeb3e1f0aa450ec33c90fa5a9c360361d54004cd569f9377c8cfe02b41fL84' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: f8df6021a1343d511d4c9b4c108ec5b683ce5487</div><div id='time'> Time: 2018-08-14</div><div id='author'> Author: dannyofig@gmail.com</div><div id='file'> File Name: modAL/batch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: select_instance</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/boruta_py/commit/b54962613e66dc057a2c67000573d72db04034d4#diff-472a9f80d8036ef5d423982df11a1d99b5b6af1a0652d3fcd0377c7d483abbd1L418' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/boruta_py</div><div id='commit'> Commit Name: b54962613e66dc057a2c67000573d72db04034d4</div><div id='time'> Time: 2018-02-08</div><div id='author'> Author: dirk.biesinger@gmail.com</div><div id='file'> File Name: boruta/boruta_py.py</div><div id='class'> Class Name: BorutaPy</div><div id='method'> Method Name: _assign_hits</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/boruta_py/commit/ebc1c0d864a99a1fd70ebd4eea54564c41dbcdc7#diff-472a9f80d8036ef5d423982df11a1d99b5b6af1a0652d3fcd0377c7d483abbd1L493' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/boruta_py</div><div id='commit'> Commit Name: ebc1c0d864a99a1fd70ebd4eea54564c41dbcdc7</div><div id='time'> Time: 2016-12-14</div><div id='author'> Author: wout@bittremieux.be</div><div id='file'> File Name: boruta/boruta_py.py</div><div id='class'> Class Name: BorutaPy</div><div id='method'> Method Name: _nanrankdata</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/3ca08d6934b6800a329172cf620bbff32b0d64d7#diff-fc86def40746fa8f783acc7fa20483452a0bca19c211d2c932c2603ffc3e8ddaL1340' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 3ca08d6934b6800a329172cf620bbff32b0d64d7</div><div id='time'> Time: 2014-12-18</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metergroup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: combine_chunks_from_generators</div><BR>

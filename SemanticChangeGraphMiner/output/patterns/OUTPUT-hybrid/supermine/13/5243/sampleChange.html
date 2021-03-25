@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+from kymatio.scattering2d import backend
+
+
+<a id="change">if torch.cuda.is_available():
+    devices = [&quotcuda&quot, &quotcpu&quot]
+else:
+    devices = [&quotcpu&quot]
+
+
+</a>def reorder_coefficients_from_interleaved(J, L):
+    &#47&#47 helper function to obtain positions of order0, order1, order2 from interleaved
+    order0, order1, order2 = [], [], []
+    n_order0, n_order1, n_order2 = 1, J * L, L ** 2 * J * (J - 1) // 2</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+devices = [&quotcpu&quot]
+<a id="change">if torch.cuda.is_available():
+    devices.append(&quotcuda&quot)
+
+</a>def reorder_coefficients_from_interleaved(J, L):
+    &#47&#47 helper function to obtain positions of order0, order1, order2 from interleaved
+    order0, order1, order2 = [], [], []
+    n_order0, n_order1, n_order2 = 1, J * L, L ** 2 * J * (J - 1) // 2</code></pre>

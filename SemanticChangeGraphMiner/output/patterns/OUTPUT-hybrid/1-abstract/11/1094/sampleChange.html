@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def _decode(self, record: tf.Tensor):
+    Decodes a serialized tf.Example.
+    <a id="change">name_to_features</a> = {
+        &quotinput_ids&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotinput_mask&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotsegment_ids&quot:
+            <a id="change">tf.io.FixedLenFeature([self._seq_length], tf.int64)</a>,
+        &quotmasked_lm_positions&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_ids&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  def _decode(self, record: tf.Tensor):
+    Decodes a serialized tf.Example.
+    <a id="change">name_to_features</a> = {
+        &quotinput_mask&quot:
+            tf.io.FixedLenFeature([self._seq_length], tf.int64),
+        &quotmasked_lm_positions&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_ids&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.int64),
+        &quotmasked_lm_weights&quot:
+            tf.io.FixedLenFeature([self._max_predictions_per_seq], tf.float32),
+    }
+    <a id="change">if self._params.use_v2_feature_names:
+      name_to_features.update({
+          &quotinput_word_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+          &quotinput_type_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+      })
+    else:
+      name_to_features.update({
+          &quotinput_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+          &quotsegment_ids&quot: tf.io.FixedLenFeature([self._seq_length], tf.int64),
+      })
+   </a> if self._use_next_sentence_label:
+      name_to_features[&quotnext_sentence_labels&quot] = tf.io.FixedLenFeature([1],
+                                                                       tf.int64)
+    if self._use_position_id:</code></pre>

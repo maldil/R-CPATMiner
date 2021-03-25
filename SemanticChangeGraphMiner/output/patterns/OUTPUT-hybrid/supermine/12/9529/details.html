@@ -1,0 +1,68 @@
+<html><h3>d7bcbade517750cc4fdb7642415e4cf05ae584e8,tutorial/utils.py,,collect_pubtator_annotations,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Given a list of ddlite Documents with PubTator/CDR annotations,
+    extract a dictionary of annotations by type.
+    
+    <a id="change">annotations = defaultdict(list)</a>
+    for a in doc.attribs[&quotroot&quot].xpath(&quot.//annotation&quot):
+
+        &#47&#47 Relation annotations
+        if len(a.xpath(&quot./infon[@key="relation"]&quot)) &gt; 0:
+            type = a.xpath(&quot./infon[@key="relation"]/text()&quot)[0]
+            types = a.xpath(&quot./infon[@key != "relation"]/@key&quot)
+            mesh_ids = a.xpath(&quot./infon[@key != "relation"]/text()&quot)
+            <a id="change">annotations</a>[type].append(PubtatorRelation(types=types, mesh_ids=mesh_ids))
+
+        &#47&#47 Mention annotations
+        else:
+            txt = a.xpath(&quot./text/text()&quot)[0]
+            offset = int(a.xpath(&quot./location/@offset&quot)[0])
+            length = int(a.xpath(&quot./location/@length&quot)[0])
+            type = a.xpath(&quot./infon[@key="type"]/text()&quot)[0]
+            mesh = a.xpath(&quot./infon[@key="MESH"]/text()&quot)[0]
+            <a id="change">annotations</a>[type].append(PubtatorMention(mesh_id=mesh, text=txt,
+                                                     char_offset=offset, char_length=length))
+    return annotations
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    extract a set of Ngram objects indexed according to **Sentence character indexing**
+    NOTE: Assume the sentences are provided in correct order & have standard separator.
+    
+    <a id="change">sent_offsets = [ensure_dict(s)[CHAR_OFFSETS][0] for s in sents]</a>
+
+    &#47&#47 Get Ngrams
+    ngrams = []
+    for a in doc.attribs[&quotroot&quot].xpath(&quot.//annotation&quot):
+
+        &#47&#47 Relation annotations
+        if len(a.xpath(&quot./infon[@key="relation"]&quot)) &gt; 0:
+
+            &#47&#47 TODO: Pull these out!
+            type = a.xpath(&quot./infon[@key="relation"]/text()&quot)[0]
+            types = a.xpath(&quot./infon[@key != "relation"]/@key&quot)
+            mesh_ids = a.xpath(&quot./infon[@key != "relation"]/text()&quot)
+            pass
+
+        &#47&#47 Mention annotations
+        else:
+            txt = a.xpath(&quot./text/text()&quot)[0]
+            offset = int(a.xpath(&quot./location/@offset&quot)[0])
+            length = int(a.xpath(&quot./location/@length&quot)[0])
+            type = a.xpath(&quot./infon[@key="type"]/text()&quot)[0]
+            mesh = a.xpath(&quot./infon[@key="MESH"]/text()&quot)[0]
+            
+            &#47&#47 Get sentence id and relative character offset
+            <a id="change">si = len(sent_offsets) - 1</a>
+            for i,so in enumerate(sent_offsets):
+                if offset == so:
+                    si = i
+                    break
+                elif <a id="change">offset &lt; so:
+   </a>                 <a id="change">si = i - 1</a>
+                    <a id="change">break</a>
+            &#47&#47offset -= sent_offsets[si]
+            ngrams.append(Ngram(offset, offset + length - 1, sents[si], metadata={
+                &quotmesh_id&quot : mesh, &quottype&quot : type}))
+    return ngrams</code></pre><img src="36414313.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/d7bcbade517750cc4fdb7642415e4cf05ae584e8#diff-090ac9a8a417f3c8db1a83c85aa5e2b0589c8de8c3d5d563aad251fe0d12c675L13' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: d7bcbade517750cc4fdb7642415e4cf05ae584e8</div><div id='time'> Time: 2016-07-03</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: tutorial/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: collect_pubtator_annotations</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/1d6771befb95f4ae94f308899633294a003dcfd6#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L212' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 1d6771befb95f4ae94f308899633294a003dcfd6</div><div id='time'> Time: 2020-07-24</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/d7bcbade517750cc4fdb7642415e4cf05ae584e8#diff-090ac9a8a417f3c8db1a83c85aa5e2b0589c8de8c3d5d563aad251fe0d12c675L13' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: d7bcbade517750cc4fdb7642415e4cf05ae584e8</div><div id='time'> Time: 2016-07-03</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: tutorial/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: collect_pubtator_annotations</div><BR><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/1d6771befb95f4ae94f308899633294a003dcfd6#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L180' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 1d6771befb95f4ae94f308899633294a003dcfd6</div><div id='time'> Time: 2020-07-24</div><div id='author'> Author: hiromu.hota@hal.hitachi.com</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: common_ancestor</div><BR>

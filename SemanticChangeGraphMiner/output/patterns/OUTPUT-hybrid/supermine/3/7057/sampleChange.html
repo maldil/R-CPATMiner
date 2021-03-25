@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        df.index = pd.to_datetime(df[TIMESTAMP_COLUMN_NAME], unit=&quots&quot, utc=True)
+        df = df.drop(TIMESTAMP_COLUMN_NAME, 1)
+        df = df.tz_convert(TIMEZONE)
+        <a id="change">df.rename(columns=lambda x: columnNameMapping[x], inplace=True)</a>
+        df.columns.set_names(LEVEL_NAMES, inplace=True)
+        df = df.apply(pd.to_numeric, errors=&quotignore&quot)
+        df = df.dropna()
+        df = df.astype(np.float32)</code></pre><h3>After Change</h3><pre><code class='java'>
+        df = df.drop(TIMESTAMP_COLUMN_NAME, 1)
+        df = df.tz_convert(TIMEZONE)
+        df.columns = pd.MultiIndex.from_tuples(
+            [columnNameMapping[x] <a id="change">for</a> x in df.columns],
+            names=LEVEL_NAMES
+        )
+        df = df.apply(pd.to_numeric, errors=&quotignore&quot)</code></pre>

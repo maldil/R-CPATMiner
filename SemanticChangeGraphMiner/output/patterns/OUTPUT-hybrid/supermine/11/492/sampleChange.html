@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            intersect = tf.intersect(timeframe)
+         
+            if not intersect.empty:
+                <a id="change">raise ValueError("Periods overlap: " + str(tf) + 
+                                 " " + str(timeframe))</a>
+
+        row = pd.DataFrame(index=[timeframe.start],
+                           columns=[&quotend&quot] + new_results.keys())
+        row[&quotend&quot] = timeframe.end</code></pre><h3>After Change</h3><pre><code class='java'>
+        timeframe : nilmtk.TimeFrame
+        new_results : dict
+        
+        <a id="change">if not isinstance(timeframe, TimeFrame):
+            raise TypeError("`timeframe` must be of type &quotnilmtk.TimeFrame&quot,"
+                            " not &quot{}&quot type.".format(type(timeframe)))
+       </a> if not isinstance(new_results, dict):
+            <a id="change">raise TypeError("`new_results` must of a dict, not &quot{}&quot type."
+                            .format(type(new_results)))</a>
+        
+        &#47&#47 check that there is no overlap
+        for index, series in self._data.iterrows():
+            tf = TimeFrame(index, series[&quotend&quot])</code></pre>

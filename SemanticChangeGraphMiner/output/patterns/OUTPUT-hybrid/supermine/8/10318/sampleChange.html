@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    input_scale = self.input_scale.get(input_name)
+    channel_order = self.channel_swap.get(input_name)
+    mean = self.mean.get(input_name)
+    <a id="change">if mean is not None:
+        decaf_in += mean
+   </a> decaf_in = decaf_in.transpose((1,2,0))
+    if channel_order:
+        channel_order_inverse = [channel_order.index(i)
+                                 for i in range(decaf_in.shape[2])]</code></pre><h3>After Change</h3><pre><code class='java'>
+    decaf_in = input_.copy().squeeze()
+    input_scale = self.input_scale.get(input_name)
+    channel_order = self.channel_swap.get(input_name)
+    <a id="change">if hasattr(self, &quotmean&quot):
+        decaf_in += self.mean.get(input_name, 0)
+   </a> decaf_in = decaf_in.transpose((1,2,0))
+    if channel_order:
+        channel_order_inverse = [channel_order.index(i)
+                                 for i in range(decaf_in.shape[2])]</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 measure accuracy and record loss
+            prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            losses.update(loss.data[0], input.size(0))
+            <a id="change">top1.update(prec1[0], input.size(0))</a>
+            top5.update(prec5[0], input.size(0))
+
+            &#47&#47 measure elapsed time
+            batch_time.update(time.time() - end)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 measure accuracy and record loss
+            prec1, prec5 = accuracy_sum(output.data, target, topk=(1, 5))
+
+            <a id="change">loss *= target.shape[0]</a>
+            count = target.new_tensor([target.shape[0]],dtype=torch.long)
+            if dist.is_initialized():
+              dist.all_reduce(count, dist.reduce_op.SUM)
+            <a id="change">for meter,val in (losses,loss), (top1,prec1), (top5,prec5):
+              if dist.is_initialized():
+                dist.all_reduce(val, dist.reduce_op.SUM)
+              val /= count.item()
+              meter.update(val.item(), count.item())
+            
+            &#47&#47 measure elapsed time
+           </a> batch_time.update(time.time() - end)
+            end = time.time()
+
+            if i % args.print_freq == 0:</code></pre>

@@ -1,0 +1,27 @@
+<html><h3>128dbbe25c3232f1423337b2c37fb743d26df3c8,pgmpy/models/MarkovChain.py,MarkovChain,sample,#MarkovChain#,214
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i in range(size - 1):
+            for j, (var, st) in enumerate(self.state):
+                next_st = <a id="change">sample_discrete(list(self.transition_models[var][st].keys()),
+                                          list(self.transition_models[var][st].values()))[0]</a>
+                self.state[j] = State(var, next_st)
+            sampled.loc[i + 1] = [st for var, st in self.state]
+
+        return sampled</code></pre><h3>After Change</h3><pre><code class='java'>
+        var_states = defaultdict(dict)
+        var_values = defaultdict(dict)
+        samples = defaultdict(dict)
+        <a id="change">for var in self.transition_models.keys():
+            for st in self.transition_models[var]:
+                var_states[var][st] = list(self.transition_models[var][st].keys())
+                var_values[var][st] = list(self.transition_models[var][st].values())
+                samples[var][st] = sample_discrete(var_states[var][st], var_values[var][st])[0]
+
+       </a> for i in range(size - 1):
+            for j, (var, st) in enumerate(self.state):
+                next_st = samples[var][st]
+                self.state[j] = State(var, next_st)</code></pre><img src="39591404.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/128dbbe25c3232f1423337b2c37fb743d26df3c8#diff-0fb01f0b1e171b350e97a5ce9bff1596e8f0a31fae2eb3104f25fb033971db88L214' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 128dbbe25c3232f1423337b2c37fb743d26df3c8</div><div id='time'> Time: 2015-11-19</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/models/MarkovChain.py</div><div id='class'> Class Name: MarkovChain</div><div id='method'> Method Name: sample</div><BR><BR><div id='link'><a href='https://github.com/naoto0804/pytorch-AdaIN/commit/4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L56' target='_blank'>Link</a></div><div id='project'> Project Name: naoto0804/pytorch-AdaIN</div><div id='commit'> Commit Name: 4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: inoue@hal.t.u-tokyo.ac.jp</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/danforthcenter/plantcv/commit/21e6d8d6a5452ca96cecb00f8a9083de14a947c4#diff-f7723329f0e23f82cec01663ce21f7a0c02e64d5d5b52db5bd9f9786b340f26eL37' target='_blank'>Link</a></div><div id='project'> Project Name: danforthcenter/plantcv</div><div id='commit'> Commit Name: 21e6d8d6a5452ca96cecb00f8a9083de14a947c4</div><div id='time'> Time: 2019-10-23</div><div id='author'> Author: haleyschuhl@gmail.com</div><div id='file'> File Name: plantcv/plantcv/hyperspectral/analyze_spectral.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: analyze_spectral</div><BR>

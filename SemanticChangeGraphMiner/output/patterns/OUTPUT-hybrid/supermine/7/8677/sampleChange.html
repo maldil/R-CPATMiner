@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    gen = model.predict(inputs, batch_size=batch_size)
+
+    <a id="change">print("Writing to &quot{}&quot...".format(output_dir))</a>
+
+    for i in range(0, gen.shape[0]):
+        if K.image_dim_ordering() == &quotth&quot:
+            image = np.empty(gen.shape[2:]+(3,))</code></pre><h3>After Change</h3><pre><code class='java'>
+    num_images = inputs[&quotidentity&quot].shape[0]
+    count = 0
+
+    <a id="change">for idx in tqdm(range(0, num_images, batch_size)):
+
+        batch = {
+            &quotidentity&quot:    inputs[&quotidentity&quot]   [idx:idx+batch_size,:],
+            &quotemotion&quot:     inputs[&quotemotion&quot]    [idx:idx+batch_size,:],
+            &quotorientation&quot: inputs[&quotorientation&quot][idx:idx+batch_size,:],
+        }
+
+        gen = model.predict_on_batch(batch)
+
+        for i in range(0, gen.shape[0]):
+            if K.image_dim_ordering() == &quotth&quot:
+                image = np.empty(gen.shape[2:]+(3,))
+                for x in range(0, 3):
+                    image[:,:,x] = gen[i,x,:,:]
+            else:
+                image = gen[i,:,:,:]
+            image = np.array(255*np.clip(image,0,1), dtype=np.uint8)
+            file_path = os.path.join(output_dir, &quot{:05}.png&quot.format(count))
+            scipy.misc.imsave(file_path, image)
+            count += 1
+
+</a>
+</code></pre>

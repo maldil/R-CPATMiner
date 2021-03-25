@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                window_inputs.append(self.crop(image, window))
+
+        &#47&#47 Run through the net (warping windows to input dimensions).
+        caffe_in = <a id="change">np.asarray([self.preprocess(self.inputs[0], window_in)
+                    for window_in in window_inputs])</a>
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+
+        &#47&#47 Package predictions with images and windows.</code></pre><h3>After Change</h3><pre><code class='java'>
+                window_inputs.append(self.crop(image, window))
+
+        &#47&#47 Run through the net (warping windows to input dimensions).
+        <a id="change">caffe_in = np.zeros((len(window_inputs), window_inputs[0].shape[2])
+                            + self.blobs[self.inputs[0]].data.shape[2:],
+                            dtype=np.float32)</a>
+        for ix, window_in in <a id="change">enumerate(window_inputs)</a>:
+            <a id="change">caffe_in[ix]</a> = self.preprocess(self.inputs[0], window_in)
+        out = self.forward_all(**{self.inputs[0]: caffe_in})
+        predictions = out[self.outputs[0]].squeeze(axis=(2,3))
+</code></pre>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+               [("-2", "-1", "0", "1", "2")], 0.05, 10)
+        yield (check_minimize, minimizer, branin, 0.39,
+               [(-5.0, 10.0), (0.0, 15.0)], 0.1, 100)
+        <a id="change">yield (check_minimize, minimizer, hart6, -3.32,
+               np.tile((0.0, 1.0), (6, 1)), 1.0, 25)</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        yield (check_minimize, minimizer, bench4, 0.0,
+               [("-2", "-1", "0", "1", "2")], 0.05, 10)
+
+        <a id="change">if name == "dt":
+            yield (check_minimize, minimizer, branin, 0.39,
+                   [(-5.0, 10.0), (0.0, 15.0)], 0.1, 200)
+            yield (check_minimize, minimizer, hart6, -3.32,
+                   np.tile((0.0, 1.0), (6, 1)), 1.0, 100)
+        else:
+            yield (check_minimize, minimizer, branin, 0.39,
+                   [(-5.0, 10.0), (0.0, 15.0)], 0.1, 125)
+            yield (check_minimize, minimizer, hart6, -3.32,
+                   np.tile((0.0, 1.0), (6, 1)), 1.0, 30)</a>
+</code></pre>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        one_and_half_markov_model = self.one_and_half_model.to_markov_model()
+
+        combinations_slice_0 = list(itertools.combinations(model.get_interface_nodes(0), 2))
+        combinations_slice_1 = list(<a id="change">itertools.combinations(model.get_interface_nodes(1), 2)</a>)
+
+        start_markov_model.add_edges_from(combinations_slice_0)
+        one_and_half_markov_model.add_edges_from(combinations_slice_0 + combinations_slice_1)</code></pre><h3>After Change</h3><pre><code class='java'>
+        one_and_half_markov_model = self.one_and_half_model.to_markov_model()
+
+        combinations_slice_0 = itertools.combinations(model.get_interface_nodes(0), 2)
+        combinations_slice_1 = <a id="change">itertools.combinations(model.get_interface_nodes(1), 2)</a>
+
+        start_markov_model.add_edges_from(combinations_slice_0)
+        one_and_half_markov_model.add_edges_from(itertools.chain(combinations_slice_0, combinations_slice_1))
+</code></pre>

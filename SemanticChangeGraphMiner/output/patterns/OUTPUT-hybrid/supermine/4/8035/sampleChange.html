@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        b_images = sess.run(net_gII.outputs, feed_dict={ &#47&#47 debug
+                                t_caption : b_caption,
+                                t_z : b_z})
+        <a id="change">gen_images = sess.run(net_g2.outputs, feed_dict={
+                                t_caption : b_caption,
+                                t_z : b_z})</a>
+        print(&quotb_images&quot, np.min(b_images), np.max(b_images))
+        print(&quotgen_images&quot, np.min(gen_images), np.max(gen_images))
+        print("[*] Sampling images")
+        combine_and_save_image_sets([b_images, gen_images], &quotsamples/step2&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+        stackD = stackD_256
+    if is_E_256:
+        cnn_encoder = cnn_encoder_256
+        <a id="change">assert is_stackGAN == True</a>
+
+    t_caption = tf.placeholder(dtype=tf.int64, shape=[batch_size, None], name=&quotcaption_input&quot)
+    t_z = tf.placeholder(tf.float32, [batch_size, z_dim], name=&quotz_noise&quot)
+</code></pre>

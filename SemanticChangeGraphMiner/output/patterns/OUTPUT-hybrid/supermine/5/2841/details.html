@@ -1,0 +1,36 @@
+<html><h3>f8df6021a1343d511d4c9b4c108ec5b683ce5487,modAL/batch.py,,ranked_batch,#,103
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    labeled = np.copy(classifier.X_training) if n_training_records &gt; 0 else select_cold_start_instance(unlabeled)
+
+    &#47&#47 Add uncertainty scores to our unlabeled data, and keep a copy of our unlabeled data.
+    unlabeled_uncertainty = <a id="change">np.concatenate((unlabeled, np.expand_dims(uncertainty_scores, axis=1)), axis=1)</a>
+    unlabeled_uncertainty_copy = np.copy(unlabeled_uncertainty)
+
+    &#47&#47 Define our record container and the maximum number of records to sample.
+    instance_index_ranking = []
+    ceiling = np.minimum(unlabeled.shape[0], n_instances)
+
+    &#47&#47 TODO (dataframing) is there a better way to do this? Inherently sequential.
+    for _ in range(ceiling):
+
+        &#47&#47 Select the instance from our unlabeled copy that scores highest.
+        raw_instance = select_instance(X_training=labeled, X_uncertainty=unlabeled_uncertainty_copy)
+        instance = np.expand_dims(raw_instance, axis=1)
+
+        &#47&#47 Find our record&quots index in both the original unlabeled and our uncertainty copy.
+        <a id="change">instance_index_original = np.where(np.all(unlabeled == raw_instance, axis=1))[0][0]</a>
+        instance_index_copy = np.where(np.all(unlabeled_uncertainty_copy[:, :-1] == instance.T, axis=1))[0][0]
+
+        &#47&#47 Add our instance we&quotve considered for labeling to our labeled set. Although we don&quott
+        &#47&#47 know it&quots label, we want further iterations to consider the newly-added instance so</code></pre><h3>After Change</h3><pre><code class='java'>
+    unlabeled_uncertainty = np.concatenate((unlabeled, expanded_uncertainty_scores), axis=1)
+
+    &#47&#47 Define our null row, which will be filtered during the select_instance call.
+    <a id="change">null_row = np.ones(shape=(unlabeled_uncertainty.shape[1],)) * np.nan</a>
+
+    &#47&#47 Define our record container and the maximum number of records to sample.
+    instance_index_ranking = []
+    ceiling = np.minimum(unlabeled.shape[0], n_instances)</code></pre><img src="12668455.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/modAL-python/modAL/commit/f8df6021a1343d511d4c9b4c108ec5b683ce5487#diff-2262fbeb3e1f0aa450ec33c90fa5a9c360361d54004cd569f9377c8cfe02b41fL122' target='_blank'>Link</a></div><div id='project'> Project Name: modAL-python/modAL</div><div id='commit'> Commit Name: f8df6021a1343d511d4c9b4c108ec5b683ce5487</div><div id='time'> Time: 2018-08-14</div><div id='author'> Author: dannyofig@gmail.com</div><div id='file'> File Name: modAL/batch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ranked_batch</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/26b1ee9edf41b235911a82fb7955cd2af880d7ba#diff-35c177116306959429a401a00a1fc3a638f7c1d77a19d7b93feda9ae6eb3480dL9' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 26b1ee9edf41b235911a82fb7955cd2af880d7ba</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: kymatio/scattering2d/core/scattering2d.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: scattering2d</div><BR><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/17ec4c25d6b26300bbcdb6bfe781595bd2586a96#diff-425b0576585fcd668a43f742a47a93ff84906bc47dfae67ca2c768a7e8c7e071L49' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: 17ec4c25d6b26300bbcdb6bfe781595bd2586a96</div><div id='time'> Time: 2020-10-25</div><div id='author'> Author: marvin.albert@gmail.com</div><div id='file'> File Name: dask_image/imread/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: imread</div><BR>

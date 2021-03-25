@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        torch.save(model.state_dict(), "state.pkl")
+
+
+<a id="change">if __name__ == "__main__":
+    main()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        torch.save(model.state_dict(), os.path.join(log_dir, "state.pkl"))
+
+
+<a id="change">if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--log_dir", type=str, required=True)
+    parser.add_argument("--augmentation", type=int, default=1,
+                        help="Generate multiple image with random rotations and translations (recommanded = 3)")
+    parser.add_argument("--dataset", choices={"test", "val", "train"}, default="train")
+    parser.add_argument("--batch_size", type=int, default=64)
+    parser.add_argument("--num_workers", type=int, default=1)
+
+    args = parser.parse_args()
+
+    main(**args.__dict__)</a>
+</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    if tournament is None:
+        p = nx.Prediction()
+        <a id="change">for t_number, t_name in nx.tournament_iter():
+            splitter.reset()
+            p += run_one(model, splitter, t_name, name=name,
+                         verbosity=verbosity)
+   </a> else:
+        splitter.reset()
+        p = run_one(model, splitter, tournament, name=name,
+                    verbosity=verbosity)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    
+    models = make_model_list(model)
+    <a id="change">if tournament is None:
+        tournaments = nx.tournament_all()
+    else:
+        tournaments = [tournament]
+   </a> p = nx.Prediction()
+    for m in models:
+        for t in tournaments:
+            splitter.reset()</code></pre>

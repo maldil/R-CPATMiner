@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    :returns: A pandas DataFrame.
+    
+    new_col = df.groupby(by)[agg_column_name].transform(agg)
+    <a id="change">df_new = df.assign(**{new_column_name: new_col})</a>
+    return df_new
+
+
+@pf.register_dataframe_accessor("data_description")</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 convert to list
+    &#47&#47 needed when creating a mapping through the iteration
+    if isinstance(by, str):
+        by = <a id="change">[by]</a>
+    &#47&#47 this is a temporary measure, till the minimum Pandas version is 1.1,
+    &#47&#47 which supports null values in the group by
+    &#47&#47 If any of the grouping columns has null values, we temporarily
+    &#47&#47 replace the values with some outrageous value, that should not exist</code></pre>

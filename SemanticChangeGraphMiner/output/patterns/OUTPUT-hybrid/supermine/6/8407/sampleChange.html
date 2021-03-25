@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+with tqdm.tqdm(train_dataloader) as tq:
+    for step, (input_nodes, output_nodes, bipartites) in enumerate(tq):
+        <a id="change">bipartites = [b.to(torch.device(&quotcuda&quot)) for b in bipartites]</a>
+        inputs = node_features[input_nodes].cuda()
+        labels = node_labels[output_nodes].cuda()
+        predictions = model(bipartites, inputs)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+with tqdm.tqdm(train_dataloader) as tq:
+    for step, (input_nodes, output_nodes, bipartites) in enumerate(tq):
+        inputs = <a id="change">bipartites[0].srcdata[&quotfeat&quot]</a>
+        labels = bipartites[-1].dstdata[&quotlabel&quot]
+        predictions = model(bipartites, inputs)
+
+</code></pre>

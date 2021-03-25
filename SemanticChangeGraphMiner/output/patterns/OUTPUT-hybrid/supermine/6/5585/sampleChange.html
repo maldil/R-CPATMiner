@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.pad:
+                res = pad_packed_sequence(res, batch_first=True)[0]
+        
+        <a id="change">return res</a></code></pre><h3>After Change</h3><pre><code class='java'>
+                      self.charlstm_c_init.expand(self.args[&quotchar_num_layers&quot], batch_size, self.args[&quotchar_hidden_dim&quot]).contiguous())
+        output, hidden = self.charlstm(embs, charlens, hx=hidden)
+        output = self.dropout(pad_packed_sequence(output, batch_first=True)[0])
+        <a id="change">decoded = self.decoder(output)</a>
+        <a id="change">return output, hidden, decoded</a>
+
+    def get_representation(self, chars, charoffsets, charlens, char_orig_idx):
+        with torch.no_grad(): &#47&#47TODO: remove
+            output, _, _ = self.forward(chars, charlens)</code></pre>

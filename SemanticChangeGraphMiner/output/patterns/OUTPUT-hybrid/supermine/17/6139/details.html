@@ -1,0 +1,34 @@
+<html><h3>99095d5412483ec623278bdb1a0c9e24b18bfc85,pdpipe/basic_stages.py,Bin,__init__,#Bin#,291
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    DEF_BIN_APP_MSG = "Binning columns {}..."
+
+    def __init__(self, bin_map, drop=True, exraise=True):
+        <a id="change">super(Bin, self).__init__(
+            exraise=exraise,
+            exmsg=Bin.DEF_BIN_EXC_MSG.format(
+                list(bin_map.keys())),
+            appmsg=Bin.DEF_BIN_APP_MSG.format(
+                list(bin_map.keys()))
+        )</a>
+        self._bin_map = bin_map
+        self._drop = drop
+
+    def _prec(self, df):</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __init__(self, bin_map, drop=True, **kwargs):
+        self._bin_map = bin_map
+        self._drop = drop
+        <a id="change">columns_str = _list_str(list(bin_map.keys()))</a>
+        <a id="change">super_kwargs = {
+            &quotexmsg&quot: Bin._DEF_BIN_EXC_MSG.format(columns_str),
+            &quotappmsg&quot: Bin._DEF_BIN_APP_MSG.format(
+                &quots&quot if len(bin_map) &gt; 1 else &quot&quot, columns_str),
+            &quotdesc&quot: self._default_desc()
+        }</a>
+        <a id="change">super_kwargs.update(**kwargs)</a>
+        super().__init__(**super_kwargs)
+
+    def _prec(self, df):
+        return set(self._bin_map.keys()).issubset(df.columns)</code></pre><img src="25237187.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L291' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Bin</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L554' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Encode</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L291' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: Bin</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/shaypal5/pdpipe/commit/99095d5412483ec623278bdb1a0c9e24b18bfc85#diff-e6456b16fe3d193c52552963e2d422895e8e414ef020ba0da01a775463d9c0e4L228' target='_blank'>Link</a></div><div id='project'> Project Name: shaypal5/pdpipe</div><div id='commit'> Commit Name: 99095d5412483ec623278bdb1a0c9e24b18bfc85</div><div id='time'> Time: 2017-03-16</div><div id='author'> Author: shaypal5@gmail.com</div><div id='file'> File Name: pdpipe/basic_stages.py</div><div id='class'> Class Name: ColRename</div><div id='method'> Method Name: __init__</div><BR>

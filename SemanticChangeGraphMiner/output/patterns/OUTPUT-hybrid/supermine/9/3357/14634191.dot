@@ -1,0 +1,31 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Thread" a="32" s="303,362" l="7,2" shape="box"];
+6 [label="start" a="32" s="365" l="7" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Thread" a="32" s="329,388" l="7,2" shape="box"];
+3 [label="FieldAccess" a="22" s="396" l="8" shape="box"];
+4 [label="SimpleName" a="42" s="327" l="1" shape="ellipse"];
+5 [label="start" a="32" s="417" l="7" shape="box"];
+7 [label="Assignment:=" a="7" s="328" l="1" shape="box"];
+8 [label="Assignment:=" a="7" s="404" l="1" shape="box"];
+9 [label="BooleanLiteral" a="9" s="405" l="4" shape="ellipse"];
+10 [label="SimpleName" a="42" s="396" l="1" shape="ellipse"];
+11 [label="SimpleName" a="42" s="415" l="1" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+1 -> 6 [label="_recv_"];
+2 -> 7 [label="_para_"];
+4 -> 10 [label="_ref_"];
+4 -> 11 [label="_ref_"];
+7 -> 4 [label="_def_"];
+8 -> 3 [label="_def_"];
+9 -> 8 [label="_para_"];
+10 -> 3 [label="_qual_"];
+11 -> 5 [label="_recv_"];
+}

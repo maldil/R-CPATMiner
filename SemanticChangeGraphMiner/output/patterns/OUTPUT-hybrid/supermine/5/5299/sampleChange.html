@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    channels = [int(c) if c != &quot&quot else &quot&quot for c in data.pop(&quotchannels&quot)]
+    columns = pd.MultiIndex.from_tuples(list(zip(features, channels)),
+                                        names=[&quotfeature&quot, &quotchannel&quot])
+    fset = pd.DataFrame(<a id="change">data.pop(&quotvalues&quot)</a>, index=data.pop(&quotindex&quot),
+                        columns=columns)
+    return fset, data
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                             names=[&quotfeature&quot, &quotchannel&quot])
+
+    for k, v in data.items():
+        if <a id="change">len(v.dtype) &gt; 0:
+    </a>        data[k] = pd.DataFrame.from_records(v, index=&quotindex&quot)
+
+    return fset, data
+</code></pre>

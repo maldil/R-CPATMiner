@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def alt_dev(y, pred):
+        return np.mean(np.logaddexp(0.0, -2.0 * (2.0 * y - 1) * pred))
+
+    <a id="change">test_data = [(np.array([1.0, 1.0, 1.0]), np.array([100.0, 100.0, 100.0])),
+                 (np.array([0.0, 0.0, 0.0]), np.array([100.0, 100.0, 100.0])),
+                 (np.array([0.0, 0.0, 0.0]),
+                  np.array([-100.0, -100.0, -100.0])),
+                 (np.array([1.0, 1.0, 1.0]),
+                  np.array([-100.0, -100.0, -100.0]))]</a>
+
+    for datum in test_data:
+        assert_almost_equal(bd(*datum), alt_dev(*datum))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        z = 2 * y - 1
+        return 2 * np.mean(np.log(1 + np.exp(-z * raw_pred)))
+
+    <a id="change">test_data = product(
+        (np.array([0., 0, 0]), np.array([1., 1, 1])),
+        (np.array([-5., -5, -5]), np.array([3., 3, 3])))</a>
+
+    for datum in test_data:
+        assert bd(*datum) == approx(alt_dev(*datum))
+</code></pre>

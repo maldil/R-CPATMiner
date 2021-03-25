@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        :rtype torch.Tensor:
+        
+        return torch.addmm(
+            <a id="change">torch.addmm(self.visible_bias.data, h, self.weights_W.data, out=out)</a>,
+            a,
+            self.weights_U.data,
+            out=out,</code></pre><h3>After Change</h3><pre><code class='java'>
+        :rtype torch.Tensor:
+        
+        return (
+            <a id="change">torch</a>.matmul(h, self.weights_W.data, out=out)
+            .add_(self.visible_bias.data)
+            .add_(torch.matmul(a, self.weights_U.data, out=out))
+            .sigmoid_()</code></pre>

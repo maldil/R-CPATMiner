@@ -1,0 +1,23 @@
+<html><h3>19fbae4ea6092bfc69e4f828febbd15f72365311,cesium/features/cadence_features.py,,delta_t_hist,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def delta_t_hist(t, nbins=50):
+    Build histogram of all possible delta_t&quots without storing every value
+    hist = np.zeros(nbins, dtype=&quotint&quot)
+    <a id="change">bins = np.linspace(0, max(t) - min(t), nbins + 1)</a>
+    <a id="change">for i in range(len(t)):
+        hist += np.histogram(t[i] - t[:i], bins=bins)[0]
+        hist += np.histogram(t[i + 1:] - t[i], bins=bins)[0]
+   </a> return hist / 2  &#47&#47 Double-counts since we loop over every pair twice
+
+
+def normalize_hist(hist, total_time):</code></pre><h3>After Change</h3><pre><code class='java'>
+    f, x = np.histogram(t, bins=conv_oversample * nbins)
+    g = np.convolve(f, f[::-1])[len(f) - 1:]  &#47&#47 Discard negative domain
+    g[0] -= len(t)  &#47&#47 First bin is double-counted because of i=j terms
+    <a id="change">hist = g.reshape((-1, conv_oversample)).sum(axis=1)</a>  &#47&#47 Combine bins
+    return hist
+
+</code></pre><img src="28664821.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/19fbae4ea6092bfc69e4f828febbd15f72365311#diff-18b89c316eebfe270b903f39274553bde16096007d0e677541e2d0dd35697ec2L24' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 19fbae4ea6092bfc69e4f828febbd15f72365311</div><div id='time'> Time: 2016-11-10</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/features/cadence_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: delta_t_hist</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/f0c15f219b0761b14329ddd416cda82fa4bae841#diff-895a95c8d11aa274f4e35d37a93b43077c5c8b1d3e0169364c0836788601ef32L98' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: f0c15f219b0761b14329ddd416cda82fa4bae841</div><div id='time'> Time: 2018-03-28</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/dcs/mcb.py</div><div id='class'> Class Name: MCB</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/19fbae4ea6092bfc69e4f828febbd15f72365311#diff-18b89c316eebfe270b903f39274553bde16096007d0e677541e2d0dd35697ec2L24' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 19fbae4ea6092bfc69e4f828febbd15f72365311</div><div id='time'> Time: 2016-11-10</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/features/cadence_features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: delta_t_hist</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/cd000fd96342d660c4f7d2d21eab9888fbab3526#diff-fd4bf1097806f070ee537aca811ec97ed1965ee9c648d5b9b18edbd0f1e05ebcL225' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: cd000fd96342d660c4f7d2d21eab9888fbab3526</div><div id='time'> Time: 2018-04-23</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/util/prob_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: min_difference</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/cleverhans/commit/68fe96add85bd842df23569dde490e1694d256fe#diff-009ad5d33495e8c745703103695ed76a8308d3d8a086781b59bda724ba8f6dc6L134' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/cleverhans</div><div id='commit'> Commit Name: 68fe96add85bd842df23569dde490e1694d256fe</div><div id='time'> Time: 2019-06-21</div><div id='author'> Author: siarheisiniak@yahoo.com</div><div id='file'> File Name: cleverhans/model_zoo/deep_k_nearest_neighbors/dknn.py</div><div id='class'> Class Name: DkNNModel</div><div id='method'> Method Name: find_train_knns</div><BR>

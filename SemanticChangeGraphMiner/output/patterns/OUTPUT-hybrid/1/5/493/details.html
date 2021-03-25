@@ -1,0 +1,21 @@
+<html><h3>6278979a2498df00e4e8bb91a8f86ce4c682fba2,flow_transforms.py,RandomVerticalFlip,__call__,#RandomVerticalFlip#,142
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def __call__(self, inputs, target):
+        if random.random() &lt; 0.5:
+            inputs[0] = np.flipud(inputs[0])
+            inputs[1] = <a id="change">np.flipud(inputs[1])</a>
+            target = np.flipud(target)
+            target[:,:,1]*=-1
+        return inputs,target
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __call__(self, inputs, target):
+        if random.random() &lt; 0.5:
+            inputs[0] = np.copy(np.flipud(inputs[0]))
+            inputs[1] = <a id="change">np.copy(np.flipud(inputs[1]))</a>
+            target = np.copy(np.flipud(target))
+            target[:,:,1]*=-1
+        return inputs,target
+</code></pre><img src="2641164.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/6278979a2498df00e4e8bb91a8f86ce4c682fba2#diff-297446cdeeb3f27c1c44e0956990d50dd58a3ca8f8de945371f4f13ae769e58eL144' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: 6278979a2498df00e4e8bb91a8f86ce4c682fba2</div><div id='time'> Time: 2017-11-16</div><div id='author'> Author: simon.fauchard@parrot.com</div><div id='file'> File Name: flow_transforms.py</div><div id='class'> Class Name: RandomVerticalFlip</div><div id='method'> Method Name: __call__</div><BR>

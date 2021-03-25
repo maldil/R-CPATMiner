@@ -1,0 +1,37 @@
+<html><h3>90b78b1379b3423aa3b4b5d0de7313f88bda23ab,chainercv/utils/mask/mask_to_bbox.py,,mask_to_bbox,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 CuPy does not support argwhere yet
+    mask = cuda.to_cpu(mask)
+
+    <a id="change">bbox = []</a>
+    for msk in mask:
+        where = np.argwhere(msk)
+        if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+        <a id="change">bbox.append((y_min, x_min, y_max, x_max))</a>
+    if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    xp = cuda.get_array_module(mask)
+
+    instance_index, ys, xs = xp.nonzero(mask)
+    <a id="change">bbox = xp.zeros((R, 4), dtype=np.float32)</a>
+    for i in range(R):
+        ys_i = ys[instance_index == i]
+        xs_i = xs[instance_index == i]
+        <a id="change">if len(ys_i) == 0:
+            continue
+       </a> y_min = ys_i.min()
+        x_min = xs_i.min()
+        y_max = ys_i.max() + 1
+        x_max = xs_i.max() + 1
+        <a id="change">bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)</a>
+    <a id="change">return bbox</a>
+</code></pre><img src="19161284.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f88ec970f95c3b1fb1f0d72ccf0069732e4a0510#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f88ec970f95c3b1fb1f0d72ccf0069732e4a0510</div><div id='time'> Time: 2019-06-12</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR><BR><div id='link'><a href='https://github.com/yzhao062/pyod/commit/f5b2d7fecaea7886cc527ee16c292e1cd4bb736a#diff-263afc28326ed6beb71e393272a7bd04a3566b5f58acb442691d06c5a8669ba6L148' target='_blank'>Link</a></div><div id='project'> Project Name: yzhao062/pyod</div><div id='commit'> Commit Name: f5b2d7fecaea7886cc527ee16c292e1cd4bb736a</div><div id='time'> Time: 2019-05-29</div><div id='author'> Author: yalmardeny@tssg,org</div><div id='file'> File Name: pyod/models/sod.py</div><div id='class'> Class Name: SOD</div><div id='method'> Method Name: _sod</div><BR>

@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+
+    rvs, crvs, rv_mode = normalize_rvs(dist1, rvs, crvs, rv_mode)
+    rvs, crvs = <a id="change">list(flatten(rvs))</a>, list(flatten(crvs))
+    normalize_rvs(dist2, rvs, crvs, rv_mode)
+
+    p1s, q1s = get_pmfs_like(dist1, dist2, rvs+crvs, rv_mode)</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+
+    rvs, _, rv_mode = normalize_rvs(dist1, rvs, None, rv_mode)
+    rvs = <a id="change">list(flatten(rvs))</a>
+    normalize_rvs(dist2, rvs, None, rv_mode)
+
+    ps, qs = get_pmfs_like(dist1, dist2, rvs, rv_mode)
+    div = np.nansum(np.power(ps, exp1) * np.power(qs, exp2))</code></pre>

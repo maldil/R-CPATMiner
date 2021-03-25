@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if trans == &quotdrop&quot or (
+                    hasattr(column, &quot__len__&quot) and not len(column)):
+                continue
+            elif <a id="change">trans</a> == &quotpassthrough&quot:
+                <a id="change">raise NotImplementedError(
+                    "get_feature_names is not yet supported when using "
+                    "a &quotpassthrough&quot transformer.")</a>
+            elif not hasattr(trans, &quotget_feature_names&quot):
+                raise AttributeError("Transformer %s (type %s) does not "
+                                     "provide get_feature_names."
+                                     % (str(name), type(trans).__name__))</code></pre><h3>After Change</h3><pre><code class='java'>
+                    else:
+                        feature_names.extend(self._df_columns[column])
+                else:
+                    <a id="change">indices = np.arange(self._n_features)</a>
+                    feature_names.extend(<a id="change">[&quotx%d&quot % i for i in indices[column]]</a>)
+                continue
+            if not hasattr(trans, &quotget_feature_names&quot):
+                raise AttributeError("Transformer %s (type %s) does not "</code></pre>

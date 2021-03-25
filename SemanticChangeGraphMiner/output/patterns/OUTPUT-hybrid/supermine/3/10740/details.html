@@ -1,0 +1,24 @@
+<html><h3>364cd40384ad4f9cda4df949d0b1bd63abdcf6df,torchsample/transforms/image_transforms.py,Contrast,__call__,#Contrast#,216
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        x = _blend(x, x_gs, alpha)
+
+        if y is not None:
+            <a id="change">y_gs = Grayscale(keep_channels=True)(y)</a>
+            y_gs.fill_(y_gs[1].mean())
+            y = _blend(y, y_gs, alpha)
+            <a id="change">return x, y</a>
+        return x
+
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        x = (x - channel_means) * self.var + channel_means
+        if y is not None:
+            channel_means = <a id="change">x.mean(1).mean(2).expand_as(x)</a>
+            x = (x - channel_means) * self.var + channel_means          
+
+
+class Gamma(object):</code></pre><img src="39221302.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/364cd40384ad4f9cda4df949d0b1bd63abdcf6df#diff-511bc83b5412852ac488cc24e3fbc230b0233c39c7a7f05216bee4ec132395e0L217' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 364cd40384ad4f9cda4df949d0b1bd63abdcf6df</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/image_transforms.py</div><div id='class'> Class Name: Contrast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/richzhang/colorization-pytorch/commit/9ba91fa13cbb1e7bc4069e46469b34abb5ca4869#diff-0b12045fcd8e12d17d1ed4983b2388873388d6b68c85aaca0218fa502d736c26L130' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/colorization-pytorch</div><div id='commit'> Commit Name: 9ba91fa13cbb1e7bc4069e46469b34abb5ca4869</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: tongzhou.wang.1994@gmail.com</div><div id='file'> File Name: models/networks.py</div><div id='class'> Class Name: GANLoss</div><div id='method'> Method Name: get_target_tensor</div><BR>

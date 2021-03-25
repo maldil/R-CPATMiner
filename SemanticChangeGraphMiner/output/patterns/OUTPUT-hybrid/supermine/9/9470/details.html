@@ -1,0 +1,35 @@
+<html><h3>2f337387d6759627bae60284e7fa612268580724,mmf/models/mmf_transformer.py,MMFTransformerEmbeddings,forward,#MMFTransformerEmbeddings#,155
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        segment_ids: Dict[str, Tensor],
+    ) -&gt; Tensor:
+        list_embeddings = []
+        <a id="change">for modality in self.model_config.modalities:
+            total_embedding = getattr(self, modality.key + "_embedding")(
+                input_ids[modality.key]
+            )
+            if modality.key not in position_ids:
+                total_embedding += getattr(self, modality.key + "_pos_embedding")(
+                    position_ids[modality.key]
+                )
+
+            if modality.key in segment_ids:
+                total_embedding += self.token_type_embeddings(segment_ids[modality.key])
+
+            layer_norm_layer = getattr(self, modality.key + "_layer_norm")
+            dropout_layer = getattr(self, modality.key + "_dropout")
+            list_embeddings.append(dropout_layer(layer_norm_layer(total_embedding)))
+
+       </a> return torch.cat(list_embeddings, dim=1)
+
+
+@registry.register_model("mmf_transformer")</code></pre><h3>After Change</h3><pre><code class='java'>
+            )
+        ):
+            modality_name = self.modality_keys[idx]
+            total_embedding = token_emb(<a id="change">input_ids[modality_name]</a>)
+            if modality_name in position_ids:
+                total_embedding += pos_emb(position_ids[modality_name])
+</code></pre><img src="36201690.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pythia/commit/2f337387d6759627bae60284e7fa612268580724#diff-5c1060c8ad17ef5b256724f35b400fc9ca23270d8e520ed68d98864fcac204bbL148' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pythia</div><div id='commit'> Commit Name: 2f337387d6759627bae60284e7fa612268580724</div><div id='time'> Time: 2020-09-15</div><div id='author'> Author: vedanujg@gmail.com</div><div id='file'> File Name: mmf/models/mmf_transformer.py</div><div id='class'> Class Name: MMFTransformerEmbeddings</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/lingpy/lingpy/commit/a84938a83a0bc2bfc9fb6e377424d1547be0a054#diff-7d8d68fc7a6bcf96d74b4327c98d2bc682c64da46cc00358c18b70a63e9c5e22L224' target='_blank'>Link</a></div><div id='project'> Project Name: lingpy/lingpy</div><div id='commit'> Commit Name: a84938a83a0bc2bfc9fb6e377424d1547be0a054</div><div id='time'> Time: 2013-04-20</div><div id='author'> Author: bambooforest@gmail.com</div><div id='file'> File Name: lingpy/basic/spreadsheet.py</div><div id='class'> Class Name: Spreadsheet</div><div id='method'> Method Name: output</div><BR><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/1250f47a9ad3a914783f26d1711692794c7ea031#diff-9b146beddbaf67ca725cb81826fd03d69c372569db8a34ba3d682514b0415053L60' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 1250f47a9ad3a914783f26d1711692794c7ea031</div><div id='time'> Time: 2014-05-01</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/pipeline/locategapsnode.py</div><div id='class'> Class Name: LocateGapsNode</div><div id='method'> Method Name: process</div><BR>

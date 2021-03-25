@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 handle rewards
+    rewards_np = np.array(rewards, dtype=np.float32)
+    if not_done_idx:
+        last_states_v = <a id="change">ptan.agent.float32_preprocessor(last_states, cuda=cuda)</a>
+        last_vals_v = net(last_states_v)[2]
+        last_vals_np = last_vals_v.data.cpu().numpy()[:, 0]
+        rewards_np[not_done_idx] += last_val_gamma * last_vals_np
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 handle rewards
+    rewards_np = np.array(rewards, dtype=np.float32)
+    if not_done_idx:
+        last_states_v = <a id="change">ptan.agent.float32_preprocessor(last_states).to(device)</a>
+        last_vals_v = net(last_states_v)[2]
+        last_vals_np = last_vals_v.data.cpu().numpy()[:, 0]
+        rewards_np[not_done_idx] += last_val_gamma * last_vals_np
+</code></pre>

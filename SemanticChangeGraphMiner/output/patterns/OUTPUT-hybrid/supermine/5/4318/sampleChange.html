@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 assert _z_test_(p1=0.1, pt=0.3, n1=100, nt=10000) ==
+
+    def test_special_case(self):
+        <a id="change">try:
+            _ = _z_test_(p1=0.1, pt=0.3, n1=0, nt=0)
+            raise AssertionError("Division by zero message did not raise")
+        except ZeroDivisionError:
+            assert _ == "Insignificant"</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def test_special_case(self):
+        assert _z_test_(p1=0.1, pt=0.3, n1=0, nt=0) == "Insignificant"
+        assert _z_test_(p1=0.1, pt=0.3, n1=100, nt=0) == "Insignificant"
+        <a id="change">assert _z_test_(p1=0.1, pt=0.3, n1=0, nt=100) == "Insignificant"</a>
+
+</code></pre>

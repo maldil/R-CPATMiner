@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    missing_samples = timestamps_of_missing_samples(data, max_sample_period,
+                                                    window_start, window_end)
+
+    series = <a id="change">pd.Series(1, index=missing_samples)</a>
+    <a id="change">return series.resample(rule=rule, how=&quotsum&quot)</a>
+
+
+def hours_on(series, on_power_threshold=DEFAULT_ON_POWER_THRESHOLD,
+             max_sample_period=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    index = _get_index(data)
+    index = reframe_index(index, window_start, window_end)
+    n_samples_per_period = (<a id="change">pd</a>.Series(1, index=index)
+                            .resample(rule=rule, how=&quotsum&quot)
+                            .fillna(0))
+
+    <a id="change">dropout_rate_per_period</a> = 1 - (n_samples_per_period / 
+                                   n_expected_samples_per_period)
+
+    <a id="change">return dropout_rate_per_period</a>
+
+
+def hours_on(series, on_power_threshold=DEFAULT_ON_POWER_THRESHOLD,
+             max_sample_period=None):</code></pre>

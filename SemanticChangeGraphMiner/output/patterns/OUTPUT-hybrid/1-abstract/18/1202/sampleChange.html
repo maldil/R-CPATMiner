@@ -1,0 +1,148 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    continuing = args.continue_from != None
+
+    for i in range(args.size):
+        url = <a id="change">url_fetcher</a>.next()[0]
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        if not url:
+            cp.print_warning("there are no more urls to process")
+
+        cp.print_progress(i + 1, " / ", args.size, " - ", url)
+
+        try:
+            video = PyTube(utils.get_youtube_url(url))
+        except Exception as exception:
+            cp.print_error("failed to generate PyTube representation for vidoe ", url)
+            continue
+
+        if int(video.length) &gt; args.video_length:
+            continue
+
+        <a id="change">caption</a> = video.captions.get_by_language_code(&quoten&quot)
+        if not caption:
+            cp.print_warning("no caption available for video - ", url)
+            continue
+
+        try:
+            srt_captions = caption.generate_srt_captions().split(&quot\n\n&quot)
+        except Exception as exception:
+            cp.print_error("failed to retrieve for vidoe - ", url)
+            continue
+
+        translator = str.maketrans(&quot&quot, &quot&quot, string.punctuation) &#47&#47 to remove punctuation
+        srt_tag_re = re.compile(r"&lt;.*?&gt;|\(.*?\)|\[.*?\]")
+
+        keyword_exist = False
+        for captions in srt_captions:
+            if keyword in captions or plural.plural(keyword) in captions:
+                keyword_exist = True
+                break
+
+        if not keyword_exist:
+            cp.print_warning("keywords never appear in the video - ", url)
+            continue
+
+        try:
+            crawler = YoutubeCrawler(url)
+            <a id="change">audio_data</a> = crawler.get_audio()
+        except Exception as exception:
+            cp.print_warning(exception)
+            continue
+
+        collected_data = []
+        video_cc_count = 0
+        video_audio_count = 0
+
+        for captions in srt_captions:
+            <a id="change">cc_split</a> = captions.split(&quot\n&quot)
+            if len(cc_split) == 4 and cc_split[0] == &quot&quot:
+                cc_split = (cc_split[1], cc_split[2], cc_split[3])
+            elif len(cc_split) != 3:</code></pre><h3>After Change</h3><pre><code class='java'>
+    url_set = set()
+
+    for i in range(args.size):
+        url = <a id="change">url_fetcher.next()</a>
+
+        if not url:
+            cp.print_warning("there are no more urls to process")
+            break
+
+        url = url[0]
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        cp.print_progress(i + 1, " / ", args.size, " - ", url)
+
+        if url in url_set:
+            cp.print_warning("video is already processed", url)
+            continue
+
+        url_set.add(url)
+
+        if continuing:
+            if url != args.continue_from:
+                continue
+            else:
+                continuing = False
+
+        try:
+            video = PyTube(utils.get_youtube_url(url))
+        except Exception as exception:
+            cp.print_error("failed to generate PyTube representation for vidoe ", url)
+            continue
+        if int(video.length) &gt; args.video_length:
+            continue
+
+        <a id="change">caption</a> = video.captions.get_by_language_code(&quoten&quot)
+        if not caption:
+            cp.print_warning("no caption available for video - ", url)
+            continue
+
+        try:
+            srt_captions = caption.generate_srt_captions().split(&quot\n\n&quot)
+        except Exception as exception:
+            cp.print_error("failed to retrieve for vidoe - ", url)
+            continue
+
+        translator = str.maketrans(&quot&quot, &quot&quot, string.punctuation) &#47&#47 to remove punctuation
+        srt_tag_re = re.compile(r"&lt;.*?&gt;|\(.*?\)|\[.*?\]")
+
+        keyword_exist = False
+        for captions in srt_captions:
+            if keyword in captions or plural.plural(keyword) in captions:
+                keyword_exist = True
+                break
+
+        if not keyword_exist:
+            cp.print_warning("keywords never appear in the video - ", url)
+            continue
+
+        try:
+            crawler = YoutubeCrawler(url)
+            <a id="change">audio_data</a> = crawler.get_audio()
+        except Exception as exception:
+            cp.print_warning(exception)
+            continue
+
+        collected_data = []
+        video_cc_count = 0
+        video_audio_count = 0
+
+        for captions in srt_captions:
+            <a id="change">cc_split</a> = captions.split(&quot\n&quot)
+            if len(cc_split) == 4 and cc_split[0] == &quot&quot:
+                cc_split = (cc_split[1], cc_split[2], cc_split[3])
+            elif len(cc_split) != 3:</code></pre>

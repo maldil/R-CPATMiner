@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        node_scope_name = node.scopeName()
+        node_id = get_node_id(node)
+        node_weights_name = &quot.&quot.join(
+            <a id="change">re.findall(r&quot\[([\w\d.\-\[\]\s]+)\]&quot, node_scope_name)</a>
+        )
+        node_attrs = {k: node[k] for k in node.attributeNames()}
+
+        node_outputs = list(node.outputs())</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        node_scope_name = node.scopeName()
+        node_id = get_node_id(node)
+        node_name_regex = <a id="change">re.findall(r&quot\[([\w\d.\-\[\]\s]+)\]&quot, node_scope_name)</a>
+
+        try: 
+            int(node_name_regex[-1])
+            node_weigth_group_name = &quot.&quot.join(
+                node_name_regex[:-1]
+            )
+            node_weights_name = node_weigth_group_name + &quot.&quot + str(group_indices[node_weigth_group_name])
+            <a id="change">group_indices[node_weigth_group_name] += 1</a>
+
+        except ValueError:
+            node_weights_name = &quot.&quot.join(
+                node_name_regex</code></pre>

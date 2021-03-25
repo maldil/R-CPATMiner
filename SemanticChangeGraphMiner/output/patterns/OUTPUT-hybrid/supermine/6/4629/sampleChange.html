@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                       **self.params.pairwise_metric_kwargs)
+        &#47&#47 Make target pairs
+        distds = Dataset(samples=distds.ravel()[:, None],
+                         sa=<a id="change">{&quotpairs&quot: list(product(self._train_ds.T,
+                                                   test_ds.T))}</a>)
+        return distds
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _call(self, ds):
+        test_ds = self._prepare_ds(ds)
+        <a id="change">if test_ds.nsamples != self._train_ds.nsamples:
+            raise ValueError(&quotDataset should have same sample size for dissimilarity.&quot\
+                             &quottrain: %d, test: %d&quot%(self._train_ds.nsamples, test_ds.nsamples))
+        &#47&#47 Call actual distance metric
+       </a> distds = cdist(self._train_ds.samples, test_ds.samples,
+                       metric=self.params.pairwise_metric,
+                       **self.params.pairwise_metric_kwargs)
+        &#47&#47 Make target pairs</code></pre>

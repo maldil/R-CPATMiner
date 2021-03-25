@@ -1,0 +1,63 @@
+<html><h3>16f50016cabab22efde6f183c89efe0a11b0c683,src/RMDL_Image.py,,image_classifciation,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def image_classifciation(X_train, y_train, X_test, y_test, batch_size, shape, sparse_categorical, Random_Deep,
+                            n_epochs):
+    y_proba = []
+    <a id="change">model = []</a>
+    score = []
+    history_ = []
+    number_of_classes = np.max(y_train)+1
+    &#47&#47X_train, y_train, X_test, y_test, shape, number_of_classes = Image_Data_load.load(Data_Image)
+    i =0
+    while i &lt; Random_Deep[0]:
+        try:
+            print("MNIST DNN ", i, "\n")
+            model.append(Sequential())
+            model[i], model_tmp = BuildModel.buildModel_DNN_image(shape, number_of_classes, 0)
+            filepath = "weights\weights_DNN_" + str(i) + ".hdf5"
+            checkpoint = ModelCheckpoint(filepath, monitor=&quotval_acc&quot, verbose=1, save_best_only=True,
+                                         mode=&quotmax&quot)
+            callbacks_list = [checkpoint]
+
+            history = model[i].fit(X_train, y_train, validation_data=(X_test, y_test),
+                                   epochs=n_epochs[0], batch_size=batch_size, callbacks=callbacks_list,
+                                   verbose=2)
+            history_.append(history)
+            model_tmp.load_weights(filepath)
+
+            if sparse_categorical == 0:
+                model_tmp.compile(loss=&quotsparse_categorical_crossentropy&quot,
+                                  optimizer=&quotadam&quot,
+                                  metrics=[&quotaccuracy&quot])
+            else:
+                model_tmp.compile(loss=&quotcategorical_crossentropy&quot,
+                                  optimizer=&quotadam&quot,
+                                  metrics=[&quotaccuracy&quot])
+
+            y_pr = model_tmp.predict_classes(X_test, batch_size=batch_size)
+            y_proba.append(np.array(y_pr))
+            score.append(accuracy_score(y_test, y_pr))
+            i = i + 1
+        except:
+            print("Error in model ", i, "   try to re-generate an other model")
+
+    i =0
+    while i &lt; Random_Deep[1]:
+        try:
+            print("RNN ", i, "\n")
+            <a id="change">model.append(Sequential())</a>
+            model[i], model_tmp = BuildModel.Image_model_RNN(number_of_classes, shape)
+
+            filepath = "weights\weights_RNN_" + str(i) + ".hdf5"
+            checkpoint = ModelCheckpoint(filepath, monitor=&quotval_acc&quot, verbose=1, save_best_only=True,</code></pre><h3>After Change</h3><pre><code class='java'>
+        y_proba.append(np.array(y_pr))
+        score.append(accuracy_score(y_test, y_pr))
+        i = i+1
+        <a id="change">del model_tmp</a>
+        del model_CNN
+        gc.collect()
+
+</code></pre><img src="32097577.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kk7nc/RMDL/commit/16f50016cabab22efde6f183c89efe0a11b0c683#diff-b7f0311182ec453924363cf8b338d28cc13e962d7ba55a9165b2db05cdf5dbdaL25' target='_blank'>Link</a></div><div id='project'> Project Name: kk7nc/RMDL</div><div id='commit'> Commit Name: 16f50016cabab22efde6f183c89efe0a11b0c683</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: kk7nc@virginia.edu</div><div id='file'> File Name: src/RMDL_Image.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: image_classifciation</div><BR><BR><div id='link'><a href='https://github.com/dirty-cat/dirty_cat/commit/6d27fa90fd962caf3d61c8e20550694818491096#diff-a57db3d1663d61ea5375f4c19da71219fbbde9728519cebe30152e591e8aaaa5L28' target='_blank'>Link</a></div><div id='project'> Project Name: dirty-cat/dirty_cat</div><div id='commit'> Commit Name: 6d27fa90fd962caf3d61c8e20550694818491096</div><div id='time'> Time: 2018-11-16</div><div id='author'> Author: gael.varoquaux@normalesup.org</div><div id='file'> File Name: dirty_cat/similarity_encoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ngram_similarity</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/0abb9b835ffeb020410bdf9a1e0532139ffa5cfc#diff-ce27fd81e6dbaf1157116418f5501cf495f022bb2d533c0329d5e0e31c054d3fL20' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 0abb9b835ffeb020410bdf9a1e0532139ffa5cfc</div><div id='time'> Time: 2016-08-16</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/kern/src/add.py</div><div id='class'> Class Name: Add</div><div id='method'> Method Name: __init__</div><BR>

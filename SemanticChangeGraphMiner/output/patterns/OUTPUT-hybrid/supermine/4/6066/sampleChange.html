@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    transforms.RandomCrop(train_args[&quothr_size&quot]),
+    transforms.ToTensor()
+])
+train_lr_transform = <a id="change">transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Scale(train_args[&quothr_size&quot] // train_args[&quotscale_factor&quot], interpolation=3),
+    transforms.ToTensor()
+])</a>
+
+train_set = datasets.ImageFolder(train_args[&quottrain_set_path&quot], train_ori_transform)
+train_loader = DataLoader(train_set, batch_size=64, shuffle=True, num_workers=12,
+                          pin_memory=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+}
+
+train_set = DatasetFromFolder(&quotdata/train&quot, upscale_factor=train_args[&quotscale_factor&quot],
+                              input_transform=<a id="change">transforms.ToTensor()</a>,
+                              target_transform=transforms.ToTensor())
+train_loader = DataLoader(train_set, batch_size=64, shuffle=True, num_workers=12, pin_memory=True)
+</code></pre>

@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Get block/grid sizes; the number of threads per block is limited
+    &#47&#47 to 256 because the kernel defined above uses too many
+    &#47&#47 registers to be invoked more threads per block:
+    <a id="change">dev = misc.get_current_device()</a>
+    max_threads_per_block = 256
+    <a id="change">block_dim, grid_dim = \
+               misc.select_block_grid_sizes(dev, z_gpu.shape, max_threads_per_block)</a>
+
+    &#47&#47 Set this to False when debugging to make sure the compiled kernel is
+    &#47&#47 not cached:
+    cache_dir=None
+    expi_mod = \
+             SourceModule(expi_template.substitute(use_double=use_double),
+                          cache_dir=cache_dir,
+                          options=["-I", install_headers])
+    exp1_func = expi_mod.get_function("exp1_array")
+
+    e_gpu = gpuarray.empty_like(z_gpu)
+    exp1_func(z_gpu, e_gpu,
+              <a id="change">np.uint32(z_gpu.size)</a>,
+              block=block_dim,
+              grid=grid_dim)
+    return e_gpu</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(&quotunsupported type&quot)
+    op = &quote[i] = exp1(z[i])&quot
+    
+    <a id="change">try:
+        func = exp1.cache[z_gpu.dtype]
+    except KeyError:
+        func = elementwise.ElementwiseKernel(args, op,
+                                 options=["-I", install_headers],
+                                 preamble=&quot&#47&#47include "cuSpecialFuncs.h"&quot)
+        exp1.cache[z_gpu.dtype] = func
+
+   </a> e_gpu = gpuarray.empty_like(z_gpu)
+    <a id="change">func(z_gpu, e_gpu)</a>
+
+    return e_gpu
+exp1.cache = {}
+</code></pre>

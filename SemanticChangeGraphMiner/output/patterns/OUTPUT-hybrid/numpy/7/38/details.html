@@ -1,0 +1,29 @@
+<html><h3>7a77233231c67038271c9945760b7a1d711b242d,pyroomacoustics/beamforming.py,Beamformer,steering_vector_2D_from_point,#Beamformer#,361
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 normalize for far-field if requested
+        if (ff):
+            <a id="change">X -= self.center</a>
+            Xn = np.sqrt(<a id="change">np.sum(X**2, axis=0)</a>)
+            <a id="change">X *= constants.get(&quotffdist&quot)/Xn</a>
+            X += self.center
+
+        D = distance(self.R, X)
+        omega = 2 * np.pi * frequency</code></pre><h3>After Change</h3><pre><code class='java'>
+        if (ff):
+            &#47&#47 unit vectors pointing towards sources
+            p = (X - self.center)
+            <a id="change">p /= np.linalg.norm(p)</a>
+
+            &#47&#47 The projected microphone distances on the unit vectors
+            D = <a id="change">np.dot(self.R.T, p)</a>
+
+            &#47&#47 subtract minimum in each column
+            <a id="change">D -= np.min(D)</a>
+
+        else:
+
+            D = distance(self.R, X)</code></pre><img src="1308371.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/7a77233231c67038271c9945760b7a1d711b242d#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 7a77233231c67038271c9945760b7a1d711b242d</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/f685547f801b13afc0874ed348e3a46600113136#diff-01ec9c14404ad0f506b33e00a170c201354f29af5c662e98f89f7bc4b0cb35f5L228' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: f685547f801b13afc0874ed348e3a46600113136</div><div id='time'> Time: 2020-06-17</div><div id='author'> Author: alexhenrie24@gmail.com</div><div id='file'> File Name: sklearn/neural_network/_multilayer_perceptron.py</div><div id='class'> Class Name: BaseMultilayerPerceptron</div><div id='method'> Method Name: _backprop</div><BR><BR><div id='link'><a href='https://github.com/LCAV/pyroomacoustics/commit/5214393bb75498ded8fc140914edd79c1799af05#diff-b35731461913e8e99f331eb22694eb50532487162bdfccfb22a19ff0232a99b1L361' target='_blank'>Link</a></div><div id='project'> Project Name: LCAV/pyroomacoustics</div><div id='commit'> Commit Name: 5214393bb75498ded8fc140914edd79c1799af05</div><div id='time'> Time: 2017-04-04</div><div id='author'> Author: fakufaku@gmail.com</div><div id='file'> File Name: pyroomacoustics/beamforming.py</div><div id='class'> Class Name: Beamformer</div><div id='method'> Method Name: steering_vector_2D_from_point</div><BR>

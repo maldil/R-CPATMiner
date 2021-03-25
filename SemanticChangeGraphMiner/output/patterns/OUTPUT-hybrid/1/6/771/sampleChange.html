@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        concat4 = torch.cat((out_conv4,out_deconv4,flow5_up),1)
+        flow4       = self.predict_flow4(concat4)
+        flow4_up    = self.upsampled_flow4_to_3(flow4)
+        out_deconv3 = <a id="change">self.deconv3(concat4)</a>
+
+        concat3 = torch.cat((out_conv3,out_deconv3,flow4_up),1)
+        flow3       = self.predict_flow3(concat3)
+        flow3_up    = self.upsampled_flow3_to_2(flow3)
+        out_deconv2 = self.deconv2(concat3)
+
+        <a id="change">concat2</a> = torch.cat((out_conv2,out_deconv2,flow3_up),1)
+        flow2 = self.predict_flow2(concat2)
+
+        if self.training:</code></pre><h3>After Change</h3><pre><code class='java'>
+        concat4 = torch.cat((out_conv4,out_deconv4,flow5_up),1)
+        flow4       = self.predict_flow4(concat4)
+        flow4_up    = crop_like(self.upsampled_flow4_to_3(flow4), out_conv3)
+        out_deconv3 = crop_like(<a id="change">self.deconv3(concat4)</a>, out_conv3)
+
+        concat3 = torch.cat((out_conv3,out_deconv3,flow4_up),1)
+        flow3       = self.predict_flow3(concat3)
+        flow3_up    = crop_like(self.upsampled_flow3_to_2(flow3), out_conv2)
+        out_deconv2 = crop_like(self.deconv2(concat3), out_conv2)
+
+        <a id="change">concat2</a> = torch.cat((out_conv2,out_deconv2,flow3_up),1)
+        flow2 = self.predict_flow2(concat2)
+
+        if self.training:</code></pre>

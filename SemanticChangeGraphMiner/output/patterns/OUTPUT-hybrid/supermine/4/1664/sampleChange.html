@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dim = len(dist)
+    poly = setdim(poly, dim)
+
+    zero = <a id="change">[1]</a>*dim
+    out = numpy.zeros((dim,) + poly.shape, dtype=float)
+    V = Var(poly, dist, **kws)
+    for i in range(dim):</code></pre><h3>After Change</h3><pre><code class='java'>
+    out = numpy.zeros((dim,)+poly.shape, dtype=float)
+    variance = Var(poly, dist, **kws)
+
+    <a id="change">valids = variance != 0</a>
+    if not <a id="change">numpy.all(valids)</a>:
+        out[:, valids] = Sens_t(poly[valids], dist, **kws)
+        return out
+
+    out[:] = variance
+    for idx, unit_vec in <a id="change">enumerate(numpy.eye(dim, dtype=int))</a>:
+        conditional = E_cond(poly, 1-unit_vec, dist, **kws)
+        out[idx] -= Var(conditional, dist, **kws)
+        out[idx] /= variance</code></pre>

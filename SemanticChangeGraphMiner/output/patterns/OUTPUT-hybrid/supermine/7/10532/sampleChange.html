@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        distances = self._dist_from_centers()
+        probs = distances / distances.sum()
+        cumprobs = probs.cumsum()
+        <a id="change">r = random.random()</a>
+        <a id="change">ind = np.where(cumprobs &gt;= r)[0][0]</a>
+        return self.X[ind]
+
+    def _is_converged(self, centroids_old, centroids):
+        Check if the distance between old and new centroids is zero.</code></pre><h3>After Change</h3><pre><code class='java'>
+        distances = self._dist_from_centers()
+        squared_distances = distances**2
+        probs = squared_distances/squared_distances.sum()
+        ind = np.random.choice(<a id="change">self.X.shape[0]</a>, 1, p=probs)[0]
+        return self.X[ind]
+
+    def _is_converged(self, centroids_old, centroids):</code></pre>

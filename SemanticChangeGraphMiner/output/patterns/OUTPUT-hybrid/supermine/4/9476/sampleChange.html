@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        img = util.combine_img_prediction(batch_x, batch_y, prediction)
+        util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
+        
+        <a id="change">return prediction.shape</a>
+    
+    def output_epoch_stats(self, epoch, total_loss, training_iters, lr):
+        print("Epoch {:}, Average loss: {:.4f}, learning rate: {:.4f}".format(epoch, (total_loss / training_iters), lr))
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        prediction = sess.run(self.net.predicter, feed_dict={self.net.x: batch_x, 
+                                                             self.net.y: batch_y, 
+                                                             self.net.keep_prob: 1.})
+        <a id="change">pred_shape = prediction.shape</a>
+        
+        <a id="change">loss = sess.run(self.net.cost, feed_dict={self.net.x: batch_x, 
+                                                       self.net.y: util.crop_to_shape(batch_y, pred_shape), 
+                                                       self.net.keep_prob: 1.})</a>
+        
+        print("Prediction error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
+                                                                          util.crop_to_shape(batch_y,
+                                                                                             prediction.shape)),</code></pre>

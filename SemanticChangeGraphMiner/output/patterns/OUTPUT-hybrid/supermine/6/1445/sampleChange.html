@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        while len(list(tcopy.tips())) != len(ids):
+            for n in list(tcopy.tips()):
+                <a id="change">if n.name not in ids:
+                    n.parent.remove(n)
+
+       </a> tcopy.prune()
+
+        return tcopy
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not ids.issubset(all_tips):
+            raise ValueError("ids are not a subset of the tree.")
+
+        <a id="change">marked = set()</a>
+        for tip in tcopy.tips():
+            if tip.name in ids:
+                <a id="change">marked.add(tip)</a>
+                for anc in tip.ancestors():
+                    if anc in marked:
+                        break
+                    else:</code></pre>

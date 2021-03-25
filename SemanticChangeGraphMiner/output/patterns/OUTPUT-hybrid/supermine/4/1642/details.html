@@ -1,0 +1,65 @@
+<html><h3>0a60b2d2807cf370e984b0bd9f7c4d0edabe4267,skopt/gbrt_opt.py,,gbrt_minimize,#,24
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    rng = check_random_state(random_state)
+
+    &#47&#47 Bounds
+    <a id="change">num_params = len(bounds)</a>
+    lower_bounds, upper_bounds = extract_bounds(bounds)
+
+    &#47&#47 Default estimator
+    if base_estimator is None:
+        base_estimator = GradientBoostingQuantileRegressor(random_state=rng)
+
+    &#47&#47 Record the points and function values evaluated as part of
+    &#47&#47 the minimization
+    Xi = np.zeros((maxiter, num_params))
+    yi = np.zeros(maxiter)
+
+    &#47&#47 Initialize with random points
+    if n_start == 0:
+        raise ValueError("Need at least one starting point.")
+
+    if maxiter == 0:
+        raise ValueError("Need to perform at least one iteration.")
+
+    n_start = min(n_start, maxiter)
+
+    Xi[:n_start] = _random_points(
+        lower_bounds, upper_bounds, n_points=n_start, random_state=rng)
+    best_x = Xi[:n_start].ravel()
+    yi[:n_start] = [func(xi) for xi in Xi[:n_start]]
+    best_y = np.min(yi[:n_start])
+
+    models = []
+
+    for i in range(n_start, maxiter):
+        rgr = clone(base_estimator)
+        &#47&#47 only the first i points are meaningful
+        rgr.fit(Xi[:i, :], yi[:i])
+        models.append(rgr)
+
+        &#47&#47 `rgr` predicts constants for each leaf which means that the EI
+        &#47&#47 has zero gradient over large distances. As a result we can not
+        &#47&#47 use gradient based optimisers like BFGS, use random sampling
+        &#47&#47 for the moment.
+        x0 = _random_points(lower_bounds, upper_bounds,
+                            n_points=n_points,
+                            random_state=rng)
+        best = np.argmax(gaussian_ei(x0, rgr, best_y))
+
+        Xi[i] = <a id="change">x0[best].ravel()</a>
+        yi[i] = func(x0[best])
+
+        if yi[i] &lt; best_y:
+            best_y = yi[i]</code></pre><h3>After Change</h3><pre><code class='java'>
+        x0 = space.transform(space.rvs(n_samples=n_points, random_state=rng))
+        best = np.argmax(gaussian_ei(x0, rgr, best_y))
+
+        Xi[i] = <a id="change">space.inverse_transform(x0[best:best+1])[0]</a>
+        yi[i] = func(Xi[i])
+
+        if yi[i] &lt; best_y:
+            best_y = yi[i]</code></pre><img src="8415186.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/0a60b2d2807cf370e984b0bd9f7c4d0edabe4267#diff-6ff0979d222b062a3c7534e3f38f057b1fd540d5ba8007def05ef75cf7aaab5eL79' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 0a60b2d2807cf370e984b0bd9f7c4d0edabe4267</div><div id='time'> Time: 2016-06-14</div><div id='author'> Author: g.louppe@gmail.com</div><div id='file'> File Name: skopt/gbrt_opt.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gbrt_minimize</div><BR><BR><div id='link'><a href='https://github.com/kymatio/kymatio/commit/0a8619ecf57eb68021e6aef48aefdc8cfa0795ed#diff-4a926d0cbdda462a0dd36f99d9c1170115d5c1e97b7fedeb6799ba5de255259fL42' target='_blank'>Link</a></div><div id='project'> Project Name: kymatio/kymatio</div><div id='commit'> Commit Name: 0a8619ecf57eb68021e6aef48aefdc8cfa0795ed</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: janden@flatironinstitute.org</div><div id='file'> File Name: examples/1d/plot_real_signal.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL120' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/mapbox/robosat/commit/9a8d91022cfde0a380d8700be76d6ddbd716a2af#diff-18c093c8eda4982869c5454bef6df335329516df35cdacb3b87d06d776d9656fL160' target='_blank'>Link</a></div><div id='project'> Project Name: mapbox/robosat</div><div id='commit'> Commit Name: 9a8d91022cfde0a380d8700be76d6ddbd716a2af</div><div id='time'> Time: 2018-09-12</div><div id='author'> Author: o@courtin.co</div><div id='file'> File Name: robosat/tools/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR>

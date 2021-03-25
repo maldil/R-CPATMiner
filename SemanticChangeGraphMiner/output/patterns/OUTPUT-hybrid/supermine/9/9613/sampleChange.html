@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return np.exp(-self.predict_cumulative_hazard(df, baseline_hazard_, batch_size, verbose))
+
+    def predict_cumulative_hazard_at_times(self, times, df, batch_size=512, return_df=True):
+        <a id="change">raise NotImplementedError("This isn&quott as relevant when we have broken the propotionality.")</a>
+
+    def concordance_index(self, df, g_preds=None, batch_size=256):
+        raise NotImplementedError()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &quot&quot&quot
+        assert hasattr(self, &quotbaseline_hazard_&quot), &quotNeed to fit model first.&quot
+        if not hasattr(times, &quot__iter__&quot):
+            <a id="change">times = [times]</a>
+        <a id="change">cum_haz = self.predict_cumulative_hazard(df, baseline_hazard_, batch_size, verbose)</a>
+        <a id="change">times_idx = search_sorted_idx(cum_haz.index.values, times)</a>
+        <a id="change">cum_haz = cum_haz.iloc[times_idx]</a>
+        if return_df:
+            return cum_haz
+        <a id="change">return cum_haz.as_matrix()</a>
+
+    def predict_survival_at_times(self, times, df, baseline_hazard_=None, batch_size=512,
+                                 return_df=True, verbose=0):
+        &quot&quot&quotPredict survival function at given times.</code></pre>

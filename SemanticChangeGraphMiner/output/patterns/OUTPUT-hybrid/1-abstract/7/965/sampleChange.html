@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for i, plot in enumerate(p()):
+            plots.append(plot + theme(figure_size=(8+i, 6+i)))
+        fn = next(filename_gen)
+        <a id="change">save_as_pdf_pages(plots, fn)</a>
+        &#47&#47 assert False, "Check %s" % fn  &#47&#47 Uncomment to check
+
+
+class TestExceptions:</code></pre><h3>After Change</h3><pre><code class='java'>
+        for i, plot in enumerate(p()):
+            plots.append(plot + theme(figure_size=(8+i, 6+i)))
+        fn = next(filename_gen)
+        <a id="change">with pytest.warns(PlotnineWarning):
+            save_as_pdf_pages(plots, fn)
+        &#47&#47 assert False, "Check %s" % fn  &#47&#47 Uncomment to check
+
+
+</a>class TestExceptions:
+    def test_plot_exception(self):
+        &#47&#47 Force an error in drawing
+        fn = next(filename_gen)</code></pre>

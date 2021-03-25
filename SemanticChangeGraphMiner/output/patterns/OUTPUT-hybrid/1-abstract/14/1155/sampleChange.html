@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.d_v = d_v
+
+        self.w_qs = nn.Parameter(torch.FloatTensor(n_head, d_model, d_k))
+        <a id="change">self.w_ks</a> = <a id="change">nn.Parameter(torch.FloatTensor(n_head, d_model, d_k))</a>
+        self.w_vs = nn.Parameter(torch.FloatTensor(n_head, d_model, d_v))
+
+        self.attention = ScaledDotProductAttention(d_model)
+        self.layer_norm = LayerNormalization(d_model)
+        self.proj = Linear(n_head*d_v, d_model)
+
+        self.dropout = nn.Dropout(dropout)
+
+        init.xavier_normal(self.w_qs)
+        <a id="change">init.xavier_normal(self.w_ks)</a>
+        init.xavier_normal(self.w_vs)
+
+    def forward(self, q, k, v, attn_mask=None):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.d_v = d_v
+
+        self.w_qs = nn.Linear(d_model, n_head * d_k)
+        <a id="change">self.w_ks</a> = <a id="change">nn.Linea</a>r(d_model, n_head * d_k)
+        self.w_vs = nn.Linear(d_model, n_head * d_v)
+        nn.init.xavier_normal_(self.w_qs.weight)
+        <a id="change">nn.init.xavier_normal_(self.w_ks.weight)</a>
+        nn.init.xavier_normal_(self.w_vs.weight)
+
+        self.attention = ScaledDotProductAttention(temperature=np.power(d_model, 0.5))
+        self.layer_norm = LayerNormalization(d_model)</code></pre>

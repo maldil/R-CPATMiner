@@ -1,0 +1,51 @@
+<html><h3>1f3da600c20e3376b0bb396bba482b1e90b7883c,i3nception_tf.py,,,#,34
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out3d = unitpy(input_3d_var)
+        filter_idx = 5
+        py_out = py_to_tf_reshape(
+            out3d.data.numpy())[0][0][<a id="change">:, :, filter_idx</a>].copy()
+        tf_out = tf_out3dsample[0][0][:, :, filter_idx].copy()
+        import pdb
+        pdb.set_trace()</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 init = tf.global_variables_initializer()
+    &#47&#47 sess.run(init)
+    for i, (input_2d, target) in enumerate(loader):
+        input_2d = torch.from_numpy(<a id="change">input_2d.numpy()</a>)
+        target = target.cuda()
+        target_var = torch.autograd.Variable(target)
+
+        &#47&#47 Pytorch forward pass
+        input_3d = input_2d.clone().unsqueeze(2).repeat(1, 1, frame_nb, 1, 1)
+        input_3d_var = torch.autograd.Variable(input_3d)
+
+        feed_dict = {}
+        input_3d_tf = input_3d.numpy().transpose(0, 2, 3, 4, 1)  &#47&#47
+        feed_dict[rgb_input] = input_3d_tf
+
+        &#47&#47 Get output
+        tf_out3dsample = sess.run(rgb_logits, feed_dict=feed_dict)
+        out_tf_np = tf_out3dsample.transpose((0, 4, 1, 2, 3))
+        out_tf = torch.from_numpy(out_tf_np)
+
+        unit_name_tf = &quotRGB/inception_i3d/Conv3d_1a_7x7/&quot
+
+        &#47&#47 Create state_dict
+        state_dict = {}
+        i3nception.load_conv3d(state_dict, &quot&quot, sess, unit_name_tf)
+        unitpy.eval()
+        unitpy.load_state_dict(state_dict)
+        out_pt = unitpy(input_3d_var).data
+        out_pt_np = out_pt.numpy()
+        filter_idx = 0
+
+        &#47&#47 Plot slices
+        filter_idx = 0
+        img_tf = out_tf_np[0][filter_idx][0]
+        <a id="change">img_pt = out_pt_np[0][filter_idx][0]</a>
+
+        max_v = max(img_tf.max(), img_pt.max())
+        min_v = min(img_tf.min(), img_pt.min())
+        plt.subplot(2, 2, 1)</code></pre><img src="28063336.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/hassony2/kinetics_i3d_pytorch/commit/1f3da600c20e3376b0bb396bba482b1e90b7883c#diff-a85f429fb89e88d1df3e80fb86b4e70180a6f1fca5c43e04e756965bd6df2aa5L57' target='_blank'>Link</a></div><div id='project'> Project Name: hassony2/kinetics_i3d_pytorch</div><div id='commit'> Commit Name: 1f3da600c20e3376b0bb396bba482b1e90b7883c</div><div id='time'> Time: 2017-11-24</div><div id='author'> Author: yana.hasson@inria.fr</div><div id='file'> File Name: i3nception_tf.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L340' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: flow2rgb</div><BR><BR><div id='link'><a href='https://github.com/havakv/pycox/commit/190d9b204a1a4798f0723c8d8d37ac5ac950909e#diff-06535a1c67024fc2af37d8b4b9cbeb27f511ac279c983a6b2f99455ca76afcdeL37' target='_blank'>Link</a></div><div id='project'> Project Name: havakv/pycox</div><div id='commit'> Commit Name: 190d9b204a1a4798f0723c8d8d37ac5ac950909e</div><div id='time'> Time: 2019-05-08</div><div id='author'> Author: haavard.kvamme@gmail..com</div><div id='file'> File Name: pycox/models/deephit.py</div><div id='class'> Class Name: DeepHitSingle</div><div id='method'> Method Name: predict_survival_function</div><BR>

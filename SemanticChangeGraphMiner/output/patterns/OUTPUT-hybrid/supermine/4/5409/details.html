@@ -1,0 +1,28 @@
+<html><h3>6967cc5df1801b8f5a01110417b38495896d75e0,src/spn/structure/leaves/cltree/Inference.py,,cltree_likelihood,#,9
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+from spn.algorithms.Inference import add_node_likelihood
+
+def cltree_likelihood(node, data=None, dtype=np.float64):
+    <a id="change">raise ValueError(&quotNot Implemented&quot)</a>
+
+def add_cltree_inference_support():
+    add_node_likelihood(CLTree, cltree_likelihood)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+import numpy as np
+
+def cltree_likelihood(node, data=None, dtype=np.float64):
+    probs = <a id="change">np.zeros(data.shape[0], dtype=dtype)</a>
+
+    for feature in range(0, node.n_features):
+        parent = node.tree[feature]
+        if parent == -1:
+            probs = probs + node.log_factors[feature, data[:,node.scope[feature]],0]
+        else:
+            <a id="change">probs = probs + node.log_factors[feature, data[:,node.scope[feature]], data[:,node.scope[parent]]]</a>
+
+    return np.exp(probs.reshape(data.shape[0],1))
+    
+</code></pre><img src="23256416.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SPFlow/SPFlow/commit/6967cc5df1801b8f5a01110417b38495896d75e0#diff-a6a41faef86d8ea4d3569226baa8878051c02eb82a3b15fcd3755eef842d3218L10' target='_blank'>Link</a></div><div id='project'> Project Name: SPFlow/SPFlow</div><div id='commit'> Commit Name: 6967cc5df1801b8f5a01110417b38495896d75e0</div><div id='time'> Time: 2018-10-23</div><div id='author'> Author: nicola.dimauro@uniba.it</div><div id='file'> File Name: src/spn/structure/leaves/cltree/Inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: cltree_likelihood</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/17522b968c8a1d2b29d0034fc57cec59ed9972de#diff-48a05758db4a8298ef7d3437e27382ce0db995b5480af9341a5a6190460ca8ceL78' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 17522b968c8a1d2b29d0034fc57cec59ed9972de</div><div id='time'> Time: 2016-03-15</div><div id='author'> Author: git@sweichwald.de</div><div id='file'> File Name: pymanopt/tools/autodiff/_tensorflow.py</div><div id='class'> Class Name: TensorflowBackend</div><div id='method'> Method Name: compute_hessian</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/a5f02ec13bb412961b1ab5a470c5b4d9b6a7f2bc#diff-734ca6c55882f2fea00c3dade9dee0937c99b660e373c8405aa73331575ad158L90' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: a5f02ec13bb412961b1ab5a470c5b4d9b6a7f2bc</div><div id='time'> Time: 2017-10-23</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/numpy/se3.py</div><div id='class'> Class Name: SE3</div><div id='method'> Method Name: left_jacobian</div><BR>

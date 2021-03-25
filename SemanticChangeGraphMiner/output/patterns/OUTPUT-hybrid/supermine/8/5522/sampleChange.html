@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        filter_nonoverlapping=False)
+    return boxes
+
+  <a id="change">box_lists = [box_list.BoxList(boxes) for boxes in tf.unstack(boxes, axis=0)]</a>
+  true_heights, true_widths, _ = tf.unstack(true_image_shapes, axis=1)
+
+  true_heights_list = tf.unstack(true_heights, axis=0)
+  true_widths_list = tf.unstack(true_widths, axis=0)
+
+  <a id="change">box_lists = list(map(_normalize_boxlist,
+                       zip(box_lists, true_heights_list, true_widths_list)))</a>
+  <a id="change">boxes = tf.stack([box_list_instance.get() for
+                    box_list_instance in box_lists], axis=0)</a>
+
+  return boxes
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  &#47&#47 Note: We use tf ops instead of functions in box_list_ops to make this
+  &#47&#47 function compatible with dynamic batch size.
+  boxes = boxes * stride
+  true_image_shapes = tf.tile(<a id="change">true_image_shapes[:, tf.newaxis, :2]</a>, [1, 1, 2])
+  boxes = boxes / tf.cast(true_image_shapes, tf.float32)
+  boxes = tf.clip_by_value(boxes, 0.0, 1.0)
+  return boxes</code></pre>

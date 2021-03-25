@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        Test on a real dataset with pandas DataFrame and Series sampled for speed
+        
+        <a id="change">df = self.load_pandas("occupancy")</a>
+
+        <a id="change">target = "occupancy"</a>
+        <a id="change">features = [
+            &quottemperature&quot, &quotrelative humidity&quot, &quotlight&quot, &quotC02&quot, &quothumidity&quot
+        ]</a>
+
+        <a id="change">X = df[features]</a>
+        y = pd.Series([
+            &quotoccupied&quot if yi == 1 else &quotunoccupied&quot <a id="change">for</a> yi in <a id="change">df[target]</a>
+        ])
+
+        assert isinstance(X, pd.DataFrame)
+        assert isinstance(y, pd.Series)</code></pre><h3>After Change</h3><pre><code class='java'>
+        
+        Test on a real dataset with pandas DataFrame and Series sampled for speed
+        
+        <a id="change">data = load_occupancy(return_dataset=True)</a>
+        <a id="change">X, y = data.to_pandas()</a>
+        classes = [k for k, _ in sorted(data.meta[&quotlabels&quot].items(), key=lambda i: i[1])]
+
+        assert isinstance(X, pd.DataFrame)
+        assert isinstance(y, pd.Series)</code></pre>

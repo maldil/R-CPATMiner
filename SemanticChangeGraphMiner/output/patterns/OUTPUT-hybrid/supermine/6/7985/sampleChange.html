@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for n_fft in [2048, 4096]:
+        for hop_length in [None, n_fft // 4, n_fft // 2]:
+            S = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))
+            <a id="change">for fmin in [0, 100]:
+                for fmax in [4000, 8000, sr // 2]:
+                    for threshold in [0.1, 0.2, 0.5]:
+                        yield __test, S, n_fft, hop_length, fmin, fmax, threshold
+
+
+</a>def test_piptrack_negative():
+
+    def __test(y, sr, S, n_fft, hop_length, fmin, fmax, threshold):
+        pitches, mags = librosa.piptrack(</code></pre><h3>After Change</h3><pre><code class='java'>
+        assert np.all(np.abs(np.log2(recovered_pitches) - np.log2(freq)) &lt;= 1e-2)
+
+
+    <a id="change">sr = 22050</a>
+    duration = 3.0
+
+    for freq in [110, 220, 440, 880]:
+        &#47&#47 Generate a sine tone
+        <a id="change">y = np.sin(2 * np.pi * freq * np.linspace(0, duration, num=duration*sr))</a>
+        for n_fft in [1024, 2048, 4096]:
+            &#47&#47 Using left-aligned frames eliminates reflection artifacts at the boundaries
+            S = np.abs(librosa.stft(y, n_fft=n_fft, center=False))
+</code></pre>

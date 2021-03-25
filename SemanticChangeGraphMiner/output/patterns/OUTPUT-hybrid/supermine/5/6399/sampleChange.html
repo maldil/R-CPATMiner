@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if not sparse:
+            iterator = FeaturesFromExp.get_matrix_iterator(features_files,
+                                                           num_instances)
+            <a id="change">for row in iterator:
+                if features is None:
+                    features = row
+                else:
+                    features = np.vstack((features, row))
+       </a> else:
+            for _, f_path, f_mask in features_files:
+                indices = np.where(f_mask)[0]
+                matrix = load_npz(f_path)[:, indices]</code></pre><h3>After Change</h3><pre><code class='java'>
+        if not sparse:
+            iterator = FeaturesFromExp.get_matrix_iterator(features_files,
+                                                           num_instances)
+            <a id="change">features = np.vstack(tuple(r for r in iterator))</a>
+        else:
+            features = None
+            for _, f_path, f_mask in features_files:
+                indices = np.where(f_mask)[0]</code></pre>

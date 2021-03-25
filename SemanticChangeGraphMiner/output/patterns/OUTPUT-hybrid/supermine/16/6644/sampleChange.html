@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_fit():
+    knop_test = KNOP(create_pool_classifiers())
+    knop_test.fit(X_dsel_ex1, y_dsel_ex1)
+    expected_scores = np.ones((15, 6)) * np.array(<a id="change">[0.5, 0.5, 1.0, 0.0, 0.33, 0.67]</a>)
+    assert np.array_equal(expected_scores, knop_test.dsel_scores)
+    &#47&#47 Assert the roc_algorithm is fitted to the scores (decision space) rather than the features (feature space)
+    assert np.array_equal(knop_test.roc_algorithm._fit_X, knop_test.dsel_scores)</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_fit():
+    knop_test = KNOP(create_pool_classifiers())
+    knop_test.fit(X_dsel_ex1, y_dsel_ex1)
+    expected_scores = np.array(<a id="change">[[0.5, 0.5], [1.0, 0.0], [0.33, 0.67]]</a>)
+    expected_scores = <a id="change">np.tile(expected_scores, (15, 1, 1))</a>
+
+    assert np.array_equal(expected_scores, knop_test.dsel_scores)
+
+    &#47&#47 Assert the roc_algorithm is fitted to the scores (decision space) rather than the features (feature space)</code></pre>

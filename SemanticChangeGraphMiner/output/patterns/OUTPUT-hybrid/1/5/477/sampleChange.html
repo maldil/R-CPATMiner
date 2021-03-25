@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        else:
+            remote_addr = request.META.get(&quotREMOTE_ADDR&quot, None)
+        if not remote_addr in settings.INTERNAL_IPS \
+                or <a id="change">request.is_ajax()</a> or not settings.DEBUG:
+            return False
+        return True
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        else:
+            remote_addr = request.META.get(&quotREMOTE_ADDR&quot, None)
+        if not remote_addr in settings.INTERNAL_IPS \
+            or <a id="change">(request.is_ajax() and \
+                not debug_toolbar.urls._PREFIX in request.path)</a> \
+                    or not settings.DEBUG:
+            return False
+        return True</code></pre>

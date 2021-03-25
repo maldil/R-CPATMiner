@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        for i in range(nb_blocks):
+
+            <a id="change">identity = resnet</a>
+
+            card_branches = <a id="change">list()</a>
+            for i in range(cardinality):
+
+                if not downsample:
+                    downsample_strides = 1
+
+                branch = conv_2d(resnet, bottleneck_size, 1,
+                             downsample_strides, &quotvalid&quot,
+                             &quotlinear&quot, bias, weights_init,
+                             bias_init, regularizer, weight_decay,
+                             trainable, restore)
+
+                if batch_norm:
+                    branch = batch_normalization(branch, trainable=trainable)
+                branch = tflearn.activation(branch, activation)
+
+                branch = conv_2d(branch, bottleneck_size, 3, 1, &quotsame&quot,
+                             &quotlinear&quot, bias, weights_init,
+                             bias_init, regularizer, weight_decay,
+                             trainable, restore)
+                if batch_norm:
+                    branch = batch_normalization(branch, trainable=trainable)
+                branch = tflearn.activation(branch, activation)
+
+                branch = conv_2d(branch, out_channels, 1, 1, &quotvalid&quot,
+                             activation, bias, weights_init,
+                             bias_init, regularizer, weight_decay,
+                             trainable, restore)
+
+                if batch_norm:
+                    branch = batch_normalization(branch, trainable=trainable)
+
+                card_branches.append(branch)
+
+            <a id="change">resnet = tf.add_n(card_branches)</a>
+
+            &#47&#47 Downsampling
+            if downsample_strides &gt; 1:
+                identity = avg_pool_2d(identity, 1, downsample_strides)
+
+            &#47&#47 Projection to new dimension
+            if in_channels != out_channels:
+                ch = (out_channels - in_channels) // 2
+                identity = tf.pad(identity,
+                                  [[0, 0], [0, 0], [0, 0], [ch, ch]])
+                in_channels = out_channels
+
+            resnet = resnet + identity
+            <a id="change">resnet = tflearn.activation(resnet, activation)</a>
+
+        return resnet
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    bottleneck_values = [64, 40, 24, 14, 4]
+    bottleneck_size = bottleneck_values[card_values.index(cardinality)]
+    &#47&#47 Group width for reference
+    <a id="change">group_width = [64, 80, 96, 112, 128]</a>
+
+    assert cardinality in card_values, "cardinality must be in [1, 2, 4, 8, 32]"
+
+    with tf.variable_scope(scope, default_name=name, values=[incoming],</code></pre>

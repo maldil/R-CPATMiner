@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        best_class_id = None
+
+        old_class_id = self.word_to_class[word_id]
+        <a id="change">class_id = self.first_normal_class_id</a>
+        <a id="change">while class_id &lt; self.num_classes:
+            if class_id == old_class_id:
+                continue
+            ll_diff = self._evaluate_move(word_id, class_id)
+            if ll_diff &gt; best_ll_diff:
+                best_ll_diff = ll_diff
+                best_class_id = class_id
+            class_id += 1
+
+       </a> assert not best_class_id is None
+        return best_ll_diff, best_class_id
+
+    def _evaluate_move(self, word_id, new_class_id):</code></pre><h3>After Change</h3><pre><code class='java'>
+        best_class_id = None
+
+        old_class_id = self.word_to_class[word_id]
+        <a id="change">for class_id in range(self.first_normal_class_id, self.num_classes):
+            if class_id == old_class_id:
+                continue
+            ll_diff = self._evaluate_move(word_id, class_id)
+            if ll_diff &gt; best_ll_diff:
+                best_ll_diff = ll_diff
+                best_class_id = class_id
+
+       </a> assert not best_class_id is None
+        return best_ll_diff, best_class_id
+
+    def _evaluate_move(self, word_id, new_class_id):</code></pre>

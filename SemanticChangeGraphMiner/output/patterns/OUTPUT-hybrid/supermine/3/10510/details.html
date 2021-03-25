@@ -1,0 +1,39 @@
+<html><h3>29ab5e1965503be3ffe87462e973edf1d457af6e,codes/scripts/extract_subimgs_single.py,,main,#,9
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_thread = 20
+
+    print(&quotParent process %s.&quot % os.getpid())
+    start = <a id="change">time.time()</a>
+
+    p = Pool(n_thread)
+    &#47&#47 read all files to a list
+    all_files = []
+    for root, _, fnames in sorted(os.walk(GT_dir)):
+        full_path = [os.path.join(root, x) for x in fnames]
+        all_files.extend(full_path)
+    &#47&#47 cut into subtasks
+    def chunkify(lst, n):  &#47&#47 for non-continuous chunks
+        return [lst[i::n] for i in range(n)]
+
+    sub_lists = chunkify(all_files, n_thread)
+    &#47&#47 call workers
+    for i in range(n_thread):
+        p.apply_async(worker, args=(sub_lists[i], save_GT_dir))
+    print(&quotWaiting for all subprocesses done...&quot)
+    p.close()
+    p.join()
+    end = time.time()
+    print(&quotAll subprocesses done. Using time {} sec.&quot.format(<a id="change">end - start</a>))
+
+
+def worker(GT_paths, save_GT_dir):</code></pre><h3>After Change</h3><pre><code class='java'>
+    pool = Pool(n_thread)
+    for path in img_list:
+        pool.apply_async(worker,
+            args=<a id="change">(path, save_folder, crop_sz, step, thres_sz, compression_level)</a>,
+            callback=update)
+    pool.close()
+    pool.join()</code></pre><img src="38992258.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/29ab5e1965503be3ffe87462e973edf1d457af6e#diff-aa0090b83308c091628d9d5fb29397ba5e5a6c25c4ba7cf95b8ef8d6d2993676L10' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 29ab5e1965503be3ffe87462e973edf1d457af6e</div><div id='time'> Time: 2018-09-06</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/scripts/extract_subimgs_single.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/11d2aee92fc941df40097eae7cc0696844019c6a#diff-87fdc322b6ef1018551f7fbf61ab4866a56c0caf501d3fd9e58ca7328d5043e7L289' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 11d2aee92fc941df40097eae7cc0696844019c6a</div><div id='time'> Time: 2018-07-20</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/core/controllers/core_helpers/status.py</div><div id='class'> Class Name: CoreStatus</div><div id='method'> Method Name: calculate_eta</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/70e1e9c9d0cda4c66e7f877e2d9e23dc3da236e8#diff-6708067c0756cbce64e3951d2b6754d699da2d66e930dd663073af326bb5dc04L99' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 70e1e9c9d0cda4c66e7f877e2d9e23dc3da236e8</div><div id='time'> Time: 2016-02-23</div><div id='author'> Author: git@sweichwald.de</div><div id='file'> File Name: pymanopt/solvers/trust_regions.py</div><div id='class'> Class Name: TrustRegions</div><div id='method'> Method Name: solve</div><BR>

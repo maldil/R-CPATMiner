@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 Extract the identifier and a path if any.
+            if mg_type == &quotScript&quot:
+                &#47&#47 for Script nodes only, identifier is a whole path
+                (name, ext) = <a id="change">os.path.splitext(node.filename)</a>
+                name = os.path.basename(name)
+            else:
+                name = node.identifier
+            path = node.filename if node.filename is not None else &quot&quot</code></pre><h3>After Change</h3><pre><code class='java'>
+            if module_filter.match(node.identifier):
+                continue
+            entry = self._node_to_toc(node, typecode)
+            <a id="change">if entry is not None:
+                &#47&#47 TOC.append the data. This checks for a pre-existing name
+                &#47&#47 and skips it if it exists.
+                result.append(entry)
+       </a> return result
+
+    def make_pure_toc(self):
+        </code></pre>

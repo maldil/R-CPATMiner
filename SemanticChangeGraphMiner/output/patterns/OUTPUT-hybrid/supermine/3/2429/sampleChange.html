@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        connection_id += 1
+
+        self.session = SessionController()
+        self.salt = &quot&quot.join([<a id="change">random.choice(ALPHABET)</a> <a id="change">for</a> i in range(20)])
+        self.socket = self.request
+        self.count = 0  &#47&#47 next packet number
+        self.connection_id = connection_id</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.session = SessionController()
+
+        <a id="change">if hasattr(self.server, &quotsalt&quot) and isinstance(self.server.salt, str):
+            self.salt = self.server.salt
+        else:
+            self.salt = base64.b64encode(os.urandom(15)).decode()
+
+       </a> self.socket = self.request
+        self.count = 0  &#47&#47 next packet number
+        self.connection_id = connection_id
+        self.logging = log</code></pre>

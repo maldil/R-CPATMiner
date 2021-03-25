@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                exclude_columns, &quotexclude_columns&quot)
+        self._drop = drop
+        self.encoders = {}
+        <a id="change">super(Encode, self).__init__(
+            exraise=exraise,
+            exmsg=Encode.DEF_ENCODE_EXC_MSG.format(self._columns),
+            appmsg=Encode.DEF_ENCODE_APP_MSG.format(self._columns)
+        )</a>
+
+    def _prec(self, df):
+        return set(self._columns or []).issubset(df.columns)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                exclude_columns, &quotexclude_columns&quot)
+        self._drop = drop
+        self.encoders = {}
+        <a id="change">col_str = _list_str(self._columns)</a>
+        <a id="change">super_kwargs = {
+            &quotexmsg&quot: Encode._DEF_ENCODE_EXC_MSG.format(col_str),
+            &quotappmsg&quot: Encode._DEF_ENCODE_APP_MSG.format(col_str),
+            &quotdesc&quot: "Encode {}".format(col_str or "all categorical columns")
+        }</a>
+        <a id="change">super_kwargs.update(**kwargs)</a>
+        super().__init__(**super_kwargs)
+
+    def _prec(self, df):
+        return set(self._columns or []).issubset(df.columns)</code></pre>

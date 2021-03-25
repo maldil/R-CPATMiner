@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47--- Repeat data for beam
+        src_seq = Variable(
+            <a id="change">src_seq</a>.data.repeat(1, beam_size).view(
+                src_seq.size(0) * beam_size, src_seq.size(1)))
+
+        enc_output = Variable(</code></pre><h3>After Change</h3><pre><code class='java'>
+        sz_b, len_s = src_seq.size()
+        src_seq = src_seq.repeat(1, sz_beam).view(sz_b * sz_beam, len_s)
+
+        <a id="change">sz_b, len_s, d_h = enc_output.size()</a>
+        enc_output = enc_output.repeat(1, sz_beam, 1).view( sz_b * sz_beam, len_s, d_h)
+
+        &#47&#47--- Prepare beams
+        beams = [Beam(sz_beam, self.opt.cuda) for _ in range(batch_size)]</code></pre>

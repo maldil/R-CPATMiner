@@ -1,0 +1,29 @@
+<html><h3>8da4857396fcedb1abd19a08cd4de40d16c7bc50,research/audioset/yamnet/yamnet_test.py,YAMNetTest,clip_test,#YAMNetTest#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  def clip_test(self, waveform, expected_class_name, top_n=10):
+    Run the model on the waveform, check that expected class is in top-n.
+    <a id="change">with YAMNetTest._yamnet_graph.as_default():
+      prediction = np.mean(YAMNetTest._yamnet.predict(
+        np.reshape(waveform, [1, -1]), steps=1)[0], axis=0)
+      top_n_class_names = YAMNetTest._yamnet_classes[
+        np.argsort(prediction)[-top_n:]]
+      self.assertIn(expected_class_name, top_n_class_names)
+
+ </a> def testZeros(self):
+    self.clip_test(
+        waveform=np.zeros((1, int(3 * params.SAMPLE_RATE))),
+        expected_class_name=&quotSilence&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+    top_n_scores = clip_predictions[top_n_indices]
+    top_n_class_names = YAMNetTest._yamnet_classes[top_n_indices]
+    top_n_predictions = list(zip(top_n_class_names, top_n_scores))
+    <a id="change">self.assertIn(expected_class_name, top_n_class_names,
+                  &quotDid not find expected class {} in top {} predictions: {}&quot.format(
+                      expected_class_name, top_n, top_n_predictions))</a>
+
+  def testZeros(self):
+    self.clip_test(
+        waveform=np.zeros((int(3 * YAMNetTest._params.sample_rate),)),</code></pre><img src="35067375.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/8da4857396fcedb1abd19a08cd4de40d16c7bc50#diff-5daaabb2051c9bd20f18a49d0777bbff5e224b60e3f4c53441eca2bec7678258L40' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: 8da4857396fcedb1abd19a08cd4de40d16c7bc50</div><div id='time'> Time: 2020-08-17</div><div id='author'> Author: 30733558+plakal@users.noreply.github.com</div><div id='file'> File Name: research/audioset/yamnet/yamnet_test.py</div><div id='class'> Class Name: YAMNetTest</div><div id='method'> Method Name: clip_test</div><BR><BR><div id='link'><a href='https://github.com/ChrisCummins/clgen/commit/9f373e4b9aba5f1023a5a5a5366268622ff07af1#diff-e9b863fd1aa28d23bbaadd5a9caabaf6f4f43701da6e1d980c23b16916d50321L57' target='_blank'>Link</a></div><div id='project'> Project Name: ChrisCummins/clgen</div><div id='commit'> Commit Name: 9f373e4b9aba5f1023a5a5a5366268622ff07af1</div><div id='time'> Time: 2020-01-08</div><div id='author'> Author: chrisc.101@gmail.com</div><div id='file'> File Name: deeplearning/clgen/docker/clgen_preprocess_test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_cxx_preprocess</div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/f7b260e965e277d62d2f54847671d06b1763fb21#diff-29882c6b6129122cae86f6770cc40526d50ab11f52506d59763ca54c244a00beL215' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: f7b260e965e277d62d2f54847671d06b1763fb21</div><div id='time'> Time: 2020-08-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/python/rules/coverage_integration_test.py</div><div id='class'> Class Name: CoverageIntegrationTest</div><div id='method'> Method Name: test_coverage_raw</div><BR>

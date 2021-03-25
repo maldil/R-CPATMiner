@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            gp = tf.gradients(D_hat, X_hat)[0]
+            gp = tf.sqrt(tf.reduce_sum(tf.square(gp), axis=1))
+            gp = tf.reduce_mean(<a id="change">tf.square(gp - 1.0) * config.lamda</a>)
+
+            self.d_loss += gp
+            self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope.name)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            gp = tf.gradients(D_hat, X_hat)[0]
+            gp = tf.sqrt(tf.reduce_sum(tf.square(gp), axis=1))
+            gp = tf.reduce_mean(<a id="change">tf.square(gp - 1.0)</a>)
+
+            self.d_loss += <a id="change">gp * config.lamda</a>
+            self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope.name)
+
+class NowbarHybrid(Nowbar):
+    def __init__(self, config):</code></pre>

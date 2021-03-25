@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            X = source[:, np.newaxis]
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            X -= self.center
+            Xn = np.sqrt(np.sum(X**2, axis=0))
+            X *= constants.get(&quotffdist&quot)/Xn
+            X += self.center
+
+       </a> D = distance(self.R, X)
+        omega = 2 * np.pi * frequency
+
+        if attn:</code></pre><h3>After Change</h3><pre><code class='java'>
+        omega = 2 * np.pi * frequency
+
+        &#47&#47 normalize for far-field if requested
+        <a id="change">if (ff):
+            &#47&#47 unit vectors pointing towards sources
+            p = (X - self.center)
+            p /= np.linalg.norm(p)
+
+            &#47&#47 The projected microphone distances on the unit vectors
+            D = np.dot(self.R.T, p)
+
+            &#47&#47 subtract minimum in each column
+            D -= np.min(D)
+
+        else:
+
+            D = distance(self.R, X)
+
+       </a> phase = np.exp(-1j * omega * D / constants.get(&quotc&quot))
+
+        if attn:
+            &#47&#47 TO DO 1: This will mean slightly different absolute value for</code></pre>

@@ -1,0 +1,20 @@
+<html><h3>25508c13627f06510f3cab96d742360b0187640a,tests/windows_aggregator_grid_v2_test.py,GridSamplesAggregatorTest,test_init_2d_mo,#GridSamplesAggregatorTest#,413
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            while more_batch:
+                out = sess.run(sampler.pop_batch_op())
+                min_val = np.sum((np.asarray(out[&quotimage&quot]).flatten()))
+                stats_val = [np.min(out), np.max(out), <a id="change">np.sum(out)</a>]
+                more_batch = aggregator.decode_batch(
+                    {&quotwindow_image&quot:out[&quotimage&quot], &quotcsv_sum&quot:min_val},
+                    out[&quotimage_location&quot])</code></pre><h3>After Change</h3><pre><code class='java'>
+                min_val = np.sum(np.reshape(np.asarray(out[&quotimage&quot]),
+                                             [10,-1]),1)
+                stats_val = np.concatenate([np.min(out_flatten,1,
+                                                   keepdims=True), <a id="change">np.max(
+                    out_flatten, 1,keepdims=True)</a>, np.sum(
+                    out_flatten,1,keepdims=True)],1)
+                more_batch = aggregator.decode_batch(
+                    {&quotwindow_image&quot:out[&quotimage&quot], &quotcsv_sum&quot:min_val},</code></pre><img src="24503837.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NifTK/NiftyNet/commit/25508c13627f06510f3cab96d742360b0187640a#diff-e723f20bd5097a059db5b74689292cb638bc80bfed1e0dd66d738a48f77e49bfL432' target='_blank'>Link</a></div><div id='project'> Project Name: NifTK/NiftyNet</div><div id='commit'> Commit Name: 25508c13627f06510f3cab96d742360b0187640a</div><div id='time'> Time: 2019-06-29</div><div id='author'> Author: carole.sudre@kcl.ac.uk</div><div id='file'> File Name: tests/windows_aggregator_grid_v2_test.py</div><div id='class'> Class Name: GridSamplesAggregatorTest</div><div id='method'> Method Name: test_init_2d_mo</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/967e77866ca63db25f5b688db4be5d55480a1102#diff-a448e95b74a0c3db02382f2a8eeed0913683529468650e1ba40801216eebd2c7L82' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 967e77866ca63db25f5b688db4be5d55480a1102</div><div id='time'> Time: 2016-07-13</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/classifier/softmax_regression.py</div><div id='class'> Class Name: SoftmaxRegression</div><div id='method'> Method Name: _softmax</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/967e77866ca63db25f5b688db4be5d55480a1102#diff-f112e964218071c9859ffd593935e9e9d71f7ac4595d17d46f8f4c3786e562d4L238' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 967e77866ca63db25f5b688db4be5d55480a1102</div><div id='time'> Time: 2016-07-13</div><div id='author'> Author: mail@sebastianraschka.com</div><div id='file'> File Name: mlxtend/classifier/multilayerperceptron.py</div><div id='class'> Class Name: MultiLayerPerceptron</div><div id='method'> Method Name: _softmax</div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        queue = [None] * args.threads
+        process = [None] * args.threads
+        thread_done = [False] * args.threads
+        <a id="change">log.debug(&quotlen(interactionFileList) {}&quot.format(len(interactionFileList)))</a>
+        log.debug(&quotlen(highlightDifferentialRegionsFileList) {}&quot.format(len(highlightDifferentialRegionsFileList)))
+
+        for i in range(args.threads):
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            else:
+                interactionFileListThread = interactionFileList[i * interactionFilesPerThread:]
+                highlightDifferentialRegionsFileListThread = highlightDifferentialRegionsFileList[i * interactionFilesPerThread:]
+                highlightSignificantRegionsFileListThread = <a id="change">highlightSignificantRegionsFileList[i * interactionFilesPerThread:]</a>
+            queue[i] = Queue()
+            process[i] = Process(target=plot_images, kwargs=dict(
+                pInteractionFileList=interactionFileListThread,
+                pHighlightDifferentialRegionsFileList=highlightDifferentialRegionsFileListThread,</code></pre>

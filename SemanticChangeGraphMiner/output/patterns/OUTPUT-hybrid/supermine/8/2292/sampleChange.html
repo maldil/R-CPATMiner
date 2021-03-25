@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                                  self._arg):
+                    self._backend = backend_autograd
+            if self._backend is None:
+                <a id="change">raise ValueError(
+                    "Cannot identify an autodiff backend from cost "
+                    "function that also was successfully imported. "
+                    "TheanoBackend was%s successfully imported. " %
+                    ("" if backend_theano.is_available() else " not") +
+                    "AutogradBackend was%s successfully imported. " %
+                    ("" if backend_autograd.is_available() else " not")
+                    )</a>
+        return self._backend
+
+    @property
+    def cost(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+                    break
+            else:
+                backend_names = [backend.name for backend in self._backends]
+                <a id="change">raise ValueError(
+                    "Cannot determine autodiff backend from cost function. "
+                    "Available backends are: {:s}".format(
+                        ", ".join(backend_names)))</a>
+        return self._backend
+
+    @property
+    def cost(self):</code></pre>

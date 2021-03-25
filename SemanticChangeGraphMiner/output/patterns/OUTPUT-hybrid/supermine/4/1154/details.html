@@ -1,0 +1,40 @@
+<html><h3>24387ddc838a9eb4273c03bf19e3f35587e3f201,implementations/wgan/wgan.py,,,#,88
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for i in range(len(data_iter) // opt.n_critic):
+        &#47&#47 Train discriminator for n_critic times
+        for _ in range(opt.n_critic):
+            <a id="change">(imgs, _) = data_iter.next()</a>
+
+            &#47&#47 Configure input
+            real_imgs = Variable(imgs.type(Tensor))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            p.data.clamp_(-opt.clip_value, opt.clip_value)
+
+        &#47&#47 Train the generator every n_critic iterations
+        <a id="change">if i % opt.n_critic == 0:
+
+            &#47&#47 -----------------
+            &#47&#47  Train Generator
+            &#47&#47 -----------------
+
+            optimizer_G.zero_grad()
+
+            &#47&#47 Generate a batch of images
+            gen_imgs = generator(z)
+            &#47&#47 Adversarial loss
+            loss_G = -torch.mean(discriminator(gen_imgs))
+
+            loss_G.backward()
+            optimizer_G.step()
+
+            print ("[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]" % (epoch, opt.n_epochs,
+                                                            batches_done % len(dataloader), len(dataloader),
+                                                            loss_D.item(), loss_G.item()))
+
+       </a> if batches_done % opt.sample_interval == 0:
+            save_image(gen_imgs.data[:25], &quotimages/%d.png&quot % batches_done, nrow=5, normalize=True)
+        batches_done += 1
+</code></pre><img src="4943574.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/24387ddc838a9eb4273c03bf19e3f35587e3f201#diff-9df98e359c24f57c3269f94141cb3fdc5fa2aab477eefcdcd916bf977153f125L101' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 24387ddc838a9eb4273c03bf19e3f35587e3f201</div><div id='time'> Time: 2018-05-07</div><div id='author'> Author: eriklindernoren@live.se</div><div id='file'> File Name: implementations/wgan/wgan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/python-docs-samples/commit/5c362b15bdd7a158332d5ddc92b692416a10c834#diff-81ce19c0e844e0d6f5b542f2f2fbf86a2ba076d8a4a8c39fd2423d5922c39217L64' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/python-docs-samples</div><div id='commit'> Commit Name: 5c362b15bdd7a158332d5ddc92b692416a10c834</div><div id='time'> Time: 2020-08-26</div><div id='author'> Author: 35782177+melaniedejong@users.noreply.github.com</div><div id='file'> File Name: iam/api-client/quickstartv2.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: modify_policy_add_role</div><BR><BR><div id='link'><a href='https://github.com/ntucllab/libact/commit/325fae8fbbc16b3c1ca40559bb2a9c783efaf440#diff-f9e5477f7d50c535defccb896f3ac5258c8a44c36a055db76696e0c5c585def5L161' target='_blank'>Link</a></div><div id='project'> Project Name: ntucllab/libact</div><div id='commit'> Commit Name: 325fae8fbbc16b3c1ca40559bb2a9c783efaf440</div><div id='time'> Time: 2015-11-25</div><div id='author'> Author: yangarbiter@gmail.com</div><div id='file'> File Name: libact/query_strategies/active_learning_by_learning.py</div><div id='class'> Class Name: ActiveLearningByLearning</div><div id='method'> Method Name: make_query</div><BR>

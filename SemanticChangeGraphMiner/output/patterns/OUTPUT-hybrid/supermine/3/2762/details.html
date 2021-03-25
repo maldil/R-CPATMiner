@@ -1,0 +1,26 @@
+<html><h3>cf8a3fb30547d6e980ecd8182f64a51df8e55c62,python/dgl/backend/pytorch/tensor.py,,pack_padded_tensor,#,248
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    index = []
+    for i, l in enumerate(lengths):
+        index.extend(range(i * max_len, i * max_len + l))
+    index = <a id="change">th</a>.tensor(index).to(device)
+    return gather_row(input.view(batch_size * max_len, -1), index)
+
+def boolean_mask(input, mask):</code></pre><h3>After Change</h3><pre><code class='java'>
+    if not is_tensor(lengths):
+        lengths = th.tensor(lengths, dtype=th.int64, device=device)
+    else:
+        lengths = <a id="change">lengths.to(device)</a>
+    input = input.view(-1, *input.shape[2:])
+    out_len = lengths.sum().item()
+    index = th.ones(out_len, dtype=th.int64, device=device)
+    cum_lengths = th.cumsum(lengths, 0)
+    index[cum_lengths[:-1]] += (max_len - lengths[:-1])
+    <a id="change">index = th.cumsum(index, 0) - 1</a>
+    return input[index]
+
+def boolean_mask(input, mask):
+    if &quotbool&quot not in str(mask.dtype):</code></pre><img src="12280331.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dmlc/dgl/commit/cf8a3fb30547d6e980ecd8182f64a51df8e55c62#diff-2f891bb8d662a969491d25652279d2c8917e0731a79b707ff75ce560648463d6L249' target='_blank'>Link</a></div><div id='project'> Project Name: dmlc/dgl</div><div id='commit'> Commit Name: cf8a3fb30547d6e980ecd8182f64a51df8e55c62</div><div id='time'> Time: 2021-02-10</div><div id='author'> Author: expye@outlook.com</div><div id='file'> File Name: python/dgl/backend/pytorch/tensor.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pack_padded_tensor</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/cbc51f8495a8d5e314cd1ae0704f32a4e3dc28b1#diff-6b8abda8c46cfbcab4284f098988878eef0300cacb575a201d596679c411838fL42' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: cbc51f8495a8d5e314cd1ae0704f32a4e3dc28b1</div><div id='time'> Time: 2018-06-16</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/modules/loss.py</div><div id='class'> Class Name: GradientPenaltyLoss</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/678ac413ce55cb3db09d1f24532920582af54f43#diff-53ebeb5bb252d44ee2375b613d81a7dba3ae4f147b1011bdfa4bafa022ec44d0L41' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: 678ac413ce55cb3db09d1f24532920582af54f43</div><div id='time'> Time: 2018-11-12</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: run_inference.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/c8a8664f8b6b430a2ce37834ccc7460f5c552a87#diff-7306b790b31cd46e0674e54dae7d7cd11494bd5e9e1215ca37ac71651340b06fL112' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: c8a8664f8b6b430a2ce37834ccc7460f5c552a87</div><div id='time'> Time: 2018-12-29</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: tests/grads_utils.py</div><div id='class'> Class Name: ComplexGradsUtils</div><div id='method'> Method Name: load_target_psi</div><BR>

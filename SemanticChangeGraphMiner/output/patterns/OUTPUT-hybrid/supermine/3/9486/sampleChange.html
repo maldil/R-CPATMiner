@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        output, hidden = self.gru(gru_input, hidden)
+        fc_output = self.fc(hidden[-1])  &#47&#47 Use the last layer
+        <a id="change">print("Final output size", fc_output.size())</a>
+        return fc_output
+
+    def _init_hidden(self, batch_size):
+        hidden = torch.zeros(self.n_layers, batch_size, self.hidden_size)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 input shape: B x S (input size)
+        &#47&#47 transpose to make S(sequence) x B (batch)
+        input = input.t()
+        batch_size = <a id="change">input.size(1)</a>
+
+        &#47&#47 Make a hidden
+        hidden = self._init_hidden(batch_size)
+</code></pre>

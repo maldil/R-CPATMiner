@@ -1,0 +1,28 @@
+<html><h3>4744e062ffe801fe2c7c1faa2bda385f293d5b37,sklearn/ensemble/tests/test_gradient_boosting_loss_functions.py,,test_binomial_deviance,#,22
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def alt_dev(y, pred):
+        return np.mean(np.logaddexp(0.0, -2.0 * (2.0 * y - 1) * pred))
+
+    <a id="change">test_data = [(np.array([1.0, 1.0, 1.0]), np.array([100.0, 100.0, 100.0])),
+                 (np.array([0.0, 0.0, 0.0]), np.array([100.0, 100.0, 100.0])),
+                 (np.array([0.0, 0.0, 0.0]),
+                  np.array([-100.0, -100.0, -100.0])),
+                 (np.array([1.0, 1.0, 1.0]),
+                  np.array([-100.0, -100.0, -100.0]))]</a>
+
+    for datum in test_data:
+        assert_almost_equal(bd(*datum), alt_dev(*datum))
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        z = 2 * y - 1
+        return 2 * np.mean(np.log(1 + np.exp(-z * raw_pred)))
+
+    <a id="change">test_data = product(
+        (np.array([0., 0, 0]), np.array([1., 1, 1])),
+        (np.array([-5., -5, -5]), np.array([3., 3, 3])))</a>
+
+    for datum in test_data:
+        assert bd(*datum) == approx(alt_dev(*datum))
+</code></pre><img src="19695916.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/4744e062ffe801fe2c7c1faa2bda385f293d5b37#diff-8bfcc12ca33b18f9e05125dea3b11ec73dc0c79adb487042e63cf0eb21f4d276L31' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 4744e062ffe801fe2c7c1faa2bda385f293d5b37</div><div id='time'> Time: 2020-08-31</div><div id='author'> Author: lorentzen.ch@gmail.com</div><div id='file'> File Name: sklearn/ensemble/tests/test_gradient_boosting_loss_functions.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_binomial_deviance</div><BR><BR><div id='link'><a href='https://github.com/EducationalTestingService/skll/commit/94f2c9d4bd78723440418b6ea914012d83b00bed#diff-b259521308ad9b898000f4fea3040c6196bee7fd89e8608a85606e86c8c2c70bL445' target='_blank'>Link</a></div><div id='project'> Project Name: EducationalTestingService/skll</div><div id='commit'> Commit Name: 94f2c9d4bd78723440418b6ea914012d83b00bed</div><div id='time'> Time: 2019-10-18</div><div id='author'> Author: nmadnani@ets.org</div><div id='file'> File Name: tests/test_utilities.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_generate_predictions</div><BR><BR><div id='link'><a href='https://github.com/janfreyberg/superintendent/commit/7b71f7f38020e790a69b792d81415399971a7591#diff-2f5683809e65a81974c3799516c3679f5c6323ffa245ac52d7c6bcb00e308ba2L8' target='_blank'>Link</a></div><div id='project'> Project Name: janfreyberg/superintendent</div><div id='commit'> Commit Name: 7b71f7f38020e790a69b792d81415399971a7591</div><div id='time'> Time: 2018-05-10</div><div id='author'> Author: jan.freyberg@gmail.com</div><div id='file'> File Name: tests/test_iteration.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

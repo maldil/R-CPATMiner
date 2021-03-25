@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        lookup_table = self.lookups.get_table("lemma_lookup", {})
+        if "lemma_rules" not in self.lookups:
+            return [lookup_table.get(string, string)]
+        <a id="change">if univ_pos in (NOUN, "NOUN", "noun"):
+            univ_pos = "noun"
+        elif univ_pos in (VERB, "VERB", "verb"):
+            univ_pos = "verb"
+        elif univ_pos in (ADJ, "ADJ", "adj"):
+            univ_pos = "adj"
+        elif univ_pos in (PUNCT, "PUNCT", "punct"):
+            univ_pos = "punct"
+        elif univ_pos in (PROPN, "PROPN"):
+            return [string]
+        else:
+            return [string.lower()]
+        &#47&#47 See Issue &#47&#47435 for example of where this logic is requied.
+       </a> if self.is_base_form(univ_pos, morphology):
+            return [string.lower()]
+        index_table = self.lookups.get_table("lemma_index", {})
+        exc_table = self.lookups.get_table("lemma_exc", {})</code></pre><h3>After Change</h3><pre><code class='java'>
+            return [lookup_table.get(string, string)]
+        if isinstance(univ_pos, int):
+            univ_pos = UPOS_NAMES.get(univ_pos, "X")
+        univ_pos = <a id="change">univ_pos.lower()</a>
+
+        if univ_pos in ("", "eol", "space"):
+            return [string.lower()]
+        &#47&#47 See Issue &#47&#47435 for example of where this logic is requied.</code></pre>

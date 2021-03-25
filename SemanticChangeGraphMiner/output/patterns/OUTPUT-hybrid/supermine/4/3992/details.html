@@ -1,0 +1,26 @@
+<html><h3>7b34113cc3b5529a127bd02667de9de0b5b75df9,models/__init__.py,PerceptualLoss,forward,#PerceptualLoss#,25
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            target = target.cuda()
+            pred = pred.cuda()
+
+        <a id="change">if(not self.spatial):
+            return self.model.forward_pair(target, pred)
+        else:
+            return self.model.forward(target, pred)
+
+
+</a>def cos_sim_blob(in0,in1):
+    in0_norm = normalize_blob(in0)
+    in1_norm = normalize_blob(in1)
+    (N,C,X,Y) = in0_norm.shape</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if(self.use_gpu):
+            target = Variable(target.to(device=self.gpu_ids[0]), requires_grad=True)
+            <a id="change">pred = Variable(pred.to(device=self.gpu_ids[0]), requires_grad=True)</a>
+
+        return self.model.forward(target, pred)
+
+def normalize_tensor(in_feat,eps=1e-10):</code></pre><img src="17541979.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/richzhang/PerceptualSimilarity/commit/7b34113cc3b5529a127bd02667de9de0b5b75df9#diff-ebdc0efe8893997879ab383f76db51dfb1ed6858333bf793da067a86e08b658fL25' target='_blank'>Link</a></div><div id='project'> Project Name: richzhang/PerceptualSimilarity</div><div id='commit'> Commit Name: 7b34113cc3b5529a127bd02667de9de0b5b75df9</div><div id='time'> Time: 2019-07-26</div><div id='author'> Author: rich.zhang@eecs.berkeley.edu</div><div id='file'> File Name: models/__init__.py</div><div id='class'> Class Name: PerceptualLoss</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/kevinzakka/recurrent-visual-attention/commit/ec6113b96d65d4edb3da8aac88796bbd99fc9478#diff-fada037ad086638e65c7ae77e3d223963e9afaa26326aab0ea718f4013176e43L67' target='_blank'>Link</a></div><div id='project'> Project Name: kevinzakka/recurrent-visual-attention</div><div id='commit'> Commit Name: ec6113b96d65d4edb3da8aac88796bbd99fc9478</div><div id='time'> Time: 2018-01-22</div><div id='author'> Author: kevinarmandzakka@gmail.com</div><div id='file'> File Name: model.py</div><div id='class'> Class Name: RecurrentAttention</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/f4ca9b361adb382423c753f7f864a5dd0e454964#diff-0e4135cb1d95a5c7db5f0c86f21da5b047bdaf0b946fe240418cfafe4393517fL53' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: f4ca9b361adb382423c753f7f864a5dd0e454964</div><div id='time'> Time: 2017-05-12</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/tensor_transforms.py</div><div id='class'> Class Name: ToVariable</div><div id='method'> Method Name: __call__</div><BR>

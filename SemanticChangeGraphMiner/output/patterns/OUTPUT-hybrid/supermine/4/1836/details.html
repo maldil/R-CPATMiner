@@ -1,0 +1,38 @@
+<html><h3>50a48e6cdd5f2240d2f0c793b3b3991d09c28d03,genome_handler.py,GenomeHandler,mutate,#GenomeHandler#,53
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    range_index = new_index % self.dense_layer_size
+                    choice_range = self.dense_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+                    <a id="change">break</a>
+            else:
+                genome[index] = np.random.choice(self.optimizer.keys())
+                break
+        return genome</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.dense_layer_size = len(self.dense_layer_shape)
+
+    def mutate(self, genome):
+        <a id="change">num_mutations = np.random.choice(range(3))</a>
+        <a id="change">for i in range(num_mutations):
+            index = np.random.choice(range(1, len(genome)))
+            if index &lt; self.convolution_layer_size * self.convolution_layers:
+                if genome[index - index % self.convolution_layer_size]:
+                    range_index = index % self.convolution_layer_size
+                    choice_range = self.convolutional_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+            elif index != len(genome) - 1:
+                offset = self.convolution_layer_size * self.convolution_layers
+                new_index = (index - offset)
+                present_index = new_index - new_index % self.dense_layer_size
+                if genome[present_index + offset]:
+                    range_index = new_index % self.dense_layer_size
+                    choice_range = self.dense_layer_shape[range_index]
+                    genome[index] = np.random.choice(choice_range)
+            else:
+                genome[index] = np.random.choice(self.optimizer.keys()) 
+       </a> return genome
+
+    def decode(self, genome):
+        model = Sequential()</code></pre><img src="8990601.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/joeddav/devol/commit/50a48e6cdd5f2240d2f0c793b3b3991d09c28d03#diff-30c310315b1527a549a9b2af04b7cdb5a290b055133c12ddeb7a00adf3e8c3d4L54' target='_blank'>Link</a></div><div id='project'> Project Name: joeddav/devol</div><div id='commit'> Commit Name: 50a48e6cdd5f2240d2f0c793b3b3991d09c28d03</div><div id='time'> Time: 2017-03-25</div><div id='author'> Author: easton.huch@gmail.com</div><div id='file'> File Name: genome_handler.py</div><div id='class'> Class Name: GenomeHandler</div><div id='method'> Method Name: mutate</div><BR><BR><div id='link'><a href='https://github.com/HsinYingLee/DRIT/commit/8776ca2dcfa98412a6dafc33d360ee1ba0d1b551#diff-e5dcc7e9ea231b852d8e5d57623ff2834ac9ea3e96408e44b8857b4d379530aaL11' target='_blank'>Link</a></div><div id='project'> Project Name: HsinYingLee/DRIT</div><div id='commit'> Commit Name: 8776ca2dcfa98412a6dafc33d360ee1ba0d1b551</div><div id='time'> Time: 2018-07-25</div><div id='author'> Author: james371507@gmail.com</div><div id='file'> File Name: src/test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/lcswillems/torch-rl/commit/68ec284dd57ba00230c6c6199cbb71d53e0696fc#diff-b14d11d78ec917a13188b343dd4e9362061d20a57d7416bbe2fcb64ebe64946cL11' target='_blank'>Link</a></div><div id='project'> Project Name: lcswillems/torch-rl</div><div id='commit'> Commit Name: 68ec284dd57ba00230c6c6199cbb71d53e0696fc</div><div id='time'> Time: 2019-12-25</div><div id='author'> Author: maximechevalierb@gmail.com</div><div id='file'> File Name: scripts/visualize.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

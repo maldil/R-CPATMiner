@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        for track,det in zip(tracker.tracks,detections):
+            bbox = track.to_tlbr()
+            <a id="change">cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 4)</a>
+            bbox = det.to_tlbr()
+            cv2.rectangle(frame,(int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,0,0), 4)
+            cv2.putText(frame, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 480, (124,252,0),4)
+        cv2.imshow(&quot&quot, frame)</code></pre><h3>After Change</h3><pre><code class='java'>
+        for track,det in zip(tracker.tracks,detections):
+            if track.is_confirmed() and track.time_since_update &lt;=0:
+                bbox = track.to_tlbr()
+                <a id="change">cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 4)</a>
+            bbox = det.to_tlbr()
+            cv2.rectangle(frame,(int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,0,0), 4)
+            cv2.putText(frame, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 480, (124,252,0),4)
+        cv2.imshow(&quot&quot, frame)</code></pre>

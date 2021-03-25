@@ -1,0 +1,55 @@
+<html><h3>4888cb7a5299f7eed9214ddc70871dc05ea0f4d2,model/ft_ResNet50/train.py,,train_model,#,151
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                else:
+                    inputs, labels = Variable(inputs), Variable(labels)
+                &#47&#47 if we use low precision, input also need to be fp16
+                <a id="change">if fp16:
+                    inputs = inputs.half()
+ 
+                &#47&#47 zero the parameter gradients
+               </a> optimizer.zero_grad()
+
+                &#47&#47 forward
+                if phase == &quotval&quot:
+                    with torch.no_grad():
+                        outputs = model(inputs)
+                else:
+                    outputs = model(inputs)
+
+                if not opt.PCB:
+                    _, preds = torch.max(outputs.data, 1)
+                    loss = criterion(outputs, labels)
+                else:
+                    part = {}
+                    sm = nn.Softmax(dim=1)
+                    num_part = 6
+                    for i in range(num_part):
+                        part[i] = outputs[i]
+
+                    score = sm(part[0]) + sm(part[1]) +sm(part[2]) + sm(part[3]) +sm(part[4]) +sm(part[5])
+                    _, preds = torch.max(score.data, 1)
+
+                    loss = criterion(part[0], labels)
+                    for i in range(num_part-1):
+                        loss += criterion(part[i+1], labels)
+
+                &#47&#47 backward + optimize only if in training phase
+                if phase == &quottrain&quot:
+                    if fp16: &#47&#47 we use optimier to backward loss
+                        <a id="change">optimizer.backward(loss)</a>
+                    else:
+                        loss.backward()
+                    optimizer.step()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 backward + optimize only if in training phase
+                if phase == &quottrain&quot:
+                    if fp16: &#47&#47 we use optimier to backward loss
+                        <a id="change">with amp.scale_loss(loss, optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                   </a> else:
+                        loss.backward()
+                    optimizer.step()
+</code></pre><img src="25022857.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/4888cb7a5299f7eed9214ddc70871dc05ea0f4d2#diff-daf83987604b2fc2b5e24489ce9856f42ab1265ee61e58e7f31da1a264ae7c95L181' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: 4888cb7a5299f7eed9214ddc70871dc05ea0f4d2</div><div id='time'> Time: 2019-03-20</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: model/ft_ResNet50/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_model</div><BR><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/f51bfb537448ababe532baa81149261937a654fc#diff-daf83987604b2fc2b5e24489ce9856f42ab1265ee61e58e7f31da1a264ae7c95L181' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: f51bfb537448ababe532baa81149261937a654fc</div><div id='time'> Time: 2019-03-09</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: model/ft_ResNet50/train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_model</div><BR><BR><div id='link'><a href='https://github.com/layumi/Person_reID_baseline_pytorch/commit/8d57309574a957dd56e14bd9ed961542d34f1d04#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L181' target='_blank'>Link</a></div><div id='project'> Project Name: layumi/Person_reID_baseline_pytorch</div><div id='commit'> Commit Name: 8d57309574a957dd56e14bd9ed961542d34f1d04</div><div id='time'> Time: 2019-03-09</div><div id='author'> Author: zdzheng12@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train_model</div><BR>

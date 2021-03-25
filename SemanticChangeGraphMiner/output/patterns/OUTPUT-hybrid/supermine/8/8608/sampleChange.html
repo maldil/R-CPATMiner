@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 get u, v, key, geom from all the graph edges
+    gdf_edges = utils_graph.graph_to_gdfs(G, nodes=False, fill_edge_geometry=True)
+    <a id="change">edges = gdf_edges[["u", "v", "key", "geometry"]].values</a>
+
+    &#47&#47 convert lat,lng (y,x) point to x,y for shapely distance operation
+    xy_point = Point(reversed(point))
+
+    &#47&#47 calculate euclidean distance from each edge&quots geometry to this point
+    <a id="change">edge_distances = [(edge, xy_point.distance(edge[3])) for edge in edges]</a>
+
+    &#47&#47 the nearest edge minimizes the distance to the point
+    (u, v, key, geom), dist = min(edge_distances, key=lambda x: x[1])
+    utils.log(f"Found nearest edge ({u, v, key}) to point {point}")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 calculate euclidean distance from each edge&quots geometry to this point
+    gs_edges = utils_graph.graph_to_gdfs(G, nodes=False)["geometry"]
+    uvk_geoms = <a id="change">zip(gs_edges.index, gs_edges.values)</a>
+    distances = ((uvk, geom, xy_point.distance(geom)) for uvk, geom in uvk_geoms)
+
+    &#47&#47 the nearest edge minimizes the distance to the point
+    (u, v, key), geom, dist = min(distances, key=lambda x: x[2])</code></pre>

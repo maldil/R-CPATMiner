@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            r[j, 0:n_dim], seed = self._sobol(n_dim, seed)
+        if self.randomize:
+            return space.inverse_transform(_random_shift(r, random_state))
+        <a id="change">return space.inverse_transform(r)</a>
+
+    def _sobol(self, dim_num, seed):
+        Generates a new quasirandom Sobol vector with each call.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        rng = check_random_state(random_state)
+        space = Space(dimensions)
+        n_dim = space.n_dims
+        <a id="change">transformer = space.get_transformer()</a>
+        space.set_transformer("normalize")
+        r = np.full((n_samples, n_dim), np.nan)
+        if self.min_skip == self.max_skip:
+            seed = self.min_skip
+        else:
+            seed = rng.randint(self.min_skip, self.max_skip)
+        for j in range(n_samples):
+            r[j, 0:n_dim], seed = self._sobol(n_dim, seed)
+        if self.randomize:
+            r = space.inverse_transform(_random_shift(r, random_state))
+        <a id="change">r = space.inverse_transform(r)</a>
+        <a id="change">space.set_transformer(transformer)</a>
+        <a id="change">return r</a>
+
+    def _sobol(self, dim_num, seed):
+        Generates a new quasirandom Sobol vector with each call.
+</code></pre>

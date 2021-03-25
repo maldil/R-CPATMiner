@@ -1,0 +1,22 @@
+<html><h3>33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec,transformer/SubLayers.py,PositionwiseFeedForward,forward,#PositionwiseFeedForward#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, x):
+        residual = x
+        <a id="change">output</a> = <a id="change">F.relu(self.w_1(x.transpose(1, 2)))</a>
+        output = self.w_2(output).transpose(2, 1)
+        <a id="change">output</a> = self.dropout(output)
+        return self.layer_norm(output + residual)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def forward(self, x):
+        residual = x
+        output = x.transpose(1, 2)
+        <a id="change">output</a> = self.w_2(<a id="change">F.relu(self.w_1(output))</a>)
+        output = output.transpose(1, 2)
+        <a id="change">output</a> = self.dropout(output)
+        output = self.layer_norm(output + residual)
+        return output
+</code></pre><img src="1810139.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jadore801120/attention-is-all-you-need-pytorch/commit/33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec#diff-c2e6f2d92a3d68833db6c545e5d53b5f7850998e08effd9bfdd299a0a944d4d8L74' target='_blank'>Link</a></div><div id='project'> Project Name: jadore801120/attention-is-all-you-need-pytorch</div><div id='commit'> Commit Name: 33b341d1f8c6397b547f12ae2d5937bf5e2fd1ec</div><div id='time'> Time: 2018-08-22</div><div id='author'> Author: yhhuang@nlg.csie.ntu.edu.tw</div><div id='file'> File Name: transformer/SubLayers.py</div><div id='class'> Class Name: PositionwiseFeedForward</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/pytorch/examples/commit/d8dd8caeec861648813ae7b1112b3faf7f85a326#diff-78f568436f0215e79aa67be416d1bed4f6e36f9308b341fa406ee3bcff8ff0afL18' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/examples</div><div id='commit'> Commit Name: d8dd8caeec861648813ae7b1112b3faf7f85a326</div><div id='time'> Time: 2018-12-12</div><div id='author'> Author: 33121121+surgan12@users.noreply.github.com</div><div id='file'> File Name: mnist/main.py</div><div id='class'> Class Name: Net</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/xinntao/BasicSR/commit/2b38855e22530bab3e66dda77c4fc653c141c1d1#diff-9b2210ae27e62d86aab823e558a7e2c0fc27c87202c27cbff3d2155ba19098bfL54' target='_blank'>Link</a></div><div id='project'> Project Name: xinntao/BasicSR</div><div id='commit'> Commit Name: 2b38855e22530bab3e66dda77c4fc653c141c1d1</div><div id='time'> Time: 2018-06-11</div><div id='author'> Author: wxt1994@126.com</div><div id='file'> File Name: codes/models/modules/sft_arch.py</div><div id='class'> Class Name: ResBlock_SFT</div><div id='method'> Method Name: forward</div><BR>

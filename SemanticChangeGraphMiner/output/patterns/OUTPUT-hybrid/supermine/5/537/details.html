@@ -1,0 +1,47 @@
+<html><h3>31bfc7c1ce9dac771dbd5e2edf2d5e789d8b1aaa,evaluate.py,,from_pipe,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        read_input = True
+
+        while read_input:
+            <a id="change">for i in range(0, opts.batch_size):
+                raw_image = pipe_in.stdout.read(width * height * 3)
+
+                if len(raw_image) != nbytes:
+                    read_input = False
+                    break
+
+                image = numpy.fromstring(raw_image, dtype=&quotuint8&quot)
+                image = image.reshape((height, width, 3))
+                X[i] = image
+
+           </a> if read_input:
+                _preds = sess.run(preds, feed_dict={img_placeholder: X})
+
+                for i in range(0, opts.batch_size):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        while read_input:
+            count = 0
+            <a id="change">while count &lt; opts.batch_size:
+                raw_image = pipe_in.stdout.read(width * height * 3)
+
+                if len(raw_image) != nbytes:
+                    last = True
+                    X = X[:count]
+                    batch_shape = (count, height, width, 3)
+                    img_placeholder = tf.placeholder(tf.float32, shape=batch_shape,
+                                                     name=&quotimg_placeholder&quot)
+                    preds = transform.net(img_placeholder)
+                    break
+
+                image = numpy.fromstring(raw_image, dtype=&quotuint8&quot)
+                image = image.reshape((height, width, 3))
+                X[count] = image
+                count += 1
+
+           </a> if read_input:
+                if last:
+                    read_input = False
+                _preds = sess.run(preds, feed_dict={img_placeholder: X})</code></pre><img src="2269186.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/lengstrom/fast-style-transfer/commit/31bfc7c1ce9dac771dbd5e2edf2d5e789d8b1aaa#diff-24edcdcba3747a424b769b374189e8346f6c2f7bdb1e16d2d9ffbe9b926d45a7L26' target='_blank'>Link</a></div><div id='project'> Project Name: lengstrom/fast-style-transfer</div><div id='commit'> Commit Name: 31bfc7c1ce9dac771dbd5e2edf2d5e789d8b1aaa</div><div id='time'> Time: 2016-12-23</div><div id='author'> Author: jonathan.e.m.bocker@gmail.com</div><div id='file'> File Name: evaluate.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: from_pipe</div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/ml-on-gcp/commit/06b9fdb0079116af3e79021a4fb27a2caac1ad97#diff-d6894cae18df9bcaaa35b2fb68129be5abdc57a7c4ad93660fe8e264947b4919L263' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/ml-on-gcp</div><div id='commit'> Commit Name: 06b9fdb0079116af3e79021a4fb27a2caac1ad97</div><div id='time'> Time: 2018-01-24</div><div id='author'> Author: yuhanliu@google.com</div><div id='file'> File Name: sklearn/hpsearch/gke_parallel.py</div><div id='class'> Class Name: GKEParallel</div><div id='method'> Method Name: _partition_search_spaces</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b649cc365040d9cd63631c763d1c485dfe981399#diff-5b86956216e2540fe93140c9ea516d9c8e0128b81b963bf585456505e871c98dL38' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b649cc365040d9cd63631c763d1c485dfe981399</div><div id='time'> Time: 2020-05-11</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: experiments/working_npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_turnball_intervals</div><BR><BR><div id='link'><a href='https://github.com/dgasmith/opt_einsum/commit/49d861234d508dc89c477750f9d5aebbee7176e3#diff-9d7cf6d9b5ff330601d5f692a067cab7ec2cdf8a55c5ea95c49057ec42ff3242L72' target='_blank'>Link</a></div><div id='project'> Project Name: dgasmith/opt_einsum</div><div id='commit'> Commit Name: 49d861234d508dc89c477750f9d5aebbee7176e3</div><div id='time'> Time: 2018-06-19</div><div id='author'> Author: john.gray.14@ucl.ac.uk</div><div id='file'> File Name: opt_einsum/parser.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: gen_unused_symbols</div><BR>

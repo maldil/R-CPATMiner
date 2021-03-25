@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _require_file(self):
+        if not getattr(self, &quot_file&quot, None):
+            <a id="change">before_access.send(sender=self, file=self)</a>
+
+    def generate(self, force=False):
+        
+        Generate the file. If ``force`` is ``True``, the file will be generated</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def _require_file(self):
+        if not getattr(self, &quot_file&quot, None):
+            <a id="change">content_required.send(sender=self, file=self)</a>
+            self._file = self.storage.open(self.name, &quotrb&quot)
+
+    &#47&#47 The ``path`` and ``url`` properties are overridden so as to not call
+    &#47&#47 ``_require_file``, which is only meant to be called when the file object</code></pre>

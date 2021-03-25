@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.tt = torch.cuda if opt.cuda else torch
+
+        checkpoint = torch.load(opt.model)
+        <a id="change">self.model = checkpoint[&quotmodel&quot]</a>
+
+        self.model.eval()
+
+        if opt.cuda:
+            <a id="change">self.model.cuda()</a>
+        else:
+            self.model.cpu()
+
+        self.src_dict = checkpoint[&quotdicts&quot][&quotsrc&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+        decoder = onmt.Models.Decoder(model_opt, self.tgt_dict)
+        model = onmt.Models.NMTModel(encoder, decoder)
+
+        <a id="change">generator = nn.Sequential(
+            nn.Linear(model_opt.rnn_size, self.tgt_dict.size()),
+            nn.LogSoftmax())</a>
+
+        model.load_state_dict(checkpoint[&quotmodel&quot])
+        generator.load_state_dict(checkpoint[&quotgenerator&quot])
+</code></pre>

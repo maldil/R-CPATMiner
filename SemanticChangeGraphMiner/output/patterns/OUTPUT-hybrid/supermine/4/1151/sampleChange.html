@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def dump_ranker(ranker):
+
+    attribs = <a id="change">{&quot__class__&quot: pickle.dumps(ranker.__class__)}</a>
+    for key, val in ranker.__dict__.iteritems():
+        attribs[key] = make_serializable(val)
+    return msgpack.dumps(attribs)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def dump_ranker(ranker, work_dir):
+
+    fname = <a id="change">os.path.abspath(os.path.join(work_dir, &quotrdump.pickle&quot))</a>
+
+    with open(fname, &quotwb&quot) as fh:
+        pickle.dump(ranker, fh, protocol=pickle.HIGHEST_PROTOCOL)
+    return fname</code></pre>

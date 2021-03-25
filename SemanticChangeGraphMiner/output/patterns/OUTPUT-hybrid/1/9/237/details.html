@@ -1,0 +1,84 @@
+<html><h3>9001639a8d317bc069661222a56d5d216d872085,tests/test_mpc.py,,test_lqr_linear_unbounded,#,91
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dynamics = AffineDynamics(R[0,0], S[0,0], f[0,0])
+
+    u_lqr = None
+    x_lqr, u_lqr, objs_lqr = <a id="change">mpc.MPC(
+        n_state, n_ctrl, T, x_init, u_lower, u_upper, u_lqr,
+        lqr_iter=10,
+        backprop=False,
+        verbose=1,
+        exit_unconverged=False,
+    )(C, c, dynamics)</a>
+    tau_lqr = torch.cat((x_lqr, u_lqr), 2)
+    tau_lqr = util.get_data_maybe(tau_lqr)
+    npt.assert_allclose(tau_cp, tau_lqr[:,0].numpy(), rtol=1e-3)
+
+    u_lqr = None
+    x_lqr, u_lqr, objs_lqr = mpc.MPC(
+        n_state, n_ctrl, T, x_init, None, None, u_lqr,
+        lqr_iter=10,
+        backprop=False,
+        exit_unconverged=False,
+    )(C, <a id="change">c</a>, dynamics)
+    tau_lqr = torch.cat((x_lqr, u_lqr), 2)
+    tau_lqr = util.get_data_maybe(tau_lqr)
+    npt.assert_allclose(tau_cp, tau_lqr[:,0].numpy(), rtol=1e-3)</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_sc = n_state + n_ctrl
+    T = 5
+    C = npr.randn(T, n_batch, n_sc, n_sc)
+    <a id="change">C</a> = np.matmul(C.transpose(0, 1, 3, 2), C)
+    <a id="change">c</a> = npr.randn(T, n_batch, n_sc)
+    alpha = 0.2
+    R = np.tile(np.eye(n_state)+alpha*np.random.randn(n_state, n_state),
+                (T, n_batch, 1, 1))
+    S = np.tile(np.random.randn(n_state, n_ctrl), (T, n_batch, 1, 1))
+    F = np.concatenate((R, S), axis=3)
+    f = np.tile(npr.randn(n_state), (T, n_batch, 1))
+    x_init = npr.randn(n_batch, n_state)
+    &#47&#47 u_lower = -100.*npr.random((T, n_batch, n_ctrl))
+    &#47&#47 u_upper = 100.*npr.random((T, n_batch, n_ctrl))
+    u_lower = -1e4*np.ones((T, n_batch, n_ctrl))
+    u_upper = 1e4*np.ones((T, n_batch, n_ctrl))
+
+    tau_cp, objs_cp = lqr_cp(
+        C[:,0], c[:,0], F[:,0], f[:,0], x_init[0], T, n_state, n_ctrl,
+        None, None
+    )
+    tau_cp = tau_cp.T
+    x_cp = tau_cp[:,:n_state]
+    u_cp = tau_cp[:,n_state:]
+
+    C, c, R, S, F, f, x_init, u_lower, u_upper = [
+        Variable(torch.Tensor(x).double()) if x is not None else None
+        for x in [C, c, R, S, F, f, x_init, u_lower, u_upper]
+    ]
+
+    dynamics = AffineDynamics(R[0,0], S[0,0], f[0,0])
+
+    u_lqr = None
+    x_lqr, u_lqr, objs_lqr = mpc.MPC(
+        n_state, n_ctrl, T, u_lower, u_upper, u_lqr,
+        lqr_iter=10,
+        backprop=False,
+        verbose=1,
+        exit_unconverged=True,
+    )(x_init, <a id="change">QuadCost(C, c)</a>, dynamics)
+    tau_lqr = torch.cat((x_lqr, u_lqr), 2)
+    tau_lqr = util.get_data_maybe(tau_lqr)
+    npt.assert_allclose(tau_cp, tau_lqr[:,0].numpy(), rtol=1e-3)
+
+    u_lqr = None
+    x_lqr, u_lqr, objs_lqr = <a id="change">mpc.MPC(
+        n_state, n_ctrl, T, None, None, u_lqr,
+        lqr_iter=10,
+        backprop=False,
+        exit_unconverged=False,
+    )(x_init, QuadCost(C, c), dynamics)</a>
+    tau_lqr = torch.cat((x_lqr, u_lqr), 2)
+    tau_lqr = util.get_data_maybe(tau_lqr)
+    npt.assert_allclose(tau_cp, tau_lqr[:,0].numpy(), rtol=1e-3)
+</code></pre><img src="1382741.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/locuslab/mpc.pytorch/commit/9001639a8d317bc069661222a56d5d216d872085#diff-9ca9807e767525b687d40856476ff67bd4e04e951c246cd689fbc2634bd7858aL99' target='_blank'>Link</a></div><div id='project'> Project Name: locuslab/mpc.pytorch</div><div id='commit'> Commit Name: 9001639a8d317bc069661222a56d5d216d872085</div><div id='time'> Time: 2018-10-10</div><div id='author'> Author: bamos@cs.cmu.edu</div><div id='file'> File Name: tests/test_mpc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_lqr_linear_unbounded</div><BR><BR><div id='link'><a href='https://github.com/locuslab/mpc.pytorch/commit/9001639a8d317bc069661222a56d5d216d872085#diff-9ca9807e767525b687d40856476ff67bd4e04e951c246cd689fbc2634bd7858aL252' target='_blank'>Link</a></div><div id='project'> Project Name: locuslab/mpc.pytorch</div><div id='commit'> Commit Name: 9001639a8d317bc069661222a56d5d216d872085</div><div id='time'> Time: 2018-10-10</div><div id='author'> Author: bamos@cs.cmu.edu</div><div id='file'> File Name: tests/test_mpc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_lqr_cuda_singleton</div><BR><BR><div id='link'><a href='https://github.com/locuslab/mpc.pytorch/commit/9001639a8d317bc069661222a56d5d216d872085#diff-9ca9807e767525b687d40856476ff67bd4e04e951c246cd689fbc2634bd7858aL99' target='_blank'>Link</a></div><div id='project'> Project Name: locuslab/mpc.pytorch</div><div id='commit'> Commit Name: 9001639a8d317bc069661222a56d5d216d872085</div><div id='time'> Time: 2018-10-10</div><div id='author'> Author: bamos@cs.cmu.edu</div><div id='file'> File Name: tests/test_mpc.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_lqr_linear_unbounded</div><BR>

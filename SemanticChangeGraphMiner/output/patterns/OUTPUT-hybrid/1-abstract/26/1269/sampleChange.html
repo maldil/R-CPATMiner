@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 minimization starts from `n_restarts_optimizer` different
+                &#47&#47 points and the best minimum is used
+                elif self.acq_optimizer == "lbfgs":
+                    <a id="change">x0</a> = X[<a id="change">np.argsort(values)</a>]
+
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        <a id="change">results</a> = Parallel(n_jobs=self.n_jobs)(
+                            delayed(fmin_l_bfgs_b)(
+                                gaussian_acquisition_1D, x,
+                                args=(est, np.min(self.yi), cand_acq_func,
+                                      self.acq_func_kwargs),
+                                bounds=self.space.transformed_bounds,
+                                approx_grad=False,
+                                maxiter=20)
+                            for <a id="change">x</a> in x0)
+
+                    <a id="change">cand_xs</a> = np.array([r[0] for r in results])
+                    <a id="change">cand_acqs</a> = np.array([r[1] for r in results])
+                    <a id="change">next_x</a> = cand_xs[np.argmin(cand_acqs)]
+
+                &#47&#47 lbfgs should handle this but just in case there are
+                &#47&#47 precision errors.</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 minimization starts from `n_restarts_optimizer` different
+                &#47&#47 points and the best minimum is used
+                elif self.acq_optimizer == "lbfgs":
+                    <a id="change">x0</a> = X[<a id="change">np</a>.argsort(values)[:self.n_restarts_optimizer]]
+
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        <a id="change">results</a> = Parallel(n_jobs=self.n_jobs)(
+                            delayed(fmin_l_bfgs_b)(
+                                gaussian_acquisition_1D, x,
+                                args=(est, np.min(self.yi), cand_acq_func,
+                                      self.acq_func_kwargs),
+                                bounds=self.space.transformed_bounds,
+                                approx_grad=False,
+                                maxiter=20)
+                            for <a id="change">x</a> in x0)
+
+                    <a id="change">cand_xs</a> = np.array([r[0] for r in results])
+                    <a id="change">cand_acqs</a> = np.array([r[1] for r in results])
+                    <a id="change">next_x</a> = cand_xs[np.argmin(cand_acqs)]
+
+                &#47&#47 lbfgs should handle this but just in case there are
+                &#47&#47 precision errors.</code></pre>

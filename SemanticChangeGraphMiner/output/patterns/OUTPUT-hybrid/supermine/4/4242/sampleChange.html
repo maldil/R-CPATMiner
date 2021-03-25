@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        result (torch.Tensor):
+            The mrr score for each user.
+    
+    <a id="change">k = min(outputs.size(1), k)</a>
+    _, indices_for_sort = outputs.sort(descending=True, dim=-1)
+    true_sorted_by_preds = torch.gather(
+        targets, dim=-1, index=indices_for_sort
+    )</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    results = []
+    for k in topk:
+        results.append(<a id="change">torch.mean(reciprocal_rank(outputs, targets, k))</a>)
+
+    return results
+</code></pre>

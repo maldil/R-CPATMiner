@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    with open(filename, &quotr&quot) as f:
+        config = yaml.load(f.read())
+
+    <a id="change">org = config[&quotorg&quot]</a>
+    repository = config[&quotrepository&quot]
+    requires = config.get(&quotrequires&quot, [])
+    <a id="change">samples = config[&quotsamples&quot]</a>
+
+    with temp_clone(org, repository) as repo:
+        <a id="change">for sample_dict in samples:
+            sample_dict[&quotorg&quot] = org
+            sample_dict[&quotrepository&quot] = repository
+
+            &#47&#47 inherit from repo wide requirements
+            sample_dict.setdefault(&quotrequires&quot, []).extend(requires)
+
+            cmle_package = CMLEPackage(sample_dict, repo)
+
+            cmle_package.generate()</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    args = parser.parse_args()
+
+    <a id="change">main(args)</a>
+</code></pre>

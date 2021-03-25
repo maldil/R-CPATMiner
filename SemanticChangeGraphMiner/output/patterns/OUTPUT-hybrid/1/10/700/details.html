@@ -1,0 +1,25 @@
+<html><h3>299280acd16069ad8da403d06abdc9b9eca0ef3e,yarll/agents/ppo/ppo.py,PPO,train,#PPO#,151
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            new_log_prob = self.new_network.log_prob(actions_taken, new_logits)
+            old_log_prob = self.old_network.log_prob(actions_taken, old_logits)
+            mean_actor_loss = -tf.reduce_mean(self._actor_loss(old_log_prob, new_log_prob, advantages))
+            <a id="change">mean_critic_loss</a> = <a id="change">tf.reduce_mean(self._critic_loss(returns, values))</a>
+            loss = mean_actor_loss + self.config["vf_coef"] * mean_critic_loss - \
+                self.config["entropy_coef"] * tf.reduce_mean(self.new_network.entropy(new_logits))
+            <a id="change">gradients</a> = tape.gradient(loss, self.new_network.trainable_weights)
+        self.optimizer.apply_gradients(zip(gradients, self.new_network.trainable_weights))
+        return mean_actor_loss, mean_critic_loss, loss, tf.linalg.global_norm(gradients), old_log_prob, new_log_prob, new_logits
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            new_log_prob = self.new_network.log_prob(actions_taken, new_logits)
+            old_log_prob = self.old_network.log_prob(actions_taken, old_logits)
+            mean_actor_loss = -tf.reduce_mean(self._actor_loss(old_log_prob, new_log_prob, advantages))
+            <a id="change">mean_critic_loss</a> = .5 * <a id="change">tf.reduce_mean(self._critic_loss(returns, values))</a>
+            loss = mean_actor_loss + self.config["vf_coef"] * mean_critic_loss - \
+                self.config["entropy_coef"] * tf.reduce_mean(self.new_network.entropy(new_logits))
+            <a id="change">gradients</a> = tape.gradient(loss, self.new_network.trainable_weights)
+        self.optimizer.apply_gradients(zip(gradients, self.new_network.trainable_weights))
+        return mean_actor_loss, mean_critic_loss, loss, tf.linalg.global_norm(gradients), old_log_prob, new_log_prob, new_logits
+</code></pre><img src="3597078.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/arnomoonens/yarll/commit/299280acd16069ad8da403d06abdc9b9eca0ef3e#diff-b6ad861197e3ed50385bc08dbb9454faf358b1c1140c6a806c07997faf1551e6L165' target='_blank'>Link</a></div><div id='project'> Project Name: arnomoonens/yarll</div><div id='commit'> Commit Name: 299280acd16069ad8da403d06abdc9b9eca0ef3e</div><div id='time'> Time: 2020-01-14</div><div id='author'> Author: arno.moonens@gmail.com</div><div id='file'> File Name: yarll/agents/ppo/ppo.py</div><div id='class'> Class Name: PPO</div><div id='method'> Method Name: train</div><BR><BR><div id='link'><a href='https://github.com/zsdonghao/text-to-image/commit/664b64722c85374b0d4a971f7e35c8bdab39ec91#diff-a5e873fb522d181645d8f001843b18fb73aae8518939c9966c393785ec3428d1L380' target='_blank'>Link</a></div><div id='project'> Project Name: zsdonghao/text-to-image</div><div id='commit'> Commit Name: 664b64722c85374b0d4a971f7e35c8bdab39ec91</div><div id='time'> Time: 2017-02-03</div><div id='author'> Author: dhsig552@163.com</div><div id='file'> File Name: train_uim2im.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main_train_imageEncoder</div><BR><BR><div id='link'><a href='https://github.com/chris-chris/pysc2-examples/commit/48d178cfbb60e5b0004f63b2eca37b2449bb6c67#diff-b23290c5a5b8fd8a0e0b906a3bffc5ff6930e5dff2799638f9170c94d742e120L26' target='_blank'>Link</a></div><div id='project'> Project Name: chris-chris/pysc2-examples</div><div id='commit'> Commit Name: 48d178cfbb60e5b0004f63b2eca37b2449bb6c67</div><div id='time'> Time: 2017-10-31</div><div id='author'> Author: sjhshy@gmail.com</div><div id='file'> File Name: a2c/a2c.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/7a23a64585d61ffa74c02dc8ad69274b9a4ef08a#diff-502de4f089cc7cf14a774c1d10334c81a9e02ad20eebfd0a56859c8e11d50424L15' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 7a23a64585d61ffa74c02dc8ad69274b9a4ef08a</div><div id='time'> Time: 2020-01-26</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: examples/regression_offset_tensorflow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

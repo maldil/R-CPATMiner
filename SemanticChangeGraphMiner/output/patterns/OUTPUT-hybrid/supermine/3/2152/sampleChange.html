@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    a = []
+    for i, j in zip(lower_iter, upper_iter):
+        a.append(dask.array.from_delayed(
+            <a id="change">dask.delayed(_utils._read_frame)(fname, slice(i, j),
+                                             arrayfunc=arrayfunc)</a>,
+            (j - i,) + shape[1:],
+            dtype,
+            meta=arrayfunc([])</code></pre><h3>After Change</h3><pre><code class='java'>
+    a = dask.array.map_blocks(
+        _map_read_frame,
+        chunks=dask.array.core.normalize_chunks(
+            <a id="change">(nframes,)</a> + shape[1:], shape),
+        fn=fname,
+        arrayfunc=arrayfunc,
+        meta=arrayfunc([]).astype(dtype),  &#47&#47 meta overwrites `dtype` argument</code></pre>

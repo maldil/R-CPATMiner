@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    net = common.AtariA2C(envs[0].observation_space.shape, envs[0].action_space.n)
+    net_em = i2a.EnvironmentModel(envs[0].observation_space.shape, envs[0].action_space.n)
+    net.load_state_dict(torch.load(args.model, map_location=lambda storage, loc: storage))
+    <a id="change">if args.cuda:
+        net.cuda()
+        net_em.cuda()
+   </a> print(net_em)
+    optimizer = optim.Adam(net_em.parameters(), lr=LEARNING_RATE)
+
+    step_idx = 0
+    best_loss = np.inf
+    with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+        for mb_obs, mb_obs_next, mb_actions, mb_rewards, done_rewards, done_steps in iterate_batches(envs, net, cuda=args.cuda):
+            if len(done_rewards) &gt; 0:
+                m_reward = np.mean(done_rewards)
+                m_steps = np.mean(done_steps)
+                print("%d: done %d episodes, mean reward=%.2f, steps=%.2f" % (
+                    step_idx, len(done_rewards), m_reward, m_steps))
+                tb_tracker.track("total_reward", m_reward, step_idx)
+                tb_tracker.track("total_steps", m_steps, step_idx)
+
+            obs_v = Variable(torch.from_numpy(mb_obs))
+            obs_next_v = <a id="change">Variable(torch.from_numpy(mb_obs_next))</a>
+            actions_t = torch.LongTensor(mb_actions.tolist())
+            rewards_v = <a id="change">Variable(torch.from_numpy(mb_rewards))</a>
+            <a id="change">if args.cuda:
+                obs_v = obs_v.cuda()
+                actions_t = actions_t.cuda()
+                obs_next_v = obs_next_v.cuda()
+                rewards_v = rewards_v.cuda()
+
+           </a> optimizer.zero_grad()
+            out_obs_next_v, out_reward_v = net_em(obs_v.float()/255, actions_t)
+            loss_obs_v = F.mse_loss(out_obs_next_v, obs_next_v)
+            loss_rew_v = F.mse_loss(out_reward_v, rewards_v)</code></pre><h3>After Change</h3><pre><code class='java'>
+    parser.add_argument("-n", "--name", required=True, help="Name of the run")
+    parser.add_argument("-m", "--model", required=True, help="File with model to load")
+    args = parser.parse_args()
+    <a id="change">device = torch.device("cuda" if args.cuda else "cpu")</a>
+
+    saves_path = os.path.join("saves", "02_env_" + args.name)
+    os.makedirs(saves_path, exist_ok=True)
+
+    envs = [common.make_env() for _ in range(NUM_ENVS)]
+    writer = SummaryWriter(comment="-02_env_" + args.name)
+
+    net = common.AtariA2C(envs[0].observation_space.shape, envs[0].action_space.n)
+    <a id="change">net_em</a> = <a id="change">i2a.EnvironmentModel(envs[0].observation_space.shape, envs[0].action_space.n).to(device)</a>
+    net.load_state_dict(torch.load(args.model, map_location=lambda storage, loc: storage))
+    net = <a id="change">net.to(device)</a>
+    print(net_em)
+    optimizer = optim.Adam(net_em.parameters(), lr=LEARNING_RATE)
+
+    step_idx = 0
+    best_loss = np.inf
+    with ptan.common.utils.TBMeanTracker(writer, batch_size=100) as tb_tracker:
+        for mb_obs, mb_obs_next, mb_actions, mb_rewards, done_rewards, done_steps in iterate_batches(envs, net, <a id="change">device</a>):
+            if len(done_rewards) &gt; 0:
+                m_reward = np.mean(done_rewards)
+                m_steps = np.mean(done_steps)
+                print("%d: done %d episodes, mean reward=%.2f, steps=%.2f" % (
+                    step_idx, len(done_rewards), m_reward, m_steps))
+                tb_tracker.track("total_reward", m_reward, step_idx)
+                tb_tracker.track("total_steps", m_steps, step_idx)
+
+            obs_v = torch.FloatTensor(mb_obs).to(device)
+            obs_next_v = torch.FloatTensor(mb_obs_next).to(<a id="change">device</a>)
+            actions_t = torch.LongTensor(mb_actions.tolist()).to(<a id="change">device</a>)
+            rewards_v = torch.FloatTensor(mb_rewards).to(<a id="change">device</a>)
+
+            optimizer.zero_grad()
+            out_obs_next_v, out_reward_v = net_em(obs_v.float()/255, actions_t)</code></pre>

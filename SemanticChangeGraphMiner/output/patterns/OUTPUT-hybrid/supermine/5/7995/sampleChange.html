@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    Y_metadata_list.append(Y_metadata_i)
+
+                val = self.site_derivatives_ep(Y[index], tau[index], v[index], Y_metadata_i)
+                <a id="change">dlik_dtheta[:, index] = val.ravel()</a>
+
+            f = partial(self.integrate)
+            quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten())))
+            quads = np.vstack(quads)</code></pre><h3>After Change</h3><pre><code class='java'>
+                quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten()), Y_metadata_list))
+                quads = np.vstack(quads)
+                quads.reshape(self.size, shape[0], shape[1])
+            elif <a id="change">quad_mode</a> == &quotgh&quot:
+                f = partial(self.integrate_gh)
+                quads = zip(*map(f, Y.flatten(), mu.flatten(), np.sqrt(sigma2.flatten())))
+                quads = np.hstack(quads)
+                <a id="change">quads = quads.T</a>
+            else:
+                raise Exception("no other quadrature mode available")
+            &#47&#47     do a gaussian-hermite integration
+            dL_dtheta_avg = boost_grad * np.nanmean(quads, axis=1)</code></pre>

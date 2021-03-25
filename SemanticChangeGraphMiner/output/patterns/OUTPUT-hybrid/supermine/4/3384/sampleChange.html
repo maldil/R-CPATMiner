@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            images__in=pk_set,
+        ):
+            answer.calculate_score(instance.answer)
+            <a id="change">answer.save()</a>
+    else:
+        ground_truth = Answer.objects.filter(
+            question=instance.question,
+            is_ground_truth=True,</code></pre><h3>After Change</h3><pre><code class='java'>
+    if action != "post_add":
+        return
+    add_scores.apply_async(
+        kwargs=<a id="change">{
+            "instance_pk": str(instance.pk),
+            "pk_set": list(map(str, pk_set)),
+        }</a>
+    )
+</code></pre>

@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    signal = (signal - dc_offset) / (maximum - dc_offset)
+
+    num_samples = len(signal)  &#47&#47 total number of signals
+    <a id="change">cur_position = 0</a>
+    count_fr = 0
+    num_fft = int(window / 2)
+    chromogram = np.zeros((int((num_samples-step-window) / step), 12),
+                          dtype=np.float64)
+
+    <a id="change">while cur_position + window - 1 &lt; num_samples:
+        count_fr += 1
+        x = signal[cur_position:cur_position + window]
+        cur_position = cur_position + step
+        X = abs(fft(x))
+        X = X[0:num_fft]
+        X = X / len(X)
+        chroma_names, chroma_feature_matrix = chroma_features(X, sampling_rate,
+                                                              num_fft)
+        chroma_feature_matrix = chroma_feature_matrix[:, 0]
+        chromogram[count_fr-1, :] = chroma_feature_matrix.T
+   </a> freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    num_fft = int(window / 2)
+    chromogram = np.zeros((int((num_samples-step-window) / step) + 1, 12),
+                          dtype=np.float64)
+    <a id="change">for cur_p in tqdm(range(window, num_samples - step, step),
+                      disable=not show_progress):
+        count_fr += 1
+        x = signal[cur_p:cur_p + window]
+        X = abs(fft(x))
+        X = X[0:num_fft]
+        X = X / len(X)
+        chroma_names, chroma_feature_matrix = chroma_features(X, sampling_rate,
+                                                              num_fft)
+        chroma_feature_matrix = chroma_feature_matrix[:, 0]
+        chromogram[count_fr-1, :] = chroma_feature_matrix.T
+   </a> freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]
+</code></pre>

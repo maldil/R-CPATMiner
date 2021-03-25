@@ -1,0 +1,22 @@
+<html><h3>e22ec775fbde41968ca64ba2ed0e09e8f5cf687d,brian2/codegen/generators/GSL_generator.py,GSLCodeGenerator,write_dataholder,#GSLCodeGenerator#,75
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def write_dataholder_single(self, var_obj):
+        raise NotImplementedError
+    def write_dataholder(self, variables_in_vector):
+        <a id="change">raise NotImplementedError</a>
+    def to_replace_vector_vars(self, variables_in_vector, ignore=[]):
+        raise NotImplementedError
+    def unpack_namespace_single(self, var_obj, in_vector, in_scalar):
+        raise NotImplementedError</code></pre><h3>After Change</h3><pre><code class='java'>
+        code = [&quot\n&quot+self.declare(&quotstruct&quot, &quotdataholder&quot) + open_struct]
+        code += [&quot\n\t&quot+self.declare(&quotint&quot, &quot_idx&quot, in_struct=True) + end_statement]
+        for var_obj in variables_in_vector:
+            <a id="change">if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+           </a> code += [<a id="change">&quot\t&quot+self.write_dataholder_single(var_obj)</a>]
+        code += [end_struct]
+        return (&quot\n&quot).join(code)
+</code></pre><img src="24967804.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/e22ec775fbde41968ca64ba2ed0e09e8f5cf687d#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL76' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: e22ec775fbde41968ca64ba2ed0e09e8f5cf687d</div><div id='time'> Time: 2017-07-10</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/e22ec775fbde41968ca64ba2ed0e09e8f5cf687d#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL78' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: e22ec775fbde41968ca64ba2ed0e09e8f5cf687d</div><div id='time'> Time: 2017-07-10</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: to_replace_vector_vars</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/670b85c9e9cec05210e8596bc1fb9ca66787162f#diff-fea489154c629a45ec01030d191f20465e809124a24260ac35fb884bc855140fL345' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: 670b85c9e9cec05210e8596bc1fb9ca66787162f</div><div id='time'> Time: 2020-04-19</div><div id='author'> Author: 50599110+lrjball@users.noreply.github.com</div><div id='file'> File Name: sklearn/compose/_column_transformer.py</div><div id='class'> Class Name: ColumnTransformer</div><div id='method'> Method Name: get_feature_names</div><BR>

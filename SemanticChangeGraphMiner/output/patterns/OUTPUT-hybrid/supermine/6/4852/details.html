@@ -1,0 +1,24 @@
+<html><h3>4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9,train.py,,,#,56
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+vgg = nn.Sequential(*list(vgg.children())[:31])
+network = net.Net(vgg, decoder)
+
+<a id="change">for name in [&quotenc_1&quot, &quotenc_2&quot, &quotenc_3&quot, &quotenc_4&quot]:
+    for param in getattr(network, name).parameters():
+        param.requires_grad = False
+</a>network.train()
+network.cuda()
+
+content_tf = train_transform()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    if (i + 1) % args.save_model_interval == 0 or (i + 1) == args.max_iter:
+        state_dict = net.decoder.state_dict()
+        <a id="change">for key in state_dict.keys():
+            state_dict[key] = state_dict[key].to(torch.device(&quotcpu&quot))
+       </a> torch.save(state_dict,
+                   &quot{:s}/decoder_iter_{:d}.pth.tar&quot.format(args.save_dir,
+                                                           i + 1))
+writer.close()</code></pre><img src="20740616.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/naoto0804/pytorch-AdaIN/commit/4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L56' target='_blank'>Link</a></div><div id='project'> Project Name: naoto0804/pytorch-AdaIN</div><div id='commit'> Commit Name: 4a5eef64d2a0ab5e1737ffbb345d9e72d2f1adc9</div><div id='time'> Time: 2018-05-16</div><div id='author'> Author: inoue@hal.t.u-tokyo.ac.jp</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/cve-search/cve-search/commit/10f98f742e47df11d47aa746699a009b6c6cb85b#diff-4cab359cdead89b6a8860fa5129a7d507c066d50d4553beb632af7f1bd68f0abL37' target='_blank'>Link</a></div><div id='project'> Project Name: cve-search/cve-search</div><div id='commit'> Commit Name: 10f98f742e47df11d47aa746699a009b6c6cb85b</div><div id='time'> Time: 2013-04-01</div><div id='author'> Author: a@foo.be</div><div id='file'> File Name: search_fulltext.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/automl/ParameterImportance/commit/b8fb87ecd382c603f01fa126f1c0ad7ca141e47a#diff-379179bc5131dfa8ada9c31712acf1696626f9021cda2ecab3eac41be5085895L164' target='_blank'>Link</a></div><div id='project'> Project Name: automl/ParameterImportance</div><div id='commit'> Commit Name: b8fb87ecd382c603f01fa126f1c0ad7ca141e47a</div><div id='time'> Time: 2018-11-19</div><div id='author'> Author: shukon@users.noreply.github.com</div><div id='file'> File Name: pimp/evaluator/local_parameter_importance.py</div><div id='class'> Class Name: LPI</div><div id='method'> Method Name: run</div><BR>

@@ -1,0 +1,28 @@
+<html><h3>32c7b798be930eb48ed052bd3254cbe4310b87f6,mvpa2/datasets/sources/openfmri.py,OpenFMRIDataset,get_bold_run_ids,#OpenFMRIDataset#,113
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        ids = []
+        task_prefix = _prefix(&quottask&quot, task)
+        bold_dir = _opj(self._basedir, _sub2id(subj), &quotBOLD&quot)
+        <a id="change">if not os.path.exists(bold_dir):
+            return ids
+       </a> for item in os.listdir(bold_dir):
+            <a id="change">if item.startswith(&quot%s_&quot % (task_prefix,)) \
+               and os.path.isdir(_opj(bold_dir, item)):
+                ids.append(_id2int(item, strip=len(task_prefix) + 4))
+       </a> return sorted(ids)
+
+    def get_task_bold_run_ids(self, task):
+        Return a dictionary with run IDs by subjects for a given task</code></pre><h3>After Change</h3><pre><code class='java'>
+          Run ID
+        
+        task_prefix = _prefix(&quottask&quot, task)
+        <a id="change">return _subdirs2ids(_opj(self._basedir, _sub2id(subj), &quotBOLD&quot),
+                            &quot%s_&quot % (task_prefix,),
+                            strip=len(task_prefix) + 4)</a>
+
+    def get_task_bold_run_ids(self, task):
+        Return a dictionary with run IDs by subjects for a given task
+</code></pre><img src="10422714.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PyMVPA/PyMVPA/commit/32c7b798be930eb48ed052bd3254cbe4310b87f6#diff-48ee0d653561a846f4fd6a81d394d98cc2c7e9703259da968292c4338d128432L126' target='_blank'>Link</a></div><div id='project'> Project Name: PyMVPA/PyMVPA</div><div id='commit'> Commit Name: 32c7b798be930eb48ed052bd3254cbe4310b87f6</div><div id='time'> Time: 2014-10-30</div><div id='author'> Author: michael.hanke@gmail.com</div><div id='file'> File Name: mvpa2/datasets/sources/openfmri.py</div><div id='class'> Class Name: OpenFMRIDataset</div><div id='method'> Method Name: get_bold_run_ids</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/hub/commit/6ea7bb25fe15a53b69245d2785b3efd064963ebc#diff-128be26741754943cb2d4a8f48cf5a231ff7e1b0b7f6439b70ea0666c5c4423fL187' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/hub</div><div id='commit'> Commit Name: 6ea7bb25fe15a53b69245d2785b3efd064963ebc</div><div id='time'> Time: 2020-09-24</div><div id='author'> Author: no-reply@google.com</div><div id='file'> File Name: tensorflow_hub/resolver.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _merge_relative_path</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/cecdbf1749ea34f7b39e244a6ebf662cef6a5009#diff-19baff8c35cc355a1476fb2911e1c37a69e6427d8a84f47e5e8f4fcf51e3f16fL17' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: cecdbf1749ea34f7b39e244a6ebf662cef6a5009</div><div id='time'> Time: 2020-01-04</div><div id='author'> Author: ines@ines.io</div><div id='file'> File Name: thinc/layers/chain.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: chain</div><BR>

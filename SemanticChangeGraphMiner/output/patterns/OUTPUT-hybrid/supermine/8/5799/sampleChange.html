@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    mock = Mock()
+    mock.side_effect = lambda study, trial, param_name, distribution: distribution.low
+    with patch.object(sampler, "sample_independent", mock) as mock_object:
+        <a id="change">study = create_study(storage_init_func(), sampler=sampler)</a>
+        trial = Trial(study, study._storage.create_new_trial(study._study_id))
+
+        with pytest.warns(UserWarning):
+            x = trial.suggest_discrete_uniform(</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Check upper endpoints.
+    mock = Mock()
+    mock.side_effect = lambda study, trial, param_name, distribution: distribution.high
+    with patch.object(sampler, "sample_independent", mock) as mock_object, <a id="change">StorageSupplier(
+        storage_mode
+    )</a> as storage:
+        <a id="change">study = create_study(storage=storage, sampler=sampler)</a>
+        trial = Trial(study, study._storage.create_new_trial(study._study_id))
+
+        with pytest.warns(UserWarning):
+            x = trial.suggest_discrete_uniform(</code></pre>

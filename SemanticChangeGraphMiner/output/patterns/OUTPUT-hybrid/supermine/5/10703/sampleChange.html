@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                &#47&#47 shape: ([batch, len], ..., [batch, len])
+                references = [item.tolist() for item in feats["references"]]
+
+                <a id="change">all_outputs.extend(outputs)</a>
+
+                for i in range(len(refs)):
+                    all_refs[i].extend(references[i])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                &#47&#47 A list of numpy array with shape: [batch, len]
+                outputs = sess.run(op, feed_dict=feed_dict)
+
+                <a id="change">for shard in outputs:
+                    all_outputs.extend(shard.tolist())
+
+                &#47&#47 shape: ([batch, len], ..., [batch, len])
+               </a> references = [item.tolist() for item in feats["references"]]
+
+                for i in range(len(refs)):
+                    all_refs[i].extend(references[i])</code></pre>

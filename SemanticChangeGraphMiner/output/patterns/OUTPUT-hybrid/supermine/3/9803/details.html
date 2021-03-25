@@ -1,0 +1,30 @@
+<html><h3>db073909d05ae6f91b7abd8d6251bfa247349447,qucumber/utils/cplx.py,,conjugate,#,226
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    :rtype: torch.Tensor
+    
+    if x.dim() == 1 or x.dim() == 2:
+        z = <a id="change">torch.zeros_like(x)</a>
+        z[0] = x[0]
+        z[1] = -x[1]
+
+    if x.dim() == 3:
+        z = torch.zeros(2, x.size()[2], x.size()[1], dtype=x.dtype, device=x.device)
+        z[0] = torch.transpose(x[0], 0, 1)
+        z[1] = -torch.transpose(x[1], 0, 1)
+
+    <a id="change">return z</a>
+
+
+def elementwise_mult(x, y):
+    Alias for :func:`scalar_mult`.</code></pre><h3>After Change</h3><pre><code class='java'>
+    :rtype: torch.Tensor
+    
+    if x.dim() &lt; 3:
+        <a id="change">return conj(x)</a>
+    else:
+        return make_complex(
+            torch.transpose(real(x), 0, 1), -torch.transpose(imag(x), 0, 1)
+        )</code></pre><img src="37442047.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/db073909d05ae6f91b7abd8d6251bfa247349447#diff-74eb531a10f330abf5a92ad9cda010611aaff2c957bb86f7344267caeeaf2142L235' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: db073909d05ae6f91b7abd8d6251bfa247349447</div><div id='time'> Time: 2019-12-31</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/cplx.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: conjugate</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c6e83948f53bcd5d77b1714b691bbd74d12da613#diff-6544c02c950db19ffbd256de4e1475afb15d5ab09c0170f072e33fcae72c7ca8L24' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c6e83948f53bcd5d77b1714b691bbd74d12da613</div><div id='time'> Time: 2020-01-19</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/initializers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: zero_init</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/317eef33f8d8a0c9c8e291c4c123f39f543201f8#diff-becb67f34b5d5f2bc63a4914814cfa89cf39d63922b99ecfdde0bae5d5975cbcL40' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 317eef33f8d8a0c9c8e291c4c123f39f543201f8</div><div id='time'> Time: 2015-04-30</div><div id='author'> Author: alan.daniel.saul@gmail.com</div><div id='file'> File Name: GPy/mappings/constant.py</div><div id='class'> Class Name: Constant</div><div id='method'> Method Name: gradients_X</div><BR>

@@ -1,0 +1,34 @@
+<html><h3>783c109c591c6a3affc750d29c9d56f86c1ed6cb,dask_image/ndmeasure/_utils.py,,_ravel_shape_indices,#,53
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Gets the raveled indices shaped like input.
+    
+
+    indices = <a id="change">sum([
+        dask.array.arange(
+            0,
+            numpy.prod(dimensions[i:], dtype=dtype),
+            numpy.prod(dimensions[i + 1:], dtype=dtype),
+            dtype=dtype,
+            chunks=c
+        )[i * (None,) + (slice(None),) + (len(dimensions) - i - 1) * (None,)]
+        for i, c in enumerate(chunks)
+    ])</a>
+
+    return indices
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for i, c in enumerate(chunks)
+    ]
+
+    <a id="change">indices = dask.array.atop(
+        _ravel_shape_indices_kernel, tuple(range(len(indices))),
+        *sum([(a, (i,)) for i, a in enumerate(indices)], tuple()),
+        dtype=dtype
+    )</a>
+
+    return indices
+
+</code></pre><img src="12679875.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/783c109c591c6a3affc750d29c9d56f86c1ed6cb#diff-60a374c703dcf39413713f8dd108028587228bb7e3205616d19a8734f40bc05aL58' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: 783c109c591c6a3affc750d29c9d56f86c1ed6cb</div><div id='time'> Time: 2018-09-29</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _ravel_shape_indices</div><BR><BR><div id='link'><a href='https://github.com/deepmind/ai-safety-gridworlds/commit/c43cb31143431421b5d2b661a2458efb301da9a3#diff-ac81bb96218cdbf9f05cf438fc8d532b23df4d3fc121a39ab9c58b2973eeca19L223' target='_blank'>Link</a></div><div id='project'> Project Name: deepmind/ai-safety-gridworlds</div><div id='commit'> Commit Name: c43cb31143431421b5d2b661a2458efb301da9a3</div><div id='time'> Time: 2020-10-13</div><div id='author'> Author: miljanm@google.com</div><div id='file'> File Name: ai_safety_gridworlds/environments/side_effects_sokoban.py</div><div id='class'> Class Name: BoxSprite</div><div id='method'> Method Name: _calculate_wall_penalty</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-YOLOv3/commit/012daf57ac31d82366323e7ec27ab7c2cb678a09#diff-09d0cbaf891d623ac245ccf84485a687b554217349ca55557c60b33234b969aeL49' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-YOLOv3</div><div id='commit'> Commit Name: 012daf57ac31d82366323e7ec27ab7c2cb678a09</div><div id='time'> Time: 2018-05-27</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: non_max_suppression</div><BR>

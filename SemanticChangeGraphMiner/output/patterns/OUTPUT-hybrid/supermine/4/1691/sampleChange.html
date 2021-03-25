@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    sql = sql.replace(&quot HAVING &quot, &quot\nHAVING\n\t&quot)
+    sql = sql.replace(&quot GROUP BY &quot, &quot\nGROUP BY\n\t&quot)
+    &#47&#47 Use Pygments to highlight SQL if it&quots available
+    <a id="change">try:
+        from pygments import highlight
+        from pygments.lexers import SqlLexer
+        from pygments.formatters import HtmlFormatter
+        sql = highlight(sql, SqlLexer(), HtmlFormatter())
+    except ImportError:
+        pass
+   </a> return sql
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def reformat_sql(sql):
+    for kwd in SQL_KEYWORDS:
+        <a id="change">sql = sql.replace(kwd, &quot&lt;strong&gt;%s&lt;/strong&gt;&quot % (kwd,))</a>
+    return sql
+
+</code></pre>

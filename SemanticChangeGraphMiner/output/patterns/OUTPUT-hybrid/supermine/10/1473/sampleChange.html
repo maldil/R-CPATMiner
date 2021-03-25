@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def forward(self, xyz, points=None):
+        xyz = xyz.contiguous()
+        points = <a id="change">(
+            points.transpose(1, 2).contiguous() if points is not None else None
+        )</a>
+        for module in self.SA_modules:
+            xyz, points = module(xyz, points)
+
+        return self.FC_layer(points.squeeze(-1))</code></pre><h3>After Change</h3><pre><code class='java'>
+                Each point in the point-cloud MUST
+                be formated as (x, y, z, features...)
+        
+        <a id="change">xyz, features = self._break_up_pc(pointcloud)</a>
+
+        for module in self.SA_modules:
+            xyz, features = module(xyz, features)
+</code></pre>

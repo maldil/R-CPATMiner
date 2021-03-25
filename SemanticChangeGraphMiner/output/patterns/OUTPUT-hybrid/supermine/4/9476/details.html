@@ -1,0 +1,25 @@
+<html><h3>e7d5e460cd9ca70ed8e455ff7d4c00d93a1034fa,tf_unet/unet.py,Trainer,store_prediction,#Trainer#,256
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        img = util.combine_img_prediction(batch_x, batch_y, prediction)
+        util.save_image(img, "%s/%s.jpg"%(self.prediction_path, name))
+        
+        <a id="change">return prediction.shape</a>
+    
+    def output_epoch_stats(self, epoch, total_loss, training_iters, lr):
+        print("Epoch {:}, Average loss: {:.4f}, learning rate: {:.4f}".format(epoch, (total_loss / training_iters), lr))
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        prediction = sess.run(self.net.predicter, feed_dict={self.net.x: batch_x, 
+                                                             self.net.y: batch_y, 
+                                                             self.net.keep_prob: 1.})
+        <a id="change">pred_shape = prediction.shape</a>
+        
+        <a id="change">loss = sess.run(self.net.cost, feed_dict={self.net.x: batch_x, 
+                                                       self.net.y: util.crop_to_shape(batch_y, pred_shape), 
+                                                       self.net.keep_prob: 1.})</a>
+        
+        print("Prediction error= {:.1f}%, loss= {:.4f}".format(error_rate(prediction,
+                                                                          util.crop_to_shape(batch_y,
+                                                                                             prediction.shape)),</code></pre><img src="36214978.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/e7d5e460cd9ca70ed8e455ff7d4c00d93a1034fa#diff-dd4be45cc8adc20e362fabdc84b061f1c12eb4e22dd892bf26d67b5ed2a9afc0L258' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: e7d5e460cd9ca70ed8e455ff7d4c00d93a1034fa</div><div id='time'> Time: 2016-08-22</div><div id='author'> Author: jakeret@phys.ethz.ch</div><div id='file'> File Name: tf_unet/unet.py</div><div id='class'> Class Name: Trainer</div><div id='method'> Method Name: store_prediction</div><BR><BR><div id='link'><a href='https://github.com/openai/pixel-cnn/commit/420747a2f5f6f23b84f62f9a00481ef53a4a4623#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L83' target='_blank'>Link</a></div><div id='project'> Project Name: openai/pixel-cnn</div><div id='commit'> Commit Name: 420747a2f5f6f23b84f62f9a00481ef53a4a4623</div><div id='time'> Time: 2016-11-11</div><div id='author'> Author: tim@Tims-MacBook-Pro.local</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_from_model</div><BR><BR><div id='link'><a href='https://github.com/hassony2/kinetics_i3d_pytorch/commit/f8715d27e2efdb0800d1265eb1383f0a99296732#diff-e7f961ae197c2ac2a98708ea583f20aca5222221f26590c86a766b53918ce287L215' target='_blank'>Link</a></div><div id='project'> Project Name: hassony2/kinetics_i3d_pytorch</div><div id='commit'> Commit Name: f8715d27e2efdb0800d1265eb1383f0a99296732</div><div id='time'> Time: 2017-11-25</div><div id='author'> Author: yana.hasson@inria.fr</div><div id='file'> File Name: src/i3nception.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_conv_params</div><BR>

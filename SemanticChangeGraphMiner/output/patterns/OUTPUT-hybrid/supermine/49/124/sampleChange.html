@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def connect(self, inputs):
+        &#47&#47 swap dimensions (we are going to max-pool over the sentence/DA, not over embedding
+        &#47&#47 dimensions) + pad one more dimension that we won&quott use
+        <a id="change">input_padded = T.shape_padright(inputs.dimshuffle(1, 0), 1)</a>
+        &#47&#47 do the max-pooling
+        <a id="change">pooled = downsample.max_pool_2d(input_padded, (self.downscale_factor, 1), self.ignore_border)</a>
+        &#47&#47 remove the padded dimension + swap dimensions back
+        <a id="change">output = pooled[:, :, 0].dimshuffle(1, 0)</a>
+        self.inputs.append(inputs)
+        self.outputs.append(output)
+        return output
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.params = []  &#47&#47 no parameters here
+
+    def connect(<a id="change">self</a>, inputs):
+        <a id="change">if self.stride &gt; 1:
+            output = T.max(T.reshape(inputs,
+                                     (inputs.shape[0] / self.stride,
+                                      inputs.shape[1] * self.stride)),
+                           axis=0)
+        else:
+            output = T.max(inputs, axis=0)
+       </a> self.inputs.append(inputs)
+        self.outputs.append(output)
+        return output
+</code></pre>

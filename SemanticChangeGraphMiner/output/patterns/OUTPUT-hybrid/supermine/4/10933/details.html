@@ -1,0 +1,22 @@
+<html><h3>9c90d0a3c85e6ce7b81df471c8e150d025058832,rdkit_fixer.py,,PreparePDBMol,#,131
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 HACK: remove not-visited bonds
+    if visited_bonds:  &#47&#47 probably we dont want to delete all
+        new_mol = Chem.RWMol(new_mol)
+        <a id="change">all_bonds = set(range(new_mol.GetNumBonds()))</a>
+        visited_bonds = set(visited_bonds)
+        for bid in sorted(all_bonds.difference(visited_bonds), reverse=True):
+            bond = new_mol.GetBondWithIdx(bid)
+            a1 = bond.GetBeginAtom()</code></pre><h3>After Change</h3><pre><code class='java'>
+        visited_bonds = set(visited_bonds)
+        for a1_ix, a2_ix in product(range(new_mol.GetNumAtoms()), repeat=2):
+            bond = new_mol.GetBondBetweenAtoms(a1_ix, a2_ix)
+            <a id="change">if bond is None or (a1_ix, a2_ix) in visited_bonds or (a1_ix, a2_ix) in visited_bonds:
+                continue
+           </a> a1 = new_mol.GetAtomWithIdx(a1_ix)
+            a2 = new_mol.GetAtomWithIdx(a2_ix)
+            a1_num = a1.GetPDBResidueInfo().GetResidueNumber()
+            a2_num = a2.GetPDBResidueInfo().GetResidueNumber()</code></pre><img src="39674303.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/oddt/oddt/commit/9c90d0a3c85e6ce7b81df471c8e150d025058832#diff-8cb7bf93dbd19ee29c5419454d313981bb4ac4b7c10ed679e2f2e46f73f63d67L230' target='_blank'>Link</a></div><div id='project'> Project Name: oddt/oddt</div><div id='commit'> Commit Name: 9c90d0a3c85e6ce7b81df471c8e150d025058832</div><div id='time'> Time: 2018-05-17</div><div id='author'> Author: maciek@wojcikowski.pl</div><div id='file'> File Name: rdkit_fixer.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: PreparePDBMol</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/5a53f60e5143ab6f416437dadddd2f1df133a247#diff-1d1bdd3af3be50dfab7a45a35a9332975e659c7edc35984cc860e038f9933777L100' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 5a53f60e5143ab6f416437dadddd2f1df133a247</div><div id='time'> Time: 2015-04-07</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/models/JunctionTree.py</div><div id='class'> Class Name: JunctionTree</div><div id='method'> Method Name: add_edge</div><BR><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa#diff-e9d887c7e23b65b06d2bcd24b5dc0636d14bcdd5a84297d1c7909dd2dc71214dL23' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/lda.py</div><div id='class'> Class Name: SHOGUN_LDA</div><div id='method'> Method Name: __init__</div><BR>

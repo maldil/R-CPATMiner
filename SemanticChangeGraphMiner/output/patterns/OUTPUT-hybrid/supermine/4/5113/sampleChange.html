@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.build()
+
+    def build(self):
+        <a id="change">self.padding_module</a> = <a id="change">ReflectionPad2d(self.pad_size)</a>
+
+    def __call__(self, x):
+        if not self.pre_pad:
+            x = self.padding_module(x)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if pad_size_tmp[2] == self.input_size[1]:
+            pad_size_tmp[2] -= 1
+            pad_size_tmp[3] -= 1
+        <a id="change">self.padding_module</a> = <a id="change">ReflectionPad2d(pad_size_tmp)</a>
+
+    def __call__(self, x):
+        if not self.pre_pad:
+            x = self.padding_module(x)</code></pre>

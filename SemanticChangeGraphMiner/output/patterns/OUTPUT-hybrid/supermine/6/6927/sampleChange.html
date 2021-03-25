@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        features += meta
+        paths += meta_paths
+
+        <a id="change">streams = (pickle.dumps(self[feat], protocol=pickle.HIGHEST_PROTOCOL) for feat in features)</a>
+
+        s3client = boto3.client(&quots3&quot) if s3client is None else s3client
+        for stream, path in zip(streams, paths):
+            s3client.put_object(Bucket=bucket_name, Key=path, Body=stream)</code></pre><h3>After Change</h3><pre><code class='java'>
+        for (ftype, fname), path in zip(ftrs, paths):
+            data = self[(ftype, fname)]
+            if ftype is FeatureType.BBOX:
+                data = tuple(data) + <a id="change">(int(data.crs.value),)</a>
+
+            <a id="change">stream = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)</a>
+            s3client.put_object(Bucket=bucket_name, Key=path, Body=stream)
+
+    def _get_save_file_list(self, path, tmp_path, features, file_format, compress_level):
+         Creates a list of _FileSaver classes for each feature which will have to be saved</code></pre>

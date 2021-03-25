@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        n_samples = X.shape[0]
+        groups, _ = check_groups(X, self.prot_attr_)
+        le = LabelEncoder().fit(self.groups_)
+        <a id="change">groups = le.transform(groups)</a>
+
+        samples_covered = 0
+        scores = np.empty((n_samples, len(self.classes_)))
+        while samples_covered &lt; n_samples:
+            start = samples_covered
+            end = samples_covered + self.batch_size
+            if end &gt; n_samples:
+                end = n_samples
+
+            batch_ids = np.arange(start, end)
+            batch_features = X[batch_ids]
+            batch_prot_attr = <a id="change">groups[batch_ids]</a>
+
+            batch_feed_dict = {self.input_ph: batch_features,
+                               self.keep_prob: 1.0}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                              feed_dict=batch_feed_dict)
+            samples_covered += len(batch_features)
+
+        return <a id="change">scores.ravel()</a> if scores.shape[1] == 1 else scores
+
+    def predict_proba(self, X):
+        decision = self.decision_function(X)</code></pre>

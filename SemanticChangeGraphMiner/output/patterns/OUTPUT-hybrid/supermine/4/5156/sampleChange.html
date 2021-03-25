@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            print(model + other)
+            &#47&#47 Raises TypeError --- binding limited to scope of with block.
+        
+        <a id="change">old_ops = dict(cls._operators)</a>
+        for op, func in operators.items():
+            cls._operators[op] = func
+        yield
+        cls._operators = old_ops</code></pre><h3>After Change</h3><pre><code class='java'>
+            print(model + other)
+            &#47&#47 Raises TypeError --- binding limited to scope of with block.
+        
+        curr_operators = dict(getattr(cls._thread_local, "operators", <a id="change">{}</a>))
+        cls._thread_local.operators = dict(operators)
+        yield
+        <a id="change">cls._thread_local.operators = dict(curr_operators)</a>
+
+    @classmethod
+    @contextlib.contextmanager
+    def use_device(cls, device):</code></pre>

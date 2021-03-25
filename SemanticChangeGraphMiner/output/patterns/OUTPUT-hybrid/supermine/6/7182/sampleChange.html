@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    label_index_dict = {}
+    for s in final_model.species:
+        if s.label not in label_index_dict:
+            <a id="change">label_index_dict[s.label] = [s.index]</a>
+        else:
+            if s.index in label_index_dict[s.label]:
+                &#47&#47 obtained a duplicate
+                <a id="change">s.index = max(label_index_dict[s.label]) + 1</a>
+                print(<a id="change">"Reindexed {0} due to dublicate labels and index".format(s.label)</a>)
+            label_index_dict[s.label].append(s.index)
+
+    return final_model</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 reindex the unique species (to avoid name conflicts on save)
+    speciesIndex = 0
+    for spec in final_model.species:
+        if <a id="change">spec.label not in [&quotAr&quot, &quotN2&quot, &quotNe&quot, &quotHe&quot]</a>:
+            spec.index = speciesIndex + 1
+            speciesIndex += 1
+</code></pre>

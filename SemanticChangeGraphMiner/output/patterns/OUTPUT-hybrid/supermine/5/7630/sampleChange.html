@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            self.__model.eval()
+
+            <a id="change">text = [[self.__text_field.vocab.stoi[x] for x in text]]</a>
+            x = Variable(torch.tensor(text))
+            x = x.cuda() if self.cuda and torch.cuda.is_available() else x
+            _, predicted = torch.max(self.__model(x), 1)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return y_output
+
+    def predict(self, X):
+        <a id="change">y_pred = [torch.argmax(yi, 1) for yi in self.__predict(X)]</a>
+        return [self.__label_field.vocab.itos[yi.data[0] + 1] for yi in y_pred]
+
+    def predict_proba(self, X):
+        softmax = nn.Softmax(dim=1)</code></pre>

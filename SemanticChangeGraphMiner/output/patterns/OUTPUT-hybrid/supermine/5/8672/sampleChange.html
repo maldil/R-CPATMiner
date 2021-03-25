@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                x = module(x)
+            elif module_def["type"] == "route":
+                layer_i = [int(x) for x in module_def["layers"].split(",")]
+                <a id="change">x = torch.cat([layer_outputs[i] for i in layer_i], 1)</a>
+            elif module_def["type"] == "shortcut":
+                layer_i = int(module_def["from"])
+                x = layer_outputs[-1] + layer_outputs[layer_i]
+            elif module_def["type"] == "yolo":</code></pre><h3>After Change</h3><pre><code class='java'>
+            if module_def["type"] in ["convolutional", "upsample", "maxpool"]:
+                x = module(x)
+            elif module_def["type"] == "route":
+                x = <a id="change">torch.cat([layer_outputs[int(layer_i)] for layer_i in module_def["layers"].split(",")], 1)</a>
+            elif module_def["type"] == "shortcut":
+                layer_i = int(module_def["from"])
+                x = layer_outputs[-1] + layer_outputs[layer_i]
+            elif module_def["type"] == "yolo":</code></pre>

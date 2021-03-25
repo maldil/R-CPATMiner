@@ -1,0 +1,41 @@
+<html><h3>cb266bbe1ce215ec56cc54ee009ea3a2a055b6d8,superintendent/semisupervisor.py,SemiSupervisor,_annotation_iterator,#SemiSupervisor#,102
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def _annotation_iterator(self, relabel, options, shuffle=True):
+
+        <a id="change">for i, row in self._data_iterator(self.features, shuffle=shuffle):
+            if relabel[i]:
+
+                new_val = yield self._compose(row, options)
+
+                self.progressbar.value += 1
+                if isinstance(self.new_labels, (pd.Series, pd.DataFrame)):
+                    self.new_labels.loc[i] = new_val
+                else:
+                    try:
+                        self.new_labels[i] = float(new_val)
+                    except ValueError:
+                        &#47&#47 catching assignment of string to number array
+                        self.new_labels = self.new_labels.astype(np.object)
+                        self.new_labels[i] = new_val
+            if new_val not in self.input_widget.options:
+                self.input_widget.options = self.input_widget.options + [
+                    new_val
+                ]
+
+       </a> if self.event_manager is not None:
+            self.event_manager.close()
+        yield self._render_finished()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _annotation_iterator(self):
+        Relabel should be integer indices
+
+        while <a id="change">len(self._label_queue) &gt; 0:
+    </a>        idx = <a id="change">self._label_queue.pop()</a>
+            self._already_labelled.append(idx)
+            row = get_values(self.features, [idx])
+
+            new_val = yield self._compose(row)</code></pre><img src="17127351.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/janfreyberg/superintendent/commit/cb266bbe1ce215ec56cc54ee009ea3a2a055b6d8#diff-39889e42d7579c74458da9e864502404619daebe033d0d7b3b4df2ec04ea6befL102' target='_blank'>Link</a></div><div id='project'> Project Name: janfreyberg/superintendent</div><div id='commit'> Commit Name: cb266bbe1ce215ec56cc54ee009ea3a2a055b6d8</div><div id='time'> Time: 2018-05-31</div><div id='author'> Author: janfreyberg@users.noreply.github.com</div><div id='file'> File Name: superintendent/semisupervisor.py</div><div id='class'> Class Name: SemiSupervisor</div><div id='method'> Method Name: _annotation_iterator</div><BR><BR><div id='link'><a href='https://github.com/janfreyberg/superintendent/commit/cb266bbe1ce215ec56cc54ee009ea3a2a055b6d8#diff-755add84b192bb0e9ca7dc2faca730abd4c53d57feb8ab523262d33a1c8b6a77L65' target='_blank'>Link</a></div><div id='project'> Project Name: janfreyberg/superintendent</div><div id='commit'> Commit Name: cb266bbe1ce215ec56cc54ee009ea3a2a055b6d8</div><div id='time'> Time: 2018-05-31</div><div id='author'> Author: janfreyberg@users.noreply.github.com</div><div id='file'> File Name: superintendent/clustersupervisor.py</div><div id='class'> Class Name: ClusterSupervisor</div><div id='method'> Method Name: _annotation_iterator</div><BR><BR><div id='link'><a href='https://github.com/ilastik/ilastik/commit/8861dfa21d1cfd487b7a6eb7508885f084f58e6c#diff-ed86935734c388c9b8c9fd5e6f928e328def31f53e02b15ac06e7c34ac30e9deL72' target='_blank'>Link</a></div><div id='project'> Project Name: ilastik/ilastik</div><div id='commit'> Commit Name: 8861dfa21d1cfd487b7a6eb7508885f084f58e6c</div><div id='time'> Time: 2019-07-10</div><div id='author'> Author: tomaz.vieira@embl.de</div><div id='file'> File Name: ilastik/applets/dataSelection/datasetInfoEditorWidget.py</div><div id='class'> Class Name: DatasetInfoEditorWidget</div><div id='method'> Method Name: __init__</div><BR>

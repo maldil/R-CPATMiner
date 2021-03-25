@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        p = cp.Variable(self._T, nonneg=True)
+        n = cp.Variable(self._T, nonneg=True)
+
+        self._constraints.append(<a id="change">cp.sum_squares(n)</a> &lt;= (target_semideviation ** 2))
+
+        B = (self.historic_returns.values - self.benchmark) / np.sqrt(self._T)
+        self._constraints.append(B @ self._w - p + n == 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+        n = cp.Variable(self._T, nonneg=True)
+
+        self._constraints.append(
+            self.frequency * <a id="change">cp.sum(cp.square(n))</a> &lt;= (target_semideviation ** 2)
+        )
+
+        B = (self.historic_returns.values - self.benchmark) / np.sqrt(self._T)</code></pre>

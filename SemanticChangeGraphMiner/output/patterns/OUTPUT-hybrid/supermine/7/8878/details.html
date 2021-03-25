@@ -1,0 +1,36 @@
+<html><h3>d7bcbade517750cc4fdb7642415e4cf05ae584e8,tutorial/utils.py,,collect_pubtator_annotations,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    Given a list of ddlite Documents with PubTator/CDR annotations,
+    extract a dictionary of annotations by type.
+    
+    <a id="change">annotations = defaultdict(list)</a>
+    for a in doc.attribs[&quotroot&quot].xpath(&quot.//annotation&quot):
+
+        &#47&#47 Relation annotations
+        if len(a.xpath(&quot./infon[@key="relation"]&quot)) &gt; 0:
+            type = a.xpath(&quot./infon[@key="relation"]/text()&quot)[0]
+            types = a.xpath(&quot./infon[@key != "relation"]/@key&quot)
+            mesh_ids = a.xpath(&quot./infon[@key != "relation"]/text()&quot)
+            <a id="change">annotations[type].append(PubtatorRelation(types=types, mesh_ids=mesh_ids))</a>
+
+        &#47&#47 Mention annotations
+        else:
+            txt = a.xpath(&quot./text/text()&quot)[0]</code></pre><h3>After Change</h3><pre><code class='java'>
+            
+            &#47&#47 Get sentence id and relative character offset
+            si = len(sent_offsets) - 1
+            <a id="change">for i,so in enumerate(sent_offsets):
+                if offset == so:
+                    si = i
+                    break
+                elif offset &lt; so:
+                    si = i - 1
+                    break
+            &#47&#47offset -= sent_offsets[si]
+           </a> ngrams.append(Ngram(offset, offset + length - 1, sents[si], metadata={
+                &quotmesh_id&quot : mesh, &quottype&quot : type}))
+    return ngrams
+</code></pre><img src="34909668.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/d7bcbade517750cc4fdb7642415e4cf05ae584e8#diff-090ac9a8a417f3c8db1a83c85aa5e2b0589c8de8c3d5d563aad251fe0d12c675L13' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: d7bcbade517750cc4fdb7642415e4cf05ae584e8</div><div id='time'> Time: 2016-07-03</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: tutorial/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: collect_pubtator_annotations</div><BR><BR><div id='link'><a href='https://github.com/markovmodel/PyEMMA/commit/b69a4513d333266b032e11f9563d6bd14830aa86#diff-a31c7ed5d35f5ed8233994868c54d625b18e6bacb6794344c4531e62bd9dde59L43' target='_blank'>Link</a></div><div id='project'> Project Name: markovmodel/PyEMMA</div><div id='commit'> Commit Name: b69a4513d333266b032e11f9563d6bd14830aa86</div><div id='time'> Time: 2018-06-21</div><div id='author'> Author: m.scherer@fu-berlin.de</div><div id='file'> File Name: conftest.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pytest_collection_modifyitems</div><BR><BR><div id='link'><a href='https://github.com/jbms/beancount-import/commit/bc19ed6b434f77e5758f4baf9cb23ed5d2b25a72#diff-127ae9abdac941d936f3929fc61ef6a9fa0abb1fd038905af4a28165892e5df2L63' target='_blank'>Link</a></div><div id='project'> Project Name: jbms/beancount-import</div><div id='commit'> Commit Name: bc19ed6b434f77e5758f4baf9cb23ed5d2b25a72</div><div id='time'> Time: 2020-08-07</div><div id='author'> Author: dumbpyx@gmail.com</div><div id='file'> File Name: beancount_import/source/generic_importer_source.py</div><div id='class'> Class Name: ImporterSource</div><div id='method'> Method Name: prepare</div><BR>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            new_idx = range(int(video.fps * video.clip.duration))[::self.every]
+        elif self.hertz is not None:
+            interval = int(video.fps / self.hertz)
+            <a id="change">new_idx = range(int(video.fps * video.clip.duration))[::interval]</a>
+        elif self.top_n is not None:
+            import cv2
+            diffs = []
+            for i, img in enumerate(video.frames):</code></pre><h3>After Change</h3><pre><code class='java'>
+            new_idx = range(video.n_frames)[::self.every]
+        elif self.hertz is not None:
+            interval = video.fps / float(self.hertz)
+            <a id="change">new_idx = np.arange(0, video.n_frames, interval).astype(int)</a>
+            new_idx = list(new_idx)
+        elif self.top_n is not None:
+            import cv2
+            diffs = []</code></pre>

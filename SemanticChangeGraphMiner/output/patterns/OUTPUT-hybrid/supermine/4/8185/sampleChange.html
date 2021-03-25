@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            jac_large_angle = phi.__class__(
+                len(large_angle_inds), cls.dim, cls.dim)
+            jac_large_angle[:, 0, 0] = A
+            <a id="change">jac_large_angle[:, 0, 1]</a> = -B
+            jac_large_angle[:, 1, 0] = B
+            jac_large_angle[:, 1, 1] = A
+            jac[large_angle_inds] = jac_large_angle</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        if len(large_angle_inds) &gt; 0:
+            angle = phi[large_angle_inds]
+            s = <a id="change">angle.sin()</a>
+            c = <a id="change">angle.cos()</a>
+
+            A = (s / angle).unsqueeze_(dim=1).unsqueeze_(
+                dim=2).expand_as(jac[large_angle_inds]) * \
+                torch.eye(cls.dim).unsqueeze_(dim=0).expand_as(</code></pre>

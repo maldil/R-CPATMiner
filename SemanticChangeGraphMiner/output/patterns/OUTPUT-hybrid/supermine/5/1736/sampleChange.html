@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  end = check_date(term.get(&quotend&quot))
+  if start and end:
+    if end &lt; start:
+      <a id="change">error(rtyaml.dump(term) + " has end before start.")</a>
+
+  if end.year &gt; 2000:
+    &#47&#47 Check party of current members (historical is too difficult and even recent ones incorrectly have Democratic instead of Democrat, which is inconsistent with the legislators files).
+    if term.get("party") not in ("Republican", "Democrat"):</code></pre><h3>After Change</h3><pre><code class='java'>
+def check_executive_term(term, context):
+  &#47&#47 Check type.
+  if term.get("type") not in ("prez", "viceprez"):
+    <a id="change">error(context, "Term has invalid &quottype&quot.")</a>
+
+  &#47&#47 Check how.
+  if term.get("how") not in ("election", "succession", "appointment"):
+    error(context, "Term has invalid &quothow&quot.")</code></pre>

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self._path = os.path.join(root, folder_in_archive)
+
+        if download:
+            <a id="change">if not os.path.isdir(self._path):
+                if not os.path.isfile(archive):
+                    checksum = _CHECKSUMS.get(url, None)
+                    download_url(url, root, hash_value=checksum, hash_type="md5")
+                extract_archive(archive)
+
+       </a> if not os.path.isdir(self._path):
+            raise RuntimeError(
+                "Dataset not found. Please use `download=True` to download it."
+            )</code></pre><h3>After Change</h3><pre><code class='java'>
+        archive = os.path.join(root, archive)
+        self._path = os.path.join(root, folder_in_archive)
+
+        <a id="change">if download:
+            raise RuntimeError(
+                "This Dataset is no longer available. "
+                "Please use `VCTK_092` class to download the latest version."
+            )
+
+       </a> if not os.path.isdir(self._path):
+            raise RuntimeError(
+                "Dataset not found. Please use `VCTK_092` class "
+                "with `download=True` to donwload the latest version."</code></pre>

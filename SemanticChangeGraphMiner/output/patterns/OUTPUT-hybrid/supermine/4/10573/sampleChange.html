@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return np.array([g.score(X) for g in self.gmms_]).T
+
+    def _generate_sample_from_state(self, state, random_state=None):
+        return <a id="change">self</a>.gmms_[state].sample(<a id="change">1</a>, random_state=random_state).flatten()
+
+    def _initialize_sufficient_statistics(self):
+        stats = super(GMMHMM, self)._initialize_sufficient_statistics()</code></pre><h3>After Change</h3><pre><code class='java'>
+            random_state = self.random_state
+        random_state = check_random_state(random_state)
+
+        <a id="change">cur_means = self.means_[state]</a>
+        cur_covs = self.covars_[state]
+        cur_weights = self.weights_[state]
+
+        i_gauss = random_state.choice(self.n_mix, p=cur_weights)</code></pre>

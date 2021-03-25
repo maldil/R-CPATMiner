@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                to_save = (rgb_flow * 255).astype(np.uint8).transpose(1,2,0)
+                imwrite(filename + &quot.png&quot, to_save)
+            if args.output_value in [&quotraw&quot, &quotboth&quot]:
+                <a id="change">np.save(filename + &quotnpy&quot, flow_output.cpu().numpy())</a>
+
+
+if __name__ == &quot__main__&quot:
+    main()</code></pre><h3>After Change</h3><pre><code class='java'>
+                imwrite(filename + &quot.png&quot, to_save)
+            if args.output_value in [&quotraw&quot, &quotboth&quot]:
+                &#47&#47 Make the flow map a HxWx2 array as in .flo files
+                <a id="change">to_save = flow_output.cpu().numpy().transpose(1,2,0)</a>
+                <a id="change">np.save(filename + &quot.npy&quot, to_save)</a>
+
+
+if __name__ == &quot__main__&quot:
+    main()</code></pre>

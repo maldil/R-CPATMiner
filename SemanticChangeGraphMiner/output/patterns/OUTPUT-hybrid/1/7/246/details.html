@@ -1,0 +1,72 @@
+<html><h3>dd6abb687427149075d0cf7c608b7b64fc551115,trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/weissinger_vortex_lattice.py,,weissinger_vortex_lattice,#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        ya = np.atleast_2d((i)*deltax)
+        yb = np.atleast_2d((i+1)*deltax)
+        xa = np.atleast_2d(((i+1)*deltax-deltax/2)*<a id="change">np.tan(sweep)</a> + 0.25*sl)
+        x  = np.atleast_2d(((i+1)*deltax-deltax/2)*np.tan(sweep) + 0.75*sl)
+        y  = np.atleast_2d(((i+1)*deltax-deltax/2))
+        
+        xloc_leading  = ((i+1)*deltax)*np.tan(sweep)
+        xloc_trailing = ((i+1)*deltax)*np.tan(sweep) + sl        
+                
+        RHS  = np.atleast_2d(np.sin(twist_distri+aoa)).T
+        A = (whav(x,y,xa.T,ya.T)-whav(x,y,xa.T,yb.T)\
+            -whav(x,y,xa.T,-ya.T)+whav(x,y,xa.T,-yb.T))*0.25/np.pi
+    
+        &#47&#47 Vortex strength computation by matrix inversion
+        T = np.linalg.solve(A.T,RHS)
+        
+        &#47&#47 Calculating the effective velocty         
+        A_v = A*0.25/np.pi*T
+        v   = np.sum(A_v,axis=0)
+        
+        Lfi = -T.T * (np.sin(twist_tc)-v)
+        Lfk =  T.T * np.cos(twist_tc)   
+        Lft = -Lfi*np.sin(twist_tc)+Lfk*np.cos(twist_tc)
+        Dg  = Lfi*np.cos(twist_tc)+Lfk*np.sin(twist_tc)
+            
+        L  = deltax * Lft
+        D  = deltax * Dg
+        
+        &#47&#47 Total lift
+        <a id="change">LT</a> = np.sum(L)
+        DT = np.sum(D)
+    
+        Cl = 2*LT/(0.5*Sref)</code></pre><h3>After Change</h3><pre><code class='java'>
+        ya = np.atleast_2d((i)*deltax)
+        yb = np.atleast_2d((i+1)*deltax)
+        xa = np.atleast_2d(((i+1)*deltax-deltax/2)*np.tan(sweep) + 0.25*sl)
+        x  = np.atleast_2d(((i+1)*deltax-deltax/2)*<a id="change">np.tan(sweep)</a> + 0.75*sl)
+        y  = np.atleast_2d(((i+1)*deltax-deltax/2))
+        
+        xloc_leading  = ((i+1)*deltax)*np.tan(sweep)
+        xloc_trailing = ((i+1)*deltax)*np.tan(sweep) + sl        
+                
+        RHS  = np.atleast_2d(np.sin(twist_distri+aoa)).T
+        A = (whav(x,y,xa.T,ya.T)-whav(x,y,xa.T,yb.T)\
+            -whav(x,y,xa.T,-ya.T)+whav(x,y,xa.T,-yb.T))*0.25/np.pi
+    
+        &#47&#47 Vortex strength computation by matrix inversion
+        T = np.linalg.solve(A.T,RHS)
+        
+        &#47&#47 Calculating the effective velocty         
+        A_v = A*0.25/np.pi*T
+        v   = np.sum(A_v,axis=0)
+        
+        Lfi = -T.T * (np.sin(twist_tc)-v)
+        Lfk =  T.T * np.cos(twist_tc)   
+        Lft = -Lfi*np.sin(twist_tc)+Lfk*np.cos(twist_tc)
+        Dg  = Lfi*np.cos(twist_tc)+Lfk*np.sin(twist_tc)
+            
+        L  = deltax * Lft
+        D  = deltax * Dg
+        
+        &#47&#47 Total lift
+        <a id="change">LT</a> = np.sum(L)
+        DT = np.sum(D)
+    
+        Cl = 2*LT/(0.5*Sref)</code></pre><img src="1413797.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/dd6abb687427149075d0cf7c608b7b64fc551115#diff-9a45bbd84db204ea6cbf4116d108bec0bdff7eff89b5305ba39be6b727ff84c4L1' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: dd6abb687427149075d0cf7c608b7b64fc551115</div><div id='time'> Time: 2017-11-01</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/weissinger_vortex_lattice.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: weissinger_vortex_lattice</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/67a83d305612106e195ad2a24c13fc7594b6abc6#diff-166e10c44a20a3b6be9b43014064a6484ba81147fbe2a3f7b6937bbe1a1ea5d9L51' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 67a83d305612106e195ad2a24c13fc7594b6abc6</div><div id='time'> Time: 2015-10-16</div><div id='author'> Author: tarik.orra@embraer.com.br</div><div id='file'> File Name: trunk/SUAVE/Methods/Geometry/Two_Dimensional/Planform/wing_planform.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: wing_planform</div><BR>

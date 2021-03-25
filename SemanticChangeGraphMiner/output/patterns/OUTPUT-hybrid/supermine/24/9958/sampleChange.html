@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def get_sample(self, name, **kwargs):
+         Returns arbitrary number of points sampled by selected method
+        
+        if <a id="change">name in S_POINTS</a>:
+            kwargs["points"] = self.xyz
+            valid_args = crosscheck_kwargs_function(kwargs, S_POINTS[name])
+            return S_POINTS[name](**valid_args)
+        
+        elif <a id="change">name in S_MESH</a>:
+            kwargs["v1"], kwargs["v2"], kwargs["v3"] = self.get_mesh_vertices()
+            <a id="change">valid_args = crosscheck_kwargs_function(kwargs, S_MESH[name])</a>
+            return <a id="change">S_MESH[name](**valid_args)</a>
+        
+        elif name in S_VOXELGRID:
+            <a id="change">kwargs["voxelgrid"] = self.voxelgrids[kwargs["voxelgrid"]]</a>
+            valid_args = crosscheck_kwargs_function(kwargs, S_VOXELGRID[name])
+            return S_VOXELGRID[name](**valid_args)
+        
+        else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                    Number of points to be sampled.                      
+
+        
+        if <a id="change">name in ALL_SAMPLING</a>:
+            S = ALL_SAMPLING[name](self, **kwargs)
+            S.extract_info()
+            return S.compute()</code></pre>

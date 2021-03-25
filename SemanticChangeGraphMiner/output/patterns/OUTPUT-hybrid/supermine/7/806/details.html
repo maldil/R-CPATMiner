@@ -1,0 +1,28 @@
+<html><h3>942f284052b22214d830c1bc2c8de03bffaa8d07,build_tools/azure/render_meta.py,,,#,8
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    requirements = [line.strip() for line in file.readlines()]
+
+&#47&#47 We build from source on windows, otherwise, we looks for a wheel
+<a id="change">if sys.platform != &quotwin32&quot:
+    wheel = next(file for file in os.listdir(str(DIST_PATH.resolve()))
+                 if file.endswith(&quot.whl&quot))
+else:
+    wheel = None
+
+&#47&#47 Numpy version is used for building
+</a>numpy_version = next(package for package in requirements if &quotnumpy&quot in package)
+
+&#47&#47 Render and write the meta.yaml file to $ROOT/conda/meta.yaml
+context = {</code></pre><h3>After Change</h3><pre><code class='java'>
+with open(str(REQUIREMENTS_FILE.resolve())) as file:
+    for line in file:
+        requirement = line.strip()
+        match = <a id="change">re.match(r&quot^([A-Za-z\-0-9]+)&quot, requirement)</a>
+        <a id="change">_, match_end = match.span()</a>
+        package = match.group(0)
+        version = requirement[match_end:].replace(&quot==&quot, &quot&quot)
+        requirements.append(f&quot{package} {version}&quot)
+</code></pre><img src="3830939.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tgsmith61591/pmdarima/commit/942f284052b22214d830c1bc2c8de03bffaa8d07#diff-9f6a8435b16df28c747f5f7b7b70f0ad0859f4c3ae02afce3754717fe3f5e346L9' target='_blank'>Link</a></div><div id='project'> Project Name: tgsmith61591/pmdarima</div><div id='commit'> Commit Name: 942f284052b22214d830c1bc2c8de03bffaa8d07</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: aaronreidsmith@gmail.com</div><div id='file'> File Name: build_tools/azure/render_meta.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/pantsbuild/pants/commit/ef7964296ee8d5025dbdf7ca02eddd72a8b9df56#diff-036c808dee9f5bfb5c0e20e0998c2af72cbc83817468c191cd43b8470faf324aL39' target='_blank'>Link</a></div><div id='project'> Project Name: pantsbuild/pants</div><div id='commit'> Commit Name: ef7964296ee8d5025dbdf7ca02eddd72a8b9df56</div><div id='time'> Time: 2020-07-23</div><div id='author'> Author: 14852634+Eric-Arellano@users.noreply.github.com</div><div id='file'> File Name: src/python/pants/backend/codegen/protobuf/protoc.py</div><div id='class'> Class Name: Protoc</div><div id='method'> Method Name: generate_url</div><BR><BR><div id='link'><a href='https://github.com/fxsjy/jieba/commit/99d0fb1a8a00c80c97271b2cc58d52c4fcff0032#diff-16ab32bf5ef81d2d7a152663941b0d9c2d3a40d521399834b5a4a73f1053846dL364' target='_blank'>Link</a></div><div id='project'> Project Name: fxsjy/jieba</div><div id='commit'> Commit Name: 99d0fb1a8a00c80c97271b2cc58d52c4fcff0032</div><div id='time'> Time: 2015-11-09</div><div id='author'> Author: abcdoyle888@gmail.com</div><div id='file'> File Name: jieba/__init__.py</div><div id='class'> Class Name: Tokenizer</div><div id='method'> Method Name: load_userdict</div><BR>

@@ -1,0 +1,35 @@
+<html><h3>cbcc3f315c653706ceded6ba42f222616322a3f2,ch03/03_atari_gan.py,,,#,132
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    dis_losses = []
+    iter_no = 0
+
+    true_labels_v = Variable(torch.FloatTensor(<a id="change">[1.0]</a> * BATCH_SIZE))
+    fake_labels_v = Variable(torch.FloatTensor([0.0] * BATCH_SIZE))
+    if args.cuda:
+        true_labels_v = true_labels_v.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+    dis_losses = []
+    iter_no = 0
+
+    <a id="change">true_labels_v = torch.ones(BATCH_SIZE, dtype=torch.float32, device=device)</a>
+    fake_labels_v = torch.zeros(BATCH_SIZE, dtype=torch.float32, device=device)
+
+    for batch_v in iterate_batches(envs):
+        &#47&#47 generate extra fake samples, input is 4D: batch, filters, x, y
+        gen_input_v = torch.FloatTensor(BATCH_SIZE, LATENT_VECTOR_SIZE, 1, 1).normal_(0, 1).to(device)
+        batch_v = batch_v.to(device)
+        gen_output_v = net_gener(gen_input_v)
+
+        &#47&#47 train discriminator
+        dis_optimizer.zero_grad()
+        dis_output_true_v = net_discr(batch_v)
+        dis_output_fake_v = net_discr(gen_output_v.detach())
+        dis_loss = objective(dis_output_true_v, true_labels_v) + objective(dis_output_fake_v, fake_labels_v)
+        dis_loss.backward()
+        dis_optimizer.step()
+        dis_losses.append(<a id="change">dis_loss.item()</a>)
+
+        &#47&#47 train generator
+        gen_optimizer.zero_grad()</code></pre><img src="12776098.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/cbcc3f315c653706ceded6ba42f222616322a3f2#diff-76e56cb5fbf1182e488a6ca29b6cdbac8ae77570be3acbd286a2ddead60318a2L135' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: cbcc3f315c653706ceded6ba42f222616322a3f2</div><div id='time'> Time: 2018-04-25</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch03/03_atari_gan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/PIQuIL/QuCumber/commit/cfa828f6349317ce50a610cd31bb3dcf5e5ea211#diff-97881f884dd61de4cafa81d99538897be4699e6b7fec1a69dbc2d0e9c06f3ec1L39' target='_blank'>Link</a></div><div id='project'> Project Name: PIQuIL/QuCumber</div><div id='commit'> Commit Name: cfa828f6349317ce50a610cd31bb3dcf5e5ea211</div><div id='time'> Time: 2019-06-05</div><div id='author'> Author: emerali@users.noreply.github.com</div><div id='file'> File Name: qucumber/utils/training_statistics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fidelity</div><BR><BR><div id='link'><a href='https://github.com/ClementPinard/FlowNetPytorch/commit/d95f630a7b7f88621bc4abb4ac92692647f03781#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L281' target='_blank'>Link</a></div><div id='project'> Project Name: ClementPinard/FlowNetPytorch</div><div id='commit'> Commit Name: d95f630a7b7f88621bc4abb4ac92692647f03781</div><div id='time'> Time: 2018-08-23</div><div id='author'> Author: clement.pinard@parrot.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            v = v.cuda()
+        q = self.dqn_model(v)
+        actions = self.action_selector(q)
+        <a id="change">return actions.data.cpu().numpy()</a>
+
+
+class TargetNet:
+    </code></pre><h3>After Change</h3><pre><code class='java'>
+        self.action_selector = action_selector
+
+    def __call__(self, observations, states):
+        v = Variable(<a id="change">torch.FloatTensor(observations)</a>)
+        if env_params.get().cuda_enabled:
+            v = v.cuda()
+        q_v = self.dqn_model(v)
+        q = q_v.data.cpu().numpy()
+        actions = self.action_selector(q)
+        <a id="change">return actions, states</a>
+
+
+class TargetNet:
+    </code></pre>

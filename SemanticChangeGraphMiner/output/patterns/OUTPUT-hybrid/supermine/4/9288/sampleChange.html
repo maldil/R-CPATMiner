@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def read_vcf(vcf_fname, sample_id=None, min_depth=1, skip_hom=True,
+             skip_reject=False, skip_somatic=True):
+    Parse SNV coordinates from a VCF file into a DataFrame.
+    <a id="change">with open(vcf_fname) as vcffile:
+        vcf_reader = vcf.Reader(vcffile)
+        rows = parse_records(vcf_reader, sample_id, min_depth, skip_hom,
+                             skip_reject, skip_somatic)
+        dframe = pd.DataFrame.from_records(rows, columns=[
+            "chromosome", "start", "end",
+            "ref", "alt", "zygosity", "depth", "alt_count"])
+   </a> dframe["alt_freq"] = dframe["alt_count"] / dframe["depth"]
+    return dframe
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def read_vcf(cls, infile, sample_id=None, min_depth=1, skip_hom=True,
+                 skip_reject=False, skip_somatic=True):
+        Parse SNV coordinates from a VCF file into a VariantArray.
+        if <a id="change">isinstance(infile, basestring)</a>:
+            vcf_reader = vcf.Reader(filename=infile)
+        else:
+            vcf_reader = vcf.Reader(infile)</code></pre>

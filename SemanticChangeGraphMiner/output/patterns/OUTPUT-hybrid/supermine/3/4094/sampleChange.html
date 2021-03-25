@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            &#47&#47 General validation summary
+            metric_value_ = tf.placeholder(tf.float32, shape=())
+            metric_summary = <a id="change">tf.summary.scalar(
+                self._model.evaluator.metric["name"], metric_value_)</a>
+
+            &#47&#47 read collection after that every op added its own
+            &#47&#47 summaries in the train_summaries collection
+            train_summaries = tf.summary.merge(</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            train_metric = None
+            for metric in self._model.evaluator.metrics:
+                <a id="change">if metric["model_selection"] is not None:
+                    train_metric = metric
+                else:
+                    tf_log(
+                        tf.summary.scalar(metric["name"], metric["fn"](
+                            predictions, targets)))
+
+           </a> if train_metric is None:
+                print(
+                    "Please specify a metric in the evaluator with &quotmodel_selection&quot not None"
+                )</code></pre>

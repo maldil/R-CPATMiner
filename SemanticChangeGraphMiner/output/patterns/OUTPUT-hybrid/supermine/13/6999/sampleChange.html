@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      metrics_dict[&quotSimple MSE&quot] = SimpleMSE
+      return metrics_dict
+    else:
+      <a id="change">Log.Fatal("This method requires three datasets.")</a>
+
+  &quot&quot&quot
+  Perform Linear Regression. If the method has been successfully completed
+  return the elapsed time in seconds.</code></pre><h3>After Change</h3><pre><code class='java'>
+  def RunMetrics(self, options):
+    Log.Info("Perform Linear regression.", self.verbose)
+
+    <a id="change">results = self.LinearRegressionMlpy(options)</a>
+    <a id="change">if results &lt; 0:
+      return results
+
+   </a> <a id="change">metrics = {&quotRuntime&quot : results}</a>
+
+
+    if len(self.dataset) &gt;= 2:
+      &#47&#47 Check if we need to build and run the model.
+      if not CheckFileAvailable(&quotmlpy_lr_predictions.csv&quot):
+        self.RunTiming(options)
+
+      testData = LoadDataset(self.dataset[1])
+      truelabels = LoadDataset(self.dataset[2])
+
+      predictedlabels = LoadDataset("mlpy_lr_predictions.csv")
+
+      confusionMatrix = Metrics.ConfusionMatrix(truelabels, predictedlabels)
+      AvgAcc = Metrics.AverageAccuracy(confusionMatrix)
+      AvgPrec = Metrics.AvgPrecision(confusionMatrix)
+      AvgRec = Metrics.AvgRecall(confusionMatrix)
+      AvgF = Metrics.AvgFMeasure(confusionMatrix)
+      AvfLift = Metrics.LiftMultiClass(confusionMatrix)
+      AvgMCC = Metrics.MCCMultiClass(confusionMatrix)
+      AvgInformation = Metrics.AvgMPIArray(confusionMatrix, truelabels, predictedlabels)
+      SimpleMSE = Metrics.SimpleMeanSquaredError(truelabels, predictedlabels)
+
+      metrics[&quotAvg Accuracy&quot] = AvgAcc
+      metrics[&quotMultiClass Precision&quot] = AvgPrec
+      metrics[&quotMultiClass Recall&quot] = AvgRec
+      metrics[&quotMultiClass FMeasure&quot] = AvgF
+      metrics[&quotMultiClass Lift&quot] = AvgLift
+      metrics[&quotMultiClass MCC&quot] = AvgMCC
+      metrics[&quotMultiClass Information&quot] = AvgInformation
+      metrics[&quotSimple MSE&quot] = SimpleMSE
+
+    <a id="change">return metrics</a>
+</code></pre>

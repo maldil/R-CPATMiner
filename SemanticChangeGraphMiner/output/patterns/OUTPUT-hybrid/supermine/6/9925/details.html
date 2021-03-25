@@ -1,0 +1,30 @@
+<html><h3>ceb4e40c074d2f0d0bde8e97c7b4493971281a9b,nussl/core/augmentation.py,,time_stretch,#,80
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    stretched_source = []
+    audio_data = signal.audio_data
+
+    for row in range(<a id="change">audio_data.shape[0]</a>):
+        audio_row = audio_data[row, :]
+        if librosa.__version__ &gt; "0.6.2":
+            audio_row = np.asfortranarray(audio_row)</code></pre><h3>After Change</h3><pre><code class='java'>
+    Returns:
+        stretched_signal: A copy of the original audio_signal, with augmented sources. 
+    
+    if not np.issubdtype(<a id="change">type(stretch_factor)</a>, np.number) or stretch_factor &lt;= 0:
+        raise ValueError("stretch_factor must be a positve scalar")
+
+    sample_rate = audio_signal.sample_rate
+    stretched_audio_data = []
+    audio_data = audio_signal.audio_data
+
+    <a id="change">for audio_row in audio_signal.get_channels():
+        stretched_audio_data.append(librosa.effects.time_stretch(audio_row, stretch_factor))
+   </a> stretched_audio_data = np.array(stretched_audio_data)
+    <a id="change">stretched_signal = audio_signal.make_copy_with_audio_data(stretched_audio_data)</a>
+    stretched_signal.stft()
+
+    return stretched_signal
+</code></pre><img src="37904562.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/ceb4e40c074d2f0d0bde8e97c7b4493971281a9b#diff-a20e961fb1e85200e29834c2840c419fbf0507a4213420afaddc9cddf87739e3L21' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: ceb4e40c074d2f0d0bde8e97c7b4493971281a9b</div><div id='time'> Time: 2020-05-14</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/core/augmentation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: time_stretch</div><BR><BR><div id='link'><a href='https://github.com/kundajelab/deeplift/commit/41651269e7700383cd61d629ec23b0dbee1d834c#diff-52c5814d358e2d4ae4ba0b4cc629891bed5e3870030040c59c2baa4d678cd977L382' target='_blank'>Link</a></div><div id='project'> Project Name: kundajelab/deeplift</div><div id='commit'> Commit Name: 41651269e7700383cd61d629ec23b0dbee1d834c</div><div id='time'> Time: 2017-03-04</div><div id='author'> Author: avanti.shrikumar@gmail.com</div><div id='file'> File Name: deeplift/conversion/keras_conversion.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_graph_model</div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/889a295c5c4e0c1cf344e49f2020917a410f64d1#diff-a20e961fb1e85200e29834c2840c419fbf0507a4213420afaddc9cddf87739e3L80' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 889a295c5c4e0c1cf344e49f2020917a410f64d1</div><div id='time'> Time: 2020-05-03</div><div id='author'> Author: abugler@gmail.com</div><div id='file'> File Name: nussl/core/augmentation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: time_stretch</div><BR><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/6d5201f33d211d8e04242e7627717cf93154037f#diff-495ce434f722384a0f50e42fea7b5b6ff1d95c14b90724aa3d30d52847c1d33aL184' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 6d5201f33d211d8e04242e7627717cf93154037f</div><div id='time'> Time: 2019-01-28</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/main.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: train</div><BR>

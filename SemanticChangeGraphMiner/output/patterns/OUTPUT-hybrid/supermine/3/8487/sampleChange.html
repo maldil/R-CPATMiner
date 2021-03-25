@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    )
+
+    indices = list(indices)
+    <a id="change">for i in _pycompat.irange(len(indices)):
+        indices[i] *= dtype.type(numpy.prod(indices[i].shape[i + 1:]))
+   </a> indices = dask.array.stack(indices).sum(axis=0)
+
+    return indices
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    indices = sum([
+        dask.array.arange(
+            0, numpy.prod(dimensions[i:]), <a id="change">numpy.prod(dimensions[i + 1:])</a>,
+            dtype=dtype, chunks=c
+        )[i * (None,) + (slice(None),) + (len(dimensions) - i - 1) * (None,)]
+        for i, c in enumerate(chunks)</code></pre>

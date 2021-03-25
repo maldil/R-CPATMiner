@@ -1,0 +1,29 @@
+<html><h3>e97a5389cd4169b54ded7eb173fc0d4d3f4cf8d5,pymanopt/autodiff/backends/_tensorflow.py,_TensorFlowBackend,compute_gradient,#_TensorFlowBackend#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        tfgrad = tf.gradients(objective, argument)
+
+        <a id="change">if not isinstance(argument, list):
+            def grad(x):
+                feed_dict = {argument: x}
+                return self._session.run(tfgrad[0], feed_dict)
+        else:
+            def grad(x):
+                feed_dict = {i: d for i, d in zip(argument, x)}
+                return self._session.run(tfgrad, feed_dict)
+
+       </a> return grad
+
+    @Backend._assert_backend_available
+    def compute_hessian(self, objective, argument):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_gradient(self, function, arguments):
+        <a id="change">flattened_arguments = flatten_arguments(arguments)</a>
+        gradient = tf.gradients(function, flattened_arguments)
+
+        if len(flattened_arguments) == 1:
+            (argument,) = flattened_arguments</code></pre><img src="25395635.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/e97a5389cd4169b54ded7eb173fc0d4d3f4cf8d5#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L70' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: e97a5389cd4169b54ded7eb173fc0d4d3f4cf8d5</div><div id='time'> Time: 2020-01-27</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/7ee672fda5a01e29375439b6a18fb1971f90d3c5#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L93' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 7ee672fda5a01e29375439b6a18fb1971f90d3c5</div><div id='time'> Time: 2020-01-27</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: compute_hessian</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/58bae639b6cfbebe1d11410a2069bc28f1873540#diff-299e6d6ddb3eb2e189a2269bec7cfa2a3849ab2acc61770b262f7738a6aff380L40' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 58bae639b6cfbebe1d11410a2069bc28f1873540</div><div id='time'> Time: 2020-01-27</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_tensorflow.py</div><div id='class'> Class Name: _TensorFlowBackend</div><div id='method'> Method Name: is_compatible</div><BR>

@@ -1,0 +1,20 @@
+<html><h3>c638823db4caa6c562423903807b5eac652b2e23,thinc/layers/staticvectors.py,,forward,#,28
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    column = model.get_attr("column")
+    W = cast(Array2d, model.get_param("W"))
+    vector_table = _get_vectors(model.ops, <a id="change">model.get_attr("lang")</a>)
+    if ids.ndim &gt;= 2:
+        ids = model.ops.as_contig(ids[:, column])
+    vectors = vector_table[ids * (ids &lt; vector_table.shape[0])]</code></pre><h3>After Change</h3><pre><code class='java'>
+
+def forward(model: Model[InT, OutT], ids: InT, is_train: bool) -&gt; Tuple[OutT, Callable]:
+    if model.has_attr("dropout_rate"):
+        <a id="change">dropout = model.get_attr("dropout_rate")</a>
+    else:
+        dropout = None
+    column = model.get_attr("column")
+    W = cast(Array2d, model.get_param("W"))</code></pre><img src="11365309.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/c638823db4caa6c562423903807b5eac652b2e23#diff-21079e08c6f58c844f9af2d2088659accf24180bd54f0fff62bb0cc0d7ec2030L31' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: c638823db4caa6c562423903807b5eac652b2e23</div><div id='time'> Time: 2020-01-24</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/staticvectors.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/explosion/thinc/commit/ab43f5af3bc8300a62fea518c7fcf9f6d23570d8#diff-21079e08c6f58c844f9af2d2088659accf24180bd54f0fff62bb0cc0d7ec2030L63' target='_blank'>Link</a></div><div id='project'> Project Name: explosion/thinc</div><div id='commit'> Commit Name: ab43f5af3bc8300a62fea518c7fcf9f6d23570d8</div><div id='time'> Time: 2020-01-24</div><div id='author'> Author: honnibal+gh@gmail.com</div><div id='file'> File Name: thinc/layers/staticvectors.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: init</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/aead7cf4711ce834a9a067c4bb6db11893c2a96b#diff-27b4f5af4fd243c13cbea81d5dc3eb8d49e670f7a02f5cbfdaa140d3c25508bbL386' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: aead7cf4711ce834a9a067c4bb6db11893c2a96b</div><div id='time'> Time: 2016-12-23</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: tfdeploy.py</div><div id='class'> Class Name: Operation</div><div id='method'> Method Name: __init__</div><BR>

@@ -1,0 +1,40 @@
+<html><h3>959c21d699cc0ce4bf74d0a4838bfda7f172848f,keras_frcnn/RoiPoolingConv.py,RoiPoolingConv,call,#RoiPoolingConv#,43
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                        y2 = y1 + col_length
+
+                        x1 = K.cast(K.round(x1), &quotint32&quot)
+                        x2 = K.cast(<a id="change">K.round(x2)</a>, &quotint32&quot)
+                        y1 = <a id="change">K.cast(K.round(y1), &quotint32&quot)</a>
+                        y2 = K.cast(K.round(y2), &quotint32&quot)
+
+                        <a id="change">new_shape</a> = [input_shape[0], y2 - y1,
+                                     x2 - x1, input_shape[3]]
+                        x_crop = img[:, y1:y2, x1:x2, :]
+                        <a id="change">xm</a> = K.reshape(x_crop, new_shape)
+                        <a id="change">pooled_val</a> = K.max(xm, axis=(1, 2))
+                        outputs.append(pooled_val)
+
+        final_output = K.concatenate(outputs,axis = 0)</code></pre><h3>After Change</h3><pre><code class='java'>
+                for jy in range(num_pool_regions):
+                    for ix in range(num_pool_regions):
+                        x1 = x + ix * row_length
+                        <a id="change">x2</a> = x1 + row_length
+                        y1 = y + jy * col_length
+                        y2 = y1 + col_length
+
+                        x1 = K.cast(x1, &quotint32&quot)
+                        x2 = K.cast(x2, &quotint32&quot)
+                        y1 = K.cast(y1, &quotint32&quot)
+                        y2 = <a id="change">K.cast(y2, &quotint32&quot)</a>
+
+                        <a id="change">new_shape</a> = [input_shape[0], y2 - y1,
+                                     x2 - x1, input_shape[3]]
+                        x_crop = img[:, y1:y2, x1:x2, :]
+                        <a id="change">xm</a> = K.reshape(x_crop, new_shape)
+                        <a id="change">pooled_val</a> = K.max(xm, axis=(1, 2))
+                        outputs.append(pooled_val)
+
+        final_output = K.concatenate(outputs,axis=0)</code></pre><img src="3524181.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/kbardool/keras-frcnn/commit/959c21d699cc0ce4bf74d0a4838bfda7f172848f#diff-75b720108d01c7db3c29ada981084d5df6a4a480903cbf755a4f7a0795bb5357L46' target='_blank'>Link</a></div><div id='project'> Project Name: kbardool/keras-frcnn</div><div id='commit'> Commit Name: 959c21d699cc0ce4bf74d0a4838bfda7f172848f</div><div id='time'> Time: 2017-03-03</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: keras_frcnn/RoiPoolingConv.py</div><div id='class'> Class Name: RoiPoolingConv</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/kbardool/keras-frcnn/commit/959c21d699cc0ce4bf74d0a4838bfda7f172848f#diff-75b720108d01c7db3c29ada981084d5df6a4a480903cbf755a4f7a0795bb5357L46' target='_blank'>Link</a></div><div id='project'> Project Name: kbardool/keras-frcnn</div><div id='commit'> Commit Name: 959c21d699cc0ce4bf74d0a4838bfda7f172848f</div><div id='time'> Time: 2017-03-03</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: keras_frcnn/RoiPoolingConv.py</div><div id='class'> Class Name: RoiPoolingConv</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/kbardool/keras-frcnn/commit/4fe513d7ec95ece89aba458fd04058f406912dd9#diff-75b720108d01c7db3c29ada981084d5df6a4a480903cbf755a4f7a0795bb5357L69' target='_blank'>Link</a></div><div id='project'> Project Name: kbardool/keras-frcnn</div><div id='commit'> Commit Name: 4fe513d7ec95ece89aba458fd04058f406912dd9</div><div id='time'> Time: 2017-02-20</div><div id='author'> Author: yannhenon@gmail.com</div><div id='file'> File Name: keras_frcnn/RoiPoolingConv.py</div><div id='class'> Class Name: RoiPoolingConv</div><div id='method'> Method Name: call</div><BR>

@@ -1,0 +1,33 @@
+<html><h3>7135527fd00f0a385b65bfb32f9535c3859d1f8a,GPy/kern/src/add.py,Add,__init__,#Add#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    This kernel will take over the active dims of it&quots subkernels passed in.
+    
+    def __init__(self, subkerns, name=&quotsum&quot):
+        for i, kern in <a id="change">enumerate(subkerns[:])</a>:
+            if isinstance(kern, Add):
+                <a id="change">del subkerns[i]</a>
+                <a id="change">for part in kern.parts[::-1]:
+                    &#47&#47kern.unlink_parameter(part)
+                    subkerns.insert(i, part.copy())
+       </a> super(Add, self).__init__(subkerns, name)
+        self._exact_psicomp = self._check_exact_psicomp()
+
+    def _check_exact_psicomp(self):</code></pre><h3>After Change</h3><pre><code class='java'>
+    unexpected behavior. 
+    
+    def __init__(self, subkerns, name=&quotsum&quot):
+        <a id="change">_newkerns = []</a>
+        for kern in subkerns:
+            if isinstance(kern, Add):
+                <a id="change">for part in kern.parts:
+                    &#47&#47kern.unlink_parameter(part)
+                    _newkerns.append(part.copy())
+           </a> else:
+                <a id="change">_newkerns.append(kern.copy())</a>
+                    
+        super(Add, self).__init__(_newkerns, name)
+        self._exact_psicomp = self._check_exact_psicomp()
+</code></pre><img src="39200662.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 15</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/7135527fd00f0a385b65bfb32f9535c3859d1f8a#diff-ce27fd81e6dbaf1157116418f5501cf495f022bb2d533c0329d5e0e31c054d3fL18' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 7135527fd00f0a385b65bfb32f9535c3859d1f8a</div><div id='time'> Time: 2016-08-16</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/kern/src/add.py</div><div id='class'> Class Name: Add</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/b8867f1552c05244dcd5ba38a7a57b6f1056312c#diff-ce27fd81e6dbaf1157116418f5501cf495f022bb2d533c0329d5e0e31c054d3fL18' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: b8867f1552c05244dcd5ba38a7a57b6f1056312c</div><div id='time'> Time: 2016-08-16</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/kern/src/add.py</div><div id='class'> Class Name: Add</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/27d49bbe015435b77b791384407c4dd012491ee8#diff-ce27fd81e6dbaf1157116418f5501cf495f022bb2d533c0329d5e0e31c054d3fL18' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 27d49bbe015435b77b791384407c4dd012491ee8</div><div id='time'> Time: 2016-08-16</div><div id='author'> Author: ibinbei@gmail.com</div><div id='file'> File Name: GPy/kern/src/add.py</div><div id='class'> Class Name: Add</div><div id='method'> Method Name: __init__</div><BR>

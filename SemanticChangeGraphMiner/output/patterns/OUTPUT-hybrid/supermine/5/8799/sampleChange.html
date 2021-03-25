@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    loss_grad = unclipped_quantile - global_state.target_unclipped_quantile
+
+    new_l2_norm_clip = gs.l2_norm_clip - global_state.learning_rate * loss_grad
+    new_l2_norm_clip = <a id="change">tf.maximum(0.0, new_l2_norm_clip)</a>
+
+    new_sum_stddev = new_l2_norm_clip * global_state.noise_multiplier
+    new_sum_query_global_state = self._sum_query.make_global_state(
+        l2_norm_clip=new_l2_norm_clip,</code></pre><h3>After Change</h3><pre><code class='java'>
+    if self._geometric_update:
+      new_l2_norm_clip = gs.l2_norm_clip * tf.math.exp(-update)
+    else:
+      <a id="change">new_l2_norm_clip = tf.math.maximum(0.0, gs.l2_norm_clip - update)</a>
+
+    new_sum_stddev = new_l2_norm_clip * global_state.noise_multiplier
+    new_sum_query_global_state = self._sum_query.make_global_state(
+        l2_norm_clip=new_l2_norm_clip,</code></pre>

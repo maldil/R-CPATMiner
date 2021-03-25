@@ -1,0 +1,34 @@
+<html><h3>85317dad0531c04e41c94d30e0667032f7d17aff,skopt/samples/sobol.py,Sobol,generate,#Sobol#,190
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for j in range(n_samples):
+            r[j, 0:n_dim], seed = self._sobol(n_dim, seed)
+        if self.randomize:
+            <a id="change">return space.inverse_transform(_random_shift(r, random_state))</a>
+        return space.inverse_transform(r)
+
+    def _sobol(self, dim_num, seed):
+        Generates a new quasirandom Sobol vector with each call.</code></pre><h3>After Change</h3><pre><code class='java'>
+        rng = check_random_state(random_state)
+        space = Space(dimensions)
+        n_dim = space.n_dims
+        <a id="change">transformer</a> = <a id="change">space.get_transformer()</a>
+        space.set_transformer("normalize")
+        r = np.full((n_samples, n_dim), np.nan)
+        if self.min_skip == self.max_skip:
+            seed = self.min_skip
+        else:
+            seed = rng.randint(self.min_skip, self.max_skip)
+        for j in range(n_samples):
+            r[j, 0:n_dim], seed = self._sobol(n_dim, seed)
+        if self.randomize:
+            r = <a id="change">space.inverse_transform(_random_shift(r, random_state))</a>
+        <a id="change">r</a> = space.inverse_transform(r)
+        <a id="change">space.set_transformer(transformer)</a>
+        <a id="change">return r</a>
+
+    def _sobol(self, dim_num, seed):
+        Generates a new quasirandom Sobol vector with each call.
+</code></pre><img src="3734251.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/85317dad0531c04e41c94d30e0667032f7d17aff#diff-49fd4847cf1cc0ad8a8feba3f2b391f4ce3ef96a910160a302c752cffaedf33dL218' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 85317dad0531c04e41c94d30e0667032f7d17aff</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/samples/sobol.py</div><div id='class'> Class Name: Sobol</div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/85317dad0531c04e41c94d30e0667032f7d17aff#diff-ee1e1dcd306a95b5b1ec30b3c6329bef59462422d343d93ea7cbe26be0025fc9L72' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 85317dad0531c04e41c94d30e0667032f7d17aff</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/samples/hammersly.py</div><div id='class'> Class Name: Hammersly</div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/85317dad0531c04e41c94d30e0667032f7d17aff#diff-49fd4847cf1cc0ad8a8feba3f2b391f4ce3ef96a910160a302c752cffaedf33dL218' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 85317dad0531c04e41c94d30e0667032f7d17aff</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/samples/sobol.py</div><div id='class'> Class Name: Sobol</div><div id='method'> Method Name: generate</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/85317dad0531c04e41c94d30e0667032f7d17aff#diff-198a8da039e12d5174696223c2834a40e8ebc97ad3918f904132d7e425954a77L71' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: 85317dad0531c04e41c94d30e0667032f7d17aff</div><div id='time'> Time: 2020-02-18</div><div id='author'> Author: holgernahrstaedt@gmx.de</div><div id='file'> File Name: skopt/samples/halton.py</div><div id='class'> Class Name: Halton</div><div id='method'> Method Name: generate</div><BR>

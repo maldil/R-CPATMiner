@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Determine approximate time left for epoch
+        epoch_batches_left = len(dataloader) - (batch_i + 1)
+        time_left = datetime.timedelta(seconds=epoch_batches_left * (<a id="change">time.time()</a> - prev_time))
+        prev_time = time.time()
+        print(f"---- ETA {time_left}")
+</code></pre><h3>After Change</h3><pre><code class='java'>
+optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
+
+for epoch in range(opt.epochs):
+    start_time = <a id="change">time.time()</a>
+    for batch_i, (_, imgs, targets) in enumerate(dataloader):
+
+        batches_done = len(dataloader) * epoch + batch_i
+
+        imgs = Variable(imgs.to(device))
+        targets = Variable(targets.to(device), requires_grad=False)
+
+        optimizer.zero_grad()
+
+        loss = model(imgs, targets)
+
+        loss.backward()
+        optimizer.step()
+
+        &#47&#47 ----------------
+        &#47&#47   Log progress
+        &#47&#47 ----------------
+
+        print("\n---- [Epoch %d/%d, Batch %d/%d] ----" % (epoch, opt.epochs, batch_i, len(dataloader)))
+        for i in range(4):
+            print(
+                "[%s] [loss %f, x %f, y %f, w %f, h %f, conf %f, cls %f, cls_acc: %.2f%%, recall: %.5f, precision: %.5f]"
+                % (
+                    "Total" if i + 1 == 4 else "YOLO Layer %d" % (i + 1),
+                    model.losses[i]["loss"],
+                    model.losses[i]["x"],
+                    model.losses[i]["y"],
+                    model.losses[i]["w"],
+                    model.losses[i]["h"],
+                    model.losses[i]["conf"],
+                    model.losses[i]["cls"],
+                    model.losses[i]["cls_acc"],
+                    model.losses[i]["recall"],
+                    model.losses[i]["precision"],
+                )
+            )
+
+            &#47&#47 Tensorboard logging
+            for name, loss in model.losses[i].items():
+                loss_name = f"{name}_total" if i + 1 == 4 else f"{name}_{i+1}"
+                logger.scalar_summary(loss_name, loss, batches_done)
+
+        &#47&#47 Determine approximate time left for epoch
+        epoch_batches_left = len(dataloader) - (batch_i + 1)
+        time_left = datetime.timedelta(seconds=epoch_batches_left * <a id="change">(time.time() - start_time)</a> / (batch_i + 1))
+        print(f"---- ETA {time_left}")
+
+        model.seen += imgs.size(0)</code></pre>

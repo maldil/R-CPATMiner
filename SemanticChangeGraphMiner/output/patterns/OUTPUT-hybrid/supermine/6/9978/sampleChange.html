@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            batch_y = torch.tensor(y).reshape(len(x), self.UPSAMPLE_COUNT).to(device)
+            y_pred = self.network(batch_x)
+            &#47&#47 loss = self.criterion.forward(y_pred, batch_y.to(device))
+            <a id="change">loss = (y_pred - batch_y).pow(2).sum() / len(x)</a>
+            loss.backward()
+            self.trainer.step()
+            total_loss += loss
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            fft_orig = torch.rfft(batch_y, 1, onesided=False)
+            fft_pred = torch.rfft(y_pred, 1, onesided=False)
+            <a id="change">loss = torch.abs(torch.abs(fft_orig) - torch.abs(fft_pred)).sum()</a>
+
+            angle_orig = torch.atan(batch_y)
+            angle_pred = torch.atan(y_pred)
+            loss += (angle_pred - angle_orig).pow(2).sum()</code></pre>

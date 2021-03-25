@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 Calculate the instantaneous frequency from phase of differential spectrum
+
+        &#47&#47 Compute the fft. Conjugate here is to match DPWE
+        t       = <a id="change">fft</a>.fft(dwin * sample)[<a id="change">:F.shape[0]</a>].conj()
+        t       = t - 1.j * ww * D[:, i]
+
+        z_t2    = np.abs(D[:, i])**2</code></pre><h3>After Change</h3><pre><code class='java'>
+        sample = y[i * hop_length : i * hop_length + n_fft]
+
+        t1      = fft.fft(fft.fftshift(dwin * sample)).conj()
+        t2      = <a id="change">fft.fft(fft.fftshift(window * sample)).conj()</a>
+
+        &#47&#47 Store the STFT. Conjugate here to match DWPE&quots matlab code.
+        D[:, i] = t2[:D.shape[0]] * window_norm 
+</code></pre>

@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    outputs = torch.Tensor([y_pred])
+    targets = torch.Tensor([y_true])
+
+    true_ndcg_at2 = <a id="change">torch.tensor(1.0 / (1.0 + 1 / math.log2(3)))</a>
+    comp_ndcg_at2 = metrics.ndcg(outputs, targets, top_k=[2])[0]
+
+    assert torch.isclose(true_ndcg_at2, comp_ndcg_at2)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    y_pred1 = [0.5, 0.2, 0.1]
+    y_pred2 = [0.5, 0.2, 0.1]
+    <a id="change">y_true1 = [1.0, 0.0, 1.0]</a>
+    y_true2 = [1.0, 0.0, 1.0]
+
+    outputs = torch.Tensor([y_pred1, y_pred2])
+    targets = torch.Tensor([y_true1, y_true2])
+
+    true_ndcg_at2 = 1.0 / (1.0 + 1 / math.log2(3))
+    comp_ndcg_at2 = <a id="change">metrics.ndcg(outputs, targets, topk=[2])[0]</a>
+
+    assert np.isclose(true_ndcg_at2, comp_ndcg_at2)
+
+</code></pre>

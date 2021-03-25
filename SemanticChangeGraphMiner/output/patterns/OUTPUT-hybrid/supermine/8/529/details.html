@@ -1,0 +1,51 @@
+<html><h3>382471c62800d7c80673ef22552b6460124ccc2d,lightning/impl/primal_cd.py,CDClassifier,fit,#CDClassifier#,223
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        elif self.penalty in ("l1", "l2", "nn"):
+            penalty = self._get_penalty()
+            <a id="change">for k in xrange(n_vectors):
+                n_pos = np.sum(Y[:, k] == 1)
+                n_neg = n_samples - n_pos
+                tol = self.tol * max(min(n_pos, n_neg), 1) / n_samples
+
+                vinit = self.violation_init_.get(k, 0) * self.C / self.C_init
+                viol = _primal_cd(self, self.coef_, self.errors_,
+                                  ds, y, Y, k, False,
+                                  indices, penalty, self._get_loss(),
+                                  self.selection, self.permute,
+                                  self.termination,
+                                  self.C, self.alpha, 1e12,
+                                  self.max_iter, max_steps,
+                                  self.shrinking, vinit,
+                                  rs, tol, self.callback, self.n_calls,
+                                  self.verbose)
+
+                if self.warm_start and not k in self.violation_init_:
+                    self.violation_init_[k] = viol
+
+       </a> if self.debiasing:
+            nz = self.coef_ != 0
+
+            if not self.warm_debiasing:</code></pre><h3>After Change</h3><pre><code class='java'>
+            vinit = np.asarray([self.violation_init_.get(k, 0)
+                                for k in xrange(n_vectors)]) * self.C / self.C_init
+
+            jobs = <a id="change">(delayed(_primal_cd)(self, self.coef_, self.errors_,
+                                        ds, y, Y, k, False,
+                                        indices, penalty, self._get_loss(),
+                                        self.selection, self.permute,
+                                        self.termination,
+                                        self.C, self.alpha, 1e12,
+                                        self.max_iter, max_steps,
+                                        self.shrinking, vinit[k],
+                                        rs, tol[k], self.callback, self.n_calls,
+                                        self.verbose)
+                    for k in xrange(n_vectors))</a>
+            <a id="change">viol = Parallel(n_jobs=self.n_jobs, verbose=self.verbose)(jobs)</a>
+
+            for k in range(n_vectors):
+                if self.warm_start and not k in self.violation_init_:
+                    self.violation_init_[k] = viol[k]</code></pre><img src="2261777.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/lightning/commit/382471c62800d7c80673ef22552b6460124ccc2d#diff-7279b005c3ad75ced1fc75d42909be25dd5c3b3d7a35c8fa301b3cd7f1daf9d0L291' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/lightning</div><div id='commit'> Commit Name: 382471c62800d7c80673ef22552b6460124ccc2d</div><div id='time'> Time: 2014-10-06</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: lightning/impl/primal_cd.py</div><div id='class'> Class Name: CDClassifier</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/b45f35862afbca09ff1c70be1cc4d1d6ca6c9617#diff-73b613902d1c35be5ff198082c22011ed69d2361ea1639a200f2e7a3cb5e9e9bL47' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: b45f35862afbca09ff1c70be1cc4d1d6ca6c9617</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/classification.py</div><div id='class'> Class Name: MDM</div><div id='method'> Method Name: _predict_distances</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/lightning/commit/36952ae77bf2f2842abaa0deb8545c4c57eaad74#diff-7279b005c3ad75ced1fc75d42909be25dd5c3b3d7a35c8fa301b3cd7f1daf9d0L424' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/lightning</div><div id='commit'> Commit Name: 36952ae77bf2f2842abaa0deb8545c4c57eaad74</div><div id='time'> Time: 2014-10-06</div><div id='author'> Author: manojkumarsivaraj334@gmail.com</div><div id='file'> File Name: lightning/impl/primal_cd.py</div><div id='class'> Class Name: CDRegressor</div><div id='method'> Method Name: fit</div><BR>

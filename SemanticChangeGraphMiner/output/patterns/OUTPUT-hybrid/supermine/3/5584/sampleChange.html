@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    assert len(feature_scope.intersection(evidence_scope)) == 0
+
+    marg_spn = <a id="change">marginalize(spn, keep=feature_scope | evidence_scope)</a>
+
+    node_moments = _node_moment
+    node_moments.update({Sum: sum_moment,
+                              Product: prod_moment})</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    for node in node_moment.keys():
+        try:
+            <a id="change">moment = node_moment[node]</a>
+            node_ll = node_likelihoods[node]
+        except KeyError:
+            raise AssertionError(&quotNode type {} doe not have associated moment and likelihoods&quot.format(node))
+        <a id="change">node_moments[key]</a> = leaf_moment(moment, node_ll)
+
+    if evidence is None:
+        &#47&#47 fake_evidence needs to be computed</code></pre>

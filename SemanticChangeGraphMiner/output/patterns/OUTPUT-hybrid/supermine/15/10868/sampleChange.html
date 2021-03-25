@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        -------
+        indices : the indices of the selected base classifiers
+        
+        indices = [idx <a id="change">for</a> idx, _ in <a id="change">enumerate(competences)</a> if competences[idx] &gt; self.gamma]
+
+        &#47&#47 if no classifier was selected, use the whole pool
+        if len(indices) == 0:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if competences.ndim &lt; 2:
+            competences = competences.reshape(1, -1)
+
+        <a id="change">selected_classifiers = (competences &gt; self.selection_threshold)</a>
+        &#47&#47 For the rows that are all False (i.e., no base classifier was selected, select all classifiers (all True)
+        <a id="change">selected_classifiers[~np.any(selected_classifiers, axis=1), :] = True</a>
+
+        return selected_classifiers
+
+    def estimate_competence(self, query, predictions):</code></pre>

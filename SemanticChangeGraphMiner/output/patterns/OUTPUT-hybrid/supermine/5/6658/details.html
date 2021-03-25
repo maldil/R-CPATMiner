@@ -1,0 +1,22 @@
+<html><h3>8aaabd6dfcd2f4ae5618ef08657bbba82e8bd69f,mesh_renderer/rasterize_triangles.py,,rasterize_clip_space,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+  per_image_barycentric_coordinates = []
+  per_image_vertex_ids = []
+  for im in range(<a id="change">clip_space_vertices.shape[0]</a>):
+    barycentric_coords, triangle_ids, _ = (
+        rasterize_triangles_module.rasterize_triangles(
+            clip_space_vertices[im, :, :], triangles, image_width,</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  vertex_count = clip_space_vertices.shape[1].value
+
+  batch_size = <a id="change">tf</a>.shape(clip_space_vertices)[0]
+  
+  <a id="change">per_image_barycentric_coordinates = tf.TensorArray(dtype=tf.float32, size=batch_size)</a>
+  per_image_vertex_ids = tf.TensorArray(dtype=tf.int32, size=batch_size)
+
+  def condition(b, *args):
+    return b &lt; batch_size</code></pre><img src="26214255.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/google/tf_mesh_renderer/commit/8aaabd6dfcd2f4ae5618ef08657bbba82e8bd69f#diff-e3cc529c7fbe8a91d7438479da642457aea30a56ce5b2d295bf09296c08026d1L106' target='_blank'>Link</a></div><div id='project'> Project Name: google/tf_mesh_renderer</div><div id='commit'> Commit Name: 8aaabd6dfcd2f4ae5618ef08657bbba82e8bd69f</div><div id='time'> Time: 2019-05-28</div><div id='author'> Author: david.erler@gmail.com</div><div id='file'> File Name: mesh_renderer/rasterize_triangles.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: rasterize_clip_space</div><BR><BR><div id='link'><a href='https://github.com/GPflow/GPflowOpt/commit/b96598a16031c8b940e991f7c1bf80d702fea07f#diff-f1c349e608d4c53f941c85a820e4a4a41a048adbfa66ead1b966d2c7f4b2e4ffL64' target='_blank'>Link</a></div><div id='project'> Project Name: GPflow/GPflowOpt</div><div id='commit'> Commit Name: b96598a16031c8b940e991f7c1bf80d702fea07f</div><div id='time'> Time: 2017-09-27</div><div id='author'> Author: Pxidbpb4Lq</div><div id='file'> File Name: gpflowopt/acquisition/mes.py</div><div id='class'> Class Name: MinValueEntropySearch</div><div id='method'> Method Name: _setup</div><BR><BR><div id='link'><a href='https://github.com/tryolabs/luminoth/commit/dfe26d7233aaccb1d344ff9ba9995d722503b7e7#diff-1a1c73ba97ad8bdcf3b5c74652e41f5f4c1aecb9606c4e5d0f8e4241a8f02e1aL62' target='_blank'>Link</a></div><div id='project'> Project Name: tryolabs/luminoth</div><div id='commit'> Commit Name: dfe26d7233aaccb1d344ff9ba9995d722503b7e7</div><div id='time'> Time: 2018-03-20</div><div id='author'> Author: joaquin.alori@gmail.com</div><div id='file'> File Name: luminoth/models/ssd/ssd.py</div><div id='class'> Class Name: SSD</div><div id='method'> Method Name: _build</div><BR><BR><div id='link'><a href='https://github.com/jakeret/tf_unet/commit/64ef74050629e45e46090b3e79375788223786ba#diff-2d4cf6811042fbb78628447ef934a4a24f24a39a01df98fdc7223c9c3b850d9fL48' target='_blank'>Link</a></div><div id='project'> Project Name: jakeret/tf_unet</div><div id='commit'> Commit Name: 64ef74050629e45e46090b3e79375788223786ba</div><div id='time'> Time: 2016-12-06</div><div id='author'> Author: felix.gruen@outlook.de</div><div id='file'> File Name: tf_unet/layers.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: crop_and_concat</div><BR>

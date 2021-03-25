@@ -1,0 +1,20 @@
+<html><h3>af79a5c7760057a7dec1b68b97639cc69f40c3ea,train.py,,evaluate,#,26
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    for b, batch in enumerate(val_iter):
+        src, len_src = batch.src
+        trg, len_trg = batch.trg
+        <a id="change">src</a>, trg = src.cuda(), trg.cuda()
+        output = model(src, trg)
+        loss = F.cross_entropy(output.view(-1, vocab_size),
+                               trg.contiguous().view(-1), ignore_index=pad)</code></pre><h3>After Change</h3><pre><code class='java'>
+        src, len_src = batch.src
+        trg, len_trg = batch.trg
+        src = Variable(src.data.cuda(), volatile=True)
+        <a id="change">trg = Variable(trg.data.cuda(), volatile=True)</a>
+        output = model(src, trg)
+        loss = F.cross_entropy(output.view(-1, vocab_size),
+                               trg.contiguous().view(-1), ignore_index=pad)
+        total_loss += loss.data[0]</code></pre><img src="11589776.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/keon/seq2seq/commit/af79a5c7760057a7dec1b68b97639cc69f40c3ea#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L33' target='_blank'>Link</a></div><div id='project'> Project Name: keon/seq2seq</div><div id='commit'> Commit Name: af79a5c7760057a7dec1b68b97639cc69f40c3ea</div><div id='time'> Time: 2017-12-03</div><div id='author'> Author: kwk236@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: evaluate</div><BR><BR><div id='link'><a href='https://github.com/vinhkhuc/PyTorch-Mini-Tutorials/commit/713df9556d874cf9ede91563fccb746b8c54c35f#diff-789b74eb303ae0656f017fd04da6099969e49f833187245fc38f4ffa9790212bL47' target='_blank'>Link</a></div><div id='project'> Project Name: vinhkhuc/PyTorch-Mini-Tutorials</div><div id='commit'> Commit Name: 713df9556d874cf9ede91563fccb746b8c54c35f</div><div id='time'> Time: 2017-05-24</div><div id='author'> Author: knvinh@gmail.com</div><div id='file'> File Name: 6_lstm.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/IBM/AIF360/commit/3cb9c2500c2b7aa82a4d4663e7a7b4fbdfa5edee#diff-cb0e7994f57b06a68c1e8cdf4ececa2089e279700573e6ce98017d9e166f1e91L45' target='_blank'>Link</a></div><div id='project'> Project Name: IBM/AIF360</div><div id='commit'> Commit Name: 3cb9c2500c2b7aa82a4d4663e7a7b4fbdfa5edee</div><div id='time'> Time: 2020-02-19</div><div id='author'> Author: hoffman.sc@gmail.com</div><div id='file'> File Name: aif360/sklearn/inprocessing/adversarial_debiasing.py</div><div id='class'> Class Name: AdversarialDebiasing</div><div id='method'> Method Name: fit</div><BR>

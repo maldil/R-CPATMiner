@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+      yaml.dump(root_config, f)
+      f.flush()
+      FLAGS.project_yaml = f.name
+      <a id="change">with tempfile.NamedTemporaryFile() as fout:
+        FLAGS.output_yaml_path = fout.name
+        create_project.main([])
+
+ </a> def test_create_project_with_spanned_configs(self):
+    FLAGS.project_yaml = (
+        &quotdeploy/samples/spanned_configs/root.yaml&quot)
+    FLAGS.projects = [&quot*&quot]</code></pre><h3>After Change</h3><pre><code class='java'>
+    ]
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+      FLAGS.output_yaml_path = <a id="change">os</a>.path.join(tmp_dir, &quotconf.yaml&quot)
+      FLAGS.project_yaml = FLAGS.output_yaml_path
+      <a id="change">FLAGS.output_cleanup_path = os.path.join(tmp_dir, &quotcleanup.sh&quot)</a>
+      with open(FLAGS.project_yaml, &quotw&quot) as f:
+        yaml = ruamel.yaml.YAML()
+        yaml.dump(root_config, f)
+        f.flush()</code></pre>

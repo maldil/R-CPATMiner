@@ -1,0 +1,103 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        train_opt = opt[&quottrain&quot]
+
+        &#47&#47 define networks and load pretrained models
+        <a id="change">self.netG</a> = <a id="change">networks.define_G(opt)</a>  &#47&#47 G
+        if self.is_train:
+            self.netD = networks.define_D(opt)  &#47&#47 D
+            self.netG.train()
+            self.netD.train()
+        self.load()  &#47&#47 load G and D if needed
+
+        &#47&#47 define losses, optimizer and scheduler
+        if self.is_train:
+            &#47&#47 G pixel loss
+            if train_opt[&quotpixel_weight&quot] &gt; 0:
+                l_pix_type = train_opt[&quotpixel_criterion&quot]
+                if l_pix_type == &quotl1&quot:
+                    <a id="change">self.cri_pix</a> = nn.L1Loss()
+                elif l_pix_type == &quotl2&quot:
+                    self.cri_pix = nn.MSELoss()
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_pix_type)
+                self.l_pix_w = train_opt[&quotpixel_weight&quot]
+            else:
+                print(&quotRemove pixel loss.&quot)
+                self.cri_pix = None
+
+            &#47&#47 G feature loss
+            if train_opt[&quotfeature_weight&quot] &gt; 0:
+                l_fea_type = train_opt[&quotfeature_criterion&quot]
+                if l_fea_type == &quotl1&quot:
+                    self.cri_fea = nn.L1Loss()
+                elif l_fea_type == &quotl2&quot:
+                    <a id="change">self.cri_fea</a> = <a id="change">nn.MSELoss()</a>
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_fea_type)
+                self.l_fea_w = train_opt[&quotfeature_weight&quot]
+            else:
+                print(&quotRemove feature loss.&quot)
+                self.cri_fea = None
+            if self.cri_fea:  &#47&#47 load VGG perceptual loss
+                self.netF = networks.define_F(opt, use_bn=False)
+
+            &#47&#47 GD gan loss
+            self.cri_gan = GANLoss(train_opt[&quotgan_type&quot], 1.0, 0.0)
+            self.l_gan_w = train_opt[&quotgan_weight&quot]
+            self.D_update_ratio = train_opt[&quotD_update_ratio&quot] if train_opt[&quotD_update_ratio&quot] else 1
+            self.D_init_iters = train_opt[&quotD_init_iters&quot] if train_opt[&quotD_init_iters&quot] else 0
+
+            if train_opt[&quotgan_type&quot] == &quotwgan-gp&quot:
+                self.random_pt = torch.Tensor(1, 1, 1, 1).to(self.device)
+                &#47&#47 gradient penalty loss
+                self.cri_gp = GradientPenaltyLoss(tensor=self.Tensor)
+                self.l_gp_w = train_opt[&quotgp_weigth&quot]
+
+            if self.use_gpu:
+                <a id="change">if self.cri_pix:
+                    self.cri_pix.cuda()
+               </a> if self.cri_fea:
+                    <a id="change">self</a>.cri_fea.cuda()
+                self.cri_gan.cuda()
+                if train_opt[&quotgan_type&quot] == &quotwgan-gp&quot:
+                    self.cri_gp.cuda()</code></pre><h3>After Change</h3><pre><code class='java'>
+        train_opt = opt[&quottrain&quot]
+
+        &#47&#47 define networks and load pretrained models
+        <a id="change">self.netG</a> = <a id="change">networks</a>.define_G(opt).to(self.device)  &#47&#47 G
+        if self.is_train:
+            self.netD = networks.define_D(opt).to(self.device)  &#47&#47 D
+            self.netG.train()
+            self.netD.train()
+        self.load()  &#47&#47 load G and D if needed
+
+        &#47&#47 define losses, optimizer and scheduler
+        if self.is_train:
+            &#47&#47 G pixel loss
+            if train_opt[&quotpixel_weight&quot] &gt; 0:
+                l_pix_type = train_opt[&quotpixel_criterion&quot]
+                if l_pix_type == &quotl1&quot:
+                    self.cri_pix = nn.L1Loss().to(<a id="change">self.device</a>)
+                elif l_pix_type == &quotl2&quot:
+                    self.cri_pix = <a id="change">nn.MSELoss().to(self.device)</a>
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_pix_type)
+                self.l_pix_w = train_opt[&quotpixel_weight&quot]
+            else:
+                print(&quotRemove pixel loss.&quot)
+                self.cri_pix = None
+
+            &#47&#47 G feature loss
+            if train_opt[&quotfeature_weight&quot] &gt; 0:
+                l_fea_type = train_opt[&quotfeature_criterion&quot]
+                if l_fea_type == &quotl1&quot:
+                    self.cri_fea = nn.L1Loss().to(self.device)
+                elif l_fea_type == &quotl2&quot:
+                    <a id="change">self.cri_fea</a> = <a id="change">nn.MSELoss().to(self.device)</a>
+                else:
+                    raise NotImplementedError(&quotLoss type [%s] is not recognized.&quot % l_fea_type)
+                self.l_fea_w = train_opt[&quotfeature_weight&quot]
+            else:</code></pre>

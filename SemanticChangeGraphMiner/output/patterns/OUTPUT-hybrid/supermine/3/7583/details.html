@@ -1,0 +1,21 @@
+<html><h3>2c6ce0ebfa9537246878e8fb9144e0c879fca17d,cube/models/vocoder.py,BeeCoder,synthesize,#BeeCoder#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    sys.stdout.flush()
+            pred_probs = self._predict_one(mgc[mgc_index], history, runtime=True)
+            for output in pred_probs:
+                synth.append(self._pick_sample(<a id="change">output.npvalue()</a>, temperature=temperature))
+
+            hist = synth[-self.HISTORY:]
+            dy.renew_cg()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            last_fft = np.zeros(self.FFT_SIZE, dtype=np.complex)
+            out_real = output_real.value()
+            <a id="change">out_imag = output_imag.value()</a>
+            for ii in range(self.FFT_SIZE):
+                last_fft[ii] = np.complex(out_real[ii], <a id="change">out_imag[ii]</a>)
+                predicted[mgc_index, ii] = np.complex(out_real[ii], out_imag[ii])
+
+        synth = self.vocoder.ifft(predicted, sample_rate=self.params.target_sample_rate)</code></pre><img src="29116030.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tiberiu44/TTS-Cube/commit/2c6ce0ebfa9537246878e8fb9144e0c879fca17d#diff-9d17b1c68e41c8fdd5b8f4fddb08fcad8f39df3ea7fa9bb8de1c41a95d338ea8L52' target='_blank'>Link</a></div><div id='project'> Project Name: tiberiu44/TTS-Cube</div><div id='commit'> Commit Name: 2c6ce0ebfa9537246878e8fb9144e0c879fca17d</div><div id='time'> Time: 2018-10-22</div><div id='author'> Author: tibi@racai.ro</div><div id='file'> File Name: cube/models/vocoder.py</div><div id='class'> Class Name: BeeCoder</div><div id='method'> Method Name: synthesize</div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/51a79d8525b651d71170d834b8002f889f16e252#diff-0ed19af11b628d3334f86ff09134da706fc313ab3ed128c13be57584174ae0ecL87' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: 51a79d8525b651d71170d834b8002f889f16e252</div><div id='time'> Time: 2017-09-04</div><div id='author'> Author: neubig@gmail.com</div><div id='file'> File Name: 03-wordemb/wordemb-skip.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/neubig/nn4nlp-code/commit/51a79d8525b651d71170d834b8002f889f16e252#diff-f59fce1931a6f2dad99efdb7858660a0e9ce82deeee5ee6d484cdfdeda3d9922L86' target='_blank'>Link</a></div><div id='project'> Project Name: neubig/nn4nlp-code</div><div id='commit'> Commit Name: 51a79d8525b651d71170d834b8002f889f16e252</div><div id='time'> Time: 2017-09-04</div><div id='author'> Author: neubig@gmail.com</div><div id='file'> File Name: 03-wordemb/wordemb-cbow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

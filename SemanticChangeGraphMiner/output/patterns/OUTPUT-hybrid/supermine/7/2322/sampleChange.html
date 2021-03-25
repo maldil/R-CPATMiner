@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Xprime : array-like of shape (n, 2)
+            Returns the 2-dimensional embedding of the instances.
+        
+        <a id="change">try:
+            return self.manifold.transform(X)
+        except AttributeError as e:
+            raise AttributeError(str(e) + " try using fit_transform instead.")
+
+   </a> def draw(self, X, y=None):
+        
+        Draws the points described by X and colored by the points in y. Can be
+        called multiple times before finalize to add more scatter plots to the</code></pre><h3>After Change</h3><pre><code class='java'>
+        it is yet to be implemented in sklearn.
+        
+        &#47&#47 Because some manifolds do not have transform we cannot call super
+        <a id="change">try:
+            Xp = self.manifold.transform(X)
+            self.draw(Xp, y)
+            return Xp
+        except NotFittedError:
+             raise NotFitted.from_estimator(self, &quottransform&quot)
+        except AttributeError:
+            name = self.manifold.__class__.__name__
+            raise ModelError((
+                "{} requires data to be simultaneously fit and transformed, "
+                "use fit_transform instead").format(name)
+            )
+                    
+       </a> return Xp
+
+    def draw(self, Xp, y=None):
+        &#47&#47 Calls draw method from super class which draws scatter plot.</code></pre>

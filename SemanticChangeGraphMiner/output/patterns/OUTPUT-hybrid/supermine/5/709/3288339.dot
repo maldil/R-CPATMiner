@@ -1,0 +1,20 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Conv1d" a="32" s="3703,3738" l="7,1" shape="box"];
+4 [label="FieldAccess" a="22" s="3663" l="9" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Conv1d" a="32" s="4191,4226" l="7,1" shape="box"];
+3 [label="weight_norm" a="32" s="4179,4227" l="12,1" shape="box"];
+5 [label="FieldAccess" a="22" s="4139" l="9" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+1 -> 4 [label="_def_"];
+2 -> 3 [label="_para_"];
+3 -> 5 [label="_def_"];
+4 -> 5 [label="_map_"];
+}

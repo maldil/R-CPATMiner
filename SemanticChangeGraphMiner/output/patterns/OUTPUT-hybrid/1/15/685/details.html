@@ -1,0 +1,30 @@
+<html><h3>8d0d0c7a6db3904f0222cbe058388a92cf21a548,calamari_ocr/ocr/dataset/imageprocessors/center_normalizer.py,CenterNormalizer,measure,#CenterNormalizer#,30
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        h, w = line.shape
+        smoothed = filters.gaussian_filter(line, (h * 0.5, h * self.smoothness), mode=&quotconstant&quot)
+        smoothed += 0.001 * filters.uniform_filter(smoothed, (h * 0.5, w), mode=&quotconstant&quot)
+        <a id="change">a</a> = <a id="change">np.argmax(smoothed, axis=0)</a>
+        a = filters.gaussian_filter(a, h * self.extra)
+        center = np.array(a, &quoti&quot)
+        deltas = abs(np.arange(h)[:, np.newaxis] - center[np.newaxis, :])
+        <a id="change">mad</a> = np.mean(deltas[line != 0])
+        <a id="change">r</a> = int(1 + self.range * mad)
+
+        return center, r
+</code></pre><h3>After Change</h3><pre><code class='java'>
+                                   borderType=cv.BORDER_CONSTANT)
+        smoothed += .001 * cv.blur(smoothed, (w, int(h*.5)), borderType=cv.BORDER_CONSTANT)
+
+        <a id="change">a</a> = <a id="change">np</a>.argmax(smoothed, axis=0).astype(np.uint16)
+        kernel = cv.getGaussianKernel(int((8.*h*self.extra)+1), h*self.extra)
+        center = cv.filter2D(a, cv.CV_16U, kernel, borderType=cv.BORDER_REFLECT).flatten()
+
+        deltas = abs(np.arange(h)[:, np.newaxis] - center[np.newaxis, :])
+        <a id="change">mad</a> = np.mean(deltas[line != 0])
+        <a id="change">r</a> = int(1 + self.range * mad)
+
+        return center, r
+</code></pre><img src="3516212.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Calamari-OCR/calamari/commit/8d0d0c7a6db3904f0222cbe058388a92cf21a548#diff-7394132891796007ae77bcac06b674e4c3c2d30065a4b209a9ea84e3333fb63fL28' target='_blank'>Link</a></div><div id='project'> Project Name: Calamari-OCR/calamari</div><div id='commit'> Commit Name: 8d0d0c7a6db3904f0222cbe058388a92cf21a548</div><div id='time'> Time: 2021-02-06</div><div id='author'> Author: ChWick@users.noreply.github.com</div><div id='file'> File Name: calamari_ocr/ocr/dataset/imageprocessors/center_normalizer.py</div><div id='class'> Class Name: CenterNormalizer</div><div id='method'> Method Name: measure</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/ce77cfbe0a31b4b9534cbfc5ecf24b56d4f04a83#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L168' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: ce77cfbe0a31b4b9534cbfc5ecf24b56d4f04a83</div><div id='time'> Time: 2014-06-19</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: estimate_tempo</div><BR><BR><div id='link'><a href='https://github.com/Calamari-OCR/calamari/commit/8d0d0c7a6db3904f0222cbe058388a92cf21a548#diff-7394132891796007ae77bcac06b674e4c3c2d30065a4b209a9ea84e3333fb63fL30' target='_blank'>Link</a></div><div id='project'> Project Name: Calamari-OCR/calamari</div><div id='commit'> Commit Name: 8d0d0c7a6db3904f0222cbe058388a92cf21a548</div><div id='time'> Time: 2021-02-06</div><div id='author'> Author: ChWick@users.noreply.github.com</div><div id='file'> File Name: calamari_ocr/ocr/dataset/imageprocessors/center_normalizer.py</div><div id='class'> Class Name: CenterNormalizer</div><div id='method'> Method Name: measure</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/92c014db6497e62174b4ef592585fcaed2fd9ac4#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L171' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 92c014db6497e62174b4ef592585fcaed2fd9ac4</div><div id='time'> Time: 2013-03-23</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: onset_estimate_bpm</div><BR>

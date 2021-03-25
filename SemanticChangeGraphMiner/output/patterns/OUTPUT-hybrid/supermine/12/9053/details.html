@@ -1,0 +1,26 @@
+<html><h3>e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4,underthesea/word_sent/model.py,CRFModel,predict,#CRFModel#,19
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            tokenized_sentence += " "
+        format_sentence = &quot&quot
+        for word in tokenized_sentence.split("_"):
+            <a id="change">if word not in self.punctuation:
+                format_sentence += word[: -1] + "_"
+       </a> tokenized_sentence = format_sentence[:-1]
+        return tokenized_sentence
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        tokens = Transformer.transform(sentence)
+        tags = self.model.tag(tokens)
+        tokens = [item[0] for item in tokens]
+        <a id="change">output = []</a>
+        for tag, token in zip(tags, tokens):
+            if tag == "I_W":
+               output[-1] = output[-1] + u" " + token
+            else:
+                output.append(token)
+        if format == "text":
+            <a id="change">output = u" ".join([item.replace(" ", "_") for item in output])</a>
+        return output
+</code></pre><img src="35215857.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/undertheseanlp/underthesea/commit/e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4#diff-fb77c10af5f2523d6e2f7b76e66bccaea14b6de4f6ce58fc1d0d251299ee7ac1L19' target='_blank'>Link</a></div><div id='project'> Project Name: undertheseanlp/underthesea</div><div id='commit'> Commit Name: e8852f5ea7b3b5d222f0d6140f9375bd3826d2e4</div><div id='time'> Time: 2017-05-08</div><div id='author'> Author: brother.rain.1024@gmail.com</div><div id='file'> File Name: underthesea/word_sent/model.py</div><div id='class'> Class Name: CRFModel</div><div id='method'> Method Name: predict</div><BR><BR><div id='link'><a href='https://github.com/CSAILVision/places365/commit/3a4a56e15dc30e5f7d9c4c7706f5710d1da73e52#diff-38b75e1a2e0904617cfc01f51f185562490b2800904aed1099106f3e0656255aL15' target='_blank'>Link</a></div><div id='project'> Project Name: CSAILVision/places365</div><div id='commit'> Commit Name: 3a4a56e15dc30e5f7d9c4c7706f5710d1da73e52</div><div id='time'> Time: 2018-05-02</div><div id='author'> Author: zhoubolei@gmail.com</div><div id='file'> File Name: run_placesCNN_basic.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/CSAILVision/places365/commit/3a4a56e15dc30e5f7d9c4c7706f5710d1da73e52#diff-e0dd0031b50ae65a4b7ca4463f99bd9ac9757cb11be74e7e66560fb0f85dccf7L89' target='_blank'>Link</a></div><div id='project'> Project Name: CSAILVision/places365</div><div id='commit'> Commit Name: 3a4a56e15dc30e5f7d9c4c7706f5710d1da73e52</div><div id='time'> Time: 2018-05-02</div><div id='author'> Author: zhoubolei@gmail.com</div><div id='file'> File Name: run_placesCNN_unified.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: load_model</div><BR>

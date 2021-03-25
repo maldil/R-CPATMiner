@@ -1,0 +1,21 @@
+<html><h3>16c8363e81d624d7a48900af8335ad263bed18a7,qanta/guesser/dan.py,DanModel,forward,#DanModel#,177
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if self.bigram_field is not None:
+                bigram_input = input_[&quotbigram&quot]
+                embed = self.bigram_embeddings(bigram_input)
+                <a id="change">embed</a> = <a id="change">embed.sum(1) / lengths[&quotbigram&quot].float().view(bigram_input.size()[0], -1)</a>
+                <a id="change">embed</a> = self.dropout(embed)
+                embedding_list.append(embed)
+
+            if self.trigram_field is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+            if self.bigram_field is not None:
+                bigram_input = input_[&quotbigram&quot]
+                embed = self.bigram_embeddings(bigram_input)
+                <a id="change">embed</a> = <a id="change">self._pool(embed, lengths[&quotbigram&quot].float, bigram_input.size()[0])</a>
+                <a id="change">embed</a> = self.dropout(embed)
+                embedding_list.append(embed)
+
+            if self.trigram_field is not None:</code></pre><img src="808271.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/Pinafore/qb/commit/16c8363e81d624d7a48900af8335ad263bed18a7#diff-e52573ae7a7c5beef51db11be8214218f3aa1b82c3b45e1830ac0b9e813e63abL186' target='_blank'>Link</a></div><div id='project'> Project Name: Pinafore/qb</div><div id='commit'> Commit Name: 16c8363e81d624d7a48900af8335ad263bed18a7</div><div id='time'> Time: 2018-02-09</div><div id='author'> Author: ski.rodriguez@gmail.com</div><div id='file'> File Name: qanta/guesser/dan.py</div><div id='class'> Class Name: DanModel</div><div id='method'> Method Name: forward</div><BR>

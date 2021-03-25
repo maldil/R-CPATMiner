@@ -1,0 +1,29 @@
+<html><h3>0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14,tasks/save_reload_model.py,,,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+x = Dropout(0.5)(x)  &#47&#47 and dropout here.
+x = Dense(1, activation=&quotsigmoid&quot)(x)
+
+model = Model(inputs=[i], outputs=<a id="change">[x]</a>)
+
+if os.path.exists(&quottcn.npz&quot):
+    &#47&#47 Load checkpoint if file exists.</code></pre><h3>After Change</h3><pre><code class='java'>
+max_features = 50
+
+&#47&#47 make model
+model = <a id="change">Sequential(layers=[Embedding(max_features, 16, input_shape=(max_len,)),
+                           TCN(nb_filters=12,
+                               dropout_rate=0.5,
+                               kernel_size=6,
+                               dilations=[1, 2, 4]),
+                           Dropout(0.5),
+                           Dense(units=1, activation=&quotsigmoid&quot)])</a>
+
+&#47&#47 get model as json string and save to file
+<a id="change">model_as_json = model.to_json()</a>
+with open(r&quotmodel.json&quot, "w") as json_file:
+    json_file.write(model_as_json)
+&#47&#47 save weights to file (for this format, need h5py installed)
+model.save_weights(&quotweights.h5&quot)</code></pre><img src="36798624.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/philipperemy/keras-tcn/commit/0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14#diff-a1a14690bd4d0db68da6b27026209aa1ee45066f7ce9125d736e3b406d0059ceL8' target='_blank'>Link</a></div><div id='project'> Project Name: philipperemy/keras-tcn</div><div id='commit'> Commit Name: 0cfe82c6beb9a28a5ff7da81b86fa0e93c388f14</div><div id='time'> Time: 2019-11-20</div><div id='author'> Author: premy@cogent.co.jp</div><div id='file'> File Name: tasks/save_reload_model.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/altosaar/variational-autoencoder/commit/b43325e297498269be86b281a02e2ef79664f273#diff-c68a66eddd1fe44b337d8ddb991d570aefa97d42470238ec801a580948b5147cL66' target='_blank'>Link</a></div><div id='project'> Project Name: altosaar/variational-autoencoder</div><div id='commit'> Commit Name: b43325e297498269be86b281a02e2ef79664f273</div><div id='time'> Time: 2019-09-18</div><div id='author'> Author: altosaar@users.noreply.github.com</div><div id='file'> File Name: train_variational_autoencoder_tensorflow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: generative_network</div><BR><BR><div id='link'><a href='https://github.com/altosaar/variational-autoencoder/commit/b43325e297498269be86b281a02e2ef79664f273#diff-c68a66eddd1fe44b337d8ddb991d570aefa97d42470238ec801a580948b5147cL41' target='_blank'>Link</a></div><div id='project'> Project Name: altosaar/variational-autoencoder</div><div id='commit'> Commit Name: b43325e297498269be86b281a02e2ef79664f273</div><div id='time'> Time: 2019-09-18</div><div id='author'> Author: altosaar@users.noreply.github.com</div><div id='file'> File Name: train_variational_autoencoder_tensorflow.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: inference_network</div><BR>

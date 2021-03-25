@@ -1,0 +1,25 @@
+<html><h3>0110937ab04f4298f98963bed1de08962d776b24,src/fonduer/utils/data_model_utils/structural.py,,lowest_common_ancestor_depth,#,187
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    :param c: The binary-Mention Candidate to evaluate
+    
+    <a id="change">span1 = _to_span(c[0])</a>
+    span2 = _to_span(c[1])
+    ancestor1 = np.array(<a id="change">span1</a>.sentence.xpath.split("/"))
+    ancestor2 = np.array(span2.sentence.xpath.split("/"))
+    min_len = min(ancestor1.size, ancestor2.size)
+    <a id="change">return min_len - np.argmin(ancestor1[:min_len] == ancestor2[:min_len])</a>
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    :param c: The multinary-Mention Candidate to evaluate
+    
+    spans = [_to_span(i) for i in c]
+    ancestors = [np.array(span.sentence.xpath.split("/")) <a id="change">for</a> span in spans]
+    min_len = min([a.size for a in ancestors])
+    arrays = np.array(<a id="change">[a[:min_len] for a in ancestors]</a>)
+    <a id="change">arg_min = np.argmin(arrays[:-1] == arrays[1:], axis=1)</a>
+    val = np.min(arg_min[np.nonzero(arg_min)])
+    <a id="change">return min_len - val</a>
+</code></pre><img src="34750995.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/HazyResearch/fonduer/commit/0110937ab04f4298f98963bed1de08962d776b24#diff-0c785e8f4024f6d1d130d6b0b9b59af850e9d7d3a6cec8d4642f81bf54c1b510L208' target='_blank'>Link</a></div><div id='project'> Project Name: HazyResearch/fonduer</div><div id='commit'> Commit Name: 0110937ab04f4298f98963bed1de08962d776b24</div><div id='time'> Time: 2020-07-01</div><div id='author'> Author: wajdikhattel@think-it.io</div><div id='file'> File Name: src/fonduer/utils/data_model_utils/structural.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lowest_common_ancestor_depth</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/2ab1119596b420cc696a783271d617562ccf7e28#diff-8900c0e1cb75b4171b1763d7502f4de71e92505ef8ff8b757c282336313e84aeL44' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 2ab1119596b420cc696a783271d617562ccf7e28</div><div id='time'> Time: 2017-03-29</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: cesium/tests/fixtures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_featureset</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/2bae518e899657e536572fa59df6e1587795e397#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L349' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 2bae518e899657e536572fa59df6e1587795e397</div><div id='time'> Time: 2014-12-30</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: line_features</div><BR>

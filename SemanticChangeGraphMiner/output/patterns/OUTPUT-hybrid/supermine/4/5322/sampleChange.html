@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+            self.axes_ = np.empty((n_rows, n_cols), dtype=np.object)
+            self.lines_ = np.empty((n_rows, n_cols), dtype=np.object)
+            self.contours_ = np.empty(<a id="change">(n_rows, n_cols)</a>, dtype=np.object)
+
+            axes_ravel = self.axes_.ravel()
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        lines_ravel = self.lines_.ravel(order=&quotC&quot)
+        contours_ravel = self.contours_.ravel(order=&quotC&quot)
+        vlines_ravel = self.deciles_vlines_.ravel(order=&quotC&quot)
+        <a id="change">hlines_ravel = self.deciles_hlines_.ravel(order=&quotC&quot)</a>
+
+        for i, axi, fx, (avg_preds, values) in zip(count(),
+                                                   self.axes_.ravel(),
+                                                   self.features,
+                                                   self.pd_results):
+            if len(values) == 1:
+                lines_ravel[i] = axi.plot(values[0],
+                                          avg_preds[self.target_idx].ravel(),
+                                          **line_kw)[0]
+            else:
+                &#47&#47 contour plot
+                XX, YY = np.meshgrid(values[0], values[1])
+                Z = avg_preds[self.target_idx].T
+                CS = axi.contour(XX, YY, Z, levels=Z_level, linewidths=0.5,
+                                 colors=&quotk&quot)
+                contours_ravel[i] = axi.contourf(XX, YY, Z, levels=Z_level,
+                                                 vmax=Z_level[-1],
+                                                 vmin=Z_level[0],
+                                                 **contour_kw)
+                axi.clabel(CS, fmt=&quot%2.2f&quot, colors=&quotk&quot, fontsize=10,
+                           inline=True)
+
+            trans = transforms.blended_transform_factory(axi.transData,
+                                                         axi.transAxes)
+            ylim = axi.get_ylim()
+            vlines_ravel[i] = axi.vlines(self.deciles[fx[0]], 0, 0.05,
+                                         transform=trans, color=&quotk&quot)
+            axi.set_ylim(ylim)
+
+            &#47&#47 Set xlabel if it is not already set
+            if not axi.get_xlabel():
+                axi.set_xlabel(self.feature_names[fx[0]])
+
+            if len(values) == 1:
+                if n_cols is None or i % n_cols == 0:
+                    axi.set_ylabel(&quotPartial dependence&quot)
+                else:
+                    axi.set_yticklabels([])
+                axi.set_ylim(self.pdp_lim[1])
+            else:
+                &#47&#47 contour plot
+                trans = transforms.blended_transform_factory(axi.transAxes,
+                                                             axi.transData)
+                xlim = axi.get_xlim()
+                <a id="change">hlines_ravel[i]</a> = axi.hlines(self.deciles[fx[1]], 0, 0.05,
+                                             transform=trans, color=&quotk&quot)
+                &#47&#47 hline erases xlim
+                axi.set_ylabel(self.feature_names[fx[1]])</code></pre>

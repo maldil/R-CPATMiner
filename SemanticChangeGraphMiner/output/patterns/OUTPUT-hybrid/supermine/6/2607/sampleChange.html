@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    params = request.GET.get(&quotparams&quot, &quot&quot)
+    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    if hash != request.GET.get(&quothash&quot, &quot&quot):
+        <a id="change">return HttpResponse(&quot&lt;h3&gt;Tamper alert&lt;/h3&gt;&quot)</a> &#47&#47 SQL Tampering alert
+    if sql.lower().startswith(&quotselect&quot):
+        params = simplejson.loads(params)
+        cursor = connection.cursor()</code></pre><h3>After Change</h3><pre><code class='java'>
+    params = request.GET.get(&quotparams&quot, &quot&quot)
+    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    if hash != request.GET.get(&quothash&quot, &quot&quot):
+        <a id="change">return HttpResponseBadRequest(&quotTamper alert&quot)</a> &#47&#47 SQL Tampering alert
+    if sql.lower().startswith(&quotselect&quot):
+        params = simplejson.loads(params)
+        cursor = connection.cursor()</code></pre>

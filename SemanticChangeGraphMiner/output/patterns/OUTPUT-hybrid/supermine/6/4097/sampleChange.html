@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 HWC to CHW, BGR to RGB, numpy to tensor
+        if img_LR.shape[2] == 3:
+            <a id="change">img_LR = cv2.cvtColor(img_LR, cv2.COLOR_BGR2RGB)</a>
+        img_LR = torch.from_numpy(np.ascontiguousarray(np.transpose(img_LR, (2, 0, 1)))).float()
+
+        return {&quotLR&quot: img_LR, &quotLR_path&quot: LR_path}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 HWC to CHW, BGR to RGB, numpy to tensor
+        if img_LR.shape[2] == 3:
+            <a id="change">img_LR = img_LR[:, :, [2, 1, 0]]</a>
+        img_LR = torch.from_numpy(np.ascontiguousarray(np.transpose(img_LR, (2, 0, 1)))).float()
+
+        return {&quotLR&quot: img_LR, &quotLR_path&quot: LR_path}
+</code></pre>

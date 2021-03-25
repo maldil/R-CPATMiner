@@ -1,0 +1,155 @@
+<html><h3>585303417c3f4641f61ac5a916a51505a67cc507,example/mscoco.py,,validate,#,200
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    gt_win, pred_win = None, None
+    end = time.time()
+    bar = Bar(&quotProcessing&quot, max=len(val_loader))
+    <a id="change">for i, (inputs, target, meta) in enumerate(val_loader):
+        &#47&#47 measure data loading time
+        data_time.update(time.time() - end)
+
+        target = target.cuda(async=True)
+
+        input_var = torch.autograd.Variable(inputs.cuda(), volatile=True)
+        target_var = torch.autograd.Variable(target, volatile=True)
+
+        &#47&#47 compute output
+        output = model(input_var)
+        score_map = output[-1].data.cpu()
+        if flip:
+            flip_input_var = torch.autograd.Variable(
+                    torch.from_numpy(fliplr(inputs.clone().numpy())).float().cuda(), 
+                    volatile=True
+                )
+            flip_output_var = model(flip_input_var)
+            flip_output = flip_back(flip_output_var[-1].data.cpu())
+            score_map += flip_output
+
+
+
+        loss = 0
+        for o in output:
+            loss += criterion(o, target_var)
+        acc = accuracy(score_map, target.cpu(), idx)
+
+        &#47&#47 generate predictions
+        preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+        for n in range(score_map.size(0)):
+            predictions[meta[&quotindex&quot][n], :, :] = preds[n, :, :]
+
+
+        if debug:
+            gt_batch_img = batch_with_heatmap(inputs, target)
+            pred_batch_img = batch_with_heatmap(inputs, score_map)
+            if not gt_win or not pred_win:
+                plt.subplot(121)
+                gt_win = plt.imshow(gt_batch_img)
+                plt.subplot(122)
+                pred_win = plt.imshow(pred_batch_img)
+            else:
+                gt_win.set_data(gt_batch_img)
+                pred_win.set_data(pred_batch_img)
+            plt.pause(.5)
+            plt.draw()
+
+        &#47&#47 measure accuracy and record loss
+        losses.update(loss.data[0], inputs.size(0))
+        acces.update(acc[0], inputs.size(0))
+
+        &#47&#47 measure elapsed time
+        batch_time.update(time.time() - end)
+        end = time.time()
+
+        &#47&#47 plot progress
+        bar.suffix  = &quot({batch}/{size}) Data: {data:.6f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | Acc: {acc: .4f}&quot.format(
+                    batch=i + 1,
+                    size=len(val_loader),
+                    data=data_time.val,
+                    bt=batch_time.avg,
+                    total=bar.elapsed_td,
+                    eta=bar.eta_td,
+                    loss=losses.avg,
+                    acc=acces.avg
+                    )
+        bar.next()
+
+   </a> bar.finish()
+    return losses.avg, acces.avg, predictions
+
+if __name__ == &quot__main__&quot:</code></pre><h3>After Change</h3><pre><code class='java'>
+    end = time.time()
+    bar = Bar(&quotProcessing&quot, max=len(val_loader))
+
+    <a id="change">with torch.no_grad():
+        for i, (input, target, meta) in enumerate(val_loader):
+            &#47&#47 measure data loading time
+            data_time.update(time.time() - end)
+
+            target = target.cuda(async=True)
+
+            input = input.to(device, non_blocking=True)
+            target = target.to(device, non_blocking=True)
+
+            &#47&#47 compute output
+            output = model(input)
+            score_map = output[-1].data.cpu()
+            if flip:
+                flip_input_var = torch.from_numpy(fliplr(input.clone().numpy())).float().to(device)
+                flip_output_var = model(flip_input_var)
+                flip_output = flip_back(flip_output_var[-1].data.cpu())
+                score_map += flip_output
+
+
+
+            loss = 0
+            for o in output:
+                loss += criterion(o, target)
+            acc = accuracy(score_map, target.cpu(), idx)
+
+            &#47&#47 generate predictions
+            preds = final_preds(score_map, meta[&quotcenter&quot], meta[&quotscale&quot], [64, 64])
+            for n in range(score_map.size(0)):
+                predictions[meta[&quotindex&quot][n], :, :] = preds[n, :, :]
+
+
+            if debug:
+                gt_batch_img = batch_with_heatmap(input, target)
+                pred_batch_img = batch_with_heatmap(input, score_map)
+                if not gt_win or not pred_win:
+                    plt.subplot(121)
+                    gt_win = plt.imshow(gt_batch_img)
+                    plt.subplot(122)
+                    pred_win = plt.imshow(pred_batch_img)
+                else:
+                    gt_win.set_data(gt_batch_img)
+                    pred_win.set_data(pred_batch_img)
+                plt.pause(.5)
+                plt.draw()
+
+            &#47&#47 measure accuracy and record loss
+            losses.update(loss.item(), input.size(0))
+            acces.update(acc[0], input.size(0))
+
+            &#47&#47 measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
+
+            &#47&#47 plot progress
+            bar.suffix  = &quot({batch}/{size}) Data: {data:.6f}s | Batch: {bt:.3f}s | Total: {total:} | ETA: {eta:} | Loss: {loss:.4f} | Acc: {acc: .4f}&quot.format(
+                        batch=i + 1,
+                        size=len(val_loader),
+                        data=data_time.val,
+                        bt=batch_time.avg,
+                        total=bar.elapsed_td,
+                        eta=bar.eta_td,
+                        loss=losses.avg,
+                        acc=acces.avg
+                        )
+            bar.next()
+
+   </a> bar.finish()
+    return losses.avg, acces.avg, predictions
+
+if __name__ == &quot__main__&quot:</code></pre><img src="15078524.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/bearpaw/pytorch-pose/commit/585303417c3f4641f61ac5a916a51505a67cc507#diff-d8621a5ced85ff347f1c279fe9e8b62fb7b355bcc592692c5c203565df1e8b31L215' target='_blank'>Link</a></div><div id='project'> Project Name: bearpaw/pytorch-pose</div><div id='commit'> Commit Name: 585303417c3f4641f61ac5a916a51505a67cc507</div><div id='time'> Time: 2019-01-24</div><div id='author'> Author: platero.yang@gmail.com</div><div id='file'> File Name: example/mscoco.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/9c7e9288e31c947aa54aec1217fedfbce2f85bc6#diff-5e25746102683d5dc0fa74531c47856e3fc334a7831ebaec0fa098dd553517e3L22' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: 9c7e9288e31c947aa54aec1217fedfbce2f85bc6</div><div id='time'> Time: 2019-05-27</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/trainers/classification.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: validate</div><BR><BR><div id='link'><a href='https://github.com/gpleiss/efficient_densenet_pytorch/commit/b0a156d87b736d90c3e27933e8e4d0114bd5ef36#diff-27419e27638ba26c3b055e9daca00840a52779aa0e76b06c6a2a68d128abffb0L88' target='_blank'>Link</a></div><div id='project'> Project Name: gpleiss/efficient_densenet_pytorch</div><div id='commit'> Commit Name: b0a156d87b736d90c3e27933e8e4d0114bd5ef36</div><div id='time'> Time: 2019-01-27</div><div id='author'> Author: gpleiss@gmail.com</div><div id='file'> File Name: demo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_epoch</div><BR>

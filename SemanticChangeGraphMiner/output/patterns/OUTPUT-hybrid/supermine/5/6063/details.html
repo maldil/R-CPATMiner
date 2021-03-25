@@ -1,0 +1,35 @@
+<html><h3>005968dcfbd2a8f70d8ea3957c8abba60a12492d,pliers/filters/video.py,FrameSamplingFilter,_filter,#FrameSamplingFilter#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            new_idx = range(int(video.fps * video.clip.duration))[::self.every]
+        elif self.hertz is not None:
+            interval = int(video.fps / self.hertz)
+            <a id="change">new_idx = range(int(video.fps * video.clip.duration))[::interval]</a>
+        elif self.top_n is not None:
+            import cv2
+            diffs = []
+            for i, img in enumerate(video.frames):
+                if i == 0:
+                    last = img
+                    continue
+                diffs.append(sum(cv2.sumElems(cv2.absdiff(last.data, img.data))))
+                last = img
+            new_idx = sorted(range(len(diffs)),
+                             key=lambda i: diffs[i],
+                             reverse=True)[:self.top_n]
+
+        <a id="change">frame_index = sorted(list(set(video.frame_index).intersection(new_idx)))</a>
+
+        return VideoFrameCollectionStim(filename=video.filename,
+                                        clip=video.clip,
+                                        frame_index=frame_index)</code></pre><h3>After Change</h3><pre><code class='java'>
+        elif self.hertz is not None:
+            interval = video.fps / float(self.hertz)
+            new_idx = np.arange(0, video.n_frames, interval).astype(int)
+            new_idx = <a id="change">list(new_idx)</a>
+        elif self.top_n is not None:
+            import cv2
+            diffs = []
+            for i, img in enumerate(video.frames):</code></pre><img src="24967549.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/005968dcfbd2a8f70d8ea3957c8abba60a12492d#diff-cab8d93a5b65c74d870192defe3bf6647a9e5e3ec36e75836b7dbeba5bf44fabL40' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 005968dcfbd2a8f70d8ea3957c8abba60a12492d</div><div id='time'> Time: 2018-05-15</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/filters/video.py</div><div id='class'> Class Name: FrameSamplingFilter</div><div id='method'> Method Name: _filter</div><BR><BR><div id='link'><a href='https://github.com/cesium-ml/cesium/commit/586b49b07574f7812101248c94d73ef1fb2a5c12#diff-1614d180002f5d4d9f0a6d08fbb13816f7b9d56ec8b086cc9fcd0a6573060b66L23' target='_blank'>Link</a></div><div id='project'> Project Name: cesium-ml/cesium</div><div id='commit'> Commit Name: 586b49b07574f7812101248c94d73ef1fb2a5c12</div><div id='time'> Time: 2015-11-11</div><div id='author'> Author: brettnaul@gmail.com</div><div id='file'> File Name: mltsp/predict.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: add_to_predict_results_dict_classification_proba</div><BR><BR><div id='link'><a href='https://github.com/CamDavidsonPilon/lifelines/commit/b1d839cb8e521c3cf2efaebe17082f1a9680a253#diff-5b86956216e2540fe93140c9ea516d9c8e0128b81b963bf585456505e871c98dL36' target='_blank'>Link</a></div><div id='project'> Project Name: CamDavidsonPilon/lifelines</div><div id='commit'> Commit Name: b1d839cb8e521c3cf2efaebe17082f1a9680a253</div><div id='time'> Time: 2020-05-13</div><div id='author'> Author: cam.davidson.pilon@gmail.com</div><div id='file'> File Name: experiments/working_npmle.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: create_turnball_intervals</div><BR>

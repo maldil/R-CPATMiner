@@ -1,0 +1,32 @@
+<html><h3>4d9d2a1fc4e0d9289000a235340235802d51a97a,app/grandchallenge/cases/image_builders/dicom.py,,_create_itk_from_dcm,#,262
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    shape = dcm_array.shape[::-1]
+    &#47&#47 Write the numpy array to a file, so there is no need to keep it in memory
+    &#47&#47 anymore. Then create a SimpleITK image from it.
+    <a id="change">with tempfile.NamedTemporaryFile() as temp:
+        temp.seek(0)
+        temp.write(dcm_array.tobytes())
+        temp.flush()
+        temp.seek(0)
+
+        del dcm_array
+
+        img = SimpleITK.Image(shape, sitk_dtype, 1)
+        SimpleITK._SimpleITK._SetImageFromArray(temp.read(), img)
+
+   </a> return img
+
+
+def image_builder_dicom(</code></pre><h3>After Change</h3><pre><code class='java'>
+        np_dtype = np.float32
+    else:
+        np_dtype = np.short
+    <a id="change">if samples_per_pixel &gt; 1:
+        pixel_dims += (samples_per_pixel,)
+   </a> dcm_array = None
+    use_pixel_array = False
+
+    for index, partial in enumerate(dicom_ds.headers):</code></pre><img src="19186032.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/comic/grand-challenge.org/commit/4d9d2a1fc4e0d9289000a235340235802d51a97a#diff-754b83c2b254b4f02b85e4cacd813f350cdefb3142b4076d907e811e0622ea38L277' target='_blank'>Link</a></div><div id='project'> Project Name: comic/grand-challenge.org</div><div id='commit'> Commit Name: 4d9d2a1fc4e0d9289000a235340235802d51a97a</div><div id='time'> Time: 2021-02-12</div><div id='author'> Author: 57257130+MikeOverkamp-diag@users.noreply.github.com</div><div id='file'> File Name: app/grandchallenge/cases/image_builders/dicom.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _create_itk_from_dcm</div><BR><BR><div id='link'><a href='https://github.com/riga/tfdeploy/commit/2984beef3784e514a7b8512ab0e658ad01e86564#diff-60f61ab7a8d1910d86d9fda2261620314edcae5894d5aaa236b821c7256badd7L9' target='_blank'>Link</a></div><div id='project'> Project Name: riga/tfdeploy</div><div id='commit'> Commit Name: 2984beef3784e514a7b8512ab0e658ad01e86564</div><div id='time'> Time: 2016-03-11</div><div id='author'> Author: marcelrieger@me.com</div><div id='file'> File Name: setup.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/GoogleCloudPlatform/ml-on-gcp/commit/8079adae33711e4886a625df3f0ae9860739f7b9#diff-d14af158fd6ca06ea342c9ee12428ba4a41e4b893af1be9f4f09a946bc978ab1L42' target='_blank'>Link</a></div><div id='project'> Project Name: GoogleCloudPlatform/ml-on-gcp</div><div id='commit'> Commit Name: 8079adae33711e4886a625df3f0ae9860739f7b9</div><div id='time'> Time: 2019-09-03</div><div id='author'> Author: yuhanliu@google.com</div><div id='file'> File Name: example_zoo/tools/process.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

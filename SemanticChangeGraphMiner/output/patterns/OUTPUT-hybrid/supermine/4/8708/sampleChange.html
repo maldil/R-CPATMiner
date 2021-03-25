@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def process(self, img, fmt, obj, spec):
+        cur_width, cur_height = img.size
+        <a id="change">crop_horz = getattr(obj, obj._ik.crop_horz_field, 1)</a>
+        crop_vert = getattr(obj, obj._ik.crop_vert_field, 1)
+        ratio = max(float(self.width)/cur_width, float(self.height)/cur_height)
+        resize_x, resize_y = ((cur_width * ratio), (cur_height * ratio))
+        crop_x, crop_y = (abs(self.width - resize_x), abs(self.height - resize_y))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def process(self, img, fmt, obj, spec):
+        cur_width, cur_height = img.size
+        <a id="change">horizontal_anchor</a>, vertical_anchor = Crop._ANCHOR_PTS[self.anchor or \
+                Crop.CENTER]
+        ratio = max(float(self.width)/cur_width, float(self.height)/cur_height)
+        resize_x, resize_y = ((cur_width * ratio), (cur_height * ratio))</code></pre>

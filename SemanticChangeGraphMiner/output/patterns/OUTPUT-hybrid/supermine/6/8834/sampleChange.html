@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    def index(self: Union["ImageSet", "AnnotationSet"]):
+        images = self.images.all()
+        common_prefix = commonprefix([i.name.lower() for i in images])
+        <a id="change">return {i.sorter_key(start=len(common_prefix)): i for i in images}</a>
+
+
+class ImageSet(UUIDModel, IndexMixin):
+    TRAINING = "TRN"</code></pre><h3>After Change</h3><pre><code class='java'>
+                for i in images
+            }
+        else:
+            <a id="change">return {
+                find_first_int(instr=i.name[len(common_prefix) :]): i
+                for i in images
+            }</a>
+
+
+class ImageSet(UUIDModel, IndexMixin):
+    TRAINING = "TRN"</code></pre>

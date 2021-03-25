@@ -1,0 +1,48 @@
+<html><h3>803d7e1fc61536c846c811bdee158bd21db36779,models/Pointnet2SemSeg.py,Pointnet2SSG,__init__,#Pointnet2SSG#,41
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            npoint=16, radius=0.8, nsample=32, mlp=[256 + 3, 256, 256, 512])
+
+        self.FP_module0 = PointnetFPModule(mlp=[512 + 256, 256, 256])
+        self.FP_module1 = <a id="change">PointnetFPModule(mlp=[256 + 128, 256, 256])</a>
+        self.FP_module2 = <a id="change">PointnetFPModule(mlp=[256 + 64, 256, 128])</a>
+        self.FP_module3 = PointnetFPModule(mlp=[128 + 6, 128, 128, 128])
+
+        self.FC_layer = nn.Sequential(
+            pt_utils.Conv1d(128, 128, bn=True), nn.Dropout(),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self.initial_dropout = RandomDropout(0.4)
+
+        <a id="change">self.SA_modules</a> = <a id="change">nn.ModuleList()</a>
+        self.SA_modules.append(
+            PointnetSAModule(
+                npoint=1024,
+                radius=0.1,
+                nsample=32,
+                mlp=[input_channels, 32, 32, 64]))
+        self.SA_modules.append(
+            PointnetSAModule(
+                npoint=256, radius=0.2, nsample=32, mlp=[64 + 3, 64, 64, 128]))
+        <a id="change">self.SA_modules.append(
+            PointnetSAModule(
+                npoint=64,
+                radius=0.4,
+                nsample=32,
+                mlp=[128 + 3, 128, 128, 256]))</a>
+        <a id="change">self.SA_modules.append(
+            PointnetSAModule(
+                npoint=16,
+                radius=0.8,
+                nsample=32,
+                mlp=[256 + 3, 256, 256, 512]))</a>
+
+        <a id="change">self.FP_modules</a> = nn.ModuleList()
+        self.FP_modules.append(PointnetFPModule(mlp=[128 + input_channels - 3, 128, 128, 128]))
+        <a id="change">self.FP_modules.append(PointnetFPModule(mlp=[256 + 64, 256, 128]))</a>
+        <a id="change">self.FP_modules.append(PointnetFPModule(mlp=[256 + 128, 256, 256]))</a>
+        self.FP_modules.append(PointnetFPModule(mlp=[512 + 256, 256, 256]))
+
+        self.FC_layer = nn.Sequential(
+            pt_utils.Conv1d(128, 128, bn=True), nn.Dropout(),</code></pre><img src="976990.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 20</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erikwijmans/Pointnet2_PyTorch/commit/803d7e1fc61536c846c811bdee158bd21db36779#diff-b83e36afef5bcb03c66ff3a2d32ca5795950c87e58c910b6296356eb4022bcf4L41' target='_blank'>Link</a></div><div id='project'> Project Name: erikwijmans/Pointnet2_PyTorch</div><div id='commit'> Commit Name: 803d7e1fc61536c846c811bdee158bd21db36779</div><div id='time'> Time: 2017-12-26</div><div id='author'> Author: ewijmans2@gmail.com</div><div id='file'> File Name: models/Pointnet2SemSeg.py</div><div id='class'> Class Name: Pointnet2SSG</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/erikwijmans/Pointnet2_PyTorch/commit/803d7e1fc61536c846c811bdee158bd21db36779#diff-b83e36afef5bcb03c66ff3a2d32ca5795950c87e58c910b6296356eb4022bcf4L90' target='_blank'>Link</a></div><div id='project'> Project Name: erikwijmans/Pointnet2_PyTorch</div><div id='commit'> Commit Name: 803d7e1fc61536c846c811bdee158bd21db36779</div><div id='time'> Time: 2017-12-26</div><div id='author'> Author: ewijmans2@gmail.com</div><div id='file'> File Name: models/Pointnet2SemSeg.py</div><div id='class'> Class Name: Pointnet2MSG</div><div id='method'> Method Name: __init__</div><BR>

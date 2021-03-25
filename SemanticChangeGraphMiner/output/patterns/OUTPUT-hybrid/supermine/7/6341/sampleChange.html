@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        goal = self._rollout_goal
+        if self.observation_key:
+            observation = observation[self.observation_key]
+        <a id="change">if self.desired_goal_key:
+            goal = self._rollout_goal[self.desired_goal_key]
+       </a> <a id="change">new_obs = np.hstack((observation, goal))</a>
+        return self.exploration_policy.get_action(new_obs)
+
+    def get_eval_paths(self):
+        paths = []</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.exploration_policy.set_num_steps_total(self._n_env_steps_total)
+        new_obs = np.hstack((
+            observation[self.observation_key],
+            <a id="change">observation[self.desired_goal_key]</a>,
+        ))
+        return self.exploration_policy.get_action(new_obs)
+</code></pre>

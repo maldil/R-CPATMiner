@@ -1,0 +1,28 @@
+<html><h3>8eee23c8f98660a64fcc65de02c26e01493b8708,torchtext/experimental/datasets/raw/translation.py,,_setup_datasets,#,117
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            extracted_files.extend(extract_archive(dataset_tar))
+    elif isinstance(URLS[dataset_name], str):
+        dataset_tar = download_from_url(URLS[dataset_name], root=root, hash_value=MD5[dataset_name], hash_type=&quotmd5&quot)
+        <a id="change">extracted_files.extend(extract_archive(dataset_tar))</a>
+    else:
+        raise ValueError(
+            "URLS for {} has to be in a form or list or string".format(
+                dataset_name))</code></pre><h3>After Change</h3><pre><code class='java'>
+        if dataset_name == &quotIWSLT&quot:
+            &#47&#47 IWSLT dataset&quots url downloads a multilingual tgz.
+            &#47&#47 We need to take an extra step to pick out the specific language pair from it.
+            <a id="change">src_language = train_filenames[0].split(".")[-1]</a>
+            tgt_language = train_filenames[1].split(".")[-1]
+            languages = "-".join([src_language, tgt_language])
+            iwslt_tar = &quot.data/2016-01/texts/{}/{}/{}.tgz&quot
+            <a id="change">iwslt_tar = iwslt_tar.format(
+                src_language, tgt_language, languages)</a>
+            extracted_dataset_tar = extract_archive(iwslt_tar)
+        <a id="change">extracted_files.extend(extracted_dataset_tar)</a>
+    else:
+        raise ValueError(
+            "URLS for {} has to be in a form or list or string".format(
+                dataset_name))</code></pre><img src="25597134.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pytorch/text/commit/8eee23c8f98660a64fcc65de02c26e01493b8708#diff-5920a134aa66be2661a0ad201a3e85f6066962ec7b46f46df920b4645c50b8fbL128' target='_blank'>Link</a></div><div id='project'> Project Name: pytorch/text</div><div id='commit'> Commit Name: 8eee23c8f98660a64fcc65de02c26e01493b8708</div><div id='time'> Time: 2020-12-29</div><div id='author'> Author: glai9665@gmail.com</div><div id='file'> File Name: torchtext/experimental/datasets/raw/translation.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _setup_datasets</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/fef58fc44fb34c8055dc31b9cf0006bd835f55f9#diff-ef020b7bd15cfff74c994f512b150fca388fb00f959dd4137f939bce7c3ecf1fL86' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: fef58fc44fb34c8055dc31b9cf0006bd835f55f9</div><div id='time'> Time: 2015-06-26</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: bin/mahotas-features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/UFAL-DSG/tgen/commit/ec01f586b20cc3e9e15146e71d9248301ba277ae#diff-8a38dc0f58c29d4066f37a4649bddd620f2139bc7272bb5e2b07fd502edb75a3L250' target='_blank'>Link</a></div><div id='project'> Project Name: UFAL-DSG/tgen</div><div id='commit'> Commit Name: ec01f586b20cc3e9e15146e71d9248301ba277ae</div><div id='time'> Time: 2014-07-02</div><div id='author'> Author: odusek@ufal.mff.cuni.cz</div><div id='file'> File Name: tgen/rank.py</div><div id='class'> Class Name: PerceptronRanker</div><div id='method'> Method Name: _get_rival_candidates</div><BR>

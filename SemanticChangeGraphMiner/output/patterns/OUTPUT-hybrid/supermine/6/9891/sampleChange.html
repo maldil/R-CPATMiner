@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        for word, count in words.items():
+            tokens = tokenizer.tokenize(word, flatten=False)[0]
+            compound_parts = parse_compound(tokens)
+            <a id="change">if compound_parts:
+                word = &quot&quot.join(compound_parts)
+                nouns_[word] = nouns_.get(word, 0) + count
+                if word in words:
+                    words[word] = max(0, words.get(word, 0) - count)
+
+       </a> words = {word:count for word, count in words.items()
+                 if (not (word in nouns_)) and (count &gt; 0)}
+
+        return nouns_, words</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        tokenizer = MaxScoreTokenizer(scores = {noun:1 for noun in nouns if len(noun) &gt; 1})
+
+        <a id="change">compounds, removals = {}, set()</a>
+        for word, count in eojeols.items():
+            &#47&#47 format: [(word, begin, end, score, length)]
+            tokens = tokenizer.tokenize(word, flatten=False)[0]
+            noun = parse_compound(tokens)</code></pre>

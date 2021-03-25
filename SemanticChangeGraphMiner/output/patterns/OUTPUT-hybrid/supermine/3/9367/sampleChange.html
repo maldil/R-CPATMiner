@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        r_power  = np.abs(scipy.signal.fftconvolve(y, filt, mode=&quotsame&quot))**2
+        cqt_power.append(feature.sync(r_power, samples, aggregate=aggregate))
+    
+    return <a id="change">np.asarray(cqt_power).squeeze()</a>
+
+def logamplitude(S, ref_power=1.0, amin=1e-10, top_db=80.0):
+    Log-scale the amplitude of a spectrogram.
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    else:
+        samples    = np.asarray([samples]).flatten()
+
+    cqt_power = np.empty((len(basis), <a id="change">len(y)</a>), dtype=np.float32)
+    
+    for i, filt in enumerate(basis):
+        cqt_power[i]  = np.abs(scipy.signal.fftconvolve(y, filt, mode=&quotsame&quot))**2</code></pre>

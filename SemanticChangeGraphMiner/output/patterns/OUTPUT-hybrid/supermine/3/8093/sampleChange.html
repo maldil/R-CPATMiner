@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if __class__._vector_instances_already_computed(corpus):
+            return __class__._convert_edges_features_reusing_computed_vector_instances(corpus)
+        else:
+            <a id="change">return self.__gen_vector_instances(corpus, len(self.final_allowed_feature_mapping))</a>
+
+
+    @staticmethod
+    def _vector_instances_already_computed(corpus):</code></pre><h3>After Change</h3><pre><code class='java'>
+            return __class__._convert_edges_features_reusing_computed_vector_instances(corpus)
+        else:
+            &#47&#47 + 1 since the keys are 0-indexed, that is a sole feature indexed by 0 means having 1 feature
+            return self.__gen_vector_instances(corpus, max(<a id="change">next(corpus.edges()).features.keys()</a>) + 1)
+
+
+    @staticmethod</code></pre>

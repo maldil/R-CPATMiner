@@ -1,0 +1,37 @@
+<html><h3>48a579ae1638f5c60e62d8f5c3bad35e0dcef249,librosa/beat.py,,onset_estimate_bpm,#,145
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47   this fails if ac_window &gt; length of song   
+
+    bpms                    = 60.0 * fft_resolution / (numpy.arange(1, ac_window+1))
+    x_corr_weighting        = <a id="change">numpy.exp(-0.5 * ((numpy.log2(bpms) - numpy.log2(start_bpm)) / bpm_std)**2)</a>
+
+    &#47&#47 Compute the weighted autocorrelation
+    x_corr                  = <a id="change">x_corr * x_corr_weighting</a>
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks                 = librosa.localmax(x_corr)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    bpms    = 60.0 * fft_res / (numpy.arange(1, ac_window+1))
+
+    &#47&#47 Smooth the autocorrelation by a log-normal distribution
+    x_corr  = <a id="change">x_corr * numpy.exp(-0.5 * ((numpy.log2(bpms / start_bpm)) / BPM_STD)**2)</a>
+
+    &#47&#47 Get the local maximum of weighted correlation
+    x_peaks = librosa.localmax(x_corr)
+
+    &#47&#47 Zero out all peaks before the first negative
+    x_peaks[:numpy.argmax(x_corr &lt; 0)] = False
+
+    &#47&#47 Find the largest (local) max
+    start_period    = numpy.argmax(x_peaks * x_corr)
+
+    &#47&#47 Choose the best peak out of .33, .5, 2, 3 * start_period
+    candidates      = numpy.multiply(start_period, [1.0/3, 1.0/2, 1.0, 2.0, 3.0])
+    <a id="change">candidates      = candidates.astype(int)</a>
+    candidates      = candidates[candidates &lt; ac_window]
+
+    best_period     = numpy.argmax(x_corr[candidates])
+</code></pre><img src="9364143.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/48a579ae1638f5c60e62d8f5c3bad35e0dcef249#diff-69a745ce12456dd0916aacf90eddd70574d70f0fde630ea5d435e5c68f020f30L158' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 48a579ae1638f5c60e62d8f5c3bad35e0dcef249</div><div id='time'> Time: 2013-03-23</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/beat.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: onset_estimate_bpm</div><BR><BR><div id='link'><a href='https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On/commit/5cdca80dcb7ec6db8fa32d18ff85df40e9ff5b67#diff-873b69a7f89c68ea9c0d52d89625377325892ce836ebab6a614f27a0a3a9021fL125' target='_blank'>Link</a></div><div id='project'> Project Name: PacktPublishing/Deep-Reinforcement-Learning-Hands-On</div><div id='commit'> Commit Name: 5cdca80dcb7ec6db8fa32d18ff85df40e9ff5b67</div><div id='time'> Time: 2018-02-10</div><div id='author'> Author: max.lapan@gmail.com</div><div id='file'> File Name: ch15/04_train_ppo.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/8afa25c763a9ee408de6f98492a71b7d721a68b0#diff-260ae01b06042016564c9ee1694681c899dffdcb1452b5b2c2ee8217066b3cf0L331' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: 8afa25c763a9ee408de6f98492a71b7d721a68b0</div><div id='time'> Time: 2014-01-21</div><div id='author'> Author: brm2132@columbia.edu</div><div id='file'> File Name: librosa/filters.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: constant_q</div><BR>

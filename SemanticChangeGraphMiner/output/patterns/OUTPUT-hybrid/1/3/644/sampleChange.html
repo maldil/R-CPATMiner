@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                             .format(n_octaves - 1, n_octaves))
+
+    &#47&#47 Now do the recursive bit
+    fft_basis, n_fft, filter_lengths = <a id="change">__fft_filters(sr, fmin_t,
+                                                     n_filters,
+                                                     bins_per_octave,
+                                                     tuning,
+                                                     resolution,
+                                                     norm,
+                                                     sparsity)</a>
+
+    min_filter_length = np.min(filter_lengths)
+
+    my_y, my_sr, my_hop = y, sr, hop_length</code></pre><h3>After Change</h3><pre><code class='java'>
+    if res_type != &quotsinc_fastest&quot and audio._HAS_SAMPLERATE:
+
+        &#47&#47 Do two octaves before resampling to allow for usage of sinc_fastest
+        fft_basis, n_fft, filter_lengths = <a id="change">__fft_filters(sr, fmin_t,
+                                                         n_filters,
+                                                         bins_per_octave,
+                                                         tuning,
+                                                         filter_scale,
+                                                         norm,
+                                                         sparsity)</a>
+        min_filter_length = np.min(filter_lengths)
+
+        &#47&#47 Compute a dynamic hop based on n_fft
+        my_cqt = __variable_hop_response(y, n_fft,</code></pre>

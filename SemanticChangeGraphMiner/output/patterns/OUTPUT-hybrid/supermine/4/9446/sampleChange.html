@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Compute the FFT
+    fft_output = np.fft.fft(sig)
+    freqs = np.fft.fftfreq(<a id="change">len(sig)</a>, 1. / fs)
+
+    &#47&#47 Rotate spectrum and invert, zscore to normalize.
+    &#47&#47   Note: the delta exponent to be applied is divided by two, as</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Get the number of samples to simulate for the signal
+    &#47&#47   If filter is to be filtered, with FIR, add extra to compensate for edges
+    <a id="change">if f_range and filter_kwargs.get(&quotfilt_type&quot, None) != &quotiir&quot:
+
+        pass_type = infer_passtype(f_range)
+        filt_len = compute_filter_length(fs, pass_type,
+                                         *check_filter_definition(pass_type, f_range),
+                                         n_seconds=filter_kwargs.get(&quotn_seconds&quot, None),
+                                         n_cycles=filter_kwargs.get(&quotn_cycles&quot, 3))
+
+        n_samples = int(n_seconds * fs) + filt_len + 1
+
+    else:
+        n_samples = int(n_seconds * fs)
+
+   </a> sig = _create_powerlaw(n_samples, fs, exponent)
+
+    if f_range is not None:
+        sig = filter_signal(sig, fs, infer_passtype(f_range), f_range,</code></pre>

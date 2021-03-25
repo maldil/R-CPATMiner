@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    params.device += 1
+
+    if params.debug == &quotprint&quot:
+        print_image(labeled_img, os.path.join(params.debug_outdir, <a id="change">str(params.device)</a> + &quot_segmented_angles.png&quot))
+    elif params.debug == &quotplot&quot:
+        plot_image(labeled_img)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 segment_label = "ID" + str(i)
+        segment_ids.append(i)
+
+    <a id="change">if label == None:
+        prefix = ""
+    else:
+        prefix = label + "_"
+
+   </a> outputs.add_observation(variable=prefix + &quotsegment_angle&quot, trait=&quotsegment angle&quot,
+                            method=&quotplantcv.plantcv.morphology.segment_angle&quot, scale=&quotdegrees&quot, datatype=list,
+                            value=segment_angles, label=segment_ids)
+
+    &#47&#47 Auto-increment device
+    params.device += 1
+
+    if params.debug == &quotprint&quot:
+        print_image(labeled_img, os.path.join(params.debug_outdir, <a id="change">str(params.device)</a> +
+                                              <a id="change">prefix</a> + &quot_segmented_angles.png&quot))
+    elif params.debug == &quotplot&quot:
+        plot_image(labeled_img)
+</code></pre>

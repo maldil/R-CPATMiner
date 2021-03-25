@@ -1,0 +1,29 @@
+<html><h3>04cd555be76efc7baced753c751c4257d41eb75d,EvalMetrics.py,,ErrorRateAt95Recall,#,10
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    count = 0
+    for label, score in sorted_scores:
+        count += 1
+        <a id="change">if label == 1:
+            tp += 1
+       </a> if tp &gt;= n_thresh:
+            break
+
+    return float(count - tp) / count</code></pre><h3>After Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    distances = 1.0 / (scores + 1e-8)
+    recall_point = 0.95
+    labels = labels[<a id="change">np.argsort(distances)</a>]
+    &#47&#47 Sliding threshold: get first index where recall &gt;= recall_point. 
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    <a id="change">threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels))</a> 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(<a id="change">labels[threshold_index:]</a> == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    return float(FP) / float(FP + TN)
+&quot&quot&quotimport operator
+</code></pre><img src="14519501.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/DagnyT/hardnet/commit/04cd555be76efc7baced753c751c4257d41eb75d#diff-c9cd0a470edd0a6a5e2aa1c058bf091d4adb6845e881261d2dbb676b571fd259L7' target='_blank'>Link</a></div><div id='project'> Project Name: DagnyT/hardnet</div><div id='commit'> Commit Name: 04cd555be76efc7baced753c751c4257d41eb75d</div><div id='time'> Time: 2017-07-27</div><div id='author'> Author: ducha.aiki@gmail.com</div><div id='file'> File Name: EvalMetrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: ErrorRateAt95Recall</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/f3cdb3e031b20e246aaf17d631decd87d2a38db3#diff-6dc4ed5731ab17e82740ecbfaf2edf6c516c0277f5f865c5e1d061da99ba9b46L165' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: f3cdb3e031b20e246aaf17d631decd87d2a38db3</div><div id='time'> Time: 2017-01-10</div><div id='author'> Author: betatim@gmail.com</div><div id='file'> File Name: skopt/optimizer/optimizer.py</div><div id='class'> Class Name: Optimizer</div><div id='method'> Method Name: tell</div><BR><BR><div id='link'><a href='https://github.com/scikit-optimize/scikit-optimize/commit/e35fde3696c0c158f67dd125ac512ea6d67b889c#diff-50c937365fd8785e82a6fcd859a637c1b1d1cc460121e42e1504d0b7d749e78bL176' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-optimize/scikit-optimize</div><div id='commit'> Commit Name: e35fde3696c0c158f67dd125ac512ea6d67b889c</div><div id='time'> Time: 2017-01-03</div><div id='author'> Author: mks542@nyu.edu</div><div id='file'> File Name: skopt/optimizer/base.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: base_minimize</div><BR>

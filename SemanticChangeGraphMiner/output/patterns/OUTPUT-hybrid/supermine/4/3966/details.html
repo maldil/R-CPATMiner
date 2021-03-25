@@ -1,0 +1,27 @@
+<html><h3>d1f932a01a3a2d73167dea9be55ffae747d1b66b,astroML/stats/tests/test_stats.py,,test_sigmaG,#,90
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def test_sigmaG():
+    np.random.seed(0)
+    a = np.random.random((20, 40, 60))
+    <a id="change">for axis in [None, 0, 1, 2]:
+        yield (check_sigmaG, a, axis)
+
+
+&#47&#47---------------------------------------------------------------------------
+&#47&#47 Check that median_sigmaG() is a good approximation of mean_sigma()
+&#47&#47 for normally-distributed data.
+</a>def check_median_sigmaG_approx(a, axis, keepdims, atol=0.15):
+    med, sigmaG = median_sigmaG(a, axis=axis, keepdims=keepdims)
+    mu, sigma = mean_sigma(a, axis=axis, ddof=1, keepdims=keepdims)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    factor = 1. / (2 * np.sqrt(2) * erfinv(0.5))
+
+    sigmaG1 = sigmaG(a, axis=axis)
+    <a id="change">q25, q75 = np.percentile(a, [25, 75], axis=axis)</a>
+    sigmaG2 = factor * (q75 - q25)
+
+    assert_array_almost_equal(sigmaG1, sigmaG2)
+</code></pre><img src="17236868.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/d1f932a01a3a2d73167dea9be55ffae747d1b66b#diff-ef5814c69699a0c73d49e7e043cf070e28a2c4e4b81fea67603e04c691113cd8L72' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: d1f932a01a3a2d73167dea9be55ffae747d1b66b</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/stats/tests/test_stats.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sigmaG</div><BR><BR><div id='link'><a href='https://github.com/astroML/astroML/commit/d1f932a01a3a2d73167dea9be55ffae747d1b66b#diff-ef5814c69699a0c73d49e7e043cf070e28a2c4e4b81fea67603e04c691113cd8L72' target='_blank'>Link</a></div><div id='project'> Project Name: astroML/astroML</div><div id='commit'> Commit Name: d1f932a01a3a2d73167dea9be55ffae747d1b66b</div><div id='time'> Time: 2018-11-30</div><div id='author'> Author: bsipocz@gmail.com</div><div id='file'> File Name: astroML/stats/tests/test_stats.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_median_sigmaG</div><BR><BR><div id='link'><a href='https://github.com/WheatonCS/Lexos/commit/3227c2ed4ae92c6b9ecfc1b2c614ff4c36bd9fd0#diff-ed915d6d981e6efc9550ff319b1c632c0df835a69268cf378ab646533f5c1413L140' target='_blank'>Link</a></div><div id='project'> Project Name: WheatonCS/Lexos</div><div id='commit'> Commit Name: 3227c2ed4ae92c6b9ecfc1b2c614ff4c36bd9fd0</div><div id='time'> Time: 2017-07-21</div><div id='author'> Author: weltch1997@gmail.com</div><div id='file'> File Name: lexos/processors/analyze/information.py</div><div id='class'> Class Name: FileInformation</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/imbalanced-learn/commit/aa6af82f458acf3f853e5174d34b11d319eea1c0#diff-771e1f1d61d44bb681ce8c7052e222e5960c7de4b91706569e0b88e5127db21cL189' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/imbalanced-learn</div><div id='commit'> Commit Name: aa6af82f458acf3f853e5174d34b11d319eea1c0</div><div id='time'> Time: 2016-06-17</div><div id='author'> Author: victor.dvro@gmail.com</div><div id='file'> File Name: unbalanced_dataset/under_sampling/instance_hardness_threshold.py</div><div id='class'> Class Name: InstanceHardnessThreshold</div><div id='method'> Method Name: transform</div><BR>

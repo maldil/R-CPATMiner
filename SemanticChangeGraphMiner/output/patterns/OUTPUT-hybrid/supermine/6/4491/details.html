@@ -1,0 +1,41 @@
+<html><h3>626173412d4281b693244e0705a787c4e7c08031,nilmtk/metrics.py,,fraction_energy_assigned_correctly,#,69
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    re: float representing Fraction of Energy Correctly Assigned
+    &quot&quot&quot
+
+    fraction = <a id="change">np.array([])</a>
+    total_energy_predicted = np.sum(predicted_power.values)
+
+    for appliance in predicted_power:
+
+        <a id="change">appliance_energy_predicted = np.sum(predicted_power[appliance].values)</a>
+
+        appliance_energy_ground_truth = np.sum(
+            df_appliances_ground_truth[appliance].values)
+        total_energy_ground_truth = np.sum(df_appliances_ground_truth.values)
+
+        <a id="change">fraction = np.append(
+            fraction, np.min(
+                [appliance_energy_predicted / total_energy_predicted,
+                 appliance_energy_ground_truth /
+                 total_energy_ground_truth
+                 ]))</a>
+
+    return np.sum(fraction)
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    fraction_per_meter_ground_truth = ground_truth_submeters.fraction_per_meter()
+
+    fractions = []
+    <a id="change">for meter_instance in predictions_submeters.instance():
+        fraction = min(fraction_per_meter_predictions[meter_instance],
+                       fraction_per_meter_ground_truth[meter_instance])
+        fractions.append(fraction)
+
+   </a> return sum(fractions)
+
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47 FUNCTIONS BELOW THIS LINE HAVE NOT YET CONVERTED TO NILMTK v0.2 &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre><img src="19399464.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/nilmtk/nilmtk/commit/626173412d4281b693244e0705a787c4e7c08031#diff-0d2d2df8be36e4353c82d992be66fe5ea50caf12891ddd5485531856ef455ea2L92' target='_blank'>Link</a></div><div id='project'> Project Name: nilmtk/nilmtk</div><div id='commit'> Commit Name: 626173412d4281b693244e0705a787c4e7c08031</div><div id='time'> Time: 2014-07-09</div><div id='author'> Author: jack-list@xlk.org.uk</div><div id='file'> File Name: nilmtk/metrics.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: fraction_energy_assigned_correctly</div><BR><BR><div id='link'><a href='https://github.com/Esri/raster-functions/commit/e0ff7e10a230b0523d0a4796e38957490a05f8f9#diff-449e277b5af2392fd7a99eaec03d2aeeaaa7bb6e8e2e34a55ca28fb33095a551L82' target='_blank'>Link</a></div><div id='project'> Project Name: Esri/raster-functions</div><div id='commit'> Commit Name: e0ff7e10a230b0523d0a4796e38957490a05f8f9</div><div id='time'> Time: 2015-10-19</div><div id='author'> Author: akferoz@esri.com</div><div id='file'> File Name: functions/RankFilter.py</div><div id='class'> Class Name: RankFilter</div><div id='method'> Method Name: updatePixels</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn/scikit-learn/commit/f685547f801b13afc0874ed348e3a46600113136#diff-01ec9c14404ad0f506b33e00a170c201354f29af5c662e98f89f7bc4b0cb35f5L228' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn/scikit-learn</div><div id='commit'> Commit Name: f685547f801b13afc0874ed348e3a46600113136</div><div id='time'> Time: 2020-06-17</div><div id='author'> Author: alexhenrie24@gmail.com</div><div id='file'> File Name: sklearn/neural_network/_multilayer_perceptron.py</div><div id='class'> Class Name: BaseMultilayerPerceptron</div><div id='method'> Method Name: _backprop</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/64624fb2b46a228fef1141e1ded84e52acccaf6e#diff-ef020b7bd15cfff74c994f512b150fca388fb00f959dd4137f939bce7c3ecf1fL78' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 64624fb2b46a228fef1141e1ded84e52acccaf6e</div><div id='time'> Time: 2015-06-09</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: bin/mahotas-features.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR>

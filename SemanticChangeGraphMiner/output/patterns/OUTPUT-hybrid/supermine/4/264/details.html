@@ -1,0 +1,61 @@
+<html><h3>3210d75451d5d78ebe884c712f31800ca1ccd0b3,train.py,,,#,577
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Train!
+    try:
+        <a id="change">train(model, data_loader, optimizer, writer,
+              init_lr=hparams.initial_learning_rate,
+              checkpoint_dir=checkpoint_dir,
+              checkpoint_interval=hparams.checkpoint_interval,
+              nepochs=hparams.nepochs,
+              clip_thresh=hparams.clip_thresh,
+              )</a>
+    except KeyboardInterrupt:
+        save_checkpoint(
+            model, optimizer, global_step, checkpoint_dir, global_epoch)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 Dataset and Dataloader setup
+    data_loaders = {}
+    <a id="change">for phase in ["train", "test"]:
+        train = phase == "train"
+        X = FileSourceDataset(RawAudioDataSource(data_root, speaker_id=speaker_id,
+                                                 train=train,
+                                                 test_size=hparams.test_size,
+                                                 random_state=hparams.random_state))
+        if local_conditioning:
+            Mel = FileSourceDataset(MelSpecDataSource(data_root, speaker_id=speaker_id,
+                                                      train=train,
+                                                      test_size=hparams.test_size,
+                                                      random_state=hparams.random_state))
+            assert len(X) == len(Mel)
+            print("Local conditioning enabled. Shape of a sample: {}.".format(
+                Mel[0].shape))
+        else:
+            Mel = None
+        print("[{}]: length of the dataset is {}".format(phase, len(X)))
+
+        if train:
+            lengths = np.array(X.file_data_source.lengths)
+            &#47&#47 Prepare sampler
+            sampler = PartialyRandomizedSimilarTimeLengthSampler(
+                lengths, batch_size=hparams.batch_size)
+        else:
+            sampler = None
+
+        dataset = PyTorchDataset(X, Mel)
+        data_loader = data_utils.DataLoader(
+            dataset, batch_size=hparams.batch_size,
+            num_workers=hparams.num_workers, sampler=sampler,
+            collate_fn=collate_fn, pin_memory=hparams.pin_memory)
+
+        data_loaders[phase] = data_loader
+
+    &#47&#47 Model
+   </a> model = build_model()
+    print(model)
+    if use_cuda:
+        model = model.cuda()</code></pre><img src="1476694.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/r9y9/wavenet_vocoder/commit/3210d75451d5d78ebe884c712f31800ca1ccd0b3#diff-ed183d67207df065a11e1289f19d34cc2abbc5448dea952683cfe9728c342b95L580' target='_blank'>Link</a></div><div id='project'> Project Name: r9y9/wavenet_vocoder</div><div id='commit'> Commit Name: 3210d75451d5d78ebe884c712f31800ca1ccd0b3</div><div id='time'> Time: 2018-01-03</div><div id='author'> Author: zryuichi@gmail.com</div><div id='file'> File Name: train.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/0722cbb28234dfb6f38c375fed80d339e9921324#diff-b96a949328ba79d54613a5adbefcbf14fb98d785d9c5c303f567cc56ca12447bL410' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 0722cbb28234dfb6f38c375fed80d339e9921324</div><div id='time'> Time: 2017-08-14</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: snorkel/learning/utils.py</div><div id='class'> Class Name: GridSearch</div><div id='method'> Method Name: _fit_st</div><BR><BR><div id='link'><a href='https://github.com/jindongwang/transferlearning/commit/376b01c2e338ec63e638f62a76d67f6a9323e47c#diff-c34d59512d21510b260b855fe4ad7ad06200765ef8696aeda8d4e0a794a97c94L109' target='_blank'>Link</a></div><div id='project'> Project Name: jindongwang/transferlearning</div><div id='commit'> Commit Name: 376b01c2e338ec63e638f62a76d67f6a9323e47c</div><div id='time'> Time: 2019-08-14</div><div id='author'> Author: jindongwang@outlook.com</div><div id='file'> File Name: code/deep/DeepCoral/DeepCoral.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR>

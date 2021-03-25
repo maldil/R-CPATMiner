@@ -1,0 +1,29 @@
+<html><h3>7c1b64977ca136ecd9e443041efbc6d4267cb180,sumy/algorithms/edmundson.py,EdmundsonMethod,key_method,#EdmundsonMethod#,83
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        words = map(self.stem_word, self._document.words)
+        words = filter(self._is_bonus_word, words)
+        <a id="change">word_counts = Counter(self.stem_word(w) for w in words)</a>
+        word_frequencies = word_counts.values()
+        max_word_frequency = <a id="change">1 if not word_frequencies else max(word_frequencies)</a>
+        <a id="change">significant_words = tuple(w for w, c in word_counts.items()
+            if c/max_word_frequency &gt; weight)</a>
+
+        <a id="change">return self._get_best_sentences(self._document.sentences,
+            sentences_count, self._rate_sentence_by_key_method,
+            significant_words)</a>
+
+    def _is_bonus_word(self, word):
+        return word in self._bonus_words
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        summarization_method = EdmundsonKeyMethod(self._document, self._stemmer,
+            self._bonus_words)
+
+        <a id="change">return summarization_method(sentences_count, weight)</a>
+
+    def title_method(self, sentences_count):
+        self.__check_null_words()
+</code></pre><img src="38990560.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/miso-belica/sumy/commit/7c1b64977ca136ecd9e443041efbc6d4267cb180#diff-bdd570c7c6e15bf8c26f014dc376d99c5502d3d421f36e806685d09c2a8386bcL83' target='_blank'>Link</a></div><div id='project'> Project Name: miso-belica/sumy</div><div id='commit'> Commit Name: 7c1b64977ca136ecd9e443041efbc6d4267cb180</div><div id='time'> Time: 2013-03-09</div><div id='author'> Author: miso.belica@gmail.com</div><div id='file'> File Name: sumy/algorithms/edmundson.py</div><div id='class'> Class Name: EdmundsonMethod</div><div id='method'> Method Name: key_method</div><BR><BR><div id='link'><a href='https://github.com/arogozhnikov/einops/commit/42745519957d6a3d6614a66a1bcba032cef42214#diff-a7b79a4e4723f59f5764d9f3fd3b376ac460c15e850f10058dfae8e98fed7be3L24' target='_blank'>Link</a></div><div id='project'> Project Name: arogozhnikov/einops</div><div id='commit'> Commit Name: 42745519957d6a3d6614a66a1bcba032cef42214</div><div id='time'> Time: 2020-09-05</div><div id='author'> Author: iamfullofspam@gmail.com</div><div id='file'> File Name: einops/layers/keras.py</div><div id='class'> Class Name: Reduce</div><div id='method'> Method Name: compute_output_shape</div><BR><BR><div id='link'><a href='https://github.com/arogozhnikov/einops/commit/42745519957d6a3d6614a66a1bcba032cef42214#diff-a7b79a4e4723f59f5764d9f3fd3b376ac460c15e850f10058dfae8e98fed7be3L10' target='_blank'>Link</a></div><div id='project'> Project Name: arogozhnikov/einops</div><div id='commit'> Commit Name: 42745519957d6a3d6614a66a1bcba032cef42214</div><div id='time'> Time: 2020-09-05</div><div id='author'> Author: iamfullofspam@gmail.com</div><div id='file'> File Name: einops/layers/keras.py</div><div id='class'> Class Name: Rearrange</div><div id='method'> Method Name: compute_output_shape</div><BR>

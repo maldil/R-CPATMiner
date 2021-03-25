@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 attention_scores2 = attention_scores2 + co_attention_mask
+
+        &#47&#47 Normalize the attention scores to probabilities.
+        attention_probs2 = <a id="change">nn.Softmax(dim=-1)(attention_scores2)</a>
+
+        &#47&#47 This is actually dropping out entire tokens to attend to, which might
+        &#47&#47 seem a bit unusual, but is taken from the original Transformer paper.
+        attention_probs2 = self.dropout2(attention_probs2)</code></pre><h3>After Change</h3><pre><code class='java'>
+        &#47&#47 attention_scores2 = attention_scores2 + co_attention_mask
+
+        &#47&#47 Normalize the attention scores to probabilities.
+        attention_probs2 = <a id="change">nn.functional.softmax(attention_scores2, dim=-1)</a>
+
+        &#47&#47 This is actually dropping out entire tokens to attend to, which might
+        &#47&#47 seem a bit unusual, but is taken from the original Transformer paper.
+        attention_probs2 = self.dropout2(attention_probs2)</code></pre>

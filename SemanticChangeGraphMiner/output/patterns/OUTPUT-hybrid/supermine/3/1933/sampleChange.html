@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    type_mapping = collections.OrderedDict([
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ])
+    out_dtype = <a id="change">numpy.dtype(list(type_mapping.items()))</a>
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    <a id="change">out_dtype = numpy.dtype([("com", input.dtype, (input.ndim,))])</a>
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype</code></pre>

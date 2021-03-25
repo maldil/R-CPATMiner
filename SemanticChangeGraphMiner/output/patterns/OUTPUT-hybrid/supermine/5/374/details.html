@@ -1,0 +1,51 @@
+<html><h3>ecd656578d31171683e7928477132e75348317d1,pyprob/model.py,Model,posterior,#Model#,87
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                len_str_num_traces = len(str(num_traces))
+                print(&quotTime spent  | Time remain.| Progress             | {} | Accepted|Smp reuse| Traces/sec&quot.format(&quotTrace&quot.ljust(len_str_num_traces * 2 + 1)))
+                prev_duration = 0
+            <a id="change">for i in range(num_traces):
+                if util._verbosity &gt; 1:
+                    duration = time.time() - time_start
+                    if (duration - prev_duration &gt; util._print_refresh_rate) or (i == num_traces - 1):
+                        prev_duration = duration
+                        traces_per_second = (i + 1) / duration
+                        print(&quot{} | {} | {} | {}/{} | {} | {} | {:,.2f}       &quot.format(util.days_hours_mins_secs_str(duration), util.days_hours_mins_secs_str((num_traces - i) / traces_per_second), util.progress_bar(i+1, num_traces), str(i+1).rjust(len_str_num_traces), num_traces, &quot{:,.2f}%&quot.format(100 * (traces_accepted / (i + 1))).rjust(7), &quot{:,.2f}%&quot.format(100 * samples_reused / max(1, samples_all)).rjust(7), traces_per_second), end=&quot\r&quot)
+                        sys.stdout.flush()
+                candidate_trace = next(self._trace_generator(trace_mode=TraceMode.POSTERIOR, inference_engine=inference_engine, metropolis_hastings_trace=current_trace, observe=observe, *args, **kwargs))
+                log_acceptance_ratio = math.log(current_trace.length_controlled) - math.log(candidate_trace.length_controlled) + candidate_trace.log_prob_observed - current_trace.log_prob_observed
+                for variable in candidate_trace.variables_controlled:
+                    if variable.reused:
+                        log_acceptance_ratio += torch.sum(variable.log_prob)
+                        log_acceptance_ratio -= torch.sum(current_trace.variables_dict_address[variable.address].log_prob)
+                        samples_reused += 1
+                samples_all += candidate_trace.length_controlled
+
+                if state._metropolis_hastings_site_transition_log_prob is None:
+                    warnings.warn(&quotTrace did not hit the Metropolis Hastings site, ensure that the model is deterministic except pyprob.sample calls&quot)
+                else:
+                    log_acceptance_ratio += torch.sum(state._metropolis_hastings_site_transition_log_prob)
+
+                &#47&#47 print(log_acceptance_ratio)
+                if math.log(random.random()) &lt; float(log_acceptance_ratio):
+                    traces_accepted += 1
+                    current_trace = candidate_trace
+                &#47&#47 do thinning
+                if i % thinning_steps == 0:
+                    posterior.add(map_func(current_trace))
+
+           </a> if util._verbosity &gt; 1:
+                print()
+
+            posterior.finalize()</code></pre><h3>After Change</h3><pre><code class='java'>
+                        sys.stdout.flush()
+                candidate_trace = next(self._trace_generator(trace_mode=TraceMode.POSTERIOR, inference_engine=inference_engine, metropolis_hastings_trace=current_trace, observe=observe, *args, **kwargs))
+                if filter is not None:
+                    <a id="change">if not filter(candidate_trace):
+                        continue
+               </a> log_acceptance_ratio = math.log(current_trace.length_controlled) - math.log(candidate_trace.length_controlled) + candidate_trace.log_prob_observed - current_trace.log_prob_observed
+                for variable in candidate_trace.variables_controlled:
+                    if variable.reused:
+                        log_acceptance_ratio += torch.sum(variable.log_prob)</code></pre><img src="1856188.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pyprob/pyprob/commit/ecd656578d31171683e7928477132e75348317d1#diff-768b8f0c61c296f2a05d4970cd46bc583376d2df221d89dc35bd7b7d3dca319aL98' target='_blank'>Link</a></div><div id='project'> Project Name: pyprob/pyprob</div><div id='commit'> Commit Name: ecd656578d31171683e7928477132e75348317d1</div><div id='time'> Time: 2020-08-06</div><div id='author'> Author: atilimgunes.baydin@gmail.com</div><div id='file'> File Name: pyprob/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: posterior</div><BR><BR><div id='link'><a href='https://github.com/pyprob/pyprob/commit/ecd656578d31171683e7928477132e75348317d1#diff-768b8f0c61c296f2a05d4970cd46bc583376d2df221d89dc35bd7b7d3dca319aL49' target='_blank'>Link</a></div><div id='project'> Project Name: pyprob/pyprob</div><div id='commit'> Commit Name: ecd656578d31171683e7928477132e75348317d1</div><div id='time'> Time: 2020-08-06</div><div id='author'> Author: atilimgunes.baydin@gmail.com</div><div id='file'> File Name: pyprob/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: _traces</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/90fa42738c0c76a13cfe7d9dfb439662b4e961d6#diff-e5c888d97caea8a9b80a0808b3b4d4a295ebd0c7eb3ba4807b8ac1253e204820L136' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: 90fa42738c0c76a13cfe7d9dfb439662b4e961d6</div><div id='time'> Time: 2016-08-22</div><div id='author'> Author: stephenhbach@gmail.com</div><div id='file'> File Name: snorkel/viewer.py</div><div id='class'> Class Name: Viewer</div><div id='method'> Method Name: save_labels</div><BR>

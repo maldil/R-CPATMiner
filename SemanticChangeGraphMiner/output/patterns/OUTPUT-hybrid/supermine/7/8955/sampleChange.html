@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bbox = []
+    for msk in mask:
+        where = np.argwhere(msk)
+        <a id="change">if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+       </a> bbox.append((y_min, x_min, y_max, x_max))
+    if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(ys_i) == 0:
+            continue
+        y_min = ys_i.min()
+        x_min = <a id="change">xs_i.min()</a>
+        y_max = ys_i.max() + 1
+        x_max = xs_i.max() + 1
+        <a id="change">bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)</a>
+    return bbox
+</code></pre>

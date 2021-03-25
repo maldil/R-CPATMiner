@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    recall_point = 0.95
+    &#47&#47 Sort label-score tuples by the score in descending order.
+    <a id="change">sorted_scores = zip(labels, scores)</a>
+    sorted_scores.sort(key=operator.itemgetter(1), reverse=False)
+
+    &#47&#47 Compute error rate
+    n_match = sum(1 <a id="change">for</a> x in sorted_scores if x[0] == 1)
+    n_thresh = recall_point * n_match
+    tp = 0
+    count = 0</code></pre><h3>After Change</h3><pre><code class='java'>
+def ErrorRateAt95Recall(labels, scores):
+    distances = 1.0 / (scores + 1e-8)
+    recall_point = 0.95
+    <a id="change">labels = labels[np.argsort(distances)]</a>
+    &#47&#47 Sliding threshold: get first index where recall &gt;= recall_point. 
+    &#47&#47 This is the index where the number of elements with label==1 below the threshold reaches a fraction of 
+    &#47&#47 &quotrecall_point&quot of the total number of elements with label==1. 
+    &#47&#47 (np.argmax returns the first occurrence of a &quot1&quot in a bool array). 
+    threshold_index = np.argmax(np.cumsum(labels) &gt;= recall_point * np.sum(labels)) 
+
+    FP = np.sum(labels[:threshold_index] == 0) &#47&#47 Below threshold (i.e., labelled positive), but should be negative
+    TN = np.sum(labels[threshold_index:] == 0) &#47&#47 Above threshold (i.e., labelled negative), and should be negative
+    return <a id="change">float(FP)</a> / float(FP + TN)
+&quot&quot&quotimport operator
+
+</code></pre>

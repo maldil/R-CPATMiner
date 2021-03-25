@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47         iterations=iterations,
+    &#47&#47         neighborhood=neighborhood,
+    &#47&#47     )
+    <a id="change">assert Y.ndim == 3, Y.shape</a>
+
+    F = Y.shape[batch_axis]
+    index = [slice(None)] * Y.ndim
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def wpe_v8(Y, K=10, delay=3, iterations=3, neighborhood=0):
+    <a id="change">if Y.ndim == 2:
+        return wpe_v6(
+            Y,
+            K=K,
+            delay=delay,
+            iterations=iterations,
+            neighborhood=neighborhood,
+        )
+    elif Y.ndim == 3:
+        batch_axis = 0
+        F = Y.shape[batch_axis]
+        index = [slice(None)] * Y.ndim
+
+        out = []
+        for f in range(F):
+            index[batch_axis] = f
+            out.append(wpe_v6(
+                Y=Y[index],
+                K=K,
+                delay=delay,
+                iterations=iterations,
+                neighborhood=neighborhood,
+            ))
+        return np.stack(out, axis=batch_axis)
+    else:
+        raise NotImplementedError(&quotInput shape is to be (F, D, T) or (D, T).&quot)
+
+
+</a>wpe = wpe_v7
+
+def abs_square(x: np.ndarray):
+    </code></pre>

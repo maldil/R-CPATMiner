@@ -1,0 +1,32 @@
+<html><h3>b3aa4931848b64f28239fa334f29f69794ff5a35,osmnx/utils_graph.py,,count_streets_per_node,#,200
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 get all undirected edges and all unique undirected edges: the latter
+    &#47&#47 throws away any parallel edges (including those in self-loops)
+    all_edges = <a id="change">G.to_undirected(reciprocal=False).edges(keys=False)</a>
+    all_unique_edges = set(all_edges)
+
+    &#47&#47 get all edges (including parallel edges) that are not self-loops
+    non_self_loop_edges = [e for e in all_edges if e[0] != e[1]]
+
+    &#47&#47 get a single copy of each self-loop edge (ie, if it&quots bi-directional, we
+    &#47&#47 ignore the parallel edge going reverse direction to keep only one copy)
+    set_non_self_loop_edges = set(non_self_loop_edges)
+    self_loop_edges = [e for <a id="change">e</a> in all_unique_edges if e not in set_non_self_loop_edges]
+
+    &#47&#47 final list contains all unique edges including each parallel edge unless
+    &#47&#47 the parallel edge is a self-loop, in which case don&quott double-count it</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 get one copy of each self-loop edge, because bi-directional self-loops
+    &#47&#47 appear twice in the undirected graph (u,v,0 and u,v,1 where u=v), but
+    &#47&#47 one-way self-loops will appear only once
+    Gu = <a id="change">G.to_undirected(reciprocal=False, as_view=True)</a>
+    self_loop_edges = set(nx.selfloop_edges(Gu))
+
+    &#47&#47 get all non-self-loop undirected edges, including parallel edges
+    non_self_loop_edges = [e for <a id="change">e</a> in Gu.edges(keys=False) if e not in self_loop_edges]
+
+    &#47&#47 make list of all unique edges including each parallel edge unless the
+    &#47&#47 parallel edge is a self-loop, in which case we don&quott double-count it</code></pre><img src="2792106.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/b3aa4931848b64f28239fa334f29f69794ff5a35#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L226' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: b3aa4931848b64f28239fa334f29f69794ff5a35</div><div id='time'> Time: 2020-12-03</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: count_streets_per_node</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/23dc031f6683aafd1cdba4f04e3388fb6ab38781#diff-3cb2b153aa1ba55500dabb25308ba224f5c067f689383baae9ce9452af4d4c86L493' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: 23dc031f6683aafd1cdba4f04e3388fb6ab38781</div><div id='time'> Time: 2015-08-28</div><div id='author'> Author: ankurankan@gmail.com</div><div id='file'> File Name: pgmpy/models/DynamicBayesianNetwork.py</div><div id='class'> Class Name: DynamicBayesianNetwork</div><div id='method'> Method Name: moralize</div><BR><BR><div id='link'><a href='https://github.com/gboeing/osmnx/commit/8d6988e9b5752236cbb24c3cf8e1b984df96b1c7#diff-9a2949a61e4bc7701a0c2d0e87a902d3b3abd33565430b1fb09cb62708974e14L229' target='_blank'>Link</a></div><div id='project'> Project Name: gboeing/osmnx</div><div id='commit'> Commit Name: 8d6988e9b5752236cbb24c3cf8e1b984df96b1c7</div><div id='time'> Time: 2020-12-02</div><div id='author'> Author: boeing@usc.edu</div><div id='file'> File Name: osmnx/utils_graph.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: count_streets_per_node</div><BR>

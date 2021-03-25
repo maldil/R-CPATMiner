@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+
+        &#47&#47 Iterate till max iteration reached or all weights are really tiny
+        while ((iteration &lt; self.max_iter) & (any(<a id="change">w</a> &gt;= 0.0001 <a id="change">for</a> w in distance_weights))):
+            &#47&#47 Run Core Relief-based algorithm
+            core_fit = core.fit(self.X_mat, self._y, distance_weights, self.weight_flag)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 if no_diff is True, that means all features do not have a significant difference in weights between previous and current run.
+            no_diff = True
+            &#47&#47 if first iteration, set false
+            <a id="change">if iteration == 0:
+                no_diff = False
+            else:
+                for i in range(len(feature_weights)):
+                    &#47&#47previous array of feature_weights
+                    prev = weight_history[len(weight_history)-1]
+                    diff = abs(prev[i] - feature_weights[i])
+                    &#47&#47 first encounter of value that has difference greater than threshold, set no_diff to False, and break out of checking loop
+                    if diff &gt;= 0.0001:
+                        no_diff = False
+                        break;
+           </a> if no_diff:
+                break;
+
+            mx = max(feature_weights)</code></pre>

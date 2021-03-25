@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self._kernel_regularizer = kernel_regularizer
+    self._bias_regularizer = bias_regularizer
+    self._backbone = backbone
+    <a id="change">if use_sync_bn:
+      self._norm = tf.keras.layers.experimental.SyncBatchNormalization
+    else:
+      self._norm = tf.keras.layers.BatchNormalization
+   </a> axis = -1 if tf.keras.backend.image_data_format() == &quotchannels_last&quot else 1
+
+    inputs = tf.keras.Input(shape=input_specs.shape[1:])
+    endpoints = backbone(inputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    endpoints = backbone(inputs)
+
+    if aggregate_endpoints:
+      <a id="change">pooled_feats = []</a>
+      for endpoint in endpoints.values():
+        x_pool = tf.keras.layers.GlobalAveragePooling3D()(endpoint)
+        pooled_feats.append(x_pool)
+      x = <a id="change">tf.concat(pooled_feats, axis=1)</a>
+    else:
+      x = endpoints[max(endpoints.keys())]
+      x = tf.keras.layers.GlobalAveragePooling3D()(x)
+</code></pre>

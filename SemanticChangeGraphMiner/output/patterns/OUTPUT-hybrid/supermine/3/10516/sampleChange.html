@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    detected_scenes = [0]
+
+    &#47&#47 grayscale
+    luminancedata = <a id="change">rgb2gray(videodata)</a>
+
+    numFrames, height, width, channels = luminancedata.shape
+
+    luminancedata = luminancedata[:, :, :, 0]
+
+    for t in range(0, numFrames-1):
+        <a id="change">hist1, bins = np.histogram(luminancedata[t], bins=256, range=(0, 255))</a>
+        hist2, bins = np.histogram(luminancedata[t+1], bins=256, range=(0, 255))
+
+        hist1 = hist1.astype(np.float)
+        hist2 = hist2.astype(np.float)</code></pre><h3>After Change</h3><pre><code class='java'>
+    numFrames, height, width, channels = videodata.shape
+
+    for t in range(0, numFrames-1):
+        frame0 = <a id="change">videodata</a>[t].astype(np.float)
+        frame1 = videodata[t+1].astype(np.float)
+
+        delta = np.sum(np.abs(frame1 - frame0)/(height * width * channels))</code></pre>

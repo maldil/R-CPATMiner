@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                dense = Dense(1)(slice)  &#47&#47 N x 1 (basically "a(Wh_i, Wh_j)" in the paper)
+                &#47&#47 TODO: masking
+                e_i = K.reshape(dense, (1, -1))  &#47&#47 1 x N (e_i in the paper)
+                <a id="change">softmax = K.squeeze(K.softmax(e_i))</a>  &#47&#47 N (alpha_i in the paper)
+                <a id="change">softmax_broadcast = K.transpose(K.reshape(K.tile(softmax, [self.F_]), [self.F_, -1]))</a>
+                node_features = K.sum(softmax_broadcast * linear_transf, axis=0)
+                if self.use_bias:
+                    output = K.bias_add(node_features, self.bias)
+                if self.heads_combination == &quotconcat&quot and self.activation is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        outputs = []  &#47&#47 Will store the outputs of each attention head (B x F&quot or B x KF&quot)
+        for head in range(self.attention_heads):
+            kernel = self.kernels[head]  &#47&#47 W in the paper (F x F&quot)
+            attention_kernel = <a id="change">self.attention_kernels[head]</a>  &#47&#47 Attention network a in paper (2*F&quot x 1)
+
+            &#47&#47 Compute inputs to attention network
+            linear_transf_X = K.dot(X, kernel)  &#47&#47 B x F&quot</code></pre>

@@ -1,0 +1,68 @@
+<html><h3>2f729fda49d2d58bf9a97ecc91781d056a2d274e,trunk/SUAVE/Methods/Aerodynamics/Lifting_Line/Lifting_Line.py,,lifting_line,#,18
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    n_trans = n_2d.T
+        
+    &#47&#47 Right hand side matrix
+    <a id="change">RHS</a> = ((<a id="change">np</a>.sin(n_trans*thetan).T)*(np.sin(np.atleast_2d(thetan).T)+(n_trans*k).T))
+
+    &#47&#47 Left hand side vector    
+    LHS = (k*np.sin(thetan)*(alpha+ageo-azl)).T
+    
+    &#47&#47 Expand out for all the angles of attack
+    <a id="change">RHS2</a> = np.tile(RHS.T, (repeats,1,1))    
+    LHS2 = np.tile(LHS,(repeats,1,1))
+        
+    &#47&#47 The Fourier Coefficientsk
+    A = np.linalg.solve(RHS2,LHS2)
+    
+    &#47&#47 The 3-D Coefficient of lift
+    CL = A[:,0]*np.pi*AR
+    
+    &#47&#47 Find the sectional coefficients of lift
+    <a id="change">Cl</a> = b*np.sum(4*A*(np.sin(n*thetan)),axis=1)/c
+    
+    &#47&#47 induced alpha
+    alpha_i = np.sum(n_trans*A*np.sin(n*thetan)/np.sin(thetan),axis=1)
+    
+    &#47&#47 Sectional vortex drag
+    Cdv = Cl*alpha_i
+    
+    &#47&#47 Total vortex drag
+    <a id="change">CDv</a> = np.sum(Cdv*AR*etam,axis=1)
+    CDv = np.dot(n,A**2)*np.pi*AR
+    
+    &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre><h3>After Change</h3><pre><code class='java'>
+    n_trans = np.atleast_2d(n).T
+        
+    &#47&#47 Right hand side matrix
+    <a id="change">RHS</a> = (<a id="change">np.sin(n_trans*thetan)</a>*(np.sin(thetan)+n_trans*k))
+    
+    &#47&#47 Expand out for all the angles of attack
+    <a id="change">RHS2</a> = np.tile(RHS.T, (repeats,1,1))
+
+    &#47&#47 Left hand side vector    
+    LHS = k*np.sin(thetan)*(alpha+ageo-azl)
+        
+    &#47&#47 The Fourier Coefficients
+    A = np.linalg.solve(RHS2,LHS)
+    
+    &#47&#47 The 3-D Coefficient of lift
+    CL = A[:,0]*np.pi*AR
+    
+    &#47&#47 Find the sectional coefficients of lift
+    <a id="change">Cl</a> = b*np.cumsum(4*A*np.sin(n*thetan),axis=1)/c
+    
+    &#47&#47 induced alpha
+    alpha_i = np.cumsum(n*A*np.sin(n*A)/np.sin(thetan),axis=1)
+    
+    &#47&#47 Sectional vortex drag
+    Cdv = Cl*alpha_i
+    
+    &#47&#47 Total vortex drag
+    <a id="change">CDv</a> = np.sum(Cdv*AR*etam,axis=1)
+    
+    &#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47
+    &#47&#47 Profile drag of a 2-D section</code></pre><img src="1253395.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/2f729fda49d2d58bf9a97ecc91781d056a2d274e#diff-78a14d72bc560018edee17eeea2fb560a6a05df26ebcf05d908012c6b576c76dL52' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 2f729fda49d2d58bf9a97ecc91781d056a2d274e</div><div id='time'> Time: 2020-04-16</div><div id='author'> Author: mclarke2@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Lifting_Line/Lifting_Line.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: lifting_line</div><BR><BR><div id='link'><a href='https://github.com/khaotik/DaNet-Tensorflow/commit/de00082780be884fc90e0113d323bfd63006ffba#diff-b10564ab7d2c520cdd0243874879fb0a782862c3c902ab535faabe57d5a505e1L261' target='_blank'>Link</a></div><div id='project'> Project Name: khaotik/DaNet-Tensorflow</div><div id='commit'> Commit Name: de00082780be884fc90e0113d323bfd63006ffba</div><div id='time'> Time: 2017-08-07</div><div id='author'> Author: junkkhaotik@gmail.com</div><div id='file'> File Name: main.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: build</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/76697588ed6da82c507a68074e63a30b809a8a99#diff-9a45bbd84db204ea6cbf4116d108bec0bdff7eff89b5305ba39be6b727ff84c4L61' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: 76697588ed6da82c507a68074e63a30b809a8a99</div><div id='time'> Time: 2017-11-03</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Methods/Aerodynamics/Common/Fidelity_Zero/Lift/weissinger_vortex_lattice.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: weissinger_vortex_lattice</div><BR>

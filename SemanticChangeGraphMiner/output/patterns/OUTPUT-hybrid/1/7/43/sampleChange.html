@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            trainX = torch.FloatTensor(trainX).cuda()
+            trainy = torch.LongTensor(trainy).cuda()
+            devX = torch.FloatTensor(devX).cuda()
+            devy = <a id="change">torch.LongTensor(devy).cuda()</a>
+        else:
+            trainX = torch.FloatTensor(trainX)
+            trainy = torch.LongTensor(trainy)
+            devX = torch.FloatTensor(devX)</code></pre><h3>After Change</h3><pre><code class='java'>
+        trainX = torch.from_numpy(trainX).to(device, dtype=torch.float32)
+        trainy = torch.from_numpy(trainy).to(device, dtype=torch.int64)
+        devX = torch.from_numpy(devX).to(device, dtype=torch.float32)
+        devy = <a id="change">torch.from_numpy(devy).to(device, dtype=torch.int64)</a>
+
+        return trainX, trainy, devX, devy
+
+    def fit(self, X, y, validation_data=None, validation_split=None,</code></pre>

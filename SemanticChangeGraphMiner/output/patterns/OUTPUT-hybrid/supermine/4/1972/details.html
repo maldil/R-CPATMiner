@@ -1,0 +1,26 @@
+<html><h3>01b8f6eef41c36f12019adfc23ace2a100d77610,maml_rl/envs/sync_vector_env.py,SyncVectorEnv,__init__,#SyncVectorEnv#,6
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.observation_space = observation_space
+        self.action_space = action_space
+
+        <a id="change">self._dones = np.zeros((self.num_envs,), dtype=np.bool_)</a>
+
+    def seed(self, seeds=None):
+        if seeds is None:
+            seeds = [None for _ in range(self.num_envs)]</code></pre><h3>After Change</h3><pre><code class='java'>
+                                            observation_space=observation_space,
+                                            action_space=action_space,
+                                            **kwargs)
+        <a id="change">for env in self.envs:
+            if not hasattr(env.unwrapped, &quotreset_task&quot):
+                raise ValueError(&quotThe environment provided is not a &quot
+                                 &quotmeta-learning environment. It does not have &quot
+                                 &quotthe method `reset_task` implemented.&quot)
+
+   </a> def reset_task(self, task):
+        for env in self.envs:
+            env.unwrapped.reset_task(task)
+</code></pre><img src="9458994.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tristandeleu/pytorch-maml-rl/commit/01b8f6eef41c36f12019adfc23ace2a100d77610#diff-88c637febe4077731425b656facc946557a0123198808cf4e9ab8d2a4277efa8L6' target='_blank'>Link</a></div><div id='project'> Project Name: tristandeleu/pytorch-maml-rl</div><div id='commit'> Commit Name: 01b8f6eef41c36f12019adfc23ace2a100d77610</div><div id='time'> Time: 2019-11-24</div><div id='author'> Author: tristan.deleu@gmail.com</div><div id='file'> File Name: maml_rl/envs/sync_vector_env.py</div><div id='class'> Class Name: SyncVectorEnv</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/scikit-learn-contrib/DESlib/commit/3d5ab488d9bf0e5f5ec0ae52de6b30b9b807ff90#diff-917b6558cc39ffefa2eaa2e531220628d98faef4d1014362aa8d7871ac936c09L101' target='_blank'>Link</a></div><div id='project'> Project Name: scikit-learn-contrib/DESlib</div><div id='commit'> Commit Name: 3d5ab488d9bf0e5f5ec0ae52de6b30b9b807ff90</div><div id='time'> Time: 2018-04-01</div><div id='author'> Author: rafaelmenelau@gmail.com</div><div id='file'> File Name: deslib/des/des_knn.py</div><div id='class'> Class Name: DESKNN</div><div id='method'> Method Name: estimate_competence</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/c7811e399b636c2514d6bc0b6013291541f1a3ed#diff-75698fcee4d00a5ebff4fec5c62abcad26e029df921ecdd739409c3ecfcb0ff2L229' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: c7811e399b636c2514d6bc0b6013291541f1a3ed</div><div id='time'> Time: 2014-12-31</div><div id='author'> Author: brian.mcfee@nyu.edu</div><div id='file'> File Name: librosa/feature.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: spectral_contrast</div><BR>

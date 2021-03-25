@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 Create an artificial color close to the original one
+cmap_hema = LinearSegmentedColormap.from_list(&quotmycmap&quot, [&quotwhite&quot, &quotnavy&quot])
+<a id="change">cmap_dab = LinearSegmentedColormap.from_list(&quotmycmap&quot, [&quotwhite&quot,
+                                             &quotsaddlebrown&quot])</a>
+cmap_eosin = LinearSegmentedColormap.from_list(&quotmycmap&quot, [&quotdarkviolet&quot,
+                                               &quotwhite&quot])
+
+ihc_rgb = data.immunohistochemistry()</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 Rescale hematoxylin and DAB signals and give them a fluorescence look
+h = rescale_intensity(ihc_hed[:, :, 0], out_range=(0, 1),
+                      in_range=(0, <a id="change">np.percentile(ihc_hed[:, :, 0], 99)</a>))
+d = rescale_intensity(ihc_hed[:, :, 2], out_range=(0, 1),
+                      in_range=(0, np.percentile(ihc_hed[:, :, 2], 99)))
+</code></pre>

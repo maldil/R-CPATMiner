@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    cursor.execute("SELECT open_time FROM rounds WHERE number = {}".format(round_number))
+    rounds = cursor.fetchall()
+    round_open_time = rounds[0]
+    <a id="change">print(round_open_time)</a>
+
+    &#47&#47 Get the truth data
+    public_targets_db = connect_to_public_targets_db()
+    validation_data = pd.read_sql("SELECT id, target FROM tournament_daily_encrypted WHERE date = &quot{}&quot AND data_type = &quotvalidation&quot;".format(), public_targets_db)</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Calculate logloss
+    submission_validation_data = submission.loc[submission["id"].isin(validation_data["id"].as_matrix())].copy()
+    submission_validation_data.sort_values("id", inplace=True)
+    submission_test_data = <a id="change">submission.loc[submission["id"].isin(test_data["id"].as_matrix())].copy()</a>
+    submission_test_data.sort_values("id", inplace=True)
+    validation_logloss = log_loss(validation_data["target"].as_matrix(), submission_validation_data["probability"].as_matrix())
+    test_logloss = log_loss(test_data["target"].as_matrix(), submission_test_data["probability"].as_matrix())
+
+    &#47&#47 Get the submission Postgres id
+    query = "SELECT s.id FROM submissions s INNER JOIN users u ON s.user_id = u.id WHERE u.username = &quot{}&quot AND s.inserted_at = &quot{}&quot".format(mongo_submission["username"], mongo_submission["created"])
+    cursor.execute(query)
+    submission_id = cursor.fetchone()[0]
+
+    <a id="change">query = "UPDATE submissions SET validation_logloss={}, test_logloss={} WHERE id = &quot{}&quot".format(validation_logloss, test_logloss, submission_id)</a>
+    cursor.execute(query)
+    print("Updated {} with validation_logloss={} and test_logloss={}".format(submission_id, validation_logloss, test_logloss))
+    postgres_db.commit()
+    cursor.close()</code></pre>

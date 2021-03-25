@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            rvs = range(dist.outcome_length())
+            rv_names = False
+
+        <a id="change">d = dist.marginal(rvs, rv_names=rv_names)</a>
+    else:
+        msg = "The total correlation is applicable to joint distributions."
+        raise ditException(msg)
+
+    marginals = [ d.marginal([i]) <a id="change">for</a> i in range(d.outcome_length()) ]
+
+    <a id="change">T = sum( H(m) for m in marginals ) - H(d)</a>
+
+    return T</code></pre><h3>After Change</h3><pre><code class='java'>
+        msg = "The total correlation is applicable to joint distributions."
+        raise ditException(msg)
+
+    one = <a id="change">sum([ H(dist, [i], crvs, rv_names) for i in rvs ])</a>
+    two = H(dist, rvs, crvs, rv_names)
+    T = one - two
+
+    return T</code></pre>

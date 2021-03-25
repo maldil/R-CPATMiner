@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        np_states = np.expand_dims(states[0], 0)
+    else:
+        np_states = np.array([np.array(s, copy=False) for s in states], copy=False)
+    <a id="change">v = Variable(torch.from_numpy(np_states), volatile=volatile)</a>
+    <a id="change">if cuda:
+        v = v.cuda(device=device_id)
+   </a> <a id="change">return v</a>
+
+
+def float32_preprocessor(states, cuda=False, device_id=None, volatile=False):
+    np_states = np.array(states, dtype=np.float32)</code></pre><h3>After Change</h3><pre><code class='java'>
+        np_states = np.expand_dims(states[0], 0)
+    else:
+        np_states = np.array([np.array(s, copy=False) for s in states], copy=False)
+    <a id="change">return torch.tensor(np_states)</a>
+
+
+def float32_preprocessor(states):
+    np_states = np.array(states, dtype=np.float32)</code></pre>

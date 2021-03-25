@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    m, k = 100, 10
+    A = np.array(np.random.randn(m, k), np.float64)
+    A = A.dot(A.T)
+    <a id="change">A</a> = <a id="change">A[:,0:50]</a>
+
+    &#47&#47 index_set = False
+    Z, R = interp_decomp(A, k=k+2, mode=&quotrow&quot, index_set=False)
+    relative_error = <a id="change">(np.linalg.norm(A - Z.dot(R)) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+    &#47&#47 index_set = True
+    Z, R = interp_decomp(A, k=k+2, mode=&quotrow&quot, index_set=True)
+    <a id="change">relative_error</a> = <a id="change">(np.linalg.norm(A - Z.dot(A[R,:])) / np.linalg.norm(A))</a>
+    assert relative_error &lt; 1e-4
+
+
+&#47&#47 =============================================================================</code></pre><h3>After Change</h3><pre><code class='java'>
+def test_id_row():
+    m, k = 100, 10
+    A = np.random.randn(m, k).astype(np.float64)
+    <a id="change">A</a> = A.dot(A.T)[:, :50]
+
+    &#47&#47 ------------------------------------------------------------------------
+    &#47&#47 test index_set == False
+    Z, R = interp_decomp(A, k+2, mode=&quotrow&quot, index_set=False)
+    A_id = <a id="change">Z.dot(R)</a>
+    assert relative_error(A, A_id) &lt; atol_float32
+
+    &#47&#47 ------------------------------------------------------------------------
+    &#47&#47 test index_set == True
+    Z, R = interp_decomp(A, k+2, mode=&quotrow&quot, index_set=True)
+    <a id="change">A_id</a> = <a id="change">Z.dot(A[R, :])</a>
+    assert relative_error(A, A_id) &lt; atol_float32
+
+
+&#47&#47 =============================================================================</code></pre>

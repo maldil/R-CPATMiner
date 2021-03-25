@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+  blobs = bucket.list_blobs(prefix=file_pattern)
+
+  for blob in blobs:
+    <a id="change">file_path = temp_folder + blob.name.split(&quot/&quot)[-1]</a>
+    blob.download_to_filename(file_path)
+    &#47&#47 Assume there is no header
+    df_list.append(pd.read_csv(file_path, header=None))
+    &#47&#47 TODO: Can remove after download to save space</code></pre><h3>After Change</h3><pre><code class='java'>
+  df_list = []
+
+  for file in gfile.Glob(file_pattern):
+    <a id="change">with gfile.Open(file, &quotr&quot) as f:
+      &#47&#47 Assume there is no header
+      df_list.append(pd.read_csv(f, header=None))
+
+ </a> data_df = pd.concat(df_list)
+
+  return data_df
+</code></pre>

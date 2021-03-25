@@ -1,0 +1,44 @@
+<html><h3>ce5dbf57781e10fd0e0367008a76f91521b59651,moabb/evaluations/base.py,BaseEvaluation,__init__,#BaseEvaluation#,15
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        Init.
+        
+        if random_state is None:
+            self.random_state = <a id="change">np.random.randint(0, 1000, 1)[0]</a>
+        self.n_jobs = n_jobs
+
+    @abstractmethod
+    def evaluate(self, dataset, subject, clf, paradigm):</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.n_jobs = n_jobs
+
+        &#47&#47 check paradigm
+        <a id="change">if not isinstance(paradigm, BaseParadigm):
+            raise(ValueError("paradigm must be an Paradigm instance"))
+       </a> self.paradigm = paradigm
+
+        &#47&#47 if no dataset provided, then we get the list from the paradigm
+        if datasets is None:
+            datasets = self.paradigm.datasets
+
+        if not isinstance(datasets, list):
+            if isinstance(datasets, BaseDataset):
+                datasets = [datasets]
+            else:
+                raise(ValueError("datasets must be a list or a dataset "
+                                 "instance"))
+
+        for dataset in datasets:
+            <a id="change">if not(isinstance(dataset, BaseDataset)):
+                raise(ValueError("datasets must only contains dataset "
+                                 "instance"))
+
+       </a> <a id="change">for dataset in datasets:
+            self.paradigm.verify(dataset)
+
+       </a> <a id="change">self.datasets = datasets</a>
+
+    def process(self, pipelines, overwrite=False, suffix=&quot&quot):
+        &quot&quot&quot
+        Runs tasks on all given datasets.</code></pre><img src="12013047.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 8</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/NeuroTechX/moabb/commit/ce5dbf57781e10fd0e0367008a76f91521b59651#diff-44e8cf9473c9e771b3e151b5bb553f4ba2b4db72dd236dbd62dd029fd4039c3cL19' target='_blank'>Link</a></div><div id='project'> Project Name: NeuroTechX/moabb</div><div id='commit'> Commit Name: ce5dbf57781e10fd0e0367008a76f91521b59651</div><div id='time'> Time: 2018-03-07</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: moabb/evaluations/base.py</div><div id='class'> Class Name: BaseEvaluation</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/jazzband/django-debug-toolbar/commit/ad110e020cbae062ba024d91223df519af3adc96#diff-a9ca9750e32c19fcb2178c5828746404974143c6ebc85000ca28298608e93c2cL50' target='_blank'>Link</a></div><div id='project'> Project Name: jazzband/django-debug-toolbar</div><div id='commit'> Commit Name: ad110e020cbae062ba024d91223df519af3adc96</div><div id='time'> Time: 2011-07-12</div><div id='author'> Author: dcramer@gmail.com</div><div id='file'> File Name: debug_toolbar/panels/template.py</div><div id='class'> Class Name: TemplateDebugPanel</div><div id='method'> Method Name: _store_template_info</div><BR><BR><div id='link'><a href='https://github.com/EpistasisLab/tpot/commit/e311ac254a9e8661db7f4b9006e8d84d86f4d1c2#diff-af09f9926e900caa780b0103b6e5fe571db2074aa4eb6c98ddac9a74465e7ac8L38' target='_blank'>Link</a></div><div id='project'> Project Name: EpistasisLab/tpot</div><div id='commit'> Commit Name: e311ac254a9e8661db7f4b9006e8d84d86f4d1c2</div><div id='time'> Time: 2018-04-30</div><div id='author'> Author: weixuanf@pennmedicine.upenn.edu</div><div id='file'> File Name: tpot/builtins/dataset_selector.py</div><div id='class'> Class Name: DatasetSelector</div><div id='method'> Method Name: fit</div><BR>

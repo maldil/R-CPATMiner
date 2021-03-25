@@ -1,0 +1,66 @@
+<html><h3>000a22e7ead9a184a325b3913e814f1f80636a6f,mlxtend/regressor/stacking_cv_regression.py,StackingCVRegressor,fit,#StackingCVRegressor#,119
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+        if self.refit:
+            self.regr_ = [clone(clf) for clf in self.regressors]
+            <a id="change">self.meta_regr_</a> = clone(self.meta_regressor)
+        else:
+            self.regr_ = self.regressors
+            <a id="change">self.meta_regr_</a> = self.meta_regressor
+
+        kfold = check_cv(self.cv, y)
+        if isinstance(self.cv, int):
+            &#47&#47 Override shuffle parameter in case of self generated
+            &#47&#47 cross-validation strategy
+            kfold.shuffle = self.shuffle
+
+        meta_features = np.zeros((X.shape[0], len(self.regressors)))
+
+        &#47&#47
+        &#47&#47 The outer loop iterates over the base-regressors. Each regressor
+        &#47&#47 is trained cv times and makes predictions, after which we train
+        &#47&#47 the meta-regressor on their combined results.
+        &#47&#47
+        for i, regr in enumerate(self.regressors):
+            &#47&#47
+            &#47&#47 In the inner loop, each model is trained cv times on the
+            &#47&#47 training-part of this fold of data; and the holdout-part of data
+            &#47&#47 is used for predictions. This is repeated cv times, so in
+            &#47&#47 the end we have predictions for each data point.
+            &#47&#47
+            &#47&#47 Advantage of this complex approach is that data points we&quotre
+            &#47&#47 predicting have not been trained on by the algorithm, so it&quots
+            &#47&#47 less susceptible to overfitting.
+            &#47&#47
+            for train_idx, holdout_idx in kfold.split(X, y, groups):
+                instance = clone(regr)
+                instance.fit(X[train_idx], y[train_idx])
+                y_pred = instance.predict(X[holdout_idx])
+                meta_features[holdout_idx, i] = y_pred
+
+        &#47&#47 save meta-features for training data
+        if self.store_train_meta_features:
+            self.train_meta_features_ = meta_features
+
+        &#47&#47 Train meta-model on the out-of-fold predictions
+        if not self.use_features_in_secondary:
+            <a id="change">self.meta_regr_.fit(meta_features, y)</a>
+        elif sparse.issparse(X):
+            self.meta_regr_.fit(sparse.hstack((X, meta_features)), y)
+        else:
+            self.meta_regr_.fit(np.hstack((X, meta_features)), y)</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47
+            for train_idx, holdout_idx in kfold.split(X, y, groups):
+                instance = clone(regr)
+                <a id="change">if sample_weight is None:
+                    instance.fit(X[train_idx], y[train_idx])
+                else:
+                    instance.fit(X[train_idx], y[train_idx],
+                                 sample_weight=sample_weight[train_idx])
+               </a> y_pred = instance.predict(X[holdout_idx])
+                meta_features[holdout_idx, i] = y_pred
+
+        &#47&#47 save meta-features for training data</code></pre><img src="30924151.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 11</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/000a22e7ead9a184a325b3913e814f1f80636a6f#diff-22536ce23081f3156ebe9d6e754494d20c91476e9e9aa656a96507268527d3ffL119' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 000a22e7ead9a184a325b3913e814f1f80636a6f</div><div id='time'> Time: 2018-09-23</div><div id='author'> Author: kmori05@gmail.com</div><div id='file'> File Name: mlxtend/regressor/stacking_cv_regression.py</div><div id='class'> Class Name: StackingCVRegressor</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/000a22e7ead9a184a325b3913e814f1f80636a6f#diff-22536ce23081f3156ebe9d6e754494d20c91476e9e9aa656a96507268527d3ffL119' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 000a22e7ead9a184a325b3913e814f1f80636a6f</div><div id='time'> Time: 2018-09-23</div><div id='author'> Author: kmori05@gmail.com</div><div id='file'> File Name: mlxtend/regressor/stacking_cv_regression.py</div><div id='class'> Class Name: StackingCVRegressor</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/4d09f8fd2b7db876f34f208f7fc8131e0a91ccb0#diff-c37001844d2d7463395530feba3f4d3817ea464c4f8e93b5e03a515c02cde9b1L109' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: 4d09f8fd2b7db876f34f208f7fc8131e0a91ccb0</div><div id='time'> Time: 2018-09-23</div><div id='author'> Author: kmori05@gmail.com</div><div id='file'> File Name: mlxtend/classifier/stacking_classification.py</div><div id='class'> Class Name: StackingClassifier</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/rasbt/mlxtend/commit/b21be33c042c1a9fd415468653941e093c4a6e05#diff-67be3808e19ca55cb8936dde9a8ac0e5ee9d8d253b85e8f252a2935107160f15L144' target='_blank'>Link</a></div><div id='project'> Project Name: rasbt/mlxtend</div><div id='commit'> Commit Name: b21be33c042c1a9fd415468653941e093c4a6e05</div><div id='time'> Time: 2018-09-23</div><div id='author'> Author: kmori05@gmail.com</div><div id='file'> File Name: mlxtend/classifier/stacking_cv_classification.py</div><div id='class'> Class Name: StackingCVClassifier</div><div id='method'> Method Name: fit</div><BR>

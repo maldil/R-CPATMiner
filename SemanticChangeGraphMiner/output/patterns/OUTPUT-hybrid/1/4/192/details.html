@@ -1,0 +1,22 @@
+<html><h3>1e39951b371238b26783b31dd5101eb334c23412,kraken/lib/layers.py,ActConv2D,resize,#ActConv2D#,703
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        idx = torch.tensor([x for x in range(old_shape) if x not in del_indices])
+        weight = self.co.weight.index_select(0, idx)
+        rweight = torch.zeros((output_size - weight.size(0), weight.size(1), weight.size(2), weight.size(3)))
+        <a id="change">torch.nn.init.xavier_uniform_(rweight)</a>
+        weight = torch.cat([weight, rweight], dim=0)
+        bias = self.co.bias.index_select(0, idx)
+        bias = torch.cat([bias, torch.zeros(output_size - bias.size(0))])
+        self.co = torch.nn.Conv2d(self.in_channels, self.out_channels, self.kernel_size,</code></pre><h3>After Change</h3><pre><code class='java'>
+        idx = torch.tensor([x for x in range(old_shape) if x not in del_indices])
+        weight = self.co.weight.index_select(0, idx)
+        rweight = torch.zeros((output_size - weight.size(0), weight.size(1), weight.size(2), weight.size(3)))
+        <a id="change">if rweight.shape[0] &gt; 0:
+            torch.nn.init.xavier_uniform_(rweight)
+       </a> weight = torch.cat([weight, rweight], dim=0)
+        bias = self.co.bias.index_select(0, idx)
+        bias = torch.cat([bias, torch.zeros(output_size - bias.size(0))])
+        self.co = torch.nn.Conv2d(self.in_channels, self.out_channels, self.kernel_size,</code></pre><img src="1206720.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/1e39951b371238b26783b31dd5101eb334c23412#diff-85d88f0177a78ea849085536c855b077f7dca3f29aecf7d754f700bef5314147L720' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 1e39951b371238b26783b31dd5101eb334c23412</div><div id='time'> Time: 2020-07-27</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/layers.py</div><div id='class'> Class Name: ActConv2D</div><div id='method'> Method Name: resize</div><BR><BR><div id='link'><a href='https://github.com/thunlp/OpenKE/commit/0ab6621dcd3e9cd97a257ea2d8d05b23bfba8609#diff-b7f2501397dc967cd8ac17366f90ef9d1c91d27747b515d4cea1730d233973a4L8' target='_blank'>Link</a></div><div id='project'> Project Name: thunlp/OpenKE</div><div id='commit'> Commit Name: 0ab6621dcd3e9cd97a257ea2d8d05b23bfba8609</div><div id='time'> Time: 2020-04-08</div><div id='author'> Author: thu.hanxu13@gmail.com</div><div id='file'> File Name: openke/module/model/HolE.py</div><div id='class'> Class Name: HolE</div><div id='method'> Method Name: __init__</div><BR>

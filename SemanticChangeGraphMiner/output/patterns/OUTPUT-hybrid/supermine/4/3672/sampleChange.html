@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+                for tip_tups in tip_tuples:
+                    &#47&#47 If a tip is inside the list of contour tuples then it is a leaf end segment
+                    <a id="change">if tip_tups in cnt_as_tuples:
+                        is_insertion_segment.append(False)
+                    else:
+                        is_insertion_segment.append(True)
+
+                &#47&#47 If none of the tips are within a segment_end then it&quots an insertion segment
+               </a> if all(is_insertion_segment):
+                    insertion_segments.append(segment_end_obj[j])
+                    insertion_hierarchies.append(segment_end_hierarchy[0][j])
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                segment_plot = np.zeros(segmented_img.shape[:2], np.uint8)
+                cv2.drawContours(segment_plot, obj, -1, 255, 1, lineType=8)
+                <a id="change">overlap_img = logical_and(segment_plot, tips)</a>
+
+                &#47&#47 If none of the tips are within a segment_end then it&quots an insertion segment
+                if <a id="change">np.sum(overlap_img)</a> == 0:
+                    insertion_segments.append(segment_end_obj[j])
+                    insertion_hierarchies.append(segment_end_hierarchy[0][j])
+</code></pre>

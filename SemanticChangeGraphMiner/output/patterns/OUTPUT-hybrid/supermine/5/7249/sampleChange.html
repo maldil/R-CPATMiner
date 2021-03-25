@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        out3d = unitpy(input_3d_var)
+        filter_idx = 5
+        py_out = py_to_tf_reshape(
+            out3d.data.numpy())[0][0][<a id="change">:, :, filter_idx</a>].copy()
+        tf_out = tf_out3dsample[0][0][:, :, filter_idx].copy()
+        import pdb
+        pdb.set_trace()</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 init = tf.global_variables_initializer()
+    &#47&#47 sess.run(init)
+    for i, (input_2d, target) in enumerate(loader):
+        input_2d = torch.from_numpy(<a id="change">input_2d.numpy()</a>)
+        target = target.cuda()
+        target_var = torch.autograd.Variable(target)
+
+        &#47&#47 Pytorch forward pass
+        input_3d = input_2d.clone().unsqueeze(2).repeat(1, 1, frame_nb, 1, 1)
+        input_3d_var = torch.autograd.Variable(input_3d)
+
+        feed_dict = {}
+        input_3d_tf = input_3d.numpy().transpose(0, 2, 3, 4, 1)  &#47&#47
+        feed_dict[rgb_input] = input_3d_tf
+
+        &#47&#47 Get output
+        tf_out3dsample = sess.run(rgb_logits, feed_dict=feed_dict)
+        out_tf_np = tf_out3dsample.transpose((0, 4, 1, 2, 3))
+        out_tf = torch.from_numpy(out_tf_np)
+
+        unit_name_tf = &quotRGB/inception_i3d/Conv3d_1a_7x7/&quot
+
+        &#47&#47 Create state_dict
+        state_dict = {}
+        i3nception.load_conv3d(state_dict, &quot&quot, sess, unit_name_tf)
+        unitpy.eval()
+        unitpy.load_state_dict(state_dict)
+        out_pt = unitpy(input_3d_var).data
+        out_pt_np = out_pt.numpy()
+        filter_idx = 0
+
+        &#47&#47 Plot slices
+        filter_idx = 0
+        img_tf = out_tf_np[0][filter_idx][0]
+        <a id="change">img_pt = out_pt_np[0][filter_idx][0]</a>
+
+        max_v = max(img_tf.max(), img_pt.max())
+        min_v = min(img_tf.min(), img_pt.min())
+        plt.subplot(2, 2, 1)</code></pre>

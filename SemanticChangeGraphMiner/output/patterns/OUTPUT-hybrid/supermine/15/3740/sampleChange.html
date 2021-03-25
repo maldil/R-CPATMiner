@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+&#47&#47 %%
+num_samples = 500
+
+<a id="change">parameters_dict = gpflow.utilities.select_dict_parameters_with_prior(model)</a>
+<a id="change">parameters = tuple(parameters_dict.values())</a>
+<a id="change">hmc_helper</a> = gpflow.optimizers.SamplingHelper(model.log_marginal_likelihood, <a id="change">parameters</a>)
+
+<a id="change">hmc</a> = tfp.mcmc.HamiltonianMonteCarlo(
+    target_log_prob_fn=hmc_helper.target_log_prob_fn, num_leapfrog_steps=10, step_size=0.01
+)
+
+<a id="change">adaptive_hmc</a> = tfp.mcmc.SimpleStepSizeAdaptation(
+    hmc, num_adaptation_steps=10, target_accept_prob=f64(0.75), adaptation_rate=0.1
+)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+&#47&#47 We then run the sampler,
+
+&#47&#47 %%
+<a id="change">num_burnin_steps = ci_niter(300)</a>
+num_samples = ci_niter(500)
+
+&#47&#47 Note that here we need model.trainable_parameters, not trainable_variables - only parameters can have priors!
+hmc_helper = gpflow.optimizers.SamplingHelper(</code></pre>

@@ -1,0 +1,41 @@
+<html><h3>0b4815ab2243fe76791b01451b87492c7944025a,ristretto/sketch/transforms.py,,sparse_johnson_lindenstrauss,#,60
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        raise ValueError(&quotIf supplied, axis must be in (0, 1)&quot)
+
+    if density is None:
+        <a id="change">density = 1.0 / 3</a>
+
+    Omega = _sketches.sparse_random_map(A, l, axis, density, random_state)
+
+    &#47&#47 project A onto Omega
+    if axis == 0:
+        <a id="change">return safe_sparse_dot(Omega.T, A)</a>
+    return safe_sparse_dot(A, Omega)
+
+
+def fast_johnson_lindenstrauss(A, l, axis=1, random_state=None):</code></pre><h3>After Change</h3><pre><code class='java'>
+        raise ValueError(&quotIf supplied, axis must be in (0, 1)&quot)
+
+    if density is None:
+        density = <a id="change">A.shape[0] / log(A.shape[0])</a>
+
+    &#47&#47 construct sparse sketch
+    Omega = _sketches.sparse_random_map(A, l, axis, density, random_state)
+
+    &#47&#47 project A onto Omega
+    if axis == 0:
+        Q = safe_sparse_dot(Omega.T, A)
+    else:
+        Q = safe_sparse_dot(A, Omega)
+
+    if n_subspace is not None:
+        Q = perform_subspace_iterations(A, Q, n_iter=n_subspace, axis=axis)
+
+    <a id="change">return Q</a>
+
+def fast_johnson_lindenstrauss(A, l, axis=1, random_state=None):
+    
+</code></pre><img src="35143450.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erichson/ristretto/commit/0b4815ab2243fe76791b01451b87492c7944025a#diff-8d8c524f3f2335d9e1a764b8dd61e156f6ec112c64c651cf13f1ecd0f888ae7dL77' target='_blank'>Link</a></div><div id='project'> Project Name: erichson/ristretto</div><div id='commit'> Commit Name: 0b4815ab2243fe76791b01451b87492c7944025a</div><div id='time'> Time: 2018-05-22</div><div id='author'> Author: jknox13@uw.edu</div><div id='file'> File Name: ristretto/sketch/transforms.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sparse_johnson_lindenstrauss</div><BR><BR><div id='link'><a href='https://github.com/google/nucleus/commit/397dace4af2db3adaec1746ab4dce36ac715cdfe#diff-ba086450fd0b3d3705b6eb5ef56c2b30b7e9c2e2c896210fbce972a4a8c11188L159' target='_blank'>Link</a></div><div id='project'> Project Name: google/nucleus</div><div id='commit'> Commit Name: 397dace4af2db3adaec1746ab4dce36ac715cdfe</div><div id='time'> Time: 2018-11-02</div><div id='author'> Author: no-reply@google.com</div><div id='file'> File Name: nucleus/util/genomics_math.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: log10_binomial</div><BR><BR><div id='link'><a href='https://github.com/google-research/google-research/commit/f705891da38c245857f04484ac7b771a37be7571#diff-b646828daaa420e875c1b3a8757a981383c2b655dbf579606860a2f3071dc8f8L267' target='_blank'>Link</a></div><div id='project'> Project Name: google-research/google-research</div><div id='commit'> Commit Name: f705891da38c245857f04484ac7b771a37be7571</div><div id='time'> Time: 2021-01-08</div><div id='author'> Author: barron@google.com</div><div id='file'> File Name: jaxnerf/nerf/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: learning_rate_decay</div><BR>

@@ -1,0 +1,50 @@
+<html><h3>dcd82a95dee25d14cdf112b5be18e6dc0a19c7eb,cli.py,,main,#,33
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            
+    
+    &#47&#47 Feature extraction
+    <a id="change">if args.mode == &quotfeatures&quot:
+        df, has_index_col = parse_data()
+        print(df)
+    
+
+</a>if __name__ == &quot__main__&quot:
+    sys.exit(main(sys.argv))</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    &#47&#47 === FEATURE EXTRACTION ===
+    &#47&#47 We expect an image filepath or folder of images
+    <a id="change">if args.mode == &quotextract&quot:
+        assert os.path.exists(args.data),\
+            &quotExtract mode (data arg): File or directory not found: "{}"&quot\
+            .format(args.data)
+            
+        &#47&#47 Calculate and write to args.out
+        features = extract_features(args.data, model=args.model, write_to=args.out)
+            
+        
+    &#47&#47 === DIMENSION REDUCTION ===
+    &#47&#47 We expect a .csv file of features
+    elif args.mode in [&quottsne&quot, &quotumap&quot]:
+        
+        &#47&#47 Make sure we know what columns are intended to be used numerically as a list of strings, or &quotall&quot
+        numeric_cols = args.numeric_cols
+        if numeric_cols is None:
+            raise Exception(&quotFeature reduction mode: No data column indices provided. Example usage: "--numeric-cols B,C,F", "--numeric-cols all"&quot)
+        elif numeric_cols != &quotall&quot:
+            numeric_cols = [s.strip() for s in numeric_cols.split(&quot,&quot) if s.strip() != &quot&quot]
+        
+        &#47&#47 Parse the data into a squashed pd.DataFrame with first column being unique keys
+        df = parse_data(args.data, numeric_cols, args.unique_col)
+        
+        if args.mode == &quottsne&quot:
+            tsne(df, dims=int(args.reduce), write_to=args.out)
+            
+        elif args.mode == &quotumap&quot:
+            raise NotImplementedError(&quotUMAP is not finished&quot)
+    
+
+</a>if __name__ == &quot__main__&quot:
+    sys.exit(main(sys.argv))</code></pre><img src="33851573.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 5</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/zegami/image-similarity-clustering/commit/dcd82a95dee25d14cdf112b5be18e6dc0a19c7eb#diff-7648f5f4cce4bf01d02de43f8c5f6f2130b787baece0cf6338210496d8bdfcdcL17' target='_blank'>Link</a></div><div id='project'> Project Name: zegami/image-similarity-clustering</div><div id='commit'> Commit Name: dcd82a95dee25d14cdf112b5be18e6dc0a19c7eb</div><div id='time'> Time: 2020-03-18</div><div id='author'> Author: douglawrence0010@gmail.com</div><div id='file'> File Name: cli.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: main</div><BR><BR><div id='link'><a href='https://github.com/Logan1x/Python-Scripts/commit/2ef5c047b4296a807eea8366f67d7f271f0d47de#diff-bf181f99a0eacb262564fa63576689ed03c45b30c6adaf12db0cb13f3a956682L11' target='_blank'>Link</a></div><div id='project'> Project Name: Logan1x/Python-Scripts</div><div id='commit'> Commit Name: 2ef5c047b4296a807eea8366f67d7f271f0d47de</div><div id='time'> Time: 2020-06-28</div><div id='author'> Author: 59202862+Monsieurvishal@users.noreply.github.com</div><div id='file'> File Name: bin/password-strength-checker.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: pass1</div><BR><BR><div id='link'><a href='https://github.com/ultralytics/yolov3/commit/0bc1db58d82c2482bfac1e32a3a43cfd5a533da2#diff-14aa3f6ca8fb175c2b249ec637d89afce517b38ac6f7f72ffda6e85f11095937L21' target='_blank'>Link</a></div><div id='project'> Project Name: ultralytics/yolov3</div><div id='commit'> Commit Name: 0bc1db58d82c2482bfac1e32a3a43cfd5a533da2</div><div id='time'> Time: 2021-01-10</div><div id='author'> Author: glenn.jocher@ultralytics.com</div><div id='file'> File Name: utils/google_utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: attempt_download</div><BR>

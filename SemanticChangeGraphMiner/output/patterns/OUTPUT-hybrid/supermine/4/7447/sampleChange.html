@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if not new_url_found_by_plugin:
+        return
+
+    <a id="change">print(&quot&quot)</a>
+    print(&quotURLs found grouped by plugin:&quot)
+
+    def by_value(a, b):
+        return cmp(b[1], a[1])</code></pre><h3>After Change</h3><pre><code class='java'>
+    IGNORING = &quotIgnoring form&quot
+    FUZZABLE = &quotNew fuzzable request identified&quot
+
+    <a id="change">output = ListOutput(&quotcrawl_stats&quot)</a>
+
+    scan.seek(0)
+
+    found_forms = 0
+    ignored_forms = 0
+    fuzzable = 0
+    new_url_found_by_plugin = {}
+
+    for line in scan:
+        if FUZZABLE in line:
+            fuzzable += 1
+            continue
+
+        if FOUND in line:
+            found_forms += 1
+            continue
+
+        if IGNORING in line:
+            ignored_forms += 1
+            continue
+
+        match = NEW_URL_FOUND.search(line)
+        if match:
+            plugin_name = match.group(1)
+            if plugin_name in new_url_found_by_plugin:
+                new_url_found_by_plugin[plugin_name] += 1
+            else:
+                new_url_found_by_plugin[plugin_name] = 1
+
+    output.append(ListOutputItem(&quotfuzzable requests&quot, {&quotfound&quot: fuzzable}))
+    output.append(ListOutputItem(&quotforms&quot, {&quotfound&quot: found_forms,
+                                           &quotignored&quot: ignored_forms}))
+
+    if not new_url_found_by_plugin:
+        return
+
+    output.append(ListOutputItem(&quotfound URLs (group by plugin)&quot, new_url_found_by_plugin))
+
+    <a id="change">return output</a>
+</code></pre>

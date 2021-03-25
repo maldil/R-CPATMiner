@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def train(self, epochs, batch_size=128, sample_interval=50):
+
+        <a id="change">half_batch = int(batch_size / 2)</a>
+
+        start_time = datetime.datetime.now()
+
+        for epoch in range(epochs):
+
+            &#47&#47 ----------------------
+            &#47&#47  Train Discriminators
+            &#47&#47 ----------------------
+
+            imgs_A = self.data_loader.load_data(domain="A", batch_size=half_batch)
+            <a id="change">imgs_B = self.data_loader.load_data(domain="B", batch_size=half_batch)</a>
+
+            &#47&#47 Translate images to opposite domain
+            fake_B = self.g_AB.predict(imgs_A)
+            fake_A = self.g_BA.predict(imgs_B)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+                &#47&#47 Plot the progress
+                print ("[Epoch %d/%d] [Batch %d/%d] time: %s [D loss: %f, acc: %3d%%] [G loss: %05f, adv: %05f, recon: %05f, id: %05f]" \
+                                                                        % <a id="change">( epoch, epochs,
+                                                                            batch_i, self.data_loader.n_batches,
+                                                                            elapsed_time,
+                                                                            d_loss[0], 100*d_loss[1],
+                                                                            g_loss[0],
+                                                                            np.mean(g_loss[1:3]),
+                                                                            np.mean(g_loss[3:5]),
+                                                                            np.mean(g_loss[5:6]))</a>)
+
+                &#47&#47 If at save interval                                        =&gt; save generated image samples
+                if batch_i % sample_interval == 0:</code></pre>

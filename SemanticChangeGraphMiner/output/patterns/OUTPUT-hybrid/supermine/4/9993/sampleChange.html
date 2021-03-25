@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            log = {&quotepoch&quot: epoch}
+            for key, value in result.items():
+                if key == &quotmetrics&quot:
+                    <a id="change">for i, metric in enumerate(self.metrics):
+                        log[metric.__name__] = result[&quotmetrics&quot][i]
+               </a> elif key == &quotval_metrics&quot:
+                    for i, metric in enumerate(self.metrics):
+                        log[&quotval_&quot + metric.__name__] = result[&quotval_metrics&quot][i]
+                else:</code></pre><h3>After Change</h3><pre><code class='java'>
+                if key == &quotmetrics&quot:
+                    log.update({mtr.__name__ : value[i] for i, mtr in enumerate(self.metrics)})
+                elif key == &quotval_metrics&quot:
+                    <a id="change">log.update({&quotval_&quot + mtr.__name__ : value[i] for i, mtr in enumerate(self.metrics)})</a>
+                else:
+                    log[key] = value
+            if self.train_logger is not None:
+                self.train_logger.add_entry(log)</code></pre>

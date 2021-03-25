@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    y_true = [2.0, 2.0, 1.0, 0.0]
+    y_pred = np.arange(3, -1, -1)
+
+    <a id="change">dcg_at4</a> = <a id="change">metrics.dcg(
+        torch.tensor([y_pred]), torch.tensor([y_true]), gain_function="rank"
+    )</a>
+    assert torch.isclose(dcg_at4, torch.tensor(4.631), atol=0.05)
+
+    y_true = [3, 2, 3, 0, 0, 1, 2, 2, 3, 0]
+    y_pred = np.arange(9, -1, -1)</code></pre><h3>After Change</h3><pre><code class='java'>
+    y_true = [2.0, 2.0, 1.0, 0.0]
+    y_pred = np.arange(3, -1, -1)
+
+    <a id="change">dcg_at4</a> = <a id="change">torch.sum(
+        metrics.dcg(
+            torch.tensor([y_pred]),
+            torch.tensor([y_true]),
+            gain_function="linear_rank",
+        )
+    )</a>
+    assert torch.isclose(dcg_at4, torch.tensor(4.631), atol=0.05)
+
+    y_true = [3, 2, 3, 0, 0, 1, 2, 2, 3, 0]
+    y_pred = np.arange(9, -1, -1)</code></pre>

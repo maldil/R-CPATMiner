@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return
+
+    def prepare(self):
+        <a id="change">self._init_search_graph()</a>
+        <a id="change">self._init_search_function()</a>
+        return
+
+    def query(self, query_data, k=10, epsilon=0.1):
+        Query the training graph_data for the k nearest neighbors</code></pre><h3>After Change</h3><pre><code class='java'>
+        return
+
+    def prepare(self):
+        <a id="change">if not hasattr(self, "_search_graph"):
+            self._init_search_graph()
+       </a> <a id="change">if not hasattr(self, "_search_function"):
+            self._init_search_function()
+            &#47&#47 Force compilation of the search function (hardcoded k, epsilon)
+            query_data = self._raw_data[:1]
+            _ = self._search_function(
+                query_data, 5, 0.0, self._visited, self.search_rng_state.copy(),
+            )
+       </a> return
+
+    def query(self, query_data, k=10, epsilon=0.1):
+        Query the training graph_data for the k nearest neighbors</code></pre>

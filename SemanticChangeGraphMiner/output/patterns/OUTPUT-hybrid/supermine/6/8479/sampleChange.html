@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            X = np.asfortranarray(X)
+    else:
+        if X.getformat() != &quotcsc&quot or not X.has_sorted_indices:
+            <a id="change">raise ValueError("Give X as csc matrix with sorted indices")</a>
+
+    n_features = X.shape[1]
+    if beta_init is None:
+        beta_init = np.zeros(n_features)</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise TypeError("Sparse X must be in column sparse format with "
+                            "sorted indices.")
+    &#47&#47 cython function only accepts float64 for X and y:
+    <a id="change">if X.dtype != &quotfloat64&quot:
+        X = X.astype(np.float64)
+   </a> if y.dtype != &quotfloat64&quot:
+        y = y.astype(np.float64)
+
+    n_features = X.shape[1]</code></pre>

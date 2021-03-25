@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    docs = []
+    for group in minibatch(docs, n_sents):
+        <a id="change">group = list(group)</a>
+        first = group.pop(0)
+        <a id="change">to_extend = first["paragraphs"][0]["sentences"]</a>
+        for sent in <a id="change">group[1:]</a>:
+            to_extend.extend(<a id="change">sent</a>[<a id="change">"paragraphs"</a>][0]["sentences"])
+        docs.append(first)
+    return docs
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    Convert IOB files into JSON format for use with train cli.
+    
+    <a id="change">sentences = read_iob(input_data.split("\n"))</a>
+    docs = merge_sentences(sentences, n_sents)
+    return docs
+
+</code></pre>

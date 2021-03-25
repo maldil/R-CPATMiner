@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47  Train Discriminators
+            &#47&#47 ----------------------
+
+            imgs_A = <a id="change">self.data_loader.load_data(domain="A", batch_size=half_batch)</a>
+            imgs_B = self.data_loader.load_data(domain="B", batch_size=half_batch)
+
+            &#47&#47 Translate images to opposite domain
+            fake_B = self.g_AB.predict(imgs_A)
+            <a id="change">fake_A</a> = self.g_BA.predict(imgs_B)
+
+            valid = np.ones((half_batch,) + self.disc_patch)
+            fake = np.zeros((half_batch,) + self.disc_patch)</code></pre><h3>After Change</h3><pre><code class='java'>
+        start_time = datetime.datetime.now()
+
+        for epoch in range(epochs):
+            <a id="change">for batch_i, (imgs_A, imgs_B) in enumerate(self.data_loader.load_batch(batch_size)):
+
+                &#47&#47 ----------------------
+                &#47&#47  Train Discriminators
+                &#47&#47 ----------------------
+
+                &#47&#47 Translate images to opposite domain
+                fake_B = self.g_AB.predict(imgs_A)
+                fake_A = self.g_BA.predict(imgs_B)
+
+                valid = np.ones((batch_size,) + self.disc_patch)
+                fake = np.zeros((batch_size,) + self.disc_patch)
+
+                &#47&#47 Train the discriminators (original images = real / translated = Fake)
+                dA_loss_real = self.d_A.train_on_batch(imgs_A, valid)
+                dA_loss_fake = self.d_A.train_on_batch(fake_A, fake)
+                dA_loss = 0.5 * np.add(dA_loss_real, dA_loss_fake)
+
+                dB_loss_real = self.d_B.train_on_batch(imgs_B, valid)
+                dB_loss_fake = self.d_B.train_on_batch(fake_B, fake)
+                dB_loss = 0.5 * np.add(dB_loss_real, dB_loss_fake)
+
+                &#47&#47 Total disciminator loss
+                d_loss = 0.5 * np.add(dA_loss, dB_loss)
+
+
+                &#47&#47 ------------------
+                &#47&#47  Train Generators
+                &#47&#47 ------------------
+
+                &#47&#47 The generators want the discriminators to label the translated images as real
+                valid = np.ones((batch_size,) + self.disc_patch)
+
+                &#47&#47 Train the generators
+                g_loss = self.combined.train_on_batch([imgs_A, imgs_B], [valid, valid, imgs_A, imgs_B, imgs_A, imgs_B])
+
+                elapsed_time = datetime.datetime.now() - start_time
+
+                &#47&#47 Plot the progress
+                print ("[Epoch %d/%d] [Batch %d/%d] time: %s [D loss: %f, acc: %3d%%] [G loss: %05f, adv: %05f, recon: %05f, id: %05f]" \
+                                                                        % ( epoch, epochs,
+                                                                            batch_i, self.data_loader.n_batches,
+                                                                            elapsed_time,
+                                                                            d_loss[0], 100*d_loss[1],
+                                                                            g_loss[0],
+                                                                            np.mean(g_loss[1:3]),
+                                                                            np.mean(g_loss[3:5]),
+                                                                            np.mean(g_loss[5:6])))
+
+                &#47&#47 If at save interval                                        =&gt; save generated image samples
+                if batch_i % sample_interval == 0:
+                    self.sample_images(epoch, batch_i)
+
+   </a> def sample_images(self, epoch, batch_i):
+        os.makedirs(&quot%s&quot % self.dataset_name, exist_ok=True)
+        r, c = 2, 3
+</code></pre>

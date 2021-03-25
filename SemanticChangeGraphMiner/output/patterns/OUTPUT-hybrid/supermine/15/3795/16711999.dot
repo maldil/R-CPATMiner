@@ -1,0 +1,43 @@
+digraph G {
+subgraph cluster0 {
+1 [label="LongTensor" a="32" s="3461,3509" l="11,1" shape="box"];
+3 [label="Assignment:=" a="7" s="3553" l="1" shape="box"];
+4 [label="cuda" a="32" s="3564" l="6" shape="box"];
+5 [label="IfStatement" a="25" s="3519,3532" l="4,2" shape="diamond"];
+6 [label="cuda" a="32" s="7098" l="6" shape="box"];
+7 [label="FieldAccess" a="22" s="7088" l="9" shape="box"];
+8 [label="FieldAccess" a="22" s="4401" l="4" shape="box"];
+9 [label="FieldAccess" a="22" s="3523" l="4" shape="box"];
+10 [label="FieldAccess" a="22" s="3554" l="9" shape="box"];
+11 [label="FieldAccess" a="22" s="3544" l="9" shape="box"];
+12 [label="IfStatement" a="25" s="7047,7060" l="4,2" shape="diamond"];
+14 [label="FieldAccess" a="22" s="3436" l="9" shape="box"];
+15 [label="FieldAccess" a="22" s="3554" l="9" shape="box"];
+16 [label="FieldAccess" a="22" s="3523" l="4" shape="box"];
+17 [label="FieldAccess" a="22" s="7051" l="4" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="LongTensor" a="32" s="3437,3485" l="11,1" shape="box"];
+13 [label="FieldAccess" a="22" s="3421" l="9" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 11 [label="_def_"];
+1 -> 14 [label="_def_"];
+1 -> 2 [label="_map_"];
+2 -> 13 [label="_def_"];
+3 -> 11 [label="_def_"];
+4 -> 3 [label="_para_"];
+5 -> 3 [label="_control_"];
+5 -> 4 [label="_control_"];
+7 -> 6 [label="_recv_"];
+12 -> 6 [label="_control_"];
+14 -> 15 [label="_ref_"];
+14 -> 15 [label="_ref_"];
+14 -> 13 [label="_map_"];
+15 -> 4 [label="_recv_"];
+16 -> 5 [label="_cond_"];
+17 -> 12 [label="_cond_"];
+}

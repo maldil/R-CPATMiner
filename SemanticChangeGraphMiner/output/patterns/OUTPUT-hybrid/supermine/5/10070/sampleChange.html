@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            &#47&#47 fft_pred = torch.rfft(y_pred, 1)
+            loss = self._get_loss(batch_y, y_pred, len(x))
+            loss.backward()
+            <a id="change">self.trainer.step()</a>
+            total_loss += loss
+            num_batches += 1
+
+        total_loss = total_loss.item()</code></pre><h3>After Change</h3><pre><code class='java'>
+            &#47&#47 fft_orig = torch.rfft(batch_y, 1)
+            &#47&#47 fft_pred = torch.rfft(y_pred, 1)
+            loss = self._get_loss(batch_y, y_pred, len(x))
+            <a id="change">if loss is not None:
+                loss.backward()
+                self.trainer.step()
+                total_loss += loss
+                num_batches += 1
+
+       </a> total_loss = total_loss.item()
+        return total_loss / num_batches
+
+</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        unitpy.load_state_dict(state_dict)
+        out3d = unitpy(input_3d_var)
+        filter_idx = 5
+        <a id="change">py_out = py_to_tf_reshape(
+            out3d.data.numpy())[0][0][:, :, filter_idx].copy()</a>
+        tf_out = tf_out3dsample[0][0][:, :, filter_idx].copy()
+        import pdb
+        pdb.set_trace()
+        max_v = max(tf_out.max(), py_out.max())</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Plot slices
+        filter_idx = 0
+        img_tf = <a id="change">out_tf_np</a>[<a id="change">0</a>][filter_idx][0]
+        img_pt = out_pt_np[0][filter_idx][0]
+
+        max_v = max(img_tf.max(), img_pt.max())</code></pre>

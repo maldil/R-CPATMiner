@@ -1,0 +1,34 @@
+<html><h3>25ca9c249fd3e11bb166b42ffeb2433036964bd1,brian2/codegen/generators/GSL_generator.py,GSLWeaveCodeGenerator,write_dataholder,#GSLWeaveCodeGenerator#,350
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            var_obj = self.variables[var]
+        except:
+            var_obj = self.other_variables[var]
+        <a id="change">dtype = self.generator.c_data_type(var_obj.dtype)</a>
+        if isinstance(var_obj, ArrayVariable):
+            pointer_name = self.generator.get_array_name(var_obj, access_data=True)
+            restrict = self.generator.restrict
+            if var_obj.scalar:
+                restrict = &quot&quot
+            return &quot{dtype}* {res} {var};&quot.format(dtype=dtype, res=restrict, var=pointer_name)
+        else:
+            return <a id="change">&quot{dtype} {var};&quot.format(dtype=dtype, var=var)</a>
+
+    def get_replacer(self, var, to_replace):
+        try:
+            var_obj = self.variables[var]</code></pre><h3>After Change</h3><pre><code class='java'>
+            return &quot{dtype} {var};&quot.format(dtype=dtype, var=var_obj.name)
+
+    def write_dataholder(self, variables_in_vector):
+        code = <a id="change">[&quot\nstruct dataholder\n{\n\tint _idx;&quot]</a>
+        for var_obj in variables_in_vector:
+            if var_obj.name == &quott&quot or &quot_gsl&quot in var_obj.name:
+                continue
+            code += <a id="change">[&quot\t&quot+self.write_dataholder_single(var_obj)]</a>
+        <a id="change">code += [&quot\n};&quot]</a>
+        return (&quot\n&quot).join(code)
+
+    def to_replace_vector_vars(self, variables_in_vector):
+        to_replace = {}</code></pre><img src="28777316.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 7</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/25ca9c249fd3e11bb166b42ffeb2433036964bd1#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL349' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: 25ca9c249fd3e11bb166b42ffeb2433036964bd1</div><div id='time'> Time: 2017-07-05</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLWeaveCodeGenerator</div><div id='method'> Method Name: write_dataholder</div><BR><BR><div id='link'><a href='https://github.com/snorkel-team/snorkel/commit/ac8954c34709432e962d535477e3634a60fbde1e#diff-a4f4a122afc31ce816e4bbc01eb48bd093f4682e56b11cff1abc99221bf3f70cL73' target='_blank'>Link</a></div><div id='project'> Project Name: snorkel-team/snorkel</div><div id='commit'> Commit Name: ac8954c34709432e962d535477e3634a60fbde1e</div><div id='time'> Time: 2016-07-15</div><div id='author'> Author: ajratner@gmail.com</div><div id='file'> File Name: ddlite_viewer.py</div><div id='class'> Class Name: Viewer</div><div id='method'> Method Name: _tag_span</div><BR><BR><div id='link'><a href='https://github.com/brian-team/brian2/commit/cd4186d816ef7482e64fe66c671fba9578eae19b#diff-5d7b10f73f8360f6e167cca4ae4502ae30e4a27635a93f1ea2f171230b10d08bL122' target='_blank'>Link</a></div><div id='project'> Project Name: brian-team/brian2</div><div id='commit'> Commit Name: cd4186d816ef7482e64fe66c671fba9578eae19b</div><div id='time'> Time: 2017-07-20</div><div id='author'> Author: charleetje@gmail.com</div><div id='file'> File Name: brian2/codegen/generators/GSL_generator.py</div><div id='class'> Class Name: GSLCodeGenerator</div><div id='method'> Method Name: get_dimension_code</div><BR>

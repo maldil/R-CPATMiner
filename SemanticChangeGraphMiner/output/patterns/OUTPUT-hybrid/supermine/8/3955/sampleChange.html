@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for entry in f_entries:
+                hash_ = self._hash_entry(entry, frozenset([&quotfilename&quot,&quotlineno&quot]))
+                &#47&#47 skip the existing entries from other statements
+                <a id="change">if hash_ in entries: continue
+</a>                &#47&#47 If the entry exists in the journal, skip
+                if self._is_existing(journal, entry): continue
+                &#47&#47 add importer name as sorce description to source postings
+                self._add_description(entry)
+                &#47&#47 balance amount
+                self.balance_amounts(entry)
+                <a id="change">hashed_entries[hash_] = entry</a>
+            entries = {**entries, **hashed_entries}
+
+        results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)</code></pre><h3>After Change</h3><pre><code class='java'>
+                entries[hash_].extend(hashed_entries[hash_][n:])
+
+        uncleared_entries = defaultdict(list)
+        <a id="change">for hash_ in entries:
+            &#47&#47 number of matching cleared entries in journal
+            n = len(similar_entries_in_journal(entries[hash_][0],
+                                               journal.entries,
+                                               self.comparator))
+            &#47&#47 If journal has n cleared entries for this hash, pick remaining
+            for entry in entries[hash_][n:]:
+                &#47&#47 add importer name as sorce description to source postings
+                self._add_description(entry)
+                &#47&#47 balance amount
+                self.balance_amounts(entry)
+                uncleared_entries[hash_].append(entry)
+
+       </a> results.add_pending_entries(
+            [ImportResult(entry.date, [entry], None)
+                for entry in itertools.chain.from_iterable(uncleared_entries.values())
+            ]</code></pre>

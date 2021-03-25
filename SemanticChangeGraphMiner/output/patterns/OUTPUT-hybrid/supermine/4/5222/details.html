@@ -1,0 +1,20 @@
+<html><h3>637ecf5877bbd6647caef2bd64925e66a586fb29,keras_rcnn/layers/losses/__init__.py,RCNN,regression_loss,#RCNN#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        weights = keras.backend.reshape(weights, (-1,))
+
+        <a id="change">updates = keras.backend.tile(weights, (4,))</a>
+
+        labels = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output_deltas, dtype=&quotfloat32&quot), indices, updates)
+
+        loss = keras_rcnn.backend.smooth_l1(output_deltas * labels, target_deltas * labels, anchored=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        updates = keras.backend.ones_like(indices, dtype=keras.backend.floatx())
+
+        labels = keras_rcnn.backend.scatter_add_tensor(keras.backend.zeros_like(output_deltas, dtype=&quotfloat32&quot), indices, <a id="change">updates[:, 0]</a>)
+
+        loss = keras_rcnn.backend.smooth_l1(output_deltas * labels, target_deltas * labels, anchored=True)
+</code></pre><img src="22896188.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/broadinstitute/keras-rcnn/commit/637ecf5877bbd6647caef2bd64925e66a586fb29#diff-f2554205afc6d4f458880705c815bd70984c5911d41901d5d4f8e3620af7c511L27' target='_blank'>Link</a></div><div id='project'> Project Name: broadinstitute/keras-rcnn</div><div id='commit'> Commit Name: 637ecf5877bbd6647caef2bd64925e66a586fb29</div><div id='time'> Time: 2018-01-30</div><div id='author'> Author: allen.goodman@icloud.com</div><div id='file'> File Name: keras_rcnn/layers/losses/__init__.py</div><div id='class'> Class Name: RCNN</div><div id='method'> Method Name: regression_loss</div><BR><BR><div id='link'><a href='https://github.com/danielegrattarola/keras-gat/commit/9d56361641a64ff73ac630812ecd4964eedbc7aa#diff-b5eead7f2a637c33998de1add9a690c0678e849a3d16791260f0f0a16506c7c3L72' target='_blank'>Link</a></div><div id='project'> Project Name: danielegrattarola/keras-gat</div><div id='commit'> Commit Name: 9d56361641a64ff73ac630812ecd4964eedbc7aa</div><div id='time'> Time: 2017-11-09</div><div id='author'> Author: daniele.grattarola@gmail.com</div><div id='file'> File Name: gat/graph_attention_layer.py</div><div id='class'> Class Name: GraphAttention</div><div id='method'> Method Name: call</div><BR><BR><div id='link'><a href='https://github.com/rail-berkeley/softlearning/commit/f8df44a7c24038d0fa3d7b0f7dc2d8c5e952c81a#diff-bc6dfc56aa8b44ee8042804012c8fdb4edc74853c5b439ae6e722dddf2c98875L217' target='_blank'>Link</a></div><div id='project'> Project Name: rail-berkeley/softlearning</div><div id='commit'> Commit Name: f8df44a7c24038d0fa3d7b0f7dc2d8c5e952c81a</div><div id='time'> Time: 2019-02-01</div><div id='author'> Author: hartikainen@berkeley.edu</div><div id='file'> File Name: softlearning/algorithms/sql.py</div><div id='class'> Class Name: SQL</div><div id='method'> Method Name: _create_svgd_update</div><BR>

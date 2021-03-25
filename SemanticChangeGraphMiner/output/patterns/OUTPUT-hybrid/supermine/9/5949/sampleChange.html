@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                tb_tracker.track("advantage", adv_v, step_idx)
+                tb_tracker.track("values", value_v, step_idx)
+                tb_tracker.track("batch_rewards", vals_ref_v, step_idx)
+                <a id="change">tb_tracker.track("loss_entropy", entropy_loss_v, step_idx)</a>
+                tb_tracker.track("loss_policy", loss_policy_v, step_idx)
+                tb_tracker.track("loss_value", loss_value_v, step_idx)
+                <a id="change">tb_tracker.track("loss_total", loss_v, step_idx)</a>
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    test_env = gym.make(ENV_ID)
+
+    net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0])
+    net_crt = model.ModelCritic(<a id="change">envs[0].observation_space.shape[0]</a>)
+    if args.cuda:
+        net_act.cuda()
+        net_crt.cuda()</code></pre>

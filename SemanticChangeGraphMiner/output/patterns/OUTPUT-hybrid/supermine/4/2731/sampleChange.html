@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            then will attempt to use voltage data from this meter.
+        nominal_voltage : float
+        
+        chunk = <a id="change">next(self.store.load(key=self.sensor_keys[0], **load_kwargs))</a>
+        for key in self.sensor_keys[1:]:
+            <a id="change">chunk += next(self.store.load(key=key, **load_kwargs))</a>
+        best_ac_type = select_best_ac_type(self.available_ac_types(),
+                                           measurement_ac_type_prefs)
+        yield chunk[Power(best_ac_type)].dropna()
+        </code></pre><h3>After Change</h3><pre><code class='java'>
+
+        while True:
+            try:
+                chunk = next(<a id="change">generators[0]</a>)
+            except StopIteration:
+                break
+            for generator in generators[1:]:</code></pre>

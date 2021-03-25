@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @classmethod
+    def from_matrix(cls, mat):
+        Create a SE2 object from a 3x3 transformation matrix.
+        <a id="change">if not SE2.is_valid_matrix(mat):
+            raise ValueError("Invalid transformation matrix")
+
+       </a> return cls(SO2(mat[0:2, 0:2]), mat[0:2, 2])
+
+    @classmethod
+    def is_valid_matrix(cls, mat):</code></pre><h3>After Change</h3><pre><code class='java'>
+    @classmethod
+    def from_matrix(cls, mat, normalize=False):
+        Create a SE2 object from a 3x3 transformation matrix.
+        <a id="change">mat_is_valid</a> = <a id="change">cls.is_valid_matrix(mat)</a>
+        <a id="change">if mat_is_valid:
+            result = cls(SO2(mat[0:2, 0:2]), mat[0:2, 2])
+        elif not mat_is_valid and normalize:
+            result = cls(SO2(mat[0:2, 0:2]), mat[0:2, 2])
+            result.normalize()
+        else:
+            raise ValueError(
+                "Invalid transformation matrix. Use normalize=True to handle rounding errors.")
+
+       </a> <a id="change">return result</a>
+
+    @classmethod
+    def is_valid_matrix(cls, mat):
+        Check if a matrix is a valid transformation matrix.</code></pre>

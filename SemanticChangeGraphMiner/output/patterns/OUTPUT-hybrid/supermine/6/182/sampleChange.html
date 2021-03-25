@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        -------
+        fig, axes
+        
+        <a id="change">raise NotImplementedError()</a>
+
+    def sort_meters(self):
+        Sorts meters by instance.
+        self.meters.sort(key=meter_sorting_key)</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise ValueError("`axes` and `meters` must be of equal length.")
+
+        if kwargs_per_meter is None:
+            <a id="change">kwargs_per_meter = {}</a>
+
+        meters = [self[meter_key] for meter_key in meter_keys]
+        for i, (ax, meter) in enumerate(zip(axes, meters)):
+            kwargs_copy = deepcopy(kwargs)
+            <a id="change">for parameter, arguments in kwargs_per_meter.iteritems():
+                kwargs_copy[parameter] = arguments[i]
+           </a> getattr(meter, plot_func)(ax=ax, **kwargs_copy)
+            ax.set_title(meter.dominant_appliance().label())
+
+        return axes</code></pre>

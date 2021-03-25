@@ -1,0 +1,48 @@
+<html><h3>55bef1eea344a530ebda48d1a5d0c2456f0c3fc1,methods/shogun/nbc.py,SHOGUN_NBC,__init__,#SHOGUN_NBC#,23
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    self.data = load_dataset(method_param["datasets"], ["csv"])
+    self.data_split = split_dataset(self.data[0])
+
+    <a id="change">self.build_opts</a> = {}
+    if "algorithm" in method_param:
+      <a id="change">self.build_opts["solver"]</a> = str(method_param["algorithm"])
+    if "epsilon" in method_param:
+      <a id="change">self.build_opts["epsilon"]</a> = float(method_param["epsilon"])
+    if "max_iterations" in method_param:
+      <a id="change">self.build_opts["max_iter"]</a> = int(method_param["max_iterations"])
+
+    self.train_feat = RealFeatures(self.data_split[0].T)
+    self.train_labels = MulticlassLabels(self.data_split[1])
+    <a id="change">self.test_feat = RealFeatures(self.data[1].T)</a>
+
+  def __str__(self):
+    return self.info
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  @param run_param - Path option for executing the benckmark. Not used for 
+  Shogun.
+  &quot&quot&quot
+  def __init__(<a id="change">self</a>, method_param, run_param):
+    self.info = "SHOGUN_NBC ("  + str(method_param) +  ")"
+
+    &#47&#47 Assemble run model parameter.
+    <a id="change">self.data</a> = load_dataset(method_param["datasets"], ["csv"])
+    self.data_split = split_dataset(self.data[0])
+
+    self.train_feat = RealFeatures(self.data_split[0].T)
+
+	&#47&#47 Encode the labels into {0,1,2,3,......,num_classes-1}
+    <a id="change">self</a>.train_labels, <a id="change">self.label_map</a> = label_encoder(self.data_split[1])
+    self.train_labels = <a id="change">MulticlassLabels(self.train_labels)</a>
+
+    if len(self.data) &gt;= 2:
+      <a id="change">self.test_feat = RealFeatures(self.data[1].T)</a>
+
+    <a id="change">self.solver = "auto"</a>
+    if "solver" in method_param:
+      <a id="change">self.solver</a> = str(method_param["solver"])
+
+  &quot&quot&quot
+  Return information about the benchmarking instance.</code></pre><img src="34589358.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 22</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/55bef1eea344a530ebda48d1a5d0c2456f0c3fc1#diff-b31e9081280d22f10af37aac85ee6db9eb8578413f9483076dd39a746f5545ddL23' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: 55bef1eea344a530ebda48d1a5d0c2456f0c3fc1</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/nbc.py</div><div id='class'> Class Name: SHOGUN_NBC</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa#diff-e9d887c7e23b65b06d2bcd24b5dc0636d14bcdd5a84297d1c7909dd2dc71214dL23' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: bfbc7582aa9e6a3e1fde6679663232f1f3f1d1fa</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/lda.py</div><div id='class'> Class Name: SHOGUN_LDA</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/55bef1eea344a530ebda48d1a5d0c2456f0c3fc1#diff-b31e9081280d22f10af37aac85ee6db9eb8578413f9483076dd39a746f5545ddL23' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: 55bef1eea344a530ebda48d1a5d0c2456f0c3fc1</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/nbc.py</div><div id='class'> Class Name: SHOGUN_NBC</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/mlpack/benchmarks/commit/18530bab8f49b7a40a4d8793d4b6b5090941c3e7#diff-6b112f16227fdd0ddfb54bd36da26708371a73fa804eabe0a45755f1ea5e0390L25' target='_blank'>Link</a></div><div id='project'> Project Name: mlpack/benchmarks</div><div id='commit'> Commit Name: 18530bab8f49b7a40a4d8793d4b6b5090941c3e7</div><div id='time'> Time: 2019-04-24</div><div id='author'> Author: rukman.sai2@gmail.com</div><div id='file'> File Name: methods/shogun/qda.py</div><div id='class'> Class Name: SHOGUN_QDA</div><div id='method'> Method Name: __init__</div><BR>

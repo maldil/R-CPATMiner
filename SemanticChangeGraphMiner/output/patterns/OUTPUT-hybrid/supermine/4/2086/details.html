@@ -1,0 +1,19 @@
+<html><h3>f08653c95fbbff7db73244b97839caf10883a7ff,openrec/modules/interactions/ns_eu_dist.py,NSEuDist,_build_training_graph,#NSEuDist#,39
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                                        reduction_indices=1,
+                                        keep_dims=True, name="l2_user_pos")
+            l2_user_neg = tf.reshape(tf.reduce_sum(tf.square(tf.subtract(tmp_user, self._n_item)),
+                                                   reduction_indices=<a id="change">[1, 2]</a>, name="l2_user_neg"), [-1,1])
+            pos_score = l2_user_pos + self._p_item_bias
+            neg_score = l2_user_neg + tf.reduce_sum(self._n_item_bias, reduction_indices=[1, 2])
+            self._loss = tf.reduce_sum(self._weights * tf.maximum(self._margin*self._neg_num + pos_score*self._neg_num - neg_score, 0))</code></pre><h3>After Change</h3><pre><code class='java'>
+                                        reduction_indices=2, 
+                                        name="l2_user_neg")
+            pos_score = l2_user_pos + tf.tile(self._p_item_bias, [1, self._neg_num])         &#47&#47 shape=(2000, self._neg_num)
+            neg_score = l2_user_neg + <a id="change">tf.reduce_sum(self._n_item_bias, reduction_indices=2)</a>  &#47&#47 shape=(2000, self._neg_num)
+            self._loss = tf.reduce_sum(self._weights * tf.maximum(self._margin + pos_score - neg_score, 0))
+
+    def _build_serving_graph(self):</code></pre><img src="9801333.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 2</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ylongqi/openrec/commit/f08653c95fbbff7db73244b97839caf10883a7ff#diff-0b9b084d8cbc8f68c8959f0e65cc13b436846bc2695678af85bb77caced0905bL39' target='_blank'>Link</a></div><div id='project'> Project Name: ylongqi/openrec</div><div id='commit'> Commit Name: f08653c95fbbff7db73244b97839caf10883a7ff</div><div id='time'> Time: 2018-03-27</div><div id='author'> Author: tonyxuan26@foxmail.com</div><div id='file'> File Name: openrec/modules/interactions/ns_eu_dist.py</div><div id='class'> Class Name: NSEuDist</div><div id='method'> Method Name: _build_training_graph</div><BR><BR><div id='link'><a href='https://github.com/calico/basenji/commit/ea60242913a0ce53f4e033fee3be1f55e2ceb7b0#diff-f02fa695459d05d06168dbf488a49366a33c52c56cb02bcf15edbd99b59a591aL250' target='_blank'>Link</a></div><div id='project'> Project Name: calico/basenji</div><div id='commit'> Commit Name: ea60242913a0ce53f4e033fee3be1f55e2ceb7b0</div><div id='time'> Time: 2021-02-14</div><div id='author'> Author: drk@calicolabs.com</div><div id='file'> File Name: basenji/metrics.py</div><div id='class'> Class Name: R2</div><div id='method'> Method Name: update_state</div><BR><BR><div id='link'><a href='https://github.com/calico/basenji/commit/ea60242913a0ce53f4e033fee3be1f55e2ceb7b0#diff-f02fa695459d05d06168dbf488a49366a33c52c56cb02bcf15edbd99b59a591aL188' target='_blank'>Link</a></div><div id='project'> Project Name: calico/basenji</div><div id='commit'> Commit Name: ea60242913a0ce53f4e033fee3be1f55e2ceb7b0</div><div id='time'> Time: 2021-02-14</div><div id='author'> Author: drk@calicolabs.com</div><div id='file'> File Name: basenji/metrics.py</div><div id='class'> Class Name: PearsonR</div><div id='method'> Method Name: update_state</div><BR>

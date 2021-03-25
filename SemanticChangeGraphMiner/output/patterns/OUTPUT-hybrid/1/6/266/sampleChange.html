@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    time_one_job = start_time - time.time()
+    start_time = time.time()
+    test_searchcv_runs(surrogate=&quotgp&quot, n_jobs=2, n_points=1, cv=10)
+    <a id="change">time_two_jobs</a> = start_time - <a id="change">time.time()</a>
+
+    assert_greater(time_one_job, time_two_jobs, &quotTwo jobs are not &quot
+                                                &quotfaster than one job&quot)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    time_one_job = time.time() - start_time
+    start_time = time.time()
+    _fit_svc(n_jobs=-1, cv=10)
+    <a id="change">time_two_jobs</a> = <a id="change">time.time()</a> - start_time
+    assert_greater(time_one_job, time_two_jobs, &quotSingle-core job is faster than multi-core job.&quot)
+
+</code></pre>

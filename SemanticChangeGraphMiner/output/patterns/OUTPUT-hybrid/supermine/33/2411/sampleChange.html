@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            if not self.out_type in (&quotarray&quot, &quotlist&quot):
+                raise RuntimeError("The out_type must be one of &quotarray&quot or &quotlist&quot.")
+
+            batch_shape = <a id="change">tuple(input.shape[:-2])</a>
+            signal_shape = <a id="change">tuple(input.shape[-2:])</a>
+
+            input = tf.reshape(input, <a id="change">(-1,) + signal_shape</a>)
+
+            S = scattering2d(input, self.pad, self.unpad, self.backend, self.J, self.L, self.phi, self.psi,
+                             self.max_order, self.out_type)
+
+            if self.out_type == &quotarray&quot:
+                scattering_shape = <a id="change">tuple(S.shape[-3:])</a>
+                new_shape = <a id="change">batch_shape + scattering_shape</a>
+
+                S = tf.reshape(S, new_shape)
+            else:
+                scattering_shape = tuple(S[0][&quotcoef&quot].shape[-2:])</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            &#47&#47 Use tf.shape to get the dynamic shape of the tf.Tensors at
+            &#47&#47 execution time.
+            batch_shape = <a id="change">tf.shape(input)[:-2]</a>
+            signal_shape = <a id="change">tf.shape(input)[-2:]</a>
+
+            &#47&#47 NOTE: Cannot simply concatenate these using + since they are
+            &#47&#47 tf.Tensors and that would add their values.
+            input = tf.reshape(input, <a id="change">tf.concat(((-1,), signal_shape), 0)</a>)
+
+            S = scattering2d(input, self.pad, self.unpad, self.backend, self.J, self.L, self.phi, self.psi,
+                             self.max_order, self.out_type)
+
+            if self.out_type == &quotarray&quot:
+                scattering_shape = <a id="change">tf.shape(S)[-3:]</a>
+                new_shape = <a id="change">tf.concat((batch_shape, scattering_shape), 0)</a>
+
+                S = tf.reshape(S, new_shape)
+            else:
+                scattering_shape = tf.shape(S[0][&quotcoef&quot])[-2:]</code></pre>

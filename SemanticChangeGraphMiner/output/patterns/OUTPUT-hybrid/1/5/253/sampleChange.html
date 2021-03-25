@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        hislope     = (freqs[2] - fftfreqs) / (freqs[2] - freqs[1])
+
+        &#47&#47 .. then intersect them with each other and zero
+        wts[i, :(1 + n_fft/2)]    = <a id="change">np.maximum(0, 
+                                            np.minimum(loslope, hislope))</a>
+
+
+    &#47&#47 Slaney-style mel is scaled to be approx constant E per channel
+    enorm   = 2.0 / (binfreqs[2:n_filts+2] - binfreqs[:n_filts])</code></pre><h3>After Change</h3><pre><code class='java'>
+        upper   = (freqs[i+2] - fftfreqs)   / (freqs[i+2] - freqs[i+1])
+
+        &#47&#47 .. then intersect them with each other and zero
+        weights[i, :size]   = <a id="change">np.maximum(0, np.minimum(lower, upper))</a> * enorm[i]
+   
+    return weights
+</code></pre>

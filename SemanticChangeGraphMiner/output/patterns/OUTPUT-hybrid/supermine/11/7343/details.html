@@ -1,0 +1,35 @@
+<html><h3>bd1fa163ba2e3a02da40151c9ab5e498878800e9,riot_neuralnet/data.py,,get_raw_training_labels,#,68
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    labels = dict()
+
+    <a id="change">for i, key in enumerate(prelabels):
+        row = prelabels[key]
+        numImages = row[0]
+
+        increment = list()
+        for j in range(4):
+            increment.append((row[2][j] - row[1][j]) / numImages)
+
+        rowLabels = list()
+        for k in range(numImages):
+            newLabel = list()
+            for labelIdx in range(4):
+                newLabel.append(increment[labelIdx]*k+(row[1][labelIdx]))
+            rowLabels.append(newLabel)
+        labels[key] = rowLabels
+
+   </a> return labels</code></pre><h3>After Change</h3><pre><code class='java'>
+                           10: [10, [.1, .5, .2, .1], [.7, .2, .2, .5]]}
+    labels = dict()
+    for time_series_key in raw_training_labels:
+        <a id="change">time_series = raw_training_labels[time_series_key]</a>
+        num_images = time_series[0]
+        <a id="change">increment = [(time_series[2][emotion_dimension_idx] - time_series[1][emotion_dimension_idx]) / num_images for emotion_dimension_idx in range(4)]</a>
+        labels[time_series_key] = [[increment[label_idx]*image_idx + <a id="change">(time_series[1][label_idx])</a> for label_idx in range(4)] for image_idx in range(num_images)]
+
+    return labels
+</code></pre><img src="28392880.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 10</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/thoughtworksarts/EmoPy/commit/bd1fa163ba2e3a02da40151c9ab5e498878800e9#diff-07e9c93f2cec703bf5d95545ca13f028732efcf4703c0d6df16a63f73200fdebL29' target='_blank'>Link</a></div><div id='project'> Project Name: thoughtworksarts/EmoPy</div><div id='commit'> Commit Name: bd1fa163ba2e3a02da40151c9ab5e498878800e9</div><div id='time'> Time: 2017-12-19</div><div id='author'> Author: angelica.perez37@gmail.com</div><div id='file'> File Name: riot_neuralnet/data.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: get_raw_training_labels</div><BR><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/3ab4b8614054e9920676ae479df1ff4c2c2e438b#diff-3948ef8cecdf97181e8b1d10a64432dd55757d923d13ee733abb0002b4c2a643L69' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 3ab4b8614054e9920676ae479df1ff4c2c2e438b</div><div id='time'> Time: 2018-02-13</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/extractors/api.py</div><div id='class'> Class Name: IndicoAPIExtractor</div><div id='method'> Method Name: _extract</div><BR><BR><div id='link'><a href='https://github.com/pliablepixels/zmeventnotification/commit/1e619d91956c813d2328a5460da0a273fe135905#diff-04595b1135131dc766b814d15d8b01dce89ff0d5c1ab7ba37af845b30bc49c6bL123' target='_blank'>Link</a></div><div id='project'> Project Name: pliablepixels/zmeventnotification</div><div id='commit'> Commit Name: 1e619d91956c813d2328a5460da0a273fe135905</div><div id='time'> Time: 2019-11-15</div><div id='author'> Author: pliablepixels@gmail.com</div><div id='file'> File Name: hook/zmes_hook_helpers/face.py</div><div id='class'> Class Name: Face</div><div id='method'> Method Name: detect</div><BR>

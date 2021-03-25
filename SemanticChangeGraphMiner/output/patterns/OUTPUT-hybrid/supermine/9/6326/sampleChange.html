@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    @Backend._assert_backend_available
+    def compute_gradient(self, function, arguments):
+        flattened_arguments = <a id="change">flatten_arguments(arguments)</a>
+
+        <a id="change">if len(flattened_arguments) == 1:
+            def unary_gradient(argument):
+                torch_argument = self._from_numpy(argument)
+                torch_argument.requires_grad_()
+                function(torch_argument).backward()
+                return self._sanitize_gradient(torch_argument)
+            return unary_gradient
+
+       </a> def nary_gradient(arguments):
+            torch_arguments = []
+            for argument in flatten_arguments(arguments):
+                torch_argument = self._from_numpy(argument)</code></pre><h3>After Change</h3><pre><code class='java'>
+                torch_arguments.append(torch_argument)
+            function(*torch_arguments).backward()
+            return self._sanitize_gradients(torch_arguments)
+        <a id="change">if len(arguments) == 1:
+            return unpack_singleton_iterable_return_value(gradient)
+       </a> <a id="change">return gradient</a>
+
+    @Backend._assert_backend_available
+    def compute_hessian_vector_product(self, function, arguments):
+        def hessian_vector_product(*args):</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    response = requests.get(url)
+    with open(os.path.join(path, name), &quotw&quot) as f:
+        <a id="change">f.write(response.content)</a>
+
+
+def download_all(path=&quotdata&quot):
+    for href, name in (OCCUPANCY, CREDIT, CONCRETE):</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Fetch the response in a streaming fashion and write it to disk.
+    response = requests.get(url, stream=True)
+    with open(dlpath, &quotwb&quot) as f:
+        <a id="change">for chunk in response.iter_content(65536):
+            f.write(chunk)
+
+    &#47&#47 If verify, compare the signature
+   </a> if signature is not None:
+        dlsignature = sha256sum(dlpath)
+        if signature != dlsignature:
+            raise ValueError(</code></pre>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+				if p_values is None:
+					p_values = predictor.predict(x)
+				else:
+					p_values = <a id="change">np.dstack([p_values, predictor.predict(x)])</a>
+
+			p_values = self.p_agg_func(p_values)
+
+			if significance:</code></pre><h3>After Change</h3><pre><code class='java'>
+	def predict(self, x, significance=None):
+		is_regression = self.cp_class.problem_type == &quotregression&quot
+
+		<a id="change">if is_regression:
+			predictions = np.dstack([predictor.predict(x, significance) for
+			                         predictor in self.predictors])
+		else:
+			predictions = np.dstack([predictor.predict(x) for
+			                         predictor in self.predictors])
+
+	</a>	predictions = self.p_agg_func(predictions)
+
+		if significance and not is_regression:
+			return predictions &gt;= significance</code></pre>

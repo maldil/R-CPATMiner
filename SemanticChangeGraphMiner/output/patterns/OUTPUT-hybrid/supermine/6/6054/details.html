@@ -1,0 +1,23 @@
+<html><h3>364cd40384ad4f9cda4df949d0b1bd63abdcf6df,torchsample/transforms/image_transforms.py,Contrast,__call__,#Contrast#,216
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    def __call__(self, x, y=None):
+        x_gs = Grayscale(keep_channels=True)(x)
+        x_gs.fill_(<a id="change">x_gs</a>[1].mean())
+
+        alpha = 1.0 + random.uniform(-self.var, self.var)
+        x = _blend(x, x_gs, alpha)</code></pre><h3>After Change</h3><pre><code class='java'>
+    def __call__(self, x, y=None):
+        channel_means = x.mean(1)
+        for i in range(2,x.dim()):
+            <a id="change">channel_means = channel_means.mean(i)</a>
+        channel_means = <a id="change">channel_means.expand_as(x)</a>
+
+        <a id="change">x = (x - channel_means) * self.var + channel_means</a>
+        if y is not None:
+            channel_means = x.mean(1).mean(2).expand_as(x)
+            x = (x - channel_means) * self.var + channel_means          
+</code></pre><img src="24955774.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/ncullen93/torchsample/commit/364cd40384ad4f9cda4df949d0b1bd63abdcf6df#diff-511bc83b5412852ac488cc24e3fbc230b0233c39c7a7f05216bee4ec132395e0L217' target='_blank'>Link</a></div><div id='project'> Project Name: ncullen93/torchsample</div><div id='commit'> Commit Name: 364cd40384ad4f9cda4df949d0b1bd63abdcf6df</div><div id='time'> Time: 2017-05-05</div><div id='author'> Author: ncullen.th@dartmouth.edu</div><div id='file'> File Name: torchsample/transforms/image_transforms.py</div><div id='class'> Class Name: Contrast</div><div id='method'> Method Name: __call__</div><BR><BR><div id='link'><a href='https://github.com/utiasSTARS/liegroups/commit/071fb5fb20683946a33f40d28af466f8e9ffc1bd#diff-3cd7be3bff916f0d48dbcfe396a9a8c08cae5d4293bef06686f5a31621c521e2L43' target='_blank'>Link</a></div><div id='project'> Project Name: utiasSTARS/liegroups</div><div id='commit'> Commit Name: 071fb5fb20683946a33f40d28af466f8e9ffc1bd</div><div id='time'> Time: 2017-10-17</div><div id='author'> Author: clement.leopold@gmail.com</div><div id='file'> File Name: liegroups/torch/so2.py</div><div id='class'> Class Name: SO2</div><div id='method'> Method Name: left_jacobian</div><BR><BR><div id='link'><a href='https://github.com/abhiskk/fast-neural-style/commit/e15bc113b83c2bdf980d2557971888d10011ef29#diff-3dfe15b93461527d2c56b75ff81c210cb5c2138c1fbf8345e4d17644fb76cf56L119' target='_blank'>Link</a></div><div id='project'> Project Name: abhiskk/fast-neural-style</div><div id='commit'> Commit Name: e15bc113b83c2bdf980d2557971888d10011ef29</div><div id='time'> Time: 2017-03-14</div><div id='author'> Author: abhishekkadiyan@gmail.com</div><div id='file'> File Name: neuralstyle/transformernet.py</div><div id='class'> Class Name: InstanceNormalization</div><div id='method'> Method Name: forward</div><BR>

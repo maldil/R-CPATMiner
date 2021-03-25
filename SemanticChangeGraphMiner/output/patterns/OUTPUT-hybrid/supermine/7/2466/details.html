@@ -1,0 +1,27 @@
+<html><h3>21608a6b6e6883504a0bcb06abbf9c7d8029897b,ann_benchmarks/distance.py,,transform_dense_to_sparse,#,17
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    indices = np.transpose(np.where(X))
+    keys = []
+    l = []
+    <a id="change">last_i = None</a>
+    for i, j in indices:
+        <a id="change">if last_i != None and last_i != i:
+            keys.append(l)
+            l = []
+       </a> l.append(j)
+        last_i = i
+    keys.append(l)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 get list of indices of non-zero elements
+    indices = np.transpose(np.where(X))
+    keys = []
+    <a id="change">for _, js in itertools.groupby(indices, lambda ij: ij[0]):
+        keys.append([j for _, j in js])
+
+   </a> assert len(X) == len(keys)
+
+    return keys
+</code></pre><img src="11405756.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/erikbern/ann-benchmarks/commit/21608a6b6e6883504a0bcb06abbf9c7d8029897b#diff-9989e294442a11a07b952b455a3d5fc814c9660e91460e43c46c99d349b773beL21' target='_blank'>Link</a></div><div id='project'> Project Name: erikbern/ann-benchmarks</div><div id='commit'> Commit Name: 21608a6b6e6883504a0bcb06abbf9c7d8029897b</div><div id='time'> Time: 2019-07-21</div><div id='author'> Author: maau@itu.dk</div><div id='file'> File Name: ann_benchmarks/distance.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: transform_dense_to_sparse</div><BR><BR><div id='link'><a href='https://github.com/mittagessen/kraken/commit/6e6c12425a787d8c954ce5c31ceed59cdd531001#diff-3896ce7d43d89b990c72bafaf6d1ee3dcea25d3ff78eb238ad6423daf5cd74feL67' target='_blank'>Link</a></div><div id='project'> Project Name: mittagessen/kraken</div><div id='commit'> Commit Name: 6e6c12425a787d8c954ce5c31ceed59cdd531001</div><div id='time'> Time: 2018-05-20</div><div id='author'> Author: mittagessen@l.unchti.me</div><div id='file'> File Name: kraken/lib/ctc_decoder.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: greedy_decoder</div><BR><BR><div id='link'><a href='https://github.com/has2k1/plotnine/commit/666b01f0a3c060be93b804b27814af58e1e50aac#diff-4b3f07c3a59f540ce19683f87c00aad4e29ae9cfa51cb8cf8e5833567ec616c3L491' target='_blank'>Link</a></div><div id='project'> Project Name: has2k1/plotnine</div><div id='commit'> Commit Name: 666b01f0a3c060be93b804b27814af58e1e50aac</div><div id='time'> Time: 2020-03-21</div><div id='author'> Author: has2k1@gmail.com</div><div id='file'> File Name: plotnine/aes.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: reorder</div><BR>

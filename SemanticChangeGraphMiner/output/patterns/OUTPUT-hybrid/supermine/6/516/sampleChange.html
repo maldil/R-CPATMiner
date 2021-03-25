@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        result = res.read()
+        print(result)
+        assert "Output: /root/wd/result_workdir_named_path.txt" in result
+        <a id="change">assert "PWD: /root." in result</a>
+
+
+@pytest.mark.skipif(not has_docker, reason="Docker container not usable")
+def test_remote_exec_workdir_wo_named_path(clear_now_and_after):</code></pre><h3>After Change</h3><pre><code class='java'>
+@pytest.mark.skipif(not has_docker, reason="Docker container not usable")
+def test_remote_exec_workdir_named_path(clear_now_and_after):
+    clear_now_and_after(file_target("&#47&#47home/wd/result_workdir_named_path.txt"))
+    root_dir = <a id="change">&quot/root/build&quot if "TRAVIS" in os.environ else &quot/root&quot</a>
+    execute_workflow(
+        
+        output: &quot&#47&#47home/wd/result_workdir_named_path.txt&quot
+</code></pre>

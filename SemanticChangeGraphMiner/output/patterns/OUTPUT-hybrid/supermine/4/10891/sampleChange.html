@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    &#47&#47 Model
+    model = build_model()
+    <a id="change">print(model)</a>
+    if use_cuda:
+        model = model.cuda()
+
+    receptive_field = model.receptive_field</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Dataloader setup
+    data_loaders = get_data_loaders(data_root, speaker_id, test_shuffle=True)
+
+    <a id="change">device = torch.device("cuda" if use_cuda else "cpu")</a>
+
+    &#47&#47 Model
+    model = build_model().to(device)
+</code></pre>

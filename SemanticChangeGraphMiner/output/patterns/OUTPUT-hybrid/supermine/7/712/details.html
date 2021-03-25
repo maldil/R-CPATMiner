@@ -1,0 +1,38 @@
+<html><h3>005968dcfbd2a8f70d8ea3957c8abba60a12492d,pliers/filters/video.py,FrameSamplingFilter,_filter,#FrameSamplingFilter#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                             key=lambda i: diffs[i],
+                             reverse=True)[:self.top_n]
+
+        <a id="change">frame_index = sorted(list(set(video.frame_index).intersection(new_idx)))</a>
+
+        return VideoFrameCollectionStim(filename=video.filename,
+                                        clip=video.clip,
+                                        frame_index=frame_index)</code></pre><h3>After Change</h3><pre><code class='java'>
+        super(FrameSamplingFilter, self).__init__()
+
+    def _filter(self, video):
+        <a id="change">if not isinstance(video, VideoStim):
+            raise TypeError(&quotCurrently, frame sampling is only supported for &quot
+                            &quotcomplete VideoStim inputs.&quot)
+
+       </a> if self.every is not None:
+            new_idx = range(video.n_frames)[::self.every]
+        elif self.hertz is not None:
+            interval = video.fps / float(self.hertz)
+            new_idx = np.arange(0, video.n_frames, interval).astype(int)
+            new_idx = list(new_idx)
+        elif self.top_n is not None:
+            import cv2
+            diffs = []
+            for i, img in enumerate(video.frames):
+                if i == 0:
+                    last = img
+                    continue
+                <a id="change">pixel_diffs = cv2.sumElems(cv2.absdiff(last.data, img.data))</a>
+                diffs.append(sum(pixel_diffs))
+                last = img
+            new_idx = sorted(range(len(diffs)),
+                             key=lambda i: diffs[i],</code></pre><img src="3294502.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tyarkoni/pliers/commit/005968dcfbd2a8f70d8ea3957c8abba60a12492d#diff-cab8d93a5b65c74d870192defe3bf6647a9e5e3ec36e75836b7dbeba5bf44fabL40' target='_blank'>Link</a></div><div id='project'> Project Name: tyarkoni/pliers</div><div id='commit'> Commit Name: 005968dcfbd2a8f70d8ea3957c8abba60a12492d</div><div id='time'> Time: 2018-05-15</div><div id='author'> Author: quinten.mcnamara@gmail.com</div><div id='file'> File Name: pliers/filters/video.py</div><div id='class'> Class Name: FrameSamplingFilter</div><div id='method'> Method Name: _filter</div><BR><BR><div id='link'><a href='https://github.com/pgmpy/pgmpy/commit/ca25da7c55ba436ab557410d5f2e2e9b557d2840#diff-054133edc3de05f054f1a2973a5e6b6ad2879baa93dff47418bd49842544ad87L412' target='_blank'>Link</a></div><div id='project'> Project Name: pgmpy/pgmpy</div><div id='commit'> Commit Name: ca25da7c55ba436ab557410d5f2e2e9b557d2840</div><div id='time'> Time: 2015-03-02</div><div id='author'> Author: abinash.panda.ece10@itbhu.ac.in</div><div id='file'> File Name: pgmpy/models/MarkovModel.py</div><div id='class'> Class Name: MarkovModel</div><div id='method'> Method Name: to_junction_tree</div><BR><BR><div id='link'><a href='https://github.com/andresriancho/w3af/commit/738966599b7e1eba13da06aa947797c01a54d26a#diff-6bad404912319c9526028f00dbf4e9340456a2f478d0c867671a2115fd7ca023L131' target='_blank'>Link</a></div><div id='project'> Project Name: andresriancho/w3af</div><div id='commit'> Commit Name: 738966599b7e1eba13da06aa947797c01a54d26a</div><div id='time'> Time: 2018-07-19</div><div id='author'> Author: andres.riancho@gmail.com</div><div id='file'> File Name: w3af/plugins/grep/cross_domain_js.py</div><div id='class'> Class Name: cross_domain_js</div><div id='method'> Method Name: _load_secure_js_file</div><BR>

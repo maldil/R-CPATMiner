@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    @return: dictionary with one key (&quot&quot) and the target number as a value
+    
+    nodes = scope_func(cur_node, incremental=incremental)
+    <a id="change">if nodes:
+        return {&quot&quot: max(node.get_depth() for node in nodes)}
+   </a> return {&quot&quot: 0}
+
+
+def max_children(cur_node, context, scope_func, incremental=False):</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    depths = {}  &#47&#47 store nodes that we&quotve already processed
+    max_depth = 0
+    <a id="change">for node_id in xrange(len(tree)):
+        pos = node_id
+        depth = 0
+        &#47&#47 go up to the root / an already processed node
+        while tree.parents[pos] &gt;= 0 and pos not in depths:
+            depth += 1
+            pos = tree.parents[pos]
+        if pos in depths:  &#47&#47 processed node: add its depth
+            depth += depths[pos]
+        &#47&#47 store the depth to save computation
+        depths[node_id] = depth
+        if depth &gt; max_depth:
+            max_depth = depth
+   </a> return {&quot&quot: max_depth}
+
+
+def max_children(tree, context):</code></pre>

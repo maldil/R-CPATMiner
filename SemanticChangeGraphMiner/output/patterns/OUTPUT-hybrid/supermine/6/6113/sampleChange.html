@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    
+    &#47&#47 take clamp of coords so they&quotre in the image bounds
+    coords[:,0] = torch.clamp(coords[:,0], 0, input.size(1)-1).round()
+    coords[<a id="change">:,1</a>] = torch.clamp(coords[:,1], 0, input.size(2)-1).round()
+
+    stride = torch.LongTensor(input.stride())[1:].float()
+    idx = coords.mv(stride).long()</code></pre><h3>After Change</h3><pre><code class='java'>
+    x_ix = x.mul(stride[1]).long()
+    y_ix = y.mul(stride[2]).long()
+
+    <a id="change">input_flat = input.view(input.size(0),-1).contiguous()</a>
+
+    mapped_vals = input_flat.gather(1, x_ix.add(y_ix))
+
+    return mapped_vals.view_as(input)</code></pre>

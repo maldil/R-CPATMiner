@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            paths = [paths]
+        chain_data = []
+        for path in paths:
+            <a id="change">parsed_output = _read_output(path)</a>
+            for sample, sample_stats, config, adaptation, timing in parsed_output:
+                <a id="change">chain_data.append(
+                    {
+                        "sample": sample,
+                        "sample_stats": sample_stats,
+                        "configuration_info": config,
+                        "adaptation_info": adaptation,
+                        "timing_info": timing,
+                    }
+                )</a>
+        self.prior = [item["sample"] for item in chain_data]
+        self.sample_stats_prior = [item["sample_stats"] for item in chain_data]
+
+    @requires("posterior")</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        attrs = {}
+        for item in chain_data:
+            <a id="change">for key, value in item["configuration_info"].items():
+                if key not in attrs:
+                    attrs[key] = []
+                attrs[key].append(value)
+       </a> self.attrs_prior = attrs
+
+    @requires("posterior")
+    def posterior_to_xarray(self):</code></pre>

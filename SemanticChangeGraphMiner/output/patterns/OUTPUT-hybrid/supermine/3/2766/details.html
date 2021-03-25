@@ -1,0 +1,21 @@
+<html><h3>66584dea87782aed5509e4269a9f015002e1f5c1,pytext/torchscript/module.py,PyTextEmbeddingModuleWithDense,forward,#PyTextEmbeddingModuleWithDense#,1232
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        )
+        &#47&#47 call model
+        dense_feat = self.normalizer.normalize(dense_feat)
+        dense_tensor = <a id="change">torch.tensor(dense_feat, dtype=torch.float)</a>
+        if self.tensorizer.device != "":
+            dense_tensor = dense_tensor.to(self.tensorizer.device)
+
+        sentence_embedding = self._forward(inputs, dense_tensor)</code></pre><h3>After Change</h3><pre><code class='java'>
+                )
+                &#47&#47 the result of forward is either a torch.Tensor or a List[Any]
+                if isinstance(result, torch.Tensor):
+                    <a id="change">result = torch.cat([result, result_extension], dim=0)</a>
+                else:
+                    result.extend(result_extension)
+
+                texts = texts[max_batch:]</code></pre><img src="12282815.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/facebookresearch/pytext/commit/66584dea87782aed5509e4269a9f015002e1f5c1#diff-6fe03fade3ffeb2f7c18ea27c310bc31b8781d5afb82ea7e2d510cc5274a9e5bL1233' target='_blank'>Link</a></div><div id='project'> Project Name: facebookresearch/pytext</div><div id='commit'> Commit Name: 66584dea87782aed5509e4269a9f015002e1f5c1</div><div id='time'> Time: 2021-02-23</div><div id='author'> Author: mikekg@fb.com</div><div id='file'> File Name: pytext/torchscript/module.py</div><div id='class'> Class Name: PyTextEmbeddingModuleWithDense</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/mariogeiger/se3cnn/commit/f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff#diff-aea3495328514bc68256872a4bcf515b46f9ca204264d5875abd8053e5c4800eL87' target='_blank'>Link</a></div><div id='project'> Project Name: mariogeiger/se3cnn</div><div id='commit'> Commit Name: f66d3c5ed7b7fa96424fd0d8214594042d9ba3ff</div><div id='time'> Time: 2019-07-09</div><div id='author'> Author: geiger.mario@gmail.com</div><div id='file'> File Name: se3cnn/SO3.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: irr_repr</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-822eea2294ce96e71f4eaf6616ce4dcfc2892d8696de9e176cf7fc9fafe2e18cL67' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/tests/test_ndcg.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: test_sample_ndcg</div><BR><BR><div id='link'><a href='https://github.com/Scitator/catalyst/commit/f4beaac559e00a3676d942dc7e8fea69efc01cfe#diff-0d5670c5f2a5fcf1725f9db7564e16eeb4669ea8b33c1560f28c55affc6cf2a3L37' target='_blank'>Link</a></div><div id='project'> Project Name: Scitator/catalyst</div><div id='commit'> Commit Name: f4beaac559e00a3676d942dc7e8fea69efc01cfe</div><div id='time'> Time: 2020-11-30</div><div id='author'> Author: raveforlive@gmail.com</div><div id='file'> File Name: catalyst/metrics/mrr.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mrr</div><BR>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if hasattr(self, &quotmodel&quot):
+            del self.model
+        &#47&#47 Try and get batch size for initializer
+        <a id="change">for cell in self.cells:
+            if hasattr(cell, &quotbatch_input_shape&quot):
+                if cell.batch_input_shape[0] is not None:
+                    self.batch_size = cell.batch_input_shape[0]
+                    break
+       </a> if self.state_sync:
+            if type(input_shape) is list:
+                x_shape = input_shape[0]
+                if not self.decode:</code></pre><h3>After Change</h3><pre><code class='java'>
+        if hasattr(self, &quotmodel&quot):
+            del self.model
+        &#47&#47 Try and get batch size for initializer
+        <a id="change">if not hasattr(self, &quotbatch_size&quot):
+                if hasattr(self, &quotbatch_input_shape&quot):
+                    batch_size = self.batch_input_shape[0]
+                    if batch_size is not None:
+                        self.batch_size = batch_size
+       </a> if self.state_sync:
+            if type(input_shape) is list:
+                x_shape = input_shape[0]
+                if not self.decode:</code></pre>

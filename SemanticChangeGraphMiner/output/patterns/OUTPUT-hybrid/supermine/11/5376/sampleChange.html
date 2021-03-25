@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            for edge in ebunch:
+                if not (isinstance(edge[0], str) and isinstance(edge[1], str)):
+                    raise TypeError("Name of nodes must be strings")
+                <a id="change">if edge[0] == edge[1]:
+                    raise Exceptions.SelfLoopError("Self Loops are"
+                                                   " not allowed", edge)
+
+       </a> nx.DiGraph.__init__(self, ebunch)
+
+        if not ebunch is None:
+            new_nodes = set(itertools.chain(*ebunch))</code></pre><h3>After Change</h3><pre><code class='java'>
+    
+    def __init__(self, ebunch=None):
+        if ebunch is not None:
+            <a id="change">self._check_node_string(set(itertools.chain(*ebunch)))</a>
+            &#47&#47 for edge in ebunch:
+            &#47&#47     if not (isinstance(edge[0], str) and isinstance(edge[1], str)):
+            &#47&#47         raise TypeError("Name of nodes must be strings")
+            &#47&#47     if edge[0] == edge[1]:
+            &#47&#47         raise Exceptions.SelfLoopError("Self Loops are"
+            &#47&#47                                        " not allowed", edge)
+
+        nx.DiGraph.__init__(self, ebunch)
+
+        if ebunch is not None:
+            new_nodes = set(itertools.chain(*ebunch))
+            <a id="change">self._check_graph(delete_graph=True)</a>
+            self._update_node_parents(new_nodes)
+            self._update_node_rule_for_parents(new_nodes)
+
+    def add_node(self, node):</code></pre>

@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def _minCost(costs):
+    h, w = costs.shape
+    if <a id="change">costs[h/2, w/2]</a> == 0:
+        return np.int((h-1)/2), np.int((w-1)/2), 0
+    <a id="change">idx = np.unravel_index(np.argmin(costs), costs.shape)</a>
+    return np.int(idx[0]), np.int(idx[1]), <a id="change">costs[idx]</a>
+
+
+def _checkBounded(xval, yval, w, h, mbSize):
+    if ((yval &lt; 0) or</code></pre><h3>After Change</h3><pre><code class='java'>
+    mi = 65537
+
+    for i in xrange(h): 
+      <a id="change">for j in xrange(w): 
+        if costs[i, j] &lt; mi:
+          mi = costs[i, j]
+          dx = j
+          dy = i
+
+
+   </a> return dx, dy, mi
+
+&#47&#47def _minCost(costs):
+&#47&#47    h, w = costs.shape</code></pre>

@@ -1,0 +1,110 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+    model.eval()
+    idx = np.random.randint(0, len(y))
+    length = <a id="change">input_lengths[idx].data.cpu().numpy()[0]</a>
+
+    &#47&#47 (T,)
+    y_target = y[idx].view(-1).data.cpu().numpy()[:length]
+
+    if c is not None:
+        c = c[idx, :, :length].unsqueeze(0)
+        assert c.dim() == 3
+        print("Shape of local conditioning features: {}".format(c.size()))
+    if g is not None:
+        &#47&#47 TODO: test
+        g = g[idx]
+        print("Shape of global conditioning features: {}".format(g.size()))
+
+    &#47&#47 Dummy silence
+    if is_mulaw_quantize(hparams.input_type):
+        initial_value = P.mulaw_quantize(0, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        initial_value = P.mulaw(0.0, hparams.quantize_channels)
+    else:
+        initial_value = 0.0
+    print("Intial value:", initial_value)
+
+    &#47&#47 (C,)
+    if is_mulaw_quantize(hparams.input_type):
+        initial_input = np_utils.to_categorical(
+            initial_value, num_classes=hparams.quantize_channels).astype(np.float32)
+        initial_input = Variable(torch.from_numpy(initial_input)).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = Variable(torch.zeros(1, 1, 1).fill_(initial_value))
+    initial_input = initial_input.cuda() if use_cuda else initial_input
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        y_hat = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        y_hat = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        <a id="change">y_hat</a> = y_hat.view(-1).cpu().data.numpy()
+
+    &#47&#47 Save audio
+    os.makedirs(eval_dir, exist_ok=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    model.eval()
+    idx = np.random.randint(0, len(y))
+    length = <a id="change">input_lengths[idx].data.cpu().item()</a>
+
+    &#47&#47 (T,)
+    y_target = y[idx].view(-1).data.cpu().numpy()[:length]
+
+    if c is not None:
+        c = c[idx, :, :length].unsqueeze(0)
+        assert c.dim() == 3
+        print("Shape of local conditioning features: {}".format(c.size()))
+    if g is not None:
+        &#47&#47 TODO: test
+        g = g[idx]
+        print("Shape of global conditioning features: {}".format(g.size()))
+
+    &#47&#47 Dummy silence
+    if is_mulaw_quantize(hparams.input_type):
+        initial_value = P.mulaw_quantize(0, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        initial_value = P.mulaw(0.0, hparams.quantize_channels)
+    else:
+        initial_value = 0.0
+    print("Intial value:", initial_value)
+
+    &#47&#47 (C,)
+    if is_mulaw_quantize(hparams.input_type):
+        initial_input = np_utils.to_categorical(
+            initial_value, num_classes=hparams.quantize_channels).astype(np.float32)
+        initial_input = torch.from_numpy(initial_input).view(
+            1, 1, hparams.quantize_channels)
+    else:
+        initial_input = torch.zeros(1, 1, 1).fill_(initial_value)
+    initial_input = initial_input.to(device)
+
+    &#47&#47 Run the model in fast eval mode
+    y_hat = model.incremental_forward(
+        initial_input, c=c, g=g, T=length, softmax=True, quantize=True, tqdm=tqdm,
+        log_scale_min=hparams.log_scale_min)
+
+    if is_mulaw_quantize(hparams.input_type):
+        y_hat = y_hat.max(1)[1].view(-1).long().cpu().data.numpy()
+        y_hat = P.inv_mulaw_quantize(y_hat, hparams.quantize_channels)
+        y_target = P.inv_mulaw_quantize(y_target, hparams.quantize_channels)
+    elif is_mulaw(hparams.input_type):
+        y_hat = P.inv_mulaw(y_hat.view(-1).cpu().data.numpy(), hparams.quantize_channels)
+        y_target = P.inv_mulaw(y_target, hparams.quantize_channels)
+    else:
+        <a id="change">y_hat</a> = y_hat.view(-1).cpu().data.numpy()
+
+    &#47&#47 Save audio
+    os.makedirs(eval_dir, exist_ok=True)</code></pre>

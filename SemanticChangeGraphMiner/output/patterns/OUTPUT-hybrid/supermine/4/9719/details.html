@@ -1,0 +1,25 @@
+<html><h3>90b78b1379b3423aa3b4b5d0de7313f88bda23ab,chainercv/utils/mask/mask_to_bbox.py,,mask_to_bbox,#,5
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    bbox = []
+    for msk in mask:
+        where = np.argwhere(msk)
+        <a id="change">if len(where) &gt; 0:
+            y_min, x_min = where.min(0)
+            y_max, x_max = where.max(0) + 1
+        else:
+            y_min, x_min, y_max, x_max = 0, 0, 0, 0
+       </a> bbox.append((y_min, x_min, y_max, x_max))
+    if len(bbox) == 0:
+        return xp.empty((0, 4), dtype=np.float32)
+    return xp.array(bbox, dtype=np.float32)</code></pre><h3>After Change</h3><pre><code class='java'>
+        if len(ys_i) == 0:
+            continue
+        y_min = ys_i.min()
+        x_min = <a id="change">xs_i.min()</a>
+        y_max = ys_i.max() + 1
+        x_max = xs_i.max() + 1
+        bbox[i] = xp.array([y_min, x_min, y_max, x_max], dtype=np.float32)
+    return bbox</code></pre><img src="37374987.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/chainer/chainercv/commit/90b78b1379b3423aa3b4b5d0de7313f88bda23ab#diff-e539469b343bde8b45aff790b5366af7a49bb68316dff39e4e7b53fcd9ff98a1L24' target='_blank'>Link</a></div><div id='project'> Project Name: chainer/chainercv</div><div id='commit'> Commit Name: 90b78b1379b3423aa3b4b5d0de7313f88bda23ab</div><div id='time'> Time: 2019-02-17</div><div id='author'> Author: yuyuniitani@gmail.com</div><div id='file'> File Name: chainercv/utils/mask/mask_to_bbox.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: mask_to_bbox</div><BR><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/f08d770d07a9cf5a8c3aafc1cecaf523beae4854#diff-6e203721b0b75607ba2b9224b03a6a75e50a80837d717ead9675b5d2d97eb24bL19' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: f08d770d07a9cf5a8c3aafc1cecaf523beae4854</div><div id='time'> Time: 2017-01-19</div><div id='author'> Author: eric.talevich@gmail.com</div><div id='file'> File Name: cnvlib/smoothing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: check_inputs</div><BR><BR><div id='link'><a href='https://github.com/daavoo/pyntcloud/commit/0da94c2fc76a74e701b653f5b76f8066b4305cdc#diff-b4c4b43239dc6a75d7dbd38c879b3a31e9b5b23f837aa3228d6e6898db453c44L232' target='_blank'>Link</a></div><div id='project'> Project Name: daavoo/pyntcloud</div><div id='commit'> Commit Name: 0da94c2fc76a74e701b653f5b76f8066b4305cdc</div><div id='time'> Time: 2020-05-13</div><div id='author'> Author: marcus.wallbaum@gmail.com</div><div id='file'> File Name: pyntcloud/structures/voxelgrid.py</div><div id='class'> Class Name: VoxelGrid</div><div id='method'> Method Name: plot</div><BR><BR><div id='link'><a href='https://github.com/etal/cnvkit/commit/cc9081563a56d433f2ce98d5fc9f4109b8208c6f#diff-6e203721b0b75607ba2b9224b03a6a75e50a80837d717ead9675b5d2d97eb24bL34' target='_blank'>Link</a></div><div id='project'> Project Name: etal/cnvkit</div><div id='commit'> Commit Name: cc9081563a56d433f2ce98d5fc9f4109b8208c6f</div><div id='time'> Time: 2018-06-29</div><div id='author'> Author: etalevich@dnanexus.com</div><div id='file'> File Name: cnvlib/smoothing.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _width2wing</div><BR>

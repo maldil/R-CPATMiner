@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.steps = steps
+
+    def __call__(self, model: Model, inputs, labels):
+        <a id="change">inputs</a>, labels, restore = wrap(inputs, labels)
+
+        def loss_fn(inputs):
+            logits = model.forward(inputs)</code></pre><h3>After Change</h3><pre><code class='java'>
+    ) -&gt; T:
+        x0, restore_type = ep.astensor_(inputs)
+        criterion_ = get_criterion(criterion)
+        <a id="change">del inputs, criterion</a>
+
+        if not isinstance(criterion_, Misclassification):
+            raise ValueError("unsupported criterion")
+</code></pre>

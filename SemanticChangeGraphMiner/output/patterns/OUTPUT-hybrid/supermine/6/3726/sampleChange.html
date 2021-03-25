@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        elif acq_optimizer == "lbfgs":
+            best = np.inf
+            <a id="change">x0 = space.transform(space.rvs(n_samples=n_restarts_optimizer,
+                                           random_state=rng))</a>
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                jobs = (delayed(fmin_l_bfgs_b)(
+                    gaussian_acquisition_1D, x,
+                    args=(gp, np.min(yi), acq_func, xi, kappa),
+                    bounds=space.transformed_bounds,
+                    approx_grad=False,
+                    maxiter=20) for x in x0)
+                results = parallel(jobs)
+
+            cand_xs = np.array([r[0] for r in results])
+            cand_acqs = np.array([r[1] for r in results])
+            best_ind = np.argmin(cand_acqs)
+            <a id="change">a = cand_acqs[best_ind]</a>
+
+            if a &lt; best:
+                next_x, best = <a id="change">cand_xs[best_ind]</a>, a
+
+        &#47&#47 lbfgs should handle this but just in case there are precision errors.
+        next_x = np.clip(</code></pre><h3>After Change</h3><pre><code class='java'>
+            next_x = X[np.argmin(values)]
+
+        elif acq_optimizer == "lbfgs":
+            <a id="change">x0 = X[np.argsort(values)[:n_restarts_optimizer]]</a>
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                jobs = (delayed(fmin_l_bfgs_b)(</code></pre>

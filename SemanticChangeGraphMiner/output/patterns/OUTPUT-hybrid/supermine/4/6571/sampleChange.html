@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Predict
+    for (i, c) in enumerate(clients):
+        print(&quotTrain&quot, mean_square_error(c.predict(X[i]), y[i]))
+        print(&quotTest&quot, mean_square_error(<a id="change">c.predict(X_test)</a>, y_test))
+
+    &#47&#47 Each client sends its own model to the next one, in a RING protocol,
+    &#47&#47 aggregating them all. The last client sends the aggregate model to the server</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47     print(mean_square_error(y_pred, y_test))
+
+    &#47&#47 The federated learning with gradient from the google paper
+    <a id="change">n_iter = 5</a>
+    <a id="change">for i in range(n_iter):
+
+        &#47&#47 Compute gradients, encrypt and aggregate
+        encrypt_aggr = clients[0].encrypted_gradient(sum_to=None)
+        encrypt_aggr = clients[1].encrypted_gradient(sum_to=encrypt_aggr)
+        encrypt_aggr = clients[2].encrypted_gradient(sum_to=encrypt_aggr)
+
+        &#47&#47 Send aggregate to server, which decrypts
+        aggr = server.decrypt_aggregate(encrypt_aggr, n_clients)
+
+        &#47&#47 Take gradient steps
+        clients[0].gradient_step(aggr)
+        clients[1].gradient_step(aggr)
+        clients[2].gradient_step(aggr)
+
+   </a> for (i, c) in enumerate(clients):
+        y_pred = c.predict(c.X)
+        print(mean_square_error(y_pred, c.y))
+</code></pre>

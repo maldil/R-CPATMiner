@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+class LabTransPCHazard:
+    def __init__(self, cuts, min_=0., dtype=None):
+        self._predefined_cuts = False
+        <a id="change">if type(cuts) is int:
+            cuts = (&quotequidistant&quot, cuts + 1)
+        elif hasattr(cuts, &quot__iter__&quot):
+            if (type(cuts[0]) is not str):
+                self.idu = IdxDiscUnknownC(cuts)
+                assert dtype is None, "Need dtype to be None for spesified cuts"
+                self.dtype = type(cuts[0])
+                self._dtype = self.dtype
+                self._predefined_cuts = True
+            elif (len(cuts) == 2) and (type(cuts[0]) is str):
+                cuts = (cuts[0], cuts[1] + 1)
+       </a> self._cuts = cuts
+        self.min_ = min_
+        self._dtype = dtype
+</code></pre><h3>After Change</h3><pre><code class='java'>
+            self.cuts = cuts
+            self.idu = IdxDiscUnknownC(self.cuts)
+            assert dtype is None, "Need `dtype` to be `None` for specified cuts"
+            self._dtype = <a id="change">type(self.cuts[0])</a>
+            self._dtype_init = self._dtype
+            self._predefined_cuts = True
+        else:
+            self._cuts += 1</code></pre>

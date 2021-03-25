@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+def get_color_dtype(data, column_names):
+    color_data_types = [data["points"][column_name].dtype for column_name in column_names]
+    <a id="change">assert len(set(color_data_types)) == 1</a>
+    return color_data_types[0]
+
+
+def convert_color_to_dtype(data, output_dtype):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+
+def get_color_dtype(data, column_names):
+    <a id="change">has_color</a> = <a id="change">all(column in data["points"] for column in column_names)</a>
+    <a id="change">if has_color:
+        color_data_types = [data["points"][column_name].dtype for column_name in column_names]
+        if len(set(color_data_types)) &gt; 1:
+            raise TypeError(f"Data types of color values are inconsistent: got {color_data_types}")
+        color_data_type = color_data_types[0]
+    else:
+        color_data_type = None
+   </a> return color_data_type
+
+
+def convert_color_to_dtype(data, output_dtype):</code></pre>

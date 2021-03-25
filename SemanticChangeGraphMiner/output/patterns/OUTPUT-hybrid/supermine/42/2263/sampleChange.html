@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        if self.verbose:
+            print("Updating variogram mode...")
+
+        <a id="change">if variogram_parameters is None:
+            vp_temp = None
+        elif use_psill:
+            vp_temp = variogram_parameters
+        else:
+            if self.variogram_model in [&quotgaussian&quot, &quotspherical&quot, &quotexponential&quot, &quothole-effect&quot]:
+                vp_temp = [variogram_parameters[0] - variogram_parameters[2],
+                           variogram_parameters[1], variogram_parameters[2]]
+            else:
+                vp_temp = variogram_parameters
+       </a> self.lags, self.semivariance, self.variogram_model_parameters = \
+            initialize_variogram_model(np.vstack((self.X_ADJUSTED, self.Y_ADJUSTED, self.Z_ADJUSTED)).T, self.VALUES,
+                                       self.variogram_model, vp_temp, self.variogram_function,
+                                       nlags, weight, &quoteuclidean&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+                                      [self.anisotropy_scaling_y, self.anisotropy_scaling_z],
+                                      [self.anisotropy_angle_x, self.anisotropy_angle_y, self.anisotropy_angle_z]).T
+
+        <a id="change">self.variogram_model</a> = variogram_model
+        if self.variogram_model not in self.variogram_dict.keys() and self.variogram_model != &quotcustom&quot:
+            raise ValueError("Specified variogram model &quot%s&quot is not supported." % variogram_model)
+        elif self.variogram_model == &quotcustom&quot:
+            if variogram_function is None or not callable(variogram_function):
+                raise ValueError("Must specify callable function for custom variogram model.")
+            else:
+                self.variogram_function = variogram_function
+        else:
+            self.variogram_function = self.variogram_dict[self.variogram_model]
+        if self.verbose:
+            print("Updating variogram mode...")
+
+        <a id="change">vp_temp = _make_variogram_parameter_list(self.variogram_model,
+                                                 variogram_parameters)</a>
+        self.lags, self.semivariance, self.variogram_model_parameters = \
+            initialize_variogram_model(np.vstack((self.X_ADJUSTED,
+                                                  self.Y_ADJUSTED,
+                                                  self.Z_ADJUSTED)).T,</code></pre>

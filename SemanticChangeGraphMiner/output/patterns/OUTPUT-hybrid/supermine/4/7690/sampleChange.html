@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            in_act = self.in_layers[i](audio)
+            in_act = in_act + self.cond_layers[i](spect)
+
+            <a id="change">t_act = torch.nn.functional.tanh(in_act[:, :self.n_channels, :])</a>
+            s_act = torch.nn.functional.sigmoid(in_act[:, self.n_channels:, :])
+            <a id="change">acts = t_act * s_act</a>
+
+            res_skip_acts = self.res_skip_layers[i](acts)
+            if i &lt; self.n_layers - 1:
+                audio = res_skip_acts[:,:self.n_channels,:] + audio</code></pre><h3>After Change</h3><pre><code class='java'>
+            acts = fused_add_tanh_sigmoid_multiply(
+                self.in_layers[i](audio),
+                self.cond_layers[i](spect),
+                <a id="change">torch.IntTensor([self.n_channels])</a>)
+
+            res_skip_acts = self.res_skip_layers[i](acts)
+            if i &lt; self.n_layers - 1:</code></pre>

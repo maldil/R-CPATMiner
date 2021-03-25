@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def parse_conceptnet4(prefix):
+    lines = []
+    for style in [&quotconceptnet4&quot, &quotconceptnet4_nadya&quot]:
+        <a id="change">for i in range(10):
+            input = prefix+&quotraw/%s/%s_flat_%s.jsons&quot%(style, style, i)
+            output = prefix+&quotedges/%s%s_flat_%s.msgpack&quot%(style, style, i)
+            add_dep(lines, &quotparse&quot, input, output, params={&quotfiletype&quot:&quotconceptnet4&quot})
+
+   </a> return lines
+
+
+def parse_ptt_petgame(prefix):</code></pre><h3>After Change</h3><pre><code class='java'>
+def parse_conceptnet4(deps):
+    for type in [&quotconceptnet4&quot, &quotconceptnet4_nadya&quot, &quotconceptnet_zh&quot]:
+        for input in in_tar[type]:
+            <a id="change">output = input.replace(&quotjsons&quot, &quotmsgpack&quot)\
+                        .replace(&quottxt&quot, &quotmsgpack&quot)\
+                        .replace(&quotraw&quot, &quotedges&quot)</a>
+            parser = type if not type.endswith(&quotzh&quot) else &quotptt_petgame&quot
+            deps[&quotparse %s&quot%type] = Dep(
+                [input],
+                [output],</code></pre>

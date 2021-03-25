@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                    samp = samples[indices == i, :]
+                    sample_grad = self.rotated_gradient(basis, samp)
+                    grad[0] += sample_grad[0]  &#47&#47 Accumulate amplitude RBM gradient
+                    grad[1] += <a id="change">sample_grad[1]</a>  &#47&#47 Accumulate phase RBM gradient
+                else:
+                    sample_grad = [
+                        self.rbm_am.effective_energy_gradient(samples[indices == i, :]),</code></pre><h3>After Change</h3><pre><code class='java'>
+                bases = np.array(list(bases)).reshape(1, -1)
+
+            unique_bases, indices = np.unique(bases, axis=0, return_inverse=True)
+            <a id="change">indices = torch.Tensor(indices).to(samples)</a>
+
+            for i in range(unique_bases.shape[0]):
+                basis = unique_bases[i, :]
+                rot_sites = np.where(basis != "Z")[0]</code></pre>

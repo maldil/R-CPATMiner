@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.cardinalities = self.cardinality * np.ones(m, dtype=np.int64)
+        self.candidate_ranges = candidate_ranges
+        if candidate_ranges is not None:
+            <a id="change">for i in range(m):
+                c_range = candidate_ranges[i]
+
+                &#47&#47 Confirm that the candidate range has only unique values
+                assert len(c_range) == len(set(c_range))
+                self.cardinalities[i] = len(c_range)
+
+                &#47&#47 Re-map the values of L[i, :]
+                &#47&#47 Assumes L is csr_sparse format at this point
+                for j in range(L[i].data.shape[0]):
+                    val = L[i].data[j]
+                    if val not in c_range:
+                        raise ValueError(Value {0} is not in supplied range 
+                            for candidate at index {1}.format(val, i))
+                    L[i, L[i].indices[j]] = c_range.index(val) + 1
+
+        &#47&#47 Shuffle the data points, cardinalities, and candidate_ranges
+       </a> idxs = range(m)
+        np.random.shuffle(idxs)
+        L = L[idxs, :]
+        if candidate_ranges is not None:</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.cardinalities = self.cardinality * np.ones(m, dtype=np.int64)
+        self.candidate_ranges = candidate_ranges
+        if self.candidate_ranges is not None:
+            <a id="change">L</a>, self.cardinalities, _ = self._remap_scoped_categoricals(L, 
+                self.candidate_ranges)
+
+        &#47&#47 Shuffle the data points, cardinalities, and candidate_ranges</code></pre>

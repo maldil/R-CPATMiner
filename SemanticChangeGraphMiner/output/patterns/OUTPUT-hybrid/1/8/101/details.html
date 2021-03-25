@@ -1,0 +1,24 @@
+<html><h3>ade919cc86680ae0728a7475c81d23546c56016b,src/pyscenic/rnkdb.py,FeatherRankingDatabase,load_full,#FeatherRankingDatabase#,255
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        return tuple(reader.get_column_name(idx) for idx in range(self.total_genes) if reader.get_column_name(idx) != INDEX_NAME)
+
+    def load_full(self) -&gt; pd.DataFrame:
+        return <a id="change">FeatherReader(self._fname).read_pandas().set_index(INDEX_NAME)</a>
+
+    def load(self, gs: Type[GeneSignature]) -&gt; pd.DataFrame:
+        return FeatherReader(self._fname).read_pandas(columns=(INDEX_NAME,) + gs.genes).set_index(INDEX_NAME)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        return tuple(reader.get_column_name(idx) for idx in range(self.total_genes) if reader.get_column_name(idx) != INDEX_NAME)
+
+    def load_full(self) -&gt; pd.DataFrame:
+        df = <a id="change">FeatherReader(self._fname).read_pandas()</a>
+        &#47&#47 Avoid copying the whole dataframe by replacing the index in place.
+        &#47&#47 This makes loading a database twice as fast in case the database file is already in the filesystem cache.
+        <a id="change">df.set_index(INDEX_NAME, inplace=True)</a>
+        return df
+
+    def load(self, gs: Type[GeneSignature]) -&gt; pd.DataFrame:
+        df = FeatherReader(self._fname).read_pandas(columns=(INDEX_NAME,) + gs.genes)</code></pre><img src="875253.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/ade919cc86680ae0728a7475c81d23546c56016b#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L256' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: ade919cc86680ae0728a7475c81d23546c56016b</div><div id='time'> Time: 2020-08-10</div><div id='author'> Author: gert.hulselmans@kuleuven.vib.be</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: FeatherRankingDatabase</div><div id='method'> Method Name: load_full</div><BR><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/ade919cc86680ae0728a7475c81d23546c56016b#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L399' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: ade919cc86680ae0728a7475c81d23546c56016b</div><div id='time'> Time: 2020-08-10</div><div id='author'> Author: gert.hulselmans@kuleuven.vib.be</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: InvertedRankingDatabase</div><div id='method'> Method Name: __init__</div><BR><BR><div id='link'><a href='https://github.com/aertslab/pySCENIC/commit/ade919cc86680ae0728a7475c81d23546c56016b#diff-7eba2a4133d5f3bb3573ba0021ab369e47ffb080cf686007f01c0f6951d852d0L259' target='_blank'>Link</a></div><div id='project'> Project Name: aertslab/pySCENIC</div><div id='commit'> Commit Name: ade919cc86680ae0728a7475c81d23546c56016b</div><div id='time'> Time: 2020-08-10</div><div id='author'> Author: gert.hulselmans@kuleuven.vib.be</div><div id='file'> File Name: src/pyscenic/rnkdb.py</div><div id='class'> Class Name: FeatherRankingDatabase</div><div id='method'> Method Name: load</div><BR>

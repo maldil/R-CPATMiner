@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Initialize with a random point
+    Xi[0] = _random_point(lower_bounds, upper_bounds, random_state=rng)
+    best_x = Xi[0].ravel()
+    <a id="change">yi[0] = best_y = func(Xi[0])</a>
+
+    models = []
+
+    &#47&#47 XXX should there be an early stopping criterion?</code></pre><h3>After Change</h3><pre><code class='java'>
+    Xi[:n_start] = _random_point(
+        lower_bounds, upper_bounds, n_points=n_start, random_state=rng)
+    best_x = Xi[:n_start].ravel()
+    yi[:n_start] = [func(xi) for xi in <a id="change">(Xi[:n_start])</a>]
+    best_y = np.min(yi[:n_start])
+
+    models = []</code></pre>

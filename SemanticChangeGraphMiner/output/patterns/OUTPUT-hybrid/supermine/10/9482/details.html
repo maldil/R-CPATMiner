@@ -1,0 +1,46 @@
+<html><h3>b470898504d2a077433a84e12a7c8078b2494760,dask_image/ndmeasure/__init__.py,,center_of_mass,#,21
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    <a id="change">type_mapping = collections.OrderedDict([
+        (("%i" % i), input.dtype) for i in _pycompat.irange(input.ndim)
+    ])</a>
+    out_dtype = numpy.dtype(list(type_mapping.items()))
+
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+
+    <a id="change">com_lbl = dask.array.stack([com_lbl[k] for k in type_mapping], axis=-1)</a>
+
+    return com_lbl
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 This only matters if index is some array.
+    index = index.T
+
+    <a id="change">out_dtype = numpy.dtype([("com", input.dtype, (input.ndim,))])</a>
+    default_1d = numpy.full((1,), numpy.nan, dtype=out_dtype)
+
+    func = functools.partial(
+        _utils._center_of_mass, shape=input.shape, dtype=out_dtype
+    )
+    com_lbl = labeled_comprehension(
+        input, labels, index,
+        func, out_dtype, default_1d[0], pass_positions=True
+    )
+    <a id="change">com_lbl = com_lbl["com"]</a>
+
+    return com_lbl
+
+</code></pre><img src="36255017.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 9</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/dask/dask-image/commit/b470898504d2a077433a84e12a7c8078b2494760#diff-6cd217dd07d68ccfa5afc17867c5c755e2f30bc4be9dbc826414837e909cee60L53' target='_blank'>Link</a></div><div id='project'> Project Name: dask/dask-image</div><div id='commit'> Commit Name: b470898504d2a077433a84e12a7c8078b2494760</div><div id='time'> Time: 2018-10-01</div><div id='author'> Author: jakirkham@gmail.com</div><div id='file'> File Name: dask_image/ndmeasure/__init__.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: center_of_mass</div><BR><BR><div id='link'><a href='https://github.com/tensorflow/models/commit/f7b4c6de2037ebedf6bc8ea5979e81666d54534f#diff-ee421de3daf8a640c16b7f6f5a5d3399d28ded3a5c073b9ee10e5e2a88b7e94fL1012' target='_blank'>Link</a></div><div id='project'> Project Name: tensorflow/models</div><div id='commit'> Commit Name: f7b4c6de2037ebedf6bc8ea5979e81666d54534f</div><div id='time'> Time: 2020-12-01</div><div id='author'> Author: rathodv@google.com</div><div id='file'> File Name: research/object_detection/meta_architectures/center_net_meta_arch.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convert_strided_predictions_to_normalized_boxes</div><BR><BR><div id='link'><a href='https://github.com/eriklindernoren/PyTorch-GAN/commit/9dfafadcea9f709132bce12341a32ff5e27ec33a#diff-1a25c34669bbfa03b9238d7cbb6f22fbb4896e1fa7779271848902ebd250df44L162' target='_blank'>Link</a></div><div id='project'> Project Name: eriklindernoren/PyTorch-GAN</div><div id='commit'> Commit Name: 9dfafadcea9f709132bce12341a32ff5e27ec33a</div><div id='time'> Time: 2018-04-24</div><div id='author'> Author: eriklindernoren@gmail.com</div><div id='file'> File Name: implementations/infogan/infogan.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: sample_image</div><BR>

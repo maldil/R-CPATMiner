@@ -1,0 +1,22 @@
+<html><h3>eac38dbe9694bdfa6c2050528d8cc6a64747e933,pymanopt/autodiff/backends/_autograd.py,_AutogradBackend,compute_gradient,#_AutogradBackend#,38
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        &#47&#47 in the form of `arguments`. This is because autograd wraps tuples and
+        &#47&#47 lists in `SequenceBox` types which are not derived from tuple or list
+        &#47&#47 so we cannot detect nested arguments automatically.
+        unary_function = <a id="change">unpack_arguments(function, signature=arguments)</a>
+        <a id="change">return autograd.grad(unary_function)</a>
+
+    @staticmethod
+    def _compute_nary_hessian_vector_product(function):
+        gradient = autograd.grad(function)</code></pre><h3>After Change</h3><pre><code class='java'>
+        num_arguments = len(arguments)
+        gradient = autograd.grad(function, argnum=list(range(num_arguments)))
+        if num_arguments &gt; 1:
+            <a id="change">return gradient</a>
+        return self._unpack_return_value(gradient)
+
+    @Backend._assert_backend_available
+    def compute_hessian_vector_product(self, function, arguments):</code></pre><img src="39062357.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/eac38dbe9694bdfa6c2050528d8cc6a64747e933#diff-5298663cbda4a856c80732c5982ac07b3cc2d9c4fda752bebe1fda8013450facL39' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: eac38dbe9694bdfa6c2050528d8cc6a64747e933</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_autograd.py</div><div id='class'> Class Name: _AutogradBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/775bf75f5a28c56d333fb57f34c4926498ab19be#diff-ab5a521e1aea7477f91e69e9007355c3b51b99cfb2da85ae386e769a939bb19aL47' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 775bf75f5a28c56d333fb57f34c4926498ab19be</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_theano.py</div><div id='class'> Class Name: _TheanoBackend</div><div id='method'> Method Name: compute_gradient</div><BR><BR><div id='link'><a href='https://github.com/pymanopt/pymanopt/commit/775bf75f5a28c56d333fb57f34c4926498ab19be#diff-ab5a521e1aea7477f91e69e9007355c3b51b99cfb2da85ae386e769a939bb19aL37' target='_blank'>Link</a></div><div id='project'> Project Name: pymanopt/pymanopt</div><div id='commit'> Commit Name: 775bf75f5a28c56d333fb57f34c4926498ab19be</div><div id='time'> Time: 2020-02-01</div><div id='author'> Author: niklas.koep@gmail.com</div><div id='file'> File Name: pymanopt/autodiff/backends/_theano.py</div><div id='class'> Class Name: _TheanoBackend</div><div id='method'> Method Name: compile_function</div><BR>

@@ -1,0 +1,22 @@
+<html><h3>9302d6f56cb836b95e357ed533a3d3aaed4f4016,pyriemann/tangentspace.py,FGDA,fit_transform,#FGDA#,58
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+       return cov
+
+    def fit_transform(self,X,y=None):
+       self.classes= <a id="change">numpy.unique(y)</a>
+       <a id="change">self._lda = LDA(n_components=len(self.classes)-1,solver=&quotlsqr&quot, shrinkage=&quotauto&quot)</a>
+       
+       ts = self._ts.fit_transform(X)
+       self._lda.fit(ts,y)
+       
+       W = <a id="change">self</a>._lda.coef_
+       self._W = numpy.dot(numpy.dot(W.T,numpy.linalg.pinv(numpy.dot(W,W.T))),W)
+       ts = numpy.dot(ts,self._W)
+       cov = self._ts.inverse_transform(ts)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    def fit_transform(self,X,y=None):
+        ts = self._fit_lda(X,y)
+        <a id="change">return self._retro_project(ts)</a></code></pre><img src="10801444.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/9302d6f56cb836b95e357ed533a3d3aaed4f4016#diff-4b6de2e6cb050f093c09ac6ca6ae764d587da9302eab9bc96ee5a7de40e905d6L58' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: 9302d6f56cb836b95e357ed533a3d3aaed4f4016</div><div id='time'> Time: 2015-05-16</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/tangentspace.py</div><div id='class'> Class Name: FGDA</div><div id='method'> Method Name: fit_transform</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/9302d6f56cb836b95e357ed533a3d3aaed4f4016#diff-4b6de2e6cb050f093c09ac6ca6ae764d587da9302eab9bc96ee5a7de40e905d6L42' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: 9302d6f56cb836b95e357ed533a3d3aaed4f4016</div><div id='time'> Time: 2015-05-16</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/tangentspace.py</div><div id='class'> Class Name: FGDA</div><div id='method'> Method Name: fit</div><BR><BR><div id='link'><a href='https://github.com/alexandrebarachant/pyRiemann/commit/9302d6f56cb836b95e357ed533a3d3aaed4f4016#diff-574d75d144b06a89725a57e668540d24a5974cecd8daa5c03b6e0413b81c25f0L14' target='_blank'>Link</a></div><div id='project'> Project Name: alexandrebarachant/pyRiemann</div><div id='commit'> Commit Name: 9302d6f56cb836b95e357ed533a3d3aaed4f4016</div><div id='time'> Time: 2015-05-16</div><div id='author'> Author: alexandre.barachant@gmail.com</div><div id='file'> File Name: pyriemann/channelselection.py</div><div id='class'> Class Name: ElectrodeSelection</div><div id='method'> Method Name: fit</div><BR>

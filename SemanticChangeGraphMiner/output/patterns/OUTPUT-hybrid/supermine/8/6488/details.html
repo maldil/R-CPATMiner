@@ -1,0 +1,23 @@
+<html><h3>b7c005999921399e383780086127e4a4aa02b079,memcnn/models/affine.py,AffineBlockInverseFunction,forward,#,254
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+            y1.set_()
+            del y1
+            output = torch.cat([x1, x2], dim=1)
+            <a id="change">x1.set_()</a>
+            <a id="change">x2.set_()</a>
+            <a id="change">del x1, x2</a>
+
+        &#47&#47 save the (empty) input and (non-empty) output variables
+        cty.save_for_backward(y.data, output)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        with torch.no_grad():
+            &#47&#47 partition in two equally sized set of channels
+            <a id="change">y = yin.detach()</a>
+            y1, y2 = torch.chunk(y, 2, dim=1)
+            y1, y2 = y1.contiguous(), y2.contiguous()
+
+            &#47&#47 compute outputs</code></pre><img src="25662036.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/b7c005999921399e383780086127e4a4aa02b079#diff-97deb8e0fa9c2d269ff7d56b047ad4c158c7d04d8e19fd046e6864a729ef6461L271' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: b7c005999921399e383780086127e4a4aa02b079</div><div id='time'> Time: 2019-12-15</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/affine.py</div><div id='class'> Class Name: AffineBlockInverseFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/b7c005999921399e383780086127e4a4aa02b079#diff-97deb8e0fa9c2d269ff7d56b047ad4c158c7d04d8e19fd046e6864a729ef6461L172' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: b7c005999921399e383780086127e4a4aa02b079</div><div id='time'> Time: 2019-12-15</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/affine.py</div><div id='class'> Class Name: AffineBlockFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/b7c005999921399e383780086127e4a4aa02b079#diff-97deb8e0fa9c2d269ff7d56b047ad4c158c7d04d8e19fd046e6864a729ef6461L271' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: b7c005999921399e383780086127e4a4aa02b079</div><div id='time'> Time: 2019-12-15</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/affine.py</div><div id='class'> Class Name: AffineBlockInverseFunction</div><div id='method'> Method Name: forward</div><BR><BR><div id='link'><a href='https://github.com/silvandeleemput/memcnn/commit/b7c005999921399e383780086127e4a4aa02b079#diff-2b004f1c84f58ff4989d2c82f4bbf6fb9bc0393ef5f7b279feff4716ad67f2e3L126' target='_blank'>Link</a></div><div id='project'> Project Name: silvandeleemput/memcnn</div><div id='commit'> Commit Name: b7c005999921399e383780086127e4a4aa02b079</div><div id='time'> Time: 2019-12-15</div><div id='author'> Author: silvandeleemput@gmail.com</div><div id='file'> File Name: memcnn/models/additive.py</div><div id='class'> Class Name: AdditiveBlockFunction</div><div id='method'> Method Name: forward</div><BR>

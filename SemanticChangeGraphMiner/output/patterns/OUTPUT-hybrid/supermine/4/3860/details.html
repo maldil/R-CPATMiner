@@ -1,0 +1,24 @@
+<html><h3>14c0cf773f514788aca6b935298fa186890eecc1,test.py,,,#,16
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        target = Variable(ToTensor()(target))
+        if torch.cuda.is_available():
+            image = image.unsqueeze(0).cuda()
+            target = <a id="change">target</a>.unsqueeze(0).cuda()
+
+        out = model(image)
+        mse = ((target - out) ** 2).mean()
+        psnr = 10 * log10(1 / mse.data.cpu().numpy())
+        <a id="change">ssim = pytorch_ssim.ssim(out, target)</a>
+        out_img = ToPILImage()(out[0].data)
+        out_img.save(out_path + &quotpsnr_%.4f_ssim_%.4f_&quot % (psnr, ssim) + image_name)
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        out = model(image.unsqueeze(0))[0]
+        mse = ((target - out) ** 2).mean()
+        psnr = 10 * log10(1 / mse.data.cpu().numpy())
+        ssim = structural_similarity(out.data.cpu().numpy(), <a id="change">target.data.cpu().numpy()</a>)
+        out_img = ToPILImage()(out.data)
+        out_img.save(out_path + &quotpsnr_%.4f_ssim_%.4f_&quot % (psnr, ssim) + image_name)
+</code></pre><img src="17033414.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/leftthomas/SRGAN/commit/14c0cf773f514788aca6b935298fa186890eecc1#diff-3665d65394f4f58a56a256ad6dd8621c68118d90fe56a19387e251c19cec2d2eL40' target='_blank'>Link</a></div><div id='project'> Project Name: leftthomas/SRGAN</div><div id='commit'> Commit Name: 14c0cf773f514788aca6b935298fa186890eecc1</div><div id='time'> Time: 2017-11-21</div><div id='author'> Author: leftthomas@qq.com</div><div id='file'> File Name: test.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: </div><BR><BR><div id='link'><a href='https://github.com/interactiveaudiolab/nussl/commit/2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc#diff-5e6b3d2d75547a9fe7fd7ace6332660a0bb8ac76746e8cd3560fb141519934adL53' target='_blank'>Link</a></div><div id='project'> Project Name: interactiveaudiolab/nussl</div><div id='commit'> Commit Name: 2ffbfa3a6bd3b8de8e21a762489346054dcd9ccc</div><div id='time'> Time: 2020-03-12</div><div id='author'> Author: prem@u.northwestern.edu</div><div id='file'> File Name: nussl/separation/deep/deep_mask_estimation.py</div><div id='class'> Class Name: DeepMaskEstimation</div><div id='method'> Method Name: extract_features</div><BR><BR><div id='link'><a href='https://github.com/carpedm20/ENAS-pytorch/commit/f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7#diff-b02f719a0cadd35d51b5f18576fb2e3122a29a3f0a9ed03e6733db2b4851c2abL213' target='_blank'>Link</a></div><div id='project'> Project Name: carpedm20/ENAS-pytorch</div><div id='commit'> Commit Name: f98bd2ec9d4289939ff6661d5a9c43ee7e8996f7</div><div id='time'> Time: 2018-03-11</div><div id='author'> Author: dukebw@mcmaster.ca</div><div id='file'> File Name: models/shared_rnn.py</div><div id='class'> Class Name: RNN</div><div id='method'> Method Name: forward</div><BR>

@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                extension = os.path.splitext(self.name)[1].lower()
+                &#47&#47 Try to guess the format from the extension.
+                format = Image.EXTENSION.get(extension)
+            <a id="change">format = format or img.format or &quotJPEG&quot</a>
+
+            &#47&#47 save the new image to the cache
+            if format != &quotJPEG&quot:
+                imgfile = img_to_fobj(img, format)
+            else:
+                imgfile = img_to_fobj(img, format,
+                                          quality=int(self.field.quality),
+                                          optimize=True)
+            <a id="change">content = ContentFile(imgfile.read())</a>
+            self._file = self.storage.save(self.name, content)
+        else:
+            &#47&#47 TODO: Should we error here or something if the imagefield doesn&quott exist?
+            img = None</code></pre><h3>After Change</h3><pre><code class='java'>
+            fp.seek(0)
+            fp = StringIO(fp.read())
+
+            <a id="change">img</a>, content = self._process_content(self.name, fp)
+            self._file = self.storage.save(self.name, content)
+        else:
+            &#47&#47 TODO: Should we error here or something if the imagefield doesn&quott exist?</code></pre>

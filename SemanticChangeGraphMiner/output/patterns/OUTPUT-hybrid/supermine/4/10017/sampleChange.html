@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        self.dtype = dtype
+
+    def __call__(self, x, y=None):
+        x = <a id="change">x.type(self.dtype)</a>
+        if y is not None:
+            y = y.type(self.dtype)
+            return x, y
+        return x</code></pre><h3>After Change</h3><pre><code class='java'>
+        self.dtype = dtype
+
+    def __call__(self, *inputs):
+        <a id="change">outputs = []</a>
+        for idx, _input in enumerate(inputs):
+            _input = _input.type(self.dtype)
+            outputs.append(_input)
+        return outputs if idx &gt; 1 else outputs[0]</code></pre>

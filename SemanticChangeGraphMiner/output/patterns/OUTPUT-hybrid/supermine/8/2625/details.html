@@ -1,0 +1,47 @@
+<html><h3>597ae33645d1a8a0e2e87e8bec05232594d5c447,pyAudioAnalysis/ShortTermFeatures.py,,chromagram,#,305
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    signal = (signal - dc_offset) / (maximum - dc_offset)
+
+    num_samples = len(signal)  &#47&#47 total number of signals
+    <a id="change">cur_position = 0</a>
+    count_fr = 0
+    num_fft = int(window / 2)
+    chromogram = np.zeros((int((num_samples-step-window) / step), 12),
+                          dtype=np.float64)
+
+    <a id="change">while cur_position + window - 1 &lt; num_samples:
+        count_fr += 1
+        x = signal[cur_position:cur_position + window]
+        cur_position = cur_position + step
+        X = abs(fft(x))
+        X = X[0:num_fft]
+        X = X / len(X)
+        chroma_names, chroma_feature_matrix = chroma_features(X, sampling_rate,
+                                                              num_fft)
+        chroma_feature_matrix = chroma_feature_matrix[:, 0]
+        chromogram[count_fr-1, :] = chroma_feature_matrix.T
+   </a> freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    num_fft = int(window / 2)
+    chromogram = np.zeros((int((num_samples-step-window) / step) + 1, 12),
+                          dtype=np.float64)
+    <a id="change">for cur_p in tqdm(range(window, num_samples - step, step),
+                      disable=not show_progress):
+        count_fr += 1
+        x = signal[cur_p:cur_p + window]
+        X = abs(fft(x))
+        X = X[0:num_fft]
+        X = X / len(X)
+        chroma_names, chroma_feature_matrix = chroma_features(X, sampling_rate,
+                                                              num_fft)
+        chroma_feature_matrix = chroma_feature_matrix[:, 0]
+        chromogram[count_fr-1, :] = chroma_feature_matrix.T
+   </a> freq_axis = chroma_names
+    time_axis = [(t * step) / sampling_rate
+                 for t in range(chromogram.shape[0])]
+</code></pre><img src="11655649.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 3</div><BR><div id='size'>Non-data size: 6</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/tyiannak/pyAudioAnalysis/commit/597ae33645d1a8a0e2e87e8bec05232594d5c447#diff-7641ac9576004c5bb3a4f35c1e0a58c2cd07e32efddf4596a6fdf926093a125cL318' target='_blank'>Link</a></div><div id='project'> Project Name: tyiannak/pyAudioAnalysis</div><div id='commit'> Commit Name: 597ae33645d1a8a0e2e87e8bec05232594d5c447</div><div id='time'> Time: 2020-06-13</div><div id='author'> Author: tyiannak@gmail.com</div><div id='file'> File Name: pyAudioAnalysis/ShortTermFeatures.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: chromagram</div><BR><BR><div id='link'><a href='https://github.com/pyprob/pyprob/commit/22b907cc151f4ae9ec9ff95e2438836ef5660b60#diff-768b8f0c61c296f2a05d4970cd46bc583376d2df221d89dc35bd7b7d3dca319aL98' target='_blank'>Link</a></div><div id='project'> Project Name: pyprob/pyprob</div><div id='commit'> Commit Name: 22b907cc151f4ae9ec9ff95e2438836ef5660b60</div><div id='time'> Time: 2020-08-06</div><div id='author'> Author: atilimgunes.baydin@gmail.com</div><div id='file'> File Name: pyprob/model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: posterior</div><BR><BR><div id='link'><a href='https://github.com/TheAlgorithms/Python/commit/110a740d5d026c4675489ea2acfefda773c4e032#diff-98d4f5a6b9f50b007fc30240a38526883720a838691b746b694d69ae7cad16c4L197' target='_blank'>Link</a></div><div id='project'> Project Name: TheAlgorithms/Python</div><div id='commit'> Commit Name: 110a740d5d026c4675489ea2acfefda773c4e032</div><div id='time'> Time: 2020-12-10</div><div id='author'> Author: 31663979+MrGeek1337@users.noreply.github.com</div><div id='file'> File Name: ciphers/caesar_cipher.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: brute_force</div><BR>

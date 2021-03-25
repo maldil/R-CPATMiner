@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+&#47&#47 Since the majority of the base classifiers selected predicts class 0, the final decision of the ensemble should be 0.
+def test_classify_instance():
+    <a id="change">query = np.atleast_2d([1, -1])</a>
+    clustering_test = DESClustering(create_pool_classifiers() * 4, k=2)
+    clustering_test.select = MagicMock(return_value=[0, 1, 2, 3, 5, 6, 7, 9])
+
+    predictions = []</code></pre><h3>After Change</h3><pre><code class='java'>
+
+&#47&#47 Since the majority of the base classifiers selected predicts class 0, the final decision of the ensemble should be 0.
+def test_classify_instance():
+    <a id="change">query = np.ones((1, 2))</a>
+    clustering_test = DESClustering(create_pool_classifiers() * 4, k=2)
+    clustering_test.select = MagicMock(return_value=[0, 1, 2, 3, 5, 6, 7, 9])
+
+    predictions = []</code></pre>

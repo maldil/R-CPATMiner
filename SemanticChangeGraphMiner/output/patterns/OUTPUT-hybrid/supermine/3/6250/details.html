@@ -1,0 +1,21 @@
+<html><h3>e1c2eeb25d5c11ad1b55862b9ea4cc5e55ed7516,GPy/kern/_src/stationary.py,Stationary,_lengthscale_grads_cython,#Stationary#,187
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        N,M = tmp.shape
+        Q = X.shape[1]
+        if hasattr(X, &quotvalues&quot):X = X.values
+        <a id="change">if hasattr(X2, &quotvalues&quot):X2 = X2.values
+</a>        grads = np.zeros(self.input_dim)
+        stationary_cython.lengthscale_grads(N, M, Q, tmp, X, X2, grads)
+        return -grads/self.lengthscale**3
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    def _lengthscale_grads_cython(self, tmp, X, X2):
+        N,M = tmp.shape
+        Q = self.input_dim
+        <a id="change">X, X2 = np.ascontiguousarray(X), np.ascontiguousarray(X2)</a>
+        grads = np.zeros(self.input_dim)
+        stationary_cython.lengthscale_grads(N, M, Q, tmp, X, X2, grads)
+        return -grads/self.lengthscale**3
+</code></pre><img src="25394849.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 5</div><BR><div id='size'>Non-data size: 3</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/e1c2eeb25d5c11ad1b55862b9ea4cc5e55ed7516#diff-37324cdf768d3fbea0b0eefc28e6ca3fda04c0750ad546f63f326b12c65aeda3L187' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: e1c2eeb25d5c11ad1b55862b9ea4cc5e55ed7516</div><div id='time'> Time: 2015-04-28</div><div id='author'> Author: james.hensman@gmail.com</div><div id='file'> File Name: GPy/kern/_src/stationary.py</div><div id='class'> Class Name: Stationary</div><div id='method'> Method Name: _lengthscale_grads_cython</div><BR><BR><div id='link'><a href='https://github.com/suavecode/SUAVE/commit/e73418dbc43053ccb522e94e9846de1c88667b73#diff-c09e31a879d82ef45aef0b6d23311f0e216695770130737973cb6ae1c6836d59L79' target='_blank'>Link</a></div><div id='project'> Project Name: suavecode/SUAVE</div><div id='commit'> Commit Name: e73418dbc43053ccb522e94e9846de1c88667b73</div><div id='time'> Time: 2017-04-01</div><div id='author'> Author: ebotero@stanford.edu</div><div id='file'> File Name: trunk/SUAVE/Components/Energy/Networks/Propulsor_Surrogate.py</div><div id='class'> Class Name: Propulsor_Surrogate</div><div id='method'> Method Name: build_surrogate</div><BR><BR><div id='link'><a href='https://github.com/SheffieldML/GPy/commit/9e4c33910fd97aa455b7063e330b51c21b63b963#diff-37324cdf768d3fbea0b0eefc28e6ca3fda04c0750ad546f63f326b12c65aeda3L228' target='_blank'>Link</a></div><div id='project'> Project Name: SheffieldML/GPy</div><div id='commit'> Commit Name: 9e4c33910fd97aa455b7063e330b51c21b63b963</div><div id='time'> Time: 2015-04-28</div><div id='author'> Author: james.hensman@gmail.com</div><div id='file'> File Name: GPy/kern/_src/stationary.py</div><div id='class'> Class Name: Stationary</div><div id='method'> Method Name: _gradients_X_cython</div><BR><BR><div id='link'><a href='https://github.com/librosa/librosa/commit/b2e82574eb7e7292741ece09ec9eb286e9ea4168#diff-a97ac8b25d96b026c015cf631b9f0f4c2c4405c64cfdad7afde0297c6ad5f4dcL178' target='_blank'>Link</a></div><div id='project'> Project Name: librosa/librosa</div><div id='commit'> Commit Name: b2e82574eb7e7292741ece09ec9eb286e9ea4168</div><div id='time'> Time: 2020-05-22</div><div id='author'> Author: bmcfee@users.noreply.github.com</div><div id='file'> File Name: librosa/util/utils.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: frame</div><BR><BR><div id='link'><a href='https://github.com/luispedro/mahotas/commit/221f2e9dce1ce5828f307909fd6da6cd9452f17c#diff-c2a679e982a7d25efabb35e7e2e2b1f4d12d4cd4ce42a40566df45a1d1e6a15cL118' target='_blank'>Link</a></div><div id='project'> Project Name: luispedro/mahotas</div><div id='commit'> Commit Name: 221f2e9dce1ce5828f307909fd6da6cd9452f17c</div><div id='time'> Time: 2012-08-23</div><div id='author'> Author: luis@luispedro.org</div><div id='file'> File Name: mahotas/polygon.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: convexhull</div><BR>

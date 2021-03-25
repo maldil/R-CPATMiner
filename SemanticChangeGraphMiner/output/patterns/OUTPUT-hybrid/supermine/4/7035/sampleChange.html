@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+def resize(image, desired_size):
+
+    old_size = image.shape[:2]  &#47&#47 old_size is in (height, width) format
+    ratio = float(desired_size)/<a id="change">max(old_size)</a>
+    new_size = tuple([<a id="change">int(x*ratio)</a> for x in old_size])
+
+    &#47&#47 new_size should be in (width, height) format
+    image = cv2.resize(image, (new_size[1], new_size[0]))</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    old_size = image.shape[:2]  &#47&#47 old_size is in (height, width) format
+    ratio = min(np.divide(desired_size, old_size))
+    <a id="change">new_size = (int(old_size[0]*ratio), int(old_size[1]*ratio))</a>
+
+    &#47&#47 new_size should be in (width, height) format
+    if image.shape[2] == 1:
+        image = cv2.resize(</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+
+        &#47&#47 Target
+        y = G.mlpg(means.numpy(), np.ones(static_dim * len(windows)), windows)
+        y = <a id="change">Variable(torch.from_numpy(y), requires_grad=False)</a>
+        y_expanded = y.expand(batch_size, y.size(0), y.size(1))
+
+        &#47&#47 Pack into variables
+        means = Variable(means, requires_grad=True)</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        &#47&#47 Target
+        y = G.mlpg(means.numpy(), np.ones(static_dim * len(windows)), windows)
+        y = <a id="change">torch.from_numpy(y)</a>
+        y_expanded = y.expand(batch_size, y.size(0), y.size(1))
+
+        means.requires_grad = True
+        means_expanded.requires_grad = True</code></pre>

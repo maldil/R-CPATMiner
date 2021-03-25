@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    result = np.full(shape=(n_features, n_identifiers), fill_value=rank_unknown, dtype=INVERTED_DB_DTYPE)
+    for row_idx in prange(n_features):
+        ranked_identifiers4feature = ranked_identifiers[row_idx, :]  &#47&#47 The values of a row are the identifiers
+        ranks = np.array([<a id="change">np.where(ranked_identifiers4feature == elem)[0]</a> for elem in reference_identifiers], dtype=INVERTED_DB_DTYPE)
+        <a id="change">col_idxs = np.nonzero(reference_identifiers.isin(ranked_identifiers4feature))</a>
+        result[row_idx, col_idxs] = ranks
+    return result
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        for col_idx in range(n_identifiers):
+            &#47&#47 TODO: Currently doing brute-force linear search at near C-speed. Time complexity could be greatly reduced
+            &#47&#47 TODO: if resorting to binary search or something similar [from O(N) to O(log2(N)) where N is 50k, i.e. top N features]
+            result[row_idx, col_idx] = find(ranked_identifiers[row_idx, :], <a id="change">reference_identifiers[col_idx]</a>, rank_unknown)
+    return result
+
+</code></pre>

@@ -1,0 +1,26 @@
+<html><h3>f869e085bd216a1e9d2f1066da783e74067810e3,src/Model.py,Model,trainBatch,#Model#,202
+</h3><link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+		"feed a batch into the NN to train it"
+		sparse = self.toSparse(batch.gtTexts)
+		rate = 0.01 if self.batchesTrained &lt; 10 else (0.001 if self.batchesTrained &lt; 10000 else 0.0001) &#47&#47 decay learning rate
+		(_, lossVal) = <a id="change">self.sess.run([self.optimizer, self.loss], { self.inputImgs : batch.imgs, self.gtTexts : sparse , self.seqLen : [Model.maxTextLen] * Model.batchSize, self.learningRate : rate} )</a>
+		self.batchesTrained += 1
+		return lossVal
+
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+	def trainBatch(self, batch):
+		"feed a batch into the NN to train it"
+		numBatchElements = <a id="change">len(batch.imgs)</a>
+		sparse = self.toSparse(batch.gtTexts)
+		rate = 0.01 if self.batchesTrained &lt; 10 else (0.001 if self.batchesTrained &lt; 10000 else 0.0001) &#47&#47 decay learning rate
+		evalList = [self.optimizer, self.loss]
+		feedDict = {self.inputImgs : batch.imgs, self.gtTexts : sparse , self.seqLen : [Model.maxTextLen] * numBatchElements, self.learningRate : rate}
+		<a id="change">(_, lossVal) = self.sess.run(evalList, feedDict)</a>
+		self.batchesTrained += 1
+		return lossVal
+
+</code></pre><img src="25361475.png" alt="Italian Trulli"   style="width:500px;height:500px;"><div id='inPattern'>In pattern: SUPERPATTERN</div><BR><div id='frequency'>Frequency: 4</div><BR><div id='size'>Non-data size: 4</div><BR><h3>Instances</h3><BR><div id='link'><a href='https://github.com/githubharald/SimpleHTR/commit/f869e085bd216a1e9d2f1066da783e74067810e3#diff-d19209026b4e67af0efda8d1cecb44fc6a45c90e4df89352fbffb1b049463cdbL204' target='_blank'>Link</a></div><div id='project'> Project Name: githubharald/SimpleHTR</div><div id='commit'> Commit Name: f869e085bd216a1e9d2f1066da783e74067810e3</div><div id='time'> Time: 2019-01-02</div><div id='author'> Author: harald_scheidl@hotmail.com</div><div id='file'> File Name: src/Model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: trainBatch</div><BR><BR><div id='link'><a href='https://github.com/githubharald/SimpleHTR/commit/f869e085bd216a1e9d2f1066da783e74067810e3#diff-d19209026b4e67af0efda8d1cecb44fc6a45c90e4df89352fbffb1b049463cdbL216' target='_blank'>Link</a></div><div id='project'> Project Name: githubharald/SimpleHTR</div><div id='commit'> Commit Name: f869e085bd216a1e9d2f1066da783e74067810e3</div><div id='time'> Time: 2019-01-02</div><div id='author'> Author: harald_scheidl@hotmail.com</div><div id='file'> File Name: src/Model.py</div><div id='class'> Class Name: Model</div><div id='method'> Method Name: inferBatch</div><BR><BR><div id='link'><a href='https://github.com/pysb/pysb/commit/47374cd825213029b578e5a22ba9836c0f55d97a#diff-9e0313a471a2f4efea3e10ad0725f0ebec706b97e75ca1c43e35b2934cf48d2cL135' target='_blank'>Link</a></div><div id='project'> Project Name: pysb/pysb</div><div id='commit'> Commit Name: 47374cd825213029b578e5a22ba9836c0f55d97a</div><div id='time'> Time: 2015-07-03</div><div id='author'> Author: oo.ortega2247@gmail.com</div><div id='file'> File Name: pysb/tools/pysb_pyurdme.py</div><div id='class'> Class Name: PyurdmeSimulator</div><div id='method'> Method Name: run</div><BR><BR><div id='link'><a href='https://github.com/THUNLP-MT/THUMT/commit/410992318552115d2e3de84844bf523012e3e98e#diff-cb60f0cf6c37bb3f911c8bbba2ac2784a894d963f0f26925463f38972caaf3e3L138' target='_blank'>Link</a></div><div id='project'> Project Name: THUNLP-MT/THUMT</div><div id='commit'> Commit Name: 410992318552115d2e3de84844bf523012e3e98e</div><div id='time'> Time: 2019-11-26</div><div id='author'> Author: cg847519328@163.com</div><div id='file'> File Name: thumt/utils/hooks.py</div><div id='class'> Class Name: </div><div id='method'> Method Name: _evaluate</div><BR>

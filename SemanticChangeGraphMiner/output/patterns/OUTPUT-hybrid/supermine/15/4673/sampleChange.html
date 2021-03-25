@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    &#47&#47 Fit and transform the visualizer (calls draw)
+    visualizer.fit(X_train, y_train, **kwargs)
+    visualizer.score(X_test, y_test)
+    <a id="change">visualizer.finalize()</a>
+
+    &#47&#47 Return the axes object on the visualizer
+    return visualizer
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    &#47&#47 Scores the visualizer with X and y test if provided, X and y train if not
+    if X_test is not None and y_test is not None:
+        visualizer.score(X_test, y_test)
+    elif <a id="change">X_test is not None or y_test is not None</a>:
+        raise YellowbrickValueError(
+            "both X_test and y_test are required if one is specified"
+        )
+    else:
+        <a id="change">visualizer.score(X_train, y_train)</a>
+
+    <a id="change">if show:
+        visualizer.show()
+    else:
+        visualizer.finalize()
+
+    &#47&#47 Return the axes object on the visualizer
+   </a> return visualizer
+
+
+&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47&#47</code></pre>

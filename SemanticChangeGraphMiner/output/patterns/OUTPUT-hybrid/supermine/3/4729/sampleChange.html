@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+                return ftype, fname if fname is ... else fname.lower()
+
+            fs_features = {check_feature(*feature) for feature in self.walk_filesystem(filesystem, patch_location, features)}
+            eop_features = <a id="change">{check_feature(*feature) for feature in self.walk_eopatch(self, patch_location, features)}</a>
+
+            intersection = fs_features.intersection(eop_features)
+            if intersection:
+                error_msg = "Cannot save features {} with overwrite_permission=OverwritePermission.ADD_ONLY "</code></pre><h3>After Change</h3><pre><code class='java'>
+
+        self._check_case_matching(eopatch_features, fs_features)
+
+        <a id="change">if overwrite_permission is OverwritePermission.ADD_ONLY:
+            self._check_add_only_permission(eopatch_features, fs_features)
+
+       </a> itr = [(ftype, fname, path) for ftype, fname, path in eopatch_features]
+
+        ftypes = {(ftype, fs.path.dirname(path)) for ftype, _, path in itr if not ftype.is_meta()}
+        for ftype, dirname in ftypes:</code></pre>

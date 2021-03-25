@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+        
+
+        if not self.word2vec_model:
+            <a id="change">print(&quotword2vec model is not trained. Run train_word2vec() first.&quot)</a>
+            return
+
+        if not self.scaler:
+            print(&quotThe scaler is not trained. Run fit_scaler() first.&quot)</code></pre><h3>After Change</h3><pre><code class='java'>
+            raise RuntimeError(&quotThe scaler is not trained. &quot + \
+                               &quotRun fit_scaler() first.&quot)
+
+        <a id="change">if not os.path.isdir(train_dir):
+            raise ValueError(&quotThe training directory &quot + train_dir + \
+                             &quot does not exist&quot)
+
+       </a> if test_dir and not os.path.isdir(test_dir):
+            <a id="change">raise ValueError(&quotThe test directory &quot + test_dir + \
+                             &quot does not exist&quot)</a>
+
+        if self.keras_model:
+            print(&quotWARNING! Overwriting already trained Keras model.&quot,
+                  file=sys.stderr)</code></pre>

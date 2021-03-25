@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3></h3><h3>Before Change</h3><pre><code class='java'>
+    if (b2.shape[0] != 2):
+        raise NameError(&quotutilities.intersection2DSegments input error : b2 is a ndarray of size 2&quot)
+    
+    <a id="change">if (ccw3p(a1,a2,b1) != ccw3p(a1,a2,b2) and ccw3p(b1,b2,a1) != ccw3p(b1,b2,a2)):
+
+        da = a2-a1
+        db = b2-b1
+        dap = np.empty_like(da)
+        dap[0] = -da[1]
+        dap[1] = da[0]
+        denom = np.dot(dap, db)
+
+        if denom != 0:
+
+            dp = a1-b1
+            num = np.dot(dap, dp)
+            p = np.array((num / denom.astype(float))*db + b1)
+
+            if (np.allclose(p, a1) or np.allclose(p, a2)):
+                endpointA = True
+            else:
+                endpointA = False
+
+            if (np.allclose(p, b1) or np.allclose(p, b2)):
+                endpointB = True
+            else:
+                endpointB = False
+
+            return p, endpointA, endpointB
+
+   </a> return None, False, False
+
+    
+def intersectionSegmentPlane(a1, a2, p, normal):</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    &#47&#47 case 2
+    b1b2a1 = ccw3p(b1, b2, a1)
+    <a id="change">b1b2a2</a> = <a id="change">ccw3p(b1, b2, a2)</a>
+    if <a id="change">b1b2a1 == b1b2a2</a>:
+        return None, False, False
+
+    da = a2-a1
+    db = b2-b1
+    dap = np.empty_like(da)
+    dap[0] = -da[1]
+    dap[1] = da[0]
+    <a id="change">denom</a> = np.dot(dap, db)
+
+    &#47&#47 case 3
+    if <a id="change">denom == 0:
+   </a>     return None, False, False
+
+    &#47&#47 At this point, we know there is intersection
+    dp = a1-b1
+    num = np.dot(dap, dp)
+    &#47&#47 This is the intersection point
+    <a id="change">p</a> = np.array((num / denom.astype(float))*db + b1)
+
+    &#47&#47 Test if intersection is actually at one of a1 or a2
+    <a id="change">if b1b2a1 == 0 or b1b2a2 == 0:
+        endpointA = True
+    else:
+        endpointA = False
+
+    &#47&#47 Test if intersection is actually at one of b1 or b2
+   </a> <a id="change">if a1a2b1 == 0 or a1a2b2 == 0:
+        endpointB = True
+    else:
+        endpointB = False
+
+   </a> return p, endpointA, endpointB
+
+
+    </code></pre>
