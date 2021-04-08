@@ -1732,6 +1732,13 @@ public class MapPyStatementsTOJDK extends PyMap{
 
                 methoddec.parameters().add(parameter);
 
+            } else {
+                SingleVariableDeclaration parameter = asn.newSingleVariableDeclaration();
+                SimpleType simpleType = asn.newSimpleType(asn.newName("Any"));
+                SimpleName simpleName = asn.newSimpleName(refactoringminer.python.MapPyExpressionsJDK.mapPythonKeyWords (((arg) arg).getArg().toString()));
+                parameter.setName(simpleName);
+                parameter.setType(simpleType);
+                methoddec.parameters().add(parameter);
             }
 
         }

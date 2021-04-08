@@ -98,10 +98,12 @@ public class AnalyzeRepoMetadata {
 					System.out.println(name);
 					File git = new File(inputPath + "/" + name + "/.git");
 					GitConnector gitConn = new GitConnector(git.getAbsolutePath());
+
 					gitConn.connect();
 					Iterable<RevCommit> commits = null;
 					try {
 						ObjectId head = gitConn.getRepository().resolve(Constants.HEAD);
+
 						commits = gitConn.getGit().log().add(head).call();
 					} catch (IOException e) {
 						e.printStackTrace();

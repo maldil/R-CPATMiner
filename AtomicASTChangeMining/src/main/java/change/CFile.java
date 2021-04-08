@@ -29,8 +29,7 @@ public class CFile extends ChangeEntity {
 
 	public CFile(RevisionAnalyzer revisionAnalyzer, String filePath,
 			String content,String projectPath,Map<TypeASTNode, String> typeInformation1) {
-		this.startLine = 0;
-		this.startPyLine = 0;
+		this.startLine = 0; this.startPyLine = 0;
 		this.cRevisionAnalyzer = revisionAnalyzer;
 		this.path = filePath;
 		this.simpleName = FileIO.getSimpleFileName(path);

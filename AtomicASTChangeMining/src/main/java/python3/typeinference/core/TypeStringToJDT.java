@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import python3.MapPyExpressionsJDK;
+import python3.MapPyStatementsTOJDK;
 import python3.PyMap;
 import python3.pyerrors.NodeNotFoundException;
 import python3.typeinference.antlr.TypeInfo;
@@ -216,7 +217,7 @@ public class TypeStringToJDT extends PyMap{
                 }
             }
             else {
-                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName(typeTree.getText())));
+                ParameterizedType paraType = ast.newParameterizedType(ast.newSimpleType(ast.newName(MapPyExpressionsJDK.mapPythonKeyWords(typeTree.getText()))));
                 for (Object child : tree.getChildren()) {
                     try {
                         paraType.typeArguments().add(convertToJDTType(ast, (CommonTree) child, 0, true));

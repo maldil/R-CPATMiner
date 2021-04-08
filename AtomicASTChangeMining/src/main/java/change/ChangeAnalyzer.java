@@ -24,6 +24,8 @@ import org.eclipse.jgit.revwalk.filter.CommitTimeRevFilter;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
 
 import python3.typeinference.core.TypeInformation;
+import refactoringminer.api.Refactoring;
+import refactoringminer.python.GetPythonRefactoring;
 import repository.SVNConnector;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
@@ -36,7 +38,9 @@ import repository.GitConnector;
 import utils.Config;
 import utils.FileIO;
 
+import static core.Configurations.WITH_REFACTORING;
 import static io.vavr.API.Try;
+import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.toList;
 
 public class ChangeAnalyzer {
@@ -48,6 +52,7 @@ public class ChangeAnalyzer {
 	private SVNConnector svnConn;
 	private GitConnector gitConn;
 	private int typeErroredFails=0;
+	GetPythonRefactoring refactoring=null ;
 	private HashMap<Long, SVNLogEntry> logEntries;
 	private ArrayList<RevisionAnalyzer> revisionAnalyzers = new ArrayList<RevisionAnalyzer>();
 	private CProject cproject;
@@ -66,6 +71,8 @@ public class ChangeAnalyzer {
 		this.url = svnUrl;
 		this.startRevision = start;
 		this.endRevision = end;
+
+
 	}
 
 	public ChangeAnalyzer(String projectName, int projectId, String svnUrl) {
@@ -82,6 +89,7 @@ public class ChangeAnalyzer {
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //		}
+
 	}
 
 	public String getProjectName() {
@@ -239,12 +247,19 @@ public class ChangeAnalyzer {
 		this.cproject = new CProject(projectId, projectName);
 		this.cproject.revisions = new ArrayList<>();
 		File dir = new File(Configurations.outputPath + "/" + projectName);
+
+		if (WITH_REFACTORING) {
+			try {
+				refactoring = new GetPythonRefactoring(Configurations.inputPath, Configurations.TYPE_REPOSITORY, projectName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		Iterable<RevCommit> commits = null;
 		try {
 //			ObjectId head = this.gitConn.getRepository().resolve(Constants.HEAD);
 //			commits = this.gitConn.getGit().log().add(head).call();
 			commits = getCommits(this.gitConn.getGit(),RevSort.REVERSE);
-
 			assert StreamSupport.stream(commits.spliterator(), false).count()>0;
 
 		} catch (RuntimeException e) {
@@ -265,9 +280,8 @@ public class ChangeAnalyzer {
 //		}
 		int num_commits =0;
 		for (final RevCommit commit : commits) {    //Iterate each commit
-			logger.info("f "+commit.toString()+" f");
-			if (commit.getName().equals("26c07ada835f1d2a25bc9606a2d4531eaf0a9657"))
-				System.out.println();
+			logger.info(commit.toString());
+
 			if (numOfExtractedRevisions >= Config.MAX_EXTRACTED_COMMITS)
 				break;
 
@@ -290,17 +304,29 @@ public class ChangeAnalyzer {
 		this.numOfRevisions++;
 		if (this.numOfRevisions % 1000 == 0)
 			logger.info("Analyzing revision: " + this.numOfRevisions + " " + commit.getName() + " from " + projectName);
+
+		List<Refactoring> refs = null;
+
+		if (refactoring!=null && refs!=null && refs.size()>0)
+			System.out.println();
+
 		RevisionAnalyzer ra = new RevisionAnalyzer(this, commit,this.url);
-//		if (!commit.getName().equals("ed954196928dec0112f069548cee16afcb476568")&&
-//		!commit.getName().equals("56f6342f9e587f867d9f40d00eef5a2c46174faa")&&
-//		!commit.getName().equals("b52af78373e60bb55b61c1bdd8a2c4d0ef55ea37")&&
-//		!commit.getName().equals("60a68e53d7730ea52e2a25cd6a713cd1ad106d46")&&
-//				!commit.getName().equals("5a8cd57f20307773efa40021ad712323cb37ba48")&&
-//				!commit.getName().equals("064a0dba709973ba3b6f69b6c72857550986b0da")){
-//			System.out.printf("");
-//			return;
-//		}
-		boolean analyzed = ra.analyzeGit();
+
+
+		boolean analyzed =false;
+		if (refactoring!=null && WITH_REFACTORING) {
+			try {
+				refs = this.refactoring.getPythonRefactoringInCommit(commit.getName());
+				analyzed =ra.analyzeGit(refs);
+				ra.updateRefactoringChanges(refs);
+			} catch (Exception e) {
+
+			}
+		}
+		else{
+			analyzed = ra.analyzeGit(refs);
+		}
+
 		if (ra.isTypeError()) typeErroredFails++;
 
 		if (ra.getSuceessRate()) sucessRate++;
@@ -314,9 +340,7 @@ public class ChangeAnalyzer {
 //						+ ":" + e.getCFile().getPath()
 //						+ ":" + e.getCClass().getName() + "." + e.getSimpleName() + "(" + e.getNumOfParameters()+ ")" + e.getParameterTypes()
 //						+ ":" + cg.summarize());
-				if (commit.getName().equals("d9858e310969497677ed6066566ef7df10311799")){
-					System.out.println();
-				}
+
 				int[] csizes = cg.getChangeSizes();
 
 				if (csizes[0] > 0 && csizes[1] > 0
@@ -324,10 +348,10 @@ public class ChangeAnalyzer {
 						&& csizes[0] <= 100 && csizes[1] <= 100 
 						&& (cg.hasMethods()||cg.hasArrays()||cg.hasForLoops())) {
 					// DEBUG
-					DotGraph dg = new DotGraph(cg);
-					String dirPath = "./OUTPUT/DEBUG/";
-					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
-					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
+//					DotGraph dg = new DotGraph(cg);
+//					String dirPath = "./OUTPUT/DEBUG/";
+//					dg.toDotFile(new File(dirPath  +commit.name()+"___"+imageID+".dot"));
+//					dg.toGraphics(dirPath  +commit.name()+"___"+imageID, "png");
 					imageID+=1;
 					HashMap<String, ChangeGraph> cgs = changeGraphs.get(e.getCFile().getPath());
 					if (cgs == null) {
@@ -337,13 +361,7 @@ public class ChangeAnalyzer {
 					String className = e.getCClass().getName().contains("PyDummyClass")? "": e.getCClass().getName();
 					String methodName = e.getSimpleName().contains("PyDummyMethod") ? "":e.getSimpleName();
 					String paraName = e.getParameterTypes();
-					if (e.getCClass().getName().contains("PyDummyClass")){
 
-					}
-//					if (e.startPyLine==-1)
-//					{
-//						assert false;
-//					}
 					if (Configurations.IS_PYTHON){
 						cgs.put(className+"," + methodName + "," + paraName + "," + e.startPyLine, cg);
 					}

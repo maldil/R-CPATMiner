@@ -11,6 +11,7 @@ import java.util.HashSet;
 import graph.PDGBuildingContext;
 import graph.PDGGraph;
 import graphics.DotGraph;
+import org.apache.log4j.Logger;
 import utils.FileIO;
 import utils.JavaASTUtil;
 import utils.Pair;
@@ -28,6 +29,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import treed.TreedMapper;
+
+import static core.Configurations.METHOD_EXACT_MAPPING;
+import static core.Configurations.WITH_REFACTORING;
 
 public class CMethod extends ChangeEntity {
 	private static final long serialVersionUID = 2920972217396599104L;
@@ -50,7 +54,7 @@ public class CMethod extends ChangeEntity {
 	private HashSet<String> types, fields;
 	private HashSet<String> literals = new HashSet<String>();
 	private HashMap<SimpleName, HashSet<SimpleName>> localVarLocs;
-
+	static Logger logger = Logger.getLogger(CMethod.class);
 	@SuppressWarnings("unchecked")
 	public CMethod(CClass cClass, MethodDeclaration method) {
 		this.startLine = ((CompilationUnit) method.getRoot()).getLineNumber(method.getBody().getStartPosition());
@@ -207,6 +211,14 @@ public class CMethod extends ChangeEntity {
 				boolean isMapped = (inMappedClasses && sim[0] >= thresholdSignatureSimilarity)
 						|| (sim[0] > 0 && sim[1] == 1.0)
 						|| (sim[0] >= thresholdSignatureSimilarity && sim[1] >= thresholdBodySimilarity);
+
+				if (METHOD_EXACT_MAPPING && cmM.getNumOfParameters()!= cmN.getNumOfParameters()){
+					isMapped=false;
+					logger.info("Method Signature is different");
+				}
+
+
+
 				if (isMapped) {
 					Pair pair = new Pair(cmM, cmN, sim[3]);
 					pairs1.add(pair);
@@ -428,6 +440,8 @@ public class CMethod extends ChangeEntity {
 
 	public void deriveChanges() {
 		CMethod cmN = this.mappedMethod;
+		if(this.declaration==null || cmN==null ||cmN.declaration==null)
+			System.out.println();
 		boolean matched = this.declaration.subtreeMatch(new ASTMatcher(false) {
 			@Override
 			public boolean match(SimpleName node, Object other) {

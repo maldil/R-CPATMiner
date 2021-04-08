@@ -16,4 +16,6 @@ public class Configurations {
     public static String PYTHON_VIRTUAL_ENVIRONMENT = "/Users/malinda/Documents/Research_Topic_2/VMS/pytestenv/bin/python3.7";
     public static String PYTHON_SCRIPT_DIRECTORY = "/Users/malinda/Documents/Research_Topic_2/CPatMiner/AtomicASTChangeMining/src/main/java/python3/typeinference/pythonscripts";
     public static String TYPE_REPOSITORY = "/Users/malinda/Documents/Research_Topic_2/PythonTypeInformation/";
+    public static boolean WITH_REFACTORING = false;
+    public static boolean METHOD_EXACT_MAPPING = true;
 }

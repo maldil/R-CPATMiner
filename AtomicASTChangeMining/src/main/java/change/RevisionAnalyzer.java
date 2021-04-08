@@ -6,14 +6,32 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import com.ibm.icu.impl.Assert;
 import core.Configurations;
+import gr.uom.java.xmi.UMLClass;
+import gr.uom.java.xmi.UMLOperation;
+import gr.uom.java.xmi.decomposition.UMLOperationBodyMapper;
+import gr.uom.java.xmi.diff.AddParameterRefactoring;
+import gr.uom.java.xmi.diff.ExtractClassRefactoring;
+import gr.uom.java.xmi.diff.ExtractSuperclassRefactoring;
+import gr.uom.java.xmi.diff.MoveAndRenameClassRefactoring;
+import gr.uom.java.xmi.diff.MoveClassRefactoring;
+import gr.uom.java.xmi.diff.MoveOperationRefactoring;
+import gr.uom.java.xmi.diff.PullUpOperationRefactoring;
+import gr.uom.java.xmi.diff.PushDownOperationRefactoring;
+import gr.uom.java.xmi.diff.RemoveParameterRefactoring;
+import gr.uom.java.xmi.diff.RenameClassRefactoring;
+import gr.uom.java.xmi.diff.RenameOperationRefactoring;
+import gr.uom.java.xmi.diff.RenameVariableRefactoring;
+import gr.uom.java.xmi.diff.ReorderParameterRefactoring;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
@@ -33,6 +51,8 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import python3.typeinference.core.TypeASTNode;
 import python3.typeinference.core.TypeInformation;
+import refactoringminer.api.Refactoring;
+import refactoringminer.api.RefactoringType;
 import utils.Config;
 import change.ChangeEntity.Type;
 
@@ -52,6 +72,11 @@ public class RevisionAnalyzer {
 
 	private HashSet<CFile> mappedFilesM = new HashSet<CFile>(),
 			mappedFilesN = new HashSet<CFile>();
+
+	private HashSet<CFile> addedFile = new HashSet<CFile>();
+
+	private HashSet<CFile> deletedFile = new HashSet<CFile>();
+
 	private HashSet<CClass> classesM = new HashSet<CClass>(),
 			classesN = new HashSet<CClass>();
 	private HashSet<CClass> mappedClassesM = new HashSet<CClass>(),
@@ -153,11 +178,13 @@ public class RevisionAnalyzer {
 		return true;
 	}
 
-	public boolean analyzeGit() {
+	public boolean analyzeGit(List<Refactoring> refs) {
 		if (!buildGitModifiedFiles())   // update mappedfilesM and mappedfilesN with source codes.
 			return false;
 		if (Config.countChangeFileOnly)
 			return true;
+		if (Configurations.WITH_REFACTORING)
+			updateRefactoringChangesofClasses(refs);
 		if (!map())
 		logger.info("methodsM: "+methodsM);//removed methods
 		logger.info("methodsN: "+methodsN); //Added methods
@@ -169,6 +196,8 @@ public class RevisionAnalyzer {
 			return false;
 		return true;
 	}
+
+
 
 	private boolean buildModifiedFiles() {
 		SVNLogEntry logEntry = this.changeAnalyzer.getLogEntry(revision);
@@ -367,7 +396,7 @@ public class RevisionAnalyzer {
 
 								if (typeInfoM == null || typeInfoN==null) {
 									typeError = true;
-									return false;
+									continue;
 								}
 								else {
 									success = true;
@@ -392,7 +421,7 @@ public class RevisionAnalyzer {
 								Map<TypeASTNode, String> typeInfor1 = typeInformation1.getTypeInformation(this.url + "/" + diff.getNewPath(), this.url, diff.getNewPath().replace('/', '.'));
 								if (typeInfor1 == null) {
 									typeError = true;
-									return false;
+									continue;
 								}
 								fileN = new CFile(this, diff.getNewPath(),
 										newContent, this.url, typeInfor1);
@@ -408,7 +437,7 @@ public class RevisionAnalyzer {
 								Map<TypeASTNode, String> typeInfo2 = typeInformation2.getTypeInformation(this.url + "/" + diff.getOldPath(), this.url, diff.getOldPath().replace('/', '.'));
 								if (typeInfo2 == null) {
 									typeError = true;
-									return false;
+									continue;
 								}
 								fileM = new CFile(this, diff.getOldPath(),
 										oldContent, this.url, typeInfo2);
@@ -422,10 +451,6 @@ public class RevisionAnalyzer {
 									newContent,this.url,null);
 						}
 
-
-
-
-
 						this.mappedFilesM.add(fileM);
 //						this.crevision.files.add(new CSourceFile(diff
 //								.getNewPath(), fileM.getSourceFile().getLines()
@@ -435,8 +460,53 @@ public class RevisionAnalyzer {
 						fileN.setCType(Type.Modified);
 						fileM.setMappedFile(fileN);
 						fileN.setMappedFile(fileM);
+					}else if (Configurations.IS_PYTHON && diff.getChangeType() == ChangeType.ADD){
+						TypeInformation typeM = new TypeInformation();
+						Map<TypeASTNode, String> typeInfo =typeM.getTypeInformationFromJsonFile
+								(Configurations.TYPE_REPOSITORY,new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath(),gitCommit.getName(),"N",diff.getNewPath().replace('/', '_'));
+						CFile file;
+						if (typeInfo!=null){
+							String content = null;
+							ObjectLoader ldr = null;
+							try {
+								ldr = repository.open(diff.getOldId().toObjectId(),
+										Constants.OBJ_BLOB);
+								content = new String(ldr.getCachedBytes());
+							} catch (IOException e) {
+								logger.debug(e.getMessage());
+								continue;
+							}
+							file = new CFile(this, diff.getOldPath(),
+									content, this.url, typeInfo);
+							file.setCType(Type.Added);
+							addedFile.add(file);
+						}
+					}
+					else if (Configurations.IS_PYTHON && diff.getChangeType() == ChangeType.DELETE){
+						TypeInformation typeM = new TypeInformation();
+						Map<TypeASTNode, String> typeInfo =typeM.getTypeInformationFromJsonFile
+								(Configurations.TYPE_REPOSITORY,new File(Configurations.inputPath).toURI().relativize(new File(url).toURI()).getPath(),gitCommit.getName(),"O",diff.getNewPath().replace('/', '_'));
+						CFile file;
+						if (typeInfo!=null){
+							String content = null;
+							ObjectLoader ldr = null;
+							try {
+								ldr = repository.open(diff.getOldId().toObjectId(),
+										Constants.OBJ_BLOB);
+								content = new String(ldr.getCachedBytes());
+							} catch (IOException e) {
+								logger.debug(e.getMessage());
+								continue;
+							}
+							file = new CFile(this, diff.getOldPath(),
+									content, this.url, typeInfo);
+							file.setCType(Type.Deleted);
+							deletedFile.add(file);
+						}
+
 					}
 				}
+
 			}
 			rw.close();
 			df.close();
@@ -446,6 +516,7 @@ public class RevisionAnalyzer {
 
 	private boolean map() {
 		mapClasses();
+
 		mapMethods();
 		// mapFields();
 		// mapEnumConstants();
@@ -648,5 +719,302 @@ public class RevisionAnalyzer {
 
 	public boolean isTypeError() {
 		return typeError;
+	}
+
+
+	private void updateRefactoringChangesofClasses(List<Refactoring> refs) {
+		for (Refactoring ref : refs) {
+			if (ref.getRefactoringType()==RefactoringType.RENAME_CLASS ){
+				RenameClassRefactoring mapper = ((RenameClassRefactoring) ref);
+				UMLClass operationBefore = mapper.getOriginalClass();
+				UMLClass operationAfter = mapper.getRenamedClass();
+				CClass classBefore = getClass(mappedFilesM,operationBefore);
+				CClass classAfter = getClass(mappedFilesN,operationAfter);
+				if (classBefore!=null&&classAfter!=null){
+					CClass.setMap(classBefore,classAfter);
+					mappedClassesM.add(classBefore);
+					mappedClassesN.add(classAfter);
+				}
+			}
+			else if(ref.getRefactoringType()==RefactoringType.MOVE_CLASS ){
+				MoveClassRefactoring mapper = ((MoveClassRefactoring) ref);
+				UMLClass operationBefore = mapper.getOriginalClass();
+				UMLClass operationAfter = mapper.getMovedClass();
+				CClass classBefore = getClass(mappedFilesM,operationBefore);
+				if (classBefore==null)
+					classBefore = getClass(deletedFile,operationBefore);
+
+				CClass classAfter = getClass(mappedFilesN,operationAfter);
+				if (classAfter==null)
+					classAfter = getClass(addedFile,operationAfter);
+
+				if (classBefore!=null&&classAfter!=null){
+					CClass.setMap(classBefore,classAfter);
+					mappedClassesM.add(classBefore);
+					mappedClassesN.add(classAfter);
+				}
+			}
+			else if(ref.getRefactoringType()==RefactoringType.MOVE_RENAME_CLASS ){
+				MoveAndRenameClassRefactoring mapper = ((MoveAndRenameClassRefactoring) ref);
+				UMLClass operationBefore = mapper.getOriginalClass();
+				UMLClass operationAfter = mapper.getRenamedClass();
+				CClass classBefore = getClass(mappedFilesM,operationBefore);
+				if (classBefore==null)
+					classBefore = getClass(deletedFile,operationBefore);
+
+				CClass classAfter = getClass(mappedFilesN,operationAfter);
+				if (classAfter==null)
+					classAfter = getClass(addedFile,operationAfter);
+
+				if (classBefore!=null&&classAfter!=null){
+					CClass.setMap(classBefore,classAfter);
+					mappedClassesM.add(classBefore);
+					mappedClassesN.add(classAfter);
+				}
+			}
+			else if(ref.getRefactoringType()==RefactoringType.EXTRACT_CLASS ){
+				ExtractClassRefactoring mapper = ((ExtractClassRefactoring) ref);
+				UMLClass operationBefore = mapper.getOriginalClass();
+				UMLClass operationAfter = mapper.getExtractedClass();
+				CClass classBefore = getClass(mappedFilesM,operationBefore);
+				if (classBefore==null)
+					classBefore = getClass(deletedFile,operationBefore);
+
+				CClass classAfter = getClass(mappedFilesN,operationAfter);
+				if (classAfter==null)
+					classAfter = getClass(addedFile,operationAfter);
+
+				if (classBefore!=null&&classAfter!=null){
+					CClass.setMap(classBefore,classAfter);
+					mappedClassesM.add(classBefore);
+					mappedClassesN.add(classAfter);
+				}
+			}
+			else if(ref.getRefactoringType()==RefactoringType.EXTRACT_SUBCLASS ){
+				System.out.println();
+				ExtractSuperclassRefactoring mapper = ((ExtractSuperclassRefactoring) ref);
+
+
+			}
+			else if (ref.getRefactoringType()==RefactoringType.EXTRACT_SUPERCLASS){
+//				System.out.println();
+//				ExtractSuperclassRefactoring mapper = ((ExtractSuperclassRefactoring) ref);
+//				UMLClass operationBefore = mapper.get();
+//				UMLClass operationAfter = mapper.getExtractedClass();
+//				CClass classBefore = getClass(mappedFilesM,operationBefore);
+//				if (classBefore==null)
+//					classBefore = getClass(deletedFile,operationBefore);
+//
+//				CClass classAfter = getClass(mappedFilesN,operationAfter);
+//				if (classAfter==null)
+//					classAfter = getClass(addedFile,operationAfter);
+//
+//				if (classBefore!=null&&classAfter!=null){
+//					CClass.setMap(classBefore,classAfter);
+//					mappedClassesM.add(classBefore);
+//					mappedClassesN.add(classAfter);
+//				}
+
+			}
+
+
+		}
+
+	}
+
+	public void updateRefactoringChanges(List<Refactoring> refs) {
+		for (Refactoring ref : refs) {
+			if(ref.getRefactoringType()== RefactoringType.RENAME_METHOD)
+			{
+				UMLOperationBodyMapper mapper = ((RenameOperationRefactoring) ref).getBodyMapper();
+				String methodNameBefore = mapper.getOperation1().getName();
+				int parametersBefore = mapper.getOperation1().getParameters().size();
+				String packageNameBefore = Arrays.stream(mapper.getOperation1().getClassName().split("\\.")).
+						limit(mapper.getOperation1().getClassName().split("\\.").length-1).collect(Collectors.joining("."));
+				String classNameBefore = mapper.getOperation1().getClassName().split("\\.")[mapper.getOperation1().getClassName().split("\\.").length-1];
+
+
+				String methodNameAfter = mapper.getOperation2().getName();
+				int parameterAfter = mapper.getOperation2().getParameters().size();
+				String packageNameAfter = Arrays.stream(mapper.getOperation2().getClassName().split("\\.")).
+						limit(mapper.getOperation2().getClassName().split("\\.").length-1).collect(Collectors.joining("."));
+				String classNameAfter = mapper.getOperation2().getClassName().split("\\.")[mapper.getOperation2().getClassName().split("\\.").length-1];
+
+
+				CMethod methodBefore = getMethod(mappedFilesM, packageNameBefore,classNameBefore,methodNameBefore,parametersBefore);
+				CMethod methodAfter = getMethod(mappedFilesN, packageNameAfter,classNameAfter,methodNameAfter,parameterAfter );
+
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+			else if (ref.getRefactoringType()== RefactoringType.MOVE_OPERATION){  //Move method
+				MoveOperationRefactoring mapper = ((MoveOperationRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOriginalOperation();
+				UMLOperation operationAfter = mapper.getMovedOperation();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+
+			}
+
+			else if (ref.getRefactoringType()== RefactoringType.PULL_UP_OPERATION){
+				PullUpOperationRefactoring mapper = ((PullUpOperationRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOriginalOperation();
+				UMLOperation operationAfter = mapper.getMovedOperation();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+
+			else if (ref.getRefactoringType()== RefactoringType.PUSH_DOWN_OPERATION){
+				PushDownOperationRefactoring mapper = ((PushDownOperationRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOriginalOperation();
+				UMLOperation operationAfter = mapper.getMovedOperation();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+
+			else if (ref.getRefactoringType()==RefactoringType.ADD_PARAMETER){
+				AddParameterRefactoring mapper = ((AddParameterRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOperationBefore();
+				UMLOperation operationAfter = mapper.getOperationAfter();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+
+			else if (ref.getRefactoringType()==RefactoringType.REORDER_PARAMETER){
+				ReorderParameterRefactoring mapper = ((ReorderParameterRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOperationBefore();
+				UMLOperation operationAfter = mapper.getOperationAfter();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+
+			else if (ref.getRefactoringType()==RefactoringType.REMOVE_PARAMETER ){
+				RemoveParameterRefactoring mapper = ((RemoveParameterRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOperationBefore();
+				UMLOperation operationAfter = mapper.getOperationAfter();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+
+			else if (ref.getRefactoringType()==RefactoringType.PARAMETERIZE_VARIABLE){
+				RenameVariableRefactoring mapper = ((RenameVariableRefactoring) ref);
+				UMLOperation operationBefore = mapper.getOperationBefore();
+				UMLOperation operationAfter = mapper.getOperationAfter();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+			}
+			else if (ref.getRefactoringType()==RefactoringType.MOVE_AND_RENAME_OPERATION){
+				MoveOperationRefactoring mapper =  ((MoveOperationRefactoring)ref);
+				UMLOperation operationBefore = mapper.getOriginalOperation();
+				UMLOperation operationAfter = mapper.getMovedOperation();
+				CMethod methodBefore = getMethod(mappedFilesM,operationBefore);
+				CMethod methodAfter = getMethod(mappedFilesN,operationAfter);
+				if (methodAfter!=null && methodBefore!=null){
+					CMethod.setMap(methodBefore,methodAfter);
+					mappedMethodsM.add(methodBefore);
+					mappedMethodsN.add(methodAfter);
+				}
+
+			}
+
+
+
+
+
+
+
+			deriveChanges();
+		}
+
+	}
+
+	private CClass getClass(HashSet<CFile> files, UMLClass operation){
+		String packageName = operation.getPackageName();
+		String className =  operation.getName();
+		CClass cClass=null;
+		for (CFile file : files) {
+			String filePackage =  file.getPath().replace('/','.').substring(0, file.getPath().length() - 3);
+			if (filePackage.equals(packageName.substring(4, packageName.length()))){
+				for (CClass aClass : file.getClasses()) {
+					if (aClass.getName().equals(className)|| !aClass.getName().contains("PyDummyClass")){
+						cClass=aClass;
+					}
+				}
+			}
+		}
+		return cClass;
+	}
+
+	private CMethod getMethod(HashSet<CFile> files, UMLOperation operation){
+		String methodName =  operation.getName();
+		int parameters = operation.getParameters().size();
+		String packageName = Arrays.stream(operation.getClassName().split("\\.")).
+				limit(operation.getClassName().split("\\.").length-1).collect(Collectors.joining("."));
+		String className = operation.getClassName().split("\\.")[operation.getClassName().split("\\.").length-1];
+		return getMethod(files,packageName,className,methodName,parameters);
+	}
+
+
+
+
+	private CMethod getMethod(HashSet<CFile> files , String packageName, String className,String methodName,int numberParameters){
+		CMethod cMethod=null;
+		for (CFile file : files) {
+			String filePackage =  file.getPath().replace('/','.').substring(0, file.getPath().length() - 3);
+			if (filePackage.equals(packageName.substring(4, packageName.length()))){
+				for (CClass aClass : file.getClasses()) {
+					if (aClass.getName().equals(className)|| aClass.getName().contains("PyDummyClass"))
+					{
+						for (CMethod method : aClass.getMethods()) {
+							if (method.getSimpleName().equals(methodName) && method.getNumOfParameters()==numberParameters-1){
+								cMethod=method;
+								break;
+							}
+						}
+
+					}
+				}
+			}
+
+		}
+		return cMethod;
 	}
 }
