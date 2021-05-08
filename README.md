@@ -1,3 +1,6 @@
+
+This is a fork of https://github.com/nguyenhoan/CPatMiner. We extended it to support Python. 
+
 Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMiner.git
 
 # CPatMiner: Graph-based Mining of In-the-Wild, Fine-grained, Semantic Code Change Patterns
