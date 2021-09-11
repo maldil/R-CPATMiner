@@ -3,7 +3,7 @@ This is a fork of https://github.com/nguyenhoan/CPatMiner. We extended it to sup
 
 Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMiner.git
 
-# CPatMiner: A tool that mines fine-grained code change pattern in Python software systems
+# R-CPatMiner: A tool that mines fine-grained code change pattern in Python software systems
 
 
 ## Packages
