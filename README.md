@@ -13,7 +13,7 @@ SemanticChangeGraphMiner: mines change templates from change graphs.
 
 ## Extracting change graphs from commits
 
-main class: https://github.com/nguyenhoan/CPatMiner/blob/master/AtomicASTChangeMining/src/main/MainChangeAnalyzer.java
+main class: https://github.com/maldil/R-CPATMiner/blob/master/AtomicASTChangeMining/src/main/java/core/MainChangeAnalyzer.java
 
 arguments:
 
@@ -23,7 +23,7 @@ arguments:
 
 ## Mining change templates from change graphs
 
-main class: https://github.com/nguyenhoan/CPatMiner/blob/master/SemanticChangeGraphMiner/src/main/MineChangePatterns.java
+main class: https://github.com/maldil/R-CPATMiner/blob/master/SemanticChangeGraphMiner/src/main/MineChangePatterns.java
 
 reposPath = input_repos_root_path: a sub folder is a git repo
 
