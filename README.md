@@ -44,8 +44,8 @@ Before you can start building components, you must first build two dependancy li
 
 Now you are ready to build the two components in CPATMiner.
 
-* Bulding `AtomicASTChangeMining` -  run mvn `mvn clean package` in the AtomicASTChangeMining's root directory. 
-* Bulding `SemanticChangeGraphMiner`  -  run mvn `mvn clean package` in the SemanticChangeGraphMiner's root directory. 
+* Bulding `AtomicASTChangeMining` -  run `mvn clean package` in the AtomicASTChangeMining's root directory. 
+* Bulding `SemanticChangeGraphMiner`  -  run `mvn clean package` in the SemanticChangeGraphMiner's root directory. 
 
 
 ## Using the tools in Docker containers.
