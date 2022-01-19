@@ -1,10 +1,10 @@
 
+
+
+# R-CPatMiner: A tool that mines fine-grained code change pattern in Python software systems
 This is a fork of https://github.com/nguyenhoan/CPatMiner. We extended it to support Python. 
 
 Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMiner.git
-
-# R-CPatMiner: A tool that mines fine-grained code change pattern in Python software systems
-
 
 ## R-CPatMiner consists of two tools that must be run one after the other. 
 * AtomicASTChangeMining: extracts change graphs from commits and store them in the directory "OUTPUT" of the project's root directory.
