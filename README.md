@@ -33,7 +33,22 @@ The variable `reposPath` needs to be specified to the directory "output" generat
 
 The resultant patterns will be created in a directory called "output" in the root directory.
 
-## Bulding the tools
+## How to build CPATMiner
+To have fully build CPATMiner, you have to build the two components. 
+Before you can start building components, you must first build two dependancy libraries locally and add them to your local `maven` repository.
+* [JPyParser](https://github.com/maldil/JPythonParser) 
+  * Run mvn `mvn clean package` in the project's root directory. 
+  * Install the binaries to your local maven repository using `mvn install:install-file -Dfile=./Your Path/target/JPyParser-1.0-SNAPSHOT.jar -DgroupId=org.mal.python -DartifactId=JPyParser -Dversion=1.0-SNAPSHOT.jar -Dpackaging=jar -DgeneratePom=true` 
+
+* [EclipseJDT](https://github.com/maldil/JavaFyPy/tree/master/CustomizedEclipseJDT) 
+  * Follow the instructions in the [repository](https://github.com/maldil/JavaFyPy/tree/master/CustomizedEclipseJDT)  to build the project.  
+  * Install the binaries to your local maven repository using mvn install:install-file -Dfile= /You_Path/target/org.eclipse.jdt.core-3.24.0-SNAPSHOT.jar -DgroupId=org.eclipse.jdt -DartifactId=org.eclipse.jdt.core -Dversion=3.24.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
+
+Now you areready to build the two components in CPATMiner.
+
+* Bulding `AtomicASTChangeMining` -  run mvn `mvn clean package` in the AtomicASTChangeMining's root directory. 
+* Bulding `SemanticChangeGraphMiner`  -  run mvn `mvn clean package` in the SemanticChangeGraphMiner's root directory. 
+
 
 ## Using the tools in Docker containers.
 We have released Docker containers which make it easy to use the tools without building it.
