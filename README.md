@@ -8,28 +8,28 @@ Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMi
 
 ## R-CPatMiner consists of two tools that must be run one after the other. 
 * AtomicASTChangeMining: extracts change graphs from commits and store them in the directory "OUTPUT" of the project's root directory.
-* SemanticChangeGraphMiner: mines change patterns from change graphs, extracted by running the tool AtomicASTChangeMining.
+* SemanticChangeGraphMiner: mines code change patterns from change graphs, extracted by running the tool AtomicASTChangeMining.
 
 ## Instructions on generating change graphs for commits. 
 AtomicASTChangeMining builds change graphs that represent code changes.
 
 main class: [MainChangeAnalyzer.java](https://github.com/maldil/R-CPATMiner/blob/master/AtomicASTChangeMining/src/main/java/core/MainChangeAnalyzer.java)
 
-`AtomicASTChangeMining` requires two inputs. Namely,i.e., 1) the file `selected-repos.csv`, which lists all of the repositories that need to be analyzed, and 2) the Type repository, which lists the types of altered files in all of the commits of the projects listed in "selected-repos.csv". We have already infered type information of 1000 ML systems and stored in this [repository](https://github.com/mlcodepatterns/PythonTypeInformation). This repository may be downloaded and the variable `Configurations.TYPE REPOSITORY` set to the downloaded location. If you want to analyze a project that isn't one of the 1000ML systems, you can infer the type information by following the guidelines in the type [repository](https://github.com/mlcodepatterns/PythonTypeInformation).
+`AtomicASTChangeMining` requires two inputs. Namely,i.e., 1) the file `selected-repos.csv`, which lists all of the repositories that need to be analyzed, and 2) the Type repository, which lists the types of altered files in all of the commits of the projects listed in "selected-repos.csv". We have already inferred the type information of 1000 ML systems and stored it in this [repository](https://github.com/mlcodepatterns/PythonTypeInformation). This repository may be downloaded and the variable `Configurations.TYPE REPOSITORY` set to the downloaded location. If you want to analyze a project that isn't one of the 1000ML systems, you can infer the type information by following the guidelines in the type [repository](https://github.com/mlcodepatterns/PythonTypeInformation).
 
 ### Steps to generate change graphs 
-  * To produce meta information required for changegraph generation, run main function of `core.AnalyzeRepoMetadata`
-  * To produce the change graphs, run `core.MainChangeAnalyzer`. This step might take sometime depending on the number of projects you specified in `selected-repos.csv`.
+  * To produce meta information required for change graph generation, run main function of `core.AnalyzeRepoMetadata`
+  * To produce the change graphs, run `core.MainChangeAnalyzer`. This step might take some time depending on the number of projects you specified in `selected-repos.csv`.
 
 
 ## Instructions on Mining change patterns from change graphs
-`SemanticChangeGraphMiner` mines the repetitive code changes. The tool needs to be run on the output of previous step. 
+`SemanticChangeGraphMiner` mines the repetitive code changes. The tool needs to be run on the output of the previous step. 
 
 
 changesPath
 main class: [MineChangePatterns.java](https://github.com/maldil/R-CPATMiner/blob/master/SemanticChangeGraphMiner/src/main/MineChangePatterns.java)
 
-The variable `reposPath` needs to be specified to the directory "output" generated the previous step which contain the changed graphs. The file `selected-repos.csv` should be updated with all the projects that need to be analysed. Execute the main class and the analysis might take some time depending on the number of projects in `selected-repos.csv`.
+The variable `reposPath` needs to be specified to the directory "output" generated in the previous step which contains the changed graphs. The file `selected-repos.csv` should be updated with all the projects that need to be analyzed. Execute the main class and the analysis might take some time depending on the number of projects in `selected-repos.csv`.
 
 The resultant patterns will be created in a directory called "output" in the root directory.
 
@@ -44,14 +44,14 @@ Before you can start building components, you must first build two dependancy li
   * Follow the instructions in the [repository](https://github.com/maldil/JavaFyPy/tree/master/CustomizedEclipseJDT)  to build the project.  
   * Install the binaries to your local maven repository using mvn install:install-file -Dfile= /You_Path/target/org.eclipse.jdt.core-3.24.0-SNAPSHOT.jar -DgroupId=org.eclipse.jdt -DartifactId=org.eclipse.jdt.core -Dversion=3.24.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
-Now you areready to build the two components in CPATMiner.
+Now you are ready to build the two components in CPATMiner.
 
 * Bulding `AtomicASTChangeMining` -  run mvn `mvn clean package` in the AtomicASTChangeMining's root directory. 
 * Bulding `SemanticChangeGraphMiner`  -  run mvn `mvn clean package` in the SemanticChangeGraphMiner's root directory. 
 
 
 ## Using the tools in Docker containers.
-We have released Docker containers which make it easy to use the tools without building it.
+We have released Docker containers which make it easy to use the tools without building them.
 Please follow the steps given below. 
 
 **Step 1** - This [folder](https://drive.google.com/file/d/1mWy046yjHrywRUf_g_wklwiyGtb5Ggtn/view?usp=sharing) should be downloaded, unzipped, and saved to the $FOLDER PATH directory.  
@@ -84,9 +84,6 @@ Open the `html` file directory.html using any of your browsers. You can see the 
 A code change pattern is represented by a row in this generated table. The number of code change occurrences per pattern is represented by the column `NumberFound`. Click the hyperlinks in the `Details` column to view each case. It should take you to the page, which has all of the occurrences for the relevant pattern. To see the actual changes on GitHub, click on the `Link` hyperlinks.
 
 **Step 6** Now, you saw how R-CPATMiner mines code change patterns. You can execute exit to terminate the container. You can still access all the generated files in the mounted folder.
-
-
-
 
 
 ## License
