@@ -11,7 +11,7 @@ Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMi
 * SemanticChangeGraphMiner: mines code change patterns from change graphs, extracted by running the tool AtomicASTChangeMining.
 
 ## Instructions on generating change graphs for commits. 
-AtomicASTChangeMining builds change graphs that represent code changes.
+`AtomicASTChangeMining` builds change graphs that represent code changes.
 
 main class: [MainChangeAnalyzer.java](https://github.com/maldil/R-CPATMiner/blob/master/AtomicASTChangeMining/src/main/java/core/MainChangeAnalyzer.java)
 
@@ -25,8 +25,6 @@ main class: [MainChangeAnalyzer.java](https://github.com/maldil/R-CPATMiner/blob
 ## Instructions on Mining change patterns from change graphs
 `SemanticChangeGraphMiner` mines the repetitive code changes. The tool needs to be run on the output of the previous step. 
 
-
-changesPath
 main class: [MineChangePatterns.java](https://github.com/maldil/R-CPATMiner/blob/master/SemanticChangeGraphMiner/src/main/MineChangePatterns.java)
 
 The variable `reposPath` needs to be specified to the directory "output" generated in the previous step which contains the changed graphs. The file `selected-repos.csv` should be updated with all the projects that need to be analyzed. Execute the main class and the analysis might take some time depending on the number of projects in `selected-repos.csv`.
