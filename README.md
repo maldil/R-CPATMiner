@@ -87,7 +87,7 @@ A code change pattern is represented by a row in this generated table. The numbe
 **Step 6** Now, you saw how R-CPATMiner mines code change patterns. You can execute exit to terminate the container. You can still access all the generated files in the mounted folder.
 
 # Research
-## How to cite RefactoringMiner
+## How to cite CPATMiner
 
 If you are using R-CPATMiner in your research, please cite the following papers:
 
