@@ -35,10 +35,13 @@ The resultant patterns will be created in a directory called "output" in the roo
 To have fully build CPATMiner, you have to build the two components. 
 Before you can start building components, you must first build two dependancy libraries locally and add them to your local `maven` repository.
 * [JPyParser](https://github.com/maldil/JPythonParser) 
-  * Run mvn `mvn clean package` in the project's root directory. 
+  * Run `git clone https://github.com/maldil/JPythonParser.git`
+  * Run `cd JPythonParser` and `mvn clean package` in the project's root directory. 
   * Install the binaries to your local maven repository using `mvn install:install-file -Dfile=./Your Path/target/JPyParser-1.0-SNAPSHOT.jar -DgroupId=org.mal.python -DartifactId=JPyParser -Dversion=1.0-SNAPSHOT.jar -Dpackaging=jar -DgeneratePom=true` 
 
 * [EclipseJDT](https://github.com/maldil/JavaFyPy/tree/master/CustomizedEclipseJDT) 
+  * Run `git clone https://github.com/maldil/JavaFyPy.git`
+  * Run `cd  CustomizedEclipseJDT`
   * Follow the instructions in the [repository](https://github.com/maldil/JavaFyPy/tree/master/CustomizedEclipseJDT)  to build the project.  
   * Install the binaries to your local maven repository using mvn install:install-file -Dfile= /You_Path/target/org.eclipse.jdt.core-3.24.0-SNAPSHOT.jar -DgroupId=org.eclipse.jdt -DartifactId=org.eclipse.jdt.core -Dversion=3.24.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
@@ -83,6 +86,68 @@ A code change pattern is represented by a row in this generated table. The numbe
 
 **Step 6** Now, you saw how R-CPATMiner mines code change patterns. You can execute exit to terminate the container. You can still access all the generated files in the mounted folder.
 
+# Research
+## How to cite RefactoringMiner
 
+If you are using R-CPATMiner in your research, please cite the following papers:
+
+
+Malinda Dilhara, Ameya Ketkar, Nikhith Sannidhi, and Danny Dig, [Discovering Repetitive Code Changes in Python ML Systems](https://danny.cs.colorado.edu/papers/ICSE2022_Repetitive_Changes_in_Python_ML_Systems.pdf)," *44th International Conference on Software Engineering* (ICSE 2022), Pittsburgh, PA, USA, May 21--29, 2022.
+
+    @inproceedings{Dilhara:ICSE:2022:RepetitiveChanges,
+	author = {Dilhara, Malinda and Ketkar, Ameya and Sannidhi, Nikhith, Dig, Danny},
+	title = {Discovering Repetitive Code Changes in Python ML Systems},
+	booktitle = {Proceedings of the 44th International Conference on Software Engineering},
+	series = {ICSE '22},
+	year = {2022},
+	isbn = {978-1-4503-9221-1/22/05},
+	location = {PA, USA},
+	numpages = {13},
+	url = {http://doi.acm.org/10.1145/3510003.3510225},
+	doi = {10.1145/3510003.3510225},
+	publisher = {ACM},
+	address = {New York, NY, USA},
+    }
+
+Malinda Dilhara, [Discovering Repetitive Code Changes in ML Systems](https://dl.acm.org/doi/abs/10.1145/3468264.3473493)
+ESEC/FSE 2021: Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (August 2021), Athens, Greece.
+
+
+
+	@inproceedings{Dilhara:FSE:2021:RepetitiveChanges,
+	author = {Dilhara, Malinda},
+	title = {Discovering Repetitive Code Changes in ML Systems},
+	year = {2021},
+	isbn = {9781450385626},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3468264.3473493},
+	doi = {10.1145/3468264.3473493},
+	booktitle = {Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+	pages = {1683–1685},
+	numpages = {3},
+	keywords = {Code change patterns, Machine learning, Empirical analysis},
+	location = {Athens, Greece},
+	series = {ESEC/FSE 2021}
+	}
+ 
+Citation for Java-CPATMiner 
+Nguyen, Hoan Anh and Nguyen, Tien N. and Dig, Danny and Nguyen, Son and Tran, Hieu and Hilton, Michael [Graph-based mining of in-the-wild, fine-grained, semantic code change patterns](https://dl.acm.org/doi/10.1109/ICSE.2019.00089) *41st International Conference on Software EngineeringMay* (ICSE-2019) Montreal, Quebec, Canada.
+```
+ @inproceedings{Nguyen:ICSE:2019:CPATMiner,
+author = {Nguyen, Hoan Anh and Nguyen, Tien N. and Dig, Danny and Nguyen, Son and Tran, Hieu and Hilton, Michael},
+title = {Graph-Based Mining of in-the-Wild, Fine-Grained, Semantic Code Change Patterns},
+year = {2019},
+publisher = {IEEE Press},
+url = {https://doi.org/10.1109/ICSE.2019.00089},
+doi = {10.1109/ICSE.2019.00089},
+booktitle = {Proceedings of the 41st International Conference on Software Engineering},
+pages = {819–830},
+numpages = {12},
+keywords = {semantic change pattern mining, graph mining},
+location = {Montreal, Quebec, Canada},
+series = {ICSE '19}
+}
+```
 ## License
 All software provided in this repository is subject to the [Apache License Version 2.0](LICENSE).
