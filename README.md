@@ -6,7 +6,7 @@ This is a fork of https://github.com/nguyenhoan/CPatMiner. We extended it to sup
 
 Clone the repo : git clone --recurse-submodules https://github.com/maldil/CPatMiner.git
 
-## R-CPatMiner consists of two tools that must be run one after the other. 
+### R-CPatMiner consists of two tools that must be run one after the other. 
 * AtomicASTChangeMining: extracts change graphs from commits and store them in the directory "OUTPUT" of the project's root directory.
 * SemanticChangeGraphMiner: mines code change patterns from change graphs, extracted by running the tool AtomicASTChangeMining.
 
