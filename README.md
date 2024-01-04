@@ -1,7 +1,7 @@
 
 [![DOI](https://zenodo.org/badge/348240921.svg)](https://zenodo.org/badge/latestdoi/348240921)
 
-
+**Note:** An updated version of this tool is available at https://github.com/maldil/PyCPATMiner/.
 
 # R-CPatMiner: A tool that mines fine-grained code change pattern in Python software systems
 This is a fork of https://github.com/nguyenhoan/CPatMiner. We extended it to support Python. 
